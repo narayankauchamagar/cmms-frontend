@@ -12,6 +12,7 @@ import SupportTwoToneIcon from '@mui/icons-material/SupportTwoTone';
 import ReceiptTwoToneIcon from '@mui/icons-material/ReceiptTwoTone';
 import BackupTableTwoToneIcon from '@mui/icons-material/BackupTableTwoTone';
 import SmartToyTwoToneIcon from '@mui/icons-material/SmartToyTwoTone';
+import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
 
 export interface MenuItem {
   link?: string;
@@ -29,6 +30,16 @@ export interface MenuItems {
 }
 
 const menuItems: MenuItems[] = [
+  {
+    heading: '',
+    items: [
+      {
+        name: 'Settings',
+        link: '/app/settings',
+        icon: SettingsTwoToneIcon
+      },
+    ]
+  },
   {
     heading: 'General',
     items: [

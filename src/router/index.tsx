@@ -13,6 +13,7 @@ import CollapsedSidebarLayout from 'src/layouts/CollapsedSidebarLayout';
 import BottomNavigationLayout from 'src/layouts/BottomNavigationLayout';
 import TopNavigationLayout from 'src/layouts/TopNavigationLayout';
 
+import settingsRoutes from './settings';
 import dashboardsRoutes from './dashboards';
 import blocksRoutes from './blocks';
 import applicationsRoutes from './applications';
@@ -31,7 +32,20 @@ const router: RouteObject[] = [
     element: <BaseLayout />,
     children: baseRoutes
   },
-
+  {
+    path: 'app',
+    element: (
+      <Authenticated>
+        <ExtendedSidebarLayout />
+      </Authenticated>
+    ),
+    children: [
+      {
+        path: 'settings',
+        children: settingsRoutes
+      }
+    ]
+  },
   // Documentation
 
   {
