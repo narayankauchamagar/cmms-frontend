@@ -134,7 +134,7 @@ function SettingsLayout(props: SettingsLayoutProps) {
   const [currentTab, setCurrentTab] = useState<string>('analytics');
 
   const tabs = [
-    { value: 'analytics', label: t('Analytics Overview') },
+    { value: 'general', label: t('General Settings') },
     { value: 'taskSearch', label: t('Task Search') },
     { value: 'projectsBoard', label: t('Projects Board') }
   ];
