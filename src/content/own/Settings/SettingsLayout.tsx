@@ -1,31 +1,9 @@
 import { ChangeEvent, ReactNode, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import PageHeader from './PageHeader';
 import Footer from 'src/components/Footer';
-import {
-  Grid,
-  Tab,
-  Tabs,
-  Typography,
-  Divider,
-  Card,
-  Box,
-  Button,
-  useTheme,
-  Avatar,
-  styled
-} from '@mui/material';
-import PageTitleWrapper from 'src/components/PageTitleWrapper';
-
-import TeamOverview from './TeamOverview';
-import TasksAnalytics from './TasksAnalytics';
-import Performance from './Performance';
-import Projects from './Projects';
-import Checklist from './Checklist';
-import Profile from './Profile';
-import TaskSearch from './TaskSearch';
+import { Avatar, Box, Card, Grid, styled, Tab, Tabs } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import NotificationsActiveTwoToneIcon from '@mui/icons-material/NotificationsActiveTwoTone';
+import { useNavigate } from 'react-router-dom';
 
 const TabsContainerWrapper = styled(Box)(
   ({ theme }) => `
@@ -129,18 +107,19 @@ interface SettingsLayoutProps {
 function SettingsLayout(props: SettingsLayoutProps) {
   const { children } = props;
   const { t }: { t: any } = useTranslation();
-  const theme = useTheme();
+  const navigate = useNavigate();
 
   const [currentTab, setCurrentTab] = useState<string>('analytics');
 
   const tabs = [
-    { value: 'general', label: t('General Settings') },
-    { value: 'taskSearch', label: t('Task Search') },
+    { value: '', label: t('General Settings') },
+    { value: 'work-order', label: t('Work order configuration') },
     { value: 'projectsBoard', label: t('Projects Board') }
   ];
 
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
-    setCurrentTab(value);
+    //setCurrentTab(value);
+    navigate(`/app/settings/${value}`)
   };
 
   return (

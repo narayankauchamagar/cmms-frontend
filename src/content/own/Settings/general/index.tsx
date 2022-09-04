@@ -1,9 +1,9 @@
 import { Avatar, Box, Divider, Grid, MenuItem, Select, styled, Switch, Typography, useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import SettingsLayout from './SettingsLayout';
+import SettingsLayout from '../SettingsLayout';
 import { Field, Formik } from 'formik';
 import * as Yup from 'yup';
-import wait from '../../../utils/wait';
+import wait from '../../../../utils/wait';
 
 const AvatarPrimary = styled(Avatar)(
   ({ theme }) => `

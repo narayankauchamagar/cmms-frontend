@@ -10,7 +10,7 @@ const Loader = (Component) => (props) =>
     </Suspense>
   );
 
-const GeneralSettings = Loader(lazy(() => import('src/content/own/Settings')));
+const GeneralSettings = Loader(lazy(() => import('src/content/own/Settings/general')));
 
 const settingsRoutes = [
   {
