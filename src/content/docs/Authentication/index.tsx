@@ -70,7 +70,9 @@ function HeaderUserbox() {
   return (
     <>
       <Helmet>
-        <title>Authentication - Tokyo White React Typescript Admin Dashboard</title>
+        <title>
+          Authentication - Tokyo White React Typescript Admin Dashboard
+        </title>
       </Helmet>
       <Container maxWidth={false}>
         <Grid container spacing={4}>
@@ -79,9 +81,9 @@ function HeaderUserbox() {
           </Grid>
           <Grid item xs={12}>
             <Typography paragraph>
-              Tokyo White React Typescript Admin Dashboard includes four separate
-              authentication methods, that are basic examples to give you a
-              starting point. The included auth methotds are:{' '}
+              Tokyo White React Typescript Admin Dashboard includes four
+              separate authentication methods, that are basic examples to give
+              you a starting point. The included auth methotds are:{' '}
               <b>JWT Web Tokens</b>, <b>Firebase</b>, <b>Auth0</b> and{' '}
               <b>AWS Amplify</b>
             </Typography>
@@ -97,8 +99,8 @@ function HeaderUserbox() {
             <Typography paragraph>
               Switching to a different auth method is easy. You just have to
               change an import to point to your designed auth method. By
-              default, Tokyo White React Typescript Admin Dashboard comes with JWT Web
-              Tokens enabled.
+              default, Tokyo White React Typescript Admin Dashboard comes with
+              JWT Web Tokens enabled.
             </Typography>
             <Typography paragraph>
               To switch to a different auth method you need to open{' '}

@@ -37,7 +37,7 @@ const menuItems: MenuItems[] = [
         name: 'Settings',
         link: '/app/settings',
         icon: SettingsTwoToneIcon
-      },
+      }
     ]
   },
   {

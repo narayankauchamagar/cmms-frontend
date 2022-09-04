@@ -104,7 +104,7 @@ function SettingsLayout(props: SettingsLayoutProps) {
   const currentTab = tabs[tabIndex].value;
 
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
-    navigate(`/app/settings/${value}`)
+    navigate(`/app/settings/${value}`);
   };
 
   return (

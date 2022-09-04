@@ -100,7 +100,10 @@ function Logo() {
   const theme = useTheme();
 
   return (
-    <TooltipWrapper title={t('Tokyo White React Typescript Admin Dashboard')} arrow>
+    <TooltipWrapper
+      title={t('Tokyo White React Typescript Admin Dashboard')}
+      arrow
+    >
       <LogoWrapper to="/overview">
         <Badge
           sx={{

@@ -7,7 +7,9 @@ function ContactSupport() {
   return (
     <>
       <Helmet>
-        <title>Contact Support - Tokyo White React Typescript Admin Dashboard</title>
+        <title>
+          Contact Support - Tokyo White React Typescript Admin Dashboard
+        </title>
       </Helmet>
       <Container maxWidth={false}>
         <Grid container spacing={4}>

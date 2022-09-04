@@ -10,8 +10,12 @@ const Loader = (Component) => (props) =>
     </Suspense>
   );
 
-const GeneralSettings = Loader(lazy(() => import('src/content/own/Settings/General')));
-const WorkOrderSettings = Loader(lazy(() => import('src/content/own/Settings/WorkOrder')));
+const GeneralSettings = Loader(
+  lazy(() => import('src/content/own/Settings/General'))
+);
+const WorkOrderSettings = Loader(
+  lazy(() => import('src/content/own/Settings/WorkOrder'))
+);
 
 const settingsRoutes = [
   {
@@ -21,7 +25,7 @@ const settingsRoutes = [
   {
     path: 'work-order',
     element: <WorkOrderSettings />
-  },
+  }
 ];
 
 export default settingsRoutes;

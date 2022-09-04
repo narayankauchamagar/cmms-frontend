@@ -50,7 +50,9 @@ To create a production build, use npm run build.`;
   return (
     <>
       <Helmet>
-        <title>Installation - Tokyo White React Typescript Admin Dashboard</title>
+        <title>
+          Installation - Tokyo White React Typescript Admin Dashboard
+        </title>
       </Helmet>
       <Container maxWidth={false}>
         <Grid container spacing={4}>

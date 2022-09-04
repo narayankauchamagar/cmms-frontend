@@ -15,7 +15,9 @@ function Dependencies() {
   return (
     <>
       <Helmet>
-        <title>Dependencies - Tokyo White React Typescript Admin Dashboard</title>
+        <title>
+          Dependencies - Tokyo White React Typescript Admin Dashboard
+        </title>
       </Helmet>
       <Container maxWidth={false}>
         <Grid container spacing={4}>
@@ -24,8 +26,8 @@ function Dependencies() {
           </Grid>
           <Grid item xs={12}>
             <Typography paragraph>
-              At it's core, Tokyo White React Typescript Admin Dashboard is powered by{' '}
-              <code>React</code>, <code>Typescript</code>,{' '}
+              At it's core, Tokyo White React Typescript Admin Dashboard is
+              powered by <code>React</code>, <code>Typescript</code>,{' '}
               <code>@emotion/react</code> and <code>MUI (Material-UI)</code>.
             </Typography>
             <Typography paragraph>
