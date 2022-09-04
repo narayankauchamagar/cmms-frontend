@@ -99,12 +99,13 @@ function SettingsLayout(props: SettingsLayoutProps) {
   const tabs = [
     { value: '', label: t('General Settings') },
     { value: 'work-order', label: t('Work order configuration') },
-    { value: 'projectsBoard', label: t('Projects Board') }
+    { value: 'projectsBoard', label: t('Projects Board') },
+    { value: 'roles', label: t('Roles') }
   ];
   const currentTab = tabs[tabIndex].value;
 
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
-    navigate(`/app/settings/${value}`)
+    navigate(`/app/settings/${value}`);
   };
 
   return (
