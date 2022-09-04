@@ -1,75 +1,39 @@
-import { Avatar, Box, Divider, Grid, MenuItem, Select, styled, Switch, Typography, useTheme } from '@mui/material';
+import {
+  Box,
+  Checkbox,
+  Divider,
+  FormControl,
+  FormControlLabel,
+  Grid,
+  IconButton,
+  InputLabel,
+  Select,
+  Tab,
+  Tabs,
+  TextField,
+  Tooltip,
+  Typography
+} from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import SettingsLayout from '../SettingsLayout';
-import { Field, Formik } from 'formik';
-import * as Yup from 'yup';
 import wait from '../../../../utils/wait';
+import { ChangeEvent, useState } from 'react';
+import HelpOutlineTwoToneIcon from '@mui/icons-material/HelpOutlineTwoTone';
 
-function SwitchOption(props: {
-  title: string;
-  description: string;
-  name: string;
-  handleChange: any;
-  values: any;
-}) {
-  const { name, title, description, handleChange, values } = props;
-  return (
-    <Grid item xs={12} sx={{ mb: 2 }}>
-      <Box display="flex" flexDirection="row" alignItems="center">
-        <Field
-          onChange={handleChange}
-          checked={values[name]}
-          as={Switch}
-          name={name}
-        />
-        <Box display="flex" flexDirection="column">
-          <Typography variant="h6" fontWeight="bold" sx={{ mb: 0.5 }}>
-            {title}
-          </Typography>
-          <Typography variant="h6" fontStyle="italic">
-            {description}
-          </Typography>
-        </Box>
-      </Box>
-    </Grid>
-  );
-}
+
 function DashboardTasks() {
   const { t }: { t: any } = useTranslation();
-  const theme = useTheme();
-  const switches = [
-    {
-      title: t('Auto-assign Work Orders'),
-      description:t(
-        'Automatically assign new work orders to the person that creates them'),
-      name: 'autoAssignWorkOrder'
-    },
-    {
-      title: t('Auto-assign requests'),
-      description: t('Automatically assign new work orders to the person who approve the request'),
-      name: 'autoAssignRequests'
-    },
-    {
-      title: t('Disable closed Work Order notifications'),
-      description: t('Disable notifications when closed Work Orders are updated'),
-      name: 'disableClosedNotification'
-    },
-    {
-      title: t('Ask for feedback when Work Order is closed'),
-      description: t('Users are asked to give feedback on the job done'),
-      name: 'askClosedFeedback'
-    },
-    {
-      title: t('Include labor cost in the total cost'),
-      description: t('Add labor costs to the total when a user logs time and has an hourly rate stored'),
-      name: 'includeLaborCost'
-    },
-    {
-      title: t('Enable work order updates for Requesters'),
-      description: t('Users get updates for the work orders they requested'),
-      name: 'enableRequesterUpdate'
-    }
+  const [currentTab, setCurrentTab] = useState<string>('create');
+
+  const tabs = [
+    { value: 'create', label: t('Creating a Work Order') },
+    { value: 'complete', label: t('Completing a Work Order') },
   ];
+
+  const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
+    setCurrentTab(value);
+  };
+
   const onSubmit = async (
     _values,
     { resetForm, setErrors, setStatus, setSubmitting }
@@ -90,123 +54,138 @@ function DashboardTasks() {
     <SettingsLayout tabIndex={1}>
       <Grid item xs={12}>
         <Box p={4}>
-          <Formik
-            initialValues={{
-              language: 'fr',
-              dateFormat: 'MM/DD/YY',
-              currency: 'MAD',
-              businessType: 'PAM',
-              autoAssignWorkOrder: true,
-              disableClosedNotification: false,
-              askClosedFeedback: false,
-              includeLaborCost: true,
-              enableRequesterUpdate: true,
-            }}
-            validationSchema={Yup.object().shape({
-              language: Yup.string(),
-              dateFormat: Yup.string(),
-              currency: Yup.string(),
-              businessType: Yup.string(),
-              autoAssignWorkOrder: Yup.bool(),
-              autoAssignRequests: Yup.bool(),
-              disableClosedNotification: Yup.bool(),
-              askClosedFeedback: Yup.bool(),
-              includeLaborCost: Yup.bool(),
-              enableRequesterUpdate: Yup.bool(),
-            })}
-            onSubmit={onSubmit}
-          >
-            {({
-              errors,
-              handleBlur,
-              handleChange,
-              handleSubmit,
-              isSubmitting,
-              touched,
-              values
-            }) => (
-              <form onSubmit={handleSubmit}>
+
+          <Box>
+            <Tabs
+              onChange={handleTabsChange}
+              value={currentTab}
+              variant="scrollable"
+              scrollButtons="auto"
+              textColor="primary"
+              indicatorColor="primary"
+            >
+              {tabs.map((tab) => (
+                <Tab key={tab.value} label={tab.label} value={tab.value} />
+              ))}
+            </Tabs>
+            <Divider sx={{mt:1}}/>
+            <Box p={3}>
+              {currentTab === 'create' && (
                 <Grid container spacing={3}>
-                  <Grid item xs={12}>
-                    <Grid container spacing={2}>
-                      <Grid item xs={12}>
-                        <Typography variant="h6" sx={{ mb: 0.5 }}>
-                          Language
-                        </Typography>
-                        <Field
-                          onChange={handleChange}
-                          value={values.language}
-                          as={Select}
-                          name="language"
-                        >
-                          <MenuItem value="en">English</MenuItem>
-                          <MenuItem value="fr">Français</MenuItem>
-                        </Field>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Typography variant="h6" sx={{ mb: 0.5 }}>
-                          Date format
-                        </Typography>
-                        <Field
-                          onChange={handleChange}
-                          value={values.dateFormat}
-                          as={Select}
-                          name="dateFormat"
-                        >
-                          <MenuItem value="MM/DD/YY">MM/DD/YY</MenuItem>
-                          <MenuItem value="DD/MM/YY">DD/MM/YY</MenuItem>
-                        </Field>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Typography variant="h6" sx={{ mb: 0.5 }}>
-                          Currency
-                        </Typography>
-                        <Field
-                          onChange={handleChange}
-                          value={values.currency}
-                          as={Select}
-                          name="currency"
-                        >
-                          <MenuItem value="MAD">MAD - Dirham - DH</MenuItem>
-                          <MenuItem value="EUR">EUR - Euro - €</MenuItem>
-                          <MenuItem value="USD">
-                            USD - United States Dollar - $
-                          </MenuItem>
-                        </Field>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Typography variant="h6" sx={{ mb: 0.5 }}>
-                          Business type
-                        </Typography>
-                        <Field
-                          onChange={handleChange}
-                          value={values.businessType}
-                          as={Select}
-                          name="businessType"
-                        >
-                          <MenuItem value="PAM">
-                            {t('Physical asset management')}
-                          </MenuItem>
-                        </Field>
-                      </Grid>
-                    </Grid>
-                    <Divider sx={{ mt: 3 }} />
-                    <Grid container spacing={2} sx={{ mt: 1 }}></Grid>
-                    {switches.map((element) => (
-                      <SwitchOption
-                        key={element.name}
-                        title={element.title}
-                        description={element.description}
-                        values={values}
-                        name={element.name}
-                        handleChange={handleChange}
-                      />
-                    ))}
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      name="regular_price"
+                      variant="outlined"
+                      label={t('Regular price')}
+                      placeholder={t('Regular price here ...')}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      name="sale_price"
+                      variant="outlined"
+                      label={t('Sale price')}
+                      placeholder={t('Sale price here ...')}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <FormControl fullWidth variant="outlined">
+                      <InputLabel htmlFor="tax_status">{t('Tax Status')}</InputLabel>
+                      <Select
+                        native
+                        label={t('Tax Status')}
+                        inputProps={{
+                          name: 'tax_status'
+                        }}
+                      >
+                        <option aria-label="None" value="" />
+                        <option value={1}>{t('Taxable')}</option>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <FormControl fullWidth variant="outlined">
+                      <InputLabel htmlFor="tax_class">{t('Tax Class')}</InputLabel>
+                      <Select
+                        native
+                        label={t('Tax Class')}
+                        inputProps={{
+                          name: 'tax_status'
+                        }}
+                      >
+                        <option aria-label="None" value="" />
+                        <option value={1}>{t('Standard')}</option>
+                      </Select>
+                    </FormControl>
                   </Grid>
                 </Grid>
-              </form>
-            )}
-          </Formik>
+              )}
+              {currentTab === 'complete' && (
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={6}>
+                    <Box display="flex" alignItems="center">
+                      <TextField
+                        fullWidth
+                        name="sku"
+                        variant="outlined"
+                        label={t('SKU')}
+                        placeholder={t('Stock quantity here ...')}
+                      />
+                      <Tooltip
+                        arrow
+                        placement="top"
+                        title={t(
+                          'This field helps identify the current product stocks'
+                        )}
+                      >
+                        <IconButton
+                          size="small"
+                          sx={{
+                            ml: 1
+                          }}
+                          color="primary"
+                        >
+                          <HelpOutlineTwoToneIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <FormControl fullWidth variant="outlined">
+                      <InputLabel htmlFor="stock_status">
+                        {t('Stock Status')}
+                      </InputLabel>
+                      <Select
+                        native
+                        label={t('Stock Status')}
+                        inputProps={{
+                          name: 'stock_status'
+                        }}
+                      >
+                        <option aria-label="None" value="" />
+                        <option value={1}>{t('In stock')}</option>
+                        <option value={1}>{t('Out of stock')}</option>
+                        <option value={1}>{t('Back in stock soon')}</option>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <FormControlLabel
+                      control={<Checkbox defaultChecked />}
+                      label={t('Sold individually')}
+                    />
+                    <Typography variant="h6" color="text.secondary">
+                      {t(
+                        'Enable this to only allow one of this item to be bought in a single order'
+                      )}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              )}
+            </Box>
+          </Box>
         </Box>
       </Grid>
     </SettingsLayout>
