@@ -130,7 +130,7 @@ function DashboardTasks() {
                     <Grid container spacing={2}>
                       <Grid item xs={12}>
                         <Typography variant="h6" sx={{ mb: 0.5 }}>
-                          Language
+                          {t('Language')}
                         </Typography>
                         <Field
                           onChange={handleChange}
@@ -144,7 +144,7 @@ function DashboardTasks() {
                       </Grid>
                       <Grid item xs={12}>
                         <Typography variant="h6" sx={{ mb: 0.5 }}>
-                          Date format
+                          {t('Date format')}
                         </Typography>
                         <Field
                           onChange={handleChange}
@@ -158,7 +158,7 @@ function DashboardTasks() {
                       </Grid>
                       <Grid item xs={12}>
                         <Typography variant="h6" sx={{ mb: 0.5 }}>
-                          Currency
+                          {t('Currency')}
                         </Typography>
                         <Field
                           onChange={handleChange}
@@ -175,7 +175,7 @@ function DashboardTasks() {
                       </Grid>
                       <Grid item xs={12}>
                         <Typography variant="h6" sx={{ mb: 0.5 }}>
-                          Business type
+                          {t('Business type')}
                         </Typography>
                         <Field
                           onChange={handleChange}
