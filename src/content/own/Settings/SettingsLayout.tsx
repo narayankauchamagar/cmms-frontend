@@ -142,7 +142,6 @@ function SettingsLayout(props: SettingsLayoutProps) {
           {children}
         </Grid>
       </Card>
-      <Footer />
     </>
   );
 }
