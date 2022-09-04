@@ -88,37 +88,22 @@ const TabsContainerWrapper = styled(Box)(
   `
 );
 
-const AvatarPrimary = styled(Avatar)(
-  ({ theme }) => `
-      background-color: ${theme.colors.primary.lighter};
-      color: ${theme.colors.primary.main};
-      width: ${theme.spacing(10)};
-      height: ${theme.spacing(10)};
-      margin: 0 auto ${theme.spacing(2)};
-
-      .MuiSvgIcon-root {
-        font-size: ${theme.typography.pxToRem(42)};
-      }
-`
-);
 interface SettingsLayoutProps {
   children?: ReactNode;
+  tabIndex: number;
 }
 function SettingsLayout(props: SettingsLayoutProps) {
-  const { children } = props;
+  const { children, tabIndex } = props;
   const { t }: { t: any } = useTranslation();
   const navigate = useNavigate();
-
-  const [currentTab, setCurrentTab] = useState<string>('analytics');
-
   const tabs = [
     { value: '', label: t('General Settings') },
     { value: 'work-order', label: t('Work order configuration') },
     { value: 'projectsBoard', label: t('Projects Board') }
   ];
+  const currentTab = tabs[tabIndex].value;
 
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
-    //setCurrentTab(value);
     navigate(`/app/settings/${value}`)
   };
 

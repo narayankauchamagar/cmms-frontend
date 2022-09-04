@@ -11,11 +11,16 @@ const Loader = (Component) => (props) =>
   );
 
 const GeneralSettings = Loader(lazy(() => import('src/content/own/Settings/general')));
+const WorkOrderSettings = Loader(lazy(() => import('src/content/own/Settings/WorkOrder')));
 
 const settingsRoutes = [
   {
     path: '',
     element: <GeneralSettings />
+  },
+  {
+    path: 'work-order',
+    element: <WorkOrderSettings />
   },
 ];
 

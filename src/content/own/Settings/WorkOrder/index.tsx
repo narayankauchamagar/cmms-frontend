@@ -1,4 +1,4 @@
-import { Box, Divider, Grid, MenuItem, Select, Switch, Typography } from '@mui/material';
+import { Avatar, Box, Divider, Grid, MenuItem, Select, styled, Switch, Typography, useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import SettingsLayout from '../SettingsLayout';
 import { Field, Formik } from 'formik';
@@ -36,6 +36,7 @@ function SwitchOption(props: {
 }
 function DashboardTasks() {
   const { t }: { t: any } = useTranslation();
+  const theme = useTheme();
   const switches = [
     {
       title: t('Auto-assign Work Orders'),
@@ -86,7 +87,7 @@ function DashboardTasks() {
     }
   };
   return (
-    <SettingsLayout tabIndex={0}>
+    <SettingsLayout tabIndex={1}>
       <Grid item xs={12}>
         <Box p={4}>
           <Formik
