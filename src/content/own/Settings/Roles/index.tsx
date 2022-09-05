@@ -3,6 +3,7 @@ import SettingsLayout from '../SettingsLayout';
 import { Grid, styled } from '@mui/material';
 
 import Results from './Results';
+import PageHeader from './PageHeader';
 import { Role } from './type';
 
 function Roles() {
@@ -95,6 +96,8 @@ function Roles() {
 
   return (
     <SettingsLayout tabIndex={3}>
+      <PageHeader rolesNumber={roles.length} />
+
       <Grid
         sx={{
           p: 4
