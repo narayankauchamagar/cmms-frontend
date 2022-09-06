@@ -19,19 +19,30 @@ const WorkOrderSettings = Loader(
 const RequestSettings = Loader(
   lazy(() => import('src/content/own/Settings/Request'))
 );
-const settingsRoutes = [
+const Profile = Loader(
+  lazy(() => import('src/content/own/UserProfile'))
+);
+const appRoutes = [
   {
-    path: '',
-    element: <GeneralSettings />
+    path: 'settings',
+    children: [
+      {
+        path: '',
+        element: <GeneralSettings />
+      },
+      {
+        path: 'work-order',
+        element: <WorkOrderSettings />
+      },
+      {
+        path: 'request',
+        element: <RequestSettings />
+      }]
   },
   {
-    path: 'work-order',
-    element: <WorkOrderSettings />
-  },
-  {
-    path: 'request',
-    element: <RequestSettings />
+    path: 'profile',
+    element: <Profile />
   }
 ];
 
-export default settingsRoutes;
+export default appRoutes;
