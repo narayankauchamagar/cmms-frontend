@@ -222,6 +222,10 @@ const Results: FC<ResultsProps> = ({ roles }) => {
 
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
+  // const [rowsPerPage, setRowsPerPage] = useState<number[]>([5, 10, 15]);
+  const rowsPerPage: number[] = [...Array(Math.floor(roles.length / 5))].map(
+    (_, i) => (i + 1) * 5
+  );
   const [query, setQuery] = useState<string>('');
   const [filters, setFilters] = useState<Filters>({
     type: null
@@ -425,15 +429,17 @@ const Results: FC<ResultsProps> = ({ roles }) => {
                           />
                         </TableCell>
                         <TableCell>
-                          <Typography variant="h5">{role.name}</Typography>
+                          <Typography variant="h6">{role.name}</Typography>
                         </TableCell>
-                        <TableCell align="center">
+                        <TableCell>
                           <Typography fontWeight="bold">
                             {role.users}
                           </Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography>{role.externalId}</Typography>
+                          <Typography variant="h6">
+                            {role.externalId}
+                          </Typography>
                         </TableCell>
                         <TableCell>{getRoleTypeLabel(role.type)}</TableCell>
                         <TableCell align="center">
@@ -462,7 +468,7 @@ const Results: FC<ResultsProps> = ({ roles }) => {
                 onRowsPerPageChange={handleLimitChange}
                 page={page}
                 rowsPerPage={limit}
-                rowsPerPageOptions={[5, 10, 15]}
+                rowsPerPageOptions={rowsPerPage}
               />
             </Box>
           </>

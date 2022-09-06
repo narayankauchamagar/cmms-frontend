@@ -60,7 +60,13 @@ function PageHeader({ rolesNumber }: PageHeaderProps) {
 
   return (
     <>
-      <Grid container justifyContent="space-between" alignItems="center" m={4}>
+      <Grid
+        container
+        justifyContent="space-between"
+        alignItems="center"
+        mx={4}
+        mt={3}
+      >
         <Grid item>
           <Typography variant="h3" component="h3" gutterBottom>
             {t('Roles Management')}
@@ -229,7 +235,7 @@ function PageHeader({ rolesNumber }: PageHeaderProps) {
                           {t('Create/Edit')}
                         </Typography>
                         <FormControlLabel
-                          control={<Checkbox />}
+                          control={<Checkbox checked />}
                           label="People & teams"
                         />
                         <FormControlLabel
@@ -248,15 +254,15 @@ function PageHeader({ rolesNumber }: PageHeaderProps) {
                           {t('Delete')}
                         </Typography>
                         <FormControlLabel
-                          control={<Checkbox />}
+                          control={<Checkbox checked />}
                           label="Work Orders"
                         />
                         <FormControlLabel
-                          control={<Checkbox />}
+                          control={<Checkbox checked />}
                           label="Preventative Maintenance Trigger"
                         />
                         <FormControlLabel
-                          control={<Checkbox />}
+                          control={<Checkbox checked />}
                           label="Locations"
                         />
                         <FormControlLabel
@@ -280,11 +286,11 @@ function PageHeader({ rolesNumber }: PageHeaderProps) {
                           label="Vendors & Customers"
                         />
                         <FormControlLabel
-                          control={<Checkbox />}
+                          control={<Checkbox checked />}
                           label="Categories"
                         />
                         <FormControlLabel
-                          control={<Checkbox />}
+                          control={<Checkbox checked />}
                           label="Delete Files"
                         />
                         <FormControlLabel

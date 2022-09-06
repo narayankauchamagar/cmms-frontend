@@ -88,6 +88,12 @@ const TabsContainerWrapper = styled(Box)(
   `
 );
 
+const Div = styled('div')(
+  ({ theme }) => `
+      margin-top: ${theme.spacing(3)};
+  `
+);
+
 interface SettingsLayoutProps {
   children?: ReactNode;
   tabIndex: number;
@@ -109,7 +115,7 @@ function SettingsLayout(props: SettingsLayoutProps) {
   };
 
   return (
-    <>
+    <Div>
       <Helmet>
         <title>Settings</title>
       </Helmet>
@@ -144,7 +150,7 @@ function SettingsLayout(props: SettingsLayoutProps) {
         </Grid>
       </Card>
       <Footer />
-    </>
+    </Div>
   );
 }
 
