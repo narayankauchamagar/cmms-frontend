@@ -247,7 +247,7 @@ function HeaderUserbox() {
           }}
         />
         <MenuListWrapperPrimary disablePadding>
-          <MenuItem>
+          <MenuItem onClick={()=>{ handleClose(); navigate('/app/profile');} }>
             <ListItemText
               primaryTypographyProps={{
                 variant: 'h5'
@@ -266,14 +266,9 @@ function HeaderUserbox() {
               primaryTypographyProps={{
                 variant: 'h5'
               }}
-              primary={t('Profile settings')}
+              primary={t('My company')}
             />
             <Box display="flex" alignItems="center">
-              <DotLegend
-                style={{
-                  background: `${theme.colors.warning.main}`
-                }}
-              />
               <ChevronRightTwoToneIcon
                 sx={{
                   ml: 1,
@@ -282,20 +277,6 @@ function HeaderUserbox() {
                 }}
               />
             </Box>
-          </MenuItem>
-          <MenuItem>
-            <ListItemText
-              primaryTypographyProps={{
-                variant: 'h5'
-              }}
-              primary={t('Active tasks')}
-            />
-            <ChevronRightTwoToneIcon
-              sx={{
-                color: `${theme.colors.alpha.black[30]}`,
-                opacity: 0.8
-              }}
-            />
           </MenuItem>
         </MenuListWrapperPrimary>
         <Divider />
