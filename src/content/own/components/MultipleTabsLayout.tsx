@@ -117,7 +117,7 @@ function MultipleTabsLayout(props: SettingsLayoutProps) {
   };
 
   return (
-    <Box mt={3}>
+    <Box mt={1}>
       <Helmet>
         <title>{title}</title>
       </Helmet>

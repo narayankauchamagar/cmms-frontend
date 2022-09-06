@@ -4,9 +4,13 @@ import { Grid, styled } from '@mui/material';
 
 import Results from './Results';
 import PageHeader from './PageHeader';
-import { Role } from './type';
+import { Role } from '../../type';
+import TableCustomized from './TableCustomized';
+import { useTranslation } from 'react-i18next';
 
 function Roles() {
+  const { t }: { t: any } = useTranslation();
+
   let roles: Role[] = [
     {
       id: '1',
@@ -94,6 +98,23 @@ function Roles() {
     }
   ];
 
+  const columns: string[] = ['Name', 'Users', 'External ID', 'Type'];
+
+  const tabs = [
+    {
+      value: 'all',
+      label: t('All types')
+    },
+    {
+      value: 'paid',
+      label: t('Paid')
+    },
+    {
+      value: 'free',
+      label: t('Free')
+    }
+  ];
+
   return (
     <SettingsLayout tabIndex={3}>
       <PageHeader rolesNumber={roles.length} />
@@ -109,7 +130,13 @@ function Roles() {
         spacing={4}
       >
         <Grid item xs={12}>
-          <Results roles={roles} />
+          {/* <Results roles={roles} /> */}
+          <TableCustomized
+            roles={roles}
+            columns={columns}
+            tabsFilter={tabs}
+            limitRows={5}
+          />
         </Grid>
       </Grid>
     </SettingsLayout>

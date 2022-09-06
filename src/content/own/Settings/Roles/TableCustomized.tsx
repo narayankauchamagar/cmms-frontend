@@ -6,7 +6,8 @@ import {
   useState,
   ReactElement,
   Ref,
-  forwardRef
+  forwardRef,
+  useRef
 } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -48,7 +49,24 @@ import BulkActions from './BulkActions';
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import { useSnackbar } from 'notistack';
-import { Role, RoleType } from '../../type';
+import { Role, RoleType, TableCustomizedType } from '../../type';
+
+interface TableCustomizedProps {
+  roles: TableCustomizedType[];
+  columns: string[];
+  // getRoleTypeLabel?(roleType: RoleType): JSX.Element;
+  // page?: number;
+  limitRows?: number;
+  enablePagination?: boolean;
+  tabsFilter?: {
+    value: string;
+    label: any;
+  }[];
+}
+
+interface Filters {
+  type?: RoleType;
+}
 
 const DialogWrapper = styled(Dialog)(
   () => `
@@ -71,29 +89,29 @@ const AvatarError = styled(Avatar)(
   `
 );
 
-const CardWrapper = styled(Card)(
-  ({ theme }) => `
-  
-    position: relative;
-    overflow: visible;
-  
-    &::after {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      border-radius: inherit;
-      z-index: 1;
-      transition: ${theme.transitions.create(['box-shadow'])};
-    }
-        
-      &.Mui-selected::after {
-        box-shadow: 0 0 0 3px ${theme.colors.primary.main};
-      }
-    `
-);
+// const CardWrapper = styled(Card)(
+//   ({ theme }) => `
+
+//     position: relative;
+//     overflow: visible;
+
+//     &::after {
+//       content: '';
+//       position: absolute;
+//       width: 100%;
+//       height: 100%;
+//       top: 0;
+//       left: 0;
+//       border-radius: inherit;
+//       z-index: 1;
+//       transition: ${theme.transitions.create(['box-shadow'])};
+//     }
+
+//       &.Mui-selected::after {
+//         box-shadow: 0 0 0 3px ${theme.colors.primary.main};
+//       }
+//     `
+// );
 
 const ButtonError = styled(Button)(
   ({ theme }) => `
@@ -120,14 +138,6 @@ const TabsWrapper = styled(Tabs)(
       `
 );
 
-interface ResultsProps {
-  roles: Role[];
-}
-
-interface Filters {
-  type?: RoleType;
-}
-
 const Transition = forwardRef(function Transition(
   props: TransitionProps & { children: ReactElement<any, any> },
   ref: Ref<unknown>
@@ -153,10 +163,10 @@ const getRoleTypeLabel = (roleType: RoleType): JSX.Element => {
 };
 
 const applyFilters = (
-  roles: Role[],
+  roles: TableCustomizedType[],
   query: string,
   filters: Filters
-): Role[] => {
+): TableCustomizedType[] => {
   return roles.filter((role) => {
     let matches = true;
 
@@ -192,39 +202,47 @@ const applyFilters = (
 };
 
 const applyPagination = (
-  roles: Role[],
+  roles: TableCustomizedType[],
   page: number,
   limit: number
-): Role[] => {
+): TableCustomizedType[] => {
   return roles.slice(page * limit, page * limit + limit);
 };
 
-const Results: FC<ResultsProps> = ({ roles }) => {
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+const TableCustomized: FC<TableCustomizedProps> = ({
+  roles,
+  columns,
+  tabsFilter,
+  limitRows = 5
+}) => {
+  const [selectedItems, setSelectedItems] = useState<(string | number)[]>([]);
   const { t }: { t: any } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
-  const location = useLocation();
+  // const location = useLocation();
 
-  const tabs = [
-    {
-      value: 'all',
-      label: t('All types')
-    },
-    {
-      value: 'paid',
-      label: t('Paid')
-    },
-    {
-      value: 'free',
-      label: t('Free')
-    }
-  ];
+  // const tabs = [
+  //   {
+  //     value: 'all',
+  //     label: t('All types')
+  //   },
+  //   {
+  //     value: 'paid',
+  //     label: t('Paid')
+  //   },
+  //   {
+  //     value: 'free',
+  //     label: t('Free')
+  //   }
+  // ];
 
   const [page, setPage] = useState<number>(0);
-  const [limit, setLimit] = useState<number>(5);
-  // const [rowsPerPage, setRowsPerPage] = useState<number[]>([5, 10, 15]);
-  const rowsPerPage: number[] = [...Array(Math.floor(roles.length / 5))].map(
-    (_, i) => (i + 1) * 5
+  // const [limit, setLimit] = useState<number>(5);
+  const [limit, setLimit] = useState<number>(limitRows);
+  // const [rowsPerPage, setRowsPerPage] = useState<number[]>([10, 20]);
+  const rowsPerPage = useRef(
+    [...Array(Math.floor(roles.length / limit) + 1)].map(
+      (_, i) => (i + 1) * limit
+    )
   );
   const [query, setQuery] = useState<string>('');
   const [filters, setFilters] = useState<Filters>({
@@ -251,13 +269,13 @@ const Results: FC<ResultsProps> = ({ roles }) => {
     setQuery(event.target.value);
   };
 
-  const handleSelectAllRoles = (event: ChangeEvent<HTMLInputElement>): void => {
+  const handleSelectAllRows = (event: ChangeEvent<HTMLInputElement>): void => {
     setSelectedItems(event.target.checked ? roles.map((role) => role.id) : []);
   };
 
-  const handleSelectOneRole = (
+  const handleSelectOneRow = (
     _event: ChangeEvent<HTMLInputElement>,
-    roleId: string
+    roleId: string | number
   ): void => {
     if (!selectedItems.includes(roleId)) {
       setSelectedItems((prevSelected) => [...prevSelected, roleId]);
@@ -331,27 +349,12 @@ const Results: FC<ResultsProps> = ({ roles }) => {
           value={filters.type || 'all'}
           variant="scrollable"
         >
-          {tabs.map((tab) => (
-            <Tab key={tab.value} value={tab.value} label={tab.label} />
-          ))}
+          {tabsFilter &&
+            tabsFilter.map((tab) => (
+              <Tab key={tab.value} value={tab.value} label={tab.label} />
+            ))}
         </TabsWrapper>
-        {/* <ToggleButtonGroup
-            sx={{
-              mt: { xs: 2, sm: 0 }
-            }}
-            value={toggleView}
-            exclusive
-            onChange={handleViewOrientation}
-          >
-            <ToggleButton disableRipple value="table_view">
-              <TableRowsTwoToneIcon />
-            </ToggleButton>
-            <ToggleButton disableRipple value="grid_view">
-              <GridViewTwoToneIcon />
-            </ToggleButton>
-          </ToggleButtonGroup> */}
       </Box>
-      {/* {toggleView === 'table_view' && ( */}
       <Card>
         <Box p={2}>
           {!selectedBulkActions && (
@@ -367,7 +370,7 @@ const Results: FC<ResultsProps> = ({ roles }) => {
                 )
               }}
               onChange={handleQueryChange}
-              placeholder={t('Search by name, external ID...')}
+              placeholder={t('Search by name, external ID...')} /////////
               value={query}
               size="small"
               fullWidth
@@ -404,44 +407,45 @@ const Results: FC<ResultsProps> = ({ roles }) => {
                       <Checkbox
                         checked={selectedAllRoles}
                         indeterminate={selectedSomeRoles}
-                        onChange={handleSelectAllRoles}
+                        onChange={handleSelectAllRows}
                       />
                     </TableCell>
-                    <TableCell>{t('Name')}</TableCell>
-                    <TableCell>{t('Users')}</TableCell>
-                    <TableCell>{t('External ID')}</TableCell>
-                    <TableCell>{t('Type')}</TableCell>
+
+                    {columns.map((col) => (
+                      <TableCell key={col}>{t(col)}</TableCell>
+                    ))}
+
                     <TableCell align="center">{t('Actions')}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {paginatedRoles.map((role) => {
                     const isRoleSelected = selectedItems.includes(role.id);
+                    const rowValues: string[] = [];
+
+                    for (const key in role) {
+                      if (key === 'id') continue;
+                      rowValues.push(role[key]);
+                    }
+
                     return (
                       <TableRow hover key={role.id} selected={isRoleSelected}>
                         <TableCell padding="checkbox">
                           <Checkbox
                             checked={isRoleSelected}
                             onChange={(event) =>
-                              handleSelectOneRole(event, role.id)
+                              handleSelectOneRow(event, role.id)
                             }
                             value={isRoleSelected}
                           />
                         </TableCell>
-                        <TableCell>
-                          <Typography variant="h6">{role.name}</Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography fontWeight="bold">
-                            {role.users}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography variant="h6">
-                            {role.externalId}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>{getRoleTypeLabel(role.type)}</TableCell>
+
+                        {rowValues.map((value, i) => (
+                          <TableCell key={`${value}_${i}`}>
+                            <Typography variant="h6">{value}</Typography>
+                          </TableCell>
+                        ))}
+
                         <TableCell align="center">
                           <Typography noWrap>
                             <Tooltip title={t('Delete')} arrow>
@@ -468,13 +472,12 @@ const Results: FC<ResultsProps> = ({ roles }) => {
                 onRowsPerPageChange={handleLimitChange}
                 page={page}
                 rowsPerPage={limit}
-                rowsPerPageOptions={rowsPerPage}
+                rowsPerPageOptions={rowsPerPage.current}
               />
             </Box>
           </>
         )}
       </Card>
-      {/* )} */}
 
       <DialogWrapper
         open={openConfirmDelete}
@@ -535,12 +538,12 @@ const Results: FC<ResultsProps> = ({ roles }) => {
   );
 };
 
-Results.propTypes = {
+TableCustomized.propTypes = {
   roles: PropTypes.array.isRequired
 };
 
-Results.defaultProps = {
+TableCustomized.defaultProps = {
   roles: []
 };
 
-export default Results;
+export default TableCustomized;
