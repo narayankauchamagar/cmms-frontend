@@ -7,21 +7,27 @@ import FieldsConfigurationForm from '../FieldsConfigurationForm';
 function WorkOrderSettings() {
   const { t }: { t: any } = useTranslation();
 
-  const createFields = [
-    { label: t('Description'), name: 'description' },
+  const fields = [
+    { label: t('Asset'), name: 'asset' },
     {
-      label: t('Priority'),
-      name: 'priority'
+      label: t('Location'),
+      name: 'location'
     },
-    { label: t('Images'), name: 'images' }
+    { label: t('Worker Assigned'), name: 'worker' },
+    { label: t('Due date'), name: 'dueDate' },
+    { label: t('Category'), name: 'category' },
+    { label: t('Team'), name: 'team' }
   ];
 
-  const initialCreateValues = {
-    description: 'optional',
-    priority: 'optional',
-    images: 'optional'
+  const initialValues = {
+    asset: 'optional',
+    location: 'optional',
+    worker: 'optional',
+    dueDate: 'optional',
+    category: 'optional',
+    team: 'optional'
   };
-  const onCreateSubmit = async (
+  const onSubmit = async (
     _values,
     { resetForm, setErrors, setStatus, setSubmitting }
   ) => {
@@ -43,12 +49,11 @@ function WorkOrderSettings() {
       <Grid item xs={12}>
         <Box p={4}>
           <Box>
-            <Divider sx={{ mt: 1 }} />
             <Box p={3}>
               <FieldsConfigurationForm
-              initialValues={initialCreateValues}
-              onSubmit={onCreateSubmit}
-              fields={createFields} />
+              initialValues={initialValues}
+              onSubmit={onSubmit}
+              fields={fields} />
             </Box>
           </Box>
         </Box>
