@@ -72,7 +72,9 @@ mock.onGet('/api/crypto-orders').reply(() => {
   return (
     <>
       <Helmet>
-        <title>Server Requests - Tokyo White React Typescript Admin Dashboard</title>
+        <title>
+          Server Requests - Tokyo White React Typescript Admin Dashboard
+        </title>
       </Helmet>
       <Container maxWidth={false}>
         <Grid container spacing={4}>
@@ -81,8 +83,8 @@ mock.onGet('/api/crypto-orders').reply(() => {
           </Grid>
           <Grid item xs={12}>
             <Typography paragraph>
-              Throughout Tokyo White React Typescript Admin Dashboard you will find a
-              few examples of API calls, mocked using Axios.
+              Throughout Tokyo White React Typescript Admin Dashboard you will
+              find a few examples of API calls, mocked using Axios.
             </Typography>
             <Typography paragraph>
               Below is a simple example of an API call implementation.

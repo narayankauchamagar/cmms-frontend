@@ -1,4 +1,12 @@
-import { Box, Divider, Grid, MenuItem, Select, Switch, Typography } from '@mui/material';
+import {
+  Box,
+  Divider,
+  Grid,
+  MenuItem,
+  Select,
+  Switch,
+  Typography
+} from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import SettingsLayout from '../SettingsLayout';
 import { Field, Formik } from 'formik';
@@ -39,18 +47,23 @@ function DashboardTasks() {
   const switches = [
     {
       title: t('Auto-assign Work Orders'),
-      description:t(
-        'Automatically assign new work orders to the person that creates them'),
+      description: t(
+        'Automatically assign new work orders to the person that creates them'
+      ),
       name: 'autoAssignWorkOrder'
     },
     {
       title: t('Auto-assign requests'),
-      description: t('Automatically assign new work orders to the person who approve the request'),
+      description: t(
+        'Automatically assign new work orders to the person who approve the request'
+      ),
       name: 'autoAssignRequests'
     },
     {
       title: t('Disable closed Work Order notifications'),
-      description: t('Disable notifications when closed Work Orders are updated'),
+      description: t(
+        'Disable notifications when closed Work Orders are updated'
+      ),
       name: 'disableClosedNotification'
     },
     {
@@ -60,7 +73,9 @@ function DashboardTasks() {
     },
     {
       title: t('Include labor cost in the total cost'),
-      description: t('Add labor costs to the total when a user logs time and has an hourly rate stored'),
+      description: t(
+        'Add labor costs to the total when a user logs time and has an hourly rate stored'
+      ),
       name: 'includeLaborCost'
     },
     {
@@ -99,7 +114,7 @@ function DashboardTasks() {
               disableClosedNotification: false,
               askClosedFeedback: false,
               includeLaborCost: true,
-              enableRequesterUpdate: true,
+              enableRequesterUpdate: true
             }}
             validationSchema={Yup.object().shape({
               language: Yup.string(),
@@ -111,7 +126,7 @@ function DashboardTasks() {
               disableClosedNotification: Yup.bool(),
               askClosedFeedback: Yup.bool(),
               includeLaborCost: Yup.bool(),
-              enableRequesterUpdate: Yup.bool(),
+              enableRequesterUpdate: Yup.bool()
             })}
             onSubmit={onSubmit}
           >
@@ -130,7 +145,7 @@ function DashboardTasks() {
                     <Grid container spacing={2}>
                       <Grid item xs={12}>
                         <Typography variant="h6" sx={{ mb: 0.5 }}>
-                          Language
+                          {t('Language')}
                         </Typography>
                         <Field
                           onChange={handleChange}
@@ -144,7 +159,7 @@ function DashboardTasks() {
                       </Grid>
                       <Grid item xs={12}>
                         <Typography variant="h6" sx={{ mb: 0.5 }}>
-                          Date format
+                          {t('Date format')}
                         </Typography>
                         <Field
                           onChange={handleChange}
@@ -158,7 +173,7 @@ function DashboardTasks() {
                       </Grid>
                       <Grid item xs={12}>
                         <Typography variant="h6" sx={{ mb: 0.5 }}>
-                          Currency
+                          {t('Currency')}
                         </Typography>
                         <Field
                           onChange={handleChange}
@@ -175,7 +190,7 @@ function DashboardTasks() {
                       </Grid>
                       <Grid item xs={12}>
                         <Typography variant="h6" sx={{ mb: 0.5 }}>
-                          Business type
+                          {t('Business type')}
                         </Typography>
                         <Field
                           onChange={handleChange}

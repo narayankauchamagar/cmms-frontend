@@ -93,8 +93,8 @@ function ThemesCustomization() {
           </Grid>
           <Grid item xs={12}>
             <Typography paragraph>
-              Tokyo White React Typescript Admin Dashboard comes with 3 predefined
-              color schemes: <code>Nebula Fighter</code>,{' '}
+              Tokyo White React Typescript Admin Dashboard comes with 3
+              predefined color schemes: <code>Nebula Fighter</code>,{' '}
               <code>Green Fields</code> and <code>Dark Spaces</code>.
             </Typography>
             <Typography paragraph>

@@ -7,7 +7,9 @@ function Introduction() {
   return (
     <>
       <Helmet>
-        <title>Introduction - Tokyo White React Typescript Admin Dashboard</title>
+        <title>
+          Introduction - Tokyo White React Typescript Admin Dashboard
+        </title>
       </Helmet>
       <Container maxWidth={false}>
         <Grid container spacing={4}>
@@ -24,9 +26,9 @@ function Introduction() {
               Welcome
             </Typography>
             <Typography paragraph>
-              Tokyo White React Typescript Admin Dashboard includes multiple pages
-              that can be used to give you a head start when starting you start
-              developing a web app.
+              Tokyo White React Typescript Admin Dashboard includes multiple
+              pages that can be used to give you a head start when starting you
+              start developing a web app.
             </Typography>
             <Typography paragraph>
               We've built this template with performance in mind, so all pages
