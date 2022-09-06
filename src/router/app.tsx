@@ -22,6 +22,9 @@ const RequestSettings = Loader(
 const Profile = Loader(
   lazy(() => import('src/content/own/UserProfile'))
 );
+const WorkOrderCategories = Loader(
+  lazy(() => import('src/content/own/Categories/WorkOrder'))
+);
 const appRoutes = [
   {
     path: 'settings',
@@ -42,6 +45,13 @@ const appRoutes = [
   {
     path: 'profile',
     element: <Profile />
+  },
+  {
+    path: 'categories',
+    children: [{
+      path: '',
+      element: <WorkOrderCategories />
+    }]
   }
 ];
 
