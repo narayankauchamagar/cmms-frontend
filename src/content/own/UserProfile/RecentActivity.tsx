@@ -1,4 +1,13 @@
-import { Avatar, Box, Card, CardHeader, Divider, styled, Typography, useTheme } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Card,
+  CardHeader,
+  Divider,
+  styled,
+  Typography,
+  useTheme
+} from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import ShoppingBagTwoToneIcon from '@mui/icons-material/ShoppingBagTwoTone';
 

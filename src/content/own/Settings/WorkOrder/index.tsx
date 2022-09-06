@@ -33,7 +33,7 @@ function WorkOrderSettings() {
     },
     { label: t('Time'), name: 'time' },
     { label: t('Parts'), name: 'parts' },
-    { label: t('Cost'), name: 'cost' },
+    { label: t('Cost'), name: 'cost' }
   ];
 
   const initialCreateValues = {
@@ -46,8 +46,7 @@ function WorkOrderSettings() {
     tasks: 'optional',
     time: 'optional',
     parts: 'optional',
-    cost: 'optional',
-
+    cost: 'optional'
   };
   const onCreateSubmit = async (
     _values,
@@ -101,16 +100,20 @@ function WorkOrderSettings() {
             </Tabs>
             <Divider sx={{ mt: 1 }} />
             <Box p={3}>
-              {currentTab === 'create' &&
-              <FieldsConfigurationForm
-                initialValues={initialCreateValues}
-                onSubmit={onCreateSubmit}
-                fields={createFields} />}
-              {currentTab === 'complete' &&
-              <FieldsConfigurationForm
-                initialValues={initialCompleteValues}
-                onSubmit={onCompleteSubmit}
-                fields={completeFields} />}
+              {currentTab === 'create' && (
+                <FieldsConfigurationForm
+                  initialValues={initialCreateValues}
+                  onSubmit={onCreateSubmit}
+                  fields={createFields}
+                />
+              )}
+              {currentTab === 'complete' && (
+                <FieldsConfigurationForm
+                  initialValues={initialCompleteValues}
+                  onSubmit={onCompleteSubmit}
+                  fields={completeFields}
+                />
+              )}
             </Box>
           </Box>
         </Box>

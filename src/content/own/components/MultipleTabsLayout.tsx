@@ -97,12 +97,6 @@ const TabsContainerWrapper = styled(Box)(
   `
 );
 
-const Div = styled('div')(
-  ({ theme }) => `
-      margin-top: ${theme.spacing(3)};
-  `
-);
-
 interface SettingsLayoutProps {
   children?: ReactNode;
   tabs: { value: string; label: string }[];
@@ -123,42 +117,48 @@ function MultipleTabsLayout(props: SettingsLayoutProps) {
   };
 
   return (
-    <>
-      <Div>
-        <Helmet>
-          <title>{title}</title>
-        </Helmet>
-        <Box display="flex" justifyContent="space-between">
-          <TabsContainerWrapper>
-            <Tabs
-              onChange={handleTabsChange}
-              value={currentTab}
-              variant="scrollable"
-              scrollButtons="auto"
-              textColor="primary"
-              indicatorColor="primary"
-            >
-              {tabs.map((tab) => (
-                <Tab key={tab.value} label={tab.label} value={tab.value} />
-              ))}
-            </Tabs>{' '}
-          </TabsContainerWrapper>
-          {action && (
-            <Button
-              startIcon={<AddTwoToneIcon />}
-              sx={{ mx: 6, my: 1 }}
-              variant="contained"
-              onClick={action}
-            >
-              {t('Category')}
-            </Button>
-          )}
-        </Box>
-        <Card
-          variant="outlined"
-          sx={{
-            mx: 4
-          }}
+    <Box mt={3}>
+      <Helmet>
+        <title>{title}</title>
+      </Helmet>
+      <Box display="flex" justifyContent="space-between">
+        <TabsContainerWrapper>
+          <Tabs
+            onChange={handleTabsChange}
+            value={currentTab}
+            variant="scrollable"
+            scrollButtons="auto"
+            textColor="primary"
+            indicatorColor="primary"
+          >
+            {tabs.map((tab) => (
+              <Tab key={tab.value} label={tab.label} value={tab.value} />
+            ))}
+          </Tabs>{' '}
+        </TabsContainerWrapper>
+        {action && (
+          <Button
+            startIcon={<AddTwoToneIcon />}
+            sx={{ mx: 6, my: 1 }}
+            variant="contained"
+            onClick={action}
+          >
+            {t('Category')}
+          </Button>
+        )}
+      </Box>
+      <Card
+        variant="outlined"
+        sx={{
+          mx: 4
+        }}
+      >
+        <Grid
+          container
+          direction="row"
+          justifyContent="center"
+          alignItems="stretch"
+          spacing={0}
         >
           <Grid
             container
@@ -169,9 +169,9 @@ function MultipleTabsLayout(props: SettingsLayoutProps) {
           >
             {children}
           </Grid>
-        </Card>
-      </Div>
-    </>
+        </Grid>
+      </Card>
+    </Box>
   );
 }
 
