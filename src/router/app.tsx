@@ -11,7 +11,7 @@ const Loader = (Component) => (props) =>
   );
 
 const GeneralSettings = Loader(
-  lazy(() => import('src/content/own/Settings/General'))
+  lazy(() => import('src/content/own/Settings/general'))
 );
 const WorkOrderSettings = Loader(
   lazy(() => import('src/content/own/Settings/WorkOrder'))
@@ -19,9 +19,11 @@ const WorkOrderSettings = Loader(
 const RequestSettings = Loader(
   lazy(() => import('src/content/own/Settings/Request'))
 );
-const Profile = Loader(
-  lazy(() => import('src/content/own/UserProfile'))
+const RolesSettings = Loader(
+  lazy(() => import('src/content/own/Settings/Roles'))
 );
+
+const Profile = Loader(lazy(() => import('src/content/own/UserProfile')));
 const WorkOrderCategories = Loader(
   lazy(() => import('src/content/own/Categories/WorkOrder'))
 );
@@ -30,11 +32,14 @@ const AssetStatusCategories = Loader(
 );
 const PurchaseOrderCategories = Loader(
   lazy(() => import('src/content/own/Categories/PurchaseOrder'))
-);const MeterCategories = Loader(
+);
+const MeterCategories = Loader(
   lazy(() => import('src/content/own/Categories/Meter'))
-);const TimeCategories = Loader(
+);
+const TimeCategories = Loader(
   lazy(() => import('src/content/own/Categories/Timer'))
 );
+
 const appRoutes = [
   {
     path: 'settings',
@@ -50,7 +55,12 @@ const appRoutes = [
       {
         path: 'request',
         element: <RequestSettings />
-      }]
+      },
+      {
+        path: 'roles',
+        element: <RolesSettings />
+      }
+    ]
   },
   {
     path: 'profile',
@@ -58,10 +68,11 @@ const appRoutes = [
   },
   {
     path: 'categories',
-    children: [{
-      path: '',
-      element: <WorkOrderCategories />
-    },
+    children: [
+      {
+        path: '',
+        element: <WorkOrderCategories />
+      },
       {
         path: 'asset-status',
         element: <AssetStatusCategories />
@@ -77,7 +88,8 @@ const appRoutes = [
       {
         path: 'time',
         element: <TimeCategories />
-      }]
+      }
+    ]
   }
 ];
 

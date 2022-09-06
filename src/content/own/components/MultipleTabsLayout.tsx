@@ -1,7 +1,16 @@
 import { ChangeEvent, ReactNode, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import { Avatar, Box, Button, Card, Grid, styled, Tab, Tabs } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  Grid,
+  styled,
+  Tab,
+  Tabs
+} from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -88,9 +97,15 @@ const TabsContainerWrapper = styled(Box)(
   `
 );
 
+const Div = styled('div')(
+  ({ theme }) => `
+      margin-top: ${theme.spacing(3)};
+  `
+);
+
 interface SettingsLayoutProps {
   children?: ReactNode;
-  tabs: { value: string, label: string }[];
+  tabs: { value: string; label: string }[];
   basePath: string;
   title: string;
   tabIndex: number;
@@ -109,45 +124,53 @@ function MultipleTabsLayout(props: SettingsLayoutProps) {
 
   return (
     <>
-      <Helmet>
-        <title>{title}</title>
-      </Helmet>
-      <Box display='flex' justifyContent='space-between'>
-        <TabsContainerWrapper>
-          <Tabs
-            onChange={handleTabsChange}
-            value={currentTab}
-            variant='scrollable'
-            scrollButtons='auto'
-            textColor='primary'
-            indicatorColor='primary'
-          >
-            {tabs.map((tab) => (
-              <Tab key={tab.value} label={tab.label} value={tab.value} />
-            ))}
-          </Tabs> </TabsContainerWrapper>
-        {
-          action &&
-          <Button startIcon={<AddTwoToneIcon />} sx={{mx:6, my:1}}variant='contained' onClick={action}>
-            {t('Category')}
-          </Button>}
-      </Box>
-      <Card
-        variant='outlined'
-        sx={{
-          mx: 4
-        }}
-      >
-        <Grid
-          container
-          direction='row'
-          justifyContent='center'
-          alignItems='stretch'
-          spacing={0}
+      <Div>
+        <Helmet>
+          <title>{title}</title>
+        </Helmet>
+        <Box display="flex" justifyContent="space-between">
+          <TabsContainerWrapper>
+            <Tabs
+              onChange={handleTabsChange}
+              value={currentTab}
+              variant="scrollable"
+              scrollButtons="auto"
+              textColor="primary"
+              indicatorColor="primary"
+            >
+              {tabs.map((tab) => (
+                <Tab key={tab.value} label={tab.label} value={tab.value} />
+              ))}
+            </Tabs>{' '}
+          </TabsContainerWrapper>
+          {action && (
+            <Button
+              startIcon={<AddTwoToneIcon />}
+              sx={{ mx: 6, my: 1 }}
+              variant="contained"
+              onClick={action}
+            >
+              {t('Category')}
+            </Button>
+          )}
+        </Box>
+        <Card
+          variant="outlined"
+          sx={{
+            mx: 4
+          }}
         >
-          {children}
-        </Grid>
-      </Card>
+          <Grid
+            container
+            direction="row"
+            justifyContent="center"
+            alignItems="stretch"
+            spacing={0}
+          >
+            {children}
+          </Grid>
+        </Card>
+      </Div>
     </>
   );
 }
