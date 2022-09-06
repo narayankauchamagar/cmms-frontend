@@ -99,7 +99,7 @@ function SettingsLayout(props: SettingsLayoutProps) {
   const tabs = [
     { value: '', label: t('General Settings') },
     { value: 'work-order', label: t('Work order configuration') },
-    { value: 'projectsBoard', label: t('Projects Board') }
+    { value: 'request', label: t('Request form configuration') }
   ];
   const currentTab = tabs[tabIndex].value;
 

@@ -16,7 +16,9 @@ const GeneralSettings = Loader(
 const WorkOrderSettings = Loader(
   lazy(() => import('src/content/own/Settings/WorkOrder'))
 );
-
+const RequestSettings = Loader(
+  lazy(() => import('src/content/own/Settings/Request'))
+);
 const settingsRoutes = [
   {
     path: '',
@@ -25,6 +27,10 @@ const settingsRoutes = [
   {
     path: 'work-order',
     element: <WorkOrderSettings />
+  },
+  {
+    path: 'request',
+    element: <RequestSettings />
   }
 ];
 

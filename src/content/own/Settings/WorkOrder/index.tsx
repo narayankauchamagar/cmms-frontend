@@ -1,26 +1,13 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Grid,
-  MenuItem,
-  Select,
-  Tab,
-  Tabs,
-  Typography,
-  useTheme
-} from '@mui/material';
+import { Box, Divider, Grid, Tab, Tabs } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import SettingsLayout from '../SettingsLayout';
 import wait from '../../../../utils/wait';
 import { ChangeEvent, useState } from 'react';
-import * as Yup from 'yup';
-import { Field, Formik } from 'formik';
+import FieldsConfigurationForm from '../FieldsConfigurationForm';
 
 function WorkOrderSettings() {
   const { t }: { t: any } = useTranslation();
   const [currentTab, setCurrentTab] = useState<string>('create');
-  const theme = useTheme();
   const tabs = [
     { value: 'create', label: t('Creating a Work Order') },
     { value: 'complete', label: t('Completing a Work Order') }
@@ -49,40 +36,6 @@ function WorkOrderSettings() {
     { label: t('Cost'), name: 'cost' },
   ];
 
-  const renderFields = (
-    fields: { label: string; name: string }[],
-    values: any
-  ) => {
-    return fields.map((field, index) => (
-      <Grid
-        style={
-          index % 2 === 0
-            ? { backgroundColor: theme.colors.alpha.black[10] }
-            : undefined
-        }
-        key={field.name}
-        item
-        xs={12}
-        md={12}
-        lg={12}
-      >
-        <Box
-          display="flex"
-          flexDirection="row"
-          justifyContent="space-between"
-          alignItems="center"
-          padding={0.5}
-        >
-          <Typography variant="h6">{field.label}</Typography>
-          <Field style={{backgroundColor: 'white'}} as={Select} value={values[field.name]} name={field.name}>
-            <MenuItem value="optional">Optional</MenuItem>
-            <MenuItem value="required">Required</MenuItem>
-            <MenuItem value="hidden">Hidden</MenuItem>
-          </Field>
-        </Box>
-      </Grid>
-    ));
-  };
   const initialCreateValues = {
     description: 'optional',
     priority: 'optional',
@@ -128,38 +81,6 @@ function WorkOrderSettings() {
       setSubmitting(false);
     }
   };
-  const renderForm = (initialValues, onSubmit, fields) => {
-    return (
-      <Box>
-        <Typography variant="h5" sx={{ mb: 2 }}>
-          {t('You can mark fields as Optional, Hidden or Required')}
-        </Typography>
-        <Formik
-          initialValues={initialValues}
-          onSubmit={onSubmit}
-        >
-          {({
-            errors,
-            handleBlur,
-            handleChange,
-            handleSubmit,
-            isSubmitting,
-            touched,
-            values
-          }) => (
-            <form onSubmit={handleSubmit}>
-              <Grid container spacing={1}>
-                {renderFields(fields, values)}
-                <Button sx={{ mt: 3 }} type="submit" variant="contained">
-                  {t('Save')}
-                </Button>
-              </Grid>
-            </form>
-          )}
-        </Formik>
-      </Box>
-    );
-  };
 
   return (
     <SettingsLayout tabIndex={1}>
@@ -181,17 +102,15 @@ function WorkOrderSettings() {
             <Divider sx={{ mt: 1 }} />
             <Box p={3}>
               {currentTab === 'create' &&
-                renderForm(
-                  initialCreateValues,
-                  onCreateSubmit,
-                  createFields
-                )}
+              <FieldsConfigurationForm
+                initialValues={initialCreateValues}
+                onSubmit={onCreateSubmit}
+                fields={createFields} />}
               {currentTab === 'complete' &&
-                renderForm(
-                  initialCompleteValues,
-                  onCompleteSubmit,
-                  completeFields
-                )}
+              <FieldsConfigurationForm
+                initialValues={initialCompleteValues}
+                onSubmit={onCompleteSubmit}
+                fields={completeFields} />}
             </Box>
           </Box>
         </Box>
