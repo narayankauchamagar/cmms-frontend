@@ -1,20 +1,23 @@
-import { Fragment, ReactNode } from 'react';
+import { Fragment, ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import MultipleTabsLayout from '../components/MultipleTabsLayout';
 import {
-  Box,
+  Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle,
   Divider,
   Grid,
   IconButton,
   List,
   ListItem,
   ListItemText,
-  styled,
+  styled, TextField,
   Typography,
   useTheme
 } from '@mui/material';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+import wait from '../../../utils/wait';
 
 const IconButtonWrapper = styled(IconButton)(
   ({ theme }) => `
@@ -46,6 +49,9 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
   const { children, tabIndex, categories } = props;
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
+  const [openAddCategoryModal, setOpenAddCategoryModal] = useState<boolean>(false);
+  const handleOpenAddCategoryModal = () => setOpenAddCategoryModal(true);
+  const handleCloseAddCategoryModal = () => setOpenAddCategoryModal(false);
   const tabs = [
     { value: '', label: t('Work Orders') },
     { value: 'asset-status', label: t('Asset Status') },
@@ -53,8 +59,111 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
     { value: 'meter', label: t('Meters') },
     { value: 'time', label: t('Timers') }
   ];
+  const renderModal = () => <Dialog
+    fullWidth
+    maxWidth='xs'
+    open={openAddCategoryModal}
+    onClose={handleCloseAddCategoryModal}
+  >
+    <DialogTitle
+      sx={{
+        p: 3
+      }}
+    >
+      <Typography variant='h4' gutterBottom>
+        {t('Add new category')}
+      </Typography>
+      <Typography variant='subtitle2'>
+        {t(
+          'Fill in the name to create and add a new category'
+        )}
+      </Typography>
+    </DialogTitle>
+    <Formik initialValues={{ name: '' }}
+            validationSchema={Yup.object().shape({
+              name: Yup.string()
+                .max(30)
+                .required(t('The name field is required'))
+            })}
+            onSubmit={async (
+              _values,
+              { resetForm, setErrors, setStatus, setSubmitting }
+            ) => {
+              console.log(_values);
+              try {
+                await wait(1000);
+                resetForm();
+                setStatus({ success: true });
+                setSubmitting(false);
+              } catch (err) {
+                console.error(err);
+                setStatus({ success: false });
+                setErrors({name: err.message});
+                setSubmitting(false);
+              }
+            }}>{({
+                   errors,
+                   handleBlur,
+                   handleChange,
+                   handleSubmit,
+                   isSubmitting,
+                   touched,
+                   values
+                 }) => (
+      <form onSubmit={handleSubmit}>
+        <DialogContent
+          dividers
+          sx={{
+            p: 3
+          }}
+        >
+          <Grid container spacing={3}>
+            <Grid item xs={12} lg={12}>
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <TextField
+                    error={Boolean(touched.name && errors.name)}
+                    fullWidth
+                    helperText={touched.name && errors.name}
+                    label={t('Name')}
+                    name='name'
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.name}
+                    variant='outlined'
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions
+          sx={{
+            p: 3
+          }}
+        >
+          <Button color="secondary" onClick={handleCloseAddCategoryModal}>
+            {t('Cancel')}
+          </Button>
+          <Button
+            type="submit"
+            startIcon={
+              isSubmitting ? <CircularProgress size="1rem" /> : null
+            }
+            disabled={isSubmitting}
+            variant="contained"
+          >
+            {t('Add new category')}
+          </Button>
+        </DialogActions>
+      </form>)}
 
-  return <MultipleTabsLayout basePath='/app/categories' tabs={tabs} tabIndex={tabIndex} title='Categories'>
+    </Formik>
+  </Dialog>;
+  return <MultipleTabsLayout basePath='/app/categories' tabs={tabs}
+                             tabIndex={tabIndex}
+                             title={`${tabs[tabIndex].label} Categories`} action={handleOpenAddCategoryModal}>
+    {renderModal()}
     <Grid item xs={12}>
       <Box p={4}>
         {categories.length ?

@@ -1,7 +1,7 @@
 import { ChangeEvent, ReactNode, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import Footer from 'src/components/Footer';
-import { Avatar, Box, Card, Grid, styled, Tab, Tabs } from '@mui/material';
+import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
+import { Avatar, Box, Button, Card, Grid, styled, Tab, Tabs } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -90,13 +90,15 @@ const TabsContainerWrapper = styled(Box)(
 
 interface SettingsLayoutProps {
   children?: ReactNode;
-  tabs: {value: string, label: string}[];
+  tabs: { value: string, label: string }[];
   basePath: string;
   title: string;
   tabIndex: number;
+  action?: () => void;
 }
+
 function MultipleTabsLayout(props: SettingsLayoutProps) {
-  const { children, tabIndex, title, tabs, basePath } = props;
+  const { children, tabIndex, title, tabs, basePath, action } = props;
   const { t }: { t: any } = useTranslation();
   const navigate = useNavigate();
   const currentTab = tabs[tabIndex].value;
@@ -110,31 +112,37 @@ function MultipleTabsLayout(props: SettingsLayoutProps) {
       <Helmet>
         <title>{title}</title>
       </Helmet>
-      <TabsContainerWrapper>
-        <Tabs
-          onChange={handleTabsChange}
-          value={currentTab}
-          variant="scrollable"
-          scrollButtons="auto"
-          textColor="primary"
-          indicatorColor="primary"
-        >
-          {tabs.map((tab) => (
-            <Tab key={tab.value} label={tab.label} value={tab.value} />
-          ))}
-        </Tabs>
-      </TabsContainerWrapper>
+      <Box display='flex' justifyContent='space-between'>
+        <TabsContainerWrapper>
+          <Tabs
+            onChange={handleTabsChange}
+            value={currentTab}
+            variant='scrollable'
+            scrollButtons='auto'
+            textColor='primary'
+            indicatorColor='primary'
+          >
+            {tabs.map((tab) => (
+              <Tab key={tab.value} label={tab.label} value={tab.value} />
+            ))}
+          </Tabs> </TabsContainerWrapper>
+        {
+          action &&
+          <Button startIcon={<AddTwoToneIcon />} sx={{mx:6, my:1}}variant='contained' onClick={action}>
+            {t('Category')}
+          </Button>}
+      </Box>
       <Card
-        variant="outlined"
+        variant='outlined'
         sx={{
           mx: 4
         }}
       >
         <Grid
           container
-          direction="row"
-          justifyContent="center"
-          alignItems="stretch"
+          direction='row'
+          justifyContent='center'
+          alignItems='stretch'
           spacing={0}
         >
           {children}
