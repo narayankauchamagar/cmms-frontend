@@ -51,7 +51,7 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
     { value: 'asset-status', label: t('Asset Status') },
     { value: 'purchase-order', label: t('Purchase Orders') },
     { value: 'meter', label: t('Meters') },
-    { value: 'timer', label: t('Timers') }
+    { value: 'time', label: t('Timers') }
   ];
 
   return <MultipleTabsLayout basePath='/app/categories' tabs={tabs} tabIndex={tabIndex} title='Categories'>
