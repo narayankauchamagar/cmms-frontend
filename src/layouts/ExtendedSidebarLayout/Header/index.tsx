@@ -69,8 +69,6 @@ function Header() {
         alignItems="center"
         spacing={2}
       >
-        <HeaderSearch />
-        <HeaderMenu />
       </Stack>
       <Box display="flex" alignItems="center">
         <HeaderButtons />
