@@ -1,7 +1,16 @@
 import { FC } from 'react';
 import PropTypes from 'prop-types';
 import type { User } from 'src/models/user';
-import { Avatar, Box, Button, Card, CardMedia, IconButton, styled, Typography } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  CardMedia,
+  IconButton,
+  styled,
+  Typography
+} from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import UploadTwoToneIcon from '@mui/icons-material/UploadTwoTone';

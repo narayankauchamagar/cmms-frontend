@@ -247,7 +247,12 @@ function HeaderUserbox() {
           }}
         />
         <MenuListWrapperPrimary disablePadding>
-          <MenuItem onClick={()=>{ handleClose(); navigate('/app/profile');} }>
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              navigate('/app/profile');
+            }}
+          >
             <ListItemText
               primaryTypographyProps={{
                 variant: 'h5'

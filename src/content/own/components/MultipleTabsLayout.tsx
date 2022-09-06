@@ -1,7 +1,16 @@
 import { ChangeEvent, ReactNode, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import { Avatar, Box, Button, Card, Grid, styled, Tab, Tabs } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  Grid,
+  styled,
+  Tab,
+  Tabs
+} from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -90,7 +99,7 @@ const TabsContainerWrapper = styled(Box)(
 
 interface SettingsLayoutProps {
   children?: ReactNode;
-  tabs: { value: string, label: string }[];
+  tabs: { value: string; label: string }[];
   basePath: string;
   title: string;
   tabIndex: number;
@@ -112,37 +121,43 @@ function MultipleTabsLayout(props: SettingsLayoutProps) {
       <Helmet>
         <title>{title}</title>
       </Helmet>
-      <Box display='flex' justifyContent='space-between'>
+      <Box display="flex" justifyContent="space-between">
         <TabsContainerWrapper>
           <Tabs
             onChange={handleTabsChange}
             value={currentTab}
-            variant='scrollable'
-            scrollButtons='auto'
-            textColor='primary'
-            indicatorColor='primary'
+            variant="scrollable"
+            scrollButtons="auto"
+            textColor="primary"
+            indicatorColor="primary"
           >
             {tabs.map((tab) => (
               <Tab key={tab.value} label={tab.label} value={tab.value} />
             ))}
-          </Tabs> </TabsContainerWrapper>
-        {
-          action &&
-          <Button startIcon={<AddTwoToneIcon />} sx={{mx:6, my:1}}variant='contained' onClick={action}>
+          </Tabs>{' '}
+        </TabsContainerWrapper>
+        {action && (
+          <Button
+            startIcon={<AddTwoToneIcon />}
+            sx={{ mx: 6, my: 1 }}
+            variant="contained"
+            onClick={action}
+          >
             {t('Category')}
-          </Button>}
+          </Button>
+        )}
       </Box>
       <Card
-        variant='outlined'
+        variant="outlined"
         sx={{
           mx: 4
         }}
       >
         <Grid
           container
-          direction='row'
-          justifyContent='center'
-          alignItems='stretch'
+          direction="row"
+          justifyContent="center"
+          alignItems="stretch"
           spacing={0}
         >
           {children}

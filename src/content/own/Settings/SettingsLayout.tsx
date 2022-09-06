@@ -16,10 +16,16 @@ function SettingsLayout(props: SettingsLayoutProps) {
     { value: 'request', label: t('Request form configuration') }
   ];
 
-  return <MultipleTabsLayout basePath='/app/settings' tabs={tabs} tabIndex={tabIndex} title='Settings'>
-    {children}
-  </MultipleTabsLayout>
-    ;
+  return (
+    <MultipleTabsLayout
+      basePath="/app/settings"
+      tabs={tabs}
+      tabIndex={tabIndex}
+      title="Settings"
+    >
+      {children}
+    </MultipleTabsLayout>
+  );
 }
 
 export default SettingsLayout;

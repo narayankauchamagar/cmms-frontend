@@ -19,9 +19,7 @@ const WorkOrderSettings = Loader(
 const RequestSettings = Loader(
   lazy(() => import('src/content/own/Settings/Request'))
 );
-const Profile = Loader(
-  lazy(() => import('src/content/own/UserProfile'))
-);
+const Profile = Loader(lazy(() => import('src/content/own/UserProfile')));
 const WorkOrderCategories = Loader(
   lazy(() => import('src/content/own/Categories/WorkOrder'))
 );
@@ -30,9 +28,11 @@ const AssetStatusCategories = Loader(
 );
 const PurchaseOrderCategories = Loader(
   lazy(() => import('src/content/own/Categories/PurchaseOrder'))
-);const MeterCategories = Loader(
+);
+const MeterCategories = Loader(
   lazy(() => import('src/content/own/Categories/Meter'))
-);const TimeCategories = Loader(
+);
+const TimeCategories = Loader(
   lazy(() => import('src/content/own/Categories/Timer'))
 );
 const appRoutes = [
@@ -50,7 +50,8 @@ const appRoutes = [
       {
         path: 'request',
         element: <RequestSettings />
-      }]
+      }
+    ]
   },
   {
     path: 'profile',
@@ -58,10 +59,11 @@ const appRoutes = [
   },
   {
     path: 'categories',
-    children: [{
-      path: '',
-      element: <WorkOrderCategories />
-    },
+    children: [
+      {
+        path: '',
+        element: <WorkOrderCategories />
+      },
       {
         path: 'asset-status',
         element: <AssetStatusCategories />
@@ -77,7 +79,8 @@ const appRoutes = [
       {
         path: 'time',
         element: <TimeCategories />
-      }]
+      }
+    ]
   }
 ];
 

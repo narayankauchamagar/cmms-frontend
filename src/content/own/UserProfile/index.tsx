@@ -58,9 +58,9 @@ function ManagementUsersView() {
             px: 4
           }}
           container
-          direction='row'
-          justifyContent='center'
-          alignItems='stretch'
+          direction="row"
+          justifyContent="center"
+          alignItems="stretch"
           spacing={1}
         >
           <Grid item xs={12} md={8}>

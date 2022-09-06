@@ -51,9 +51,10 @@ function WorkOrderSettings() {
           <Box>
             <Box p={3}>
               <FieldsConfigurationForm
-              initialValues={initialValues}
-              onSubmit={onSubmit}
-              fields={fields} />
+                initialValues={initialValues}
+                onSubmit={onSubmit}
+                fields={fields}
+              />
             </Box>
           </Box>
         </Box>
