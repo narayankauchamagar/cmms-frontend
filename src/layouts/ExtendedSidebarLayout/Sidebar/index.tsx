@@ -2,16 +2,7 @@ import { useContext } from 'react';
 import Scrollbar from 'src/components/Scrollbar';
 import { SidebarContext } from 'src/contexts/SidebarContext';
 
-import {
-  Box,
-  Drawer,
-  alpha,
-  styled,
-  Divider,
-  useTheme,
-  lighten,
-  darken
-} from '@mui/material';
+import { alpha, Box, darken, Divider, Drawer, lighten, styled, useTheme } from '@mui/material';
 
 import SidebarTopSection from './SidebarTopSection';
 import SidebarMenu from './SidebarMenu';
@@ -67,15 +58,7 @@ function Sidebar() {
           </Box>
           <Divider
             sx={{
-              my: theme.spacing(3),
-              mx: theme.spacing(2),
-              background: theme.colors.alpha.trueWhite[10]
-            }}
-          />
-          <SidebarTopSection />
-          <Divider
-            sx={{
-              my: theme.spacing(3),
+              mt:theme.spacing(1),
               mx: theme.spacing(2),
               background: theme.colors.alpha.trueWhite[10]
             }}
@@ -120,15 +103,7 @@ function Sidebar() {
             </Box>
             <Divider
               sx={{
-                my: theme.spacing(3),
-                mx: theme.spacing(2),
-                background: theme.colors.alpha.trueWhite[10]
-              }}
-            />
-            <SidebarTopSection />
-            <Divider
-              sx={{
-                my: theme.spacing(3),
+                mt: theme.spacing(1),
                 mx: theme.spacing(2),
                 background: theme.colors.alpha.trueWhite[10]
               }}
