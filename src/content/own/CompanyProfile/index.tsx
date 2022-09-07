@@ -6,6 +6,7 @@ import { Box, Grid } from '@mui/material';
 import CompanyCover from './CompanyCover';
 import CompanyDetails from './CompanyDetails';
 import { Company } from '../../../models/owns/company';
+import CompanyPlan from './CompanyPlan';
 
 function CompanyProfile() {
   const [company, setCompany] = useState<Company | null>({
@@ -14,12 +15,12 @@ function CompanyProfile() {
     id: 'dsds',
     address: 'address',
     phone: '425785752',
-    website: 'www.google.com'
+    website: 'www.google.com',
+    plan: { id: 'dsds4', name: 'Starter' }
   });
   if (!company) {
     return null;
   }
-
   return (
     <>
       <Helmet>
@@ -45,6 +46,9 @@ function CompanyProfile() {
           </Grid>
           <Grid item xs={12}>
             <CompanyDetails company={company} />
+          </Grid>
+          <Grid item xs={12}>
+            <CompanyPlan plan={company.plan} />
           </Grid>
         </Grid>
       </Box>

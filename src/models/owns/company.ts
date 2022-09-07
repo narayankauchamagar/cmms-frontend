@@ -1,3 +1,5 @@
+import { SubscriptionPlan } from './subscriptionPlan';
+
 export interface Company {
   id: string;
   logo: string;
@@ -5,4 +7,5 @@ export interface Company {
   address: string;
   website: string;
   phone: string;
+  plan: SubscriptionPlan;
 }
