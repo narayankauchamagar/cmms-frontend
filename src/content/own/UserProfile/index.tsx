@@ -10,7 +10,7 @@ import type { User } from 'src/models/user';
 import ProfileCover from './ProfileCover';
 import RecentActivity from './RecentActivity';
 import MyCards from './MyCards';
-import EditProfileTab from './EditProfileTab';
+import ProfileDetails from './ProfileDetails';
 import axios from 'src/utils/axios';
 
 function ManagementUsersView() {
@@ -70,7 +70,7 @@ function ManagementUsersView() {
             <RecentActivity />
           </Grid>
           <Grid item xs={12}>
-            <EditProfileTab />
+            <ProfileDetails />
           </Grid>
           <Grid item xs={12} md={12}>
             <MyCards />
