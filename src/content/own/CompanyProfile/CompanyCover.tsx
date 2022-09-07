@@ -28,15 +28,15 @@ const CardCoverAction = styled(Box)(
 );
 
 interface CompanyCoverProps {
-  company: Company;
+  image: string;
 }
 
-const CompanyCover: FC<CompanyCoverProps> = ({ company }) => {
+const CompanyCover: FC<CompanyCoverProps> = ({ image }) => {
   const { t }: { t: any } = useTranslation();
   return (
     <>
       <CardCover>
-        <CardMedia image={company.logo} />
+        <CardMedia image={image} />
         <CardCoverAction>
           <Input accept="image/*" id="change-cover" multiple type="file" />
           <label htmlFor="change-cover">
@@ -52,11 +52,6 @@ const CompanyCover: FC<CompanyCoverProps> = ({ company }) => {
       </CardCover>
     </>
   );
-};
-
-CompanyCover.propTypes = {
-  // @ts-ignore
-  company: PropTypes.object.isRequired
 };
 
 export default CompanyCover;

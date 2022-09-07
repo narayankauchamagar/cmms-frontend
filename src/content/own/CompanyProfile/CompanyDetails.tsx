@@ -7,8 +7,8 @@ import {
   DialogActions,
   DialogContent,
   Divider,
-  Link,
   Grid,
+  Link,
   TextField,
   Typography
 } from '@mui/material';
@@ -21,18 +21,23 @@ import wait from '../../../utils/wait';
 import { useState } from 'react';
 import { phoneRegExp } from '../../../utils/validators';
 import CustomDialog from '../components/CustomDialog';
+import { Company } from '../../../models/owns/company';
 
-function CompanyDetails() {
+interface CompanyDetailsProps {
+  company: Company;
+}
+function CompanyDetails(props: CompanyDetailsProps) {
+  const { company } = props;
   const { t }: { t: any } = useTranslation();
   const [openEditModal, setOpenEditModal] = useState<boolean>(false);
   const handleOpenEditModal = () => setOpenEditModal(true);
   const handleCloseEditModal = () => setOpenEditModal(false);
 
   const companyDetails = {
-    name: { value: 'Name', title: t(' Name') },
-    address: { value: 'Address', title: t('Address') },
-    website: { value: 'www.google.com', title: 'Website', isLink: true },
-    phone: { value: '245475777', title: 'Phone' }
+    name: { value: company.name, title: t(' Name') },
+    address: { value: company.address, title: t('Address') },
+    website: { value: company.website, title: 'Website', isLink: true },
+    phone: { value: company.phone, title: 'Phone' }
   };
 
   const renderKeyAndValue = (key: string, value: string, isLink: boolean) => {
@@ -45,7 +50,17 @@ function CompanyDetails() {
         </Grid>
         <Grid item xs={12} sm={8} md={9}>
           {isLink ? (
-            <Link href={value}>{value}</Link>
+            <Link
+              href={
+                value.startsWith('https://') || value.startsWith('http://')
+                  ? value
+                  : `https://${value}`
+              }
+              target="_blank"
+              rel="noreferrer"
+            >
+              {value}
+            </Link>
           ) : (
             <Text color="black">
               <b>{value}</b>
