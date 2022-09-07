@@ -19,7 +19,10 @@ const WorkOrderSettings = Loader(
 const RequestSettings = Loader(
   lazy(() => import('src/content/own/Settings/Request'))
 );
-const Profile = Loader(lazy(() => import('src/content/own/UserProfile')));
+const UserProfile = Loader(lazy(() => import('src/content/own/UserProfile')));
+const CompanyProfile = Loader(
+  lazy(() => import('src/content/own/CompanyProfile'))
+);
 const WorkOrderCategories = Loader(
   lazy(() => import('src/content/own/Categories/WorkOrder'))
 );
@@ -58,7 +61,11 @@ const appRoutes = [
     children: [
       {
         path: 'profile',
-        element: <Profile />
+        element: <UserProfile />
+      },
+      {
+        path: 'company-profile',
+        element: <CompanyProfile />
       }
     ]
   },
