@@ -16,7 +16,7 @@ function CompanyProfile() {
     address: 'address',
     phone: '425785752',
     website: 'www.google.com',
-    plan: { id: 'dsds4', name: 'Starter' }
+    plan: { id: 'dsds4', name: 'Starter', users: 2 }
   });
   if (!company) {
     return null;
