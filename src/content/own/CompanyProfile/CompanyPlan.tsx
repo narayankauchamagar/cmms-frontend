@@ -10,12 +10,14 @@ import {
 import { useTranslation } from 'react-i18next';
 import { SubscriptionPlan } from '../../../models/owns/subscriptionPlan';
 import CardMembershipTwoToneIcon from '@mui/icons-material/CardMembershipTwoTone';
+import { useNavigate } from 'react-router-dom';
 
 interface CompanyPlanProps {
   plan: SubscriptionPlan;
 }
 function CompanyPlan(props: CompanyPlanProps) {
   const { plan } = props;
+  const navigate = useNavigate();
   const theme = useTheme();
   const { t }: { t: any } = useTranslation();
   if (plan.name == 'Business') return null;
@@ -73,7 +75,11 @@ function CompanyPlan(props: CompanyPlanProps) {
           more features.`)}
         </Typography>
         <Box sx={{ mt: 2 }}>
-          <Button sx={{ mr: 2 }} variant="contained">
+          <Button
+            sx={{ mr: 2 }}
+            variant="contained"
+            onClick={() => navigate('/app/subscription/plans')}
+          >
             {t('Upgrade now')}
           </Button>
           <Button variant="contained" color="secondary">
