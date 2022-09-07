@@ -16,12 +16,14 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
+import LockTwoToneIcon from '@mui/icons-material/LockTwoTone';
 import Text from 'src/components/Text';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import wait from '../../../utils/wait';
 import { useState } from 'react';
 import { phoneRegExp } from '../../../utils/validators';
+import CustomDialog from '../components/CustomDialog';
 
 function ProfileDetails() {
   const { t }: { t: any } = useTranslation();
@@ -29,6 +31,9 @@ function ProfileDetails() {
   const handleOpenEditModal = () => setOpenEditModal(true);
   const handleCloseEditModal = () => setOpenEditModal(false);
 
+  const [openPasswordModal, setOpenPasswordModal] = useState<boolean>(false);
+  const handleOpenPasswordModal = () => setOpenPasswordModal(true);
+  const handleClosePasswordModal = () => setOpenPasswordModal(false);
   const user = {
     firstName: { value: 'firstName', title: t('First Name') },
     lastName: { value: 'lastName', title: t('Last Name') },
@@ -79,25 +84,13 @@ function ProfileDetails() {
       </>
     );
   };
-  const renderModal = () => (
-    <Dialog
-      fullWidth
-      maxWidth="xs"
-      open={openEditModal}
+  const renderEditModal = () => (
+    <CustomDialog
       onClose={handleCloseEditModal}
+      open={openEditModal}
+      title="Edit profile"
+      subtitle="Fill in the fields below"
     >
-      <DialogTitle
-        sx={{
-          p: 3
-        }}
-      >
-        <Typography variant="h4" gutterBottom>
-          {t('Edit profile')}
-        </Typography>
-        <Typography variant="subtitle2">
-          {t('Fill in the fields below')}
-        </Typography>
-      </DialogTitle>
       <Formik
         initialValues={{
           firstName: user.firstName.value,
@@ -235,11 +228,153 @@ function ProfileDetails() {
           </form>
         )}
       </Formik>
-    </Dialog>
+    </CustomDialog>
+  );
+  const renderPasswordModal = () => (
+    <CustomDialog
+      onClose={handleClosePasswordModal}
+      open={openPasswordModal}
+      title="Change password"
+      subtitle="Fill in the fields below"
+    >
+      <Formik
+        initialValues={{
+          currentPassword: '',
+          newPassword: '',
+          confirmPassword: ''
+        }}
+        validationSchema={Yup.object().shape({
+          currentPassword: Yup.string()
+            .required(t('Please provide the current password.'))
+            .min(8, t('Password is too short - should be 8 chars minimum.')),
+          newPassword: Yup.string()
+            .required(t('No password provided.'))
+            .min(8, t('Password is too short - should be 8 chars minimum.')),
+          confirmPassword: Yup.string().oneOf(
+            [Yup.ref('newPassword'), null],
+            t('Passwords must match')
+          )
+        })}
+        onSubmit={async (
+          _values,
+          { resetForm, setErrors, setStatus, setSubmitting }
+        ) => {
+          console.log(_values);
+          try {
+            await wait(1000);
+            resetForm();
+            setStatus({ success: true });
+            setSubmitting(false);
+          } catch (err) {
+            console.error(err);
+            setStatus({ success: false });
+            setSubmitting(false);
+          }
+        }}
+      >
+        {({
+          errors,
+          handleBlur,
+          handleChange,
+          handleSubmit,
+          isSubmitting,
+          touched,
+          values
+        }) => (
+          <form onSubmit={handleSubmit}>
+            <DialogContent
+              dividers
+              sx={{
+                p: 3
+              }}
+            >
+              <Grid container spacing={3}>
+                <Grid item xs={12} lg={12}>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                      <TextField
+                        error={Boolean(
+                          touched.currentPassword && errors.currentPassword
+                        )}
+                        fullWidth
+                        helperText={
+                          touched.currentPassword && errors.currentPassword
+                        }
+                        label={t('Current password')}
+                        type="password"
+                        name="currentPassword"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.currentPassword}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        error={Boolean(
+                          touched.newPassword && errors.newPassword
+                        )}
+                        fullWidth
+                        helperText={touched.newPassword && errors.newPassword}
+                        label={t('New password')}
+                        type="password"
+                        name="newPassword"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.newPassword}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        error={Boolean(
+                          touched.confirmPassword && errors.confirmPassword
+                        )}
+                        fullWidth
+                        helperText={
+                          touched.confirmPassword && errors.confirmPassword
+                        }
+                        type="password"
+                        label={t('Confirm password')}
+                        name="confirmPassword"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.confirmPassword}
+                        variant="outlined"
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </DialogContent>
+            <DialogActions
+              sx={{
+                p: 3
+              }}
+            >
+              <Button color="secondary" onClick={handleClosePasswordModal}>
+                {t('Cancel')}
+              </Button>
+              <Button
+                type="submit"
+                startIcon={
+                  isSubmitting ? <CircularProgress size="1rem" /> : null
+                }
+                disabled={isSubmitting}
+                variant="contained"
+              >
+                {t('Save')}
+              </Button>
+            </DialogActions>
+          </form>
+        )}
+      </Formik>
+    </CustomDialog>
   );
   return (
     <Grid container spacing={3}>
-      {renderModal()}
+      {renderEditModal()}
+      {renderPasswordModal()}
       <Grid item xs={12}>
         <Card>
           <Box
@@ -256,13 +391,22 @@ function ProfileDetails() {
                 {t('Manage informations related to your personal details')}
               </Typography>
             </Box>
-            <Button
-              onClick={handleOpenEditModal}
-              variant="text"
-              startIcon={<EditTwoToneIcon />}
-            >
-              {t('Edit')}
-            </Button>
+            <Box>
+              <Button
+                onClick={handleOpenEditModal}
+                variant="text"
+                startIcon={<EditTwoToneIcon />}
+              >
+                {t('Edit')}
+              </Button>
+              <Button
+                onClick={handleOpenPasswordModal}
+                variant="text"
+                startIcon={<LockTwoToneIcon />}
+              >
+                {t('Change password')}
+              </Button>
+            </Box>
           </Box>
           <Divider />
           <CardContent
