@@ -1,41 +1,19 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { Helmet } from 'react-helmet-async';
 
 import { Box, Grid } from '@mui/material';
-import useRefMounted from 'src/hooks/useRefMounted';
 import { useTranslation } from 'react-i18next';
-import type { User } from 'src/models/user';
-import ProfileCover from './ProfileCover';
+import CompanyCover from './CompanyCover';
 import CompanyDetails from './CompanyDetails';
-import axios from 'src/utils/axios';
+import { Company } from '../../../models/owns/company';
 
-function ManagementUsersView() {
-  const isMountedRef = useRefMounted();
-  const [company, setCompany] = useState<User | null>(null);
-  // @ts-ignore
-  const userId = '1';
-  const { t }: { t: any } = useTranslation();
-
-  const getUser = useCallback(async () => {
-    try {
-      const response = await axios.get<{ user: User }>('/api/user', {
-        params: {
-          userId
-        }
-      });
-      if (isMountedRef.current) {
-        setCompany(response.data.user);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }, [userId, isMountedRef]);
-
-  useEffect(() => {
-    getUser();
-  }, [getUser]);
-
+function CompanyProfile() {
+  const [company, setCompany] = useState<Company | null>({
+    name: 'Maxtron',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png',
+    id: 'dsds'
+  });
   if (!company) {
     return null;
   }
@@ -61,7 +39,7 @@ function ManagementUsersView() {
           spacing={1}
         >
           <Grid item xs={12}>
-            <ProfileCover user={company} />
+            <CompanyCover company={company} />
           </Grid>
           <Grid item xs={12}>
             <CompanyDetails />
@@ -72,4 +50,4 @@ function ManagementUsersView() {
   );
 }
 
-export default ManagementUsersView;
+export default CompanyProfile;

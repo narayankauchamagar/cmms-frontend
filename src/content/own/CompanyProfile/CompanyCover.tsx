@@ -1,9 +1,9 @@
 import { FC } from 'react';
 import PropTypes from 'prop-types';
-import type { User } from 'src/models/user';
 import { Box, Button, Card, CardMedia, styled } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import UploadTwoToneIcon from '@mui/icons-material/UploadTwoTone';
+import { Company } from '../../../models/owns/company';
 
 const Input = styled('input')({
   display: 'none'
@@ -27,16 +27,16 @@ const CardCoverAction = styled(Box)(
 `
 );
 
-interface ProfileCoverProps {
-  user: User;
+interface CompanyCoverProps {
+  company: Company;
 }
 
-const CompanyCover: FC<ProfileCoverProps> = ({ user }) => {
+const CompanyCover: FC<CompanyCoverProps> = ({ company }) => {
   const { t }: { t: any } = useTranslation();
   return (
     <>
       <CardCover>
-        <CardMedia image={user.coverImg} />
+        <CardMedia image={company.logo} />
         <CardCoverAction>
           <Input accept="image/*" id="change-cover" multiple type="file" />
           <label htmlFor="change-cover">
@@ -56,7 +56,7 @@ const CompanyCover: FC<ProfileCoverProps> = ({ user }) => {
 
 CompanyCover.propTypes = {
   // @ts-ignore
-  user: PropTypes.object.isRequired
+  company: PropTypes.object.isRequired
 };
 
 export default CompanyCover;

@@ -7,14 +7,13 @@ import {
   DialogActions,
   DialogContent,
   Divider,
+  Link,
   Grid,
-  Switch,
   TextField,
   Typography
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
-import LockTwoToneIcon from '@mui/icons-material/LockTwoTone';
 import Text from 'src/components/Text';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -30,26 +29,13 @@ function CompanyDetails() {
   const handleCloseEditModal = () => setOpenEditModal(false);
 
   const companyDetails = {
-    firstName: { value: 'firstName', title: t('First Name') },
-    lastName: { value: 'lastName', title: t('Last Name') },
-    phone: { value: '55386865', title: t('Phone') },
-    jobTitle: { value: 'Carrier', title: t('Job Title') },
-    settings: {
-      isNotified: { value: true, title: t('Email notifications') },
-      emailForWorkOrders: {
-        value: false,
-        title: t('Email Updates for Work Orders and Messages')
-      },
-      emailForRequest: {
-        value: true,
-        title: t('Email Updates for Requested Work Orders')
-      },
-      dailyEmailSummary: { value: false, title: t('Daily Summary Emails') },
-      purchaseOrderEmail: { value: true, title: t('Purchase Order Emails') }
-    }
+    name: { value: 'Name', title: t(' Name') },
+    address: { value: 'Address', title: t('Address') },
+    website: { value: 'www.google.com', title: 'Website', isLink: true },
+    phone: { value: '245475777', title: 'Phone' }
   };
 
-  const renderKeyAndValue = (key: string, value: string) => {
+  const renderKeyAndValue = (key: string, value: string, isLink: boolean) => {
     return (
       <>
         <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
@@ -58,9 +44,13 @@ function CompanyDetails() {
           </Box>
         </Grid>
         <Grid item xs={12} sm={8} md={9}>
-          <Text color="black">
-            <b>{value}</b>
-          </Text>
+          {isLink ? (
+            <Link href={value}>{value}</Link>
+          ) : (
+            <Text color="black">
+              <b>{value}</b>
+            </Text>
+          )}
         </Grid>
       </>
     );
@@ -75,25 +65,23 @@ function CompanyDetails() {
     >
       <Formik
         initialValues={{
-          firstName: companyDetails.firstName.value,
-          lastName: companyDetails.lastName.value,
+          name: companyDetails.name.value,
+          address: companyDetails.address.value,
           phone: companyDetails.phone.value,
-          jobTitle: companyDetails.jobTitle.value
+          website: companyDetails.website.value
         }}
         validationSchema={Yup.object().shape({
-          firstName: Yup.string()
+          name: Yup.string().max(100).required(t('The name field is required')),
+          address: Yup.string()
             .max(100)
-            .required(t('The First Name field is required')),
-          lastName: Yup.string()
-            .max(100)
-            .required(t('The Last Name field is required')),
+            .required(t('The address field is required')),
           phone: Yup.string().matches(
             phoneRegExp,
             'The phone number is invalid'
           ),
-          jobTitle: Yup.string()
+          website: Yup.string()
             .max(100)
-            .required(t('The Job title field is required'))
+            .required(t('The website field is required'))
         })}
         onSubmit={async (
           _values,
@@ -108,7 +96,6 @@ function CompanyDetails() {
           } catch (err) {
             console.error(err);
             setStatus({ success: false });
-            setErrors({ firstName: err.message });
             setSubmitting(false);
           }
         }}
@@ -134,27 +121,27 @@ function CompanyDetails() {
                   <Grid container spacing={3}>
                     <Grid item xs={12}>
                       <TextField
-                        error={Boolean(touched.firstName && errors.firstName)}
+                        error={Boolean(touched.name && errors.name)}
                         fullWidth
-                        helperText={touched.firstName && errors.firstName}
-                        label={t('First Name')}
-                        name="firstName"
+                        helperText={touched.name && errors.name}
+                        label={t('Name')}
+                        name="name"
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        value={values.firstName}
+                        value={values.name}
                         variant="outlined"
                       />
                     </Grid>
                     <Grid item xs={12}>
                       <TextField
-                        error={Boolean(touched.lastName && errors.lastName)}
+                        error={Boolean(touched.address && errors.address)}
                         fullWidth
-                        helperText={touched.lastName && errors.lastName}
-                        label={t('Last Name')}
-                        name="lastName"
+                        helperText={touched.address && errors.address}
+                        label={t('Address')}
+                        name="address"
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        value={values.lastName}
+                        value={values.address}
                         variant="outlined"
                       />
                     </Grid>
@@ -173,14 +160,14 @@ function CompanyDetails() {
                     </Grid>
                     <Grid item xs={12}>
                       <TextField
-                        error={Boolean(touched.jobTitle && errors.jobTitle)}
+                        error={Boolean(touched.website && errors.website)}
                         fullWidth
-                        helperText={touched.jobTitle && errors.jobTitle}
-                        label={t('Job Title')}
-                        name="jobTitle"
+                        helperText={touched.website && errors.website}
+                        label={t('Website')}
+                        name="website"
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        value={values.jobTitle}
+                        value={values.website}
                         variant="outlined"
                       />
                     </Grid>
@@ -253,7 +240,8 @@ function CompanyDetails() {
                   if (key !== 'settings')
                     return renderKeyAndValue(
                       companyDetails[key].title,
-                      companyDetails[key].value
+                      companyDetails[key].value,
+                      companyDetails[key].isLink
                     );
                 })}
               </Grid>
