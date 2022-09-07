@@ -9,7 +9,7 @@ import {
   useTheme
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import ShoppingBagTwoToneIcon from '@mui/icons-material/ShoppingBagTwoTone';
+import AssignmentTwoToneIcon from '@mui/icons-material/AssignmentTwoTone';
 
 const AvatarPrimary = styled(Avatar)(
   ({ theme }) => `
@@ -30,7 +30,7 @@ function RecentActivity() {
       <Divider />
       <Box px={2} py={4} display="flex" alignItems="flex-start">
         <AvatarPrimary>
-          <ShoppingBagTwoToneIcon />
+          <AssignmentTwoToneIcon />
         </AvatarPrimary>
         <Box pl={2} flex={1}>
           <Typography variant="h3">{t('Work Orders')}</Typography>

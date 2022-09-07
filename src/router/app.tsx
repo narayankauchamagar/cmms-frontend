@@ -54,8 +54,13 @@ const appRoutes = [
     ]
   },
   {
-    path: 'profile',
-    element: <Profile />
+    path: 'account',
+    children: [
+      {
+        path: 'profile',
+        element: <Profile />
+      }
+    ]
   },
   {
     path: 'categories',

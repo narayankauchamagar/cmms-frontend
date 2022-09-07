@@ -250,7 +250,7 @@ function HeaderUserbox() {
           <MenuItem
             onClick={() => {
               handleClose();
-              navigate('/app/profile');
+              navigate('/app/account/profile');
             }}
           >
             <ListItemText
@@ -266,7 +266,12 @@ function HeaderUserbox() {
               }}
             />
           </MenuItem>
-          <MenuItem>
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              navigate('/app/account/company-profile');
+            }}
+          >
             <ListItemText
               primaryTypographyProps={{
                 variant: 'h5'
