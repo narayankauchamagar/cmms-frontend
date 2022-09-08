@@ -23,7 +23,10 @@ const RolesSettings = Loader(
   lazy(() => import('src/content/own/Settings/Roles'))
 );
 
-const Profile = Loader(lazy(() => import('src/content/own/UserProfile')));
+const UserProfile = Loader(lazy(() => import('src/content/own/UserProfile')));
+const CompanyProfile = Loader(
+  lazy(() => import('src/content/own/CompanyProfile'))
+);
 const WorkOrderCategories = Loader(
   lazy(() => import('src/content/own/Categories/WorkOrder'))
 );
@@ -39,7 +42,9 @@ const MeterCategories = Loader(
 const TimeCategories = Loader(
   lazy(() => import('src/content/own/Categories/Timer'))
 );
-
+const SubscriptionPlans = Loader(
+  lazy(() => import('src/content/own/Subscription/Plans'))
+);
 const appRoutes = [
   {
     path: 'settings',
@@ -63,8 +68,26 @@ const appRoutes = [
     ]
   },
   {
-    path: 'profile',
-    element: <Profile />
+    path: 'account',
+    children: [
+      {
+        path: 'profile',
+        element: <UserProfile />
+      },
+      {
+        path: 'company-profile',
+        element: <CompanyProfile />
+      }
+    ]
+  },
+  {
+    path: 'subscription',
+    children: [
+      {
+        path: 'plans',
+        element: <SubscriptionPlans />
+      }
+    ]
   },
   {
     path: 'categories',

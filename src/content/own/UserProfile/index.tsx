@@ -10,7 +10,7 @@ import type { User } from 'src/models/user';
 import ProfileCover from './ProfileCover';
 import RecentActivity from './RecentActivity';
 import MyCards from './MyCards';
-import EditProfileTab from './EditProfileTab';
+import ProfileDetails from './ProfileDetails';
 import axios from 'src/utils/axios';
 
 function ManagementUsersView() {
@@ -48,35 +48,29 @@ function ManagementUsersView() {
       <Helmet>
         <title>{user.name} - Profile Details</title>
       </Helmet>
-      <Box
+      <Grid
         sx={{
-          mt: 3
+          px: 4
         }}
+        container
+        direction="row"
+        justifyContent="center"
+        alignItems="stretch"
+        spacing={2}
       >
-        <Grid
-          sx={{
-            px: 4
-          }}
-          container
-          direction="row"
-          justifyContent="center"
-          alignItems="stretch"
-          spacing={1}
-        >
-          <Grid item xs={12} md={8}>
-            <ProfileCover user={user} />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <RecentActivity />
-          </Grid>
-          <Grid item xs={12}>
-            <EditProfileTab />
-          </Grid>
-          <Grid item xs={12} md={12}>
-            <MyCards />
-          </Grid>
+        <Grid item xs={12} md={8}>
+          <ProfileCover user={user} />
         </Grid>
-      </Box>
+        <Grid item xs={12} md={4}>
+          <RecentActivity />
+        </Grid>
+        <Grid item xs={12}>
+          <ProfileDetails />
+        </Grid>
+        <Grid item xs={12} md={12}>
+          <MyCards />
+        </Grid>
+      </Grid>
     </>
   );
 }
