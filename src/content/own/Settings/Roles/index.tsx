@@ -2,10 +2,9 @@ import SettingsLayout from '../SettingsLayout';
 
 import { Grid, styled } from '@mui/material';
 
-import Results from './Results';
 import PageHeader from './PageHeader';
 import { Role } from '../../type';
-import TableCustomized from './TableCustomized';
+import TableCustomized from '../../components/TableCustomized';
 import { useTranslation } from 'react-i18next';
 
 function Roles() {
@@ -100,6 +99,8 @@ function Roles() {
 
   const columns: string[] = ['Name', 'Users', 'External ID', 'Type'];
 
+  const searchFilterProperties = ['name', 'externalId'];
+
   const tabs = [
     {
       value: 'all',
@@ -130,11 +131,11 @@ function Roles() {
         spacing={4}
       >
         <Grid item xs={12}>
-          {/* <Results roles={roles} /> */}
           <TableCustomized
-            roles={roles}
+            data={roles}
             columns={columns}
             tabsFilter={tabs}
+            searchFilterProperties={searchFilterProperties}
             limitRows={5}
           />
         </Grid>

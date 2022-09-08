@@ -8,7 +8,7 @@ export interface Role {
   type: RoleType;
 }
 
-export interface TableCustomizedType {
+export interface TableCustomizedDataType {
   id: string | number;
   [propName: string]: any;
 }

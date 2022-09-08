@@ -16,13 +16,11 @@ import {
   Box,
   Card,
   Checkbox,
-  Grid,
   Slide,
   Divider,
   Tooltip,
   IconButton,
   InputAdornment,
-  Link,
   Table,
   TableBody,
   TableCell,
@@ -30,8 +28,6 @@ import {
   TablePagination,
   TableContainer,
   TableRow,
-  ToggleButton,
-  ToggleButtonGroup,
   Tab,
   Tabs,
   TextField,
@@ -44,20 +40,24 @@ import {
 import { TransitionProps } from '@mui/material/transitions';
 import CloseIcon from '@mui/icons-material/Close';
 import { useTranslation } from 'react-i18next';
-import Label from 'src/components/Label';
-import BulkActions from './BulkActions';
+import BulkActions from '../Settings/Roles/BulkActions';
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import { useSnackbar } from 'notistack';
-import { Role, RoleType, TableCustomizedType } from '../../type';
+import { TableCustomizedDataType } from '../type';
 
 interface TableCustomizedProps {
-  roles: TableCustomizedType[];
+  data: TableCustomizedDataType[];
   columns: string[];
-  // getRoleTypeLabel?(roleType: RoleType): JSX.Element;
-  // page?: number;
+  itemLabelBg?: {
+    column: string;
+    map: { [propName: string]: { [propName: string]: string } };
+  }[];
   limitRows?: number;
   enablePagination?: boolean;
+  enableSearchFilter?: boolean;
+  searchFilterProperties?: string[];
+  enableTabsFilter?: boolean;
   tabsFilter?: {
     value: string;
     label: any;
@@ -65,7 +65,8 @@ interface TableCustomizedProps {
 }
 
 interface Filters {
-  type?: RoleType;
+  type?: any;
+  // [propName: string]: any
 }
 
 const DialogWrapper = styled(Dialog)(
@@ -145,42 +146,42 @@ const Transition = forwardRef(function Transition(
   return <Slide direction="down" ref={ref} {...props} />;
 });
 
-const getRoleTypeLabel = (roleType: RoleType): JSX.Element => {
-  const map = {
-    free: {
-      text: 'Free',
-      color: 'info'
-    },
-    paid: {
-      text: 'Paid',
-      color: 'warning'
-    }
-  };
+// const getRoleTypeLabel = (roleType: RoleType): JSX.Element => {
+//   const map = {
+//     free: {
+//       text: 'Free',
+//       color: 'info'
+//     },
+//     paid: {
+//       text: 'Paid',
+//       color: 'warning'
+//     }
+//   };
 
-  const { text, color }: any = map[roleType];
+//   const { text, color }: any = map[roleType];
 
-  return <Label color={color}>{text}</Label>;
-};
+//   return <Label color={color}>{text}</Label>;
+// };
 
 const applyFilters = (
-  roles: TableCustomizedType[],
+  data: TableCustomizedDataType[],
   query: string,
-  filters: Filters
-): TableCustomizedType[] => {
-  return roles.filter((role) => {
+  filters: Filters,
+  properties: string[]
+): TableCustomizedDataType[] => {
+  return data.filter((row) => {
     let matches = true;
 
     if (query) {
-      const properties = ['name', 'externalId'];
       let containsQuery = false;
 
       properties.forEach((property) => {
-        if (role[property].toLowerCase().includes(query.toLowerCase())) {
+        if (row[property].toLowerCase().includes(query.toLowerCase())) {
           containsQuery = true;
         }
       });
 
-      if (filters.type && role.type !== filters.type) {
+      if (filters.type && row.type !== filters.type) {
         matches = false;
       }
 
@@ -192,7 +193,7 @@ const applyFilters = (
     Object.keys(filters).forEach((key) => {
       const value = filters[key];
 
-      if (value && role[key] !== value) {
+      if (value && row[key] !== value) {
         matches = false;
       }
     });
@@ -202,17 +203,18 @@ const applyFilters = (
 };
 
 const applyPagination = (
-  roles: TableCustomizedType[],
+  data: TableCustomizedDataType[],
   page: number,
   limit: number
-): TableCustomizedType[] => {
-  return roles.slice(page * limit, page * limit + limit);
+): TableCustomizedDataType[] => {
+  return data.slice(page * limit, page * limit + limit);
 };
 
 const TableCustomized: FC<TableCustomizedProps> = ({
-  roles,
+  data,
   columns,
   tabsFilter,
+  searchFilterProperties,
   limitRows = 5
 }) => {
   const [selectedItems, setSelectedItems] = useState<(string | number)[]>([]);
@@ -220,27 +222,10 @@ const TableCustomized: FC<TableCustomizedProps> = ({
   const { enqueueSnackbar } = useSnackbar();
   // const location = useLocation();
 
-  // const tabs = [
-  //   {
-  //     value: 'all',
-  //     label: t('All types')
-  //   },
-  //   {
-  //     value: 'paid',
-  //     label: t('Paid')
-  //   },
-  //   {
-  //     value: 'free',
-  //     label: t('Free')
-  //   }
-  // ];
-
   const [page, setPage] = useState<number>(0);
-  // const [limit, setLimit] = useState<number>(5);
   const [limit, setLimit] = useState<number>(limitRows);
-  // const [rowsPerPage, setRowsPerPage] = useState<number[]>([10, 20]);
   const rowsPerPage = useRef(
-    [...Array(Math.floor(roles.length / limit) + 1)].map(
+    [...Array(Math.floor(data.length / limit) + 1)].map(
       (_, i) => (i + 1) * limit
     )
   );
@@ -270,18 +255,18 @@ const TableCustomized: FC<TableCustomizedProps> = ({
   };
 
   const handleSelectAllRows = (event: ChangeEvent<HTMLInputElement>): void => {
-    setSelectedItems(event.target.checked ? roles.map((role) => role.id) : []);
+    setSelectedItems(event.target.checked ? data.map((row) => row.id) : []);
   };
 
   const handleSelectOneRow = (
     _event: ChangeEvent<HTMLInputElement>,
-    roleId: string | number
+    rowId: string | number
   ): void => {
-    if (!selectedItems.includes(roleId)) {
-      setSelectedItems((prevSelected) => [...prevSelected, roleId]);
+    if (!selectedItems.includes(rowId)) {
+      setSelectedItems((prevSelected) => [...prevSelected, rowId]);
     } else {
       setSelectedItems((prevSelected) =>
-        prevSelected.filter((id) => id !== roleId)
+        prevSelected.filter((id) => id !== rowId)
       );
     }
   };
@@ -294,21 +279,17 @@ const TableCustomized: FC<TableCustomizedProps> = ({
     setLimit(parseInt(event.target.value));
   };
 
-  const filteredRoles = applyFilters(roles, query, filters);
-  const paginatedRoles = applyPagination(filteredRoles, page, limit);
+  const filteredRows = applyFilters(
+    data,
+    query,
+    filters,
+    searchFilterProperties
+  );
+  const paginatedRows = applyPagination(filteredRows, page, limit);
   const selectedBulkActions = selectedItems.length > 0;
-  const selectedSomeRoles =
-    selectedItems.length > 0 && selectedItems.length < roles.length;
-  const selectedAllRoles = selectedItems.length === roles.length;
-
-  // const [toggleView, setToggleView] = useState<string | null>('table_view');
-
-  // const handleViewOrientation = (
-  //   _event: MouseEvent<HTMLElement>,
-  //   newValue: string | null
-  // ) => {
-  //   setToggleView(newValue);
-  // };
+  const selectedSomeRows =
+    selectedItems.length > 0 && selectedItems.length < data.length;
+  const selectedAllRows = selectedItems.length === data.length;
 
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
 
@@ -370,7 +351,7 @@ const TableCustomized: FC<TableCustomizedProps> = ({
                 )
               }}
               onChange={handleQueryChange}
-              placeholder={t('Search by name, external ID...')} /////////
+              placeholder={t(`Search by ${searchFilterProperties}...`)}
               value={query}
               size="small"
               fullWidth
@@ -383,7 +364,7 @@ const TableCustomized: FC<TableCustomizedProps> = ({
 
         <Divider />
 
-        {paginatedRoles.length === 0 ? (
+        {paginatedRows.length === 0 ? (
           <>
             <Typography
               sx={{
@@ -394,7 +375,7 @@ const TableCustomized: FC<TableCustomizedProps> = ({
               color="text.secondary"
               align="center"
             >
-              {t("We couldn't find any roles matching your search criteria")}
+              {t("We couldn't find any data matching your search criteria")}
             </Typography>
           </>
         ) : (
@@ -405,8 +386,8 @@ const TableCustomized: FC<TableCustomizedProps> = ({
                   <TableRow>
                     <TableCell padding="checkbox">
                       <Checkbox
-                        checked={selectedAllRoles}
-                        indeterminate={selectedSomeRoles}
+                        checked={selectedAllRows}
+                        indeterminate={selectedSomeRows}
                         onChange={handleSelectAllRows}
                       />
                     </TableCell>
@@ -419,24 +400,24 @@ const TableCustomized: FC<TableCustomizedProps> = ({
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {paginatedRoles.map((role) => {
-                    const isRoleSelected = selectedItems.includes(role.id);
+                  {paginatedRows.map((row) => {
+                    const isRowSelected = selectedItems.includes(row.id);
                     const rowValues: string[] = [];
 
-                    for (const key in role) {
+                    for (const key in row) {
                       if (key === 'id') continue;
-                      rowValues.push(role[key]);
+                      rowValues.push(row[key]);
                     }
 
                     return (
-                      <TableRow hover key={role.id} selected={isRoleSelected}>
+                      <TableRow hover key={row.id} selected={isRowSelected}>
                         <TableCell padding="checkbox">
                           <Checkbox
-                            checked={isRoleSelected}
+                            checked={isRowSelected}
                             onChange={(event) =>
-                              handleSelectOneRow(event, role.id)
+                              handleSelectOneRow(event, row.id)
                             }
-                            value={isRoleSelected}
+                            value={isRowSelected}
                           />
                         </TableCell>
 
@@ -467,7 +448,7 @@ const TableCustomized: FC<TableCustomizedProps> = ({
             <Box p={2}>
               <TablePagination
                 component="div"
-                count={filteredRoles.length}
+                count={filteredRows.length}
                 onPageChange={handlePageChange}
                 onRowsPerPageChange={handleLimitChange}
                 page={page}
@@ -539,11 +520,11 @@ const TableCustomized: FC<TableCustomizedProps> = ({
 };
 
 TableCustomized.propTypes = {
-  roles: PropTypes.array.isRequired
+  data: PropTypes.array.isRequired
 };
 
 TableCustomized.defaultProps = {
-  roles: []
+  data: []
 };
 
 export default TableCustomized;
