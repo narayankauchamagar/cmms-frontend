@@ -45,6 +45,11 @@ const TimeCategories = Loader(
 const SubscriptionPlans = Loader(
   lazy(() => import('src/content/own/Subscription/Plans'))
 );
+
+const VendorsAndCustomers = Loader(
+  lazy(() => import('src/content/own/VendorsAndCustomers'))
+);
+
 const appRoutes = [
   {
     path: 'settings',
@@ -111,6 +116,15 @@ const appRoutes = [
       {
         path: 'time',
         element: <TimeCategories />
+      }
+    ]
+  },
+  {
+    path: 'vendors-customers',
+    children: [
+      {
+        path: '',
+        element: <VendorsAndCustomers />
       }
     ]
   }

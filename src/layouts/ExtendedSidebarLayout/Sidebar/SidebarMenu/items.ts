@@ -14,6 +14,7 @@ import BackupTableTwoToneIcon from '@mui/icons-material/BackupTableTwoTone';
 import SmartToyTwoToneIcon from '@mui/icons-material/SmartToyTwoTone';
 import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
 import CategoryTwoToneIcon from '@mui/icons-material/CategoryTwoTone';
+import { GroupsTwoTone } from '@mui/icons-material';
 
 export interface MenuItem {
   link?: string;
@@ -43,6 +44,11 @@ const menuItems: MenuItems[] = [
         name: 'Settings',
         link: '/app/settings',
         icon: SettingsTwoToneIcon
+      },
+      {
+        name: 'Vendors & Customers',
+        link: '/app/vendors-customers',
+        icon: GroupsTwoTone
       }
     ]
   },
