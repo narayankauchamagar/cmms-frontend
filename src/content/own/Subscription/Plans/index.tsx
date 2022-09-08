@@ -35,9 +35,8 @@ function SubscriptionPlans() {
     { name: 'Business', value: 'business', monthly: 40 }
   ];
   const getCost = () => {
-    const monthlyCost = plans.find(
-      (plan) => plan.value == selectedPlan
-    ).monthly;
+    const monthlyCost =
+      plans.find((plan) => plan.value == selectedPlan).monthly * usersCount;
     return period == 'monthly' ? monthlyCost : monthlyCost * 12;
   };
   return (
