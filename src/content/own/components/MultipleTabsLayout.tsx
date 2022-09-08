@@ -117,7 +117,7 @@ function MultipleTabsLayout(props: SettingsLayoutProps) {
   };
 
   return (
-    <>
+    <Box mt={1}>
       <Helmet>
         <title>{title}</title>
       </Helmet>
@@ -160,10 +160,18 @@ function MultipleTabsLayout(props: SettingsLayoutProps) {
           alignItems="stretch"
           spacing={0}
         >
-          {children}
+          <Grid
+            container
+            direction="row"
+            justifyContent="center"
+            alignItems="stretch"
+            spacing={0}
+          >
+            {children}
+          </Grid>
         </Grid>
       </Card>
-    </>
+    </Box>
   );
 }
 
