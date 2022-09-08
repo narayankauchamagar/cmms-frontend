@@ -34,6 +34,12 @@ function SubscriptionPlans() {
     { name: 'Professional', value: 'professional', monthly: 20 },
     { name: 'Business', value: 'business', monthly: 40 }
   ];
+  const getCost = () => {
+    const monthlyCost = plans.find(
+      (plan) => plan.value == selectedPlan
+    ).monthly;
+    return period == 'monthly' ? monthlyCost : monthlyCost * 12;
+  };
   return (
     <>
       <Helmet>
@@ -228,6 +234,10 @@ function SubscriptionPlans() {
                   my: 3
                 }}
               >
+                <Typography sx={{ my: 2 }} variant="h4" gutterBottom>
+                  {t('You will be charged')} <b>${getCost()}</b>{' '}
+                  {period == 'monthly' ? t('monthly') : t('yearly')}
+                </Typography>
                 <Button size="large" variant="contained">
                   {t('Proceed to Payment')}
                 </Button>
