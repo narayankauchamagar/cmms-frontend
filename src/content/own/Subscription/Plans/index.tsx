@@ -120,7 +120,7 @@ function Subscription() {
                 </Typography>
                 <RadioGroup
                   sx={{ p: 2, my: 1 }}
-                  defaultValue={period}
+                  value={period}
                   onChange={(event) => {
                     setPeriod(event.target.value);
                   }}
@@ -132,7 +132,10 @@ function Subscription() {
                         key={item.value}
                         sx={{
                           border: 2,
-                          borderColor: theme.colors.primary.main,
+                          borderColor:
+                            item.value === period
+                              ? theme.colors.primary.main
+                              : theme.colors.alpha.black[30],
                           p: 2,
                           backgroundColor:
                             item.value === period
@@ -150,6 +153,11 @@ function Subscription() {
                     ))}
                   </Stack>
                 </RadioGroup>
+              </Box>
+              <Box>
+                <Typography variant="h4">
+                  {t('Which plan fits you best?')}
+                </Typography>
               </Box>
             </Card>
           </Grid>
