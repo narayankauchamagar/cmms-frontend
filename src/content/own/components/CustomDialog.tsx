@@ -1,4 +1,4 @@
-import { Dialog, DialogTitle, Typography } from '@mui/material';
+import { Breakpoint, Dialog, DialogTitle, Typography } from '@mui/material';
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -8,12 +8,13 @@ interface FormModalProps {
   subtitle?: string;
   open: boolean;
   onClose: () => void;
+  maxWidth?: false | Breakpoint;
 }
 function CustomDialog(props: FormModalProps) {
-  const { open, onClose, children, title, subtitle } = props;
+  const { open, onClose, children, title, subtitle, maxWidth } = props;
   const { t }: { t: any } = useTranslation();
   return (
-    <Dialog fullWidth maxWidth="xs" open={open} onClose={onClose}>
+    <Dialog fullWidth maxWidth={maxWidth ?? 'xs'} open={open} onClose={onClose}>
       <DialogTitle
         sx={{
           p: 3
