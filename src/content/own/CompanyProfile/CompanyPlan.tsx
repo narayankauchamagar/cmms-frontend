@@ -82,7 +82,11 @@ function CompanyPlan(props: CompanyPlanProps) {
           >
             {t('Upgrade now')}
           </Button>
-          <Button variant="contained" color="secondary">
+          <Button
+            onClick={() => navigate('/billing')}
+            variant="contained"
+            color="secondary"
+          >
             {t('Learn more')}
           </Button>
         </Box>

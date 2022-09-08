@@ -224,12 +224,17 @@ function SubscriptionPlans() {
                           plans.find((plan) => plan.value == selectedPlan)
                             .monthly
                         }{' '}
-                        $
+                        $ per month
                       </Typography>
                     </Grid>
                     <Grid item xs={12} lg={12}>
                       <Typography variant={'h4'}>{t('Total cost')}</Typography>
                       <Typography variant="h6">{getCost()} $</Typography>
+                    </Grid>
+                    <Grid item xs={12} lg={12}>
+                      <Typography variant={'h4'}>
+                        {t('Your payment data is encrypted and secure.')}
+                      </Typography>
                     </Grid>
                   </Grid>
                 </Grid>
