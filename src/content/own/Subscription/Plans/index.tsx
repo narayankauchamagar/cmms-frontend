@@ -74,7 +74,7 @@ function SubscriptionPlans() {
             .test(
               'test-number', // this is used internally by yup
               t('Credit Card number is invalid'), //validation message
-              (value) => valid.number(value).isValid
+              (value) => valid.number(value?.toString()).isValid
             ) // return true false based on validation
             .required(t('The card field is required')),
           expirationMonth: Yup.string()
@@ -95,7 +95,7 @@ function SubscriptionPlans() {
             .test(
               'test-cvv', // this is used internally by yup
               t('CVV is invalid'), //validation message
-              (value) => valid.expirationYear(value).isValid
+              (value) => valid.cvv(value?.toString()).isValid
             ) // return true false based on validation
             .required(t('The CVV is required')),
           cardholder: Yup.string()
@@ -206,6 +206,30 @@ function SubscriptionPlans() {
                         value={values.cardholder}
                         variant="outlined"
                       />
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item xs={12} lg={6}>
+                  <Grid container spacing={2} justifyContent="center">
+                    <Grid item xs={12} lg={6}>
+                      <Typography variant={'h4'}>{t('Seats')}</Typography>
+                      <Typography variant="h6">{usersCount}</Typography>
+                    </Grid>
+                    <Grid item xs={12} lg={6}>
+                      <Typography variant={'h4'}>
+                        {t('Cost per seat')}
+                      </Typography>
+                      <Typography variant="h6">
+                        {
+                          plans.find((plan) => plan.value == selectedPlan)
+                            .monthly
+                        }{' '}
+                        $
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} lg={12}>
+                      <Typography variant={'h4'}>{t('Total cost')}</Typography>
+                      <Typography variant="h6">{getCost()} $</Typography>
                     </Grid>
                   </Grid>
                 </Grid>
