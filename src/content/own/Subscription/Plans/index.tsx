@@ -6,6 +6,7 @@ import {
   Divider,
   FormControlLabel,
   Grid,
+  Link,
   Radio,
   RadioGroup,
   Slider,
@@ -23,11 +24,16 @@ function Subscription() {
   const theme = useTheme();
   const [usersCount, setUsersCount] = useState<number>(3);
   const [period, setPeriod] = useState<string>('monthly');
+  const [selectedPlan, setSelectedPlan] = useState<string>('starter');
   const periods = [
     { name: 'Monthly', value: 'monthly' },
     { name: 'Annually', value: 'annually' }
   ];
-
+  const plans = [
+    { name: 'Starter', value: 'starter', monthly: 10 },
+    { name: 'Professional', value: 'professional', monthly: 20 },
+    { name: 'Business', value: 'business', monthly: 40 }
+  ];
   return (
     <>
       <Helmet>
@@ -66,22 +72,16 @@ function Subscription() {
           <Grid item xs={12}>
             <Card sx={{ p: 2, mt: 2 }}>
               <Box>
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="space-between"
-                >
-                  <Box>
-                    <Typography variant="h4" gutterBottom>
-                      {t('Number of users who will use Grash')}
-                    </Typography>
-                    <Typography variant="subtitle2">
-                      {t('Pay only for')} <b>{t('Admin')}</b>,{' '}
-                      <b>{t('Technical')}</b> and{' '}
-                      <b>{t('Limited Technical')}</b> users, and use unlimited{' '}
-                      <b>{t('Requester')}</b>, <b>{t('View-Only')}</b> for free
-                    </Typography>
-                  </Box>
+                <Box>
+                  <Typography variant="h4" gutterBottom>
+                    {t('Number of users who will use Grash')}
+                  </Typography>
+                  <Typography variant="subtitle2">
+                    {t('Pay only for')} <b>{t('Admin')}</b>,{' '}
+                    <b>{t('Technical')}</b> and <b>{t('Limited Technical')}</b>{' '}
+                    users, and use unlimited <b>{t('Requester')}</b>,{' '}
+                    <b>{t('View-Only')}</b> for free
+                  </Typography>
                 </Box>
                 <Stack
                   direction="row"
@@ -126,38 +126,96 @@ function Subscription() {
                   }}
                   name="period"
                 >
-                  <Stack direction="row" spacing={2}>
-                    {periods.map((item) => (
-                      <FormControlLabel
-                        key={item.value}
-                        sx={{
-                          border: 2,
-                          borderColor:
-                            item.value === period
-                              ? theme.colors.primary.main
-                              : theme.colors.alpha.black[30],
-                          p: 2,
-                          backgroundColor:
-                            item.value === period
-                              ? theme.colors.primary.lighter
-                              : null
-                        }}
-                        value={item.value}
-                        control={<Radio />}
-                        label={
-                          <Typography variant="h6" fontWeight="bold">
-                            {item.name}
-                          </Typography>
-                        }
-                      />
-                    ))}
-                  </Stack>
+                  <Grid container>
+                    <Grid item xs={12} md={6}>
+                      <Grid container spacing={1}>
+                        {periods.map((item) => (
+                          <Grid item xs={12} md={6} key={item.value}>
+                            <FormControlLabel
+                              sx={{
+                                border: 2,
+                                borderColor:
+                                  item.value === period
+                                    ? theme.colors.primary.main
+                                    : theme.colors.alpha.black[30],
+                                p: 2,
+                                backgroundColor:
+                                  item.value === period
+                                    ? theme.colors.primary.lighter
+                                    : null
+                              }}
+                              value={item.value}
+                              control={<Radio />}
+                              label={
+                                <Typography variant="h6" fontWeight="bold">
+                                  {item.name}
+                                </Typography>
+                              }
+                            />
+                          </Grid>
+                        ))}
+                      </Grid>
+                    </Grid>
+                  </Grid>
                 </RadioGroup>
               </Box>
               <Box>
-                <Typography variant="h4">
+                <Typography variant="h4" gutterBottom>
                   {t('Which plan fits you best?')}
                 </Typography>
+                <Typography variant="h6">
+                  Check out our <Link href="/pricing">Pricing Page</Link> for
+                  more details
+                </Typography>
+                <RadioGroup
+                  sx={{ p: 2, my: 1 }}
+                  value={selectedPlan}
+                  onChange={(event) => {
+                    setSelectedPlan(event.target.value);
+                  }}
+                  name="plans"
+                >
+                  <Grid container spacing={1}>
+                    {plans.map((item) => (
+                      <Grid item xs={12} md={4} key={item.value}>
+                        <FormControlLabel
+                          sx={{
+                            border: 2,
+                            borderColor:
+                              item.value === selectedPlan
+                                ? theme.colors.primary.main
+                                : theme.colors.alpha.black[30],
+                            p: 2,
+                            backgroundColor:
+                              item.value === selectedPlan
+                                ? theme.colors.primary.lighter
+                                : null
+                          }}
+                          value={item.value}
+                          control={<Radio />}
+                          label={
+                            <Box>
+                              <Typography variant="h6" fontWeight="bold">
+                                {item.name}
+                              </Typography>
+                              <Typography variant="subtitle1">
+                                <b>
+                                  {period == 'monthly'
+                                    ? item.monthly
+                                    : item.monthly * 12}{' '}
+                                  USD
+                                </b>{' '}
+                                {period == 'monthly'
+                                  ? t('per user/month')
+                                  : t('per user/year')}
+                              </Typography>
+                            </Box>
+                          }
+                        />
+                      </Grid>
+                    ))}
+                  </Grid>
+                </RadioGroup>
               </Box>
             </Card>
           </Grid>
