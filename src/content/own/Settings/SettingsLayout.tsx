@@ -13,7 +13,8 @@ function SettingsLayout(props: SettingsLayoutProps) {
   const tabs = [
     { value: '', label: t('General Settings') },
     { value: 'work-order', label: t('Work order configuration') },
-    { value: 'request', label: t('Request form configuration') }
+    { value: 'request', label: t('Request form configuration') },
+    { value: 'roles', label: t('Roles') }
   ];
 
   return (

@@ -11,7 +11,7 @@ const Loader = (Component) => (props) =>
   );
 
 const GeneralSettings = Loader(
-  lazy(() => import('src/content/own/Settings/General'))
+  lazy(() => import('src/content/own/Settings/general'))
 );
 const WorkOrderSettings = Loader(
   lazy(() => import('src/content/own/Settings/WorkOrder'))
@@ -19,6 +19,10 @@ const WorkOrderSettings = Loader(
 const RequestSettings = Loader(
   lazy(() => import('src/content/own/Settings/Request'))
 );
+const RolesSettings = Loader(
+  lazy(() => import('src/content/own/Settings/Roles'))
+);
+
 const UserProfile = Loader(lazy(() => import('src/content/own/UserProfile')));
 const CompanyProfile = Loader(
   lazy(() => import('src/content/own/CompanyProfile'))
@@ -56,6 +60,10 @@ const appRoutes = [
       {
         path: 'request',
         element: <RequestSettings />
+      },
+      {
+        path: 'roles',
+        element: <RolesSettings />
       }
     ]
   },
