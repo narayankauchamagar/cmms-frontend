@@ -2,8 +2,8 @@ import { Helmet } from 'react-helmet-async';
 import PersonTwoToneIcon from '@mui/icons-material/PersonTwoTone';
 import {
   Box,
+  Button,
   Card,
-  Divider,
   FormControlLabel,
   Grid,
   Link,
@@ -11,16 +11,16 @@ import {
   RadioGroup,
   Slider,
   Stack,
-  styled,
   Typography,
   useTheme
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
+import PlanFeatures from './PlanFeatures';
 
-function Subscription() {
+function SubscriptionPlans() {
   const { t }: { t: any } = useTranslation();
-  const plan = { id: 'dsds4', name: 'Starter', users: 2 };
+  const plan = { id: 'dsds4', name: 'Starter', users: 2, code: 'starter' };
   const theme = useTheme();
   const [usersCount, setUsersCount] = useState<number>(3);
   const [period, setPeriod] = useState<string>('monthly');
@@ -217,6 +217,21 @@ function Subscription() {
                   </Grid>
                 </RadioGroup>
               </Box>
+              <Box>
+                <PlanFeatures plan={selectedPlan} />
+              </Box>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  my: 3
+                }}
+              >
+                <Button size="large" variant="contained">
+                  {t('Proceed to Payment')}
+                </Button>
+              </Box>
             </Card>
           </Grid>
         </Grid>
@@ -225,4 +240,4 @@ function Subscription() {
   );
 }
 
-export default Subscription;
+export default SubscriptionPlans;
