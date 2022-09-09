@@ -1,10 +1,29 @@
 import { Helmet } from 'react-helmet-async';
 import { Card, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { TableCustomizedColumnType } from '../type';
+import TableCustomized from '../components/TableCustomized';
+import File from '../../../models/file';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
+  const columns: TableCustomizedColumnType[] = [
+    { label: t('ID'), accessor: 'id' },
+    { label: t('Name'), accessor: 'name' },
+    { label: t('Uploaded By'), accessor: 'createdBy' },
+    { label: t('Uploaded on'), accessor: 'createdAt' }
+  ];
 
+  const files: File[] = [
+    {
+      id: 74,
+      name: 'ghgvhb',
+      createdAt: 'dfggj',
+      createdBy: 'ghu',
+      updatedAt: 'ghfgj',
+      updatedBy: 'ghfgj'
+    }
+  ];
   return (
     <>
       <Helmet>
@@ -26,7 +45,9 @@ function Files() {
               alignItems: 'center',
               justifyContent: 'space-between'
             }}
-          ></Card>
+          >
+            <TableCustomized data={files} columns={columns} />
+          </Card>
         </Grid>
       </Grid>
     </>
