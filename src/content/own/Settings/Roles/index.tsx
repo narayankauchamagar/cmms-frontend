@@ -21,6 +21,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { forwardRef, ReactElement, Ref, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { TransitionProps } from '@mui/material/transitions';
+import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 
 const DialogWrapper = styled(Dialog)(
   () => `
@@ -67,6 +68,9 @@ function Roles() {
     setOpenConfirmDelete(true);
   };
 
+  const handleConfirmDeleteMultiple = (ids: number[]) => {
+    setOpenConfirmDelete(true);
+  };
   const closeConfirmDelete = () => setOpenConfirmDelete(false);
 
   const handleDeleteCompleted = () => {
@@ -270,12 +274,20 @@ function Roles() {
             columns={columns}
             tabsFilter={tabs}
             searchFilterProperties={searchFilterProperties}
-            hasBulkActions
             actions={[
               {
                 name: t('Delete'),
                 color: 'error',
-                callback: handleConfirmDelete
+                callback: handleConfirmDelete,
+                icon: <DeleteTwoToneIcon fontSize="small" />
+              }
+            ]}
+            bulkActions={[
+              {
+                name: t('Delete'),
+                color: 'error',
+                callback: handleConfirmDeleteMultiple,
+                icon: <DeleteTwoToneIcon />
               }
             ]}
           />

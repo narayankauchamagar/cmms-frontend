@@ -28,7 +28,7 @@ import {
   Typography
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import BulkActions from '../Settings/Roles/BulkActions';
+import BulkActions, { BulkAction } from '../Settings/Roles/BulkActions';
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import { useSnackbar } from 'notistack';
@@ -46,7 +46,6 @@ interface TableCustomizedProps {
   limitRows?: number;
   enablePagination?: boolean;
   searchFilterProperties?: string[];
-  hasBulkActions?: boolean;
   enableTabsFilter?: boolean;
   tabsFilter?: {
     value: string;
@@ -66,7 +65,9 @@ interface TableCustomizedProps {
       IconButtonPropsColorOverrides
     >;
     callback: (id: number) => void;
+    icon: ReactNode;
   }[];
+  bulkActions?: BulkAction[];
 }
 
 interface Filters {
@@ -141,8 +142,8 @@ const TableCustomized: FC<TableCustomizedProps> = ({
   tabsFilter,
   searchFilterProperties,
   limitRows = 5,
-  hasBulkActions = false,
-  actions
+  actions,
+  bulkActions
 }) => {
   const [selectedItems, setSelectedItems] = useState<(string | number)[]>([]);
   const { t }: { t: any } = useTranslation();
@@ -263,7 +264,9 @@ const TableCustomized: FC<TableCustomizedProps> = ({
             variant="outlined"
           />
         )}
-        {selectedBulkActions && hasBulkActions && <BulkActions />}
+        {selectedBulkActions && bulkActions && (
+          <BulkActions actions={bulkActions} />
+        )}
       </Box>
 
       <Divider />
@@ -288,7 +291,7 @@ const TableCustomized: FC<TableCustomizedProps> = ({
             <Table>
               <TableHead>
                 <TableRow>
-                  {hasBulkActions && (
+                  {bulkActions && (
                     <TableCell padding="checkbox">
                       <Checkbox
                         checked={selectedAllRows}
@@ -314,7 +317,7 @@ const TableCustomized: FC<TableCustomizedProps> = ({
 
                   return (
                     <TableRow hover key={row.id} selected={isRowSelected}>
-                      {hasBulkActions && (
+                      {bulkActions && (
                         <TableCell padding="checkbox">
                           <Checkbox
                             checked={isRowSelected}
@@ -344,7 +347,7 @@ const TableCustomized: FC<TableCustomizedProps> = ({
                                 onClick={() => action.callback(Number(row.id))}
                                 color={action.color}
                               >
-                                <DeleteTwoToneIcon fontSize="small" />
+                                {action.icon}
                               </IconButton>
                             </Tooltip>
                           ))}

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, ReactNode } from 'react';
 
 import {
   Box,
@@ -17,6 +17,8 @@ import { useTranslation } from 'react-i18next';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
 import VerifiedUserTwoToneIcon from '@mui/icons-material/VerifiedUserTwoTone';
+import { OverridableStringUnion } from '@mui/types';
+import { IconButtonPropsColorOverrides } from '@mui/material/IconButton/IconButton';
 
 const ButtonError = styled(Button)(
   ({ theme }) => `
@@ -28,8 +30,18 @@ const ButtonError = styled(Button)(
      }
     `
 );
+export interface BulkAction {
+  name: string;
+  color: 'primary' | 'error';
+  callback: (ids: number[]) => void;
+  icon: ReactNode;
+}
+interface BulkActionsProps {
+  actions: BulkAction[];
+}
 
-function BulkActions() {
+function BulkActions(props: BulkActionsProps) {
+  const { actions } = props;
   const [onMenuOpen, menuOpen] = useState<boolean>(false);
   const moreRef = useRef<HTMLButtonElement | null>(null);
   const { t }: { t: any } = useTranslation();
@@ -60,15 +72,31 @@ function BulkActions() {
               <VerifiedUserTwoToneIcon />
             </IconButton>
           </Tooltip> */}
-          <ButtonError
-            sx={{
-              ml: 1
-            }}
-            startIcon={<DeleteTwoToneIcon />}
-            variant="contained"
-          >
-            {t('Delete')}
-          </ButtonError>
+          {actions.map((action) =>
+            action.color == 'primary' ? (
+              <Button
+                onClick={() => action.callback([1, 2])}
+                sx={{
+                  ml: 1
+                }}
+                startIcon={action.icon}
+                variant="contained"
+              >
+                {action.name}
+              </Button>
+            ) : (
+              <ButtonError
+                sx={{
+                  ml: 1
+                }}
+                onClick={() => action.callback([1, 2])}
+                startIcon={action.icon}
+                variant="contained"
+              >
+                {action.name}
+              </ButtonError>
+            )
+          )}
         </Box>
         <IconButton
           color="primary"
