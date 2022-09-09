@@ -9,6 +9,7 @@ import { Provider } from 'react-redux';
 import store from 'src/store';
 import App from 'src/App';
 import { SidebarProvider } from 'src/contexts/SidebarContext';
+import { TitleProvider } from 'src/contexts/TitleContext';
 import * as serviceWorker from 'src/serviceWorker';
 import { AuthProvider } from 'src/contexts/JWTAuthContext';
 
@@ -16,12 +17,14 @@ ReactDOM.render(
   <HelmetProvider>
     <Provider store={store}>
       <SidebarProvider>
-        <BrowserRouter>
-          <ScrollTop />
-          <AuthProvider>
-            <App />
-          </AuthProvider>
-        </BrowserRouter>
+        <TitleProvider>
+          <BrowserRouter>
+            <ScrollTop />
+            <AuthProvider>
+              <App />
+            </AuthProvider>
+          </BrowserRouter>
+        </TitleProvider>
       </SidebarProvider>
     </Provider>
   </HelmetProvider>,

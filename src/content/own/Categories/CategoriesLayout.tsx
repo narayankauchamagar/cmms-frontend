@@ -1,4 +1,4 @@
-import { Fragment, ReactNode, useState } from 'react';
+import { Fragment, ReactNode, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import MultipleTabsLayout from '../components/MultipleTabsLayout';
 import {
@@ -25,6 +25,7 @@ import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import wait from '../../../utils/wait';
+import { TitleContext } from '../../../contexts/TitleContext';
 
 const IconButtonWrapper = styled(IconButton)(
   ({ theme }) => `
@@ -60,6 +61,11 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
     useState<boolean>(false);
   const handleOpenAddCategoryModal = () => setOpenAddCategoryModal(true);
   const handleCloseAddCategoryModal = () => setOpenAddCategoryModal(false);
+  const { setTitle } = useContext(TitleContext);
+
+  useEffect(() => {
+    setTitle(t('Categories'));
+  }, []);
   const tabs = [
     { value: '', label: t('Work Orders') },
     { value: 'asset-status', label: t('Asset Status') },

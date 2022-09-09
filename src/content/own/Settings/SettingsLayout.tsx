@@ -1,6 +1,7 @@
-import { ReactNode } from 'react';
+import { ReactNode, useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import MultipleTabsLayout from '../components/MultipleTabsLayout';
+import { TitleContext } from '../../../contexts/TitleContext';
 
 interface SettingsLayoutProps {
   children?: ReactNode;
@@ -16,6 +17,11 @@ function SettingsLayout(props: SettingsLayoutProps) {
     { value: 'request', label: t('Request form configuration') },
     { value: 'roles', label: t('Roles') }
   ];
+  const { setTitle } = useContext(TitleContext);
+
+  useEffect(() => {
+    setTitle(t('Settings'));
+  }, []);
 
   return (
     <MultipleTabsLayout

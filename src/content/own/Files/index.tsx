@@ -4,9 +4,16 @@ import { useTranslation } from 'react-i18next';
 import { TableCustomizedColumnType } from '../type';
 import TableCustomized from '../components/TableCustomized';
 import File from '../../../models/file';
+import { useContext, useEffect } from 'react';
+import { TitleContext } from '../../../contexts/TitleContext';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
+  const { setTitle } = useContext(TitleContext);
+
+  useEffect(() => {
+    setTitle(t('Files'));
+  }, []);
   const columns: TableCustomizedColumnType[] = [
     { label: t('ID'), accessor: 'id' },
     { label: t('Name'), accessor: 'name' },
