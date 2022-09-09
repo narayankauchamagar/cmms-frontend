@@ -33,6 +33,8 @@ import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import { useSnackbar } from 'notistack';
 import { TableCustomizedColumnType, TableCustomizedDataType } from '../type';
+import { OverridableStringUnion } from '@mui/types';
+import { IconButtonPropsColorOverrides } from '@mui/material/IconButton/IconButton';
 
 interface TableCustomizedProps {
   data: TableCustomizedDataType[];
@@ -50,7 +52,21 @@ interface TableCustomizedProps {
     value: string;
     label: any;
   }[];
-  actions?: ReactNode;
+  actions?: {
+    name: string;
+    color: OverridableStringUnion<
+      | 'inherit'
+      | 'default'
+      | 'primary'
+      | 'secondary'
+      | 'error'
+      | 'info'
+      | 'success'
+      | 'warning',
+      IconButtonPropsColorOverrides
+    >;
+    callback: (id: number) => void;
+  }[];
 }
 
 interface Filters {
@@ -317,7 +333,22 @@ const TableCustomized: FC<TableCustomizedProps> = ({
                       ))}
 
                       {actions && (
-                        <TableCell align="center">{actions}</TableCell>
+                        <TableCell align="center">
+                          {actions.map((action) => (
+                            <Tooltip
+                              key={action.name}
+                              title={action.name}
+                              arrow
+                            >
+                              <IconButton
+                                onClick={() => action.callback(Number(row.id))}
+                                color={action.color}
+                              >
+                                <DeleteTwoToneIcon fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
+                          ))}
+                        </TableCell>
                       )}
                     </TableRow>
                   );

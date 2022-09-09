@@ -6,10 +6,8 @@ import {
   Button,
   Dialog,
   Grid,
-  IconButton,
   Slide,
   styled,
-  Tooltip,
   Typography,
   Zoom
 } from '@mui/material';
@@ -23,7 +21,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import { forwardRef, ReactElement, Ref, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { TransitionProps } from '@mui/material/transitions';
-import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 
 const DialogWrapper = styled(Dialog)(
   () => `
@@ -66,13 +63,11 @@ function Roles() {
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = (id: number) => {
     setOpenConfirmDelete(true);
   };
 
-  const closeConfirmDelete = () => {
-    setOpenConfirmDelete(false);
-  };
+  const closeConfirmDelete = () => setOpenConfirmDelete(false);
 
   const handleDeleteCompleted = () => {
     setOpenConfirmDelete(false);
@@ -255,15 +250,6 @@ function Roles() {
       </Box>
     </DialogWrapper>
   );
-  const actions = () => (
-    <Typography noWrap>
-      <Tooltip title={t('Delete')} arrow>
-        <IconButton onClick={handleConfirmDelete} color="primary">
-          <DeleteTwoToneIcon fontSize="small" />
-        </IconButton>
-      </Tooltip>
-    </Typography>
-  );
   return (
     <SettingsLayout tabIndex={3}>
       <PageHeader rolesNumber={roles.length} />
@@ -285,7 +271,13 @@ function Roles() {
             tabsFilter={tabs}
             searchFilterProperties={searchFilterProperties}
             hasBulkActions
-            actions={actions()}
+            actions={[
+              {
+                name: t('Delete'),
+                color: 'error',
+                callback: handleConfirmDelete
+              }
+            ]}
           />
         </Grid>
       </Grid>
