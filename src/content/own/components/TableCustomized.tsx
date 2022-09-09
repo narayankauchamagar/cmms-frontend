@@ -44,19 +44,19 @@ import BulkActions from '../Settings/Roles/BulkActions';
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import { useSnackbar } from 'notistack';
-import { TableCustomizedDataType } from '../type';
+import { TableCustomizedColumnType, TableCustomizedDataType } from '../type';
 
 interface TableCustomizedProps {
   data: TableCustomizedDataType[];
-  columns: string[];
+  columns: TableCustomizedColumnType[];
   itemLabelBg?: {
     column: string;
     map: { [propName: string]: { [propName: string]: string } };
   }[];
   limitRows?: number;
   enablePagination?: boolean;
-  enableSearchFilter?: boolean;
   searchFilterProperties?: string[];
+  hasBulkActions?: boolean;
   enableTabsFilter?: boolean;
   tabsFilter?: {
     value: string;
@@ -215,7 +215,8 @@ const TableCustomized: FC<TableCustomizedProps> = ({
   columns,
   tabsFilter,
   searchFilterProperties,
-  limitRows = 5
+  limitRows = 5,
+  hasBulkActions = false
 }) => {
   const [selectedItems, setSelectedItems] = useState<(string | number)[]>([]);
   const { t }: { t: any } = useTranslation();
@@ -316,29 +317,30 @@ const TableCustomized: FC<TableCustomizedProps> = ({
 
   return (
     <>
-      <Box
-        display="flex"
-        alignItems="center"
-        flexDirection={{ xs: 'column', sm: 'row' }}
-        justifyContent={{ xs: 'center', sm: 'space-between' }}
-        pb={3}
-      >
-        <TabsWrapper
-          onChange={handleTabsChange}
-          scrollButtons="auto"
-          textColor="secondary"
-          value={filters.type || 'all'}
-          variant="scrollable"
+      {tabsFilter && (
+        <Box
+          display="flex"
+          alignItems="center"
+          flexDirection={{ xs: 'column', sm: 'row' }}
+          justifyContent={{ xs: 'center', sm: 'space-between' }}
+          pb={3}
         >
-          {tabsFilter &&
-            tabsFilter.map((tab) => (
+          <TabsWrapper
+            onChange={handleTabsChange}
+            scrollButtons="auto"
+            textColor="secondary"
+            value={filters.type || 'all'}
+            variant="scrollable"
+          >
+            {tabsFilter.map((tab) => (
               <Tab key={tab.value} value={tab.value} label={tab.label} />
             ))}
-        </TabsWrapper>
-      </Box>
+          </TabsWrapper>
+        </Box>
+      )}
       <Card>
         <Box p={2}>
-          {!selectedBulkActions && (
+          {!selectedBulkActions && searchFilterProperties && (
             <TextField
               sx={{
                 m: 0
@@ -359,7 +361,7 @@ const TableCustomized: FC<TableCustomizedProps> = ({
               variant="outlined"
             />
           )}
-          {selectedBulkActions && <BulkActions />}
+          {selectedBulkActions && hasBulkActions && <BulkActions />}
         </Box>
 
         <Divider />
@@ -384,16 +386,18 @@ const TableCustomized: FC<TableCustomizedProps> = ({
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        checked={selectedAllRows}
-                        indeterminate={selectedSomeRows}
-                        onChange={handleSelectAllRows}
-                      />
-                    </TableCell>
+                    {hasBulkActions && (
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          checked={selectedAllRows}
+                          indeterminate={selectedSomeRows}
+                          onChange={handleSelectAllRows}
+                        />
+                      </TableCell>
+                    )}
 
                     {columns.map((col) => (
-                      <TableCell key={col}>{t(col)}</TableCell>
+                      <TableCell key={col.accessor}>{t(col.label)}</TableCell>
                     ))}
 
                     <TableCell align="center">{t('Actions')}</TableCell>
@@ -402,24 +406,21 @@ const TableCustomized: FC<TableCustomizedProps> = ({
                 <TableBody>
                   {paginatedRows.map((row) => {
                     const isRowSelected = selectedItems.includes(row.id);
-                    const rowValues: string[] = [];
-
-                    for (const key in row) {
-                      if (key === 'id') continue;
-                      rowValues.push(row[key]);
-                    }
+                    const rowValues = columns.map((col) => row[col.accessor]);
 
                     return (
                       <TableRow hover key={row.id} selected={isRowSelected}>
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            checked={isRowSelected}
-                            onChange={(event) =>
-                              handleSelectOneRow(event, row.id)
-                            }
-                            value={isRowSelected}
-                          />
-                        </TableCell>
+                        {hasBulkActions && (
+                          <TableCell padding="checkbox">
+                            <Checkbox
+                              checked={isRowSelected}
+                              onChange={(event) =>
+                                handleSelectOneRow(event, row.id)
+                              }
+                              value={isRowSelected}
+                            />
+                          </TableCell>
+                        )}
 
                         {rowValues.map((value, i) => (
                           <TableCell key={`${value}_${i}`}>

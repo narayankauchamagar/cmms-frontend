@@ -3,9 +3,10 @@ import SettingsLayout from '../SettingsLayout';
 import { Grid, styled } from '@mui/material';
 
 import PageHeader from './PageHeader';
-import { Role } from '../../type';
+import { TableCustomizedColumnType } from '../../type';
 import TableCustomized from '../../components/TableCustomized';
 import { useTranslation } from 'react-i18next';
+import { Role } from '../../../../models/role';
 
 function Roles() {
   const { t }: { t: any } = useTranslation();
@@ -97,7 +98,12 @@ function Roles() {
     }
   ];
 
-  const columns: string[] = ['Name', 'Users', 'External ID', 'Type'];
+  const columns: TableCustomizedColumnType[] = [
+    { label: 'Name', accessor: 'name' },
+    { label: 'Users', accessor: 'users' },
+    { label: 'External ID', accessor: 'externalId' },
+    { label: 'Type', accessor: 'type' }
+  ];
 
   const searchFilterProperties = ['name', 'externalId'];
 
@@ -136,7 +142,7 @@ function Roles() {
             columns={columns}
             tabsFilter={tabs}
             searchFilterProperties={searchFilterProperties}
-            limitRows={5}
+            hasBulkActions
           />
         </Grid>
       </Grid>
