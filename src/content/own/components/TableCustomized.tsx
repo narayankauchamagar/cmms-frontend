@@ -48,9 +48,12 @@ interface TableCustomizedProps {
   searchFilterProperties?: string[];
   enableTabsFilter?: boolean;
   tabsFilter?: {
-    value: string;
-    label: any;
-  }[];
+    accessor: string;
+    tabs: {
+      value: string;
+      label: any;
+    }[];
+  };
   actions?: {
     name: string;
     color: OverridableStringUnion<
@@ -171,7 +174,7 @@ const TableCustomized: FC<TableCustomizedProps> = ({
 
     setFilters((prevFilters) => ({
       ...prevFilters,
-      type: value
+      [tabsFilter.accessor]: value
     }));
 
     setSelectedItems([]);
@@ -236,7 +239,7 @@ const TableCustomized: FC<TableCustomizedProps> = ({
             value={filters.type || 'all'}
             variant="scrollable"
           >
-            {tabsFilter.map((tab) => (
+            {tabsFilter.tabs.map((tab) => (
               <Tab key={tab.value} value={tab.value} label={tab.label} />
             ))}
           </TabsWrapper>

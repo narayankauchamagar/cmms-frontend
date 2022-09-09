@@ -272,7 +272,7 @@ function Roles() {
           <TableCustomized
             data={roles}
             columns={columns}
-            tabsFilter={tabs}
+            tabsFilter={{ accessor: 'type', tabs }}
             searchFilterProperties={searchFilterProperties}
             actions={[
               {
