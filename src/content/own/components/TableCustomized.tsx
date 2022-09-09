@@ -1,44 +1,32 @@
 import {
-  FC,
   ChangeEvent,
-  MouseEvent,
+  FC,
+  ReactNode,
   SyntheticEvent,
-  useState,
-  ReactElement,
-  Ref,
-  forwardRef,
-  useRef
+  useRef,
+  useState
 } from 'react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
-  Avatar,
   Box,
-  Card,
   Checkbox,
-  Slide,
   Divider,
-  Tooltip,
   IconButton,
   InputAdornment,
+  styled,
+  Tab,
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TablePagination,
-  TableContainer,
   TableRow,
-  Tab,
   Tabs,
   TextField,
-  Button,
-  Typography,
-  Dialog,
-  Zoom,
-  styled
+  Tooltip,
+  Typography
 } from '@mui/material';
-import { TransitionProps } from '@mui/material/transitions';
-import CloseIcon from '@mui/icons-material/Close';
 import { useTranslation } from 'react-i18next';
 import BulkActions from '../Settings/Roles/BulkActions';
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
@@ -62,68 +50,13 @@ interface TableCustomizedProps {
     value: string;
     label: any;
   }[];
+  actions?: ReactNode;
 }
 
 interface Filters {
   type?: any;
   // [propName: string]: any
 }
-
-const DialogWrapper = styled(Dialog)(
-  () => `
-        .MuiDialog-paper {
-          overflow: visible;
-        }
-  `
-);
-
-const AvatarError = styled(Avatar)(
-  ({ theme }) => `
-        background-color: ${theme.colors.error.lighter};
-        color: ${theme.colors.error.main};
-        width: ${theme.spacing(12)};
-        height: ${theme.spacing(12)};
-  
-        .MuiSvgIcon-root {
-          font-size: ${theme.typography.pxToRem(45)};
-        }
-  `
-);
-
-// const CardWrapper = styled(Card)(
-//   ({ theme }) => `
-
-//     position: relative;
-//     overflow: visible;
-
-//     &::after {
-//       content: '';
-//       position: absolute;
-//       width: 100%;
-//       height: 100%;
-//       top: 0;
-//       left: 0;
-//       border-radius: inherit;
-//       z-index: 1;
-//       transition: ${theme.transitions.create(['box-shadow'])};
-//     }
-
-//       &.Mui-selected::after {
-//         box-shadow: 0 0 0 3px ${theme.colors.primary.main};
-//       }
-//     `
-// );
-
-const ButtonError = styled(Button)(
-  ({ theme }) => `
-       background: ${theme.colors.error.main};
-       color: ${theme.palette.error.contrastText};
-  
-       &:hover {
-          background: ${theme.colors.error.dark};
-       }
-      `
-);
 
 const TabsWrapper = styled(Tabs)(
   ({ theme }) => `
@@ -138,30 +71,6 @@ const TabsWrapper = styled(Tabs)(
       }
       `
 );
-
-const Transition = forwardRef(function Transition(
-  props: TransitionProps & { children: ReactElement<any, any> },
-  ref: Ref<unknown>
-) {
-  return <Slide direction="down" ref={ref} {...props} />;
-});
-
-// const getRoleTypeLabel = (roleType: RoleType): JSX.Element => {
-//   const map = {
-//     free: {
-//       text: 'Free',
-//       color: 'info'
-//     },
-//     paid: {
-//       text: 'Paid',
-//       color: 'warning'
-//     }
-//   };
-
-//   const { text, color }: any = map[roleType];
-
-//   return <Label color={color}>{text}</Label>;
-// };
 
 const applyFilters = (
   data: TableCustomizedDataType[],
@@ -216,7 +125,8 @@ const TableCustomized: FC<TableCustomizedProps> = ({
   tabsFilter,
   searchFilterProperties,
   limitRows = 5,
-  hasBulkActions = false
+  hasBulkActions = false,
+  actions
 }) => {
   const [selectedItems, setSelectedItems] = useState<(string | number)[]>([]);
   const { t }: { t: any } = useTranslation();
@@ -292,29 +202,6 @@ const TableCustomized: FC<TableCustomizedProps> = ({
     selectedItems.length > 0 && selectedItems.length < data.length;
   const selectedAllRows = selectedItems.length === data.length;
 
-  const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
-
-  const handleConfirmDelete = () => {
-    setOpenConfirmDelete(true);
-  };
-
-  const closeConfirmDelete = () => {
-    setOpenConfirmDelete(false);
-  };
-
-  const handleDeleteCompleted = () => {
-    setOpenConfirmDelete(false);
-
-    enqueueSnackbar(t('The role has been removed'), {
-      variant: 'success',
-      anchorOrigin: {
-        vertical: 'top',
-        horizontal: 'right'
-      },
-      TransitionComponent: Zoom
-    });
-  };
-
   return (
     <>
       {tabsFilter && (
@@ -338,184 +225,119 @@ const TableCustomized: FC<TableCustomizedProps> = ({
           </TabsWrapper>
         </Box>
       )}
-      <Card>
-        <Box p={2}>
-          {!selectedBulkActions && searchFilterProperties && (
-            <TextField
-              sx={{
-                m: 0
-              }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchTwoToneIcon />
-                  </InputAdornment>
-                )
-              }}
-              onChange={handleQueryChange}
-              placeholder={t(`Search by ${searchFilterProperties}...`)}
-              value={query}
-              size="small"
-              fullWidth
-              margin="normal"
-              variant="outlined"
-            />
-          )}
-          {selectedBulkActions && hasBulkActions && <BulkActions />}
-        </Box>
-
-        <Divider />
-
-        {paginatedRows.length === 0 ? (
-          <>
-            <Typography
-              sx={{
-                py: 10
-              }}
-              variant="h3"
-              fontWeight="normal"
-              color="text.secondary"
-              align="center"
-            >
-              {t("We couldn't find any data matching your search criteria")}
-            </Typography>
-          </>
-        ) : (
-          <>
-            <TableContainer>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    {hasBulkActions && (
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={selectedAllRows}
-                          indeterminate={selectedSomeRows}
-                          onChange={handleSelectAllRows}
-                        />
-                      </TableCell>
-                    )}
-
-                    {columns.map((col) => (
-                      <TableCell key={col.accessor}>{t(col.label)}</TableCell>
-                    ))}
-
-                    <TableCell align="center">{t('Actions')}</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {paginatedRows.map((row) => {
-                    const isRowSelected = selectedItems.includes(row.id);
-                    const rowValues = columns.map((col) => row[col.accessor]);
-
-                    return (
-                      <TableRow hover key={row.id} selected={isRowSelected}>
-                        {hasBulkActions && (
-                          <TableCell padding="checkbox">
-                            <Checkbox
-                              checked={isRowSelected}
-                              onChange={(event) =>
-                                handleSelectOneRow(event, row.id)
-                              }
-                              value={isRowSelected}
-                            />
-                          </TableCell>
-                        )}
-
-                        {rowValues.map((value, i) => (
-                          <TableCell key={`${value}_${i}`}>
-                            <Typography variant="h6">{value}</Typography>
-                          </TableCell>
-                        ))}
-
-                        <TableCell align="center">
-                          <Typography noWrap>
-                            <Tooltip title={t('Delete')} arrow>
-                              <IconButton
-                                onClick={handleConfirmDelete}
-                                color="primary"
-                              >
-                                <DeleteTwoToneIcon fontSize="small" />
-                              </IconButton>
-                            </Tooltip>
-                          </Typography>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <Box p={2}>
-              <TablePagination
-                component="div"
-                count={filteredRows.length}
-                onPageChange={handlePageChange}
-                onRowsPerPageChange={handleLimitChange}
-                page={page}
-                rowsPerPage={limit}
-                rowsPerPageOptions={rowsPerPage.current}
-              />
-            </Box>
-          </>
-        )}
-      </Card>
-
-      <DialogWrapper
-        open={openConfirmDelete}
-        maxWidth="sm"
-        fullWidth
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={closeConfirmDelete}
-      >
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          flexDirection="column"
-          p={5}
-        >
-          <AvatarError>
-            <CloseIcon />
-          </AvatarError>
-
-          <Typography
-            align="center"
+      <Box p={2}>
+        {!selectedBulkActions && searchFilterProperties && (
+          <TextField
             sx={{
-              py: 4,
-              px: 6
+              m: 0
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchTwoToneIcon />
+                </InputAdornment>
+              )
+            }}
+            onChange={handleQueryChange}
+            placeholder={t(`Search by ${searchFilterProperties}...`)}
+            value={query}
+            size="small"
+            fullWidth
+            margin="normal"
+            variant="outlined"
+          />
+        )}
+        {selectedBulkActions && hasBulkActions && <BulkActions />}
+      </Box>
+
+      <Divider />
+
+      {paginatedRows.length === 0 ? (
+        <>
+          <Typography
+            sx={{
+              py: 10
             }}
             variant="h3"
+            fontWeight="normal"
+            color="text.secondary"
+            align="center"
           >
-            {t('Are you sure you want to permanently delete this role')}?
+            {t("We couldn't find any data matching your search criteria")}
           </Typography>
+        </>
+      ) : (
+        <>
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  {hasBulkActions && (
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        checked={selectedAllRows}
+                        indeterminate={selectedSomeRows}
+                        onChange={handleSelectAllRows}
+                      />
+                    </TableCell>
+                  )}
 
-          <Box>
-            <Button
-              variant="text"
-              size="large"
-              sx={{
-                mx: 1
-              }}
-              onClick={closeConfirmDelete}
-            >
-              {t('Cancel')}
-            </Button>
-            <ButtonError
-              onClick={handleDeleteCompleted}
-              size="large"
-              sx={{
-                mx: 1,
-                px: 3
-              }}
-              variant="contained"
-            >
-              {t('Delete')}
-            </ButtonError>
+                  {columns.map((col) => (
+                    <TableCell key={col.accessor}>{t(col.label)}</TableCell>
+                  ))}
+
+                  {actions && (
+                    <TableCell align="center">{t('Actions')}</TableCell>
+                  )}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {paginatedRows.map((row) => {
+                  const isRowSelected = selectedItems.includes(row.id);
+                  const rowValues = columns.map((col) => row[col.accessor]);
+
+                  return (
+                    <TableRow hover key={row.id} selected={isRowSelected}>
+                      {hasBulkActions && (
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            checked={isRowSelected}
+                            onChange={(event) =>
+                              handleSelectOneRow(event, row.id)
+                            }
+                            value={isRowSelected}
+                          />
+                        </TableCell>
+                      )}
+
+                      {rowValues.map((value, i) => (
+                        <TableCell key={`${value}_${i}`}>
+                          <Typography variant="h6">{value}</Typography>
+                        </TableCell>
+                      ))}
+
+                      {actions && (
+                        <TableCell align="center">{actions}</TableCell>
+                      )}
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <Box p={2}>
+            <TablePagination
+              component="div"
+              count={filteredRows.length}
+              onPageChange={handlePageChange}
+              onRowsPerPageChange={handleLimitChange}
+              page={page}
+              rowsPerPage={limit}
+              rowsPerPageOptions={rowsPerPage.current}
+            />
           </Box>
-        </Box>
-      </DialogWrapper>
+        </>
+      )}
     </>
   );
 };
