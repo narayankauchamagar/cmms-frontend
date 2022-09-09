@@ -11,7 +11,7 @@ const Loader = (Component) => (props) =>
   );
 
 const GeneralSettings = Loader(
-  lazy(() => import('src/content/own/Settings/general'))
+  lazy(() => import('src/content/own/Settings/General'))
 );
 const WorkOrderSettings = Loader(
   lazy(() => import('src/content/own/Settings/WorkOrder'))
@@ -45,6 +45,7 @@ const TimeCategories = Loader(
 const SubscriptionPlans = Loader(
   lazy(() => import('src/content/own/Subscription/Plans'))
 );
+const Files = Loader(lazy(() => import('src/content/own/Files')));
 const appRoutes = [
   {
     path: 'settings',
@@ -88,6 +89,10 @@ const appRoutes = [
         element: <SubscriptionPlans />
       }
     ]
+  },
+  {
+    path: 'files',
+    element: <Files />
   },
   {
     path: 'categories',

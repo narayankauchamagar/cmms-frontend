@@ -14,6 +14,7 @@ import BackupTableTwoToneIcon from '@mui/icons-material/BackupTableTwoTone';
 import SmartToyTwoToneIcon from '@mui/icons-material/SmartToyTwoTone';
 import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
 import CategoryTwoToneIcon from '@mui/icons-material/CategoryTwoTone';
+import AttachFileTwoToneIcon from '@mui/icons-material/AttachFileTwoTone';
 
 export interface MenuItem {
   link?: string;
@@ -34,6 +35,11 @@ const menuItems: MenuItems[] = [
   {
     heading: '',
     items: [
+      {
+        name: 'Files',
+        link: '/app/files',
+        icon: AttachFileTwoToneIcon
+      },
       {
         name: 'Categories',
         link: '/app/categories',

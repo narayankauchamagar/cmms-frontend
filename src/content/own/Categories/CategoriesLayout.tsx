@@ -176,6 +176,7 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
       tabIndex={tabIndex}
       title={`${tabs[tabIndex].label} Categories`}
       action={handleOpenAddCategoryModal}
+      actionTitle={t('Categories')}
     >
       {renderModal()}
       <Grid item xs={12}>
