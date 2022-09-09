@@ -1,4 +1,10 @@
-import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import {
+  ChangeEvent,
+  useCallback,
+  useContext,
+  useEffect,
+  useState
+} from 'react';
 
 import { Helmet } from 'react-helmet-async';
 import Footer from 'src/components/Footer';
@@ -12,6 +18,7 @@ import RecentActivity from './RecentActivity';
 import MyCards from './MyCards';
 import ProfileDetails from './ProfileDetails';
 import axios from 'src/utils/axios';
+import { TitleContext } from '../../../contexts/TitleContext';
 
 function ManagementUsersView() {
   const isMountedRef = useRefMounted();
@@ -19,7 +26,11 @@ function ManagementUsersView() {
   // @ts-ignore
   const userId = '1';
   const { t }: { t: any } = useTranslation();
+  const { setTitle } = useContext(TitleContext);
 
+  useEffect(() => {
+    setTitle(t('Profile'));
+  }, []);
   const getUser = useCallback(async () => {
     try {
       const response = await axios.get<{ user: User }>('/api/user', {

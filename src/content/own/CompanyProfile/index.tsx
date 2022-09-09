@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import { Helmet } from 'react-helmet-async';
 
@@ -7,8 +7,11 @@ import CompanyCover from './CompanyCover';
 import CompanyDetails from './CompanyDetails';
 import { Company } from '../../../models/owns/company';
 import CompanyPlan from './CompanyPlan';
+import { TitleContext } from '../../../contexts/TitleContext';
+import { useTranslation } from 'react-i18next';
 
 function CompanyProfile() {
+  const { t }: { t: any } = useTranslation();
   const [company, setCompany] = useState<Company | null>({
     name: 'Maxtron',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png',
@@ -18,6 +21,11 @@ function CompanyProfile() {
     website: 'www.google.com',
     plan: { id: 'dsds4', name: 'Starter', users: 2 }
   });
+  const { setTitle } = useContext(TitleContext);
+
+  useEffect(() => {
+    setTitle(t('Company'));
+  }, []);
   if (!company) {
     return null;
   }

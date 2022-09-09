@@ -21,13 +21,14 @@ import {
   useTheme
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import PlanFeatures from './PlanFeatures';
 import * as Yup from 'yup';
 import wait from '../../../../utils/wait';
 import CustomDialog from '../../components/CustomDialog';
 import { Field, Formik } from 'formik';
 import valid from 'card-validator';
+import { TitleContext } from '../../../../contexts/TitleContext';
 
 function SubscriptionPlans() {
   const { t }: { t: any } = useTranslation();
@@ -39,6 +40,11 @@ function SubscriptionPlans() {
   const handleOpenCheckoutModal = () => setOpenCheckout(true);
   const [period, setPeriod] = useState<string>('monthly');
   const [selectedPlan, setSelectedPlan] = useState<string>('starter');
+  const { setTitle } = useContext(TitleContext);
+
+  useEffect(() => {
+    setTitle(t('Plans'));
+  }, []);
   const periods = [
     { name: 'Monthly', value: 'monthly' },
     { name: 'Annually', value: 'annually' }
