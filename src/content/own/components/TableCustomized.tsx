@@ -13,6 +13,7 @@ import {
   Divider,
   IconButton,
   InputAdornment,
+  Stack,
   styled,
   Tab,
   Table,
@@ -223,7 +224,7 @@ const TableCustomized: FC<TableCustomizedProps> = ({
   const selectedAllRows = selectedItems.length === data.length;
 
   return (
-    <>
+    <Box width="100%">
       {tabsFilter && (
         <Box
           display="flex"
@@ -289,7 +290,7 @@ const TableCustomized: FC<TableCustomizedProps> = ({
           </Typography>
         </>
       ) : (
-        <>
+        <Stack direction="column">
           <TableContainer>
             <Table>
               <TableHead>
@@ -373,9 +374,9 @@ const TableCustomized: FC<TableCustomizedProps> = ({
               rowsPerPageOptions={rowsPerPage.current}
             />
           </Box>
-        </>
+        </Stack>
       )}
-    </>
+    </Box>
   );
 };
 
