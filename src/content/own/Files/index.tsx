@@ -6,11 +6,14 @@ import TableCustomized from '../components/TableCustomized';
 import File from '../../../models/file';
 import { useContext, useEffect } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
+import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
+import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
-
+  const handleDelete = (id: number) => {};
+  const handleRename = (id: number) => {};
   useEffect(() => {
     setTitle(t('Files'));
   }, []);
@@ -53,7 +56,25 @@ function Files() {
               justifyContent: 'space-between'
             }}
           >
-            <TableCustomized data={files} columns={columns} />
+            <TableCustomized
+              data={files}
+              columns={columns}
+              actions={[
+                {
+                  name: t('Rename'),
+                  color: 'primary',
+                  callback: handleRename,
+                  icon: <EditTwoToneIcon fontSize="small" />
+                },
+                {
+                  name: t('Delete'),
+                  color: 'error',
+                  callback: handleDelete,
+                  icon: <DeleteTwoToneIcon fontSize="small" />
+                }
+              ]}
+              searchFilterProperties={['name']}
+            />
           </Card>
         </Grid>
       </Grid>
