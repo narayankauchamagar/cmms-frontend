@@ -13,7 +13,7 @@ interface PropsType extends IField {
   errorMessage?: any;
   fullWidth?: boolean;
   //   helperText?: string;
-  variant?: 'outlined' | any;
+  variant?: 'outlined' | 'filled' | 'standard';
   required?: boolean;
 }
 
@@ -26,7 +26,6 @@ export default (props: PropsType) => {
         error={props.error}
         fullWidth={props.fullWidth || true}
         helperText={props.error && props.errorMessage}
-        // helperText={touched.name && errors.name}
         label={t(`${props.label}`)}
         placeholder={t(`${props.placeholder}`)}
         name={props.name}

@@ -1,16 +1,12 @@
-import {
-  Box,
-  Button,
-  Checkbox,
-  FormControlLabel,
-  Typography
-} from '@mui/material';
+import { Box, Button, CircularProgress } from '@mui/material';
 import { Formik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 import { ObjectSchema } from 'yup';
 import { IField, IHash } from '../../type';
+import CheckBoxForm from './CheckBoxForm';
 import Field from './Field';
+import SelectForm from './SelectForm';
 
 interface PropsType {
   fields: Array<IField>;
@@ -38,12 +34,13 @@ export default (props: PropsType) => {
   const validationSchema = Yup.object().shape(shape);
 
   const handleChange = (formik, field, e) => {
-    props.onChange({ field, e });
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    props.onChange && props.onChange({ field, e });
     console.log('field======>', field);
 
-    // if (props.fields.length == 1) {
-    //   formik.setFieldTouched(field, true);
-    // }
+    if (props.fields.length == 1) {
+      formik.setFieldTouched(field, true);
+    }
     formik.setFieldValue(field, e);
     return formik.handleChange(field);
   };
@@ -55,7 +52,7 @@ export default (props: PropsType) => {
       onSubmit={(values, { resetForm, setErrors, setStatus, setSubmitting }) =>
         props.onSubmit(values).finally(() => {
           setSubmitting(false);
-          resetForm();
+          // resetForm();
           setStatus({ success: true });
           setSubmitting(false);
         })
@@ -66,32 +63,29 @@ export default (props: PropsType) => {
           {props.fields.map((field, index) => {
             return (
               <>
-                {field.type === 'checkbox' ? (
-                  <Box>
-                    <FormControlLabel
-                      control={<Checkbox /*checked={field.checked}*/ />}
-                      label={t(`${field.label}`)}
-                    />
-                  </Box>
+                {field.type === 'select' ? (
+                  <SelectForm
+                    options={field.items}
+                    label={field.label}
+                    placeholder={field.placeholder}
+                    multiple={field.multiple}
+                    fullWidth={field.fullWidth}
+                    key={field.name}
+                  />
+                ) : field.type === 'checkbox' ? (
+                  <CheckBoxForm
+                    label={field.label}
+                    onChange={(e) => {
+                      handleChange(formik, field.name, e.target.checked);
+                    }}
+                  />
                 ) : field.type === 'groupCheckbox' ? (
-                  <Box
-                    display="flex"
-                    flexDirection="column"
-                    justifyContent="space-between"
-                    my={2}
-                  >
-                    <Typography variant="h4" sx={{ pb: 1 }}>
-                      {t(`${field.label}`)}
-                    </Typography>
-                    {field.listCheckbox.map((item) => (
-                      <FormControlLabel
-                        key={item.label}
-                        control={<Checkbox /*checked={item.checked}*/ />}
-                        label={t(`${item.label}`)}
-                        sx={{ marginLeft: 0.5 }}
-                      />
-                    ))}
-                  </Box>
+                  <CheckBoxForm
+                    label={field.label}
+                    type="groupCheckbox"
+                    listCheckbox={field.items}
+                    key={field.name}
+                  />
                 ) : (
                   <Field
                     key={index}
@@ -99,10 +93,12 @@ export default (props: PropsType) => {
                     isDisabled={formik.isSubmitting}
                     label={field.label}
                     placeholder={field.placeholder}
-                    value={formik.values[field.name]}
-                    onBlur={formik.handleBlur(field.name)}
+                    value={formik.values.name}
+                    onBlur={formik.handleBlur}
+                    // onChange={formik.handleChange}
                     onChange={(e) => {
-                      handleChange(formik, field.name, e);
+                      console.log('e: ', e);
+                      handleChange(formik, field.name, e.target.value);
                     }}
                     error={
                       (formik.touched[field.name] &&
@@ -123,13 +119,16 @@ export default (props: PropsType) => {
             justifyContent="space-between"
           >
             <Button
+              type="submit"
               sx={{
                 mt: { xs: 2, sm: 0 }
               }}
-              onClick={() => formik.handleSubmit}
+              onClick={() => formik.handleSubmit()}
               variant="contained"
-              onLoad={() => formik.isSubmitting || props.isLoading}
-              disabled={false}
+              startIcon={
+                formik.isSubmitting ? <CircularProgress size="1rem" /> : null
+              }
+              disabled={Boolean(formik.errors.submit) || formik.isSubmitting}
             >
               {t(props.submitText)}
             </Button>

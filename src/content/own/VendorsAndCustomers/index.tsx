@@ -12,10 +12,12 @@ function VendorsAndCustomers() {
 
   const [companyName, setCompanyName] = useState('');
   const [phone, setPhone] = useState('');
+  const [acceptTerm, setAcceptTerm] = useState(false);
 
   const values = {
     companyName: companyName,
-    phone: phone
+    phone: phone,
+    term: acceptTerm
   };
   console.log('values-> ', values);
 
@@ -37,7 +39,8 @@ function VendorsAndCustomers() {
       name: 'phone',
       type: 'text',
       label: 'Phone',
-      placeholder: '+00212611223344'
+      placeholder: '+00212611223344',
+      required: true
     },
     {
       name: 'website',
@@ -80,14 +83,16 @@ function VendorsAndCustomers() {
     {
       name: 'term',
       type: 'checkbox',
-      label: 'I accept the terms'
+      label: 'I accept the terms',
+      checked: acceptTerm
     },
     {
       name: 'listCheckbox',
       type: 'groupCheckbox',
-      listCheckbox: [
+      label: 'List Checkbox',
+      items: [
         {
-          label: 'label1',
+          label: 'label',
           value: 'lab1',
           checked: true
         },
@@ -103,8 +108,21 @@ function VendorsAndCustomers() {
           label: 'Autres',
           value: 'Autres'
         }
-      ],
-      label: 'List Checkbox'
+      ]
+    },
+    {
+      name: 'selectList',
+      type: 'select',
+      label: 'Select List',
+      multiple: true,
+      items: [
+        { label: 'Bucharest, Romania', value: 'v' },
+        { label: 'San Francisco, USA', value: 'v' },
+        { label: 'Madrid, Spain', value: 'v' },
+        { label: 'Berlin, Germany', value: 'v' },
+        { label: 'Paris, France', value: 'v' },
+        { label: 'London, UK', value: 'v' }
+      ]
     }
   ];
 
@@ -112,7 +130,11 @@ function VendorsAndCustomers() {
     companyName: Yup.string().required('Company Name est obligatoire'),
     phone: Yup.number()
       .required('Phone number est obligatoire')
-      .typeError('Vous devez saisir des nombres')
+      .typeError('Vous devez saisir des nombres'),
+    term: Yup.boolean().oneOf(
+      [true],
+      t('You must accept the terms and conditions')
+    )
   };
 
   return (
@@ -135,8 +157,10 @@ function VendorsAndCustomers() {
             submitText="Submit"
             validation={Yup.object().shape(shape)}
             onChange={({ field, e }) => {
-              // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+              /* eslint-disable @typescript-eslint/no-unused-expressions */
               field === 'phone' && setPhone(e);
+              field === 'companyName' && setCompanyName(e);
+              field === 'term' && setAcceptTerm(e);
             }}
             onSubmit={async (_values) => {
               try {

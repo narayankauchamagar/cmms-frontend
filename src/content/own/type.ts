@@ -18,7 +18,6 @@ export interface TableCustomizedDataType {
 export interface IField {
   label?: string;
   type: 'text' | 'checkbox' | 'groupCheckbox' | 'select' | 'form';
-  // keyboardType?: 'numeric' | undefined;
   name: string;
   placeholder?: string;
   fullWidth?: boolean;
@@ -26,10 +25,11 @@ export interface IField {
   onPress?: any;
   required?: boolean;
   error?: any;
-  items?: any;
-  listCheckbox?: { label: string; value: string; checked?: boolean }[];
+  items?: { label: string; value: string; checked?: boolean }[];
+  // listCheckbox?: { label: string; value: string; checked?: boolean }[];
   icon?: ReactNode | string;
   // onPressIcon?: () => void;
+  checked?: boolean;
 }
 
 export interface IHash<E> {
