@@ -1,129 +1,83 @@
 import {
-  FC,
   ChangeEvent,
-  MouseEvent,
+  FC,
+  ReactNode,
   SyntheticEvent,
-  useState,
-  ReactElement,
-  Ref,
-  forwardRef,
-  useRef
+  useRef,
+  useState
 } from 'react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
-  Avatar,
   Box,
-  Card,
   Checkbox,
-  Slide,
   Divider,
-  Tooltip,
   IconButton,
   InputAdornment,
+  Stack,
+  styled,
+  Tab,
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TablePagination,
-  TableContainer,
   TableRow,
-  Tab,
   Tabs,
   TextField,
-  Button,
-  Typography,
-  Dialog,
-  Zoom,
-  styled
+  Tooltip,
+  Typography
 } from '@mui/material';
-import { TransitionProps } from '@mui/material/transitions';
-import CloseIcon from '@mui/icons-material/Close';
 import { useTranslation } from 'react-i18next';
-import BulkActions from '../Settings/Roles/BulkActions';
+import BulkActions, { BulkAction } from '../Settings/Roles/BulkActions';
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import { useSnackbar } from 'notistack';
-import { TableCustomizedDataType } from '../type';
+import { TableCustomizedColumnType, TableCustomizedDataType } from '../type';
+import { OverridableStringUnion } from '@mui/types';
+import { IconButtonPropsColorOverrides } from '@mui/material/IconButton/IconButton';
 
 interface TableCustomizedProps {
   data: TableCustomizedDataType[];
-  columns: string[];
+  columns: TableCustomizedColumnType[];
   itemLabelBg?: {
     column: string;
     map: { [propName: string]: { [propName: string]: string } };
   }[];
   limitRows?: number;
   enablePagination?: boolean;
-  enableSearchFilter?: boolean;
   searchFilterProperties?: string[];
   enableTabsFilter?: boolean;
   tabsFilter?: {
-    value: string;
-    label: any;
+    accessor: string;
+    tabs: {
+      value: string;
+      label: any;
+    }[];
+  };
+  actions?: {
+    name: string;
+    color: OverridableStringUnion<
+      | 'inherit'
+      | 'default'
+      | 'primary'
+      | 'secondary'
+      | 'error'
+      | 'info'
+      | 'success'
+      | 'warning',
+      IconButtonPropsColorOverrides
+    >;
+    callback: (id: number) => void;
+    icon: ReactNode;
   }[];
+  bulkActions?: BulkAction[];
 }
 
 interface Filters {
   type?: any;
   // [propName: string]: any
 }
-
-const DialogWrapper = styled(Dialog)(
-  () => `
-        .MuiDialog-paper {
-          overflow: visible;
-        }
-  `
-);
-
-const AvatarError = styled(Avatar)(
-  ({ theme }) => `
-        background-color: ${theme.colors.error.lighter};
-        color: ${theme.colors.error.main};
-        width: ${theme.spacing(12)};
-        height: ${theme.spacing(12)};
-  
-        .MuiSvgIcon-root {
-          font-size: ${theme.typography.pxToRem(45)};
-        }
-  `
-);
-
-// const CardWrapper = styled(Card)(
-//   ({ theme }) => `
-
-//     position: relative;
-//     overflow: visible;
-
-//     &::after {
-//       content: '';
-//       position: absolute;
-//       width: 100%;
-//       height: 100%;
-//       top: 0;
-//       left: 0;
-//       border-radius: inherit;
-//       z-index: 1;
-//       transition: ${theme.transitions.create(['box-shadow'])};
-//     }
-
-//       &.Mui-selected::after {
-//         box-shadow: 0 0 0 3px ${theme.colors.primary.main};
-//       }
-//     `
-// );
-
-const ButtonError = styled(Button)(
-  ({ theme }) => `
-       background: ${theme.colors.error.main};
-       color: ${theme.palette.error.contrastText};
-  
-       &:hover {
-          background: ${theme.colors.error.dark};
-       }
-      `
-);
 
 const TabsWrapper = styled(Tabs)(
   ({ theme }) => `
@@ -138,30 +92,6 @@ const TabsWrapper = styled(Tabs)(
       }
       `
 );
-
-const Transition = forwardRef(function Transition(
-  props: TransitionProps & { children: ReactElement<any, any> },
-  ref: Ref<unknown>
-) {
-  return <Slide direction="down" ref={ref} {...props} />;
-});
-
-// const getRoleTypeLabel = (roleType: RoleType): JSX.Element => {
-//   const map = {
-//     free: {
-//       text: 'Free',
-//       color: 'info'
-//     },
-//     paid: {
-//       text: 'Paid',
-//       color: 'warning'
-//     }
-//   };
-
-//   const { text, color }: any = map[roleType];
-
-//   return <Label color={color}>{text}</Label>;
-// };
 
 const applyFilters = (
   data: TableCustomizedDataType[],
@@ -215,7 +145,9 @@ const TableCustomized: FC<TableCustomizedProps> = ({
   columns,
   tabsFilter,
   searchFilterProperties,
-  limitRows = 5
+  limitRows = 5,
+  actions,
+  bulkActions
 }) => {
   const [selectedItems, setSelectedItems] = useState<(string | number)[]>([]);
   const { t }: { t: any } = useTranslation();
@@ -243,7 +175,7 @@ const TableCustomized: FC<TableCustomizedProps> = ({
 
     setFilters((prevFilters) => ({
       ...prevFilters,
-      type: value
+      [tabsFilter.accessor]: value
     }));
 
     setSelectedItems([]);
@@ -291,99 +223,79 @@ const TableCustomized: FC<TableCustomizedProps> = ({
     selectedItems.length > 0 && selectedItems.length < data.length;
   const selectedAllRows = selectedItems.length === data.length;
 
-  const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
-
-  const handleConfirmDelete = () => {
-    setOpenConfirmDelete(true);
-  };
-
-  const closeConfirmDelete = () => {
-    setOpenConfirmDelete(false);
-  };
-
-  const handleDeleteCompleted = () => {
-    setOpenConfirmDelete(false);
-
-    enqueueSnackbar(t('The role has been removed'), {
-      variant: 'success',
-      anchorOrigin: {
-        vertical: 'top',
-        horizontal: 'right'
-      },
-      TransitionComponent: Zoom
-    });
-  };
-
   return (
-    <>
-      <Box
-        display="flex"
-        alignItems="center"
-        flexDirection={{ xs: 'column', sm: 'row' }}
-        justifyContent={{ xs: 'center', sm: 'space-between' }}
-        pb={3}
-      >
-        <TabsWrapper
-          onChange={handleTabsChange}
-          scrollButtons="auto"
-          textColor="secondary"
-          value={filters.type || 'all'}
-          variant="scrollable"
+    <Box width="100%">
+      {tabsFilter && (
+        <Box
+          display="flex"
+          alignItems="center"
+          flexDirection={{ xs: 'column', sm: 'row' }}
+          justifyContent={{ xs: 'center', sm: 'space-between' }}
+          pb={3}
         >
-          {tabsFilter &&
-            tabsFilter.map((tab) => (
+          <TabsWrapper
+            onChange={handleTabsChange}
+            scrollButtons="auto"
+            textColor="secondary"
+            value={filters.type || 'all'}
+            variant="scrollable"
+          >
+            {tabsFilter.tabs.map((tab) => (
               <Tab key={tab.value} value={tab.value} label={tab.label} />
             ))}
-        </TabsWrapper>
-      </Box>
-      <Card>
-        <Box p={2}>
-          {!selectedBulkActions && (
-            <TextField
-              sx={{
-                m: 0
-              }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchTwoToneIcon />
-                  </InputAdornment>
-                )
-              }}
-              onChange={handleQueryChange}
-              placeholder={t(`Search by ${searchFilterProperties}...`)}
-              value={query}
-              size="small"
-              fullWidth
-              margin="normal"
-              variant="outlined"
-            />
-          )}
-          {selectedBulkActions && <BulkActions />}
+          </TabsWrapper>
         </Box>
+      )}
+      <Box p={2}>
+        {!selectedBulkActions && searchFilterProperties && (
+          <TextField
+            sx={{
+              m: 0
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchTwoToneIcon />
+                </InputAdornment>
+              )
+            }}
+            onChange={handleQueryChange}
+            placeholder={t(`Search by ${searchFilterProperties}...`)}
+            value={query}
+            size="small"
+            fullWidth
+            margin="normal"
+            variant="outlined"
+          />
+        )}
+        {selectedBulkActions && bulkActions && (
+          <BulkActions actions={bulkActions} />
+        )}
+      </Box>
 
-        <Divider />
+      <Divider />
 
-        {paginatedRows.length === 0 ? (
-          <>
-            <Typography
-              sx={{
-                py: 10
-              }}
-              variant="h3"
-              fontWeight="normal"
-              color="text.secondary"
-              align="center"
-            >
-              {t("We couldn't find any data matching your search criteria")}
-            </Typography>
-          </>
-        ) : (
-          <>
-            <TableContainer>
-              <Table>
-                <TableHead>
-                  <TableRow>
+      {paginatedRows.length === 0 ? (
+        <>
+          <Typography
+            sx={{
+              py: 10
+            }}
+            variant="h3"
+            fontWeight="normal"
+            color="text.secondary"
+            align="center"
+          >
+            {t("We couldn't find any data matching your search criteria")}
+          </Typography>
+        </>
+      ) : (
+        <Stack direction="column">
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  {bulkActions && (
                     <TableCell padding="checkbox">
                       <Checkbox
                         checked={selectedAllRows}
@@ -391,26 +303,25 @@ const TableCustomized: FC<TableCustomizedProps> = ({
                         onChange={handleSelectAllRows}
                       />
                     </TableCell>
+                  )}
 
-                    {columns.map((col) => (
-                      <TableCell key={col}>{t(col)}</TableCell>
-                    ))}
+                  {columns.map((col) => (
+                    <TableCell key={col.accessor}>{t(col.label)}</TableCell>
+                  ))}
 
+                  {actions && (
                     <TableCell align="center">{t('Actions')}</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {paginatedRows.map((row) => {
-                    const isRowSelected = selectedItems.includes(row.id);
-                    const rowValues: string[] = [];
+                  )}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {paginatedRows.map((row) => {
+                  const isRowSelected = selectedItems.includes(row.id);
+                  const rowValues = columns.map((col) => row[col.accessor]);
 
-                    for (const key in row) {
-                      if (key === 'id') continue;
-                      rowValues.push(row[key]);
-                    }
-
-                    return (
-                      <TableRow hover key={row.id} selected={isRowSelected}>
+                  return (
+                    <TableRow hover key={row.id} selected={isRowSelected}>
+                      {bulkActions && (
                         <TableCell padding="checkbox">
                           <Checkbox
                             checked={isRowSelected}
@@ -420,102 +331,52 @@ const TableCustomized: FC<TableCustomizedProps> = ({
                             value={isRowSelected}
                           />
                         </TableCell>
+                      )}
 
-                        {rowValues.map((value, i) => (
-                          <TableCell key={`${value}_${i}`}>
-                            <Typography variant="h6">{value}</Typography>
-                          </TableCell>
-                        ))}
+                      {rowValues.map((value, i) => (
+                        <TableCell key={`${value}_${i}`}>
+                          <Typography variant="h6">{value}</Typography>
+                        </TableCell>
+                      ))}
 
+                      {actions && (
                         <TableCell align="center">
-                          <Typography noWrap>
-                            <Tooltip title={t('Delete')} arrow>
+                          {actions.map((action) => (
+                            <Tooltip
+                              key={action.name}
+                              title={action.name}
+                              arrow
+                            >
                               <IconButton
-                                onClick={handleConfirmDelete}
-                                color="primary"
+                                onClick={() => action.callback(Number(row.id))}
+                                color={action.color}
                               >
-                                <DeleteTwoToneIcon fontSize="small" />
+                                {action.icon}
                               </IconButton>
                             </Tooltip>
-                          </Typography>
+                          ))}
                         </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <Box p={2}>
-              <TablePagination
-                component="div"
-                count={filteredRows.length}
-                onPageChange={handlePageChange}
-                onRowsPerPageChange={handleLimitChange}
-                page={page}
-                rowsPerPage={limit}
-                rowsPerPageOptions={rowsPerPage.current}
-              />
-            </Box>
-          </>
-        )}
-      </Card>
-
-      <DialogWrapper
-        open={openConfirmDelete}
-        maxWidth="sm"
-        fullWidth
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={closeConfirmDelete}
-      >
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          flexDirection="column"
-          p={5}
-        >
-          <AvatarError>
-            <CloseIcon />
-          </AvatarError>
-
-          <Typography
-            align="center"
-            sx={{
-              py: 4,
-              px: 6
-            }}
-            variant="h3"
-          >
-            {t('Are you sure you want to permanently delete this role')}?
-          </Typography>
-
-          <Box>
-            <Button
-              variant="text"
-              size="large"
-              sx={{
-                mx: 1
-              }}
-              onClick={closeConfirmDelete}
-            >
-              {t('Cancel')}
-            </Button>
-            <ButtonError
-              onClick={handleDeleteCompleted}
-              size="large"
-              sx={{
-                mx: 1,
-                px: 3
-              }}
-              variant="contained"
-            >
-              {t('Delete')}
-            </ButtonError>
+                      )}
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <Box p={2}>
+            <TablePagination
+              component="div"
+              count={filteredRows.length}
+              onPageChange={handlePageChange}
+              onRowsPerPageChange={handleLimitChange}
+              page={page}
+              rowsPerPage={limit}
+              rowsPerPageOptions={rowsPerPage.current}
+            />
           </Box>
-        </Box>
-      </DialogWrapper>
-    </>
+        </Stack>
+      )}
+    </Box>
   );
 };
 

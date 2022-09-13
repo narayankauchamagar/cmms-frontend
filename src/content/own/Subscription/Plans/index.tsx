@@ -4,27 +4,47 @@ import {
   Box,
   Button,
   Card,
+  CircularProgress,
+  DialogActions,
+  DialogContent,
   FormControlLabel,
   Grid,
   Link,
+  MenuItem,
   Radio,
   RadioGroup,
+  Select,
   Slider,
   Stack,
+  TextField,
   Typography,
   useTheme
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import PlanFeatures from './PlanFeatures';
+import * as Yup from 'yup';
+import wait from '../../../../utils/wait';
+import CustomDialog from '../../components/CustomDialog';
+import { Field, Formik } from 'formik';
+import valid from 'card-validator';
+import { TitleContext } from '../../../../contexts/TitleContext';
 
 function SubscriptionPlans() {
   const { t }: { t: any } = useTranslation();
   const plan = { id: 'dsds4', name: 'Starter', users: 2, code: 'starter' };
   const theme = useTheme();
   const [usersCount, setUsersCount] = useState<number>(3);
+  const [openCheckout, setOpenCheckout] = useState<boolean>(false);
+  const handleCloseCheckoutModal = () => setOpenCheckout(false);
+  const handleOpenCheckoutModal = () => setOpenCheckout(true);
   const [period, setPeriod] = useState<string>('monthly');
   const [selectedPlan, setSelectedPlan] = useState<string>('starter');
+  const { setTitle } = useContext(TitleContext);
+
+  useEffect(() => {
+    setTitle(t('Plans'));
+  }, []);
   const periods = [
     { name: 'Monthly', value: 'monthly' },
     { name: 'Annually', value: 'annually' }
@@ -39,11 +59,224 @@ function SubscriptionPlans() {
       plans.find((plan) => plan.value == selectedPlan).monthly * usersCount;
     return period == 'monthly' ? monthlyCost : monthlyCost * 12;
   };
+  const renderCheckoutModal = () => (
+    <CustomDialog
+      onClose={handleCloseCheckoutModal}
+      open={openCheckout}
+      title="Checkout"
+      subtitle="Fill in the fields below"
+      maxWidth="md"
+    >
+      <Formik
+        initialValues={{
+          card: '',
+          expirationMonth: '01',
+          expirationYear: '2022',
+          cvv: '',
+          cardholder: ''
+        }}
+        validationSchema={Yup.object().shape({
+          card: Yup.string()
+            .test(
+              'test-number', // this is used internally by yup
+              t('Credit Card number is invalid'), //validation message
+              (value) => valid.number(value?.toString()).isValid
+            ) // return true false based on validation
+            .required(t('The card field is required')),
+          expirationMonth: Yup.string()
+            .test(
+              'test-expirationMonth', // this is used internally by yup
+              t('Expiration month is invalid'), //validation message
+              (value) => valid.expirationMonth(value).isValid
+            ) // return true false based on validation
+            .required(t('The Expiration month is required')),
+          expirationYear: Yup.string()
+            .test(
+              'test-expirationYear', // this is used internally by yup
+              t('Expiration year is invalid'), //validation message
+              (value) => valid.expirationYear(value).isValid
+            ) // return true false based on validation
+            .required(t('The Expiration year is required')),
+          cvv: Yup.string()
+            .test(
+              'test-cvv', // this is used internally by yup
+              t('CVV is invalid'), //validation message
+              (value) => valid.cvv(value?.toString()).isValid
+            ) // return true false based on validation
+            .required(t('The CVV is required')),
+          cardholder: Yup.string()
+            .min(5)
+            .required(t('The cardholder name is required'))
+        })}
+        onSubmit={async (
+          _values,
+          { resetForm, setErrors, setStatus, setSubmitting }
+        ) => {
+          console.log(_values);
+          try {
+            await wait(1000);
+            resetForm();
+            setStatus({ success: true });
+            setSubmitting(false);
+          } catch (err) {
+            console.error(err);
+            setStatus({ success: false });
+            setSubmitting(false);
+          }
+        }}
+      >
+        {({
+          errors,
+          handleBlur,
+          handleChange,
+          handleSubmit,
+          isSubmitting,
+          touched,
+          values
+        }) => (
+          <form onSubmit={handleSubmit}>
+            <DialogContent
+              dividers
+              sx={{
+                p: 3
+              }}
+            >
+              <Grid container spacing={3}>
+                <Grid item xs={12} lg={6}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <TextField
+                        error={Boolean(touched.card && errors.card)}
+                        fullWidth
+                        helperText={touched.card && errors.card}
+                        label={t('Card')}
+                        type="number"
+                        name="card"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.card}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item xs={12} lg={6}>
+                      <Typography variant="h6" gutterBottom>
+                        {t('Expiration Month')}
+                      </Typography>
+                      <Field
+                        as={Select}
+                        fullWidth
+                        name="expirationMonth"
+                        onChange={handleChange}
+                        value={values.expirationMonth}
+                      >
+                        <MenuItem value="01">01</MenuItem>
+                      </Field>
+                    </Grid>
+                    <Grid item xs={12} lg={6}>
+                      <Typography variant="h6" gutterBottom>
+                        {t('Expiration Year')}
+                      </Typography>
+                      <Field
+                        as={Select}
+                        fullWidth
+                        name="expirationYear"
+                        onChange={handleChange}
+                        value={values.expirationYear}
+                      >
+                        <MenuItem value="2022">2022</MenuItem>
+                      </Field>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        error={Boolean(touched.cvv && errors.cvv)}
+                        fullWidth
+                        helperText={touched.cvv && errors.cvv}
+                        label={t('CVV')}
+                        type="number"
+                        name="cvv"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.cvv}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        error={Boolean(touched.cardholder && errors.cardholder)}
+                        fullWidth
+                        helperText={touched.cardholder && errors.cardholder}
+                        label={t('Cardholder name')}
+                        name="cardholder"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.cardholder}
+                        variant="outlined"
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item xs={12} lg={6}>
+                  <Grid container spacing={2} justifyContent="center">
+                    <Grid item xs={12} lg={6}>
+                      <Typography variant={'h4'}>{t('Seats')}</Typography>
+                      <Typography variant="h6">{usersCount}</Typography>
+                    </Grid>
+                    <Grid item xs={12} lg={6}>
+                      <Typography variant={'h4'}>
+                        {t('Cost per seat')}
+                      </Typography>
+                      <Typography variant="h6">
+                        {
+                          plans.find((plan) => plan.value == selectedPlan)
+                            .monthly
+                        }{' '}
+                        $ per month
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} lg={12}>
+                      <Typography variant={'h4'}>{t('Total cost')}</Typography>
+                      <Typography variant="h6">{getCost()} $</Typography>
+                    </Grid>
+                    <Grid item xs={12} lg={12}>
+                      <Typography variant={'h4'}>
+                        {t('Your payment data is encrypted and secure.')}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </DialogContent>
+            <DialogActions
+              sx={{
+                p: 3
+              }}
+            >
+              <Button color="secondary" onClick={handleCloseCheckoutModal}>
+                {t('Cancel')}
+              </Button>
+              <Button
+                type="submit"
+                startIcon={
+                  isSubmitting ? <CircularProgress size="1rem" /> : null
+                }
+                disabled={isSubmitting}
+                variant="contained"
+              >
+                {t('Save')}
+              </Button>
+            </DialogActions>
+          </form>
+        )}
+      </Formik>
+    </CustomDialog>
+  );
+
   return (
     <>
       <Helmet>
         <title>{t('Plan')}</title>
       </Helmet>
+      {renderCheckoutModal()}
       <Grid
         container
         justifyContent="center"
@@ -223,6 +456,9 @@ function SubscriptionPlans() {
                 </RadioGroup>
               </Box>
               <Box>
+                <Typography variant="h4" gutterBottom>
+                  Features
+                </Typography>
                 <PlanFeatures plan={selectedPlan} />
               </Box>
               <Box
@@ -237,7 +473,11 @@ function SubscriptionPlans() {
                   {t('You will be charged')} <b>${getCost()}</b>{' '}
                   {period == 'monthly' ? t('monthly') : t('yearly')}
                 </Typography>
-                <Button size="large" variant="contained">
+                <Button
+                  onClick={handleOpenCheckoutModal}
+                  size="large"
+                  variant="contained"
+                >
                   {t('Proceed to Payment')}
                 </Button>
               </Box>

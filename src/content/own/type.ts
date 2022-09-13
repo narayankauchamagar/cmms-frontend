@@ -1,18 +1,13 @@
 import { ReactNode } from 'react';
 
-export type RoleType = 'paid' | 'free';
-
-export interface Role {
-  id: string;
-  name: string;
-  users: number;
-  externalId?: string;
-  type: RoleType;
-}
-
 export interface TableCustomizedDataType {
   id: string | number;
   [propName: string]: any;
+}
+
+export interface TableCustomizedColumnType {
+  label: string;
+  accessor: string;
 }
 
 export interface IField {

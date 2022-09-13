@@ -104,10 +104,12 @@ interface SettingsLayoutProps {
   title: string;
   tabIndex: number;
   action?: () => void;
+  actionTitle?: string;
 }
 
 function MultipleTabsLayout(props: SettingsLayoutProps) {
-  const { children, tabIndex, title, tabs, basePath, action } = props;
+  const { children, tabIndex, title, tabs, basePath, action, actionTitle } =
+    props;
   const { t }: { t: any } = useTranslation();
   const navigate = useNavigate();
   const currentTab = tabs[tabIndex].value;
@@ -143,7 +145,7 @@ function MultipleTabsLayout(props: SettingsLayoutProps) {
             variant="contained"
             onClick={action}
           >
-            {t('Category')}
+            {actionTitle}
           </Button>
         )}
       </Box>
