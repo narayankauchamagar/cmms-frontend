@@ -36,8 +36,6 @@ export default (props: PropsType) => {
   const handleChange = (formik, field, e) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     props.onChange && props.onChange({ field, e });
-    console.log('field======>', field);
-
     if (props.fields.length == 1) {
       formik.setFieldTouched(field, true);
     }
@@ -97,7 +95,6 @@ export default (props: PropsType) => {
                     onBlur={formik.handleBlur}
                     // onChange={formik.handleChange}
                     onChange={(e) => {
-                      console.log('e: ', e);
                       handleChange(formik, field.name, e.target.value);
                     }}
                     error={

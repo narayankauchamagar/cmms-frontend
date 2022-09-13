@@ -1,11 +1,12 @@
-import { Grid, styled, Typography } from '@mui/material';
+import { Card, Grid, styled, Typography } from '@mui/material';
 import * as Yup from 'yup';
 
 import { useTranslation } from 'react-i18next';
 import { IField } from '../type';
 import Form from '../components/form';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import wait from 'src/utils/wait';
+import { TitleContext } from '../../../contexts/TitleContext';
 
 function VendorsAndCustomers() {
   const { t }: { t: any } = useTranslation();
@@ -13,13 +14,17 @@ function VendorsAndCustomers() {
   const [companyName, setCompanyName] = useState('');
   const [phone, setPhone] = useState('');
   const [acceptTerm, setAcceptTerm] = useState(false);
+  const { setTitle } = useContext(TitleContext);
+
+  useEffect(() => {
+    setTitle(t('Vendors&Customers'));
+  }, []);
 
   const values = {
     companyName: companyName,
     phone: phone,
     term: acceptTerm
   };
-  console.log('values-> ', values);
 
   let fields: Array<IField> = [
     {
@@ -140,36 +145,38 @@ function VendorsAndCustomers() {
   return (
     <>
       <Grid
-        sx={{
-          p: 4
-        }}
         container
-        direction="row"
         justifyContent="center"
         alignItems="stretch"
-        spacing={4}
+        spacing={2}
+        padding={4}
       >
         <Grid item xs={12}>
-          <Typography variant="h1">Vendors & Customers</Typography>
-          <Form
-            fields={fields}
-            values={values}
-            submitText="Submit"
-            validation={Yup.object().shape(shape)}
-            onChange={({ field, e }) => {
-              /* eslint-disable @typescript-eslint/no-unused-expressions */
-              field === 'phone' && setPhone(e);
-              field === 'companyName' && setCompanyName(e);
-              field === 'term' && setAcceptTerm(e);
+          <Card
+            sx={{
+              p: 2
             }}
-            onSubmit={async (_values) => {
-              try {
-                await wait(1000);
-              } catch (err) {
-                console.error(err);
-              }
-            }}
-          />
+          >
+            <Form
+              fields={fields}
+              values={values}
+              submitText="Submit"
+              validation={Yup.object().shape(shape)}
+              onChange={({ field, e }) => {
+                /* eslint-disable @typescript-eslint/no-unused-expressions */
+                field === 'phone' && setPhone(e);
+                field === 'companyName' && setCompanyName(e);
+                field === 'term' && setAcceptTerm(e);
+              }}
+              onSubmit={async (_values) => {
+                try {
+                  await wait(1000);
+                } catch (err) {
+                  console.error(err);
+                }
+              }}
+            />
+          </Card>
         </Grid>
       </Grid>
     </>
