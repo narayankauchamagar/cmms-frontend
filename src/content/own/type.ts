@@ -12,7 +12,13 @@ export interface TableCustomizedColumnType {
 
 export interface IField {
   label?: string;
-  type: 'text' | 'checkbox' | 'groupCheckbox' | 'select' | 'form';
+  type:
+    | 'text'
+    | 'checkbox'
+    | 'groupCheckbox'
+    | 'select'
+    | 'groupField'
+    | 'form';
   name: string;
   placeholder?: string;
   fullWidth?: boolean;

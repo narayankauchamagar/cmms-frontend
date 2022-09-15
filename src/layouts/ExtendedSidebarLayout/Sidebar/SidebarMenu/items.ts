@@ -53,7 +53,7 @@ const menuItems: MenuItems[] = [
       },
       {
         name: 'Vendors & Customers',
-        link: '/app/vendors-customers/vendors',
+        link: '/app/vendors-customers',
         icon: GroupsTwoTone
       }
     ]

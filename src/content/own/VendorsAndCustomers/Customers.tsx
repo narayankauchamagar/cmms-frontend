@@ -20,24 +20,24 @@ interface PropsType {
   handleCloseModal: () => void;
 }
 
-const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
+const Customers = ({ openModal, handleCloseModal }: PropsType) => {
   const { t }: { t: any } = useTranslation();
 
-  const [companyName, setCompanyName] = useState<string>('');
+  const [customerName, setCustomerName] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
 
   const values = {
-    companyName: companyName,
+    customerName: customerName,
     phone: phone
   };
-  console.log('values-> ', values);
+  console.log('values customers-> ', values);
 
   let fields: Array<IField> = [
     {
-      name: 'companyName',
+      name: 'customerName',
       type: 'text',
-      label: 'Company Name',
-      placeholder: 'Grash',
+      label: 'Customer Name',
+      placeholder: 'Jonh Doe',
       required: true
     },
     {
@@ -60,21 +60,15 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
       placeholder: 'https://web-site.com'
     },
     {
-      name: 'name',
-      type: 'text',
-      label: 'Name',
-      placeholder: 'John Doe'
-    },
-    {
       name: 'email',
       type: 'text',
       label: 'Email',
       placeholder: 'john.doe@gmail.com'
     },
     {
-      name: 'vendorType',
+      name: 'customerType',
       type: 'text',
-      label: 'Vendor Type',
+      label: 'Customer Type',
       placeholder: 'ex. Plumbing, Electrical'
     },
     {
@@ -82,7 +76,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
       type: 'text',
       label: 'Description',
       multiple: true,
-      placeholder: 'Describe the purpose of this business in a few line...'
+      placeholder: 'Describe the purpose of this customer in a few line...'
     },
     {
       name: 'rate',
@@ -94,52 +88,49 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
   ];
 
   const shape = {
-    companyName: Yup.string().required('Company Name is require'),
+    customerName: Yup.string().required('Customer Name is require'),
     phone: Yup.number()
       .required('Phone number is require')
       .typeError('You must enter numbers')
   };
 
-  let vendorsList = [
+  let customersList = [
     {
       id: '1',
-      companyName: 'Company Name',
+      customerName: 'Customer 1',
       address: 'casa, maroc',
       phone: '+00212611223344',
       website: 'https://web-site.com',
-      name: 'John Doe',
       email: 'john.doe@gmail.com',
-      vendorType: 'Plumbing',
+      customerType: 'Plumbing',
       description: 'Describe...',
       rate: 'rate'
     },
     {
       id: '2',
-      companyName: 'Company Name 2',
+      customerName: 'Customer 2',
       address: 'casa, maroc',
       phone: '+00212611223344',
       website: 'https://web-site.com',
-      name: 'John Doe',
       email: 'john.doe@gmail.com',
-      vendorType: 'Plumbing',
-      description: 'Describe...',
+      customerType: 'Electrical',
+      description: 'Describe 2...',
       rate: 'rate'
     }
   ];
 
   const columns: TableCustomizedColumnType[] = [
-    { label: 'Company Name', accessor: 'companyName' },
+    { label: 'Customer Name', accessor: 'customerName' },
     { label: 'Address', accessor: 'address' },
     { label: 'Phone', accessor: 'phone' },
     { label: 'Website', accessor: 'website' },
-    { label: 'Name', accessor: 'name' },
     { label: 'Email', accessor: 'email' },
-    { label: 'Vendor Type', accessor: 'vendorType' },
+    { label: 'Customer Type', accessor: 'customerType' },
     { label: 'Description', accessor: 'description' },
     { label: 'Rate', accessor: 'rate' }
   ];
 
-  const RenderVendorsAddModal = () => (
+  const RenderCustomersAddModal = () => (
     <Dialog fullWidth maxWidth="md" open={openModal} onClose={handleCloseModal}>
       <DialogTitle
         sx={{
@@ -147,10 +138,10 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Add vendor')}
+          {t('Add Customer')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the fields below to create and add a new vendor')}
+          {t('Fill in the fields below to create and add a new customer')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -165,12 +156,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
             validation={Yup.object().shape(shape)}
             submitText={t('Add')}
             values={values || {}}
-            onChange={({ field, e }) => {
-              /* eslint-disable @typescript-eslint/no-unused-expressions */
-              // field === 'phone' && setPhone(e);
-              // field === 'companyName' && setCompanyName(e);
-              // field === 'term' && setAcceptTerm(e);
-            }}
+            onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               try {
                 await wait(2000);
@@ -184,7 +170,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
     </Dialog>
   );
 
-  const RenderVendorsList = () => (
+  const RenderCustomersList = () => (
     <Box>
       <Grid
         sx={{
@@ -197,7 +183,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
         spacing={4}
       >
         <Grid item xs={12}>
-          <TableCustomized data={vendorsList} columns={columns} />
+          <TableCustomized data={customersList} columns={columns} />
         </Grid>
       </Grid>
     </Box>
@@ -205,10 +191,10 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
 
   return (
     <Box>
-      <RenderVendorsAddModal />
-      <RenderVendorsList />
+      <RenderCustomersAddModal />
+      <RenderCustomersList />
     </Box>
   );
 };
 
-export default Vendors;
+export default Customers;

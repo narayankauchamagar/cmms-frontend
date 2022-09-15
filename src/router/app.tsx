@@ -128,7 +128,7 @@ const appRoutes = [
     path: 'vendors-customers',
     children: [
       {
-        path: 'vendors',
+        path: '',
         element: <VendorsAndCustomers />
       },
       {
