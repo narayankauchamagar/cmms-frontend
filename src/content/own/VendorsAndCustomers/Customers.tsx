@@ -88,10 +88,10 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
   ];
 
   const shape = {
-    customerName: Yup.string().required('Customer Name is require'),
+    customerName: Yup.string().required('Customer Name is required'),
     phone: Yup.number()
-      .required('Phone number is require')
-      .typeError('You must enter numbers')
+      .required(t('Phone number is required'))
+      .typeError(t('You must enter numbers'))
   };
 
   let customersList = [
@@ -183,7 +183,11 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
         spacing={4}
       >
         <Grid item xs={12}>
-          <TableCustomized data={customersList} columns={columns} />
+          <TableCustomized
+            data={customersList}
+            columns={columns}
+            searchFilterProperties={['name']}
+          />
         </Grid>
       </Grid>
     </Box>
