@@ -30,7 +30,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
     companyName: companyName,
     phone: phone
   };
-  console.log('values-> ', values);
+  // console.log('values-> ', values);
 
   let fields: Array<IField> = [
     {
@@ -89,7 +89,8 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
       type: 'text',
       label: 'Rate',
       placeholder: 'Rate',
-      icon: '$'
+      icon: '$',
+      helperText: 'Changes will only apply to Work Orders created in the future'
     }
   ];
 

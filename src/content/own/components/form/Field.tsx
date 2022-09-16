@@ -25,7 +25,7 @@ export default (props: PropsType) => {
       <TextField
         error={props.error}
         fullWidth={props.fullWidth || true}
-        helperText={props.error && props.errorMessage}
+        helperText={t(props.error ? props.errorMessage : props.helperText)}
         label={t(`${props.label}`)}
         placeholder={t(`${props.placeholder}`)}
         name={props.name}

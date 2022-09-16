@@ -1,4 +1,4 @@
-import { Box, Button, CircularProgress } from '@mui/material';
+import { Box, Button, CircularProgress, Typography } from '@mui/material';
 import { Formik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
@@ -84,6 +84,10 @@ export default (props: PropsType) => {
                     listCheckbox={field.items}
                     key={field.name}
                   />
+                ) : field.type === 'titleGroupField' ? (
+                  <Typography variant="h3" sx={{ pb: 1 }}>
+                    {t(`${field.label}`)}
+                  </Typography>
                 ) : (
                   <Field
                     key={index}

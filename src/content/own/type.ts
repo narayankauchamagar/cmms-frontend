@@ -11,16 +11,17 @@ export interface TableCustomizedColumnType {
 }
 
 export interface IField {
-  label?: string;
+  label: string;
   type:
     | 'text'
     | 'checkbox'
     | 'groupCheckbox'
     | 'select'
-    | 'groupField'
+    | 'titleGroupField'
     | 'form';
-  name: string;
+  name?: string;
   placeholder?: string;
+  helperText?: string;
   fullWidth?: boolean;
   multiple?: boolean;
   onPress?: any;

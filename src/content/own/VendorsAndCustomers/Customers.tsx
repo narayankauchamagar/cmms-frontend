@@ -30,9 +30,14 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
     customerName: customerName,
     phone: phone
   };
-  console.log('values customers-> ', values);
+  // console.log('values customers-> ', values);
 
   let fields: Array<IField> = [
+    {
+      name: 'details',
+      type: 'titleGroupField',
+      label: 'Details'
+    },
     {
       name: 'customerName',
       type: 'text',
@@ -83,7 +88,42 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
       type: 'text',
       label: 'Rate',
       placeholder: 'Rate',
-      icon: '$'
+      icon: '$',
+      helperText: 'Changes will only apply to Work Orders created in the future'
+    },
+    {
+      name: 'details',
+      type: 'titleGroupField',
+      label: 'Billing Information'
+    },
+    {
+      name: 'address1',
+      type: 'text',
+      label: 'Address',
+      placeholder: 'casa, maroc'
+    },
+    {
+      name: 'address2',
+      type: 'text',
+      label: 'Address Line 2',
+      placeholder: 'casa, maroc'
+    },
+    {
+      name: 'address3',
+      type: 'text',
+      label: 'Address Line 3',
+      placeholder: 'casa, maroc'
+    },
+    {
+      name: 'currency',
+      type: 'select',
+      label: 'Currency',
+      placeholder: 'Select Currency',
+      items: [
+        { label: 'MAD, Dirham', value: 'dirham' },
+        { label: 'Euro', value: 'euro' },
+        { label: 'Dollar', value: 'dollar' }
+      ]
     }
   ];
 
