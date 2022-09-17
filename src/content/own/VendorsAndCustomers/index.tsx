@@ -44,7 +44,7 @@ const VendorsAndCustomers = ({}: PropsType) => {
       basePath="/app/vendors-customers"
       tabs={tabs}
       tabIndex={tabIndex}
-      title={`Vendors&Customers`}
+      title={`Vendors & Customers`}
       action={handleOpenAddModal}
       actionTitle={t(`${tabs[tabIndex].label}`)}
     >

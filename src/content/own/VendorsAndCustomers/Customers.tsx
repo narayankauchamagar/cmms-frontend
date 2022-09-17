@@ -3,9 +3,9 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  Grid,
   Typography
 } from '@mui/material';
+import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import { useTranslation } from 'react-i18next';
 import Form from '../components/form';
 import * as Yup from 'yup';
@@ -144,7 +144,11 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
       email: 'john.doe@gmail.com',
       customerType: 'Plumbing',
       description: 'Describe...',
-      rate: 'rate'
+      rate: 'rate',
+      address1: 'Add 1',
+      address2: '-',
+      address3: 'Add 3',
+      currency: 'MAD, dirham'
     },
     {
       id: '2',
@@ -155,7 +159,11 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
       email: 'john.doe@gmail.com',
       customerType: 'Electrical',
       description: 'Describe 2...',
-      rate: 'rate'
+      rate: 'rate',
+      address1: 'Add 1',
+      address2: '-',
+      address3: '-',
+      currency: 'Euro'
     }
   ];
 
@@ -167,8 +175,13 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
     { label: 'Email', accessor: 'email' },
     { label: 'Customer Type', accessor: 'customerType' },
     { label: 'Description', accessor: 'description' },
-    { label: 'Rate', accessor: 'rate' }
+    { label: 'Rate', accessor: 'rate' },
+    { label: 'Address Line 1', accessor: 'address1' },
+    { label: 'Address Line 2', accessor: 'address2' },
+    { label: 'Address Line 3', accessor: 'address3' },
+    { label: 'Currency', accessor: 'currency' }
   ];
+  const searchFilterProperties = ['customerName', 'customerType', 'email'];
 
   const RenderCustomersAddModal = () => (
     <Dialog fullWidth maxWidth="md" open={openModal} onClose={handleCloseModal}>
@@ -211,26 +224,37 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
   );
 
   const RenderCustomersList = () => (
-    <Box>
-      <Grid
-        sx={{
-          p: 4
-        }}
-        container
-        direction="row"
-        justifyContent="center"
-        alignItems="stretch"
-        spacing={4}
-      >
-        <Grid item xs={12}>
-          <TableCustomized data={customersList} columns={columns} />
-        </Grid>
-      </Grid>
+    <Box
+      sx={{
+        width: '95%'
+      }}
+    >
+      <TableCustomized
+        data={customersList}
+        columns={columns}
+        searchFilterProperties={searchFilterProperties}
+        actions={[
+          {
+            name: t('Delete'),
+            color: 'error',
+            callback: () => {},
+            icon: <DeleteTwoToneIcon fontSize="small" />
+          }
+        ]}
+      />
     </Box>
   );
 
   return (
-    <Box>
+    <Box
+      sx={{
+        p: 4,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: '100%'
+      }}
+    >
       <RenderCustomersAddModal />
       <RenderCustomersList />
     </Box>

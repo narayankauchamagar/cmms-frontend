@@ -3,9 +3,9 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  Grid,
   Typography
 } from '@mui/material';
+import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import { useTranslation } from 'react-i18next';
 import Form from '../components/form';
 import * as Yup from 'yup';
@@ -140,6 +140,8 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
     { label: 'Rate', accessor: 'rate' }
   ];
 
+  const searchFilterProperties = ['name', 'companyName', 'vendorType', 'email'];
+
   const RenderVendorsAddModal = () => (
     <Dialog fullWidth maxWidth="md" open={openModal} onClose={handleCloseModal}>
       <DialogTitle
@@ -186,26 +188,37 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
   );
 
   const RenderVendorsList = () => (
-    <Box>
-      <Grid
-        sx={{
-          p: 4
-        }}
-        container
-        direction="row"
-        justifyContent="center"
-        alignItems="stretch"
-        spacing={4}
-      >
-        <Grid item xs={12}>
-          <TableCustomized data={vendorsList} columns={columns} />
-        </Grid>
-      </Grid>
+    <Box
+      sx={{
+        width: '95%'
+      }}
+    >
+      <TableCustomized
+        data={vendorsList}
+        columns={columns}
+        searchFilterProperties={searchFilterProperties}
+        actions={[
+          {
+            name: t('Delete'),
+            color: 'error',
+            callback: () => {},
+            icon: <DeleteTwoToneIcon fontSize="small" />
+          }
+        ]}
+      />
     </Box>
   );
 
   return (
-    <Box>
+    <Box
+      sx={{
+        p: 4,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: '100%'
+      }}
+    >
       <RenderVendorsAddModal />
       <RenderVendorsList />
     </Box>
