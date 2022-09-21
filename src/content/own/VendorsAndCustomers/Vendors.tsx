@@ -97,8 +97,8 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
   const shape = {
     companyName: Yup.string().required('Company Name is require'),
     phone: Yup.number()
-      .required('Phone number is require')
-      .typeError('You must enter numbers')
+      .required(t('Phone number is required'))
+      .typeError(t('You must enter numbers'))
   };
 
   let vendorsList = [

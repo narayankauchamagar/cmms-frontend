@@ -128,10 +128,10 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
   ];
 
   const shape = {
-    customerName: Yup.string().required('Customer Name is require'),
+    customerName: Yup.string().required('Customer Name is required'),
     phone: Yup.number()
-      .required('Phone number is require')
-      .typeError('You must enter numbers')
+      .required(t('Phone number is required'))
+      .typeError(t('You must enter numbers'))
   };
 
   let customersList = [
