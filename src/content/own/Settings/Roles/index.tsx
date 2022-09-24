@@ -22,6 +22,14 @@ import { forwardRef, ReactElement, Ref, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { TransitionProps } from '@mui/material/transitions';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
+import {
+  DataGrid,
+  GridColDef,
+  GridRowsProp,
+  GridToolbar,
+  GridToolbarColumnsButton,
+  GridToolbarDensitySelector
+} from '@mui/x-data-grid';
 
 const DialogWrapper = styled(Dialog)(
   () => `
@@ -254,11 +262,32 @@ function Roles() {
       </Box>
     </DialogWrapper>
   );
+
+  const rows: GridRowsProp = [
+    { id: 1, col1: 'Hello', col2: 'World' },
+    { id: 2, col1: 'DataGridPro', col2: 'is Awesome' },
+    { id: 3, col1: 'MUI', col2: 'is Amazing' },
+    { id: 2, col1: 'DataGridPro', col2: 'is Awesome' },
+    { id: 2, col1: 'DataGridPro', col2: 'is Awesome' },
+    { id: 1, col1: 'Hello', col2: 'World' },
+    { id: 2, col1: 'DataGridPro', col2: 'is Awesome' }
+  ];
+
+  const columns_: GridColDef[] = [
+    {
+      field: 'col1',
+      headerName: 'Column 1',
+      description: 'first column',
+      width: 150
+    },
+    { field: 'col2', headerName: 'Column 2', width: 150 }
+  ];
+
   return (
     <SettingsLayout tabIndex={3}>
       <PageHeader rolesNumber={roles.length} />
       {renderDeleteModal()}
-      <Grid
+      {/* <Grid
         sx={{
           p: 4
         }}
@@ -268,8 +297,8 @@ function Roles() {
         alignItems="stretch"
         spacing={4}
       >
-        <Grid item xs={12}>
-          <TableCustomized
+        <Grid item xs={12}> */}
+      {/* <TableCustomized
             data={roles}
             columns={columns}
             tabsFilter={{ accessor: 'type', tabs }}
@@ -290,9 +319,27 @@ function Roles() {
                 icon: <DeleteTwoToneIcon />
               }
             ]}
-          />
-        </Grid>
-      </Grid>
+          /> */}
+      <Box sx={{ m: 4, height: 300, width: '95%' }}>
+        <DataGrid
+          rows={rows}
+          columns={columns_}
+          components={{
+            Toolbar: GridToolbar,
+            // Toolbar: GridToolbarColumnsButton,
+            // Toolbar: GridToolbarDensitySelector
+          }}
+          initialState={{
+            columns: {
+              columnVisibilityModel: {
+                
+              }
+            }
+          }}
+        />
+      </Box>
+      {/* </Grid>
+      </Grid> */}
     </SettingsLayout>
   );
 }
