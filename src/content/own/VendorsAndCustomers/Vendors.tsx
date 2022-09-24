@@ -13,6 +13,13 @@ import { IField, TableCustomizedColumnType } from '../type';
 import wait from 'src/utils/wait';
 import TableCustomized from '../components/TableCustomized';
 import { useState } from 'react';
+import CustomDataGrid from '../components/CustomDatagrid';
+import {
+  GridActionsCellItem,
+  GridEnrichedColDef,
+  GridRowParams,
+  GridToolbar
+} from '@mui/x-data-grid';
 
 interface PropsType {
   values?: any;
@@ -128,19 +135,78 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
     }
   ];
 
-  const columns: TableCustomizedColumnType[] = [
-    { label: 'Company Name', accessor: 'companyName' },
-    { label: 'Address', accessor: 'address' },
-    { label: 'Phone', accessor: 'phone' },
-    { label: 'Website', accessor: 'website' },
-    { label: 'Name', accessor: 'name' },
-    { label: 'Email', accessor: 'email' },
-    { label: 'Vendor Type', accessor: 'vendorType' },
-    { label: 'Description', accessor: 'description' },
-    { label: 'Rate', accessor: 'rate' }
+  const columns: GridEnrichedColDef[] = [
+    {
+      field: 'companyName',
+      headerName: t('Company Name'),
+      description: t('Company Name'),
+      width: 150
+    },
+    {
+      field: 'address',
+      headerName: t('Address'),
+      description: t('Address'),
+      width: 150
+    },
+    {
+      field: 'phone',
+      headerName: t('Phone'),
+      description: t('Phone'),
+      width: 150
+    },
+    {
+      field: 'website',
+      headerName: t('Website'),
+      description: t('Website'),
+      width: 150
+    },
+    {
+      field: 'name',
+      headerName: t('Name'),
+      description: t('Name'),
+      width: 150
+    },
+    {
+      field: 'email',
+      headerName: t('Email'),
+      description: t('Email'),
+      width: 150
+    },
+    {
+      field: 'vendorType',
+      headerName: t('Vendor Type'),
+      description: t('Vendor Type'),
+      width: 150
+    },
+    {
+      field: 'description',
+      headerName: t('Description'),
+      description: t('Description'),
+      width: 150
+    },
+    {
+      field: 'rate',
+      headerName: t('Rate'),
+      description: t('Rate'),
+      width: 150
+    },
+    {
+      field: 'actions',
+      type: 'actions',
+      headerName: t('Actions'),
+      description: t('Actions'),
+      getActions: (params: GridRowParams) => [
+        <GridActionsCellItem
+          key="delete"
+          icon={<DeleteTwoToneIcon fontSize="small" color="error" />}
+          onClick={() => {}}
+          label="Delete"
+        />
+      ]
+    }
   ];
 
-  const searchFilterProperties = ['name', 'companyName', 'vendorType', 'email'];
+  // const searchFilterProperties = ['name', 'companyName', 'vendorType', 'email'];
 
   const RenderVendorsAddModal = () => (
     <Dialog fullWidth maxWidth="md" open={openModal} onClose={handleCloseModal}>
@@ -190,21 +256,21 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
   const RenderVendorsList = () => (
     <Box
       sx={{
+        height: 400,
         width: '95%'
       }}
     >
-      <TableCustomized
-        data={vendorsList}
+      <CustomDataGrid
+        rows={vendorsList}
         columns={columns}
-        searchFilterProperties={searchFilterProperties}
-        actions={[
-          {
-            name: t('Delete'),
-            color: 'error',
-            callback: () => {},
-            icon: <DeleteTwoToneIcon fontSize="small" />
+        components={{
+          Toolbar: GridToolbar
+        }}
+        initialState={{
+          columns: {
+            columnVisibilityModel: {}
           }
-        ]}
+        }}
       />
     </Box>
   );

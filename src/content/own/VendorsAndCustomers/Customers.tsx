@@ -13,6 +13,13 @@ import { IField, TableCustomizedColumnType } from '../type';
 import wait from 'src/utils/wait';
 import TableCustomized from '../components/TableCustomized';
 import { useState } from 'react';
+import CustomDataGrid from '../components/CustomDatagrid';
+import {
+  GridActionsCellItem,
+  GridEnrichedColDef,
+  GridRowParams,
+  GridToolbar
+} from '@mui/x-data-grid';
 
 interface PropsType {
   values?: any;
@@ -167,21 +174,95 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
     }
   ];
 
-  const columns: TableCustomizedColumnType[] = [
-    { label: 'Customer Name', accessor: 'customerName' },
-    { label: 'Address', accessor: 'address' },
-    { label: 'Phone', accessor: 'phone' },
-    { label: 'Website', accessor: 'website' },
-    { label: 'Email', accessor: 'email' },
-    { label: 'Customer Type', accessor: 'customerType' },
-    { label: 'Description', accessor: 'description' },
-    { label: 'Rate', accessor: 'rate' },
-    { label: 'Address Line 1', accessor: 'address1' },
-    { label: 'Address Line 2', accessor: 'address2' },
-    { label: 'Address Line 3', accessor: 'address3' },
-    { label: 'Currency', accessor: 'currency' }
+  const columns: GridEnrichedColDef[] = [
+    {
+      field: 'customerName',
+      headerName: t('Customer Name'),
+      description: t('Customer Name'),
+      width: 150
+    },
+    {
+      field: 'address',
+      headerName: t('Address'),
+      description: t('Address'),
+      width: 150
+    },
+    {
+      field: 'phone',
+      headerName: t('Phone'),
+      description: t('Phone'),
+      width: 150
+    },
+    {
+      field: 'website',
+      headerName: t('Website'),
+      description: t('Website'),
+      width: 150
+    },
+    {
+      field: 'email',
+      headerName: t('Email'),
+      description: t('Email'),
+      width: 150
+    },
+    {
+      field: 'customerType',
+      headerName: t('Customer Type'),
+      description: t('Customer Type'),
+      width: 150
+    },
+    {
+      field: 'description',
+      headerName: t('Description'),
+      description: t('Description'),
+      width: 150
+    },
+    {
+      field: 'rate',
+      headerName: t('Rate'),
+      description: t('Rate'),
+      width: 150
+    },
+    {
+      field: 'address1',
+      headerName: t('Address Line 1'),
+      description: t('Address Line 1'),
+      width: 150
+    },
+    {
+      field: 'address3',
+      headerName: t('Address Line 2'),
+      description: t('Address Line 2'),
+      width: 150
+    },
+    {
+      field: 'address3',
+      headerName: t('Address Line 3'),
+      description: t('Address Line 3'),
+      width: 150
+    },
+    {
+      field: 'currency',
+      headerName: t('Currency'),
+      description: t('Currency'),
+      width: 150
+    },
+    {
+      field: 'actions',
+      type: 'actions',
+      headerName: t('Actions'),
+      description: t('Actions'),
+      getActions: (params: GridRowParams) => [
+        <GridActionsCellItem
+          key="delete"
+          icon={<DeleteTwoToneIcon fontSize="small" color="error" />}
+          onClick={() => {}}
+          label="Delete"
+        />
+      ]
+    }
   ];
-  const searchFilterProperties = ['customerName', 'customerType', 'email'];
+  // const searchFilterProperties = ['customerName', 'customerType', 'email'];
 
   const RenderCustomersAddModal = () => (
     <Dialog fullWidth maxWidth="md" open={openModal} onClose={handleCloseModal}>
@@ -226,21 +307,21 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
   const RenderCustomersList = () => (
     <Box
       sx={{
+        height: 400,
         width: '95%'
       }}
     >
-      <TableCustomized
-        data={customersList}
+      <CustomDataGrid
+        rows={customersList}
         columns={columns}
-        searchFilterProperties={searchFilterProperties}
-        actions={[
-          {
-            name: t('Delete'),
-            color: 'error',
-            callback: () => {},
-            icon: <DeleteTwoToneIcon fontSize="small" />
+        components={{
+          Toolbar: GridToolbar
+        }}
+        initialState={{
+          columns: {
+            columnVisibilityModel: {}
           }
-        ]}
+        }}
       />
     </Box>
   );
