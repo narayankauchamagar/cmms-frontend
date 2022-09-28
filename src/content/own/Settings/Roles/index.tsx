@@ -5,16 +5,14 @@ import {
   Box,
   Button,
   Dialog,
-  Grid,
   Slide,
   styled,
   Typography,
+  useTheme,
   Zoom
 } from '@mui/material';
 
 import PageHeader from './PageHeader';
-import { TableCustomizedColumnType } from '../../type';
-import TableCustomized from '../../components/TableCustomized';
 import { useTranslation } from 'react-i18next';
 import { Role } from '../../../../models/role';
 import CloseIcon from '@mui/icons-material/Close';
@@ -22,6 +20,14 @@ import { forwardRef, ReactElement, Ref, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { TransitionProps } from '@mui/material/transitions';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
+import {
+  GridActionsCellItem,
+  GridRenderCellParams,
+  GridRowParams,
+  GridToolbar
+} from '@mui/x-data-grid';
+import CustomDatagrid from '../../components/CustomDatagrid';
+import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 
 const DialogWrapper = styled(Dialog)(
   () => `
@@ -59,8 +65,19 @@ const ButtonError = styled(Button)(
        }
       `
 );
+const LabelWrapper = styled(Box)(
+  ({ theme }) => `
+    font-size: ${theme.typography.pxToRem(10)};
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: ${theme.general.borderRadiusSm};
+    padding: ${theme.spacing(0.9, 1.5, 0.7)};
+    line-height: 1;
+  `
+);
 function Roles() {
   const { t }: { t: any } = useTranslation();
+  const theme = useTheme();
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
@@ -173,30 +190,6 @@ function Roles() {
     }
   ];
 
-  const columns: TableCustomizedColumnType[] = [
-    { label: 'Name', accessor: 'name' },
-    { label: 'Users', accessor: 'users' },
-    { label: 'External ID', accessor: 'externalId' },
-    { label: 'Type', accessor: 'type' }
-  ];
-
-  const searchFilterProperties = ['name', 'externalId'];
-
-  const tabs = [
-    {
-      value: 'all',
-      label: t('All types')
-    },
-    {
-      value: 'paid',
-      label: t('Paid')
-    },
-    {
-      value: 'free',
-      label: t('Free')
-    }
-  ];
-
   const renderDeleteModal = () => (
     <DialogWrapper
       open={openConfirmDelete}
@@ -254,45 +247,85 @@ function Roles() {
       </Box>
     </DialogWrapper>
   );
+
+  const columns: GridEnrichedColDef[] = [
+    {
+      field: 'name',
+      headerName: t('Name'),
+      description: t('Name'),
+      width: 150
+    },
+    {
+      field: 'users',
+      headerName: t('Users'),
+      description: t('Users'),
+      width: 150
+    },
+    {
+      field: 'externalId',
+      headerName: t('External ID'),
+      description: t('External Id'),
+      width: 150
+    },
+    {
+      field: 'type',
+      headerName: t('Type'),
+      description: t('Type'),
+      width: 150,
+      renderCell: (params: GridRenderCellParams<string>) => (
+        <LabelWrapper
+          sx={{
+            background:
+              params.value === 'free'
+                ? `${theme.colors.info.main}`
+                : `${theme.colors.success.main}`,
+            color: `${theme.palette.getContrastText(
+              params.value === 'free'
+                ? theme.colors.info.dark
+                : theme.colors.success.dark
+            )}`
+          }}
+        >
+          {t(params.value)}
+        </LabelWrapper>
+      )
+    },
+    {
+      field: 'actions',
+      type: 'actions',
+      headerName: t('Actions'),
+      description: t('Actions'),
+      getActions: (params: GridRowParams) => [
+        <GridActionsCellItem
+          key="delete"
+          icon={<DeleteTwoToneIcon fontSize="small" color="error" />}
+          onClick={() => handleConfirmDelete(Number(params.id))}
+          label="Delete"
+        />
+      ]
+    }
+  ];
+
   return (
     <SettingsLayout tabIndex={3}>
       <PageHeader rolesNumber={roles.length} />
       {renderDeleteModal()}
-      <Grid
-        sx={{
-          p: 4
-        }}
-        container
-        direction="row"
-        justifyContent="center"
-        alignItems="stretch"
-        spacing={4}
-      >
-        <Grid item xs={12}>
-          <TableCustomized
-            data={roles}
-            columns={columns}
-            tabsFilter={{ accessor: 'type', tabs }}
-            searchFilterProperties={searchFilterProperties}
-            actions={[
-              {
-                name: t('Delete'),
-                color: 'error',
-                callback: handleConfirmDelete,
-                icon: <DeleteTwoToneIcon fontSize="small" />
-              }
-            ]}
-            bulkActions={[
-              {
-                name: t('Delete'),
-                color: 'error',
-                callback: handleConfirmDeleteMultiple,
-                icon: <DeleteTwoToneIcon />
-              }
-            ]}
-          />
-        </Grid>
-      </Grid>
+      <Box sx={{ m: 4, height: 500, width: '95%' }}>
+        <CustomDatagrid
+          rows={roles}
+          columns={columns}
+          components={{
+            Toolbar: GridToolbar
+            // Toolbar: GridToolbarColumnsButton,
+            // Toolbar: GridToolbarDensitySelector
+          }}
+          initialState={{
+            columns: {
+              columnVisibilityModel: {}
+            }
+          }}
+        />
+      </Box>
     </SettingsLayout>
   );
 }

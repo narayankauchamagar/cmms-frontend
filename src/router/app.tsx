@@ -46,6 +46,11 @@ const SubscriptionPlans = Loader(
   lazy(() => import('src/content/own/Subscription/Plans'))
 );
 const Files = Loader(lazy(() => import('src/content/own/Files')));
+
+const VendorsAndCustomers = Loader(
+  lazy(() => import('src/content/own/VendorsAndCustomers'))
+);
+
 const appRoutes = [
   {
     path: 'settings',
@@ -116,6 +121,19 @@ const appRoutes = [
       {
         path: 'time',
         element: <TimeCategories />
+      }
+    ]
+  },
+  {
+    path: 'vendors-customers',
+    children: [
+      {
+        path: '',
+        element: <VendorsAndCustomers />
+      },
+      {
+        path: 'customers',
+        element: <VendorsAndCustomers />
       }
     ]
   }

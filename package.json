@@ -23,6 +23,7 @@
     "@mui/lab": "5.0.0-alpha.84",
     "@mui/material": "5.8.2",
     "@mui/styles": "5.8.0",
+    "@mui/x-data-grid": "^5.17.3",
     "@reduxjs/toolkit": "1.8.2",
     "@types/jsonwebtoken": "8.5.8",
     "@types/nprogress": "0.2.0",

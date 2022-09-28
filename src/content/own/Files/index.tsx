@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import { Card, Grid } from '@mui/material';
+import { Box, Card, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { TableCustomizedColumnType } from '../type';
 import TableCustomized from '../components/TableCustomized';
@@ -8,6 +8,13 @@ import { useContext, useEffect } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
+import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
+import CustomDataGrid from '../components/CustomDatagrid';
+import {
+  GridActionsCellItem,
+  GridRowParams,
+  GridToolbar
+} from '@mui/x-data-grid';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
@@ -17,13 +24,53 @@ function Files() {
   useEffect(() => {
     setTitle(t('Files'));
   }, []);
-  const columns: TableCustomizedColumnType[] = [
-    { label: t('ID'), accessor: 'id' },
-    { label: t('Name'), accessor: 'name' },
-    { label: t('Uploaded By'), accessor: 'createdBy' },
-    { label: t('Uploaded on'), accessor: 'createdAt' }
-  ];
 
+  const columns: GridEnrichedColDef[] = [
+    {
+      field: 'id',
+      headerName: t('ID'),
+      description: t('ID'),
+      width: 150
+    },
+    {
+      field: 'name',
+      headerName: t('Name'),
+      description: t('Name'),
+      width: 150
+    },
+    {
+      field: 'createdBy',
+      headerName: t('Uploaded By'),
+      description: t('Uploaded By'),
+      width: 150
+    },
+    {
+      field: 'createdAt',
+      headerName: t('Uploaded On'),
+      description: t('Uploaded On'),
+      width: 150
+    },
+    {
+      field: 'actions',
+      type: 'actions',
+      headerName: t('Actions'),
+      description: t('Actions'),
+      getActions: (params: GridRowParams) => [
+        <GridActionsCellItem
+          key="rename"
+          icon={<EditTwoToneIcon fontSize="small" color="primary" />}
+          onClick={() => handleRename(Number(params.id))}
+          label="Rename"
+        />,
+        <GridActionsCellItem
+          key="delete"
+          icon={<DeleteTwoToneIcon fontSize="small" color="error" />}
+          onClick={() => handleDelete(Number(params.id))}
+          label="Delete"
+        />
+      ]
+    }
+  ];
   const files: File[] = [
     {
       id: 74,
@@ -56,25 +103,20 @@ function Files() {
               justifyContent: 'space-between'
             }}
           >
-            <TableCustomized
-              data={files}
-              columns={columns}
-              actions={[
-                {
-                  name: t('Rename'),
-                  color: 'primary',
-                  callback: handleRename,
-                  icon: <EditTwoToneIcon fontSize="small" />
-                },
-                {
-                  name: t('Delete'),
-                  color: 'error',
-                  callback: handleDelete,
-                  icon: <DeleteTwoToneIcon fontSize="small" />
-                }
-              ]}
-              searchFilterProperties={['name']}
-            />
+            <Box sx={{ height: 500, width: '95%' }}>
+              <CustomDataGrid
+                columns={columns}
+                rows={files}
+                components={{
+                  Toolbar: GridToolbar
+                }}
+                initialState={{
+                  columns: {
+                    columnVisibilityModel: {}
+                  }
+                }}
+              />
+            </Box>
           </Card>
         </Grid>
       </Grid>
