@@ -19,7 +19,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import wait from '../../../utils/wait';
 import { useState } from 'react';
-import { phoneRegExp } from '../../../utils/validators';
+import { phoneRegExp, websiteRegExp } from '../../../utils/validators';
 import CustomDialog from '../components/CustomDialog';
 import { Company } from '../../../models/owns/company';
 
@@ -92,11 +92,9 @@ function CompanyDetails(props: CompanyDetailsProps) {
             .required(t('The address field is required')),
           phone: Yup.string().matches(
             phoneRegExp,
-            'The phone number is invalid'
+            t('The phone number is invalid')
           ),
-          website: Yup.string()
-            .max(100)
-            .required(t('The website field is required'))
+          website: Yup.string().matches(websiteRegExp)
         })}
         onSubmit={async (
           _values,

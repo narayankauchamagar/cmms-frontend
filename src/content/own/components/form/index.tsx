@@ -93,6 +93,7 @@ export default (props: PropsType) => {
                     key={index}
                     {...field}
                     isDisabled={formik.isSubmitting}
+                    type={field.type}
                     label={field.label}
                     placeholder={field.placeholder}
                     value={formik.values.name}

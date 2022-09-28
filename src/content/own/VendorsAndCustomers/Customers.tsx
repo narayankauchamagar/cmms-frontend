@@ -20,6 +20,11 @@ import {
   GridRowParams,
   GridToolbar
 } from '@mui/x-data-grid';
+import {
+  emailRegExp,
+  phoneRegExp,
+  websiteRegExp
+} from '../../../utils/validators';
 
 interface PropsType {
   values?: any;
@@ -92,7 +97,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
     },
     {
       name: 'rate',
-      type: 'text',
+      type: 'number',
       label: 'Rate',
       placeholder: 'Rate',
       icon: '$',
@@ -136,9 +141,11 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
 
   const shape = {
     customerName: Yup.string().required('Customer Name is required'),
-    phone: Yup.number()
-      .required(t('Phone number is required'))
-      .typeError(t('You must enter numbers'))
+    phone: Yup.string()
+      .matches(phoneRegExp, t('The phone number is invalid'))
+      .required(t('The phone number is required')),
+    website: Yup.string().matches(websiteRegExp, t('Invalid website')),
+    email: Yup.string().matches(emailRegExp, t('Invalid email'))
   };
 
   let customersList = [
