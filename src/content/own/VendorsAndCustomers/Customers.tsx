@@ -3,6 +3,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  IconButton,
   Typography
 } from '@mui/material';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
@@ -25,6 +26,7 @@ import {
   phoneRegExp,
   websiteRegExp
 } from '../../../utils/validators';
+import { Close } from '@mui/icons-material';
 
 interface PropsType {
   values?: any;
@@ -34,7 +36,7 @@ interface PropsType {
 
 const Customers = ({ openModal, handleCloseModal }: PropsType) => {
   const { t }: { t: any } = useTranslation();
-  const [isVendorDetailsOpen, setIsVendorDetailsOpen] = useState<boolean>(false);
+  const [isCustomerDetailsOpen, setIsCustomerDetailsOpen] = useState<boolean>(false);
 
   const [customerName, setCustomerName] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
@@ -330,19 +332,18 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
             columnVisibilityModel: {}
           }
         }}
-        setOpenModal={setIsVendorDetailsOpen}
+        setOpenModal={setIsCustomerDetailsOpen}
       />
     </Box>
   );
-
 
   const ModalCustomerDetails = () => (
     <Dialog
       fullWidth
       maxWidth="sm"
-      open={isVendorDetailsOpen}
+      open={isCustomerDetailsOpen}
       onClose={() => {
-        setIsVendorDetailsOpen(false);
+        setIsCustomerDetailsOpen(false);
       }}
     >
       <DialogTitle
@@ -350,16 +351,31 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
           p: 3,
           display: 'flex',
           flexDirection: 'row',
-          // justifyContent: 'space-between',
+          justifyContent: 'space-between'
         }}
       >
-        <Typography variant="subtitle1" mr={2}>
-          {t('Edit')}
-        </Typography>
-        <Typography variant="subtitle1">
-          {t('Delete')}
-        </Typography>
+        <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+          <Typography variant="subtitle1" mr={2}>
+            {t('Edit')}
+          </Typography>
+          <Typography variant="subtitle1">{t('Delete')}</Typography>
+        </Box>
+        <IconButton
+          aria-label="close"
+          onClick={() => {
+            setIsCustomerDetailsOpen(false);
+          }}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500]
+          }}
+        >
+          <Close />
+        </IconButton>
       </DialogTitle>
+
       <DialogContent
         dividers
         sx={{
@@ -367,52 +383,40 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
         }}
       >
         <Box>
-          <Typography variant="h4" sx={{textAlign: 'center'}} gutterBottom>
+          <Typography variant="h4" sx={{ textAlign: 'center' }} gutterBottom>
             {t('McMaster-Carr')}
           </Typography>
-          <Typography variant="subtitle1" sx={{textAlign: 'center', mb: 3}}>
+          <Typography variant="subtitle1" sx={{ textAlign: 'center', mb: 3 }}>
             {t('Wide range of stock parts from screws to filters.')}
           </Typography>
 
-          <Typography variant="subtitle1" gutterBottom>
-            {t('Address')}
-          </Typography>
-          <Typography variant="h5" sx={{mb: 1}}>
+          <Typography variant="subtitle1">{t('Address')}</Typography>
+          <Typography variant="h5" sx={{ mb: 1 }}>
             {t('Rabat, Maroc')}
           </Typography>
 
-          <Typography variant="subtitle1" gutterBottom>
-            {t('Phone')}
-          </Typography>
-          <Typography variant="h5" sx={{mb: 1}}>
+          <Typography variant="subtitle1">{t('Phone')}</Typography>
+          <Typography variant="h5" sx={{ mb: 1 }}>
             {t('06 22 33 44 55')}
           </Typography>
 
-          <Typography variant="subtitle1" gutterBottom>
-            {t('Website')}
-          </Typography>
-          <Typography variant="h5" sx={{mb: 1}}>
-            <a href='http://www.website.com'>www.website.com</a>
+          <Typography variant="subtitle1">{t('Website')}</Typography>
+          <Typography variant="h5" sx={{ mb: 1 }}>
+            <a href="http://www.website.com">www.website.com</a>
           </Typography>
 
-          <Typography variant="subtitle1" gutterBottom>
-            {t('Name')}
-          </Typography>
-          <Typography variant="h5" sx={{mb: 1}}>
+          <Typography variant="subtitle1">{t('Name')}</Typography>
+          <Typography variant="h5" sx={{ mb: 1 }}>
             {t('John Doe')}
           </Typography>
 
-          <Typography variant="subtitle1" gutterBottom>
-            {t('Email')}
-          </Typography>
-          <Typography variant="h5" sx={{mb: 1}}>
+          <Typography variant="subtitle1">{t('Email')}</Typography>
+          <Typography variant="h5" sx={{ mb: 1 }}>
             {t('john.doe@email.com')}
           </Typography>
 
-          <Typography variant="subtitle1" gutterBottom>
-            {t('Vendor Type')}
-          </Typography>
-          <Typography variant="h5" sx={{mb: 1}}>
+          <Typography variant="subtitle1">{t('Vendor Type')}</Typography>
+          <Typography variant="h5" sx={{ mb: 1 }}>
             {t('General Parts')}
           </Typography>
         </Box>

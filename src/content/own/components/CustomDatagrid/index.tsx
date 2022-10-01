@@ -32,7 +32,7 @@ function CustomDataGrid(props: CustomDatagridProps) {
       }}
       {...props}
       localeText={translatedGridLocaleText}
-      onCellClick={() => {props.setOpenModal(true)}}
+      onRowClick={() => {props.setOpenModal(true)}}
     />
   );
 }
