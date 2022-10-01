@@ -29,6 +29,7 @@ interface PropsType {
 
 const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
   const { t }: { t: any } = useTranslation();
+  const [isVendorDetailsOpen, setIsVendorDetailsOpen] = useState<boolean>(false);
 
   const [companyName, setCompanyName] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
@@ -271,8 +272,93 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
             columnVisibilityModel: {}
           }
         }}
+        setOpenModal={setIsVendorDetailsOpen}
       />
     </Box>
+  );
+
+  const ModalVendorDetails = () => (
+    <Dialog
+      fullWidth
+      maxWidth="sm"
+      open={isVendorDetailsOpen}
+      onClose={() => {
+        setIsVendorDetailsOpen(false);
+      }}
+    >
+      <DialogTitle
+        sx={{
+          p: 3,
+          display: 'flex',
+          flexDirection: 'row',
+          // justifyContent: 'space-between',
+        }}
+      >
+        <Typography variant="subtitle1" mr={2}>
+          {t('Edit')}
+        </Typography>
+        <Typography variant="subtitle1">
+          {t('Delete')}
+        </Typography>
+      </DialogTitle>
+      <DialogContent
+        dividers
+        sx={{
+          p: 3
+        }}
+      >
+        <Box>
+          <Typography variant="h4" sx={{textAlign: 'center'}} gutterBottom>
+            {t('McMaster-Carr')}
+          </Typography>
+          <Typography variant="subtitle1" sx={{textAlign: 'center', mb: 3}}>
+            {t('Wide range of stock parts from screws to filters.')}
+          </Typography>
+
+          <Typography variant="subtitle1" gutterBottom>
+            {t('Address')}
+          </Typography>
+          <Typography variant="h5" sx={{mb: 1}}>
+            {t('Rabat, Maroc')}
+          </Typography>
+
+          <Typography variant="subtitle1" gutterBottom>
+            {t('Phone')}
+          </Typography>
+          <Typography variant="h5" sx={{mb: 1}}>
+            {t('06 22 33 44 55')}
+          </Typography>
+
+          <Typography variant="subtitle1" gutterBottom>
+            {t('Website')}
+          </Typography>
+          <Typography variant="h5" sx={{mb: 1}}>
+            <a href='http://www.website.com'>www.website.com</a>
+          </Typography>
+
+          <Typography variant="subtitle1" gutterBottom>
+            {t('Name')}
+          </Typography>
+          <Typography variant="h5" sx={{mb: 1}}>
+            {t('John Doe')}
+          </Typography>
+
+          <Typography variant="subtitle1" gutterBottom>
+            {t('Email')}
+          </Typography>
+          <Typography variant="h5" sx={{mb: 1}}>
+            {t('john.doe@email.com')}
+          </Typography>
+
+          <Typography variant="subtitle1" gutterBottom>
+            {t('Vendor Type')}
+          </Typography>
+          <Typography variant="h5" sx={{mb: 1}}>
+            {t('General Parts')}
+          </Typography>
+        </Box>
+      </DialogContent>
+    </Dialog>
   );
 
   return (
@@ -285,6 +371,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
         width: '100%'
       }}
     >
+      <ModalVendorDetails />
       <RenderVendorsAddModal />
       <RenderVendorsList />
     </Box>
