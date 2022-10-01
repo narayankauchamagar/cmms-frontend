@@ -13,6 +13,7 @@ export interface TableCustomizedColumnType {
 export interface IField {
   label: string;
   type:
+    | 'number'
     | 'text'
     | 'checkbox'
     | 'groupCheckbox'

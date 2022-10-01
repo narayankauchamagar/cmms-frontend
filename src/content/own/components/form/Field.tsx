@@ -30,6 +30,7 @@ export default (props: PropsType) => {
         placeholder={t(`${props.placeholder}`)}
         name={props.name}
         onBlur={props.onBlur}
+        type={props.type}
         onChange={props.onChange}
         value={props.value}
         variant={props.value || 'outlined'}
