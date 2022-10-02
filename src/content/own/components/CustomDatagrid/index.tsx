@@ -25,6 +25,9 @@ function CustomDataGrid(props: CustomDatagridProps) {
           fontWeight: 'bold',
           textTransform: 'uppercase',
           backgroundColor: theme.colors.alpha.black[10]
+        },
+        '.MuiDataGrid-row': {
+          cursor: 'pointer'
         }
       }}
       {...props}

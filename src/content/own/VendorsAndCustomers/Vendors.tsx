@@ -3,6 +3,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  IconButton,
   Typography
 } from '@mui/material';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
@@ -25,6 +26,8 @@ import {
   phoneRegExp,
   websiteRegExp
 } from '../../../utils/validators';
+import { Close } from '@mui/icons-material';
+import { Vendor } from '../../../models/owns/vendor';
 
 interface PropsType {
   values?: any;
@@ -34,15 +37,17 @@ interface PropsType {
 
 const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
   const { t }: { t: any } = useTranslation();
+  const [isVendorDetailsOpen, setIsVendorDetailsOpen] =
+    useState<boolean>(false);
 
   const [companyName, setCompanyName] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
-
+  const [currentVendor, setCurrentVendor] = useState<Vendor>();
+  const [viewOrUpdate, setViewOrUpdate] = useState<'view' | 'update'>('view');
   const values = {
     companyName: companyName,
     phone: phone
   };
-  // console.log('values-> ', values);
 
   let fields: Array<IField> = [
     {
@@ -56,7 +61,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
       name: 'address',
       type: 'text',
       label: 'Address',
-      placeholder: 'casa, maroc'
+      placeholder: 'Casa, Maroc'
     },
     {
       name: 'phone',
@@ -116,7 +121,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
     email: Yup.string().matches(emailRegExp, t('Invalid email'))
   };
 
-  let vendorsList = [
+  let vendorsList: Vendor[] = [
     {
       id: '1',
       companyName: 'Company Name',
@@ -127,7 +132,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
       email: 'john.doe@gmail.com',
       vendorType: 'Plumbing',
       description: 'Describe...',
-      rate: 'rate'
+      rate: 15
     },
     {
       id: '2',
@@ -139,7 +144,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
       email: 'john.doe@gmail.com',
       vendorType: 'Plumbing',
       description: 'Describe...',
-      rate: 'rate'
+      rate: 20
     }
   ];
 
@@ -279,8 +284,137 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
             columnVisibilityModel: {}
           }
         }}
+        onRowClick={(params) => {
+          setCurrentVendor(
+            vendorsList.find((vendor) => vendor.id === params.id)
+          );
+          setIsVendorDetailsOpen(true);
+        }}
       />
     </Box>
+  );
+
+  const ModalVendorDetails = () => (
+    <Dialog
+      fullWidth
+      maxWidth="sm"
+      open={isVendorDetailsOpen}
+      onClose={() => {
+        setIsVendorDetailsOpen(false);
+      }}
+    >
+      <DialogTitle
+        sx={{
+          p: 3,
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between'
+        }}
+      >
+        <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+          {viewOrUpdate === 'view' ? (
+            <Typography
+              onClick={() => setViewOrUpdate('update')}
+              style={{ cursor: 'pointer' }}
+              variant="subtitle1"
+              mr={2}
+            >
+              {t('Edit')}
+            </Typography>
+          ) : (
+            <Typography
+              onClick={() => setViewOrUpdate('view')}
+              style={{ cursor: 'pointer' }}
+              variant="subtitle1"
+              mr={2}
+            >
+              {t('Go back')}
+            </Typography>
+          )}
+          <Typography variant="subtitle1">{t('Delete')}</Typography>
+        </Box>
+        <IconButton
+          aria-label="close"
+          onClick={() => {
+            setIsVendorDetailsOpen(false);
+          }}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500]
+          }}
+        >
+          <Close />
+        </IconButton>
+      </DialogTitle>
+
+      <DialogContent
+        dividers
+        sx={{
+          p: 3
+        }}
+      >
+        {viewOrUpdate === 'view' ? (
+          <Box>
+            <Typography variant="h4" sx={{ textAlign: 'center' }} gutterBottom>
+              {currentVendor?.companyName}
+            </Typography>
+            <Typography variant="subtitle1" sx={{ textAlign: 'center', mb: 3 }}>
+              {currentVendor?.description}
+            </Typography>
+
+            <Typography variant="subtitle1">{t('Address')}</Typography>
+            <Typography variant="h5" sx={{ mb: 1 }}>
+              {currentVendor?.address}
+            </Typography>
+
+            <Typography variant="subtitle1">{t('Phone')}</Typography>
+            <Typography variant="h5" sx={{ mb: 1 }}>
+              {currentVendor?.phone}
+            </Typography>
+
+            <Typography variant="subtitle1">{t('Website')}</Typography>
+            <Typography variant="h5" sx={{ mb: 1 }}>
+              <a href={currentVendor?.website}>{currentVendor?.website}</a>
+            </Typography>
+
+            <Typography variant="subtitle1">{t('Name')}</Typography>
+            <Typography variant="h5" sx={{ mb: 1 }}>
+              {currentVendor?.name}
+            </Typography>
+
+            <Typography variant="subtitle1">{t('Email')}</Typography>
+            <Typography variant="h5" sx={{ mb: 1 }}>
+              {currentVendor?.email}
+            </Typography>
+
+            <Typography variant="subtitle1">{t('Vendor Type')}</Typography>
+            <Typography variant="h5" sx={{ mb: 1 }}>
+              {currentVendor?.vendorType}
+            </Typography>
+          </Box>
+        ) : (
+          <Box>
+            <Form
+              fields={fields}
+              validation={Yup.object().shape(shape)}
+              submitText={t('Update')}
+              values={currentVendor || {}}
+              onChange={({ field, e }) => {}}
+              onSubmit={async (values) => {
+                try {
+                  await wait(2000);
+                  setViewOrUpdate('view');
+                } catch (err) {
+                  console.error(err);
+                }
+              }}
+            />
+          </Box>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 
   return (
@@ -293,6 +427,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
         width: '100%'
       }}
     >
+      <ModalVendorDetails />
       <RenderVendorsAddModal />
       <RenderVendorsList />
     </Box>
