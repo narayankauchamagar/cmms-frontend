@@ -7,6 +7,7 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
+  Drawer,
   Grid,
   Tab,
   Tabs,
@@ -40,6 +41,7 @@ import User from '../../../models/owns/user';
 import Team from '../../../models/owns/team';
 import { Vendor } from '../../../models/owns/vendor';
 import { Customer } from '../../../models/owns/customer';
+import LocationDetails from './LocationDetails';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
@@ -52,7 +54,9 @@ function Files() {
     setCurrentTab(value);
   };
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
+  const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const { setTitle } = useContext(TitleContext);
+  const [currentLocation, setCurrentLocation] = useState<Location>();
   const handleDelete = (id: number) => {};
   const handleRename = (id: number) => {};
   useEffect(() => {
@@ -357,6 +361,12 @@ function Files() {
                 components={{
                   Toolbar: GridToolbar
                 }}
+                onRowClick={(params) => {
+                  setCurrentLocation(
+                    locations.find((location) => location.id === params.id)
+                  );
+                  setOpenDrawer(true);
+                }}
                 initialState={{
                   columns: {
                     columnVisibilityModel: {}
@@ -368,6 +378,13 @@ function Files() {
         </Grid>
       </Grid>
       {renderLocationAddModal()}
+      <Drawer
+        anchor="right"
+        open={openDrawer}
+        onClose={() => setOpenDrawer(false)}
+      >
+        <LocationDetails location={currentLocation} />
+      </Drawer>
     </>
   );
 }
