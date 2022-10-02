@@ -3,7 +3,7 @@ import { Box, Card, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { TableCustomizedColumnType } from '../type';
 import TableCustomized from '../components/TableCustomized';
-import File from '../../../models/owns/file';
+import Location from '../../../models/owns/location';
 import { useContext, useEffect } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
@@ -22,16 +22,10 @@ function Files() {
   const handleDelete = (id: number) => {};
   const handleRename = (id: number) => {};
   useEffect(() => {
-    setTitle(t('Files'));
+    setTitle(t('Locations'));
   }, []);
 
   const columns: GridEnrichedColDef[] = [
-    {
-      field: 'id',
-      headerName: t('ID'),
-      description: t('ID'),
-      width: 150
-    },
     {
       field: 'name',
       headerName: t('Name'),
@@ -39,15 +33,15 @@ function Files() {
       width: 150
     },
     {
-      field: 'createdBy',
-      headerName: t('Uploaded By'),
-      description: t('Uploaded By'),
+      field: 'address',
+      headerName: t('Address'),
+      description: t('Address'),
       width: 150
     },
     {
       field: 'createdAt',
-      headerName: t('Uploaded On'),
-      description: t('Uploaded On'),
+      headerName: t('Created At'),
+      description: t('Created At'),
       width: 150
     },
     {
@@ -71,10 +65,11 @@ function Files() {
       ]
     }
   ];
-  const files: File[] = [
+  const locations: Location[] = [
     {
       id: 74,
       name: 'ghgvhb',
+      address: 'GHJ HIjnjb',
       createdAt: 'dfggj',
       createdBy: 'ghu',
       updatedAt: 'ghfgj',
@@ -106,7 +101,7 @@ function Files() {
             <Box sx={{ height: 500, width: '95%' }}>
               <CustomDataGrid
                 columns={columns}
-                rows={files}
+                rows={locations}
                 components={{
                   Toolbar: GridToolbar
                 }}
