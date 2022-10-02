@@ -27,6 +27,7 @@ import {
   websiteRegExp
 } from '../../../utils/validators';
 import { Close } from '@mui/icons-material';
+import { Customer } from '../../../models/owns/customer';
 
 interface PropsType {
   values?: any;
@@ -41,7 +42,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
 
   const [customerName, setCustomerName] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
-
+  const [currentCustomer, setCurrentCustomer] = useState<Customer>();
   const values = {
     customerName: customerName,
     phone: phone
@@ -152,7 +153,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
     email: Yup.string().matches(emailRegExp, t('Invalid email'))
   };
 
-  let customersList = [
+  let customersList: Customer[] = [
     {
       id: '1',
       customerName: 'Customer 1',
@@ -162,7 +163,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
       email: 'john.doe@gmail.com',
       customerType: 'Plumbing',
       description: 'Describe...',
-      rate: 'rate',
+      rate: 10,
       address1: 'Add 1',
       address2: '-',
       address3: 'Add 3',
@@ -177,7 +178,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
       email: 'john.doe@gmail.com',
       customerType: 'Electrical',
       description: 'Describe 2...',
-      rate: 'rate',
+      rate: 15,
       address1: 'Add 1',
       address2: '-',
       address3: '-',
@@ -333,7 +334,12 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
             columnVisibilityModel: {}
           }
         }}
-        onRowClick={() => setIsCustomerDetailsOpen(true)}
+        onRowClick={(params) => {
+          setCurrentCustomer(
+            customersList.find((customer) => customer.id === params.id)
+          );
+          setIsCustomerDetailsOpen(true);
+        }}
       />
     </Box>
   );
@@ -385,40 +391,40 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
       >
         <Box>
           <Typography variant="h4" sx={{ textAlign: 'center' }} gutterBottom>
-            {t('McMaster-Carr')}
+            {currentCustomer?.customerName}
           </Typography>
           <Typography variant="subtitle1" sx={{ textAlign: 'center', mb: 3 }}>
-            {t('Wide range of stock parts from screws to filters.')}
+            {currentCustomer?.description}
           </Typography>
 
           <Typography variant="subtitle1">{t('Address')}</Typography>
           <Typography variant="h5" sx={{ mb: 1 }}>
-            {t('Rabat, Maroc')}
+            {currentCustomer?.address}
           </Typography>
 
           <Typography variant="subtitle1">{t('Phone')}</Typography>
           <Typography variant="h5" sx={{ mb: 1 }}>
-            {t('06 22 33 44 55')}
+            {currentCustomer?.phone}
           </Typography>
 
           <Typography variant="subtitle1">{t('Website')}</Typography>
           <Typography variant="h5" sx={{ mb: 1 }}>
-            <a href="http://www.website.com">www.website.com</a>
+            <a href={currentCustomer?.website}>{currentCustomer?.website}</a>
           </Typography>
 
           <Typography variant="subtitle1">{t('Name')}</Typography>
           <Typography variant="h5" sx={{ mb: 1 }}>
-            {t('John Doe')}
+            {currentCustomer?.customerName}
           </Typography>
 
           <Typography variant="subtitle1">{t('Email')}</Typography>
           <Typography variant="h5" sx={{ mb: 1 }}>
-            {t('john.doe@email.com')}
+            {currentCustomer?.email}
           </Typography>
 
-          <Typography variant="subtitle1">{t('Vendor Type')}</Typography>
+          <Typography variant="subtitle1">{t('Customer Type')}</Typography>
           <Typography variant="h5" sx={{ mb: 1 }}>
-            {t('General Parts')}
+            {currentCustomer?.customerType}
           </Typography>
         </Box>
       </DialogContent>
