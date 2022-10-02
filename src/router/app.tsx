@@ -51,6 +51,10 @@ const VendorsAndCustomers = Loader(
   lazy(() => import('src/content/own/VendorsAndCustomers'))
 );
 
+const PeopleAndTeams = Loader(
+  lazy(() => import('src/content/own/PeopleAndTeams'))
+);
+
 const appRoutes = [
   {
     path: 'settings',
@@ -134,6 +138,19 @@ const appRoutes = [
       {
         path: 'customers',
         element: <VendorsAndCustomers />
+      }
+    ]
+  },
+  {
+    path: 'people-teams',
+    children: [
+      {
+        path: '',
+        element: <PeopleAndTeams />
+      },
+      {
+        path: 'teams',
+        element: <PeopleAndTeams />
       }
     ]
   }
