@@ -43,11 +43,11 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
   const [companyName, setCompanyName] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
   const [currentVendor, setCurrentVendor] = useState<Vendor>();
+  const [viewOrUpdate, setViewOrUpdate] = useState<'view' | 'update'>('view');
   const values = {
     companyName: companyName,
     phone: phone
   };
-  // console.log('values-> ', values);
 
   let fields: Array<IField> = [
     {
@@ -312,9 +312,16 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
         }}
       >
         <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-          <Typography variant="subtitle1" mr={2}>
-            {t('Edit')}
-          </Typography>
+          {viewOrUpdate === 'view' && (
+            <Typography
+              onClick={() => setViewOrUpdate('update')}
+              style={{ cursor: 'pointer' }}
+              variant="subtitle1"
+              mr={2}
+            >
+              {t('Edit')}
+            </Typography>
+          )}
           <Typography variant="subtitle1">{t('Delete')}</Typography>
         </Box>
         <IconButton
@@ -339,44 +346,69 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
           p: 3
         }}
       >
-        <Box>
-          <Typography variant="h4" sx={{ textAlign: 'center' }} gutterBottom>
-            {currentVendor?.companyName}
-          </Typography>
-          <Typography variant="subtitle1" sx={{ textAlign: 'center', mb: 3 }}>
-            {currentVendor?.description}
-          </Typography>
+        {viewOrUpdate === 'view' ? (
+          <Box>
+            <Typography variant="h4" sx={{ textAlign: 'center' }} gutterBottom>
+              {currentVendor?.companyName}
+            </Typography>
+            <Typography variant="subtitle1" sx={{ textAlign: 'center', mb: 3 }}>
+              {currentVendor?.description}
+            </Typography>
 
-          <Typography variant="subtitle1">{t('Address')}</Typography>
-          <Typography variant="h5" sx={{ mb: 1 }}>
-            {currentVendor?.address}
-          </Typography>
+            <Typography variant="subtitle1">{t('Address')}</Typography>
+            <Typography variant="h5" sx={{ mb: 1 }}>
+              {currentVendor?.address}
+            </Typography>
 
-          <Typography variant="subtitle1">{t('Phone')}</Typography>
-          <Typography variant="h5" sx={{ mb: 1 }}>
-            {currentVendor?.phone}
-          </Typography>
+            <Typography variant="subtitle1">{t('Phone')}</Typography>
+            <Typography variant="h5" sx={{ mb: 1 }}>
+              {currentVendor?.phone}
+            </Typography>
 
-          <Typography variant="subtitle1">{t('Website')}</Typography>
-          <Typography variant="h5" sx={{ mb: 1 }}>
-            <a href={currentVendor?.website}>{currentVendor?.website}</a>
-          </Typography>
+            <Typography variant="subtitle1">{t('Website')}</Typography>
+            <Typography variant="h5" sx={{ mb: 1 }}>
+              <a href={currentVendor?.website}>{currentVendor?.website}</a>
+            </Typography>
 
-          <Typography variant="subtitle1">{t('Name')}</Typography>
-          <Typography variant="h5" sx={{ mb: 1 }}>
-            {currentVendor?.name}
-          </Typography>
+            <Typography variant="subtitle1">{t('Name')}</Typography>
+            <Typography variant="h5" sx={{ mb: 1 }}>
+              {currentVendor?.name}
+            </Typography>
 
-          <Typography variant="subtitle1">{t('Email')}</Typography>
-          <Typography variant="h5" sx={{ mb: 1 }}>
-            {currentVendor?.email}
-          </Typography>
+            <Typography variant="subtitle1">{t('Email')}</Typography>
+            <Typography variant="h5" sx={{ mb: 1 }}>
+              {currentVendor?.email}
+            </Typography>
 
-          <Typography variant="subtitle1">{t('Vendor Type')}</Typography>
-          <Typography variant="h5" sx={{ mb: 1 }}>
-            {currentVendor?.vendorType}
-          </Typography>
-        </Box>
+            <Typography variant="subtitle1">{t('Vendor Type')}</Typography>
+            <Typography variant="h5" sx={{ mb: 1 }}>
+              {currentVendor?.vendorType}
+            </Typography>
+          </Box>
+        ) : (
+          <Box>
+            <Form
+              fields={fields}
+              validation={Yup.object().shape(shape)}
+              submitText={t('Update')}
+              values={
+                {
+                  companyName: currentVendor.companyName,
+                  phone: currentVendor.phone
+                } || {}
+              }
+              onChange={({ field, e }) => {}}
+              onSubmit={async (values) => {
+                try {
+                  await wait(2000);
+                  setViewOrUpdate('view');
+                } catch (err) {
+                  console.error(err);
+                }
+              }}
+            />
+          </Box>
+        )}
       </DialogContent>
     </Dialog>
   );

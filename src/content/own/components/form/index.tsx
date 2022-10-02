@@ -60,7 +60,7 @@ export default (props: PropsType) => {
         <>
           {props.fields.map((field, index) => {
             return (
-              <>
+              <div key={index}>
                 {field.type === 'select' ? (
                   <SelectForm
                     options={field.items}
@@ -111,7 +111,7 @@ export default (props: PropsType) => {
                     fullWidth={field.fullWidth}
                   />
                 )}
-              </>
+              </div>
             );
           })}
 
