@@ -24,7 +24,13 @@ export default (props: PropsType) => {
         fullWidth={props.fullWidth || true}
         multiple={props.multiple}
         limitTags={2}
-        value={{ label: props.value, value: props.value }}
+        defaultValue={
+          props.multiple
+            ? []
+            : props.value
+            ? { label: props.value, value: props.value }
+            : null
+        }
         options={props.options}
         // @ts-ignore
         getOptionLabel={(option) => option.label}
