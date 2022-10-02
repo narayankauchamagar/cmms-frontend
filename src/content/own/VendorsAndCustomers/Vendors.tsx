@@ -312,7 +312,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
         }}
       >
         <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-          {viewOrUpdate === 'view' && (
+          {viewOrUpdate === 'view' ? (
             <Typography
               onClick={() => setViewOrUpdate('update')}
               style={{ cursor: 'pointer' }}
@@ -320,6 +320,15 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
               mr={2}
             >
               {t('Edit')}
+            </Typography>
+          ) : (
+            <Typography
+              onClick={() => setViewOrUpdate('view')}
+              style={{ cursor: 'pointer' }}
+              variant="subtitle1"
+              mr={2}
+            >
+              {t('Go back')}
             </Typography>
           )}
           <Typography variant="subtitle1">{t('Delete')}</Typography>
