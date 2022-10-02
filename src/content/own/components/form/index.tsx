@@ -96,7 +96,7 @@ export default (props: PropsType) => {
                     type={field.type}
                     label={field.label}
                     placeholder={field.placeholder}
-                    value={formik.values.name}
+                    value={formik.values[field.name]}
                     onBlur={formik.handleBlur}
                     // onChange={formik.handleChange}
                     onChange={(e) => {

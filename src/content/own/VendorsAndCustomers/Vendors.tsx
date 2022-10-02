@@ -61,7 +61,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
       name: 'address',
       type: 'text',
       label: 'Address',
-      placeholder: 'casa, maroc'
+      placeholder: 'Casa, Maroc'
     },
     {
       name: 'phone',
@@ -400,12 +400,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
               fields={fields}
               validation={Yup.object().shape(shape)}
               submitText={t('Update')}
-              values={
-                {
-                  companyName: currentVendor.companyName,
-                  phone: currentVendor.phone
-                } || {}
-              }
+              values={currentVendor || {}}
               onChange={({ field, e }) => {}}
               onSubmit={async (values) => {
                 try {
