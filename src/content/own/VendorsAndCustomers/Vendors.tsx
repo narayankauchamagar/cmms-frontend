@@ -27,6 +27,7 @@ import {
   websiteRegExp
 } from '../../../utils/validators';
 import { Close } from '@mui/icons-material';
+import { Vendor } from '../../../models/owns/vendor';
 
 interface PropsType {
   values?: any;
@@ -36,11 +37,12 @@ interface PropsType {
 
 const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
   const { t }: { t: any } = useTranslation();
-  const [isVendorDetailsOpen, setIsVendorDetailsOpen] = useState<boolean>(false);
+  const [isVendorDetailsOpen, setIsVendorDetailsOpen] =
+    useState<boolean>(false);
 
   const [companyName, setCompanyName] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
-
+  const [currentVendor, setCurrentVendor] = useState<Vendor>();
   const values = {
     companyName: companyName,
     phone: phone
@@ -119,7 +121,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
     email: Yup.string().matches(emailRegExp, t('Invalid email'))
   };
 
-  let vendorsList = [
+  let vendorsList: Vendor[] = [
     {
       id: '1',
       companyName: 'Company Name',
@@ -130,7 +132,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
       email: 'john.doe@gmail.com',
       vendorType: 'Plumbing',
       description: 'Describe...',
-      rate: 'rate'
+      rate: 15
     },
     {
       id: '2',
@@ -142,7 +144,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
       email: 'john.doe@gmail.com',
       vendorType: 'Plumbing',
       description: 'Describe...',
-      rate: 'rate'
+      rate: 20
     }
   ];
 
@@ -282,7 +284,12 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
             columnVisibilityModel: {}
           }
         }}
-        setOpenModal={setIsVendorDetailsOpen}
+        onRowClick={(params) => {
+          setCurrentVendor(
+            vendorsList.find((vendor) => vendor.id === params.id)
+          );
+          setIsVendorDetailsOpen(true);
+        }}
       />
     </Box>
   );
@@ -334,40 +341,40 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
       >
         <Box>
           <Typography variant="h4" sx={{ textAlign: 'center' }} gutterBottom>
-            {t('McMaster-Carr')}
+            {currentVendor?.companyName}
           </Typography>
           <Typography variant="subtitle1" sx={{ textAlign: 'center', mb: 3 }}>
-            {t('Wide range of stock parts from screws to filters.')}
+            {currentVendor?.description}
           </Typography>
 
           <Typography variant="subtitle1">{t('Address')}</Typography>
           <Typography variant="h5" sx={{ mb: 1 }}>
-            {t('Rabat, Maroc')}
+            {currentVendor?.address}
           </Typography>
 
           <Typography variant="subtitle1">{t('Phone')}</Typography>
           <Typography variant="h5" sx={{ mb: 1 }}>
-            {t('06 22 33 44 55')}
+            {currentVendor?.phone}
           </Typography>
 
           <Typography variant="subtitle1">{t('Website')}</Typography>
           <Typography variant="h5" sx={{ mb: 1 }}>
-            <a href="http://www.website.com">www.website.com</a>
+            <a href={currentVendor?.website}>{currentVendor?.website}</a>
           </Typography>
 
           <Typography variant="subtitle1">{t('Name')}</Typography>
           <Typography variant="h5" sx={{ mb: 1 }}>
-            {t('John Doe')}
+            {currentVendor?.name}
           </Typography>
 
           <Typography variant="subtitle1">{t('Email')}</Typography>
           <Typography variant="h5" sx={{ mb: 1 }}>
-            {t('john.doe@email.com')}
+            {currentVendor?.email}
           </Typography>
 
           <Typography variant="subtitle1">{t('Vendor Type')}</Typography>
           <Typography variant="h5" sx={{ mb: 1 }}>
-            {t('General Parts')}
+            {currentVendor?.vendorType}
           </Typography>
         </Box>
       </DialogContent>

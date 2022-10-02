@@ -36,7 +36,8 @@ interface PropsType {
 
 const Customers = ({ openModal, handleCloseModal }: PropsType) => {
   const { t }: { t: any } = useTranslation();
-  const [isCustomerDetailsOpen, setIsCustomerDetailsOpen] = useState<boolean>(false);
+  const [isCustomerDetailsOpen, setIsCustomerDetailsOpen] =
+    useState<boolean>(false);
 
   const [customerName, setCustomerName] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
@@ -332,7 +333,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
             columnVisibilityModel: {}
           }
         }}
-        setOpenModal={setIsCustomerDetailsOpen}
+        onRowClick={() => setIsCustomerDetailsOpen(true)}
       />
     </Box>
   );

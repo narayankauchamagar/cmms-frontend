@@ -3,11 +3,8 @@ import { DataGrid } from '@mui/x-data-grid';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@mui/material';
 import gridLocaleText from './GridLocaleText';
-import { Dispatch, SetStateAction } from 'react';
 
-interface CustomDatagridProps extends DataGridProps {
-  setOpenModal?: Dispatch<SetStateAction<boolean>>;
-}
+interface CustomDatagridProps extends DataGridProps {}
 
 function CustomDataGrid(props: CustomDatagridProps) {
   const { t }: { t: any } = useTranslation();
@@ -28,11 +25,13 @@ function CustomDataGrid(props: CustomDatagridProps) {
           fontWeight: 'bold',
           textTransform: 'uppercase',
           backgroundColor: theme.colors.alpha.black[10]
+        },
+        '.MuiDataGrid-row': {
+          cursor: 'pointer'
         }
       }}
       {...props}
       localeText={translatedGridLocaleText}
-      onRowClick={() => {props.setOpenModal(true)}}
     />
   );
 }
