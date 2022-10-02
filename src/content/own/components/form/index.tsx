@@ -64,6 +64,7 @@ export default (props: PropsType) => {
                 {field.type === 'select' ? (
                   <SelectForm
                     options={field.items}
+                    value={formik.values[field.name]}
                     label={field.label}
                     placeholder={field.placeholder}
                     multiple={field.multiple}

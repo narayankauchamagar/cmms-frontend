@@ -43,6 +43,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
   const [customerName, setCustomerName] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
   const [currentCustomer, setCurrentCustomer] = useState<Customer>();
+  const [viewOrUpdate, setViewOrUpdate] = useState<'view' | 'update'>('view');
   const values = {
     customerName: customerName,
     phone: phone
@@ -362,9 +363,25 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
         }}
       >
         <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-          <Typography variant="subtitle1" mr={2}>
-            {t('Edit')}
-          </Typography>
+          {viewOrUpdate === 'view' ? (
+            <Typography
+              onClick={() => setViewOrUpdate('update')}
+              style={{ cursor: 'pointer' }}
+              variant="subtitle1"
+              mr={2}
+            >
+              {t('Edit')}
+            </Typography>
+          ) : (
+            <Typography
+              onClick={() => setViewOrUpdate('view')}
+              style={{ cursor: 'pointer' }}
+              variant="subtitle1"
+              mr={2}
+            >
+              {t('Go back')}
+            </Typography>
+          )}
           <Typography variant="subtitle1">{t('Delete')}</Typography>
         </Box>
         <IconButton
@@ -389,44 +406,69 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
           p: 3
         }}
       >
-        <Box>
-          <Typography variant="h4" sx={{ textAlign: 'center' }} gutterBottom>
-            {currentCustomer?.customerName}
-          </Typography>
-          <Typography variant="subtitle1" sx={{ textAlign: 'center', mb: 3 }}>
-            {currentCustomer?.description}
-          </Typography>
+        {viewOrUpdate === 'view' ? (
+          <Box>
+            <Typography variant="h4" sx={{ textAlign: 'center' }} gutterBottom>
+              {currentCustomer?.customerName}
+            </Typography>
+            <Typography variant="subtitle1" sx={{ textAlign: 'center', mb: 3 }}>
+              {currentCustomer?.description}
+            </Typography>
 
-          <Typography variant="subtitle1">{t('Address')}</Typography>
-          <Typography variant="h5" sx={{ mb: 1 }}>
-            {currentCustomer?.address}
-          </Typography>
+            <Typography variant="subtitle1">{t('Address')}</Typography>
+            <Typography variant="h5" sx={{ mb: 1 }}>
+              {currentCustomer?.address}
+            </Typography>
 
-          <Typography variant="subtitle1">{t('Phone')}</Typography>
-          <Typography variant="h5" sx={{ mb: 1 }}>
-            {currentCustomer?.phone}
-          </Typography>
+            <Typography variant="subtitle1">{t('Phone')}</Typography>
+            <Typography variant="h5" sx={{ mb: 1 }}>
+              {currentCustomer?.phone}
+            </Typography>
 
-          <Typography variant="subtitle1">{t('Website')}</Typography>
-          <Typography variant="h5" sx={{ mb: 1 }}>
-            <a href={currentCustomer?.website}>{currentCustomer?.website}</a>
-          </Typography>
+            <Typography variant="subtitle1">{t('Website')}</Typography>
+            <Typography variant="h5" sx={{ mb: 1 }}>
+              <a href={currentCustomer?.website}>{currentCustomer?.website}</a>
+            </Typography>
 
-          <Typography variant="subtitle1">{t('Name')}</Typography>
-          <Typography variant="h5" sx={{ mb: 1 }}>
-            {currentCustomer?.customerName}
-          </Typography>
+            <Typography variant="subtitle1">{t('Name')}</Typography>
+            <Typography variant="h5" sx={{ mb: 1 }}>
+              {currentCustomer?.customerName}
+            </Typography>
 
-          <Typography variant="subtitle1">{t('Email')}</Typography>
-          <Typography variant="h5" sx={{ mb: 1 }}>
-            {currentCustomer?.email}
-          </Typography>
+            <Typography variant="subtitle1">{t('Email')}</Typography>
+            <Typography variant="h5" sx={{ mb: 1 }}>
+              {currentCustomer?.email}
+            </Typography>
 
-          <Typography variant="subtitle1">{t('Customer Type')}</Typography>
-          <Typography variant="h5" sx={{ mb: 1 }}>
-            {currentCustomer?.customerType}
-          </Typography>
-        </Box>
+            <Typography variant="subtitle1">{t('Customer Type')}</Typography>
+            <Typography variant="h5" sx={{ mb: 1 }}>
+              {currentCustomer?.customerType}
+            </Typography>
+
+            <Typography variant="subtitle1">{t('Currency')}</Typography>
+            <Typography variant="h5" sx={{ mb: 1 }}>
+              {currentCustomer?.currency}
+            </Typography>
+          </Box>
+        ) : (
+          <Box>
+            <Form
+              fields={fields}
+              validation={Yup.object().shape(shape)}
+              submitText={t('Update')}
+              values={currentCustomer || {}}
+              onChange={({ field, e }) => {}}
+              onSubmit={async (values) => {
+                try {
+                  await wait(2000);
+                  setViewOrUpdate('view');
+                } catch (err) {
+                  console.error(err);
+                }
+              }}
+            />
+          </Box>
+        )}
       </DialogContent>
     </Dialog>
   );

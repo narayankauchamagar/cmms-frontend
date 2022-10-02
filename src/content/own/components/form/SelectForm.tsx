@@ -7,6 +7,7 @@ interface PropsType {
     value: string;
   }[];
   label: string;
+  value: string;
   placeholder?: string;
   multiple?: boolean;
   fullWidth?: boolean;
@@ -23,6 +24,7 @@ export default (props: PropsType) => {
         fullWidth={props.fullWidth || true}
         multiple={props.multiple}
         limitTags={2}
+        value={{ label: props.value, value: props.value }}
         options={props.options}
         // @ts-ignore
         getOptionLabel={(option) => option.label}
