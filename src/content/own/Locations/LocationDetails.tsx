@@ -20,9 +20,10 @@ import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 
 interface LocationDetailsProps {
   location: Location;
+  handleUpdate: (id: number) => void;
 }
 export default function LocationDetails(props: LocationDetailsProps) {
-  const { location } = props;
+  const { location, handleUpdate } = props;
   const { t }: { t: any } = useTranslation();
   const [currentTab, setCurrentTab] = useState<string>('assets');
   const tabs = [
@@ -75,6 +76,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
         </Box>
         <Box>
           <EditTwoToneIcon
+            onClick={() => handleUpdate(location.id)}
             style={{ cursor: 'pointer', marginRight: 10 }}
             color="primary"
           />

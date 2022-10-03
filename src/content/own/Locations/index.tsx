@@ -50,15 +50,30 @@ function Files() {
     { value: 'list', label: t('List View') },
     { value: 'map', label: t('Map View') }
   ];
+  const locations: Location[] = [
+    {
+      id: 74,
+      name: 'ghgvhb',
+      address: 'GHJ HIjnjb',
+      createdAt: 'dfggj',
+      createdBy: 'ghu',
+      updatedAt: 'ghfgj',
+      updatedBy: 'ghfgj'
+    }
+  ];
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
+  const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const { setTitle } = useContext(TitleContext);
   const [currentLocation, setCurrentLocation] = useState<Location>();
   const handleDelete = (id: number) => {};
-  const handleRename = (id: number) => {};
+  const handleUpdate = (id: number) => {
+    setCurrentLocation(locations.find((location) => location.id === id));
+    setOpenUpdateModal(true);
+  };
   useEffect(() => {
     setTitle(t('Locations'));
   }, []);
@@ -89,10 +104,10 @@ function Files() {
       description: t('Actions'),
       getActions: (params: GridRowParams) => [
         <GridActionsCellItem
-          key="rename"
+          key="edit"
           icon={<EditTwoToneIcon fontSize="small" color="primary" />}
-          onClick={() => handleRename(Number(params.id))}
-          label="Rename"
+          onClick={() => handleUpdate(Number(params.id))}
+          label="Edit"
         />,
         <GridActionsCellItem
           key="delete"
@@ -103,18 +118,14 @@ function Files() {
       ]
     }
   ];
-  const locations: Location[] = [
+  const workers: User[] = [
     {
-      id: 74,
-      name: 'ghgvhb',
-      address: 'GHJ HIjnjb',
-      createdAt: 'dfggj',
-      createdBy: 'ghu',
-      updatedAt: 'ghfgj',
-      updatedBy: 'ghfgj'
+      id: 21,
+      firstName: 'gfgb',
+      lastName: 'fglink'
     }
   ];
-  const workers: User[] = [
+  const currentLocationWorkers: User[] = [
     {
       id: 21,
       firstName: 'gfgb',
@@ -201,7 +212,7 @@ function Files() {
       required: true
     },
     {
-      name: 'worker',
+      name: 'workers',
       multiple: true,
       type: 'select',
       label: 'Workers',
@@ -214,7 +225,7 @@ function Files() {
       })
     },
     {
-      name: 'team',
+      name: 'teams',
       multiple: true,
       type: 'select',
       label: 'Teams',
@@ -227,7 +238,7 @@ function Files() {
       })
     },
     {
-      name: 'vendor',
+      name: 'vendors',
       multiple: true,
       type: 'select',
       label: 'Vendors',
@@ -240,7 +251,7 @@ function Files() {
       })
     },
     {
-      name: 'customer',
+      name: 'customers',
       multiple: true,
       type: 'select',
       label: 'Customers',
@@ -290,6 +301,59 @@ function Files() {
             validation={Yup.object().shape(shape)}
             submitText={t('Add')}
             values={{}}
+            onChange={({ field, e }) => {}}
+            onSubmit={async (values) => {
+              try {
+                await wait(2000);
+              } catch (err) {
+                console.error(err);
+              }
+            }}
+          />
+        </Box>
+      </DialogContent>
+    </Dialog>
+  );
+  const renderLocationUpdateModal = () => (
+    <Dialog
+      fullWidth
+      maxWidth="md"
+      open={openUpdateModal}
+      onClose={() => setOpenUpdateModal(false)}
+    >
+      <DialogTitle
+        sx={{
+          p: 3
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
+          {t('Update location')}
+        </Typography>
+        <Typography variant="subtitle2">
+          {t('Fill in the fields below to update the location')}
+        </Typography>
+      </DialogTitle>
+      <DialogContent
+        dividers
+        sx={{
+          p: 3
+        }}
+      >
+        <Box>
+          <Form
+            fields={fields}
+            validation={Yup.object().shape(shape)}
+            submitText={t('Save')}
+            values={{
+              ...currentLocation,
+              title: currentLocation?.name,
+              workers: currentLocationWorkers.map((worker) => {
+                return {
+                  label: `${worker.firstName} ${worker.lastName}`,
+                  value: worker.id.toString()
+                };
+              })
+            }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               try {
@@ -378,12 +442,16 @@ function Files() {
         </Grid>
       </Grid>
       {renderLocationAddModal()}
+      {renderLocationUpdateModal()}
       <Drawer
         anchor="right"
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}
       >
-        <LocationDetails location={currentLocation} />
+        <LocationDetails
+          location={currentLocation}
+          handleUpdate={handleUpdate}
+        />
       </Drawer>
     </>
   );
