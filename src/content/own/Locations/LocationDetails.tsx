@@ -1,6 +1,9 @@
 import {
   Box,
   Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
   Divider,
   Grid,
   List,
@@ -17,6 +20,12 @@ import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import Asset from '../../../models/owns/asset';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
+import Part from '../../../models/owns/part';
+import FloorPlan from '../../../models/owns/floorPlan';
+import Form from '../components/form';
+import * as Yup from 'yup';
+import wait from '../../../utils/wait';
+import { IField } from '../type';
 
 interface LocationDetailsProps {
   location: Location;
@@ -25,13 +34,14 @@ interface LocationDetailsProps {
 export default function LocationDetails(props: LocationDetailsProps) {
   const { location, handleUpdate } = props;
   const { t }: { t: any } = useTranslation();
+  const [openAddFloorPlan, setOpenAddFloorPlan] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<string>('assets');
   const tabs = [
     { value: 'assets', label: t('Assets') },
     { value: 'files', label: t('Files') },
-    { value: 'workorders', label: t('Work Orders') },
+    { value: 'workOrders', label: t('Work Orders') },
     { value: 'parts', label: t('Parts') },
-    { value: 'floorplans', label: t('Floor Plans') }
+    { value: 'floorPlans', label: t('Floor Plans') }
   ];
   const assets: Asset[] = [
     {
@@ -52,6 +62,111 @@ export default function LocationDetails(props: LocationDetailsProps) {
     }
   ];
 
+  const parts: Part[] = [
+    {
+      id: 212,
+      name: 'cgvg',
+      createdAt: 'dfggj',
+      createdBy: 'ghu',
+      updatedAt: 'ghfgj',
+      updatedBy: 'ghfgj'
+    },
+    {
+      id: 44,
+      name: 'fcgvc',
+      createdAt: 'dfggj',
+      createdBy: 'ghu',
+      updatedAt: 'ghfgj',
+      updatedBy: 'ghfgj'
+    }
+  ];
+  const floorPlans: FloorPlan[] = [
+    {
+      id: 212,
+      name: 'cgvg',
+      createdAt: 'dfggj',
+      createdBy: 'ghu',
+      updatedAt: 'ghfgj',
+      updatedBy: 'ghfgj'
+    },
+    {
+      id: 44,
+      name: 'fcgvc',
+      createdAt: 'dfggj',
+      createdBy: 'ghu',
+      updatedAt: 'ghfgj',
+      updatedBy: 'ghfgj'
+    }
+  ];
+  const fields: Array<IField> = [
+    {
+      name: 'name',
+      type: 'text',
+      label: t('Name'),
+      placeholder: t('Floor plan name'),
+      required: true
+    },
+    {
+      name: 'area',
+      type: 'number',
+      label: 'Area',
+      placeholder: 'Floor plan area'
+    },
+    {
+      name: 'image',
+      type: 'file',
+      label: 'File',
+      placeholder: 'Upload a file or image'
+    }
+  ];
+  const floorPlanShape = {
+    name: Yup.string().required(t('Floor plan name is required'))
+  };
+  const renderAddFloorPlanModal = () => (
+    <Dialog
+      fullWidth
+      maxWidth="sm"
+      open={openAddFloorPlan}
+      onClose={() => setOpenAddFloorPlan(false)}
+    >
+      <DialogTitle
+        sx={{
+          p: 3
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
+          {t('Add new Floor Plan')}
+        </Typography>
+        <Typography variant="subtitle2">
+          {t('Fill in the fields below to create a new Floor Plan')}
+        </Typography>
+      </DialogTitle>
+      <DialogContent
+        dividers
+        sx={{
+          p: 3
+        }}
+      >
+        <Box>
+          <Form
+            fields={fields}
+            validation={Yup.object().shape(floorPlanShape)}
+            submitText={t('Add Floor Plan')}
+            values={{}}
+            onChange={({ field, e }) => {}}
+            onSubmit={async (values) => {
+              try {
+                await wait(2000);
+                setOpenAddFloorPlan(false);
+              } catch (err) {
+                console.error(err);
+              }
+            }}
+          />
+        </Box>
+      </DialogContent>
+    </Dialog>
+  );
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
@@ -63,6 +178,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
       spacing={2}
       padding={4}
     >
+      {renderAddFloorPlanModal()}
       <Grid
         item
         xs={12}
@@ -112,6 +228,47 @@ export default function LocationDetails(props: LocationDetailsProps) {
                   <ListItemText
                     primary={asset.name}
                     secondary={asset.createdAt}
+                  />
+                </ListItemButton>
+              ))}
+            </List>
+          </Box>
+        )}
+        {currentTab === 'parts' && (
+          <Box>
+            <Box display="flex" justifyContent="right">
+              <Button startIcon={<AddTwoToneIcon fontSize="small" />}>
+                {t('Parts')}
+              </Button>
+            </Box>
+            <List sx={{ width: '100%' }}>
+              {parts.map((part) => (
+                <ListItemButton key={part.id} divider>
+                  <ListItemText
+                    primary={part.name}
+                    secondary={part.createdAt}
+                  />
+                </ListItemButton>
+              ))}
+            </List>
+          </Box>
+        )}
+        {currentTab === 'floorPlans' && (
+          <Box>
+            <Box display="flex" justifyContent="right">
+              <Button
+                onClick={() => setOpenAddFloorPlan(true)}
+                startIcon={<AddTwoToneIcon fontSize="small" />}
+              >
+                {t('Floor plan')}
+              </Button>
+            </Box>
+            <List sx={{ width: '100%' }}>
+              {floorPlans.map((floorPlan) => (
+                <ListItemButton key={floorPlan.id} divider>
+                  <ListItemText
+                    primary={floorPlan.name}
+                    secondary={floorPlan.createdAt}
                   />
                 </ListItemButton>
               ))}

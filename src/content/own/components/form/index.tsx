@@ -7,6 +7,7 @@ import { IField, IHash } from '../../type';
 import CheckBoxForm from './CheckBoxForm';
 import Field from './Field';
 import SelectForm from './SelectForm';
+import FileUpload from '../FileUpload';
 
 interface PropsType {
   fields: Array<IField>;
@@ -89,6 +90,16 @@ export default (props: PropsType) => {
                   <Typography variant="h3" sx={{ pb: 1 }}>
                     {t(`${field.label}`)}
                   </Typography>
+                ) : field.type === 'file' ? (
+                  <Box sx={{ pb: 1 }}>
+                    <FileUpload
+                      title={field.label}
+                      description={field.placeholder}
+                      setFieldValue={(files) =>
+                        formik.setFieldValue(field.name, files)
+                      }
+                    />
+                  </Box>
                 ) : (
                   <Field
                     key={index}
