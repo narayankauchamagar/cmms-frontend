@@ -1,4 +1,4 @@
-import { Box, Button, CircularProgress, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Grid, Typography } from '@mui/material';
 import { Formik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
@@ -58,10 +58,10 @@ export default (props: PropsType) => {
       }
     >
       {(formik) => (
-        <>
+        <Grid container spacing={2}>
           {props.fields.map((field, index) => {
             return (
-              <div key={index}>
+              <Grid item xs={12} key={index}>
                 {field.type === 'select' ? (
                   <SelectForm
                     options={field.items}
@@ -91,7 +91,7 @@ export default (props: PropsType) => {
                     {t(`${field.label}`)}
                   </Typography>
                 ) : field.type === 'file' ? (
-                  <Box sx={{ pb: 1 }}>
+                  <Box>
                     <FileUpload
                       title={field.label}
                       description={field.placeholder}
@@ -123,15 +123,11 @@ export default (props: PropsType) => {
                     fullWidth={field.fullWidth}
                   />
                 )}
-              </div>
+              </Grid>
             );
           })}
 
-          <Box
-            display="flex"
-            flexDirection="row"
-            justifyContent="space-between"
-          >
+          <Grid item xs={12}>
             <Button
               type="submit"
               sx={{
@@ -159,8 +155,8 @@ export default (props: PropsType) => {
                 {t(props.submitText)}
               </Button>
             )}
-          </Box>
-        </>
+          </Grid>
+        </Grid>
       )}
     </Formik>
   );

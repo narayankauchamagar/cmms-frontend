@@ -1,10 +1,19 @@
 import { Helmet } from 'react-helmet-async';
-import { Box, Button, Card, Grid } from '@mui/material';
+import {
+  Box,
+  Button,
+  Card,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  Typography
+} from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { TableCustomizedColumnType } from '../type';
+import { IField, TableCustomizedColumnType } from '../type';
 import TableCustomized from '../components/TableCustomized';
 import File from '../../../models/owns/file';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
@@ -17,12 +26,14 @@ import {
 } from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { AssetDTO } from '../../../models/owns/asset';
+import Form from '../components/form';
+import * as Yup from 'yup';
+import wait from '../../../utils/wait';
 
 function Assets() {
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
-  const handleDelete = (id: number) => {};
-  const handleRename = (id: number) => {};
+  const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   useEffect(() => {
     setTitle(t('Assets'));
   }, []);
@@ -59,7 +70,7 @@ function Assets() {
       width: 150
     },
     {
-      field: 'Model',
+      field: 'model',
       headerName: t('Model'),
       description: t('Model'),
       width: 150
@@ -84,8 +95,8 @@ function Assets() {
     },
     {
       field: 'primaryUser',
-      headerName: t('PrimaryUser'),
-      description: t('PrimaryUser'),
+      headerName: t('Primary User'),
+      description: t('Primary User'),
       width: 150
     },
     {
@@ -148,8 +159,95 @@ function Assets() {
       updatedBy: 'ghfgj'
     }
   ];
+  const fields: Array<IField> = [
+    {
+      name: 'name',
+      type: 'text',
+      label: t('Name'),
+      placeholder: t('Enter asset name'),
+      required: true
+    },
+    {
+      name: 'description',
+      type: 'text',
+      label: t('Description'),
+      placeholder: t('Description'),
+      multiple: true
+    },
+    {
+      name: 'model',
+      type: 'text',
+      label: t('Model'),
+      placeholder: t('Model')
+    },
+    {
+      name: 'category',
+      type: 'text',
+      label: t('Category'),
+      placeholder: t('Category')
+    },
+    {
+      name: 'area',
+      type: 'text',
+      label: t('Area'),
+      placeholder: t('Area')
+    },
+    {
+      name: 'image',
+      type: 'file',
+      label: t('Image')
+    }
+  ];
+  const shape = {
+    name: Yup.string().required(t('Asset name is required'))
+  };
+  const renderAssetAddModal = () => (
+    <Dialog
+      fullWidth
+      maxWidth="md"
+      open={openAddModal}
+      onClose={() => setOpenAddModal(false)}
+    >
+      <DialogTitle
+        sx={{
+          p: 3
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
+          {t('Add Asset')}
+        </Typography>
+        <Typography variant="subtitle2">
+          {t('Fill in the fields below to create and add a new asset')}
+        </Typography>
+      </DialogTitle>
+      <DialogContent
+        dividers
+        sx={{
+          p: 3
+        }}
+      >
+        <Box>
+          <Form
+            fields={fields}
+            validation={Yup.object().shape(shape)}
+            submitText={t('Create Asset')}
+            values={{}}
+            onChange={({ field, e }) => {}}
+            onSubmit={async (values) => {
+              try {
+                await wait(2000);
+              } catch (err) {
+                console.error(err);
+              }
+            }}
+          />
+        </Box>
+      </DialogContent>
+    </Dialog>
+  );
   return (
     <>
+      {renderAssetAddModal()}
       <Helmet>
         <title>{t('Assets')}</title>
       </Helmet>
@@ -169,6 +267,7 @@ function Assets() {
           alignItems="center"
         >
           <Button
+            onClick={() => setOpenAddModal(true)}
             startIcon={<AddTwoToneIcon />}
             sx={{ mx: 6, my: 1 }}
             variant="contained"
