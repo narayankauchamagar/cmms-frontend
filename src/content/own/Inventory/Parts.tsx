@@ -50,9 +50,63 @@ const Parts = ({}: PropsType) => {
       width: 150
     },
     {
-      field: 'number',
-      headerName: t('Number'),
-      description: t('Number'),
+      field: 'quantity',
+      headerName: t('Quantity'),
+      description: t('Quantity'),
+      width: 150
+    },
+    {
+      field: 'barCode',
+      headerName: t('Barcode'),
+      description: t('Barcode'),
+      width: 150
+    },
+    {
+      field: 'area',
+      headerName: t('Area'),
+      description: t('Area'),
+      width: 150
+    },
+    {
+      field: 'category',
+      headerName: t('Category'),
+      description: t('Category'),
+      width: 150
+    },
+    {
+      field: 'description',
+      headerName: t('Description'),
+      description: t('Description'),
+      width: 150
+    },
+    {
+      field: 'location',
+      headerName: t('Location'),
+      description: t('Location'),
+      width: 150
+    },
+    {
+      field: 'users',
+      headerName: t('Assigned Users'),
+      description: t('Assigned Users'),
+      width: 150
+    },
+    {
+      field: 'vendors',
+      headerName: t('Assigned Vendors'),
+      description: t('Assigned Vendors'),
+      width: 150
+    },
+    {
+      field: 'createdAt',
+      headerName: t('Date Created'),
+      description: t('Date Created'),
+      width: 150
+    },
+    {
+      field: 'openWorkOrders',
+      headerName: t('Open Work Orders'),
+      description: t('Open Work Orders'),
       width: 150
     }
   ];
@@ -71,20 +125,22 @@ const Parts = ({}: PropsType) => {
           <Tab key={tab.value} label={tab.label} value={tab.value} />
         ))}
       </Tabs>
-      <Box sx={{ height: 500, width: '95%' }}>
-        <CustomDataGrid
-          columns={columns}
-          rows={parts}
-          components={{
-            Toolbar: GridToolbar
-          }}
-          initialState={{
-            columns: {
-              columnVisibilityModel: {}
-            }
-          }}
-        />
-      </Box>
+      {currentTab === 'list' && (
+        <Box sx={{ height: 500, width: '95%' }}>
+          <CustomDataGrid
+            columns={columns}
+            rows={parts}
+            components={{
+              Toolbar: GridToolbar
+            }}
+            initialState={{
+              columns: {
+                columnVisibilityModel: {}
+              }
+            }}
+          />
+        </Box>
+      )}
     </Box>
   );
 };

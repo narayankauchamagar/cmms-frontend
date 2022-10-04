@@ -4,7 +4,15 @@ export default interface Part extends Audit {
   id: number;
   name: string;
   cost: number;
-  number: number;
+  quantity: number;
+  barCode: string;
+  area: string;
+  category: string;
+  description: string;
+  location: string;
+  users: number;
+  vendors: number;
+  openWorkOrders: number;
 }
 export const parts: Part[] = [
   {
@@ -12,17 +20,33 @@ export const parts: Part[] = [
     name: 'cgvg',
     createdAt: 'dfggj',
     cost: 52,
-    number: 9,
+    quantity: 9,
+    barCode: 'dfsad',
+    area: 'fafcax',
+    category: 'facacaa ',
+    description: 'string',
+    location: 'string',
+    users: 24,
+    vendors: 4,
+    openWorkOrders: 2,
     createdBy: 'ghu',
     updatedAt: 'ghfgj',
     updatedBy: 'ghfgj'
   },
   {
     id: 44,
-    name: 'fcgvc',
+    name: 'cgvg',
     createdAt: 'dfggj',
-    cost: 40,
-    number: 7,
+    cost: 52,
+    quantity: 9,
+    barCode: 'dfsad',
+    area: 'fafcax',
+    category: 'facacaa ',
+    description: 'string',
+    location: 'string',
+    users: 24,
+    vendors: 4,
+    openWorkOrders: 2,
     createdBy: 'ghu',
     updatedAt: 'ghfgj',
     updatedBy: 'ghfgj'
