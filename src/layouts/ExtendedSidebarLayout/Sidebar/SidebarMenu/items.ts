@@ -18,6 +18,7 @@ import AttachFileTwoToneIcon from '@mui/icons-material/AttachFileTwoTone';
 import LocationOnTwoToneIcon from '@mui/icons-material/LocationOnTwoTone';
 import { GroupsTwoTone } from '@mui/icons-material';
 import Inventory2TwoToneIcon from '@mui/icons-material/Inventory2TwoTone';
+import HandymanTwoToneIcon from '@mui/icons-material/HandymanTwoTone';
 export interface MenuItem {
   link?: string;
   icon?: ReactNode;
@@ -51,6 +52,11 @@ const menuItems: MenuItems[] = [
         name: 'Locations',
         link: '/app/locations',
         icon: LocationOnTwoToneIcon
+      },
+      {
+        name: 'Parts/Inventory',
+        link: '/app/inventory/parts',
+        icon: HandymanTwoToneIcon
       },
       {
         name: 'Categories',
