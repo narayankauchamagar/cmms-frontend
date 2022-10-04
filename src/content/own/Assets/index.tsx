@@ -29,15 +29,58 @@ import { AssetDTO } from '../../../models/owns/asset';
 import Form from '../components/form';
 import * as Yup from 'yup';
 import wait from '../../../utils/wait';
+import User from '../../../models/owns/user';
+import Team from '../../../models/owns/team';
+import { Customer } from '../../../models/owns/customer';
 
 function Assets() {
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
+  const [customers, setCustomers] = useState([]);
+  const [fetchingCustomers, setFetchingCustomers] = useState(false);
   useEffect(() => {
     setTitle(t('Assets'));
   }, []);
 
+  const fetchCustomers = async () => {
+    setFetchingCustomers(true);
+    const _customers: Customer[] = [
+      {
+        id: '1',
+        name: 'Customer 1',
+        address: 'casa, maroc',
+        phone: '+00212611223344',
+        website: 'https://web-site.com',
+        email: 'john.doe@gmail.com',
+        customerType: 'Plumbing',
+        description: 'Describe...',
+        rate: 10,
+        address1: 'Add 1',
+        address2: '-',
+        address3: 'Add 3',
+        currency: 'MAD, dirham'
+      },
+      {
+        id: '2',
+        name: 'Customer 2',
+        address: 'casa, maroc',
+        phone: '+00212611223344',
+        website: 'https://web-site.com',
+        email: 'john.doe@gmail.com',
+        customerType: 'Electrical',
+        description: 'Describe 2...',
+        rate: 15,
+        address1: 'Add 1',
+        address2: '-',
+        address3: '-',
+        currency: 'Euro'
+      }
+    ];
+    await wait(2000);
+    setFetchingCustomers(false);
+    setCustomers(_customers);
+  };
   const columns: GridEnrichedColDef[] = [
     {
       field: 'id',
@@ -159,7 +202,34 @@ function Assets() {
       updatedBy: 'ghfgj'
     }
   ];
+  const workers: User[] = [
+    {
+      id: 21,
+      firstName: 'gfgb',
+      lastName: 'fglink'
+    },
+    {
+      id: 22,
+      firstName: 'Hgcgbv',
+      lastName: 'gvghv'
+    }
+  ];
+  const teams: Team[] = [
+    {
+      id: 21,
+      name: 'team1'
+    },
+    {
+      id: 23,
+      name: 'team2'
+    }
+  ];
   const fields: Array<IField> = [
+    {
+      name: 'assetInfo',
+      type: 'titleGroupField',
+      label: t('Asset Information')
+    },
     {
       name: 'name',
       type: 'text',
@@ -183,12 +253,14 @@ function Assets() {
     {
       name: 'category',
       type: 'text',
+      midWidth: true,
       label: t('Category'),
       placeholder: t('Category')
     },
     {
       name: 'area',
       type: 'text',
+      midWidth: true,
       label: t('Area'),
       placeholder: t('Area')
     },
@@ -196,6 +268,74 @@ function Assets() {
       name: 'image',
       type: 'file',
       label: t('Image')
+    },
+    {
+      name: 'assignedTo',
+      type: 'titleGroupField',
+      label: t('Assigned To')
+    },
+    {
+      name: 'primaryUser',
+      type: 'select',
+      label: 'Worker',
+      placeholder: 'Select primary user',
+      items: workers.map((worker) => {
+        return {
+          label: `${worker.firstName} ${worker.lastName}`,
+          value: worker.id.toString()
+        };
+      })
+    },
+    {
+      name: 'assignedTo',
+      type: 'select',
+      multiple: true,
+      label: t('Additional Workers'),
+      placeholder: 'Select additional workers',
+      items: workers.map((worker) => {
+        return {
+          label: `${worker.firstName} ${worker.lastName}`,
+          value: worker.id.toString()
+        };
+      })
+    },
+    {
+      name: 'teams',
+      type: 'select',
+      multiple: true,
+      label: t('Teams'),
+      placeholder: 'Select teams',
+      items: teams.map((team) => {
+        return {
+          label: team.name,
+          value: team.id.toString()
+        };
+      })
+    },
+    {
+      name: 'moreInfos',
+      type: 'titleGroupField',
+      label: t('More Informations')
+    },
+    {
+      name: 'customers',
+      type: 'select',
+      multiple: true,
+      label: t('Customers'),
+      placeholder: 'Select customers',
+      onPress: fetchCustomers,
+      loading: fetchingCustomers,
+      items: customers.map((customer) => {
+        return {
+          label: customer.name,
+          value: customer.id.toString()
+        };
+      })
+    },
+    {
+      name: 'structure',
+      type: 'titleGroupField',
+      label: t('Structure')
     }
   ];
   const shape = {

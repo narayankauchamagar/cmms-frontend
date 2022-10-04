@@ -61,12 +61,14 @@ export default (props: PropsType) => {
         <Grid container spacing={2}>
           {props.fields.map((field, index) => {
             return (
-              <Grid item xs={12} key={index}>
+              <Grid item xs={12} lg={field.midWidth ? 6 : 12} key={index}>
                 {field.type === 'select' ? (
                   <SelectForm
                     options={field.items}
                     value={formik.values[field.name]}
                     label={field.label}
+                    loading={field.loading}
+                    onOpen={field.onPress}
                     placeholder={field.placeholder}
                     multiple={field.multiple}
                     fullWidth={field.fullWidth}

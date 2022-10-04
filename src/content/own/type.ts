@@ -26,7 +26,8 @@ export interface IField {
   helperText?: string;
   fullWidth?: boolean;
   multiple?: boolean;
-  onPress?: any;
+  midWidth?: boolean;
+  onPress?: () => void;
   required?: boolean;
   error?: any;
   items?: { label: string; value: string; checked?: boolean }[];
@@ -34,6 +35,7 @@ export interface IField {
   icon?: ReactNode | string;
   // onPressIcon?: () => void;
   checked?: boolean;
+  loading?: boolean;
 }
 
 export interface IHash<E> {
