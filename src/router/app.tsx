@@ -52,6 +52,7 @@ const VendorsAndCustomers = Loader(
   lazy(() => import('src/content/own/VendorsAndCustomers'))
 );
 const Assets = Loader(lazy(() => import('src/content/own/Assets')));
+const ShowAsset = Loader(lazy(() => import('src/content/own/Assets/Show')));
 
 const appRoutes = [
   {
@@ -107,7 +108,17 @@ const appRoutes = [
   },
   {
     path: 'assets',
-    element: <Assets />
+    children: [
+      { path: '', element: <Assets /> },
+      {
+        path: ':assetId',
+        children: [
+          { path: 'work-orders', element: <ShowAsset /> },
+          { path: 'details', element: <ShowAsset /> },
+          { path: 'parts', element: <ShowAsset /> }
+        ]
+      }
+    ]
   },
   {
     path: 'categories',

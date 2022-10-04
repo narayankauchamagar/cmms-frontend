@@ -25,10 +25,12 @@ import User from '../../../models/owns/user';
 import Team from '../../../models/owns/team';
 import { Customer } from '../../../models/owns/customer';
 import { Vendor } from '../../../models/owns/vendor';
+import { useNavigate } from 'react-router-dom';
 
 function Assets() {
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
+  const navigate = useNavigate();
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [customers, setCustomers] = useState([]);
   const [fetchingCustomers, setFetchingCustomers] = useState(false);
@@ -493,6 +495,9 @@ function Assets() {
                 rows={assets}
                 components={{
                   Toolbar: GridToolbar
+                }}
+                onRowClick={(params) => {
+                  navigate(`/app/assets/${params.id}/work-orders`);
                 }}
                 initialState={{
                   columns: {
