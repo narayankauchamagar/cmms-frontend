@@ -20,7 +20,7 @@ import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import Asset, { assets } from '../../../models/owns/asset';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import Part from '../../../models/owns/part';
+import Part, { parts } from '../../../models/owns/part';
 import FloorPlan from '../../../models/owns/floorPlan';
 import Form from '../components/form';
 import * as Yup from 'yup';
@@ -44,24 +44,6 @@ export default function LocationDetails(props: LocationDetailsProps) {
     { value: 'floorPlans', label: t('Floor Plans') }
   ];
 
-  const parts: Part[] = [
-    {
-      id: 212,
-      name: 'cgvg',
-      createdAt: 'dfggj',
-      createdBy: 'ghu',
-      updatedAt: 'ghfgj',
-      updatedBy: 'ghfgj'
-    },
-    {
-      id: 44,
-      name: 'fcgvc',
-      createdAt: 'dfggj',
-      createdBy: 'ghu',
-      updatedAt: 'ghfgj',
-      updatedBy: 'ghfgj'
-    }
-  ];
   const floorPlans: FloorPlan[] = [
     {
       id: 212,

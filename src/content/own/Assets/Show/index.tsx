@@ -7,6 +7,7 @@ import { Box, Typography } from '@mui/material';
 import Asset, { assets } from '../../../../models/owns/asset';
 import AssetWorkOrders from './AssetWorkOrders';
 import AssetDetails from './AssetDetails';
+import AssetParts from './AssetParts';
 
 interface PropsType {}
 
@@ -51,8 +52,10 @@ const VendorsAndCustomers = ({}: PropsType) => {
       {asset ? (
         tabIndex === 0 ? (
           <AssetWorkOrders asset={asset} />
+        ) : tabIndex === 1 ? (
+          <AssetDetails asset={asset} />
         ) : (
-          tabIndex === 1 && <AssetDetails asset={asset} />
+          tabIndex === 2 && <AssetParts asset={asset} />
         )
       ) : null}
     </MultipleTabsLayout>
