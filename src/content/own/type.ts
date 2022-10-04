@@ -20,7 +20,8 @@ export interface IField {
     | 'groupCheckbox'
     | 'select'
     | 'titleGroupField'
-    | 'form';
+    | 'form'
+    | 'date';
   name?: string;
   placeholder?: string;
   helperText?: string;

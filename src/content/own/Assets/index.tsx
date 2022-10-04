@@ -10,20 +10,12 @@ import {
   Typography
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { IField, TableCustomizedColumnType } from '../type';
-import TableCustomized from '../components/TableCustomized';
-import File from '../../../models/owns/file';
+import { IField } from '../type';
 import { useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
-import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import CustomDataGrid from '../components/CustomDatagrid';
-import {
-  GridActionsCellItem,
-  GridRowParams,
-  GridToolbar
-} from '@mui/x-data-grid';
+import { GridToolbar } from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { AssetDTO } from '../../../models/owns/asset';
 import Form from '../components/form';
@@ -32,6 +24,7 @@ import wait from '../../../utils/wait';
 import User from '../../../models/owns/user';
 import Team from '../../../models/owns/team';
 import { Customer } from '../../../models/owns/customer';
+import { Vendor } from '../../../models/owns/vendor';
 
 function Assets() {
   const { t }: { t: any } = useTranslation();
@@ -39,6 +32,8 @@ function Assets() {
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [customers, setCustomers] = useState([]);
   const [fetchingCustomers, setFetchingCustomers] = useState(false);
+  const [vendors, setVendors] = useState([]);
+  const [fetchingVendors, setFetchingVendors] = useState(false);
   useEffect(() => {
     setTitle(t('Assets'));
   }, []);
@@ -80,6 +75,38 @@ function Assets() {
     await wait(2000);
     setFetchingCustomers(false);
     setCustomers(_customers);
+  };
+  const fetchVendors = async () => {
+    setFetchingVendors(true);
+    const _vendors: Vendor[] = [
+      {
+        id: '1',
+        companyName: 'Company Name',
+        address: 'casa, maroc',
+        phone: '+00212611223344',
+        website: 'https://web-site.com',
+        name: 'John Doe',
+        email: 'john.doe@gmail.com',
+        vendorType: 'Plumbing',
+        description: 'Describe...',
+        rate: 15
+      },
+      {
+        id: '2',
+        companyName: 'Company Name 2',
+        address: 'casa, maroc',
+        phone: '+00212611223344',
+        website: 'https://web-site.com',
+        name: 'John Doe',
+        email: 'john.doe@gmail.com',
+        vendorType: 'Plumbing',
+        description: 'Describe...',
+        rate: 20
+      }
+    ];
+    await wait(2000);
+    setFetchingVendors(false);
+    setVendors(_vendors);
   };
   const columns: GridEnrichedColDef[] = [
     {
@@ -333,10 +360,45 @@ function Assets() {
       })
     },
     {
+      name: 'vendors',
+      type: 'select',
+      multiple: true,
+      label: t('Vendors'),
+      placeholder: t('Select vendors'),
+      onPress: fetchVendors,
+      loading: fetchingVendors,
+      items: vendors.map((vendor) => {
+        return {
+          label: vendor.name,
+          value: vendor.id.toString()
+        };
+      })
+    },
+    {
+      name: 'inServiceDate',
+      type: 'date',
+      midWidth: true,
+      label: t('Placed in Service date')
+    },
+    {
+      name: 'warrantyExpirationDate',
+      type: 'date',
+      midWidth: true,
+      label: t('Warranty Expiration date')
+    },
+    {
+      name: 'additionalInformation',
+      type: 'text',
+      label: t('Additional Information'),
+      placeholder: t('Additional Information'),
+      multiple: true
+    },
+    {
       name: 'structure',
       type: 'titleGroupField',
       label: t('Structure')
     }
+    //TODO parts, parent Asset, location
   ];
   const shape = {
     name: Yup.string().required(t('Asset name is required'))

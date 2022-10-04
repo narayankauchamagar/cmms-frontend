@@ -1,4 +1,11 @@
-import { Box, Button, CircularProgress, Grid, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Grid,
+  TextField,
+  Typography
+} from '@mui/material';
 import { Formik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
@@ -8,6 +15,7 @@ import CheckBoxForm from './CheckBoxForm';
 import Field from './Field';
 import SelectForm from './SelectForm';
 import FileUpload from '../FileUpload';
+import DatePicker from '@mui/lab/DatePicker';
 
 interface PropsType {
   fields: Array<IField>;
@@ -100,6 +108,25 @@ export default (props: PropsType) => {
                       setFieldValue={(files) =>
                         formik.setFieldValue(field.name, files)
                       }
+                    />
+                  </Box>
+                ) : field.type === 'date' ? (
+                  <Box>
+                    <Box pb={1}>
+                      <b>{field.label}:</b>
+                    </Box>
+                    <DatePicker
+                      value={formik.values[field.name]}
+                      onChange={(newValue) => {
+                        handleChange(formik, field.name, newValue);
+                      }}
+                      renderInput={(params) => (
+                        <TextField
+                          fullWidth
+                          placeholder={t('Select date...')}
+                          {...params}
+                        />
+                      )}
                     />
                   </Box>
                 ) : (
