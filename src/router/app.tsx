@@ -51,6 +51,7 @@ const Locations = Loader(lazy(() => import('src/content/own/Locations')));
 const VendorsAndCustomers = Loader(
   lazy(() => import('src/content/own/VendorsAndCustomers'))
 );
+const Assets = Loader(lazy(() => import('src/content/own/Assets')));
 
 const appRoutes = [
   {
@@ -103,6 +104,10 @@ const appRoutes = [
   {
     path: 'locations',
     element: <Locations />
+  },
+  {
+    path: 'assets',
+    element: <Assets />
   },
   {
     path: 'categories',

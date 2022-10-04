@@ -376,8 +376,8 @@ function Files() {
         container
         justifyContent="center"
         alignItems="stretch"
-        spacing={2}
-        padding={4}
+        spacing={1}
+        paddingX={4}
       >
         <Grid
           item

@@ -16,14 +16,15 @@ import {
   GridToolbar
 } from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
+import { AssetDTO } from '../../../models/owns/asset';
 
-function Files() {
+function Assets() {
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
   const handleDelete = (id: number) => {};
   const handleRename = (id: number) => {};
   useEffect(() => {
-    setTitle(t('Files'));
+    setTitle(t('Assets'));
   }, []);
 
   const columns: GridEnrichedColDef[] = [
@@ -40,42 +41,107 @@ function Files() {
       width: 150
     },
     {
-      field: 'createdBy',
-      headerName: t('Uploaded By'),
-      description: t('Uploaded By'),
+      field: 'location',
+      headerName: t('Location'),
+      description: t('Location'),
+      width: 150
+    },
+    {
+      field: 'image',
+      headerName: t('Image'),
+      description: t('Image'),
+      width: 150
+    },
+    {
+      field: 'area',
+      headerName: t('Area'),
+      description: t('Area'),
+      width: 150
+    },
+    {
+      field: 'Model',
+      headerName: t('Model'),
+      description: t('Model'),
+      width: 150
+    },
+    {
+      field: 'barCode',
+      headerName: t('BarCode'),
+      description: t('BarCode'),
+      width: 150
+    },
+    {
+      field: 'category',
+      headerName: t('Category'),
+      description: t('Category'),
+      width: 150
+    },
+    {
+      field: 'description',
+      headerName: t('Description'),
+      description: t('Description'),
+      width: 150
+    },
+    {
+      field: 'primaryUser',
+      headerName: t('PrimaryUser'),
+      description: t('PrimaryUser'),
+      width: 150
+    },
+    {
+      field: 'users',
+      headerName: t('Users'),
+      description: t('Users'),
+      width: 150
+    },
+    {
+      field: 'teams',
+      headerName: t('Teams'),
+      description: t('Teams'),
+      width: 150
+    },
+    {
+      field: 'vendors',
+      headerName: t('Vendors'),
+      description: t('Vendors'),
+      width: 150
+    },
+    {
+      field: 'parentAsset',
+      headerName: t('Parent Asset'),
+      description: t('Parent Asset'),
+      width: 150
+    },
+    {
+      field: 'openWorkOrders',
+      headerName: t('Open Work Orders'),
+      description: t('Open Work Orders'),
       width: 150
     },
     {
       field: 'createdAt',
-      headerName: t('Uploaded On'),
-      description: t('Uploaded On'),
+      headerName: t('Created At'),
+      description: t('Created At'),
       width: 150
-    },
-    {
-      field: 'actions',
-      type: 'actions',
-      headerName: t('Actions'),
-      description: t('Actions'),
-      getActions: (params: GridRowParams) => [
-        <GridActionsCellItem
-          key="rename"
-          icon={<EditTwoToneIcon fontSize="small" color="primary" />}
-          onClick={() => handleRename(Number(params.id))}
-          label="Rename"
-        />,
-        <GridActionsCellItem
-          key="delete"
-          icon={<DeleteTwoToneIcon fontSize="small" color="error" />}
-          onClick={() => handleDelete(Number(params.id))}
-          label="Delete"
-        />
-      ]
     }
   ];
-  const files: File[] = [
+  const assets: AssetDTO[] = [
     {
-      id: 74,
-      name: 'ghgvhb',
+      id: 1,
+      name: 'Name',
+      image: 'Image',
+      location: 'Location',
+      area: 'Area',
+      model: 'Model',
+      barCode: 'Barcode',
+      category: 'Category',
+      description: 'desc',
+      primaryUser: 'user',
+      users: 1,
+      teams: 4,
+      vendors: 3,
+      parentAsset: 'string',
+      openWorkOrders: 2,
       createdAt: 'dfggj',
       createdBy: 'ghu',
       updatedAt: 'ghfgj',
@@ -85,7 +151,7 @@ function Files() {
   return (
     <>
       <Helmet>
-        <title>{t('Files')}</title>
+        <title>{t('Assets')}</title>
       </Helmet>
       <Grid
         container
@@ -107,7 +173,7 @@ function Files() {
             sx={{ mx: 6, my: 1 }}
             variant="contained"
           >
-            File
+            Asset
           </Button>
         </Grid>
         <Grid item xs={12}>
@@ -123,7 +189,7 @@ function Files() {
             <Box sx={{ height: 500, width: '95%' }}>
               <CustomDataGrid
                 columns={columns}
-                rows={files}
+                rows={assets}
                 components={{
                   Toolbar: GridToolbar
                 }}
@@ -141,4 +207,4 @@ function Files() {
   );
 }
 
-export default Files;
+export default Assets;
