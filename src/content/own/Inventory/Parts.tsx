@@ -57,7 +57,7 @@ const Parts = ({}: PropsType) => {
     }
   ];
   return (
-    <Box sx={{ p: 2, height: 500, width: '95%' }}>
+    <Box sx={{ p: 2 }}>
       <Tabs
         sx={{ mb: 2 }}
         onChange={handleTabsChange}
@@ -71,18 +71,20 @@ const Parts = ({}: PropsType) => {
           <Tab key={tab.value} label={tab.label} value={tab.value} />
         ))}
       </Tabs>
-      <CustomDataGrid
-        columns={columns}
-        rows={parts}
-        components={{
-          Toolbar: GridToolbar
-        }}
-        initialState={{
-          columns: {
-            columnVisibilityModel: {}
-          }
-        }}
-      />
+      <Box sx={{ height: 500, width: '95%' }}>
+        <CustomDataGrid
+          columns={columns}
+          rows={parts}
+          components={{
+            Toolbar: GridToolbar
+          }}
+          initialState={{
+            columns: {
+              columnVisibilityModel: {}
+            }
+          }}
+        />
+      </Box>
     </Box>
   );
 };
