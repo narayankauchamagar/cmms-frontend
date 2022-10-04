@@ -7,7 +7,7 @@ interface PropsType {
     value: string;
   }[];
   label: string;
-  value: string;
+  value: string | { label: string; value: string }[];
   placeholder?: string;
   multiple?: boolean;
   fullWidth?: boolean;
@@ -23,8 +23,17 @@ export default (props: PropsType) => {
       <Autocomplete
         fullWidth={props.fullWidth || true}
         multiple={props.multiple}
-        limitTags={2}
-        value={{ label: props.value, value: props.value }}
+        filterSelectedOptions
+        limitTags={5}
+        // @ts-ignore
+        isOptionEqualToValue={(option, value) => option.value === value.value}
+        defaultValue={
+          props.multiple
+            ? props.value
+            : props.value
+            ? { label: props.value, value: props.value }
+            : null
+        }
         options={props.options}
         // @ts-ignore
         getOptionLabel={(option) => option.label}

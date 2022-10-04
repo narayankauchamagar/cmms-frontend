@@ -3,7 +3,7 @@ import { Box, Card, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { TableCustomizedColumnType } from '../type';
 import TableCustomized from '../components/TableCustomized';
-import File from '../../../models/file';
+import File from '../../../models/owns/file';
 import { useContext, useEffect } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
