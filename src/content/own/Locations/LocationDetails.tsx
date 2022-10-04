@@ -18,7 +18,7 @@ import { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import Asset from '../../../models/owns/asset';
+import Asset, { assets } from '../../../models/owns/asset';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import Part from '../../../models/owns/part';
 import FloorPlan from '../../../models/owns/floorPlan';
@@ -42,24 +42,6 @@ export default function LocationDetails(props: LocationDetailsProps) {
     { value: 'workOrders', label: t('Work Orders') },
     { value: 'parts', label: t('Parts') },
     { value: 'floorPlans', label: t('Floor Plans') }
-  ];
-  const assets: Asset[] = [
-    {
-      id: 212,
-      name: 'cgvg',
-      createdAt: 'dfggj',
-      createdBy: 'ghu',
-      updatedAt: 'ghfgj',
-      updatedBy: 'ghfgj'
-    },
-    {
-      id: 44,
-      name: 'fcgvc',
-      createdAt: 'dfggj',
-      createdBy: 'ghu',
-      updatedAt: 'ghfgj',
-      updatedBy: 'ghfgj'
-    }
   ];
 
   const parts: Part[] = [

@@ -3,9 +3,10 @@ import { useTranslation } from 'react-i18next';
 import MultipleTabsLayout from '../../components/MultipleTabsLayout';
 import { TitleContext } from '../../../../contexts/TitleContext';
 import { useLocation, useParams } from 'react-router-dom';
-import { Box } from '@mui/material';
-import Asset from '../../../../models/owns/asset';
+import { Box, Typography } from '@mui/material';
+import Asset, { assets } from '../../../../models/owns/asset';
 import AssetWorkOrders from './AssetWorkOrders';
+import AssetDetails from './AssetDetails';
 
 interface PropsType {}
 
@@ -16,24 +17,6 @@ const VendorsAndCustomers = ({}: PropsType) => {
   const [asset, setAsset] = useState<Asset>();
   const { setTitle } = useContext(TitleContext);
   const location = useLocation();
-  const assets: Asset[] = [
-    {
-      id: 212,
-      name: 'cgvg',
-      createdAt: 'dfggj',
-      createdBy: 'ghu',
-      updatedAt: 'ghfgj',
-      updatedBy: 'ghfgj'
-    },
-    {
-      id: 44,
-      name: 'fcgvc',
-      createdAt: 'dfggj',
-      createdBy: 'ghu',
-      updatedAt: 'ghfgj',
-      updatedBy: 'ghfgj'
-    }
-  ];
 
   const handleOpenUpdateModal = () => setOpenUpdateModal(true);
   const handleCloseUpdateModal = () => setOpenUpdateModal(false);
@@ -65,8 +48,13 @@ const VendorsAndCustomers = ({}: PropsType) => {
       actionTitle={t('Edit')}
       withoutCard={true}
     >
-      {tabIndex === 0 && <AssetWorkOrders asset={asset} />}
-      {tabIndex === 1 && <Box>gf</Box>}
+      {asset ? (
+        tabIndex === 0 ? (
+          <AssetWorkOrders asset={asset} />
+        ) : (
+          tabIndex === 1 && <AssetDetails asset={asset} />
+        )
+      ) : null}
     </MultipleTabsLayout>
   );
 };

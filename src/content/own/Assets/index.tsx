@@ -17,7 +17,7 @@ import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import CustomDataGrid from '../components/CustomDatagrid';
 import { GridToolbar } from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import { AssetDTO } from '../../../models/owns/asset';
+import { AssetDTO, assetDTOS } from '../../../models/owns/asset';
 import Form from '../components/form';
 import * as Yup from 'yup';
 import wait from '../../../utils/wait';
@@ -208,29 +208,7 @@ function Assets() {
       width: 150
     }
   ];
-  const assets: AssetDTO[] = [
-    {
-      id: 1,
-      name: 'Name',
-      image: 'Image',
-      location: 'Location',
-      area: 'Area',
-      model: 'Model',
-      barCode: 'Barcode',
-      category: 'Category',
-      description: 'desc',
-      primaryUser: 'user',
-      users: 1,
-      teams: 4,
-      vendors: 3,
-      parentAsset: 'string',
-      openWorkOrders: 2,
-      createdAt: 'dfggj',
-      createdBy: 'ghu',
-      updatedAt: 'ghfgj',
-      updatedBy: 'ghfgj'
-    }
-  ];
+
   const workers: User[] = [
     {
       id: 21,
@@ -492,7 +470,7 @@ function Assets() {
             <Box sx={{ height: 500, width: '95%' }}>
               <CustomDataGrid
                 columns={columns}
-                rows={assets}
+                rows={assetDTOS}
                 components={{
                   Toolbar: GridToolbar
                 }}
