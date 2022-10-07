@@ -5,11 +5,8 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  Divider,
+  Drawer,
   Grid,
-  List,
-  ListItem,
-  ListItemText,
   Stack,
   Tab,
   Tabs,
@@ -18,22 +15,16 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import CustomDataGrid from '../components/CustomDatagrid';
-import {
-  GridActionsCellItem,
-  GridRenderCellParams,
-  GridRowParams,
-  GridToolbar
-} from '@mui/x-data-grid';
+import { GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
-import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import Part, { parts } from '../../../models/owns/part';
+import { parts } from '../../../models/owns/part';
 import { ChangeEvent, useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import Form from '../components/form';
 import wait from '../../../utils/wait';
 import { IField } from '../type';
 import SetType, { sets } from '../../../models/owns/setType';
+import SetDetails from './SetDetails';
 
 interface PropsType {
   setAction: (p: () => () => void) => void;
@@ -44,10 +35,18 @@ const Sets = ({ setAction }: PropsType) => {
   const theme = useTheme();
   const [currentTab, setCurrentTab] = useState<string>('list');
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
+  const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
+  const [openDrawer, setOpenDrawer] = useState<boolean>(false);
+  const [currentSet, setCurrentSet] = useState<SetType>();
   const tabs = [
     { value: 'list', label: t('List View') },
     { value: 'card', label: t('Card View') }
   ];
+
+  const handleUpdate = (id: number) => {
+    setCurrentSet(sets.find((set) => set.id === id));
+    setOpenUpdateModal(true);
+  };
 
   useEffect(() => {
     const handleOpenModal = () => setOpenAddModal(true);
@@ -97,6 +96,10 @@ const Sets = ({ setAction }: PropsType) => {
   ];
   const shape = {
     name: Yup.string().required(t('Set name is required'))
+  };
+  const handleOpenDetails = (id: number) => {
+    setCurrentSet(sets.find((set) => set.id === id));
+    setOpenDrawer(true);
   };
   const fieldsToRender = (set: SetType) => [
     {
@@ -165,9 +168,55 @@ const Sets = ({ setAction }: PropsType) => {
       </DialogContent>
     </Dialog>
   );
+  const renderSetUpdateModal = () => (
+    <Dialog
+      fullWidth
+      maxWidth="md"
+      open={openUpdateModal}
+      onClose={() => setOpenUpdateModal(false)}
+    >
+      <DialogTitle
+        sx={{
+          p: 3
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
+          {t('Edit Set')}
+        </Typography>
+        <Typography variant="subtitle2">
+          {t('Fill in the fields below to edit the Set')}
+        </Typography>
+      </DialogTitle>
+      <DialogContent
+        dividers
+        sx={{
+          p: 3
+        }}
+      >
+        <Box>
+          <Form
+            fields={fields}
+            validation={Yup.object().shape(shape)}
+            submitText={t('Edit Set')}
+            values={currentSet}
+            onChange={({ field, e }) => {}}
+            onSubmit={async (values) => {
+              try {
+                await wait(2000);
+                setOpenUpdateModal(false);
+              } catch (err) {
+                console.error(err);
+              }
+            }}
+          />
+        </Box>
+      </DialogContent>
+    </Dialog>
+  );
   return (
     <Box sx={{ p: 2 }}>
       {renderSetAddModal()}
+      {renderSetUpdateModal()}
       <Tabs
         sx={{ mb: 2 }}
         onChange={handleTabsChange}
@@ -188,6 +237,9 @@ const Sets = ({ setAction }: PropsType) => {
             rows={sets}
             components={{
               Toolbar: GridToolbar
+            }}
+            onRowClick={(params) => {
+              handleOpenDetails(Number(params.id));
             }}
             initialState={{
               columns: {
@@ -222,7 +274,17 @@ const Sets = ({ setAction }: PropsType) => {
             ))}
           </Grid>
         </Grid>
-      )}{' '}
+      )}
+      <Drawer
+        anchor="right"
+        open={openDrawer}
+        onClose={() => setOpenDrawer(false)}
+        PaperProps={{
+          sx: { width: '60%' }
+        }}
+      >
+        <SetDetails set={currentSet} handleUpdate={handleUpdate} />
+      </Drawer>
     </Box>
   );
 };

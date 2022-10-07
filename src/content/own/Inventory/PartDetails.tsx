@@ -38,7 +38,6 @@ interface PartDetailsProps {
 export default function PartDetails(props: PartDetailsProps) {
   const { part, handleUpdate } = props;
   const { t }: { t: any } = useTranslation();
-  const [openAddFloorPlan, setOpenAddFloorPlan] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<string>('details');
   const theme = useTheme();
   const tabs = [
@@ -49,93 +48,6 @@ export default function PartDetails(props: PartDetailsProps) {
     //TODO events
   ];
 
-  const floorPlans: FloorPlan[] = [
-    {
-      id: 212,
-      name: 'cgvg',
-      createdAt: 'dfggj',
-      createdBy: 'ghu',
-      updatedAt: 'ghfgj',
-      updatedBy: 'ghfgj'
-    },
-    {
-      id: 44,
-      name: 'fcgvc',
-      createdAt: 'dfggj',
-      createdBy: 'ghu',
-      updatedAt: 'ghfgj',
-      updatedBy: 'ghfgj'
-    }
-  ];
-  const fields: Array<IField> = [
-    {
-      name: 'name',
-      type: 'text',
-      label: t('Name'),
-      placeholder: t('Floor plan name'),
-      required: true
-    },
-    {
-      name: 'area',
-      type: 'number',
-      label: 'Area',
-      placeholder: 'Floor plan area'
-    },
-    {
-      name: 'image',
-      type: 'file',
-      label: 'File',
-      placeholder: 'Upload a file or image'
-    }
-  ];
-  const floorPlanShape = {
-    name: Yup.string().required(t('Floor plan name is required'))
-  };
-  const renderAddFloorPlanModal = () => (
-    <Dialog
-      fullWidth
-      maxWidth="sm"
-      open={openAddFloorPlan}
-      onClose={() => setOpenAddFloorPlan(false)}
-    >
-      <DialogTitle
-        sx={{
-          p: 3
-        }}
-      >
-        <Typography variant="h4" gutterBottom>
-          {t('Add new Floor Plan')}
-        </Typography>
-        <Typography variant="subtitle2">
-          {t('Fill in the fields below to create a new Floor Plan')}
-        </Typography>
-      </DialogTitle>
-      <DialogContent
-        dividers
-        sx={{
-          p: 3
-        }}
-      >
-        <Box>
-          <Form
-            fields={fields}
-            validation={Yup.object().shape(floorPlanShape)}
-            submitText={t('Add Floor Plan')}
-            values={{}}
-            onChange={({ field, e }) => {}}
-            onSubmit={async (values) => {
-              try {
-                await wait(2000);
-                setOpenAddFloorPlan(false);
-              } catch (err) {
-                console.error(err);
-              }
-            }}
-          />
-        </Box>
-      </DialogContent>
-    </Dialog>
-  );
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
@@ -209,7 +121,6 @@ export default function PartDetails(props: PartDetailsProps) {
       spacing={2}
       padding={4}
     >
-      {renderAddFloorPlanModal()}
       <Grid
         item
         xs={12}
