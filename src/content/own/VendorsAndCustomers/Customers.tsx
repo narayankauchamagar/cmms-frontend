@@ -57,7 +57,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
       label: 'Details'
     },
     {
-      name: 'customerName',
+      name: 'name',
       type: 'text',
       label: 'Customer Name',
       placeholder: 'Jonh Doe',
@@ -157,7 +157,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
   let customersList: Customer[] = [
     {
       id: '1',
-      customerName: 'Customer 1',
+      name: 'Customer 1',
       address: 'casa, maroc',
       phone: '+00212611223344',
       website: 'https://web-site.com',
@@ -172,7 +172,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
     },
     {
       id: '2',
-      customerName: 'Customer 2',
+      name: 'Customer 2',
       address: 'casa, maroc',
       phone: '+00212611223344',
       website: 'https://web-site.com',
@@ -409,7 +409,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
         {viewOrUpdate === 'view' ? (
           <Box>
             <Typography variant="h4" sx={{ textAlign: 'center' }} gutterBottom>
-              {currentCustomer?.customerName}
+              {currentCustomer?.name}
             </Typography>
             <Typography variant="subtitle1" sx={{ textAlign: 'center', mb: 3 }}>
               {currentCustomer?.description}
@@ -432,7 +432,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
 
             <Typography variant="subtitle1">{t('Name')}</Typography>
             <Typography variant="h5" sx={{ mb: 1 }}>
-              {currentCustomer?.customerName}
+              {currentCustomer?.name}
             </Typography>
 
             <Typography variant="subtitle1">{t('Email')}</Typography>
@@ -476,7 +476,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
   return (
     <Box
       sx={{
-        p: 4,
+        py: 2,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',

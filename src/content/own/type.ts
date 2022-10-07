@@ -16,16 +16,21 @@ export interface IField {
     | 'number'
     | 'text'
     | 'checkbox'
+    | 'file'
     | 'groupCheckbox'
     | 'select'
     | 'titleGroupField'
-    | 'form';
+    | 'form'
+    | 'date';
+  type2?: 'customer' | 'vendor' | 'user' | 'team';
   name?: string;
   placeholder?: string;
+  fileType?: 'file' | 'image';
   helperText?: string;
   fullWidth?: boolean;
   multiple?: boolean;
-  onPress?: any;
+  midWidth?: boolean;
+  onPress?: () => void;
   required?: boolean;
   error?: any;
   items?: { label: string; value: string; checked?: boolean }[];
@@ -33,6 +38,7 @@ export interface IField {
   icon?: ReactNode | string;
   // onPressIcon?: () => void;
   checked?: boolean;
+  loading?: boolean;
 }
 
 export interface IHash<E> {

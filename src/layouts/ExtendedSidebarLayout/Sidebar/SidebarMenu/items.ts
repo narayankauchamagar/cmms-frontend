@@ -16,7 +16,9 @@ import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
 import CategoryTwoToneIcon from '@mui/icons-material/CategoryTwoTone';
 import AttachFileTwoToneIcon from '@mui/icons-material/AttachFileTwoTone';
 import { GroupsTwoTone, People } from '@mui/icons-material';
-
+import LocationOnTwoToneIcon from '@mui/icons-material/LocationOnTwoTone';
+import Inventory2TwoToneIcon from '@mui/icons-material/Inventory2TwoTone';
+import HandymanTwoToneIcon from '@mui/icons-material/HandymanTwoTone';
 export interface MenuItem {
   link?: string;
   icon?: ReactNode;
@@ -37,9 +39,24 @@ const menuItems: MenuItems[] = [
     heading: '',
     items: [
       {
+        name: 'Assets',
+        link: '/app/assets',
+        icon: Inventory2TwoToneIcon
+      },
+      {
         name: 'Files',
         link: '/app/files',
         icon: AttachFileTwoToneIcon
+      },
+      {
+        name: 'Locations',
+        link: '/app/locations',
+        icon: LocationOnTwoToneIcon
+      },
+      {
+        name: 'Parts/Inventory',
+        link: '/app/inventory/parts',
+        icon: HandymanTwoToneIcon
       },
       {
         name: 'Categories',

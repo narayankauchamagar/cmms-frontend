@@ -105,11 +105,20 @@ interface SettingsLayoutProps {
   tabIndex: number;
   action?: () => void;
   actionTitle?: string;
+  withoutCard?: boolean;
 }
 
 function MultipleTabsLayout(props: SettingsLayoutProps) {
-  const { children, tabIndex, title, tabs, basePath, action, actionTitle } =
-    props;
+  const {
+    children,
+    tabIndex,
+    title,
+    tabs,
+    basePath,
+    action,
+    actionTitle,
+    withoutCard
+  } = props;
   const { t }: { t: any } = useTranslation();
   const navigate = useNavigate();
   const currentTab = tabs[tabIndex].value;
@@ -149,30 +158,18 @@ function MultipleTabsLayout(props: SettingsLayoutProps) {
           </Button>
         )}
       </Box>
-      <Card
-        variant="outlined"
-        sx={{
-          mx: 4
-        }}
-      >
-        <Grid
-          container
-          direction="row"
-          justifyContent="center"
-          alignItems="stretch"
-          spacing={0}
+      {withoutCard ? (
+        children
+      ) : (
+        <Card
+          variant="outlined"
+          sx={{
+            mx: 4
+          }}
         >
-          <Grid
-            container
-            direction="row"
-            justifyContent="center"
-            alignItems="stretch"
-            spacing={0}
-          >
-            {children}
-          </Grid>
-        </Grid>
-      </Card>
+          {children}
+        </Card>
+      )}
     </Box>
   );
 }

@@ -46,10 +46,14 @@ const SubscriptionPlans = Loader(
   lazy(() => import('src/content/own/Subscription/Plans'))
 );
 const Files = Loader(lazy(() => import('src/content/own/Files')));
+const Locations = Loader(lazy(() => import('src/content/own/Locations')));
 
 const VendorsAndCustomers = Loader(
   lazy(() => import('src/content/own/VendorsAndCustomers'))
 );
+const Assets = Loader(lazy(() => import('src/content/own/Assets')));
+const ShowAsset = Loader(lazy(() => import('src/content/own/Assets/Show')));
+const Inventory = Loader(lazy(() => import('src/content/own/Inventory')));
 
 const PeopleAndTeams = Loader(
   lazy(() => import('src/content/own/PeopleAndTeams'))
@@ -102,6 +106,31 @@ const appRoutes = [
   {
     path: 'files',
     element: <Files />
+  },
+  {
+    path: 'locations',
+    element: <Locations />
+  },
+  {
+    path: 'inventory',
+    children: [
+      { path: 'parts', element: <Inventory /> },
+      { path: 'sets', element: <Inventory /> }
+    ]
+  },
+  {
+    path: 'assets',
+    children: [
+      { path: '', element: <Assets /> },
+      {
+        path: ':assetId',
+        children: [
+          { path: 'work-orders', element: <ShowAsset /> },
+          { path: 'details', element: <ShowAsset /> },
+          { path: 'parts', element: <ShowAsset /> }
+        ]
+      }
+    ]
   },
   {
     path: 'categories',

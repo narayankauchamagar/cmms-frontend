@@ -22,7 +22,6 @@ export default (props: PropsType) => {
       display="flex"
       flexDirection={props.direction || 'column'}
       justifyContent="space-between"
-      my={2}
     >
       <Typography variant="h5" sx={{ pb: 1 }}>
         {t(`${props.label}`)}

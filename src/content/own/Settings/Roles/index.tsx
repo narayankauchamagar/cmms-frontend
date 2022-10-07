@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   Dialog,
+  Grid,
   Slide,
   styled,
   Typography,
@@ -253,7 +254,10 @@ function Roles() {
       field: 'name',
       headerName: t('Name'),
       description: t('Name'),
-      width: 150
+      width: 150,
+      renderCell: (params: GridRenderCellParams<string>) => (
+        <Box sx={{ fontWeight: 'bold' }}>{params.value}</Box>
+      )
     },
     {
       field: 'users',
@@ -308,24 +312,28 @@ function Roles() {
 
   return (
     <SettingsLayout tabIndex={3}>
-      <PageHeader rolesNumber={roles.length} />
-      {renderDeleteModal()}
-      <Box sx={{ m: 4, height: 500, width: '95%' }}>
-        <CustomDatagrid
-          rows={roles}
-          columns={columns}
-          components={{
-            Toolbar: GridToolbar
-            // Toolbar: GridToolbarColumnsButton,
-            // Toolbar: GridToolbarDensitySelector
-          }}
-          initialState={{
-            columns: {
-              columnVisibilityModel: {}
-            }
-          }}
-        />
-      </Box>
+      <Grid item xs={12}>
+        <Box p={4}>
+          <PageHeader rolesNumber={roles.length} />
+          {renderDeleteModal()}
+          <Box sx={{ mt: 4, height: 500, width: '95%' }}>
+            <CustomDatagrid
+              rows={roles}
+              columns={columns}
+              components={{
+                Toolbar: GridToolbar
+                // Toolbar: GridToolbarColumnsButton,
+                // Toolbar: GridToolbarDensitySelector
+              }}
+              initialState={{
+                columns: {
+                  columnVisibilityModel: {}
+                }
+              }}
+            />
+          </Box>
+        </Box>
+      </Grid>
     </SettingsLayout>
   );
 }
