@@ -6,7 +6,7 @@ import {
   TextField,
   Typography
 } from '@mui/material';
-import { Formik } from 'formik';
+import { Formik, FormikProps, FormikValues } from 'formik';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 import { ObjectSchema } from 'yup';
@@ -16,6 +16,10 @@ import Field from './Field';
 import SelectForm from './SelectForm';
 import FileUpload from '../FileUpload';
 import DatePicker from '@mui/lab/DatePicker';
+import { useState } from 'react';
+import { Customer } from '../../../../models/owns/customer';
+import wait from '../../../../utils/wait';
+import { Vendor } from '../../../../models/owns/vendor';
 
 interface PropsType {
   fields: Array<IField>;
@@ -32,6 +36,81 @@ interface PropsType {
 export default (props: PropsType) => {
   const { t }: { t: any } = useTranslation();
   const shape: IHash<any> = {};
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [fetchingCustomers, setFetchingCustomers] = useState(false);
+  const [vendors, setVendors] = useState<Vendor[]>([]);
+  const [fetchingVendors, setFetchingVendors] = useState(false);
+  const fetchCustomers = async () => {
+    setFetchingCustomers(true);
+    const _customers: Customer[] = [
+      {
+        id: '1',
+        name: 'Customer 1',
+        address: 'casa, maroc',
+        phone: '+00212611223344',
+        website: 'https://web-site.com',
+        email: 'john.doe@gmail.com',
+        customerType: 'Plumbing',
+        description: 'Describe...',
+        rate: 10,
+        address1: 'Add 1',
+        address2: '-',
+        address3: 'Add 3',
+        currency: 'MAD, dirham'
+      },
+      {
+        id: '2',
+        name: 'Customer 2',
+        address: 'casa, maroc',
+        phone: '+00212611223344',
+        website: 'https://web-site.com',
+        email: 'john.doe@gmail.com',
+        customerType: 'Electrical',
+        description: 'Describe 2...',
+        rate: 15,
+        address1: 'Add 1',
+        address2: '-',
+        address3: '-',
+        currency: 'Euro'
+      }
+    ];
+    await wait(2000);
+    setFetchingCustomers(false);
+    setCustomers(_customers);
+  };
+
+  const fetchVendors = async () => {
+    setFetchingVendors(true);
+    const _vendors: Vendor[] = [
+      {
+        id: '1',
+        companyName: 'Company Name',
+        address: 'casa, maroc',
+        phone: '+00212611223344',
+        website: 'https://web-site.com',
+        name: 'John Doe',
+        email: 'john.doe@gmail.com',
+        vendorType: 'Plumbing',
+        description: 'Describe...',
+        rate: 15
+      },
+      {
+        id: '2',
+        companyName: 'Company Name 2',
+        address: 'casa, maroc',
+        phone: '+00212611223344',
+        website: 'https://web-site.com',
+        name: 'John Doe',
+        email: 'john.doe@gmail.com',
+        vendorType: 'Plumbing',
+        description: 'Describe...',
+        rate: 20
+      }
+    ];
+    await wait(2000);
+    setFetchingVendors(false);
+    setVendors(_vendors);
+  };
 
   props.fields.forEach((f) => {
     shape[f.name] = Yup.string();
@@ -50,6 +129,49 @@ export default (props: PropsType) => {
     }
     formik.setFieldValue(field, e);
     return formik.handleChange(field);
+  };
+
+  const renderSelect = (formik: FormikProps<IHash<any>>, field: IField) => {
+    let options = field.items;
+    let loading = field.loading;
+    let onOpen = field.onPress;
+    switch (field.type2) {
+      case 'customer':
+        options = customers.map((customer) => {
+          return {
+            label: customer.name,
+            value: customer.id.toString()
+          };
+        });
+        onOpen = fetchCustomers;
+        loading = fetchingCustomers;
+        break;
+      case 'vendor':
+        options = vendors.map((vendor) => {
+          return {
+            label: vendor.name,
+            value: vendor.id.toString()
+          };
+        });
+        onOpen = fetchVendors;
+        loading = fetchingVendors;
+        break;
+      default:
+        break;
+    }
+    return (
+      <SelectForm
+        options={options}
+        value={formik.values[field.name]}
+        label={field.label}
+        loading={loading}
+        onOpen={onOpen}
+        placeholder={field.placeholder}
+        multiple={field.multiple}
+        fullWidth={field.fullWidth}
+        key={field.name}
+      />
+    );
   };
 
   return (
@@ -71,17 +193,7 @@ export default (props: PropsType) => {
             return (
               <Grid item xs={12} lg={field.midWidth ? 6 : 12} key={index}>
                 {field.type === 'select' ? (
-                  <SelectForm
-                    options={field.items}
-                    value={formik.values[field.name]}
-                    label={field.label}
-                    loading={field.loading}
-                    onOpen={field.onPress}
-                    placeholder={field.placeholder}
-                    multiple={field.multiple}
-                    fullWidth={field.fullWidth}
-                    key={field.name}
-                  />
+                  renderSelect(formik, field)
                 ) : field.type === 'checkbox' ? (
                   <CheckBoxForm
                     label={field.label}

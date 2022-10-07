@@ -40,76 +40,6 @@ function Assets() {
     setTitle(t('Assets'));
   }, []);
 
-  const fetchCustomers = async () => {
-    setFetchingCustomers(true);
-    const _customers: Customer[] = [
-      {
-        id: '1',
-        name: 'Customer 1',
-        address: 'casa, maroc',
-        phone: '+00212611223344',
-        website: 'https://web-site.com',
-        email: 'john.doe@gmail.com',
-        customerType: 'Plumbing',
-        description: 'Describe...',
-        rate: 10,
-        address1: 'Add 1',
-        address2: '-',
-        address3: 'Add 3',
-        currency: 'MAD, dirham'
-      },
-      {
-        id: '2',
-        name: 'Customer 2',
-        address: 'casa, maroc',
-        phone: '+00212611223344',
-        website: 'https://web-site.com',
-        email: 'john.doe@gmail.com',
-        customerType: 'Electrical',
-        description: 'Describe 2...',
-        rate: 15,
-        address1: 'Add 1',
-        address2: '-',
-        address3: '-',
-        currency: 'Euro'
-      }
-    ];
-    await wait(2000);
-    setFetchingCustomers(false);
-    setCustomers(_customers);
-  };
-  const fetchVendors = async () => {
-    setFetchingVendors(true);
-    const _vendors: Vendor[] = [
-      {
-        id: '1',
-        companyName: 'Company Name',
-        address: 'casa, maroc',
-        phone: '+00212611223344',
-        website: 'https://web-site.com',
-        name: 'John Doe',
-        email: 'john.doe@gmail.com',
-        vendorType: 'Plumbing',
-        description: 'Describe...',
-        rate: 15
-      },
-      {
-        id: '2',
-        companyName: 'Company Name 2',
-        address: 'casa, maroc',
-        phone: '+00212611223344',
-        website: 'https://web-site.com',
-        name: 'John Doe',
-        email: 'john.doe@gmail.com',
-        vendorType: 'Plumbing',
-        description: 'Describe...',
-        rate: 20
-      }
-    ];
-    await wait(2000);
-    setFetchingVendors(false);
-    setVendors(_vendors);
-  };
   const columns: GridEnrichedColDef[] = [
     {
       field: 'id',
@@ -327,32 +257,18 @@ function Assets() {
     {
       name: 'customers',
       type: 'select',
+      type2: 'customer',
       multiple: true,
       label: t('Customers'),
-      placeholder: 'Select customers',
-      onPress: fetchCustomers,
-      loading: fetchingCustomers,
-      items: customers.map((customer) => {
-        return {
-          label: customer.name,
-          value: customer.id.toString()
-        };
-      })
+      placeholder: 'Select customers'
     },
     {
       name: 'vendors',
       type: 'select',
+      type2: 'vendor',
       multiple: true,
       label: t('Vendors'),
-      placeholder: t('Select vendors'),
-      onPress: fetchVendors,
-      loading: fetchingVendors,
-      items: vendors.map((vendor) => {
-        return {
-          label: vendor.name,
-          value: vendor.id.toString()
-        };
-      })
+      placeholder: t('Select vendors')
     },
     {
       name: 'inServiceDate',
