@@ -291,6 +291,7 @@ function Assets() {
             onSubmit={async (values) => {
               try {
                 await wait(2000);
+                setOpenAddModal(false);
               } catch (err) {
                 console.error(err);
               }

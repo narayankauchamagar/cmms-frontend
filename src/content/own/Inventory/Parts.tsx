@@ -281,6 +281,7 @@ const Parts = ({ setAction }: PropsType) => {
             onSubmit={async (values) => {
               try {
                 await wait(2000);
+                setOpenAddModal(false);
               } catch (err) {
                 console.error(err);
               }
@@ -328,9 +329,55 @@ const Parts = ({ setAction }: PropsType) => {
       value: part.createdAt
     }
   ];
+  const renderPartUpdateModal = () => (
+    <Dialog
+      fullWidth
+      maxWidth="md"
+      open={openUpdateModal}
+      onClose={() => setOpenUpdateModal(false)}
+    >
+      <DialogTitle
+        sx={{
+          p: 3
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
+          {t('Update Part')}
+        </Typography>
+        <Typography variant="subtitle2">
+          {t('Fill in the fields below to update the Part')}
+        </Typography>
+      </DialogTitle>
+      <DialogContent
+        dividers
+        sx={{
+          p: 3
+        }}
+      >
+        <Box>
+          <Form
+            fields={fields}
+            validation={Yup.object().shape(shape)}
+            submitText={t('Save')}
+            values={currentPart}
+            onChange={({ field, e }) => {}}
+            onSubmit={async (values) => {
+              try {
+                await wait(2000);
+                setOpenUpdateModal(false);
+              } catch (err) {
+                console.error(err);
+              }
+            }}
+          />
+        </Box>
+      </DialogContent>
+    </Dialog>
+  );
   return (
     <Box sx={{ p: 2 }}>
       {renderPartAddModal()}
+      {renderPartUpdateModal()}
       <Tabs
         sx={{ mb: 2 }}
         onChange={handleTabsChange}

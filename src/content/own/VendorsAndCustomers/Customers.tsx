@@ -307,6 +307,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
             onSubmit={async (values) => {
               try {
                 await wait(2000);
+                handleCloseModal();
               } catch (err) {
                 console.error(err);
               }
