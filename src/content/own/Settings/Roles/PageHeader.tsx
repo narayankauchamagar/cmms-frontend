@@ -60,13 +60,7 @@ function PageHeader({ rolesNumber }: PageHeaderProps) {
 
   return (
     <>
-      <Grid
-        container
-        justifyContent="space-between"
-        alignItems="center"
-        mx={4}
-        mt={3}
-      >
+      <Grid container justifyContent="space-between" alignItems="center">
         <Grid item>
           <Typography variant="h3" component="h3" gutterBottom>
             {t('Roles Management')}
