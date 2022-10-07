@@ -451,6 +451,9 @@ function Files() {
         anchor="right"
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}
+        PaperProps={{
+          sx: { width: '60%' }
+        }}
       >
         <LocationDetails
           location={currentLocation}

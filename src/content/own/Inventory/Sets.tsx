@@ -1,6 +1,7 @@
 import {
   Box,
   Card,
+  CardMedia,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -12,7 +13,8 @@ import {
   Stack,
   Tab,
   Tabs,
-  Typography
+  Typography,
+  useTheme
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import CustomDataGrid from '../components/CustomDatagrid';
@@ -25,13 +27,13 @@ import {
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import { parts } from '../../../models/owns/part';
+import Part, { parts } from '../../../models/owns/part';
 import { ChangeEvent, useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import Form from '../components/form';
 import wait from '../../../utils/wait';
 import { IField } from '../type';
-import { sets } from '../../../models/owns/set';
+import SetType, { sets } from '../../../models/owns/setType';
 
 interface PropsType {
   setAction: (p: () => () => void) => void;
@@ -39,6 +41,7 @@ interface PropsType {
 
 const Sets = ({ setAction }: PropsType) => {
   const { t }: { t: any } = useTranslation();
+  const theme = useTheme();
   const [currentTab, setCurrentTab] = useState<string>('list');
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const tabs = [
@@ -94,6 +97,28 @@ const Sets = ({ setAction }: PropsType) => {
   ];
   const shape = {
     name: Yup.string().required(t('Set name is required'))
+  };
+  const fieldsToRender = (set: SetType) => [
+    {
+      label: t('Parts'),
+      value: set.parts
+    },
+    {
+      label: t('Total Cost'),
+      value: set.cost
+    }
+  ];
+  const renderField = (label, value) => {
+    return (
+      <Grid item xs={12}>
+        <Stack spacing={1} direction="row">
+          <Typography variant="h6" sx={{ color: theme.colors.alpha.black[70] }}>
+            {label}
+          </Typography>
+          <Typography variant="h6">{value}</Typography>
+        </Stack>
+      </Grid>
+    );
   };
   const renderSetAddModal = () => (
     <Dialog
@@ -171,6 +196,32 @@ const Sets = ({ setAction }: PropsType) => {
           />
         </Box>
       )}
+      {currentTab === 'card' && (
+        <Grid item xs={12}>
+          <Grid container spacing={2}>
+            {sets.map((set) => (
+              <Grid item xs={12} lg={3} key={set.id}>
+                <Card>
+                  <CardMedia
+                    component="img"
+                    height="280"
+                    image="/static/images/placeholders/covers/2.jpg"
+                    alt="..."
+                  />
+                </Card>
+                <Box sx={{ p: 2 }}>
+                  <Typography variant="h4">{set.name}</Typography>
+                  <Box sx={{ mt: 1 }}>
+                    {fieldsToRender(set).map((field) =>
+                      renderField(field.label, field.value)
+                    )}
+                  </Box>
+                </Box>
+              </Grid>
+            ))}
+          </Grid>
+        </Grid>
+      )}{' '}
     </Box>
   );
 };

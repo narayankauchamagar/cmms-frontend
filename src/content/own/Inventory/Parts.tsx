@@ -5,11 +5,8 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  Divider,
+  Drawer,
   Grid,
-  List,
-  ListItem,
-  ListItemText,
   Stack,
   Tab,
   Tabs,
@@ -18,21 +15,15 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import CustomDataGrid from '../components/CustomDatagrid';
-import {
-  GridActionsCellItem,
-  GridRenderCellParams,
-  GridRowParams,
-  GridToolbar
-} from '@mui/x-data-grid';
+import { GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
-import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import Part, { parts } from '../../../models/owns/part';
 import { ChangeEvent, useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import Form from '../components/form';
 import wait from '../../../utils/wait';
 import { IField } from '../type';
+import PartDetails from './PartDetails';
 
 interface PropsType {
   setAction: (p: () => () => void) => void;
@@ -41,7 +32,15 @@ interface PropsType {
 const Parts = ({ setAction }: PropsType) => {
   const { t }: { t: any } = useTranslation();
   const [currentTab, setCurrentTab] = useState<string>('list');
+  const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
+  const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
+  const [currentPart, setCurrentPart] = useState<Part>();
+
+  const handleUpdate = (id: number) => {
+    setCurrentPart(parts.find((part) => part.id === id));
+    setOpenUpdateModal(true);
+  };
   const tabs = [
     { value: 'list', label: t('List View') },
     { value: 'card', label: t('Card View') }
@@ -349,6 +348,10 @@ const Parts = ({ setAction }: PropsType) => {
             components={{
               Toolbar: GridToolbar
             }}
+            onRowClick={(params) => {
+              setCurrentPart(parts.find((part) => part.id === params.id));
+              setOpenDrawer(true);
+            }}
             initialState={{
               columns: {
                 columnVisibilityModel: {}
@@ -383,6 +386,16 @@ const Parts = ({ setAction }: PropsType) => {
           </Grid>
         </Grid>
       )}
+      <Drawer
+        anchor="right"
+        open={openDrawer}
+        onClose={() => setOpenDrawer(false)}
+        PaperProps={{
+          sx: { width: '60%' }
+        }}
+      >
+        <PartDetails part={currentPart} handleUpdate={handleUpdate} />
+      </Drawer>
     </Box>
   );
 };

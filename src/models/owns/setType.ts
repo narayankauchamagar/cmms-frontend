@@ -1,15 +1,15 @@
 import { Audit } from './audit';
 
-export default interface Set extends Audit {
+export default interface SetType extends Audit {
   id: number;
   name: string;
   cost: number;
   parts: number;
 }
-export const sets: Set[] = [
+export const sets: SetType[] = [
   {
     id: 212,
-    name: 'cgvg',
+    name: 'Set 1',
     createdAt: 'dfggj',
     cost: 52,
     parts: 45,
@@ -19,7 +19,7 @@ export const sets: Set[] = [
   },
   {
     id: 44,
-    name: 'cgvg',
+    name: 'Set 2',
     createdAt: 'dfggj',
     cost: 52,
     parts: 45,

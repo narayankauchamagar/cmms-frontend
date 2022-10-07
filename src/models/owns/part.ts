@@ -5,6 +5,7 @@ export default interface Part extends Audit {
   name: string;
   cost: number;
   quantity: number;
+  minQuantity: number;
   barCode: string;
   area: string;
   category: string;
@@ -27,6 +28,7 @@ export const parts: Part[] = [
     description: 'string',
     location: 'string',
     users: 24,
+    minQuantity: 4,
     vendors: 4,
     openWorkOrders: 2,
     createdBy: 'ghu',
@@ -39,6 +41,7 @@ export const parts: Part[] = [
     createdAt: 'dfggj',
     cost: 52,
     quantity: 9,
+    minQuantity: 4,
     barCode: 'dfsad',
     area: 'fafcax',
     category: 'facacaa ',
