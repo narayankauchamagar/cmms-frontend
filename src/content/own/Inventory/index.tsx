@@ -10,7 +10,7 @@ interface PropsType {}
 
 const VendorsAndCustomers = ({}: PropsType) => {
   const { t }: { t: any } = useTranslation();
-  const { assetId } = useParams();
+  const [action, setAction] = useState<() => void>();
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const { setTitle } = useContext(TitleContext);
   const location = useLocation();
@@ -36,10 +36,10 @@ const VendorsAndCustomers = ({}: PropsType) => {
       tabs={tabs}
       tabIndex={tabIndex}
       title={`Inventory`}
-      action={handleOpenUpdateModal}
+      action={action}
       actionTitle={tabs[tabIndex].label}
     >
-      {tabIndex === 0 && <Parts />}
+      {tabIndex === 0 && <Parts setAction={setAction} />}
     </MultipleTabsLayout>
   );
 };
