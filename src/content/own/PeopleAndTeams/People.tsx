@@ -3,7 +3,9 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  Typography
+  Drawer,
+  Typography,
+  useTheme
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import Form from '../components/form';
@@ -12,6 +14,8 @@ import { IField } from '../type';
 import wait from 'src/utils/wait';
 import CustomDataGrid from '../components/CustomDatagrid';
 import { GridEnrichedColDef, GridToolbar } from '@mui/x-data-grid';
+import { useState } from 'react';
+import UserDetailsDrawer from './UserDetailsDrawer';
 
 interface PropsType {
   values?: any;
@@ -21,6 +25,13 @@ interface PropsType {
 
 const People = ({ openModal, handleCloseModal }: PropsType) => {
   const { t }: { t: any } = useTranslation();
+  const theme = useTheme();
+
+  const [detailDrawerOpen, setDetailDrawerOpen] = useState(false);
+
+  const handleDrawerToggle = () => {
+    setDetailDrawerOpen(!detailDrawerOpen);
+  };
 
   let fields: Array<IField> = [];
 
@@ -150,6 +161,9 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
             columnVisibilityModel: {}
           }
         }}
+        onRowClick={(params) => {
+          handleDrawerToggle();
+        }}
       />
     </Box>
   );
@@ -166,6 +180,16 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
     >
       <RenderPeopleAddModal />
       <RenderPeopleList />
+
+      <Drawer
+        variant="temporary"
+        anchor={theme.direction === 'rtl' ? 'left' : 'right'}
+        open={detailDrawerOpen}
+        onClose={handleDrawerToggle}
+        elevation={9}
+      >
+        {detailDrawerOpen && <UserDetailsDrawer peopleList={PeopleList} />}
+      </Drawer>
     </Box>
   );
 };

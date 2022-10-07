@@ -41,15 +41,11 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
     {
       name: 'teamUsers',
       type: 'select',
+      type2: 'user',
+      multiple: true,
       label: 'People in the team',
-      placeholder: 'Team Users',
-      // multiple: true,
-      items: [
-        { label: 'Team 1', value: 'team1' },
-        { label: 'Team 2', value: 'team2' },
-        { label: 'Team 3', value: 'team3' }
-      ]
-    }
+      placeholder: 'Team Users'
+    },
   ];
 
   const shape = {
@@ -138,18 +134,29 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
         width: '95%'
       }}
     >
-      <CustomDataGrid
-        rows={TeamsList}
-        columns={columns}
-        components={{
-          Toolbar: GridToolbar
-        }}
-        initialState={{
-          columns: {
-            columnVisibilityModel: {}
-          }
-        }}
-      />
+      {TeamsList.length !== 0 ? (
+        <CustomDataGrid
+          rows={TeamsList}
+          columns={columns}
+          components={{
+            Toolbar: GridToolbar
+          }}
+          initialState={{
+            columns: {
+              columnVisibilityModel: {}
+            }
+          }}
+        />
+      ) : (
+        <Box sx={{ mt: 2, px: 3, textAlign: 'center' }}>
+          <Typography variant="h5">
+            {t('Teams help you manage specific groups of people.')}
+          </Typography>
+          <Typography component="span" variant="subtitle2">
+            {t("Press the '+' button to create a team.")}
+          </Typography>
+        </Box>
+      )}
     </Box>
   );
 
