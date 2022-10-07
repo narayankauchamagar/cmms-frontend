@@ -22,7 +22,7 @@ export interface IField {
     | 'titleGroupField'
     | 'form'
     | 'date';
-  type2?: 'customer' | 'vendor';
+  type2?: 'customer' | 'vendor' | 'user';
   name?: string;
   placeholder?: string;
   helperText?: string;

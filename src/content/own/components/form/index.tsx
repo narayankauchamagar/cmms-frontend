@@ -20,6 +20,7 @@ import { useState } from 'react';
 import { Customer } from '../../../../models/owns/customer';
 import wait from '../../../../utils/wait';
 import { Vendor } from '../../../../models/owns/vendor';
+import User from 'src/models/owns/user';
 
 interface PropsType {
   fields: Array<IField>;
@@ -40,6 +41,8 @@ export default (props: PropsType) => {
   const [fetchingCustomers, setFetchingCustomers] = useState(false);
   const [vendors, setVendors] = useState<Vendor[]>([]);
   const [fetchingVendors, setFetchingVendors] = useState(false);
+  const [users, setUsers] = useState<User[]>([]);
+  const [fetchingUsers, setFetchingUsers] = useState(false);
   const fetchCustomers = async () => {
     setFetchingCustomers(true);
     const _customers: Customer[] = [
@@ -111,7 +114,24 @@ export default (props: PropsType) => {
     setFetchingVendors(false);
     setVendors(_vendors);
   };
-
+  const fetchUsers = async () => {
+    setFetchingUsers(true);
+    const _users: User[] = [
+      {
+        id: 21,
+        firstName: 'gfgb',
+        lastName: 'fglink'
+      },
+      {
+        id: 22,
+        firstName: 'Hgcgbv',
+        lastName: 'gvghv'
+      }
+    ];
+    await wait(2000);
+    setFetchingUsers(false);
+    setUsers(_users);
+  };
   props.fields.forEach((f) => {
     shape[f.name] = Yup.string();
     if (f.required) {
@@ -155,6 +175,16 @@ export default (props: PropsType) => {
         });
         onOpen = fetchVendors;
         loading = fetchingVendors;
+        break;
+      case 'user':
+        options = users.map((user) => {
+          return {
+            label: `${user.firstName} ${user.lastName}`,
+            value: user.id.toString()
+          };
+        });
+        onOpen = fetchUsers;
+        loading = fetchingUsers;
         break;
       default:
         break;

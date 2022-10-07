@@ -138,19 +138,6 @@ function Assets() {
       width: 150
     }
   ];
-
-  const workers: User[] = [
-    {
-      id: 21,
-      firstName: 'gfgb',
-      lastName: 'fglink'
-    },
-    {
-      id: 22,
-      firstName: 'Hgcgbv',
-      lastName: 'gvghv'
-    }
-  ];
   const teams: Team[] = [
     {
       id: 21,
@@ -214,27 +201,17 @@ function Assets() {
     {
       name: 'primaryUser',
       type: 'select',
+      type2: 'user',
       label: 'Worker',
-      placeholder: 'Select primary user',
-      items: workers.map((worker) => {
-        return {
-          label: `${worker.firstName} ${worker.lastName}`,
-          value: worker.id.toString()
-        };
-      })
+      placeholder: 'Select primary user'
     },
     {
       name: 'assignedTo',
       type: 'select',
+      type2: 'user',
       multiple: true,
       label: t('Additional Workers'),
-      placeholder: 'Select additional workers',
-      items: workers.map((worker) => {
-        return {
-          label: `${worker.firstName} ${worker.lastName}`,
-          value: worker.id.toString()
-        };
-      })
+      placeholder: 'Select additional workers'
     },
     {
       name: 'teams',
