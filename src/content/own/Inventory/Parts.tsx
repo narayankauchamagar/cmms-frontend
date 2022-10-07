@@ -55,6 +55,10 @@ const Parts = ({ setAction }: PropsType) => {
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
+  const handleOpenDetails = (id: number) => {
+    setCurrentPart(parts.find((part) => part.id === id));
+    setOpenDrawer(true);
+  };
   const columns: GridEnrichedColDef[] = [
     {
       field: 'name',
@@ -349,8 +353,7 @@ const Parts = ({ setAction }: PropsType) => {
               Toolbar: GridToolbar
             }}
             onRowClick={(params) => {
-              setCurrentPart(parts.find((part) => part.id === params.id));
-              setOpenDrawer(true);
+              handleOpenDetails(Number(params.id));
             }}
             initialState={{
               columns: {
@@ -365,22 +368,25 @@ const Parts = ({ setAction }: PropsType) => {
           <Grid container spacing={2}>
             {parts.map((part) => (
               <Grid item xs={12} lg={3} key={part.id}>
-                <Card>
+                <Card
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => handleOpenDetails(part.id)}
+                >
                   <CardMedia
                     component="img"
                     height="280"
                     image="/static/images/placeholders/covers/2.jpg"
                     alt="..."
                   />
-                </Card>
-                <Box sx={{ p: 2 }}>
-                  <Typography variant="h4">{part.name}</Typography>
-                  <Box sx={{ mt: 1 }}>
-                    {fieldsToRender(part).map((field) =>
-                      renderField(field.label, field.value)
-                    )}
+                  <Box sx={{ p: 2 }}>
+                    <Typography variant="h4">{part.name}</Typography>
+                    <Box sx={{ mt: 1 }}>
+                      {fieldsToRender(part).map((field) =>
+                        renderField(field.label, field.value)
+                      )}
+                    </Box>
                   </Box>
-                </Box>
+                </Card>
               </Grid>
             ))}
           </Grid>

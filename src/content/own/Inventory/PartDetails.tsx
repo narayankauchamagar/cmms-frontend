@@ -7,6 +7,7 @@ import {
   Divider,
   Grid,
   List,
+  ListItem,
   ListItemButton,
   ListItemText,
   Tab,
@@ -28,6 +29,7 @@ import * as Yup from 'yup';
 import wait from '../../../utils/wait';
 import { IField } from '../type';
 import SetType from '../../../models/owns/setType';
+import { files } from 'src/models/owns/file';
 
 interface PartDetailsProps {
   part: Part;
@@ -282,10 +284,37 @@ export default function PartDetails(props: PartDetailsProps) {
             <List sx={{ width: '100%' }}>
               {assets.map((asset) => (
                 <ListItemButton key={asset.id} divider>
-                  <ListItemText
-                    primary={asset.name}
-                    secondary={asset.createdAt}
-                  />
+                  <ListItem
+                    secondaryAction={<Typography>{asset.createdAt}</Typography>}
+                  >
+                    <ListItemText
+                      primary={asset.name}
+                      secondary={asset.description}
+                    />
+                  </ListItem>
+                </ListItemButton>
+              ))}
+            </List>
+          </Box>
+        )}
+        {currentTab === 'files' && (
+          <Box>
+            <Box display="flex" justifyContent="right">
+              <Button startIcon={<AddTwoToneIcon fontSize="small" />}>
+                {t('File')}
+              </Button>
+            </Box>
+            <List sx={{ width: '100%' }}>
+              {files.map((file) => (
+                <ListItemButton key={file.id} divider>
+                  <ListItem
+                    secondaryAction={<Typography>{file.createdAt}</Typography>}
+                  >
+                    <ListItemText
+                      primary={file.name}
+                      secondary={`#${file.id}`}
+                    />
+                  </ListItem>
                 </ListItemButton>
               ))}
             </List>
