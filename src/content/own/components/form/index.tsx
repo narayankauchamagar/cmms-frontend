@@ -276,7 +276,12 @@ export default (props: PropsType) => {
                   <Box>
                     <FileUpload
                       title={field.label}
-                      description={field.placeholder}
+                      type={field.fileType || 'file'}
+                      description={
+                        field.placeholder || field.fileType === 'image'
+                          ? t('Drag an image here')
+                          : t('Drag files here')
+                      }
                       setFieldValue={(files) =>
                         formik.setFieldValue(field.name, files)
                       }

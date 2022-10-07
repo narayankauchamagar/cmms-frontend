@@ -25,6 +25,7 @@ export interface IField {
   type2?: 'customer' | 'vendor' | 'user' | 'team';
   name?: string;
   placeholder?: string;
+  fileType?: 'file' | 'image';
   helperText?: string;
   fullWidth?: boolean;
   multiple?: boolean;

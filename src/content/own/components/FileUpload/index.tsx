@@ -8,7 +8,8 @@ import {
   ListItem,
   ListItemText,
   styled,
-  Typography
+  Typography,
+  Zoom
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import WarningTwoToneIcon from '@mui/icons-material/WarningTwoTone';
@@ -17,6 +18,7 @@ import CloudUploadTwoToneIcon from '@mui/icons-material/CloudUploadTwoTone';
 import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone';
 import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
 import { useTheme } from '@mui/material';
+import { useSnackbar } from 'notistack';
 
 const WarningTwoToneIconWrapper = styled(WarningTwoToneIcon)(
   ({ theme }) => `
@@ -122,13 +124,15 @@ const BoxUpgrade = styled(Box)(
 
 interface FileUploadProps {
   title: string;
+  type: 'image' | 'file';
   description: string;
   setFieldValue: (files: any) => void;
 }
 function FileUpload(props: FileUploadProps) {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
-  const { title, description, setFieldValue } = props;
+  const { enqueueSnackbar } = useSnackbar();
+  const { title, description, setFieldValue, type } = props;
   const data = {
     percentage: 68.45
   };
@@ -141,13 +145,29 @@ function FileUpload(props: FileUploadProps) {
     getRootProps,
     getInputProps
   } = useDropzone({
-    accept: {
-      'image/png': ['.png'],
-      'image/jpeg': ['.jpg']
-    },
+    accept:
+      type === 'image'
+        ? {
+            'image/png': ['.png'],
+            'image/jpeg': ['.jpg']
+          }
+        : {},
+    maxFiles: type === 'image' ? 1 : 10,
     onDrop: (acceptedFiles) => {
       setFieldValue(acceptedFiles);
-    }
+    },
+    onDropRejected: (fileRejections) =>
+      enqueueSnackbar(
+        fileRejections[0].errors.map((error) => error.message),
+        {
+          variant: 'error',
+          anchorOrigin: {
+            vertical: 'bottom',
+            horizontal: 'center'
+          },
+          TransitionComponent: Zoom
+        }
+      )
   });
 
   const files = acceptedFiles.map((file, index) => (
@@ -217,7 +237,7 @@ function FileUpload(props: FileUploadProps) {
           </>
         )}
       </BoxUploadWrapper>
-      {files.length > 0 && (
+      {type === 'file' && files.length > 0 && (
         <>
           <Alert
             sx={{

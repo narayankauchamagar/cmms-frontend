@@ -188,6 +188,49 @@ const Parts = ({ setAction }: PropsType) => {
       label: t('Additional Part Details'),
       placeholder: t('Additional Part Details'),
       multiple: true
+    },
+    {
+      name: 'workers',
+      type: 'select',
+      type2: 'user',
+      multiple: true,
+      label: t('Workers'),
+      placeholder: 'Select Workers'
+    },
+    {
+      name: 'teams',
+      type: 'select',
+      type2: 'team',
+      multiple: true,
+      label: t('Teams'),
+      placeholder: 'Select Teams'
+    },
+    {
+      name: 'vendors',
+      type: 'select',
+      type2: 'vendor',
+      multiple: true,
+      label: t('Vendors'),
+      placeholder: 'Select Vendors'
+    },
+    {
+      name: 'customers',
+      type: 'select',
+      type2: 'customer',
+      multiple: true,
+      label: t('Customers'),
+      placeholder: 'Select Customers'
+    },
+    {
+      name: 'image',
+      type: 'file',
+      label: t('Image'),
+      fileType: 'image'
+    },
+    {
+      name: 'files',
+      type: 'file',
+      label: t('Files')
     }
   ];
   const shape = {
