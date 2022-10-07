@@ -1,6 +1,7 @@
 import {
   Box,
   Card,
+  CardMedia,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -12,19 +13,21 @@ import {
   Stack,
   Tab,
   Tabs,
-  Typography
+  Typography,
+  useTheme
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import CustomDataGrid from '../components/CustomDatagrid';
 import {
   GridActionsCellItem,
+  GridRenderCellParams,
   GridRowParams,
   GridToolbar
 } from '@mui/x-data-grid';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import { parts } from '../../../models/owns/part';
+import Part, { parts } from '../../../models/owns/part';
 import { ChangeEvent, useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import Form from '../components/form';
@@ -43,6 +46,7 @@ const Parts = ({ setAction }: PropsType) => {
     { value: 'list', label: t('List View') },
     { value: 'card', label: t('Card View') }
   ];
+  const theme = useTheme();
 
   useEffect(() => {
     const handleOpenModal = () => setOpenAddModal(true);
@@ -57,7 +61,10 @@ const Parts = ({ setAction }: PropsType) => {
       field: 'name',
       headerName: t('Name'),
       description: t('Name'),
-      width: 150
+      width: 150,
+      renderCell: (params: GridRenderCellParams<string>) => (
+        <Box sx={{ fontWeight: 'bold' }}>{params.value}</Box>
+      )
     },
     {
       field: 'cost',
@@ -280,6 +287,44 @@ const Parts = ({ setAction }: PropsType) => {
       </DialogContent>
     </Dialog>
   );
+  const renderField = (label, value) => {
+    return (
+      <Grid item xs={12}>
+        <Stack spacing={1} direction="row">
+          <Typography variant="h6" sx={{ color: theme.colors.alpha.black[70] }}>
+            {label}
+          </Typography>
+          <Typography variant="h6">{value}</Typography>
+        </Stack>
+      </Grid>
+    );
+  };
+  const fieldsToRender = (part: Part) => [
+    {
+      label: t('ID'),
+      value: part.id
+    },
+    {
+      label: t('Category'),
+      value: part.category
+    },
+    {
+      label: t('Quantity'),
+      value: part.quantity
+    },
+    {
+      label: t('Cost'),
+      value: part.cost
+    },
+    {
+      label: t('Barcode'),
+      value: part.barCode
+    },
+    {
+      label: t('Date created'),
+      value: part.createdAt
+    }
+  ];
   return (
     <Box sx={{ p: 2 }}>
       {renderPartAddModal()}
@@ -311,6 +356,32 @@ const Parts = ({ setAction }: PropsType) => {
             }}
           />
         </Box>
+      )}
+      {currentTab === 'card' && (
+        <Grid item xs={12}>
+          <Grid container spacing={2}>
+            {parts.map((part) => (
+              <Grid item xs={12} lg={3} key={part.id}>
+                <Card>
+                  <CardMedia
+                    component="img"
+                    height="280"
+                    image="/static/images/placeholders/covers/2.jpg"
+                    alt="..."
+                  />
+                </Card>
+                <Box sx={{ p: 2 }}>
+                  <Typography variant="h4">{part.name}</Typography>
+                  <Box sx={{ mt: 1 }}>
+                    {fieldsToRender(part).map((field) =>
+                      renderField(field.label, field.value)
+                    )}
+                  </Box>
+                </Box>
+              </Grid>
+            ))}
+          </Grid>
+        </Grid>
       )}
     </Box>
   );

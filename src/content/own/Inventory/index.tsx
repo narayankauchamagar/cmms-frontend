@@ -5,6 +5,7 @@ import { TitleContext } from '../../../contexts/TitleContext';
 import { useLocation, useParams } from 'react-router-dom';
 import { Box, Typography } from '@mui/material';
 import Parts from './Parts';
+import Sets from './Sets';
 
 interface PropsType {}
 
@@ -40,6 +41,7 @@ const VendorsAndCustomers = ({}: PropsType) => {
       actionTitle={tabs[tabIndex].label}
     >
       {tabIndex === 0 && <Parts setAction={setAction} />}
+      {tabIndex === 1 && <Sets setAction={setAction} />}
     </MultipleTabsLayout>
   );
 };

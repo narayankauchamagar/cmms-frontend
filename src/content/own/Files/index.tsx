@@ -12,6 +12,7 @@ import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import CustomDataGrid from '../components/CustomDatagrid';
 import {
   GridActionsCellItem,
+  GridRenderCellParams,
   GridRowParams,
   GridToolbar
 } from '@mui/x-data-grid';
@@ -37,7 +38,10 @@ function Files() {
       field: 'name',
       headerName: t('Name'),
       description: t('Name'),
-      width: 150
+      width: 150,
+      renderCell: (params: GridRenderCellParams<string>) => (
+        <Box sx={{ fontWeight: 'bold' }}>{params.value}</Box>
+      )
     },
     {
       field: 'createdBy',

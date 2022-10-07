@@ -148,8 +148,7 @@ function FileUpload(props: FileUploadProps) {
     accept:
       type === 'image'
         ? {
-            'image/png': ['.png'],
-            'image/jpeg': ['.jpg']
+            'image/*': []
           }
         : {},
     maxFiles: type === 'image' ? 1 : 10,
@@ -237,17 +236,19 @@ function FileUpload(props: FileUploadProps) {
           </>
         )}
       </BoxUploadWrapper>
-      {type === 'file' && files.length > 0 && (
+      {files.length > 0 && (
         <>
-          <Alert
-            sx={{
-              py: 0,
-              mt: 2
-            }}
-            severity="success"
-          >
-            {t('You have uploaded')} <b>{files.length}</b> {t('files')}!
-          </Alert>
+          {type === 'file' && (
+            <Alert
+              sx={{
+                py: 0,
+                mt: 2
+              }}
+              severity="success"
+            >
+              {t('You have uploaded')} <b>{files.length}</b> {t('files')}!
+            </Alert>
+          )}
           <DividerContrast
             sx={{
               mt: 2

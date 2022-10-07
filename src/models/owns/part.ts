@@ -17,7 +17,7 @@ export default interface Part extends Audit {
 export const parts: Part[] = [
   {
     id: 212,
-    name: 'cgvg',
+    name: 'Foil Tape',
     createdAt: 'dfggj',
     cost: 52,
     quantity: 9,
@@ -35,7 +35,7 @@ export const parts: Part[] = [
   },
   {
     id: 44,
-    name: 'cgvg',
+    name: 'HVAC Filter',
     createdAt: 'dfggj',
     cost: 52,
     quantity: 9,

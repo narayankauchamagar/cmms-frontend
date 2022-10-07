@@ -254,7 +254,10 @@ function Roles() {
       field: 'name',
       headerName: t('Name'),
       description: t('Name'),
-      width: 150
+      width: 150,
+      renderCell: (params: GridRenderCellParams<string>) => (
+        <Box sx={{ fontWeight: 'bold' }}>{params.value}</Box>
+      )
     },
     {
       field: 'users',
