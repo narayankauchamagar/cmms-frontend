@@ -21,6 +21,7 @@ import { Customer } from '../../../../models/owns/customer';
 import wait from '../../../../utils/wait';
 import { Vendor } from '../../../../models/owns/vendor';
 import User from 'src/models/owns/user';
+import Team from '../../../../models/owns/team';
 
 interface PropsType {
   fields: Array<IField>;
@@ -43,6 +44,8 @@ export default (props: PropsType) => {
   const [fetchingVendors, setFetchingVendors] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
   const [fetchingUsers, setFetchingUsers] = useState(false);
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [fetchingTeams, setFetchingTeams] = useState(false);
   const fetchCustomers = async () => {
     setFetchingCustomers(true);
     const _customers: Customer[] = [
@@ -132,6 +135,23 @@ export default (props: PropsType) => {
     setFetchingUsers(false);
     setUsers(_users);
   };
+
+  const fetchTeams = async () => {
+    setFetchingTeams(true);
+    const _teams: Team[] = [
+      {
+        id: 21,
+        name: 'team1'
+      },
+      {
+        id: 23,
+        name: 'team2'
+      }
+    ];
+    await wait(2000);
+    setFetchingTeams(false);
+    setTeams(_teams);
+  };
   props.fields.forEach((f) => {
     shape[f.name] = Yup.string();
     if (f.required) {
@@ -185,6 +205,16 @@ export default (props: PropsType) => {
         });
         onOpen = fetchUsers;
         loading = fetchingUsers;
+        break;
+      case 'team':
+        options = teams.map((team) => {
+          return {
+            label: team.name,
+            value: team.id.toString()
+          };
+        });
+        onOpen = fetchTeams;
+        loading = fetchingTeams;
         break;
       default:
         break;

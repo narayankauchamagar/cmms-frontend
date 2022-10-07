@@ -17,14 +17,10 @@ import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import CustomDataGrid from '../components/CustomDatagrid';
 import { GridToolbar } from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import { AssetDTO, assetDTOS } from '../../../models/owns/asset';
+import { assetDTOS } from '../../../models/owns/asset';
 import Form from '../components/form';
 import * as Yup from 'yup';
 import wait from '../../../utils/wait';
-import User from '../../../models/owns/user';
-import Team from '../../../models/owns/team';
-import { Customer } from '../../../models/owns/customer';
-import { Vendor } from '../../../models/owns/vendor';
 import { useNavigate } from 'react-router-dom';
 
 function Assets() {
@@ -32,10 +28,6 @@ function Assets() {
   const { setTitle } = useContext(TitleContext);
   const navigate = useNavigate();
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
-  const [customers, setCustomers] = useState([]);
-  const [fetchingCustomers, setFetchingCustomers] = useState(false);
-  const [vendors, setVendors] = useState([]);
-  const [fetchingVendors, setFetchingVendors] = useState(false);
   useEffect(() => {
     setTitle(t('Assets'));
   }, []);
@@ -138,16 +130,6 @@ function Assets() {
       width: 150
     }
   ];
-  const teams: Team[] = [
-    {
-      id: 21,
-      name: 'team1'
-    },
-    {
-      id: 23,
-      name: 'team2'
-    }
-  ];
   const fields: Array<IField> = [
     {
       name: 'assetInfo',
@@ -216,15 +198,10 @@ function Assets() {
     {
       name: 'teams',
       type: 'select',
+      type2: 'team',
       multiple: true,
       label: t('Teams'),
-      placeholder: 'Select teams',
-      items: teams.map((team) => {
-        return {
-          label: team.name,
-          value: team.id.toString()
-        };
-      })
+      placeholder: 'Select teams'
     },
     {
       name: 'moreInfos',
