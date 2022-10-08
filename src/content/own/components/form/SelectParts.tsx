@@ -14,7 +14,7 @@ import {
   Typography,
   useTheme
 } from '@mui/material';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { parts } from 'src/models/owns/part';
 import { sets } from '../../../../models/owns/setType';
@@ -23,11 +23,17 @@ import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 interface SelectPartsProps {
   open: boolean;
   onClose: () => void;
+  onChange: (parts: { id: number; name: string }[]) => void;
 }
 
-export default function SelectParts({ open, onClose }: SelectPartsProps) {
+export default function SelectParts({
+  open,
+  onClose,
+  onChange
+}: SelectPartsProps) {
   const { t }: { t: any } = useTranslation();
   const [currentTab, setCurrentTab] = useState<string>('parts');
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
@@ -35,6 +41,22 @@ export default function SelectParts({ open, onClose }: SelectPartsProps) {
     { value: 'parts', label: t('Parts') },
     { value: 'sets', label: t('Sets of Parts') }
   ];
+
+  useEffect(() => {
+    onChange(
+      selectedIds.map((id) => {
+        return { id, name: parts.find((part) => part.id === id).name };
+      })
+    );
+  }, [selectedIds]);
+
+  const onSelect = (ids: number[]) => {
+    setSelectedIds(Array.from(new Set([...selectedIds, ...ids])));
+  };
+  const onUnSelect = (ids: number[]) => {
+    const newSelectedIds = selectedIds.filter((id) => !ids.includes(id));
+    setSelectedIds(newSelectedIds);
+  };
   return (
     <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
       <DialogTitle
@@ -69,6 +91,11 @@ export default function SelectParts({ open, onClose }: SelectPartsProps) {
           <FormGroup>
             {parts.map((part) => (
               <FormControlLabel
+                onChange={(event, checked) => {
+                  if (checked) {
+                    onSelect([part.id]);
+                  } else onUnSelect([part.id]);
+                }}
                 key={part.id}
                 control={<Checkbox />}
                 label={part.name}
@@ -83,7 +110,14 @@ export default function SelectParts({ open, onClose }: SelectPartsProps) {
                 key={set.id}
                 control={
                   <Box display="flex" flexDirection="row" alignItems="center">
-                    <Checkbox />
+                    <Checkbox
+                      onChange={(event, checked) => {
+                        console.log(checked, event);
+                        if (checked) {
+                          onSelect(set.parts.map((part) => part.id));
+                        } else onUnSelect(set.parts.map((part) => part.id));
+                      }}
+                    />
                     <Accordion>
                       <AccordionSummary
                         expandIcon={<ExpandMoreTwoToneIcon />}

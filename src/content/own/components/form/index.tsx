@@ -2,16 +2,12 @@ import {
   Box,
   Button,
   CircularProgress,
-  Dialog,
-  DialogContent,
-  DialogTitle,
   Grid,
-  Tab,
-  Tabs,
   TextField,
-  Typography
+  Typography,
+  Link
 } from '@mui/material';
-import { Formik, FormikProps, FormikValues } from 'formik';
+import { Formik, FormikProps } from 'formik';
 import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 import { ObjectSchema } from 'yup';
@@ -27,8 +23,8 @@ import wait from '../../../../utils/wait';
 import { Vendor } from '../../../../models/owns/vendor';
 import User from 'src/models/owns/user';
 import Team from '../../../../models/owns/team';
-import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import SelectParts from './SelectParts';
+import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 
 interface PropsType {
   fields: Array<IField>;
@@ -54,6 +50,9 @@ export default (props: PropsType) => {
   const [teams, setTeams] = useState<Team[]>([]);
   const [fetchingTeams, setFetchingTeams] = useState(false);
   const [openPartsModal, setOpenPartsModal] = useState<boolean>(false);
+  const [selectedParts, setSelectedParts] = useState<
+    { id: number; name: string }[]
+  >([]);
   const fetchCustomers = async () => {
     setFetchingCustomers(true);
     const _customers: Customer[] = [
@@ -215,12 +214,38 @@ export default (props: PropsType) => {
         break;
       case 'part':
         return (
-          <Button
-            startIcon={<AddTwoToneIcon />}
-            onClick={() => setOpenPartsModal(true)}
-          >
-            Add Parts
-          </Button>
+          <Box>
+            <Box display="flex" flexDirection="column">
+              {selectedParts.length
+                ? selectedParts.map((part) => (
+                    <Link
+                      sx={{ mb: 1 }}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={`parts/${part.id}`}
+                      key={part.id}
+                      variant="h4"
+                    >
+                      {part.name}
+                    </Link>
+                  ))
+                : null}
+            </Box>
+            <Button
+              startIcon={<AddTwoToneIcon />}
+              onClick={() => setOpenPartsModal(true)}
+            >
+              Add Parts
+            </Button>
+            <SelectParts
+              open={openPartsModal}
+              onClose={() => setOpenPartsModal(false)}
+              onChange={(newValue) => {
+                setSelectedParts(newValue);
+                handleChange(formik, field.name, newValue);
+              }}
+            />
+          </Box>
         );
       default:
         break;
@@ -375,10 +400,6 @@ export default (props: PropsType) => {
           </Grid>
         )}
       </Formik>
-      <SelectParts
-        open={openPartsModal}
-        onClose={() => setOpenPartsModal(false)}
-      />
     </>
   );
 };

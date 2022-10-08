@@ -100,6 +100,11 @@ const Sets = ({ setAction }: PropsType) => {
       required: true
     },
     {
+      name: 'partsTitle',
+      type: 'titleGroupField',
+      label: t('Parts')
+    },
+    {
       name: 'parts',
       type: 'select',
       type2: 'part',
@@ -189,6 +194,7 @@ const Sets = ({ setAction }: PropsType) => {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               try {
+                console.log(values);
                 await wait(2000);
                 setOpenAddModal(false);
               } catch (err) {
