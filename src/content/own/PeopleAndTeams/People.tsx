@@ -16,6 +16,7 @@ import CustomDataGrid from '../components/CustomDatagrid';
 import { GridEnrichedColDef, GridToolbar } from '@mui/x-data-grid';
 import { useState } from 'react';
 import UserDetailsDrawer from './UserDetailsDrawer';
+import User, { users } from '../../../models/owns/user';
 
 interface PropsType {
   values?: any;
@@ -26,7 +27,7 @@ interface PropsType {
 const People = ({ openModal, handleCloseModal }: PropsType) => {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
-
+  const [currentUser, setCurrentUser] = useState<User>();
   const [detailDrawerOpen, setDetailDrawerOpen] = useState(false);
 
   const handleDrawerToggle = () => {
@@ -37,36 +38,12 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
 
   const shape = {};
 
-  let PeopleList = [
-    {
-      id: '1',
-      name: 'John Doe',
-      email: 'john.doe@gmail.com',
-      phone: '+00212611223344',
-      jobTitle: 'Job',
-      companyName: 'Company',
-      accountType: 'Administrator',
-      lastVisit: '02/09/22',
-      hourlyRate: ''
-    },
-    {
-      id: '2',
-      name: 'John Jr',
-      email: 'john.jr@gmail.com',
-      phone: '+00212611223344',
-      jobTitle: 'Job',
-      companyName: 'Company',
-      accountType: 'Administrator',
-      lastVisit: '02/09/22',
-      hourlyRate: ''
-    }
-  ];
-
   const columns: GridEnrichedColDef[] = [
     {
       field: 'name',
       headerName: t('Name'),
-      width: 150
+      width: 150,
+      valueGetter: (params) => `${params.row.firstName} ${params.row.lastName}`
     },
     {
       field: 'email',
@@ -151,7 +128,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
       }}
     >
       <CustomDataGrid
-        rows={PeopleList}
+        rows={users}
         columns={columns}
         components={{
           Toolbar: GridToolbar
@@ -162,6 +139,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
           }
         }}
         onRowClick={(params) => {
+          setCurrentUser(users.find((user) => user.id === params.id));
           handleDrawerToggle();
         }}
       />
@@ -188,7 +166,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
         onClose={handleDrawerToggle}
         elevation={9}
       >
-        {detailDrawerOpen && <UserDetailsDrawer peopleList={PeopleList} />}
+        <UserDetailsDrawer user={currentUser} />
       </Drawer>
     </Box>
   );

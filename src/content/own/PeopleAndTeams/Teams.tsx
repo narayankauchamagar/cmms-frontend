@@ -35,8 +35,7 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
       type: 'text',
       multiple: true,
       label: 'Description',
-      placeholder: 'Description',
-      required: true
+      placeholder: 'Description'
     },
     {
       name: 'teamUsers',
@@ -45,7 +44,7 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
       multiple: true,
       label: 'People in the team',
       placeholder: 'Team Users'
-    },
+    }
   ];
 
   const shape = {

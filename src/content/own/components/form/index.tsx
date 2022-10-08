@@ -119,18 +119,7 @@ export default (props: PropsType) => {
   };
   const fetchUsers = async () => {
     setFetchingUsers(true);
-    const _users: User[] = [
-      {
-        id: 21,
-        firstName: 'gfgb',
-        lastName: 'fglink'
-      },
-      {
-        id: 22,
-        firstName: 'Hgcgbv',
-        lastName: 'gvghv'
-      }
-    ];
+    const _users: User[] = users;
     await wait(2000);
     setFetchingUsers(false);
     setUsers(_users);

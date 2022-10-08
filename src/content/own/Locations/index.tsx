@@ -38,7 +38,7 @@ import {
   phoneRegExp,
   websiteRegExp
 } from '../../../utils/validators';
-import User from '../../../models/owns/user';
+import User, { users } from '../../../models/owns/user';
 import Team from '../../../models/owns/team';
 import { Vendor } from '../../../models/owns/vendor';
 import { Customer } from '../../../models/owns/customer';
@@ -122,20 +122,8 @@ function Files() {
       ]
     }
   ];
-  const workers: User[] = [
-    {
-      id: 21,
-      firstName: 'gfgb',
-      lastName: 'fglink'
-    }
-  ];
-  const currentLocationWorkers: User[] = [
-    {
-      id: 21,
-      firstName: 'gfgb',
-      lastName: 'fglink'
-    }
-  ];
+  const workers: User[] = users;
+  const currentLocationWorkers: User[] = users;
   const teams: Team[] = [
     {
       id: 21,

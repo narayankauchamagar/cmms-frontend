@@ -11,6 +11,8 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import Scrollbar from 'src/components/Scrollbar';
+import User from '../../../models/owns/user';
+import Part from '../../../models/owns/part';
 
 const AvatarPrimary = styled(Avatar)(
   ({ theme }) => `
@@ -32,10 +34,10 @@ const TabsContainerWrapper = styled(CardContent)(
 );
 
 interface PropsType {
-  peopleList?: any[];
+  user: User;
 }
 
-function UserDetailsDrawer({ peopleList }: PropsType) {
+function UserDetailsDrawer({ user }: PropsType) {
   const { t }: { t: any } = useTranslation();
 
   const [currentTab, setCurrentTab] = useState<string>('overview');
@@ -48,7 +50,50 @@ function UserDetailsDrawer({ peopleList }: PropsType) {
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
-
+  const fieldsToRender = (
+    user: User
+  ): { label: string; value: string | number }[] => [
+    {
+      label: t('ID'),
+      value: user.id
+    },
+    {
+      label: t('First Name'),
+      value: user.firstName
+    },
+    {
+      label: t('Last Name'),
+      value: user.lastName
+    },
+    {
+      label: t('Email'),
+      value: user.email
+    },
+    {
+      label: t('Phone'),
+      value: user.phone
+    },
+    {
+      label: t('Job Title'),
+      value: user.jobTitle
+    },
+    {
+      label: t('Company Name'),
+      value: user.companyName
+    },
+    {
+      label: t('Account Type'),
+      value: user.lastName
+    },
+    {
+      label: t('Last Visit'),
+      value: user.lastVisit
+    },
+    {
+      label: t('Hourly Rate'),
+      value: user.hourlyRate
+    }
+  ];
   return (
     <Box
       sx={{
@@ -81,10 +126,12 @@ function UserDetailsDrawer({ peopleList }: PropsType) {
             }}
             variant="rounded"
           >
-            <Typography variant="h1">I</Typography>
+            <Typography variant="h1">
+              {Array.from(user.firstName)[0].toUpperCase()}
+            </Typography>
           </AvatarPrimary>
           <Typography variant="h3" noWrap gutterBottom>
-            Ibrahima
+            {`${user.firstName} ${user.lastName}`}
           </Typography>
         </Box>
         <Divider sx={{ my: 3 }} />
@@ -108,15 +155,13 @@ function UserDetailsDrawer({ peopleList }: PropsType) {
 
         {currentTab === 'overview' && (
           <>
-            {Object.keys(peopleList[0]).map((itemKey) => (
+            {fieldsToRender(user).map(({ label, value }) => (
               <>
                 <Box mt={1} px={3}>
                   <Typography component="span" variant="subtitle2">
-                    {t(itemKey)}
+                    {label}
                   </Typography>
-                  <Typography variant="h5">
-                    {t(peopleList[0][itemKey])}
-                  </Typography>
+                  <Typography variant="h5">{value}</Typography>
                 </Box>
                 <Divider sx={{ my: 1 }} />
               </>
