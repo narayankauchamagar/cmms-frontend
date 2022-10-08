@@ -1,12 +1,8 @@
 {
-  "name": "tokyo-white-react-admin-dashboard",
-  "version": "3.1.0",
-  "title": "Tokyo White React Typescript Admin Dashboard",
-  "description": "High performance React template built with lots of powerful MUI (Material-UI) components across multiple product niches for fast & perfect apps development processes.",
-  "author": {
-    "name": "BloomUI.com",
-    "url": "https://bloomui.com"
-  },
+  "name": "grash",
+  "version": "0.1.0",
+  "title": "Grash CMMS",
+  "description": "High performance CMMS.",
   "private": true,
   "dependencies": {
     "@auth0/auth0-spa-js": "1.22.0",

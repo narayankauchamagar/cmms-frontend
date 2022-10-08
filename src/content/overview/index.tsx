@@ -33,7 +33,7 @@ function Overview() {
   return (
     <OverviewWrapper>
       <Helmet>
-        <title>Tokyo White React Typescript Admin Dashboard</title>
+        <title>Grash</title>
       </Helmet>
       <HeaderWrapper>
         <Container maxWidth="lg">

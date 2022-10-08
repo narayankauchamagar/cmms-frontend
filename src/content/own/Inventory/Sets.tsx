@@ -70,13 +70,16 @@ const Sets = ({ setAction }: PropsType) => {
       field: 'parts',
       headerName: t('Parts'),
       description: t('Parts'),
-      width: 150
+      width: 150,
+      valueGetter: (params) => params.row.parts.length
     },
     {
       field: 'cost',
       headerName: t('Total Cost'),
       description: t('Total Cost'),
-      width: 150
+      width: 150,
+      valueGetter: (params) =>
+        params.row.parts.reduce((acc, part) => acc + part.cost, 0)
     },
     {
       field: 'createdAt',
@@ -108,7 +111,7 @@ const Sets = ({ setAction }: PropsType) => {
     },
     {
       label: t('Total Cost'),
-      value: set.cost
+      value: set.parts.reduce((acc, part) => acc + part.cost, 0)
     }
   ];
   const renderField = (label, value) => {
