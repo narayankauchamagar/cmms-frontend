@@ -13,7 +13,11 @@ import * as Yup from 'yup';
 import { IField } from '../type';
 import wait from 'src/utils/wait';
 import CustomDataGrid from '../components/CustomDatagrid';
-import { GridEnrichedColDef, GridToolbar } from '@mui/x-data-grid';
+import {
+  GridEnrichedColDef,
+  GridRenderCellParams,
+  GridToolbar
+} from '@mui/x-data-grid';
 import { useState } from 'react';
 import UserDetailsDrawer from './UserDetailsDrawer';
 import User, { users } from '../../../models/owns/user';
@@ -43,7 +47,10 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
       field: 'name',
       headerName: t('Name'),
       width: 150,
-      valueGetter: (params) => `${params.row.firstName} ${params.row.lastName}`
+      valueGetter: (params) => `${params.row.firstName} ${params.row.lastName}`,
+      renderCell: (params: GridRenderCellParams<string>) => (
+        <Box sx={{ fontWeight: 'bold' }}>{params.value}</Box>
+      )
     },
     {
       field: 'email',

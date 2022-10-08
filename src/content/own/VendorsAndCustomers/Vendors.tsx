@@ -18,6 +18,7 @@ import CustomDataGrid from '../components/CustomDatagrid';
 import {
   GridActionsCellItem,
   GridEnrichedColDef,
+  GridRenderCellParams,
   GridRowParams,
   GridToolbar
 } from '@mui/x-data-grid';
@@ -153,7 +154,10 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
       field: 'companyName',
       headerName: t('Company Name'),
       description: t('Company Name'),
-      width: 150
+      width: 150,
+      renderCell: (params: GridRenderCellParams<string>) => (
+        <Box sx={{ fontWeight: 'bold' }}>{params.value}</Box>
+      )
     },
     {
       field: 'address',

@@ -18,6 +18,7 @@ import CustomDataGrid from '../components/CustomDatagrid';
 import {
   GridActionsCellItem,
   GridEnrichedColDef,
+  GridRenderCellParams,
   GridRowParams,
   GridToolbar
 } from '@mui/x-data-grid';
@@ -189,10 +190,13 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
 
   const columns: GridEnrichedColDef[] = [
     {
-      field: 'customerName',
+      field: 'name',
       headerName: t('Customer Name'),
       description: t('Customer Name'),
-      width: 150
+      width: 150,
+      renderCell: (params: GridRenderCellParams<string>) => (
+        <Box sx={{ fontWeight: 'bold' }}>{params.value}</Box>
+      )
     },
     {
       field: 'address',

@@ -11,7 +11,11 @@ import * as Yup from 'yup';
 import { IField } from '../type';
 import wait from 'src/utils/wait';
 import CustomDataGrid from '../components/CustomDatagrid';
-import { GridEnrichedColDef, GridToolbar } from '@mui/x-data-grid';
+import {
+  GridEnrichedColDef,
+  GridRenderCellParams,
+  GridToolbar
+} from '@mui/x-data-grid';
 
 interface PropsType {
   values?: any;
@@ -71,7 +75,10 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
     {
       field: 'name',
       headerName: t('Team Name'),
-      width: 150
+      width: 150,
+      renderCell: (params: GridRenderCellParams<string>) => (
+        <Box sx={{ fontWeight: 'bold' }}>{params.value}</Box>
+      )
     },
     {
       field: 'description',
