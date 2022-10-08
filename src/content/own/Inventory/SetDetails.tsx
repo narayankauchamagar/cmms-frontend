@@ -46,7 +46,7 @@ export default function SetDetails(props: PartDetailsProps) {
         </Box>
         <Box>
           <EditTwoToneIcon
-            onClick={() => handleUpdate(set.id)}
+            onClick={() => handleUpdate(set?.id)}
             style={{ cursor: 'pointer', marginRight: 10 }}
             color="primary"
           />
@@ -58,11 +58,11 @@ export default function SetDetails(props: PartDetailsProps) {
         <Box display="flex" flexDirection="row">
           <HandymanTwoToneIcon />
           <Typography sx={{ mb: 1, ml: 1 }} variant="h4">
-            {`${set.parts.length} Parts`}
+            {`${set?.parts.length} Parts`}
           </Typography>
         </Box>
         <List sx={{ width: '100%' }}>
-          {set.parts.map((part) => (
+          {set?.parts.map((part) => (
             <ListItemButton key={part.id} divider>
               <ListItem secondaryAction={<Typography>{part.cost}</Typography>}>
                 <ListItemText
@@ -81,7 +81,7 @@ export default function SetDetails(props: PartDetailsProps) {
             </Typography>
           </Box>
           <Typography variant="h6" sx={{ pr: 2 }}>
-            {set.parts.reduce((acc, part) => acc + part.cost, 0)}
+            {set?.parts.reduce((acc, part) => acc + part.cost, 0)}
           </Typography>
         </Box>
       </Grid>

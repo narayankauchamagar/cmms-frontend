@@ -24,16 +24,18 @@ interface SelectPartsProps {
   open: boolean;
   onClose: () => void;
   onChange: (parts: { id: number; name: string }[]) => void;
+  selected: number[];
 }
 
 export default function SelectParts({
   open,
   onClose,
-  onChange
+  onChange,
+  selected
 }: SelectPartsProps) {
   const { t }: { t: any } = useTranslation();
   const [currentTab, setCurrentTab] = useState<string>('parts');
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [selectedIds, setSelectedIds] = useState<number[]>(selected);
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
@@ -97,7 +99,7 @@ export default function SelectParts({
                   } else onUnSelect([part.id]);
                 }}
                 key={part.id}
-                control={<Checkbox />}
+                control={<Checkbox checked={selectedIds.includes(part.id)} />}
                 label={part.name}
               />
             ))}
@@ -111,8 +113,10 @@ export default function SelectParts({
                 control={
                   <Box display="flex" flexDirection="row" alignItems="center">
                     <Checkbox
+                      checked={set.parts.every((part) =>
+                        selectedIds.includes(part.id)
+                      )}
                       onChange={(event, checked) => {
-                        console.log(checked, event);
                         if (checked) {
                           onSelect(set.parts.map((part) => part.id));
                         } else onUnSelect(set.parts.map((part) => part.id));

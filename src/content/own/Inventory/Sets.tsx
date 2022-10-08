@@ -109,7 +109,13 @@ const Sets = ({ setAction }: PropsType) => {
       type: 'select',
       type2: 'part',
       label: t('Part'),
-      placeholder: t('Enter Part name')
+      placeholder: t('Enter Part name'),
+      items: currentSet?.parts?.map((part) => {
+        return {
+          label: part.name,
+          value: part.id.toString()
+        };
+      })
     }
   ];
   const shape = {
@@ -137,6 +143,7 @@ const Sets = ({ setAction }: PropsType) => {
   const handleCloseDetails = () => {
     window.history.replaceState(null, 'Sets', `/app/inventory/sets`);
     setOpenDrawer(false);
+    setCurrentSet(null);
   };
   const fieldsToRender = (set: SetType) => [
     {

@@ -25,6 +25,7 @@ import User from 'src/models/owns/user';
 import Team from '../../../../models/owns/team';
 import SelectParts from './SelectParts';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
+import { parts } from '../../../../models/owns/part';
 
 interface PropsType {
   fields: Array<IField>;
@@ -238,6 +239,7 @@ export default (props: PropsType) => {
               Add Parts
             </Button>
             <SelectParts
+              selected={options?.map((option) => Number(option.value)) ?? []}
               open={openPartsModal}
               onClose={() => setOpenPartsModal(false)}
               onChange={(newValue) => {
