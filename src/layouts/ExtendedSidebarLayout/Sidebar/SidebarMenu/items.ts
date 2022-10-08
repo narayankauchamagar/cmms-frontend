@@ -15,8 +15,8 @@ import SmartToyTwoToneIcon from '@mui/icons-material/SmartToyTwoTone';
 import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
 import CategoryTwoToneIcon from '@mui/icons-material/CategoryTwoTone';
 import AttachFileTwoToneIcon from '@mui/icons-material/AttachFileTwoTone';
+import { GroupsTwoTone, People } from '@mui/icons-material';
 import LocationOnTwoToneIcon from '@mui/icons-material/LocationOnTwoTone';
-import { GroupsTwoTone } from '@mui/icons-material';
 import Inventory2TwoToneIcon from '@mui/icons-material/Inventory2TwoTone';
 import HandymanTwoToneIcon from '@mui/icons-material/HandymanTwoTone';
 export interface MenuItem {
@@ -72,6 +72,11 @@ const menuItems: MenuItems[] = [
         name: 'Vendors & Customers',
         link: '/app/vendors-customers',
         icon: GroupsTwoTone
+      },
+      {
+        name: 'People & Teams',
+        link: '/app/people-teams',
+        icon: People
       }
     ]
   },
