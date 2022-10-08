@@ -12,13 +12,9 @@ interface PropsType {}
 const VendorsAndCustomers = ({}: PropsType) => {
   const { t }: { t: any } = useTranslation();
   const [action, setAction] = useState<() => void>();
-  const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const { setTitle } = useContext(TitleContext);
   const location = useLocation();
   const { partId, setId } = useParams();
-
-  const handleOpenUpdateModal = () => setOpenUpdateModal(true);
-  const handleCloseUpdateModal = () => setOpenUpdateModal(false);
 
   useEffect(() => {
     setTitle('Parts&Inventory');

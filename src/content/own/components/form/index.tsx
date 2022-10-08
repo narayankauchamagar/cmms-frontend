@@ -2,7 +2,12 @@ import {
   Box,
   Button,
   CircularProgress,
+  Dialog,
+  DialogContent,
+  DialogTitle,
   Grid,
+  Tab,
+  Tabs,
   TextField,
   Typography
 } from '@mui/material';
@@ -22,6 +27,8 @@ import wait from '../../../../utils/wait';
 import { Vendor } from '../../../../models/owns/vendor';
 import User from 'src/models/owns/user';
 import Team from '../../../../models/owns/team';
+import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
+import SelectParts from './SelectParts';
 
 interface PropsType {
   fields: Array<IField>;
@@ -46,6 +53,7 @@ export default (props: PropsType) => {
   const [fetchingUsers, setFetchingUsers] = useState(false);
   const [teams, setTeams] = useState<Team[]>([]);
   const [fetchingTeams, setFetchingTeams] = useState(false);
+  const [openPartsModal, setOpenPartsModal] = useState<boolean>(false);
   const fetchCustomers = async () => {
     setFetchingCustomers(true);
     const _customers: Customer[] = [
@@ -205,6 +213,15 @@ export default (props: PropsType) => {
         onOpen = fetchTeams;
         loading = fetchingTeams;
         break;
+      case 'part':
+        return (
+          <Button
+            startIcon={<AddTwoToneIcon />}
+            onClick={() => setOpenPartsModal(true)}
+          >
+            Add Parts
+          </Button>
+        );
       default:
         break;
     }
@@ -224,135 +241,144 @@ export default (props: PropsType) => {
   };
 
   return (
-    <Formik<IHash<any>>
-      validationSchema={props.validation || validationSchema}
-      initialValues={props.values || {}}
-      onSubmit={(values, { resetForm, setErrors, setStatus, setSubmitting }) =>
-        props.onSubmit(values).finally(() => {
-          setSubmitting(false);
-          // resetForm();
-          setStatus({ success: true });
-          setSubmitting(false);
-        })
-      }
-    >
-      {(formik) => (
-        <Grid container spacing={2}>
-          {props.fields.map((field, index) => {
-            return (
-              <Grid item xs={12} lg={field.midWidth ? 6 : 12} key={index}>
-                {field.type === 'select' ? (
-                  renderSelect(formik, field)
-                ) : field.type === 'checkbox' ? (
-                  <CheckBoxForm
-                    label={field.label}
-                    onChange={(e) => {
-                      handleChange(formik, field.name, e.target.checked);
-                    }}
-                  />
-                ) : field.type === 'groupCheckbox' ? (
-                  <CheckBoxForm
-                    label={field.label}
-                    type="groupCheckbox"
-                    listCheckbox={field.items}
-                    key={field.name}
-                  />
-                ) : field.type === 'titleGroupField' ? (
-                  <Typography variant="h3" sx={{ pb: 1 }}>
-                    {t(`${field.label}`)}
-                  </Typography>
-                ) : field.type === 'file' ? (
-                  <Box>
-                    <FileUpload
-                      title={field.label}
-                      type={field.fileType || 'file'}
-                      description={
-                        field.placeholder || field.fileType === 'image'
-                          ? t('Drag an image here')
-                          : t('Drag files here')
-                      }
-                      setFieldValue={(files) =>
-                        formik.setFieldValue(field.name, files)
-                      }
-                    />
-                  </Box>
-                ) : field.type === 'date' ? (
-                  <Box>
-                    <Box pb={1}>
-                      <b>{field.label}:</b>
-                    </Box>
-                    <DatePicker
-                      value={formik.values[field.name]}
-                      onChange={(newValue) => {
-                        handleChange(formik, field.name, newValue);
+    <>
+      <Formik<IHash<any>>
+        validationSchema={props.validation || validationSchema}
+        initialValues={props.values || {}}
+        onSubmit={(
+          values,
+          { resetForm, setErrors, setStatus, setSubmitting }
+        ) =>
+          props.onSubmit(values).finally(() => {
+            setSubmitting(false);
+            // resetForm();
+            setStatus({ success: true });
+            setSubmitting(false);
+          })
+        }
+      >
+        {(formik) => (
+          <Grid container spacing={2}>
+            {props.fields.map((field, index) => {
+              return (
+                <Grid item xs={12} lg={field.midWidth ? 6 : 12} key={index}>
+                  {field.type === 'select' ? (
+                    renderSelect(formik, field)
+                  ) : field.type === 'checkbox' ? (
+                    <CheckBoxForm
+                      label={field.label}
+                      onChange={(e) => {
+                        handleChange(formik, field.name, e.target.checked);
                       }}
-                      renderInput={(params) => (
-                        <TextField
-                          fullWidth
-                          placeholder={t('Select date...')}
-                          {...params}
-                        />
-                      )}
                     />
-                  </Box>
-                ) : (
-                  <Field
-                    key={index}
-                    {...field}
-                    isDisabled={formik.isSubmitting}
-                    type={field.type}
-                    label={field.label}
-                    placeholder={field.placeholder}
-                    value={formik.values[field.name]}
-                    onBlur={formik.handleBlur}
-                    // onChange={formik.handleChange}
-                    onChange={(e) => {
-                      handleChange(formik, field.name, e.target.value);
-                    }}
-                    error={
-                      (formik.touched[field.name] &&
-                        !!formik.errors[field.name]) ||
-                      field.error
-                    }
-                    errorMessage={formik.errors[field.name]}
-                    fullWidth={field.fullWidth}
-                  />
-                )}
-              </Grid>
-            );
-          })}
+                  ) : field.type === 'groupCheckbox' ? (
+                    <CheckBoxForm
+                      label={field.label}
+                      type="groupCheckbox"
+                      listCheckbox={field.items}
+                      key={field.name}
+                    />
+                  ) : field.type === 'titleGroupField' ? (
+                    <Typography variant="h3" sx={{ pb: 1 }}>
+                      {t(`${field.label}`)}
+                    </Typography>
+                  ) : field.type === 'file' ? (
+                    <Box>
+                      <FileUpload
+                        title={field.label}
+                        type={field.fileType || 'file'}
+                        description={
+                          field.placeholder || field.fileType === 'image'
+                            ? t('Drag an image here')
+                            : t('Drag files here')
+                        }
+                        setFieldValue={(files) =>
+                          formik.setFieldValue(field.name, files)
+                        }
+                      />
+                    </Box>
+                  ) : field.type === 'date' ? (
+                    <Box>
+                      <Box pb={1}>
+                        <b>{field.label}:</b>
+                      </Box>
+                      <DatePicker
+                        value={formik.values[field.name]}
+                        onChange={(newValue) => {
+                          handleChange(formik, field.name, newValue);
+                        }}
+                        renderInput={(params) => (
+                          <TextField
+                            fullWidth
+                            placeholder={t('Select date...')}
+                            {...params}
+                          />
+                        )}
+                      />
+                    </Box>
+                  ) : (
+                    <Field
+                      key={index}
+                      {...field}
+                      isDisabled={formik.isSubmitting}
+                      type={field.type}
+                      label={field.label}
+                      placeholder={field.placeholder}
+                      value={formik.values[field.name]}
+                      onBlur={formik.handleBlur}
+                      // onChange={formik.handleChange}
+                      onChange={(e) => {
+                        handleChange(formik, field.name, e.target.value);
+                      }}
+                      error={
+                        (formik.touched[field.name] &&
+                          !!formik.errors[field.name]) ||
+                        field.error
+                      }
+                      errorMessage={formik.errors[field.name]}
+                      fullWidth={field.fullWidth}
+                    />
+                  )}
+                </Grid>
+              );
+            })}
 
-          <Grid item xs={12}>
-            <Button
-              type="submit"
-              sx={{
-                mt: { xs: 2, sm: 0 }
-              }}
-              onClick={() => formik.handleSubmit()}
-              variant="contained"
-              startIcon={
-                formik.isSubmitting ? <CircularProgress size="1rem" /> : null
-              }
-              disabled={Boolean(formik.errors.submit) || formik.isSubmitting}
-            >
-              {t(props.submitText)}
-            </Button>
-
-            {props.onCanceled && (
+            <Grid item xs={12}>
               <Button
+                type="submit"
                 sx={{
                   mt: { xs: 2, sm: 0 }
                 }}
-                onClick={() => props.onCanceled}
-                variant="outlined"
-                disabled
+                onClick={() => formik.handleSubmit()}
+                variant="contained"
+                startIcon={
+                  formik.isSubmitting ? <CircularProgress size="1rem" /> : null
+                }
+                disabled={Boolean(formik.errors.submit) || formik.isSubmitting}
               >
                 {t(props.submitText)}
               </Button>
-            )}
+
+              {props.onCanceled && (
+                <Button
+                  sx={{
+                    mt: { xs: 2, sm: 0 }
+                  }}
+                  onClick={() => props.onCanceled}
+                  variant="outlined"
+                  disabled
+                >
+                  {t(props.submitText)}
+                </Button>
+              )}
+            </Grid>
           </Grid>
-        </Grid>
-      )}
-    </Formik>
+        )}
+      </Formik>
+      <SelectParts
+        open={openPartsModal}
+        onClose={() => setOpenPartsModal(false)}
+      />
+    </>
   );
 };

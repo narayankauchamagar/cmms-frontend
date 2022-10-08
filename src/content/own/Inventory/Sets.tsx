@@ -98,6 +98,13 @@ const Sets = ({ setAction }: PropsType) => {
       label: t('Name'),
       placeholder: t('Enter Part name'),
       required: true
+    },
+    {
+      name: 'parts',
+      type: 'select',
+      type2: 'part',
+      label: t('Part'),
+      placeholder: t('Enter Part name')
     }
   ];
   const shape = {
