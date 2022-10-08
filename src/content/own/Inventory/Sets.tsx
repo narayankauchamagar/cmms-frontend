@@ -25,6 +25,8 @@ import wait from '../../../utils/wait';
 import { IField } from '../type';
 import SetType, { sets } from '../../../models/owns/setType';
 import SetDetails from './SetDetails';
+import { useParams } from 'react-router-dom';
+import { isNumeric } from '../../../utils/validators';
 
 interface PropsType {
   setAction: (p: () => () => void) => void;
@@ -42,6 +44,7 @@ const Sets = ({ setAction }: PropsType) => {
     { value: 'list', label: t('List View') },
     { value: 'card', label: t('Card View') }
   ];
+  const { setId } = useParams();
 
   const handleUpdate = (id: number) => {
     setCurrentSet(sets.find((set) => set.id === id));
@@ -100,9 +103,28 @@ const Sets = ({ setAction }: PropsType) => {
   const shape = {
     name: Yup.string().required(t('Set name is required'))
   };
+
+  useEffect(() => {
+    if (setId && isNumeric(setId)) {
+      handleOpenDetails(Number(setId));
+    }
+  }, [sets]);
+
   const handleOpenDetails = (id: number) => {
-    setCurrentSet(sets.find((set) => set.id === id));
-    setOpenDrawer(true);
+    const foundSet = sets.find((set) => set.id === id);
+    if (foundSet) {
+      setCurrentSet(foundSet);
+      window.history.replaceState(
+        null,
+        'Set details',
+        `/app/inventory/sets/${id}`
+      );
+      setOpenDrawer(true);
+    }
+  };
+  const handleCloseDetails = () => {
+    window.history.replaceState(null, 'Sets', `/app/inventory/sets`);
+    setOpenDrawer(false);
   };
   const fieldsToRender = (set: SetType) => [
     {
@@ -281,7 +303,7 @@ const Sets = ({ setAction }: PropsType) => {
       <Drawer
         anchor="right"
         open={openDrawer}
-        onClose={() => setOpenDrawer(false)}
+        onClose={handleCloseDetails}
         PaperProps={{
           sx: { width: '60%' }
         }}

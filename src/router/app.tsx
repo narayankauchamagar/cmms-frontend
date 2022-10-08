@@ -121,7 +121,13 @@ const appRoutes = [
           { path: ':partId', element: <Inventory /> }
         ]
       },
-      { path: 'sets', element: <Inventory /> }
+      {
+        path: 'sets',
+        children: [
+          { path: '', element: <Inventory /> },
+          { path: ':setId', element: <Inventory /> }
+        ]
+      }
     ]
   },
   {

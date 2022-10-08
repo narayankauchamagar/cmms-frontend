@@ -15,7 +15,7 @@ const VendorsAndCustomers = ({}: PropsType) => {
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const { setTitle } = useContext(TitleContext);
   const location = useLocation();
-  const { partId } = useParams();
+  const { partId, setId } = useParams();
 
   const handleOpenUpdateModal = () => setOpenUpdateModal(true);
   const handleCloseUpdateModal = () => setOpenUpdateModal(false);
@@ -30,7 +30,7 @@ const VendorsAndCustomers = ({}: PropsType) => {
     { value: 'parts', label: t('Parts') },
     { value: 'sets', label: t('Sets of Parts') }
   ];
-  const minus = partId ? 2 : 1;
+  const minus = partId || setId ? 2 : 1;
   const tabIndex = tabs.findIndex(
     (tab) => tab.value === arr[arr.length - minus]
   );
