@@ -114,7 +114,13 @@ const appRoutes = [
   {
     path: 'inventory',
     children: [
-      { path: 'parts', element: <Inventory /> },
+      {
+        path: 'parts',
+        children: [
+          { path: '', element: <Inventory /> },
+          { path: ':partId', element: <Inventory /> }
+        ]
+      },
       { path: 'sets', element: <Inventory /> }
     ]
   },

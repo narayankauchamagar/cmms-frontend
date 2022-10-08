@@ -24,6 +24,8 @@ import Form from '../components/form';
 import wait from '../../../utils/wait';
 import { IField } from '../type';
 import PartDetails from './PartDetails';
+import { useParams } from 'react-router-dom';
+import { isNumeric } from '../../../utils/validators';
 
 interface PropsType {
   setAction: (p: () => () => void) => void;
@@ -36,6 +38,7 @@ const Parts = ({ setAction }: PropsType) => {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [currentPart, setCurrentPart] = useState<Part>();
+  const { partId } = useParams();
 
   const handleUpdate = (id: number) => {
     setCurrentPart(parts.find((part) => part.id === id));
@@ -52,12 +55,32 @@ const Parts = ({ setAction }: PropsType) => {
     setAction(() => handleOpenModal);
   }, []);
 
+  useEffect(() => {
+    if (partId) {
+      if (isNumeric(partId)) {
+        handleOpenDetails(Number(partId));
+      }
+    }
+  }, [parts]);
+
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
   const handleOpenDetails = (id: number) => {
-    setCurrentPart(parts.find((part) => part.id === id));
-    setOpenDrawer(true);
+    const foundPart = parts.find((part) => part.id === id);
+    if (foundPart) {
+      setCurrentPart(foundPart);
+      window.history.replaceState(
+        null,
+        'Part details',
+        `/app/inventory/parts/${id}`
+      );
+      setOpenDrawer(true);
+    }
+  };
+  const handleCloseDetails = () => {
+    window.history.replaceState(null, 'Part', `/app/inventory/parts`);
+    setOpenDrawer(false);
   };
   const columns: GridEnrichedColDef[] = [
     {
@@ -442,7 +465,7 @@ const Parts = ({ setAction }: PropsType) => {
       <Drawer
         anchor="right"
         open={openDrawer}
-        onClose={() => setOpenDrawer(false)}
+        onClose={handleCloseDetails}
         PaperProps={{
           sx: { width: '60%' }
         }}
