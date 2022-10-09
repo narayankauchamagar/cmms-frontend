@@ -63,35 +63,9 @@ export default (props: PropsType) => {
 
   const fetchVendors = async () => {
     setFetchingVendors(true);
-    const _vendors: Vendor[] = [
-      {
-        id: '1',
-        companyName: 'Company Name',
-        address: 'casa, maroc',
-        phone: '+00212611223344',
-        website: 'https://web-site.com',
-        name: 'John Doe',
-        email: 'john.doe@gmail.com',
-        vendorType: 'Plumbing',
-        description: 'Describe...',
-        rate: 15
-      },
-      {
-        id: '2',
-        companyName: 'Company Name 2',
-        address: 'casa, maroc',
-        phone: '+00212611223344',
-        website: 'https://web-site.com',
-        name: 'John Doe',
-        email: 'john.doe@gmail.com',
-        vendorType: 'Plumbing',
-        description: 'Describe...',
-        rate: 20
-      }
-    ];
     await wait(2000);
     setFetchingVendors(false);
-    setVendors(_vendors);
+    setVendors(vendors);
   };
   const fetchUsers = async () => {
     setFetchingUsers(true);

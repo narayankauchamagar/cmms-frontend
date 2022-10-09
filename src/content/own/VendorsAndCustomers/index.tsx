@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import MultipleTabsLayout from '../components/MultipleTabsLayout';
 import { TitleContext } from '../../../contexts/TitleContext';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import Vendors from './Vendors';
 import Customers from './Customers';
 
@@ -15,29 +15,23 @@ const VendorsAndCustomers = ({}: PropsType) => {
   const { setTitle } = useContext(TitleContext);
   const location = useLocation();
 
-  // const [companyName, setCompanyName] = useState<string>('');
-  // const [phone, setPhone] = useState<string>('');
-
   const handleOpenAddModal = () => setOpenAddModal(true);
   const handleCloseAddModal = () => setOpenAddModal(false);
-
-  // const values = {
-  //   companyName: companyName,
-  //   phone: phone
-  // };
-  // console.log('values-> ', values);
+  const { customerId, vendorId } = useParams();
 
   useEffect(() => {
     setTitle(t('Vendors & Customers'));
   }, []);
 
-  let regex = /(\/app\/vendors-customers)\/?$/;
-  const tabIndex = regex.test(location.pathname) ? 0 : 1;
-
   const tabs = [
     { value: 'vendors', label: t('Vendors') },
     { value: 'customers', label: t('Customers') }
   ];
+  const arr = location.pathname.split('/');
+  const minus = customerId || vendorId ? 2 : 1;
+  const tabIndex = tabs.findIndex(
+    (tab) => tab.value === arr[arr.length - minus]
+  );
 
   return (
     <MultipleTabsLayout

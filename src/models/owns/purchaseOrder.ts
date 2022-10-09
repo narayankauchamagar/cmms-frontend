@@ -24,7 +24,7 @@ export default interface PurchaseOrder extends Audit {
   shippingPhone: string;
   shippingFax: string;
   additionalInfoRequistionerName: string;
-  additionalInfoShippingOrderCategory: string;
+  additionalInfoShippingMethod: string;
   additionalInfoTerm: string;
   additionalInfoNotes: string;
 }
@@ -50,7 +50,7 @@ export const purchaseOrders: PurchaseOrder[] = [
     shippingPhone: 'string',
     shippingFax: 'string',
     additionalInfoRequistionerName: 'string',
-    additionalInfoShippingOrderCategory: 'string',
+    additionalInfoShippingMethod: 'string',
     additionalInfoTerm: 'string',
     additionalInfoNotes: 'string',
     createdAt: 'fghb',

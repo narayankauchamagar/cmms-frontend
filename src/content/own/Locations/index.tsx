@@ -34,7 +34,7 @@ import wait from '../../../utils/wait';
 import { isNumeric } from '../../../utils/validators';
 import User, { users } from '../../../models/owns/user';
 import Team from '../../../models/owns/team';
-import { Vendor } from '../../../models/owns/vendor';
+import { Vendor, vendors } from '../../../models/owns/vendor';
 import { Customer, customers } from '../../../models/owns/customer';
 import LocationDetails from './LocationDetails';
 import { useParams } from 'react-router-dom';
@@ -146,32 +146,6 @@ function Files() {
     {
       id: 21,
       name: 'team1'
-    }
-  ];
-  const vendors: Vendor[] = [
-    {
-      id: '1',
-      companyName: 'Company Name',
-      address: 'casa, maroc',
-      phone: '+00212611223344',
-      website: 'https://web-site.com',
-      name: 'John Doe',
-      email: 'john.doe@gmail.com',
-      vendorType: 'Plumbing',
-      description: 'Describe...',
-      rate: 15
-    },
-    {
-      id: '2',
-      companyName: 'Company Name 2',
-      address: 'casa, maroc',
-      phone: '+00212611223344',
-      website: 'https://web-site.com',
-      name: 'John Doe',
-      email: 'john.doe@gmail.com',
-      vendorType: 'Plumbing',
-      description: 'Describe...',
-      rate: 20
     }
   ];
 
