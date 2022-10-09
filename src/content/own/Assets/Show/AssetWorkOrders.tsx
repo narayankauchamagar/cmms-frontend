@@ -1,13 +1,5 @@
 import Asset from '../../../../models/owns/asset';
-import {
-  Box,
-  Card,
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-  Typography
-} from '@mui/material';
+import { Box, Card, Grid, Typography } from '@mui/material';
 
 interface PropsType {
   asset: Asset;

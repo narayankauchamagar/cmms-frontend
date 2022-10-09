@@ -34,8 +34,8 @@ import wait from '../../../utils/wait';
 import { isNumeric } from '../../../utils/validators';
 import User, { users } from '../../../models/owns/user';
 import Team from '../../../models/owns/team';
-import { Vendor, vendors } from '../../../models/owns/vendor';
-import { Customer, customers } from '../../../models/owns/customer';
+import { vendors } from '../../../models/owns/vendor';
+import { customers } from '../../../models/owns/customer';
 import LocationDetails from './LocationDetails';
 import { useParams } from 'react-router-dom';
 

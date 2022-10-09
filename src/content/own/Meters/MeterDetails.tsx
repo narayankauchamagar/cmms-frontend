@@ -1,35 +1,17 @@
 import {
   Box,
-  Button,
-  Dialog,
-  DialogContent,
-  DialogTitle,
   Divider,
   Grid,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
   Tab,
   Tabs,
   Typography,
   useTheme
 } from '@mui/material';
-import Location from '../../../models/owns/location';
 import { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import Asset, { assets } from '../../../models/owns/asset';
-import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import Meter, { meters } from '../../../models/owns/meter';
-import FloorPlan from '../../../models/owns/floorPlan';
-import Form from '../components/form';
-import * as Yup from 'yup';
-import wait from '../../../utils/wait';
-import { IField } from '../type';
-import SetType from '../../../models/owns/setType';
-import { files } from 'src/models/owns/file';
+import Meter from '../../../models/owns/meter';
 
 interface MeterDetailsProps {
   meter: Meter;

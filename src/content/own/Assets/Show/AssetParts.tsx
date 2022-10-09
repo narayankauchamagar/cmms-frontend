@@ -1,15 +1,5 @@
-import Asset, { assetDTOS } from '../../../../models/owns/asset';
-import {
-  Box,
-  Card,
-  Divider,
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-  Stack,
-  Typography
-} from '@mui/material';
+import Asset from '../../../../models/owns/asset';
+import { Box, Card, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import CustomDataGrid from '../../components/CustomDatagrid';
 import {
@@ -19,7 +9,6 @@ import {
 } from '@mui/x-data-grid';
 import { parts } from '../../../../models/owns/part';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import { useNavigate } from 'react-router-dom';
 

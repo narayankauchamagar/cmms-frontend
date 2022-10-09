@@ -1,15 +1,8 @@
-import {
-  ChangeEvent,
-  useCallback,
-  useContext,
-  useEffect,
-  useState
-} from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 
 import { Helmet } from 'react-helmet-async';
-import Footer from 'src/components/Footer';
 
-import { Box, Grid, styled, Tabs } from '@mui/material';
+import { Grid } from '@mui/material';
 import useRefMounted from 'src/hooks/useRefMounted';
 import { useTranslation } from 'react-i18next';
 import type { User } from 'src/models/user';

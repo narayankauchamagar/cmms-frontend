@@ -20,7 +20,7 @@ import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import Asset, { assets } from '../../../models/owns/asset';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import Part, { parts } from '../../../models/owns/part';
+import { parts } from '../../../models/owns/part';
 import FloorPlan from '../../../models/owns/floorPlan';
 import Form from '../components/form';
 import * as Yup from 'yup';

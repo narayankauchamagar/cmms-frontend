@@ -1,9 +1,7 @@
 import { FC } from 'react';
-import PropTypes from 'prop-types';
 import { Box, Button, Card, CardMedia, styled } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import UploadTwoToneIcon from '@mui/icons-material/UploadTwoTone';
-import { Company } from '../../../models/owns/company';
 
 const Input = styled('input')({
   display: 'none'

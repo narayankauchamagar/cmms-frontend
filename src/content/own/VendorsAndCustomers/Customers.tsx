@@ -10,9 +10,8 @@ import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import { useTranslation } from 'react-i18next';
 import Form from '../components/form';
 import * as Yup from 'yup';
-import { IField, TableCustomizedColumnType } from '../type';
+import { IField } from '../type';
 import wait from 'src/utils/wait';
-import TableCustomized from '../components/TableCustomized';
 import { useEffect, useState } from 'react';
 import CustomDataGrid from '../components/CustomDatagrid';
 import {

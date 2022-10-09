@@ -22,8 +22,6 @@ import Form from '../components/form';
 import * as Yup from 'yup';
 import wait from '../../../utils/wait';
 import { IField } from '../type';
-import PartDetails from '../Inventory/PartDetails';
-import { parts } from '../../../models/owns/part';
 import MeterDetails from './MeterDetails';
 import { useParams } from 'react-router-dom';
 import { isNumeric } from '../../../utils/validators';

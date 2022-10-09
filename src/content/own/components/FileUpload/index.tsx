@@ -9,6 +9,7 @@ import {
   ListItemText,
   styled,
   Typography,
+  useTheme,
   Zoom
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -17,7 +18,6 @@ import { useDropzone } from 'react-dropzone';
 import CloudUploadTwoToneIcon from '@mui/icons-material/CloudUploadTwoTone';
 import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone';
 import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
-import { useTheme } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 const WarningTwoToneIconWrapper = styled(WarningTwoToneIcon)(

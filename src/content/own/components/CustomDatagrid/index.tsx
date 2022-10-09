@@ -1,5 +1,4 @@
-import { DataGridProps, GridLocaleText } from '@mui/x-data-grid';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@mui/material';
 import gridLocaleText from './GridLocaleText';

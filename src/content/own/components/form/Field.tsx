@@ -1,4 +1,4 @@
-import { Box, InputAdornment, TextField } from '@mui/material';
+import { InputAdornment, TextField } from '@mui/material';
 import { IField } from '../../type';
 import { useTranslation } from 'react-i18next';
 

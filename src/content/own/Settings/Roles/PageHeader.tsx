@@ -5,20 +5,20 @@ import { useTranslation } from 'react-i18next';
 import wait from 'src/utils/wait';
 
 import {
-  Grid,
+  Box,
+  Button,
+  Checkbox,
+  CircularProgress,
   Dialog,
-  DialogTitle,
   DialogActions,
   DialogContent,
-  Box,
-  Zoom,
-  Typography,
+  DialogTitle,
   Divider,
-  TextField,
-  CircularProgress,
-  Button,
   FormControlLabel,
-  Checkbox
+  Grid,
+  TextField,
+  Typography,
+  Zoom
 } from '@mui/material';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { useSnackbar } from 'notistack';

@@ -1,4 +1,4 @@
-import { Autocomplete, Box, TextField } from '@mui/material';
+import { Autocomplete, TextField } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
 interface PropsType {

@@ -31,7 +31,6 @@ import {
 import { useTranslation } from 'react-i18next';
 import BulkActions, { BulkAction } from '../Settings/Roles/BulkActions';
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
-import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import { useSnackbar } from 'notistack';
 import { TableCustomizedColumnType, TableCustomizedDataType } from '../type';
 import { OverridableStringUnion } from '@mui/types';

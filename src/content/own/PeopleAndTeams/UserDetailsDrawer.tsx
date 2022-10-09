@@ -1,18 +1,17 @@
-import { useState, ChangeEvent } from 'react';
+import { ChangeEvent, useState } from 'react';
 import {
   Avatar,
   Box,
-  Typography,
-  Divider,
   CardContent,
-  Tabs,
+  Divider,
+  styled,
   Tab,
-  styled
+  Tabs,
+  Typography
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import Scrollbar from 'src/components/Scrollbar';
 import User from '../../../models/owns/user';
-import Part from '../../../models/owns/part';
 
 const AvatarPrimary = styled(Avatar)(
   ({ theme }) => `

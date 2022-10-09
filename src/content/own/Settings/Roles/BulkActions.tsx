@@ -1,24 +1,18 @@
-import { useState, useRef, ReactNode } from 'react';
+import { ReactNode, useRef, useState } from 'react';
 
 import {
   Box,
-  Menu,
-  Tooltip,
-  IconButton,
   Button,
-  ListItemText,
-  ListItem,
+  IconButton,
   List,
-  Typography,
-  styled
+  ListItem,
+  ListItemText,
+  Menu,
+  styled,
+  Typography
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-
-import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
-import VerifiedUserTwoToneIcon from '@mui/icons-material/VerifiedUserTwoTone';
-import { OverridableStringUnion } from '@mui/types';
-import { IconButtonPropsColorOverrides } from '@mui/material/IconButton/IconButton';
 
 const ButtonError = styled(Button)(
   ({ theme }) => `

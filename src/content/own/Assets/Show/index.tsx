@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import MultipleTabsLayout from '../../components/MultipleTabsLayout';
 import { TitleContext } from '../../../../contexts/TitleContext';
 import { useLocation, useParams } from 'react-router-dom';
-import { Box, Typography } from '@mui/material';
 import Asset, { assets } from '../../../../models/owns/asset';
 import AssetWorkOrders from './AssetWorkOrders';
 import AssetDetails from './AssetDetails';

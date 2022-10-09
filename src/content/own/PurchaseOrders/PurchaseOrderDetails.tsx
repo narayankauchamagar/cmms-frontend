@@ -13,7 +13,6 @@ import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import PurchaseOrder from '../../../models/owns/purchaseOrder';
-import Part from '../../../models/owns/part';
 
 interface PurchaseOrderDetailsProps {
   purchaseOrder: PurchaseOrder;

@@ -1,21 +1,9 @@
 import { Helmet } from 'react-helmet-async';
-import { Box, Button, Card, Grid } from '@mui/material';
+import { Button, Card, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { IField, TableCustomizedColumnType } from '../type';
-import TableCustomized from '../components/TableCustomized';
-import File, { files } from '../../../models/owns/file';
+import { IField } from '../type';
 import { useContext, useEffect } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
-import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
-import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
-import CustomDataGrid from '../components/CustomDatagrid';
-import {
-  GridActionsCellItem,
-  GridRenderCellParams,
-  GridRowParams,
-  GridToolbar
-} from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import Form from '../components/form';
 import * as Yup from 'yup';

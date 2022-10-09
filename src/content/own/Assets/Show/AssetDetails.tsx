@@ -1,15 +1,5 @@
 import Asset from '../../../../models/owns/asset';
-import {
-  Box,
-  Card,
-  Divider,
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-  Stack,
-  Typography
-} from '@mui/material';
+import { Box, Card, Divider, Grid, Stack, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
 interface PropsType {

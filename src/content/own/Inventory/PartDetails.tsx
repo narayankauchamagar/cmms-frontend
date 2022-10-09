@@ -1,9 +1,6 @@
 import {
   Box,
   Button,
-  Dialog,
-  DialogContent,
-  DialogTitle,
   Divider,
   Grid,
   List,
@@ -15,20 +12,13 @@ import {
   Typography,
   useTheme
 } from '@mui/material';
-import Location from '../../../models/owns/location';
 import { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import Asset, { assets } from '../../../models/owns/asset';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import Part, { parts } from '../../../models/owns/part';
-import FloorPlan from '../../../models/owns/floorPlan';
-import Form from '../components/form';
-import * as Yup from 'yup';
-import wait from '../../../utils/wait';
-import { IField } from '../type';
-import SetType from '../../../models/owns/setType';
+import Part from '../../../models/owns/part';
 import { files } from 'src/models/owns/file';
 
 interface PartDetailsProps {

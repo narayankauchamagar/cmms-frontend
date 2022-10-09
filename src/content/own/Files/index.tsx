@@ -1,9 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { Box, Button, Card, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { TableCustomizedColumnType } from '../type';
-import TableCustomized from '../components/TableCustomized';
-import File, { files } from '../../../models/owns/file';
+import { files } from '../../../models/owns/file';
 import { useContext, useEffect } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';

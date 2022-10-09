@@ -3,9 +3,9 @@ import {
   Button,
   CircularProgress,
   Grid,
+  Link,
   TextField,
-  Typography,
-  Link
+  Typography
 } from '@mui/material';
 import { Formik, FormikProps } from 'formik';
 import { useTranslation } from 'react-i18next';
@@ -18,16 +18,17 @@ import SelectForm from './SelectForm';
 import FileUpload from '../FileUpload';
 import DatePicker from '@mui/lab/DatePicker';
 import { useState } from 'react';
-import { Customer } from '../../../../models/owns/customer';
+import {
+  Customer,
+  customers as customersList
+} from '../../../../models/owns/customer';
 import wait from '../../../../utils/wait';
-import { Vendor } from '../../../../models/owns/vendor';
+import { Vendor, vendors as vendorsList } from '../../../../models/owns/vendor';
 import User from 'src/models/owns/user';
 import Team from '../../../../models/owns/team';
 import SelectParts from './SelectParts';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { users as usersList } from '../../../../models/owns/user';
-import { vendors as vendorsList } from '../../../../models/owns/vendor';
-import { customers as customersList } from '../../../../models/owns/customer';
 import Location, {
   locations as locationsList
 } from '../../../../models/owns/location';
