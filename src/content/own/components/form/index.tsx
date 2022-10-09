@@ -28,6 +28,10 @@ import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { users as usersList } from '../../../../models/owns/user';
 import { vendors as vendorsList } from '../../../../models/owns/vendor';
 import { customers as customersList } from '../../../../models/owns/customer';
+import Location, {
+  locations as locationsList
+} from '../../../../models/owns/location';
+import Asset, { assets as assetsList } from '../../../../models/owns/asset';
 
 interface PropsType {
   fields: Array<IField>;
@@ -52,6 +56,11 @@ export default (props: PropsType) => {
   const [fetchingUsers, setFetchingUsers] = useState(false);
   const [teams, setTeams] = useState<Team[]>([]);
   const [fetchingTeams, setFetchingTeams] = useState(false);
+  const [locations, setLocations] = useState<Location[]>([]);
+  const [fetchingLocations, setFetchingLocations] = useState(false);
+  const [assets, setAssets] = useState<Asset[]>([]);
+  const [fetchingAssets, setFetchingAssets] = useState(false);
+
   const [openPartsModal, setOpenPartsModal] = useState<boolean>(false);
   const [selectedParts, setSelectedParts] = useState<
     { id: number; name: string }[]
@@ -75,7 +84,18 @@ export default (props: PropsType) => {
     setFetchingUsers(false);
     setUsers(usersList);
   };
-
+  const fetchLocations = async () => {
+    setFetchingLocations(true);
+    await wait(2000);
+    setFetchingLocations(false);
+    setLocations(locationsList);
+  };
+  const fetchAssets = async () => {
+    setFetchingAssets(true);
+    await wait(2000);
+    setFetchingAssets(false);
+    setAssets(assetsList);
+  };
   const fetchTeams = async () => {
     setFetchingTeams(true);
     const _teams: Team[] = [
@@ -156,6 +176,26 @@ export default (props: PropsType) => {
         onOpen = fetchTeams;
         loading = fetchingTeams;
         break;
+      case 'location':
+        options = locations.map((location) => {
+          return {
+            label: location.name,
+            value: location.id.toString()
+          };
+        });
+        onOpen = fetchLocations;
+        loading = fetchingLocations;
+        break;
+      case 'asset':
+        options = assets.map((asset) => {
+          return {
+            label: asset.name,
+            value: asset.id.toString()
+          };
+        });
+        onOpen = fetchAssets;
+        loading = fetchingAssets;
+        break;
       case 'part':
         return (
           <Box>
@@ -193,20 +233,21 @@ export default (props: PropsType) => {
           </Box>
         );
       default:
-        return (
-          <SelectForm
-            options={options}
-            value={formik.values[field.name]}
-            label={field.label}
-            loading={loading}
-            onOpen={onOpen}
-            placeholder={field.placeholder}
-            multiple={field.multiple}
-            fullWidth={field.fullWidth}
-            key={field.name}
-          />
-        );
+        break;
     }
+    return (
+      <SelectForm
+        options={options}
+        value={formik.values[field.name]}
+        label={field.label}
+        loading={loading}
+        onOpen={onOpen}
+        placeholder={field.placeholder}
+        multiple={field.multiple}
+        fullWidth={field.fullWidth}
+        key={field.name}
+      />
+    );
   };
 
   return (
