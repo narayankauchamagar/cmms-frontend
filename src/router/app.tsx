@@ -46,6 +46,9 @@ const SubscriptionPlans = Loader(
   lazy(() => import('src/content/own/Subscription/Plans'))
 );
 const Files = Loader(lazy(() => import('src/content/own/Files')));
+const PurchaseOrders = Loader(
+  lazy(() => import('src/content/own/PurchaseOrders'))
+);
 const Locations = Loader(lazy(() => import('src/content/own/Locations')));
 
 const VendorsAndCustomers = Loader(
@@ -106,6 +109,10 @@ const appRoutes = [
   {
     path: 'files',
     element: <Files />
+  },
+  {
+    path: 'purchase-orders',
+    element: <PurchaseOrders />
   },
   {
     path: 'locations',

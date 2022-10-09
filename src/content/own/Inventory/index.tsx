@@ -17,7 +17,7 @@ const VendorsAndCustomers = ({}: PropsType) => {
   const { partId, setId } = useParams();
 
   useEffect(() => {
-    setTitle('Parts&Inventory');
+    setTitle('Parts & Inventory');
   }, []);
 
   const arr = location.pathname.split('/');

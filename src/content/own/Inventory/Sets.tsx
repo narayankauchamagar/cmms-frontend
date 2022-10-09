@@ -148,7 +148,7 @@ const Sets = ({ setAction }: PropsType) => {
   const fieldsToRender = (set: SetType) => [
     {
       label: t('Parts'),
-      value: set.parts
+      value: set.parts.length
     },
     {
       label: t('Total Cost'),
@@ -157,7 +157,7 @@ const Sets = ({ setAction }: PropsType) => {
   ];
   const renderField = (label, value) => {
     return (
-      <Grid item xs={12}>
+      <Grid item xs={12} key={label}>
         <Stack spacing={1} direction="row">
           <Typography variant="h6" sx={{ color: theme.colors.alpha.black[70] }}>
             {label}

@@ -242,9 +242,9 @@ export default (props: PropsType) => {
               selected={options?.map((option) => Number(option.value)) ?? []}
               open={openPartsModal}
               onClose={() => setOpenPartsModal(false)}
-              onChange={(newValue) => {
-                setSelectedParts(newValue);
-                handleChange(formik, field.name, newValue);
+              onChange={(newParts) => {
+                setSelectedParts(newParts);
+                handleChange(formik, field.name, newParts);
               }}
             />
           </Box>
