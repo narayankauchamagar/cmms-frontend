@@ -1,8 +1,17 @@
 import { Helmet } from 'react-helmet-async';
-import { Box, Button, Card, Grid } from '@mui/material';
+import {
+  Box,
+  Button,
+  Card,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  Typography
+} from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { files } from '../../../models/owns/file';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
@@ -16,12 +25,16 @@ import {
 } from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { meters } from '../../../models/owns/meter';
+import Form from '../components/form';
+import * as Yup from 'yup';
+import wait from '../../../utils/wait';
+import { IField } from '../type';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
-  const handleDelete = (id: number) => {};
-  const handleRename = (id: number) => {};
+  const [openAddModal, setOpenAddModal] = useState<boolean>(false);
+
   useEffect(() => {
     setTitle(t('Meters'));
   }, []);
@@ -83,12 +96,118 @@ function Files() {
       width: 150
     }
   ];
-
+  const fields: Array<IField> = [
+    {
+      name: 'name',
+      type: 'text',
+      label: t('Name'),
+      placeholder: t('Enter Meter name'),
+      required: true
+    },
+    {
+      name: 'unit',
+      type: 'text',
+      label: t('Unit'),
+      placeholder: t('Unit'),
+      required: true
+    },
+    {
+      name: 'updateFrequency',
+      type: 'number',
+      label: t('Update Frequency'),
+      placeholder: t('Update Frequency'),
+      required: true
+    },
+    {
+      name: 'category',
+      type: 'text',
+      label: t('Category'),
+      placeholder: t('Category')
+    },
+    {
+      name: 'image',
+      type: 'file',
+      label: t('Image'),
+      fileType: 'image'
+    },
+    {
+      name: 'vendors',
+      type: 'select',
+      type2: 'user',
+      label: t('Workers'),
+      multiple: true
+    },
+    {
+      name: 'location',
+      type: 'select',
+      type2: 'location',
+      label: t('Location')
+    },
+    {
+      name: 'assets',
+      type: 'select',
+      type2: 'asset',
+      label: t('Asset')
+    }
+  ];
+  const shape = {
+    name: Yup.string().required(t('Meter name is required')),
+    unit: Yup.string().required(t('Meter unit is required')),
+    updateFrequency: Yup.string().required(
+      t('Meter update frequency is required')
+    )
+  };
+  const renderAddModal = () => (
+    <Dialog
+      fullWidth
+      maxWidth="md"
+      open={openAddModal}
+      onClose={() => setOpenAddModal(false)}
+    >
+      <DialogTitle
+        sx={{
+          p: 3
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
+          {t('Add Meter')}
+        </Typography>
+        <Typography variant="subtitle2">
+          {t('Fill in the fields below to create and add a new Meter')}
+        </Typography>
+      </DialogTitle>
+      <DialogContent
+        dividers
+        sx={{
+          p: 3
+        }}
+      >
+        <Box>
+          <Form
+            fields={fields}
+            validation={Yup.object().shape(shape)}
+            submitText={t('Add')}
+            values={{}}
+            onChange={({ field, e }) => {}}
+            onSubmit={async (values) => {
+              try {
+                await wait(2000);
+                setOpenAddModal(false);
+              } catch (err) {
+                console.error(err);
+              }
+            }}
+          />
+        </Box>
+      </DialogContent>
+    </Dialog>
+  );
   return (
     <>
       <Helmet>
         <title>{t('Meters')}</title>
       </Helmet>
+      {renderAddModal()}
       <Grid
         container
         justifyContent="center"
@@ -108,6 +227,7 @@ function Files() {
             startIcon={<AddTwoToneIcon />}
             sx={{ mx: 6, my: 1 }}
             variant="contained"
+            onClick={() => setOpenAddModal(true)}
           >
             Meter
           </Button>

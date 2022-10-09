@@ -22,7 +22,14 @@ export interface IField {
     | 'titleGroupField'
     | 'form'
     | 'date';
-  type2?: 'customer' | 'vendor' | 'user' | 'team' | 'part';
+  type2?:
+    | 'customer'
+    | 'vendor'
+    | 'user'
+    | 'team'
+    | 'part'
+    | 'location'
+    | 'asset';
   name?: string;
   placeholder?: string;
   fileType?: 'file' | 'image';

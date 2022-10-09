@@ -25,7 +25,9 @@ import User from 'src/models/owns/user';
 import Team from '../../../../models/owns/team';
 import SelectParts from './SelectParts';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import { parts } from '../../../../models/owns/part';
+import { users as usersList } from '../../../../models/owns/user';
+import { vendors as vendorsList } from '../../../../models/owns/vendor';
+import { customers as customersList } from '../../../../models/owns/customer';
 
 interface PropsType {
   fields: Array<IField>;
@@ -58,21 +60,20 @@ export default (props: PropsType) => {
     setFetchingCustomers(true);
     await wait(2000);
     setFetchingCustomers(false);
-    setCustomers(customers);
+    setCustomers(customersList);
   };
 
   const fetchVendors = async () => {
     setFetchingVendors(true);
     await wait(2000);
     setFetchingVendors(false);
-    setVendors(vendors);
+    setVendors(vendorsList);
   };
   const fetchUsers = async () => {
     setFetchingUsers(true);
-    const _users: User[] = users;
     await wait(2000);
     setFetchingUsers(false);
-    setUsers(_users);
+    setUsers(usersList);
   };
 
   const fetchTeams = async () => {
@@ -192,21 +193,20 @@ export default (props: PropsType) => {
           </Box>
         );
       default:
-        break;
+        return (
+          <SelectForm
+            options={options}
+            value={formik.values[field.name]}
+            label={field.label}
+            loading={loading}
+            onOpen={onOpen}
+            placeholder={field.placeholder}
+            multiple={field.multiple}
+            fullWidth={field.fullWidth}
+            key={field.name}
+          />
+        );
     }
-    return (
-      <SelectForm
-        options={options}
-        value={formik.values[field.name]}
-        label={field.label}
-        loading={loading}
-        onOpen={onOpen}
-        placeholder={field.placeholder}
-        multiple={field.multiple}
-        fullWidth={field.fullWidth}
-        key={field.name}
-      />
-    );
   };
 
   return (
