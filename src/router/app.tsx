@@ -121,6 +121,10 @@ const appRoutes = [
         element: <PurchaseOrders />
       },
       {
+        path: ':purchaseOrderId',
+        element: <PurchaseOrders />
+      },
+      {
         path: 'create',
         element: <CreatePurchaseOrders />
       }

@@ -20,12 +20,13 @@ import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import PurchaseOrder, {
   purchaseOrders
 } from '../../../models/owns/purchaseOrder';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import PurchaseOrderDetails from './PurchaseOrderDetails';
 import { IField } from '../type';
 import Form from '../components/form';
 import * as Yup from 'yup';
 import wait from '../../../utils/wait';
+import { isNumeric } from '../../../utils/validators';
 
 function PurchaseOrders() {
   const { t }: { t: any } = useTranslation();
@@ -33,6 +34,7 @@ function PurchaseOrders() {
   const navigate = useNavigate();
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
+  const { purchaseOrderId } = useParams();
 
   const [currentPurchaseOrder, setCurrentPurchaseOrder] =
     useState<PurchaseOrder>();
@@ -43,9 +45,34 @@ function PurchaseOrders() {
     );
     setOpenUpdateModal(true);
   };
+  const handleOpenDetails = (id: number) => {
+    const foundPurchaseOrder = purchaseOrders.find(
+      (purchaseOrder) => purchaseOrder.id === id
+    );
+    if (foundPurchaseOrder) {
+      setCurrentPurchaseOrder(foundPurchaseOrder);
+      window.history.replaceState(
+        null,
+        'PurchaseOrder details',
+        `/app/purchase-orders/${id}`
+      );
+      setOpenDrawer(true);
+    }
+  };
   useEffect(() => {
     setTitle(t('Purchase Orders'));
   }, []);
+
+  useEffect(() => {
+    if (purchaseOrderId && isNumeric(purchaseOrderId)) {
+      handleOpenDetails(Number(purchaseOrderId));
+    }
+  }, [purchaseOrders]);
+
+  const handleCloseDetails = () => {
+    window.history.replaceState(null, 'PurchaseOrder', `/app/purchase-orders`);
+    setOpenDrawer(false);
+  };
 
   const columns: GridEnrichedColDef[] = [
     {
@@ -383,14 +410,7 @@ function PurchaseOrders() {
                 components={{
                   Toolbar: GridToolbar
                 }}
-                onRowClick={(params) => {
-                  setCurrentPurchaseOrder(
-                    purchaseOrders.find(
-                      (purchaseOrder) => purchaseOrder.id === params.id
-                    )
-                  );
-                  setOpenDrawer(true);
-                }}
+                onRowClick={(params) => handleOpenDetails(Number(params.id))}
                 initialState={{
                   columns: {
                     columnVisibilityModel: {}
@@ -404,7 +424,7 @@ function PurchaseOrders() {
       <Drawer
         anchor="right"
         open={openDrawer}
-        onClose={() => setOpenDrawer(false)}
+        onClose={handleCloseDetails}
         PaperProps={{
           sx: { width: '60%' }
         }}
