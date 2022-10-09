@@ -281,7 +281,7 @@ function Files() {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Update location')}
+          {t('Edit location')}
         </Typography>
         <Typography variant="subtitle2">
           {t('Fill in the fields below to update the location')}

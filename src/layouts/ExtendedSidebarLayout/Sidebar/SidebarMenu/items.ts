@@ -19,6 +19,7 @@ import { GroupsTwoTone, People } from '@mui/icons-material';
 import LocationOnTwoToneIcon from '@mui/icons-material/LocationOnTwoTone';
 import Inventory2TwoToneIcon from '@mui/icons-material/Inventory2TwoTone';
 import HandymanTwoToneIcon from '@mui/icons-material/HandymanTwoTone';
+import SpeedTwoToneIcon from '@mui/icons-material/SpeedTwoTone';
 
 export interface MenuItem {
   link?: string;
@@ -53,6 +54,11 @@ const menuItems: MenuItems[] = [
         name: 'Purchase Orders',
         link: '/app/purchase-orders',
         icon: ReceiptTwoToneIcon
+      },
+      {
+        name: 'Meters',
+        link: '/app/meters',
+        icon: SpeedTwoToneIcon
       },
       {
         name: 'Locations',
