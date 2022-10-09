@@ -6,7 +6,6 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  Divider,
   Drawer,
   Grid,
   Tab,
@@ -14,8 +13,7 @@ import {
   Typography
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { IField, TableCustomizedColumnType } from '../type';
-import TableCustomized from '../components/TableCustomized';
+import { IField } from '../type';
 import Location from '../../../models/owns/location';
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
@@ -33,16 +31,13 @@ import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import Form from '../components/form';
 import * as Yup from 'yup';
 import wait from '../../../utils/wait';
-import {
-  emailRegExp,
-  phoneRegExp,
-  websiteRegExp
-} from '../../../utils/validators';
+import { isNumeric } from '../../../utils/validators';
 import User, { users } from '../../../models/owns/user';
 import Team from '../../../models/owns/team';
 import { Vendor } from '../../../models/owns/vendor';
 import { Customer } from '../../../models/owns/customer';
 import LocationDetails from './LocationDetails';
+import { useParams } from 'react-router-dom';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
@@ -69,15 +64,38 @@ function Files() {
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const { setTitle } = useContext(TitleContext);
+  const { locationId } = useParams();
   const [currentLocation, setCurrentLocation] = useState<Location>();
   const handleDelete = (id: number) => {};
   const handleUpdate = (id: number) => {
     setCurrentLocation(locations.find((location) => location.id === id));
     setOpenUpdateModal(true);
   };
+  const handleOpenDetails = (id: number) => {
+    const foundLocation = locations.find((location) => location.id === id);
+    if (foundLocation) {
+      setCurrentLocation(foundLocation);
+      window.history.replaceState(
+        null,
+        'Location details',
+        `/app/locations/${id}`
+      );
+      setOpenDrawer(true);
+    }
+  };
+  const handleCloseDetails = () => {
+    window.history.replaceState(null, 'Location', `/app/locations`);
+    setOpenDrawer(false);
+  };
   useEffect(() => {
     setTitle(t('Locations'));
   }, []);
+
+  useEffect(() => {
+    if (locationId && isNumeric(locationId)) {
+      handleOpenDetails(Number(locationId));
+    }
+  }, [locations]);
 
   const columns: GridEnrichedColDef[] = [
     {
@@ -419,12 +437,7 @@ function Files() {
                 components={{
                   Toolbar: GridToolbar
                 }}
-                onRowClick={(params) => {
-                  setCurrentLocation(
-                    locations.find((location) => location.id === params.id)
-                  );
-                  setOpenDrawer(true);
-                }}
+                onRowClick={(params) => handleOpenDetails(Number(params.id))}
                 initialState={{
                   columns: {
                     columnVisibilityModel: {}
@@ -440,7 +453,7 @@ function Files() {
       <Drawer
         anchor="right"
         open={openDrawer}
-        onClose={() => setOpenDrawer(false)}
+        onClose={handleCloseDetails}
         PaperProps={{
           sx: { width: '60%' }
         }}

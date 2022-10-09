@@ -128,7 +128,10 @@ const appRoutes = [
   },
   {
     path: 'locations',
-    element: <Locations />
+    children: [
+      { path: '', element: <Locations /> },
+      { path: ':locationId', element: <Locations /> }
+    ]
   },
   {
     path: 'inventory',
