@@ -1,31 +1,34 @@
 import { Helmet } from 'react-helmet-async';
-import { Box, Button, Card, Grid } from '@mui/material';
+import { Box, Button, Card, Drawer, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { TableCustomizedColumnType } from '../type';
-import TableCustomized from '../components/TableCustomized';
-import File, { files } from '../../../models/owns/file';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
-import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import CustomDataGrid from '../components/CustomDatagrid';
-import {
-  GridActionsCellItem,
-  GridRenderCellParams,
-  GridRowParams,
-  GridToolbar
-} from '@mui/x-data-grid';
+import { GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import { purchaseOrders } from '../../../models/owns/purchaseOrder';
+import PurchaseOrder, {
+  purchaseOrders
+} from '../../../models/owns/purchaseOrder';
 import { useNavigate } from 'react-router-dom';
+import PurchaseOrderDetails from './PurchaseOrderDetails';
 
 function PurchaseOrders() {
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
   const navigate = useNavigate();
-  const handleDelete = (id: number) => {};
-  const handleRename = (id: number) => {};
+  const [openDrawer, setOpenDrawer] = useState<boolean>(false);
+  const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
+
+  const [currentPurchaseOrder, setCurrentPurchaseOrder] =
+    useState<PurchaseOrder>();
+
+  const handleUpdate = (id: number) => {
+    setCurrentPurchaseOrder(
+      purchaseOrders.find((purchaseOrder) => purchaseOrder.id === id)
+    );
+    setOpenUpdateModal(true);
+  };
   useEffect(() => {
     setTitle(t('Purchase Orders'));
   }, []);
@@ -161,6 +164,14 @@ function PurchaseOrders() {
                 components={{
                   Toolbar: GridToolbar
                 }}
+                onRowClick={(params) => {
+                  setCurrentPurchaseOrder(
+                    purchaseOrders.find(
+                      (purchaseOrder) => purchaseOrder.id === params.id
+                    )
+                  );
+                  setOpenDrawer(true);
+                }}
                 initialState={{
                   columns: {
                     columnVisibilityModel: {}
@@ -171,6 +182,19 @@ function PurchaseOrders() {
           </Card>
         </Grid>
       </Grid>
+      <Drawer
+        anchor="right"
+        open={openDrawer}
+        onClose={() => setOpenDrawer(false)}
+        PaperProps={{
+          sx: { width: '60%' }
+        }}
+      >
+        <PurchaseOrderDetails
+          purchaseOrder={currentPurchaseOrder}
+          handleUpdate={handleUpdate}
+        />
+      </Drawer>
     </>
   );
 }
