@@ -223,7 +223,7 @@ export default (props: PropsType) => {
                       sx={{ mb: 1 }}
                       target="_blank"
                       rel="noopener noreferrer"
-                      href={`parts/${part.id}`}
+                      href={`/app/inventory/parts/${part.id}`}
                       key={part.id}
                       variant="h4"
                     >

@@ -18,10 +18,12 @@ import {
 } from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { purchaseOrders } from '../../../models/owns/purchaseOrder';
+import { useNavigate } from 'react-router-dom';
 
 function PurchaseOrders() {
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
+  const navigate = useNavigate();
   const handleDelete = (id: number) => {};
   const handleRename = (id: number) => {};
   useEffect(() => {
@@ -76,15 +78,39 @@ function PurchaseOrders() {
         )
     },
     {
+      field: 'category',
+      headerName: t('Category'),
+      description: t('Category'),
+      width: 150
+    },
+    {
+      field: 'shippingShipToName',
+      headerName: t('Shipping to'),
+      description: t('Shipping to'),
+      width: 150
+    },
+    {
+      field: 'shippingAddress',
+      headerName: t('Shipping Address'),
+      description: t('Shipping Address'),
+      width: 150
+    },
+    {
+      field: 'shippingPhone',
+      headerName: t('Phone'),
+      description: t('Phone'),
+      width: 150
+    },
+    {
       field: 'createdBy',
-      headerName: t('Uploaded By'),
-      description: t('Uploaded By'),
+      headerName: t('Created By'),
+      description: t('Created By'),
       width: 150
     },
     {
       field: 'createdAt',
-      headerName: t('Uploaded On'),
-      description: t('Uploaded On'),
+      headerName: t('Created On'),
+      description: t('Created On'),
       width: 150
     }
   ];
@@ -110,11 +136,12 @@ function PurchaseOrders() {
           alignItems="center"
         >
           <Button
+            onClick={() => navigate('/app/purchase-orders/create')}
             startIcon={<AddTwoToneIcon />}
             sx={{ mx: 6, my: 1 }}
             variant="contained"
           >
-            File
+            Purchase Order
           </Button>
         </Grid>
         <Grid item xs={12}>
