@@ -6,39 +6,62 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  Drawer,
   Grid,
   Typography
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { files } from '../../../models/owns/file';
 import { useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
-import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import CustomDataGrid from '../components/CustomDatagrid';
-import {
-  GridActionsCellItem,
-  GridRenderCellParams,
-  GridRowParams,
-  GridToolbar
-} from '@mui/x-data-grid';
+import { GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import { meters } from '../../../models/owns/meter';
+import Meter, { meters } from '../../../models/owns/meter';
 import Form from '../components/form';
 import * as Yup from 'yup';
 import wait from '../../../utils/wait';
 import { IField } from '../type';
+import PartDetails from '../Inventory/PartDetails';
+import { parts } from '../../../models/owns/part';
+import MeterDetails from './MeterDetails';
+import { useParams } from 'react-router-dom';
+import { isNumeric } from '../../../utils/validators';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
+  const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
+  const [openDrawer, setOpenDrawer] = useState<boolean>(false);
+  const [currentMeter, setCurrentMeter] = useState<Meter>();
+  const { meterId } = useParams();
 
   useEffect(() => {
     setTitle(t('Meters'));
   }, []);
+  useEffect(() => {
+    if (meterId && isNumeric(meterId)) {
+      handleOpenDetails(Number(meterId));
+    }
+  }, [meters]);
 
+  const handleUpdate = (id: number) => {
+    setCurrentMeter(meters.find((meter) => meter.id === id));
+    setOpenUpdateModal(true);
+  };
+  const handleOpenDetails = (id: number) => {
+    const foundMeter = meters.find((meter) => meter.id === id);
+    if (foundMeter) {
+      setCurrentMeter(foundMeter);
+      window.history.replaceState(null, 'Meter details', `/app/meters/${id}`);
+      setOpenDrawer(true);
+    }
+  };
+  const handleCloseDetails = () => {
+    window.history.replaceState(null, 'Meter', `/app/meters`);
+    setOpenDrawer(false);
+  };
   const columns: GridEnrichedColDef[] = [
     {
       field: 'name',
@@ -246,6 +269,7 @@ function Files() {
               <CustomDataGrid
                 columns={columns}
                 rows={meters}
+                onRowClick={({ id }) => handleOpenDetails(Number(id))}
                 components={{
                   Toolbar: GridToolbar
                 }}
@@ -259,6 +283,16 @@ function Files() {
           </Card>
         </Grid>
       </Grid>
+      <Drawer
+        anchor="right"
+        open={openDrawer}
+        onClose={handleCloseDetails}
+        PaperProps={{
+          sx: { width: '60%' }
+        }}
+      >
+        <MeterDetails meter={currentMeter} handleUpdate={handleUpdate} />
+      </Drawer>
     </>
   );
 }
