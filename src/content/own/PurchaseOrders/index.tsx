@@ -1,5 +1,15 @@
 import { Helmet } from 'react-helmet-async';
-import { Box, Button, Card, Drawer, Grid } from '@mui/material';
+import {
+  Box,
+  Button,
+  Card,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Drawer,
+  Grid,
+  Typography
+} from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
@@ -12,6 +22,10 @@ import PurchaseOrder, {
 } from '../../../models/owns/purchaseOrder';
 import { useNavigate } from 'react-router-dom';
 import PurchaseOrderDetails from './PurchaseOrderDetails';
+import { IField } from '../type';
+import Form from '../components/form';
+import * as Yup from 'yup';
+import wait from '../../../utils/wait';
 
 function PurchaseOrders() {
   const { t }: { t: any } = useTranslation();
@@ -117,7 +131,212 @@ function PurchaseOrders() {
       width: 150
     }
   ];
-
+  const fields: Array<IField> = [
+    {
+      name: 'purchaseOrderDetails',
+      type: 'titleGroupField',
+      label: t('Purchase Order Details')
+    },
+    {
+      name: 'name',
+      type: 'text',
+      label: t('Name'),
+      placeholder: t('Enter Purchase Order name'),
+      required: true,
+      midWidth: true
+    },
+    {
+      name: 'category',
+      type: 'text',
+      label: t('Category'),
+      placeholder: t('Category'),
+      midWidth: true
+    },
+    {
+      name: 'dueDate',
+      type: 'date',
+      label: t('Due Date'),
+      midWidth: true
+    },
+    {
+      name: 'additionalDetails',
+      type: 'text',
+      label: t('Additional Details'),
+      midWidth: true,
+      multiple: true
+    },
+    {
+      name: 'vendors',
+      type: 'select',
+      type2: 'vendor',
+      label: t('Vendors'),
+      midWidth: true,
+      multiple: true
+    },
+    {
+      name: 'parts',
+      type: 'select',
+      type2: 'part',
+      label: t('Parts'),
+      midWidth: true,
+      multiple: true
+    },
+    {
+      name: 'shippingInformation',
+      type: 'titleGroupField',
+      label: t('Shipping Information')
+    },
+    {
+      name: 'useCompanyAddress',
+      type: 'checkbox',
+      label: t('Use Company address')
+    },
+    {
+      name: 'companyName',
+      type: 'text',
+      label: t('Company name'),
+      placeholder: t('Company name'),
+      midWidth: true
+    },
+    {
+      name: 'shipToName',
+      type: 'text',
+      label: t('Ship To'),
+      placeholder: t('Ship To'),
+      midWidth: true
+    },
+    {
+      name: 'address',
+      type: 'text',
+      label: t('Address'),
+      placeholder: t('Address'),
+      midWidth: true
+    },
+    {
+      name: 'city',
+      type: 'text',
+      label: t('City'),
+      placeholder: t('City'),
+      midWidth: true
+    },
+    {
+      name: 'state',
+      type: 'text',
+      label: t('State'),
+      placeholder: t('State'),
+      midWidth: true
+    },
+    {
+      name: 'zipCode',
+      type: 'text',
+      label: t('Zip Code'),
+      placeholder: t('Zip Code'),
+      midWidth: true
+    },
+    {
+      name: 'phone',
+      type: 'text',
+      label: t('Phone number'),
+      placeholder: t('Phone number'),
+      midWidth: true
+    },
+    {
+      name: 'faxNumber',
+      type: 'text',
+      label: t('Fax Number'),
+      placeholder: t('Fax Number'),
+      midWidth: true
+    },
+    {
+      name: 'additionalInformation',
+      type: 'titleGroupField',
+      label: t('Additional Information')
+    },
+    {
+      name: 'purchaseOrderDate',
+      type: 'date',
+      label: t('Purchase Order Date'),
+      placeholder: t('Purchase Order Date'),
+      midWidth: true
+    },
+    {
+      name: 'notes',
+      type: 'text',
+      label: t('Notes'),
+      placeholder: t('Add Notes'),
+      midWidth: true,
+      multiple: true
+    },
+    {
+      name: 'requisitioner',
+      type: 'text',
+      label: t('Requisitioner'),
+      placeholder: t('Requisitioner'),
+      midWidth: true
+    },
+    {
+      name: 'terms',
+      type: 'text',
+      label: t('Terms'),
+      placeholder: t('Terms'),
+      midWidth: true
+    },
+    {
+      name: 'shippingMethod',
+      type: 'text',
+      label: t('Shipping Method'),
+      placeholder: t('Shipping Method'),
+      midWidth: true
+    }
+  ];
+  const shape = {
+    name: Yup.string().required(t('The name is required'))
+  };
+  const renderUpdateModal = () => (
+    <Dialog
+      fullWidth
+      maxWidth="md"
+      open={openUpdateModal}
+      onClose={() => setOpenUpdateModal(false)}
+    >
+      <DialogTitle
+        sx={{
+          p: 3
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
+          {t('Edit Purchase Order')}
+        </Typography>
+        <Typography variant="subtitle2">
+          {t('Fill in the fields below to update the Purchase Order')}
+        </Typography>
+      </DialogTitle>
+      <DialogContent
+        dividers
+        sx={{
+          p: 3
+        }}
+      >
+        <Box>
+          <Form
+            fields={fields}
+            validation={Yup.object().shape(shape)}
+            submitText={t('Save')}
+            values={currentPurchaseOrder}
+            onChange={({ field, e }) => {}}
+            onSubmit={async (values) => {
+              try {
+                await wait(2000);
+                setOpenUpdateModal(false);
+              } catch (err) {
+                console.error(err);
+              }
+            }}
+          />
+        </Box>
+      </DialogContent>
+    </Dialog>
+  );
   return (
     <>
       <Helmet>
@@ -195,6 +414,7 @@ function PurchaseOrders() {
           handleUpdate={handleUpdate}
         />
       </Drawer>
+      {renderUpdateModal()}
     </>
   );
 }
