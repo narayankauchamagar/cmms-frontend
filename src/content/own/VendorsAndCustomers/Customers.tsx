@@ -13,7 +13,7 @@ import * as Yup from 'yup';
 import { IField, TableCustomizedColumnType } from '../type';
 import wait from 'src/utils/wait';
 import TableCustomized from '../components/TableCustomized';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CustomDataGrid from '../components/CustomDatagrid';
 import {
   GridActionsCellItem,
@@ -24,11 +24,13 @@ import {
 } from '@mui/x-data-grid';
 import {
   emailRegExp,
+  isNumeric,
   phoneRegExp,
   websiteRegExp
 } from '../../../utils/validators';
 import { Close } from '@mui/icons-material';
-import { Customer } from '../../../models/owns/customer';
+import { Customer, customers } from '../../../models/owns/customer';
+import { useParams } from 'react-router-dom';
 
 interface PropsType {
   values?: any;
@@ -40,7 +42,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
   const { t }: { t: any } = useTranslation();
   const [isCustomerDetailsOpen, setIsCustomerDetailsOpen] =
     useState<boolean>(false);
-
+  const { customerId } = useParams();
   const [customerName, setCustomerName] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
   const [currentCustomer, setCurrentCustomer] = useState<Customer>();
@@ -49,7 +51,31 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
     customerName: customerName,
     phone: phone
   };
-  // console.log('values customers-> ', values);
+  const handleOpenDetails = (id: number) => {
+    const foundCustomer = customers.find((customer) => customer.id === id);
+    if (foundCustomer) {
+      setCurrentCustomer(foundCustomer);
+      window.history.replaceState(
+        null,
+        'Customer details',
+        `/app/vendors-customers/customers/${id}`
+      );
+      setIsCustomerDetailsOpen(true);
+    }
+  };
+  const handleCloseDetails = () => {
+    window.history.replaceState(
+      null,
+      'Customer',
+      `/app/vendors-customers/customers`
+    );
+    setIsCustomerDetailsOpen(false);
+  };
+  useEffect(() => {
+    if (customerId && isNumeric(customerId)) {
+      handleOpenDetails(Number(customerId));
+    }
+  }, [customers]);
 
   let fields: Array<IField> = [
     {
@@ -154,39 +180,6 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
     website: Yup.string().matches(websiteRegExp, t('Invalid website')),
     email: Yup.string().matches(emailRegExp, t('Invalid email'))
   };
-
-  let customersList: Customer[] = [
-    {
-      id: '1',
-      name: 'Customer 1',
-      address: 'casa, maroc',
-      phone: '+00212611223344',
-      website: 'https://web-site.com',
-      email: 'john.doe@gmail.com',
-      customerType: 'Plumbing',
-      description: 'Describe...',
-      rate: 10,
-      address1: 'Add 1',
-      address2: '-',
-      address3: 'Add 3',
-      currency: 'MAD, dirham'
-    },
-    {
-      id: '2',
-      name: 'Customer 2',
-      address: 'casa, maroc',
-      phone: '+00212611223344',
-      website: 'https://web-site.com',
-      email: 'john.doe@gmail.com',
-      customerType: 'Electrical',
-      description: 'Describe 2...',
-      rate: 15,
-      address1: 'Add 1',
-      address2: '-',
-      address3: '-',
-      currency: 'Euro'
-    }
-  ];
 
   const columns: GridEnrichedColDef[] = [
     {
@@ -330,7 +323,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
       }}
     >
       <CustomDataGrid
-        rows={customersList}
+        rows={customers}
         columns={columns}
         components={{
           Toolbar: GridToolbar
@@ -340,12 +333,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
             columnVisibilityModel: {}
           }
         }}
-        onRowClick={(params) => {
-          setCurrentCustomer(
-            customersList.find((customer) => customer.id === params.id)
-          );
-          setIsCustomerDetailsOpen(true);
-        }}
+        onRowClick={(params) => handleOpenDetails(Number(params.id))}
       />
     </Box>
   );
@@ -355,9 +343,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
       fullWidth
       maxWidth="sm"
       open={isCustomerDetailsOpen}
-      onClose={() => {
-        setIsCustomerDetailsOpen(false);
-      }}
+      onClose={handleCloseDetails}
     >
       <DialogTitle
         sx={{

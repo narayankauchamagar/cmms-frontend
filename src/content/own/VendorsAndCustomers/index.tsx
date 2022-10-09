@@ -35,7 +35,7 @@ const VendorsAndCustomers = ({}: PropsType) => {
   const tabIndex = regex.test(location.pathname) ? 0 : 1;
 
   const tabs = [
-    { value: '', label: t('Vendors') },
+    { value: 'vendors', label: t('Vendors') },
     { value: 'customers', label: t('Customers') }
   ];
 

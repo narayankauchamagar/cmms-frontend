@@ -56,41 +56,9 @@ export default (props: PropsType) => {
   >([]);
   const fetchCustomers = async () => {
     setFetchingCustomers(true);
-    const _customers: Customer[] = [
-      {
-        id: '1',
-        name: 'Customer 1',
-        address: 'casa, maroc',
-        phone: '+00212611223344',
-        website: 'https://web-site.com',
-        email: 'john.doe@gmail.com',
-        customerType: 'Plumbing',
-        description: 'Describe...',
-        rate: 10,
-        address1: 'Add 1',
-        address2: '-',
-        address3: 'Add 3',
-        currency: 'MAD, dirham'
-      },
-      {
-        id: '2',
-        name: 'Customer 2',
-        address: 'casa, maroc',
-        phone: '+00212611223344',
-        website: 'https://web-site.com',
-        email: 'john.doe@gmail.com',
-        customerType: 'Electrical',
-        description: 'Describe 2...',
-        rate: 15,
-        address1: 'Add 1',
-        address2: '-',
-        address3: '-',
-        currency: 'Euro'
-      }
-    ];
     await wait(2000);
     setFetchingCustomers(false);
-    setCustomers(_customers);
+    setCustomers(customers);
   };
 
   const fetchVendors = async () => {

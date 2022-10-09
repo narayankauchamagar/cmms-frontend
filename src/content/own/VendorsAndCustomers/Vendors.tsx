@@ -13,7 +13,7 @@ import * as Yup from 'yup';
 import { IField, TableCustomizedColumnType } from '../type';
 import wait from 'src/utils/wait';
 import TableCustomized from '../components/TableCustomized';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CustomDataGrid from '../components/CustomDatagrid';
 import {
   GridActionsCellItem,
@@ -24,11 +24,13 @@ import {
 } from '@mui/x-data-grid';
 import {
   emailRegExp,
+  isNumeric,
   phoneRegExp,
   websiteRegExp
 } from '../../../utils/validators';
 import { Close } from '@mui/icons-material';
-import { Vendor } from '../../../models/owns/vendor';
+import { Vendor, vendors } from '../../../models/owns/vendor';
+import { useParams } from 'react-router-dom';
 
 interface PropsType {
   values?: any;
@@ -40,6 +42,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
   const { t }: { t: any } = useTranslation();
   const [isVendorDetailsOpen, setIsVendorDetailsOpen] =
     useState<boolean>(false);
+  const { vendorId } = useParams();
 
   const [companyName, setCompanyName] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
@@ -49,6 +52,31 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
     companyName: companyName,
     phone: phone
   };
+  const handleOpenDetails = (id: number) => {
+    const foundVendor = vendors.find((vendor) => vendor.id === id);
+    if (foundVendor) {
+      setCurrentVendor(foundVendor);
+      window.history.replaceState(
+        null,
+        'Vendor details',
+        `/app/vendors-customers/vendors/${id}`
+      );
+      setIsVendorDetailsOpen(true);
+    }
+  };
+  const handleCloseDetails = () => {
+    window.history.replaceState(
+      null,
+      'Vendors',
+      `/app/vendors-customers/vendors`
+    );
+    setIsVendorDetailsOpen(false);
+  };
+  useEffect(() => {
+    if (vendorId && isNumeric(vendorId)) {
+      handleOpenDetails(Number(vendorId));
+    }
+  }, [vendors]);
 
   let fields: Array<IField> = [
     {
@@ -121,33 +149,6 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
     website: Yup.string().matches(websiteRegExp, t('Invalid website')),
     email: Yup.string().matches(emailRegExp, t('Invalid email'))
   };
-
-  let vendorsList: Vendor[] = [
-    {
-      id: '1',
-      companyName: 'Company Name',
-      address: 'casa, maroc',
-      phone: '+00212611223344',
-      website: 'https://web-site.com',
-      name: 'John Doe',
-      email: 'john.doe@gmail.com',
-      vendorType: 'Plumbing',
-      description: 'Describe...',
-      rate: 15
-    },
-    {
-      id: '2',
-      companyName: 'Company Name 2',
-      address: 'casa, maroc',
-      phone: '+00212611223344',
-      website: 'https://web-site.com',
-      name: 'John Doe',
-      email: 'john.doe@gmail.com',
-      vendorType: 'Plumbing',
-      description: 'Describe...',
-      rate: 20
-    }
-  ];
 
   const columns: GridEnrichedColDef[] = [
     {
@@ -279,7 +280,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
       }}
     >
       <CustomDataGrid
-        rows={vendorsList}
+        rows={vendors}
         columns={columns}
         components={{
           Toolbar: GridToolbar
@@ -289,12 +290,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
             columnVisibilityModel: {}
           }
         }}
-        onRowClick={(params) => {
-          setCurrentVendor(
-            vendorsList.find((vendor) => vendor.id === params.id)
-          );
-          setIsVendorDetailsOpen(true);
-        }}
+        onRowClick={(params) => handleOpenDetails(Number(params.id))}
       />
     </Box>
   );
@@ -304,9 +300,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
       fullWidth
       maxWidth="sm"
       open={isVendorDetailsOpen}
-      onClose={() => {
-        setIsVendorDetailsOpen(false);
-      }}
+      onClose={handleCloseDetails}
     >
       <DialogTitle
         sx={{
