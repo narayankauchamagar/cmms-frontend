@@ -136,6 +136,7 @@ export default (props: PropsType) => {
     let options = field.items;
     let loading = field.loading;
     let onOpen = field.onPress;
+    let values = formik.values[field.name];
     switch (field.type2) {
       case 'customer':
         options = customers.map((customer) => {
@@ -236,10 +237,11 @@ export default (props: PropsType) => {
       default:
         break;
     }
+    console.log(formik.values);
     return (
       <SelectForm
         options={options}
-        value={formik.values[field.name]}
+        value={values}
         label={field.label}
         loading={loading}
         onOpen={onOpen}

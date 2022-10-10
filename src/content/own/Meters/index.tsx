@@ -152,7 +152,7 @@ function Files() {
       fileType: 'image'
     },
     {
-      name: 'vendors',
+      name: 'workers',
       type: 'select',
       type2: 'user',
       label: t('Workers'),
@@ -165,7 +165,7 @@ function Files() {
       label: t('Location')
     },
     {
-      name: 'assets',
+      name: 'asset',
       type: 'select',
       type2: 'asset',
       label: t('Asset')
@@ -223,12 +223,74 @@ function Files() {
       </DialogContent>
     </Dialog>
   );
+  const renderUpdateModal = () => (
+    <Dialog
+      fullWidth
+      maxWidth="md"
+      open={openUpdateModal}
+      onClose={() => setOpenUpdateModal(false)}
+    >
+      <DialogTitle
+        sx={{
+          p: 3
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
+          {t('Edit Meter')}
+        </Typography>
+        <Typography variant="subtitle2">
+          {t('Fill in the fields below to edit the Meter')}
+        </Typography>
+      </DialogTitle>
+      <DialogContent
+        dividers
+        sx={{
+          p: 3
+        }}
+      >
+        <Box>
+          <Form
+            fields={fields}
+            validation={Yup.object().shape(shape)}
+            submitText={t('Save')}
+            values={{
+              ...currentMeter,
+              workers: currentMeter?.workers.map((worker) => {
+                return {
+                  label: `${worker?.firstName} ${worker.lastName}`,
+                  value: worker.id
+                };
+              }),
+              location: {
+                label: currentMeter?.location.name,
+                value: currentMeter?.location.id
+              },
+              asset: {
+                label: currentMeter?.asset.name,
+                value: currentMeter?.asset.id
+              }
+            }}
+            onChange={({ field, e }) => {}}
+            onSubmit={async (values) => {
+              try {
+                await wait(2000);
+                setOpenAddModal(false);
+              } catch (err) {
+                console.error(err);
+              }
+            }}
+          />
+        </Box>
+      </DialogContent>
+    </Dialog>
+  );
   return (
     <>
       <Helmet>
         <title>{t('Meters')}</title>
       </Helmet>
       {renderAddModal()}
+      {renderUpdateModal()}
       <Grid
         container
         justifyContent="center"

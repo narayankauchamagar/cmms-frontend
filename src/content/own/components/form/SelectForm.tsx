@@ -7,7 +7,7 @@ interface PropsType {
     value: string;
   }[];
   label: string;
-  value: string | { label: string; value: string }[];
+  value: { label: string; value: string } | { label: string; value: string }[];
   placeholder?: string;
   multiple?: boolean;
   fullWidth?: boolean;
@@ -30,13 +30,7 @@ export default (props: PropsType) => {
       loading={props.loading}
       // @ts-ignore
       isOptionEqualToValue={(option, value) => option.value === value.value}
-      defaultValue={
-        props.multiple
-          ? props.value
-          : props.value
-          ? { label: props.value, value: props.value }
-          : null
-      }
+      defaultValue={props.value}
       options={props.options}
       // @ts-ignore
       getOptionLabel={(option) => option.label}
