@@ -25,7 +25,7 @@ import {
 import wait from '../../../../utils/wait';
 import { Vendor, vendors as vendorsList } from '../../../../models/owns/vendor';
 import User from 'src/models/owns/user';
-import Team from '../../../../models/owns/team';
+import Team, { teams as teamsList } from '../../../../models/owns/team';
 import SelectParts from './SelectParts';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { users as usersList } from '../../../../models/owns/user';
@@ -99,19 +99,9 @@ export default (props: PropsType) => {
   };
   const fetchTeams = async () => {
     setFetchingTeams(true);
-    const _teams: Team[] = [
-      {
-        id: 21,
-        name: 'team1'
-      },
-      {
-        id: 23,
-        name: 'team2'
-      }
-    ];
     await wait(2000);
     setFetchingTeams(false);
-    setTeams(_teams);
+    setTeams(teamsList);
   };
   props.fields.forEach((f) => {
     shape[f.name] = Yup.string();
@@ -237,7 +227,6 @@ export default (props: PropsType) => {
       default:
         break;
     }
-    console.log(formik.values);
     return (
       <SelectForm
         options={options}

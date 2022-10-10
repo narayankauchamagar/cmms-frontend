@@ -193,12 +193,11 @@ function PurchaseOrders() {
       multiple: true
     },
     {
-      name: 'vendors',
+      name: 'vendor',
       type: 'select',
       type2: 'vendor',
-      label: t('Vendors'),
-      midWidth: true,
-      multiple: true
+      label: t('Vendor'),
+      midWidth: true
     },
     {
       name: 'parts',
@@ -349,7 +348,13 @@ function PurchaseOrders() {
             fields={fields}
             validation={Yup.object().shape(shape)}
             submitText={t('Save')}
-            values={currentPurchaseOrder}
+            values={{
+              ...currentPurchaseOrder,
+              vendor: {
+                label: currentPurchaseOrder?.vendor.name,
+                value: currentPurchaseOrder?.vendor.id.toString()
+              }
+            }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               try {

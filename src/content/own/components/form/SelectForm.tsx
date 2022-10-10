@@ -29,7 +29,7 @@ export default (props: PropsType) => {
       onOpen={props.onOpen}
       loading={props.loading}
       // @ts-ignore
-      isOptionEqualToValue={(option, value) => option.value === value.value}
+      isOptionEqualToValue={(option, value) => option.value == value.value}
       defaultValue={props.value}
       options={props.options}
       // @ts-ignore

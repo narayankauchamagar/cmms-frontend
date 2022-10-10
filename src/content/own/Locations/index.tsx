@@ -33,9 +33,9 @@ import * as Yup from 'yup';
 import wait from '../../../utils/wait';
 import { isNumeric } from '../../../utils/validators';
 import User, { users } from '../../../models/owns/user';
-import Team from '../../../models/owns/team';
-import { vendors } from '../../../models/owns/vendor';
-import { customers } from '../../../models/owns/customer';
+import Team, { teams } from '../../../models/owns/team';
+import { Vendor, vendors } from '../../../models/owns/vendor';
+import { Customer, customers } from '../../../models/owns/customer';
 import LocationDetails from './LocationDetails';
 import { useParams } from 'react-router-dom';
 
@@ -140,14 +140,10 @@ function Files() {
       ]
     }
   ];
-  const workers: User[] = users;
   const currentLocationWorkers: User[] = users;
-  const teams: Team[] = [
-    {
-      id: 21,
-      name: 'team1'
-    }
-  ];
+  const currentLocationTeams: Team[] = teams;
+  const currentLocationVendors: Vendor[] = vendors;
+  const currentLocationCustomers: Customer[] = customers;
 
   const fields: Array<IField> = [
     {
@@ -168,53 +164,33 @@ function Files() {
       name: 'workers',
       multiple: true,
       type: 'select',
+      type2: 'user',
       label: 'Workers',
-      placeholder: 'Select workers',
-      items: workers.map((worker) => {
-        return {
-          label: `${worker.firstName} ${worker.lastName}`,
-          value: worker.id.toString()
-        };
-      })
+      placeholder: 'Select workers'
     },
     {
       name: 'teams',
       multiple: true,
       type: 'select',
+      type2: 'team',
       label: 'Teams',
-      placeholder: 'Select teams',
-      items: teams.map((team) => {
-        return {
-          label: team.name,
-          value: team.id.toString()
-        };
-      })
+      placeholder: 'Select teams'
     },
     {
       name: 'vendors',
       multiple: true,
       type: 'select',
+      type2: 'vendor',
       label: 'Vendors',
-      placeholder: 'Select vendors',
-      items: vendors.map((vendor) => {
-        return {
-          label: vendor.name,
-          value: vendor.id.toString()
-        };
-      })
+      placeholder: 'Select vendors'
     },
     {
       name: 'customers',
       multiple: true,
       type: 'select',
+      type2: 'customer',
       label: 'Customers',
-      placeholder: 'Select customers',
-      items: customers.map((customer) => {
-        return {
-          label: customer.name,
-          value: customer.id.toString()
-        };
-      })
+      placeholder: 'Select customers'
     }
   ];
 
@@ -305,6 +281,24 @@ function Files() {
                 return {
                   label: `${worker.firstName} ${worker.lastName}`,
                   value: worker.id.toString()
+                };
+              }),
+              teams: currentLocationTeams.map((team) => {
+                return {
+                  label: team.name,
+                  value: team.id.toString()
+                };
+              }),
+              vendors: currentLocationVendors.map((vendor) => {
+                return {
+                  label: vendor.name,
+                  value: vendor.id.toString()
+                };
+              }),
+              customers: currentLocationCustomers.map((customer) => {
+                return {
+                  label: customer.name,
+                  value: customer.id.toString()
                 };
               })
             }}
