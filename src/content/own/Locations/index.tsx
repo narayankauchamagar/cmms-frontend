@@ -392,7 +392,7 @@ function Files() {
         open={openDrawer}
         onClose={handleCloseDetails}
         PaperProps={{
-          sx: { width: '60%' }
+          sx: { width: '50%' }
         }}
       >
         <LocationDetails

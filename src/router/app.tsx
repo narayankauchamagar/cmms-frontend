@@ -61,6 +61,7 @@ const VendorsAndCustomers = Loader(
 const Assets = Loader(lazy(() => import('src/content/own/Assets')));
 const ShowAsset = Loader(lazy(() => import('src/content/own/Assets/Show')));
 const Inventory = Loader(lazy(() => import('src/content/own/Inventory')));
+const Requests = Loader(lazy(() => import('src/content/own/Requests')));
 
 const PeopleAndTeams = Loader(
   lazy(() => import('src/content/own/PeopleAndTeams'))
@@ -124,6 +125,19 @@ const appRoutes = [
       {
         path: ':meterId',
         element: <Meters />
+      }
+    ]
+  },
+  {
+    path: 'requests',
+    children: [
+      {
+        path: '',
+        element: <Requests />
+      },
+      {
+        path: ':requestId',
+        element: <Requests />
       }
     ]
   },

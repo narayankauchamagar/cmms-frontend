@@ -121,7 +121,20 @@ export default (props: PropsType) => {
     formik.setFieldValue(field, e);
     return formik.handleChange(field);
   };
-
+  const getPriorityLabel = (str: string) => {
+    switch (str) {
+      case 'NONE':
+        return t('None');
+      case 'LOW':
+        return t('Low');
+      case 'MEDIUM':
+        return t('Medium');
+      case 'HIGH':
+        return t('High');
+      default:
+        break;
+    }
+  };
   const renderSelect = (formik: FormikProps<IHash<any>>, field: IField) => {
     let options = field.items;
     let loading = field.loading;
@@ -185,6 +198,19 @@ export default (props: PropsType) => {
             value: asset.id.toString()
           };
         });
+        onOpen = fetchAssets;
+        loading = fetchingAssets;
+        break;
+      case 'priority':
+        options = ['NONE', 'LOW', 'MEDIUM', 'HIGH'].map((value) => {
+          return {
+            label: getPriorityLabel(value),
+            value
+          };
+        });
+        values = values
+          ? { label: getPriorityLabel(values), value: values }
+          : null;
         onOpen = fetchAssets;
         loading = fetchingAssets;
         break;

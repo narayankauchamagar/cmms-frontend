@@ -465,7 +465,7 @@ const Parts = ({ setAction }: PropsType) => {
         open={openDrawer}
         onClose={handleCloseDetails}
         PaperProps={{
-          sx: { width: '60%' }
+          sx: { width: '50%' }
         }}
       >
         <PartDetails part={currentPart} handleUpdate={handleUpdate} />

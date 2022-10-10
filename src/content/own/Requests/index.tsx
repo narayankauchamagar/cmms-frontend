@@ -17,12 +17,12 @@ import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import CustomDataGrid from '../components/CustomDatagrid';
 import { GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import Meter, { meters } from '../../../models/owns/meter';
+import Request, { requests } from '../../../models/owns/request';
 import Form from '../components/form';
 import * as Yup from 'yup';
 import wait from '../../../utils/wait';
 import { IField } from '../type';
-import MeterDetails from './MeterDetails';
+import RequestDetails from './RequestDetails';
 import { useParams } from 'react-router-dom';
 import { isNumeric } from '../../../utils/validators';
 
@@ -32,32 +32,36 @@ function Files() {
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
-  const [currentMeter, setCurrentMeter] = useState<Meter>();
-  const { meterId } = useParams();
+  const [currentRequest, setCurrentRequest] = useState<Request>();
+  const { requestId } = useParams();
 
   useEffect(() => {
-    setTitle(t('Meters'));
+    setTitle(t('Requests'));
   }, []);
   useEffect(() => {
-    if (meterId && isNumeric(meterId)) {
-      handleOpenDetails(Number(meterId));
+    if (requestId && isNumeric(requestId)) {
+      handleOpenDetails(Number(requestId));
     }
-  }, [meters]);
+  }, [requests]);
 
   const handleUpdate = (id: number) => {
-    setCurrentMeter(meters.find((meter) => meter.id === id));
+    setCurrentRequest(requests.find((request) => request.id === id));
     setOpenUpdateModal(true);
   };
   const handleOpenDetails = (id: number) => {
-    const foundMeter = meters.find((meter) => meter.id === id);
-    if (foundMeter) {
-      setCurrentMeter(foundMeter);
-      window.history.replaceState(null, 'Meter details', `/app/meters/${id}`);
+    const foundRequest = requests.find((request) => request.id === id);
+    if (foundRequest) {
+      setCurrentRequest(foundRequest);
+      window.history.replaceState(
+        null,
+        'Request details',
+        `/app/requests/${id}`
+      );
       setOpenDrawer(true);
     }
   };
   const handleCloseDetails = () => {
-    window.history.replaceState(null, 'Meter', `/app/meters`);
+    window.history.replaceState(null, 'Request', `/app/requests`);
     setOpenDrawer(false);
   };
   const columns: GridEnrichedColDef[] = [
@@ -71,49 +75,21 @@ function Files() {
       )
     },
     {
-      field: 'nextReading',
-      headerName: t('Next Reading Due'),
-      description: t('Next Reading'),
+      field: 'description',
+      headerName: t('Description'),
+      description: t('Description'),
       width: 150
     },
     {
-      field: 'unit',
-      headerName: t('Unit of Measurement'),
-      description: t('Unit of Measurement'),
+      field: 'priority',
+      headerName: t('Priority'),
+      description: t('Priority'),
       width: 150
     },
     {
-      field: 'lastReading',
-      headerName: t('Last Reading'),
-      description: t('Last Reading'),
-      width: 150,
-      valueGetter: (params) =>
-        params.row.readings[params.row.readings.length - 1].value
-    },
-    {
-      field: 'location',
-      headerName: t('Location'),
-      description: t('Location'),
-      width: 150,
-      valueGetter: (params) => params.row.location.name
-    },
-    {
-      field: 'asset',
-      headerName: t('Asset'),
-      description: t('Asset'),
-      width: 150,
-      valueGetter: (params) => params.row.asset.name
-    },
-    {
-      field: 'createdBy',
-      headerName: t('Created By'),
-      description: t('Created By'),
-      width: 150
-    },
-    {
-      field: 'createdAt',
-      headerName: t('Date Created'),
-      description: t('Date Created'),
+      field: 'status',
+      headerName: t('Status'),
+      description: t('Status'),
       width: 150
     }
   ];
@@ -122,28 +98,22 @@ function Files() {
       name: 'name',
       type: 'text',
       label: t('Name'),
-      placeholder: t('Enter Meter name'),
+      placeholder: t('Enter Request name'),
       required: true
     },
     {
-      name: 'unit',
+      name: 'description',
       type: 'text',
-      label: t('Unit'),
-      placeholder: t('Unit'),
-      required: true
+      label: t('Description'),
+      placeholder: t('Description'),
+      multiple: true
     },
     {
-      name: 'updateFrequency',
-      type: 'number',
-      label: t('Update Frequency'),
-      placeholder: t('Update Frequency'),
-      required: true
-    },
-    {
-      name: 'category',
-      type: 'text',
-      label: t('Category'),
-      placeholder: t('Category')
+      name: 'priority',
+      type: 'select',
+      type2: 'priority',
+      label: t('Priority'),
+      placeholder: t('Priority')
     },
     {
       name: 'image',
@@ -152,31 +122,14 @@ function Files() {
       fileType: 'image'
     },
     {
-      name: 'workers',
-      type: 'select',
-      type2: 'user',
-      label: t('Workers'),
-      multiple: true
-    },
-    {
-      name: 'location',
-      type: 'select',
-      type2: 'location',
-      label: t('Location')
-    },
-    {
-      name: 'asset',
-      type: 'select',
-      type2: 'asset',
-      label: t('Asset')
+      name: 'files',
+      type: 'file',
+      label: t('Files'),
+      fileType: 'file'
     }
   ];
   const shape = {
-    name: Yup.string().required(t('Meter name is required')),
-    unit: Yup.string().required(t('Meter unit is required')),
-    updateFrequency: Yup.string().required(
-      t('Meter update frequency is required')
-    )
+    name: Yup.string().required(t('Request name is required'))
   };
   const renderAddModal = () => (
     <Dialog
@@ -191,10 +144,10 @@ function Files() {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Add Meter')}
+          {t('Add Request')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the fields below to create and add a new Meter')}
+          {t('Fill in the fields below to create and add a new Request')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -236,10 +189,10 @@ function Files() {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Edit Meter')}
+          {t('Edit Request')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the fields below to edit the Meter')}
+          {t('Fill in the fields below to edit the Request')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -253,23 +206,7 @@ function Files() {
             fields={fields}
             validation={Yup.object().shape(shape)}
             submitText={t('Save')}
-            values={{
-              ...currentMeter,
-              workers: currentMeter?.workers.map((worker) => {
-                return {
-                  label: `${worker?.firstName} ${worker.lastName}`,
-                  value: worker.id
-                };
-              }),
-              location: {
-                label: currentMeter?.location.name,
-                value: currentMeter?.location.id
-              },
-              asset: {
-                label: currentMeter?.asset.name,
-                value: currentMeter?.asset.id
-              }
-            }}
+            values={currentRequest}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               try {
@@ -287,7 +224,7 @@ function Files() {
   return (
     <>
       <Helmet>
-        <title>{t('Meters')}</title>
+        <title>{t('Requests')}</title>
       </Helmet>
       {renderAddModal()}
       {renderUpdateModal()}
@@ -312,7 +249,7 @@ function Files() {
             variant="contained"
             onClick={() => setOpenAddModal(true)}
           >
-            Meter
+            Request
           </Button>
         </Grid>
         <Grid item xs={12}>
@@ -328,7 +265,7 @@ function Files() {
             <Box sx={{ height: 500, width: '95%' }}>
               <CustomDataGrid
                 columns={columns}
-                rows={meters}
+                rows={requests}
                 onRowClick={({ id }) => handleOpenDetails(Number(id))}
                 components={{
                   Toolbar: GridToolbar
@@ -351,7 +288,7 @@ function Files() {
           sx: { width: '50%' }
         }}
       >
-        <MeterDetails meter={currentMeter} handleUpdate={handleUpdate} />
+        <RequestDetails request={currentRequest} handleUpdate={handleUpdate} />
       </Drawer>
     </>
   );

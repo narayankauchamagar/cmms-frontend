@@ -431,7 +431,7 @@ function PurchaseOrders() {
         open={openDrawer}
         onClose={handleCloseDetails}
         PaperProps={{
-          sx: { width: '60%' }
+          sx: { width: '50%' }
         }}
       >
         <PurchaseOrderDetails

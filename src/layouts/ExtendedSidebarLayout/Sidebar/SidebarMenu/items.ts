@@ -20,6 +20,7 @@ import LocationOnTwoToneIcon from '@mui/icons-material/LocationOnTwoTone';
 import Inventory2TwoToneIcon from '@mui/icons-material/Inventory2TwoTone';
 import HandymanTwoToneIcon from '@mui/icons-material/HandymanTwoTone';
 import SpeedTwoToneIcon from '@mui/icons-material/SpeedTwoTone';
+import MoveToInboxTwoToneIcon from '@mui/icons-material/MoveToInboxTwoTone';
 
 export interface MenuItem {
   link?: string;
@@ -59,6 +60,11 @@ const menuItems: MenuItems[] = [
         name: 'Meters',
         link: '/app/meters',
         icon: SpeedTwoToneIcon
+      },
+      {
+        name: 'Requests',
+        link: '/app/requests',
+        icon: MoveToInboxTwoToneIcon
       },
       {
         name: 'Locations',

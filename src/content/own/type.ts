@@ -29,7 +29,8 @@ export interface IField {
     | 'team'
     | 'part'
     | 'location'
-    | 'asset';
+    | 'asset'
+    | 'priority';
   name?: string;
   placeholder?: string;
   fileType?: 'file' | 'image';
