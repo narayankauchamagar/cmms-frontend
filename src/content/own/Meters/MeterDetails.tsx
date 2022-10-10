@@ -12,6 +12,10 @@ import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import Meter from '../../../models/owns/meter';
+import * as Yup from 'yup';
+import wait from '../../../utils/wait';
+import Form from '../components/form';
+import { IField } from '../type';
 
 interface MeterDetailsProps {
   meter: Meter;
@@ -40,19 +44,40 @@ export default function MeterDetails(props: MeterDetailsProps) {
       </Grid>
     );
   };
-  const firstFieldsToRender = (
-    meter: Meter
-  ): { label: string; value: any }[] => [
+  const fieldsToRender = (meter: Meter): { label: string; value: any }[] => [
     {
-      label: t('Name'),
-      value: meter.name
+      label: t('Location Name'),
+      value: meter.location.name
     },
     {
-      label: t('ID'),
-      value: meter.id
+      label: t('Asset Name'),
+      value: meter.asset.name
+    },
+    {
+      label: t('Reading Frequency'),
+      value: `Every ${meter.updateFrequency} day`
+    },
+    {
+      label: t('Assigned To'),
+      value: meter.workers.reduce(
+        (acc, user, index) =>
+          acc + `${index !== 0 ? ',' : ''} ${user.firstName} ${user.lastName}`,
+        ''
+      )
     }
   ];
-
+  const fields: Array<IField> = [
+    {
+      name: 'reading',
+      type: 'text',
+      label: t('Reading'),
+      placeholder: t('Enter Meter value'),
+      required: true
+    }
+  ];
+  const shape = {
+    reading: Yup.string().required(t('Reading value is required'))
+  };
   return (
     <Grid
       container
@@ -70,7 +95,6 @@ export default function MeterDetails(props: MeterDetailsProps) {
       >
         <Box>
           <Typography variant="h2">{meter?.name}</Typography>
-          <Typography variant="h6">{meter?.asset.name}</Typography>
         </Box>
         <Box>
           <EditTwoToneIcon
@@ -99,11 +123,24 @@ export default function MeterDetails(props: MeterDetailsProps) {
       <Grid item xs={12}>
         {currentTab === 'details' && (
           <Box>
-            <Typography sx={{ mb: 1 }} variant="h4">
+            <Form
+              fields={fields}
+              validation={Yup.object().shape(shape)}
+              submitText={t('Add Reading')}
+              values={{ reading: 0 }}
+              onSubmit={async (values) => {
+                try {
+                  await wait(2000);
+                } catch (err) {
+                  console.error(err);
+                }
+              }}
+            />
+            <Typography sx={{ mt: 2, mb: 1 }} variant="h4">
               Meter details
             </Typography>
             <Grid container spacing={2}>
-              {firstFieldsToRender(meter).map((field) =>
+              {fieldsToRender(meter).map((field) =>
                 renderField(field.label, field.value)
               )}
             </Grid>
