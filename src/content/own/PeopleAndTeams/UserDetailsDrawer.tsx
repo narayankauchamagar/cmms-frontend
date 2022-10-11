@@ -1,5 +1,6 @@
 import { ChangeEvent, useState } from 'react';
 import {
+  alpha,
   Avatar,
   Box,
   CardContent,
@@ -7,11 +8,14 @@ import {
   styled,
   Tab,
   Tabs,
-  Typography
+  Typography,
+  useTheme
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import Scrollbar from 'src/components/Scrollbar';
 import User from '../../../models/owns/user';
+import Chart from 'react-apexcharts';
+import type { ApexOptions } from 'apexcharts';
 
 const AvatarPrimary = styled(Avatar)(
   ({ theme }) => `
@@ -38,6 +42,7 @@ interface PropsType {
 
 function UserDetailsDrawer({ user }: PropsType) {
   const { t }: { t: any } = useTranslation();
+  const theme = useTheme();
 
   const [currentTab, setCurrentTab] = useState<string>('overview');
 
@@ -93,6 +98,69 @@ function UserDetailsDrawer({ user }: PropsType) {
       value: user.hourlyRate
     }
   ];
+
+  //////////////////////////////////////////////////////////////////////////////////////////////
+  const chart3Options: ApexOptions = {
+    stroke: {
+      curve: 'smooth',
+      width: [0, 5]
+    },
+    theme: {
+      mode: theme.palette.mode
+    },
+    chart: {
+      background: 'transparent',
+      toolbar: {
+        show: false
+      }
+    },
+    colors: [alpha(theme.colors.primary.main, 0.4), theme.colors.primary.main],
+    fill: {
+      opacity: 1
+    },
+    labels: [
+      '01 Aug 2021',
+      '02 Aug 2021',
+      '03 Aug 2021',
+      '04 Aug 2021',
+      '05 Aug 2021',
+      '06 Aug 2021',
+      '07 Aug 2021',
+      '08 Aug 2021',
+      '09 Aug 2021',
+      '10 Aug 2021',
+      '11 Aug 2021',
+      '12 Aug 2021'
+    ],
+    xaxis: {
+      type: 'datetime'
+    },
+    dataLabels: {
+      enabled: false
+    },
+    grid: {
+      strokeDashArray: 5,
+      borderColor: theme.palette.divider
+    },
+    legend: {
+      show: false
+    }
+  };
+
+  const chart3Data = [
+    {
+      name: 'Income',
+      type: 'column',
+      data: [440, 505, 414, 671, 227, 413, 201, 352, 752, 320, 257, 160]
+    },
+    {
+      name: 'Expenses',
+      type: 'line',
+      data: [231, 442, 335, 227, 433, 222, 117, 316, 242, 252, 162, 176]
+    }
+  ];
+  //////////////////////////////////////////////////////////////////////////////////////////////
+
   return (
     <Box
       sx={{
@@ -169,8 +237,27 @@ function UserDetailsDrawer({ user }: PropsType) {
         )}
 
         {currentTab === 'activity' && (
-          <Box mt={3} px={3}>
-            <Typography variant="h3">{t('graph...')}</Typography>
+          <Box sx={{ mt: 3, px: 3, textAlign: 'center' }}>
+            <Typography variant="subtitle2">
+              {t('Work orders completed in last 14 days')}
+            </Typography>
+            <Typography variant="h2">{t('0')}</Typography>
+            <Typography variant="subtitle2" color="green">
+              {t(
+                'You have not completed any work orders in the last two weeks'
+              )}
+            </Typography>
+
+            {/* ////////////////////////////////////////////////////////////////////////// */}
+            <Box flexGrow={1} px={2} pb={2}>
+              <Chart
+                options={chart3Options}
+                series={chart3Data}
+                type="line"
+                height={'100%'}
+              />
+            </Box>
+            {/* ////////////////////////////////////////////////////////////////////////// */}
           </Box>
         )}
       </Scrollbar>
