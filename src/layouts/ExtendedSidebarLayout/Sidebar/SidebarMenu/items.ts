@@ -21,6 +21,7 @@ import Inventory2TwoToneIcon from '@mui/icons-material/Inventory2TwoTone';
 import HandymanTwoToneIcon from '@mui/icons-material/HandymanTwoTone';
 import SpeedTwoToneIcon from '@mui/icons-material/SpeedTwoTone';
 import MoveToInboxTwoToneIcon from '@mui/icons-material/MoveToInboxTwoTone';
+import AssignmentTwoToneIcon from '@mui/icons-material/AssignmentTwoTone';
 
 export interface MenuItem {
   link?: string;
@@ -41,6 +42,11 @@ const menuItems: MenuItems[] = [
   {
     heading: '',
     items: [
+      {
+        name: 'Work Orders',
+        link: '/app/work-orders',
+        icon: AssignmentTwoToneIcon
+      },
       {
         name: 'Assets',
         link: '/app/assets',
