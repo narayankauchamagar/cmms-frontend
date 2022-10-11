@@ -89,13 +89,72 @@ function WorkOrders() {
 
   const columns: GridEnrichedColDef[] = [
     {
-      field: 'name',
-      headerName: t('Name'),
-      description: t('Name'),
+      field: 'id',
+      headerName: t('ID'),
+      description: t('ID'),
+      width: 150
+    },
+    {
+      field: 'status',
+      headerName: t('Status'),
+      description: t('Status'),
+      width: 150
+    },
+    {
+      field: 'title',
+      headerName: t('Title'),
+      description: t('Title'),
       width: 150,
       renderCell: (params: GridRenderCellParams<string>) => (
         <Box sx={{ fontWeight: 'bold' }}>{params.value}</Box>
       )
+    },
+
+    {
+      field: 'priority',
+      headerName: t('Priority'),
+      description: t('Priority'),
+      width: 150
+    },
+    {
+      field: 'description',
+      headerName: t('Description'),
+      description: t('Description'),
+      width: 150
+    },
+
+    {
+      field: 'assignedTo',
+      headerName: t('Assignees'),
+      description: t('Assignees'),
+      width: 150
+    },
+    {
+      field: 'location',
+      headerName: t('Location name'),
+      description: t('Location name'),
+      width: 150,
+      valueGetter: (params) => params.row.location.name
+    },
+    {
+      field: 'locationAddress',
+      headerName: t('Location address'),
+      description: t('Location address'),
+      width: 150,
+      valueGetter: (params) => params.row.location.address
+    },
+    {
+      field: 'category',
+      headerName: t('Category'),
+      description: t('Category'),
+      width: 150
+    },
+    {
+      field: 'asset',
+      headerName: t('Asset name'),
+      description: t('Asset name'),
+      width: 150,
+      valueGetter: (params) => params.row.asset.name
     },
     {
       field: 'address',
@@ -104,30 +163,64 @@ function WorkOrders() {
       width: 150
     },
     {
+      field: 'daysSinceCreated',
+      headerName: t('Days since created'),
+      description: t('Days since created'),
+      width: 150
+    },
+    {
+      field: 'additionalCost',
+      headerName: t('Additional Cost'),
+      description: t('Additional Cost'),
+      width: 150
+    },
+    {
+      field: 'files',
+      headerName: t('Files'),
+      description: t('Files'),
+      width: 150
+    },
+    {
+      field: 'tasks',
+      headerName: t('Tasks'),
+      description: t('Tasks'),
+      width: 150
+    },
+    {
+      field: 'requestedBy',
+      headerName: t('Requested By'),
+      description: t('Requested By'),
+      width: 150
+    },
+    {
+      field: 'laborCost',
+      headerName: t('Labor Cost'),
+      description: t('Labor Cost'),
+      width: 150
+    },
+    {
+      field: 'parts',
+      headerName: t('Parts'),
+      description: t('Parts'),
+      width: 150
+    },
+    {
+      field: 'completedOn',
+      headerName: t('Completed On'),
+      description: t('Completed On'),
+      width: 150
+    },
+    {
+      field: 'updatedAt',
+      headerName: t('Updated At'),
+      description: t('Updated At'),
+      width: 150
+    },
+    {
       field: 'createdAt',
       headerName: t('Created At'),
       description: t('Created At'),
       width: 150
-    },
-    {
-      field: 'actions',
-      type: 'actions',
-      headerName: t('Actions'),
-      description: t('Actions'),
-      getActions: (params: GridRowParams) => [
-        <GridActionsCellItem
-          key="edit"
-          icon={<EditTwoToneIcon fontSize="small" color="primary" />}
-          onClick={() => handleUpdate(Number(params.id))}
-          label="Edit"
-        />,
-        <GridActionsCellItem
-          key="delete"
-          icon={<DeleteTwoToneIcon fontSize="small" color="error" />}
-          onClick={() => handleDelete(Number(params.id))}
-          label="Delete"
-        />
-      ]
     }
   ];
   const currentWorkOrderWorkers: User[] = users;
