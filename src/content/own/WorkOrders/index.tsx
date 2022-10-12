@@ -124,8 +124,7 @@ function WorkOrders() {
     {
       field: 'id',
       headerName: t('ID'),
-      description: t('ID'),
-      width: 150
+      description: t('ID')
     },
     {
       field: 'status',

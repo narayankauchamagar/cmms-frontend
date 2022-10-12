@@ -39,7 +39,11 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
           {label}
         </Typography>
         {type === 'vendor' ? (
-          <Link href={`/app/vendors-customers/vendors/${id}`} variant="h6">
+          <Link
+            href={`/app/vendors-customers/vendors/${id}`}
+            variant="h6"
+            fontWeight="bold"
+          >
             {value}
           </Link>
         ) : (

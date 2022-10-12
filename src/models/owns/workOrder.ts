@@ -24,6 +24,7 @@ interface WorkOrderBase extends Audit {
   asset: Asset;
 }
 export default interface WorkOrder extends WorkOrderBase {
+  category: string;
   id: number;
   completedBy: User;
   completedOn: string;
@@ -39,6 +40,7 @@ export const workOrders: WorkOrder[] = [
   {
     completedBy: users[0],
     completedOn: 'string',
+    category: 'PREVENTIVE',
     archived: true,
     parentRequest: requests[0],
     purchaseOrder: purchaseOrders[0],
