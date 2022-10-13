@@ -61,7 +61,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
     workOrder: WorkOrder
   ): {
     label: string;
-    value: any;
+    value: string | number;
     type?: 'location' | 'asset';
     id?: number;
   }[] => [
@@ -75,7 +75,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
     },
     {
       label: t('Category'),
-      value: workOrder.category
+      value: workOrder.category.name
     },
     {
       label: t('Location'),
@@ -157,12 +157,13 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                 Assigned To
               </Typography>
               {workOrder.assignedTo.map((user, index) => (
-                <Link
-                  key={user.id}
-                  href={`/app/people-teams/users/${user.id}`}
-                  variant="h6"
-                  fontWeight="bold"
-                >{`${user.firstName} ${user.lastName}`}</Link>
+                <Box key={user.id}>
+                  <Link
+                    href={`/app/people-teams/users/${user.id}`}
+                    variant="h6"
+                    fontWeight="bold"
+                  >{`${user.firstName} ${user.lastName}`}</Link>
+                </Box>
               ))}
             </Grid>
           </Grid>

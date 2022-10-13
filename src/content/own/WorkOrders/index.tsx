@@ -43,6 +43,8 @@ import WorkOrderDetails from './WorkOrderDetails';
 import { useParams } from 'react-router-dom';
 import { enumerate } from '../../../utils/displayers';
 import { categories } from '../../../models/owns/category';
+import Location, { locations } from '../../../models/owns/location';
+import Asset, { assets } from '../../../models/owns/asset';
 
 const AvatarPrimary = styled(Avatar)(
   ({ theme }) => `
@@ -182,7 +184,8 @@ function WorkOrders() {
       field: 'category',
       headerName: t('Category'),
       description: t('Category'),
-      width: 150
+      width: 150,
+      valueGetter: (params) => params.row.category.name
     },
     {
       field: 'asset',
@@ -264,9 +267,9 @@ function WorkOrders() {
     }
   ];
   const currentWorkOrderWorkers: User[] = users;
-  const currentWorkOrderTeams: Team[] = teams;
-  const currentWorkOrderVendors: Vendor[] = vendors;
-  const currentWorkOrderCustomers: Customer[] = customers;
+  const currentWorkOrderTeam: Team = teams[0];
+  const currentWorkOrderLocation: Location = locations[0];
+  const currentWorkOrderAsset: Asset = assets[0];
 
   const fields: Array<IField> = [
     {
@@ -422,10 +425,10 @@ function WorkOrders() {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Edit workOrder')}
+          {t('Edit Work Order')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the fields below to update the workOrder')}
+          {t('Fill in the fields below to update the Work Order')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -441,30 +444,28 @@ function WorkOrders() {
             submitText={t('Save')}
             values={{
               ...currentWorkOrder,
-              workers: currentWorkOrderWorkers.map((worker) => {
+              category: {
+                label: currentWorkOrder?.category.name,
+                value: currentWorkOrder?.category.id
+              },
+              additionalWorkers: currentWorkOrderWorkers.map((worker) => {
                 return {
                   label: `${worker.firstName} ${worker.lastName}`,
                   value: worker.id.toString()
                 };
               }),
-              teams: currentWorkOrderTeams.map((team) => {
-                return {
-                  label: team.name,
-                  value: team.id.toString()
-                };
-              }),
-              vendors: currentWorkOrderVendors.map((vendor) => {
-                return {
-                  label: vendor.name,
-                  value: vendor.id.toString()
-                };
-              }),
-              customers: currentWorkOrderCustomers.map((customer) => {
-                return {
-                  label: customer.name,
-                  value: customer.id.toString()
-                };
-              })
+              team: {
+                label: currentWorkOrderTeam.name,
+                value: currentWorkOrderTeam.id.toString()
+              },
+              location: {
+                label: currentWorkOrderLocation.name,
+                value: currentWorkOrderLocation.id.toString()
+              },
+              asset: {
+                label: currentWorkOrderAsset.name,
+                value: currentWorkOrderAsset.id.toString()
+              }
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
@@ -483,7 +484,7 @@ function WorkOrders() {
   return (
     <>
       <Helmet>
-        <title>{t('WorkOrders')}</title>
+        <title>{t('Work Orders')}</title>
       </Helmet>
       <Grid
         container
