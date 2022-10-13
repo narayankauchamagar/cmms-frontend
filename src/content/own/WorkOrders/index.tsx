@@ -42,6 +42,7 @@ import { Customer, customers } from '../../../models/owns/customer';
 import WorkOrderDetails from './WorkOrderDetails';
 import { useParams } from 'react-router-dom';
 import { enumerate } from '../../../utils/displayers';
+import { categories } from '../../../models/owns/category';
 
 const AvatarPrimary = styled(Avatar)(
   ({ theme }) => `
@@ -276,43 +277,85 @@ function WorkOrders() {
       required: true
     },
     {
-      name: 'address',
+      name: 'description',
       type: 'text',
-      label: 'Address',
-      placeholder: 'Casa, Maroc',
-      required: true
+      label: t('Description'),
+      placeholder: t('Description'),
+      multiple: true
     },
     {
-      name: 'workers',
-      multiple: true,
+      name: 'image',
+      type: 'file',
+      label: t('Image'),
+      fileType: 'image'
+    },
+    {
+      name: 'dueDate',
+      type: 'date',
+      label: t('Due Date')
+    },
+    {
+      name: 'estimatedDuration',
+      type: 'number',
+      label: t('Estimated Duration'),
+      placeholder: t('Hours')
+    },
+    {
+      name: 'priority',
       type: 'select',
-      type2: 'user',
-      label: 'Workers',
-      placeholder: 'Select workers'
+      label: t('Priority'),
+      type2: 'priority'
     },
     {
-      name: 'teams',
-      multiple: true,
+      name: 'category',
+      type: 'select',
+      label: t('Category'),
+      items: categories.map((category) => {
+        return {
+          label: category.name,
+          value: category.id.toString()
+        };
+      })
+    },
+    {
+      name: 'additionalWorkers',
+      type: 'select',
+      label: t('Worker'),
+      type2: 'user',
+      multiple: true
+    },
+
+    {
+      name: 'team',
       type: 'select',
       type2: 'team',
-      label: 'Teams',
-      placeholder: 'Select teams'
+      label: 'Team',
+      placeholder: 'Select team'
     },
     {
-      name: 'vendors',
-      multiple: true,
+      name: 'location',
       type: 'select',
-      type2: 'vendor',
-      label: 'Vendors',
-      placeholder: 'Select vendors'
+      type2: 'location',
+      label: 'Location',
+      placeholder: 'Select location'
     },
     {
-      name: 'customers',
-      multiple: true,
+      name: 'asset',
       type: 'select',
-      type2: 'customer',
-      label: 'Customers',
-      placeholder: 'Select customers'
+      type2: 'asset',
+      label: t('Asset'),
+      placeholder: 'Select Asset'
+    },
+    {
+      name: 'files',
+      type: 'file',
+      label: t('Files'),
+      fileType: 'file'
+    },
+    {
+      name: 'requiresSignature',
+      type: 'checkbox',
+      label: t('Requires Signature')
     }
   ];
 
@@ -334,10 +377,10 @@ function WorkOrders() {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Add workOrder')}
+          {t('Add Work Order')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the fields below to create and add a new workOrder')}
+          {t('Fill in the fields below to create and add a new Work Order')}
         </Typography>
       </DialogTitle>
       <DialogContent

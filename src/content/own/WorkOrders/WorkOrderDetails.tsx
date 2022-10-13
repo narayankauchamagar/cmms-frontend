@@ -114,8 +114,10 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
         justifyContent="space-between"
       >
         <Box>
+          {/*//TODO format*/}
+          <Typography variant="h6">{workOrder?.priority} Priority</Typography>
           <Typography variant="h2">{workOrder?.title}</Typography>
-          <Typography variant="h6">{workOrder?.address}</Typography>
+          <Typography variant="h6">{workOrder?.description}</Typography>
         </Box>
         <Box>
           <EditTwoToneIcon
@@ -155,17 +157,12 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                 Assigned To
               </Typography>
               {workOrder.assignedTo.map((user, index) => (
-                <Box
+                <Link
                   key={user.id}
-                  sx={{ display: 'flex', flexDirection: 'row' }}
-                >
-                  <Link
-                    href={`/app/people-teams/users/${user.id}`}
-                    variant="h6"
-                    fontWeight="bold"
-                  >{`${user.firstName} ${user.lastName}`}</Link>
-                  {index == 0 ? '' : ','}
-                </Box>
+                  href={`/app/people-teams/users/${user.id}`}
+                  variant="h6"
+                  fontWeight="bold"
+                >{`${user.firstName} ${user.lastName}`}</Link>
               ))}
             </Grid>
           </Grid>
