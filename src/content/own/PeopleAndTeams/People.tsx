@@ -1,9 +1,12 @@
 import {
   Box,
+  Button,
   Dialog,
   DialogContent,
   DialogTitle,
   Drawer,
+  InputAdornment,
+  TextField,
   Typography,
   useTheme
 } from '@mui/material';
@@ -21,6 +24,8 @@ import {
 import { useState } from 'react';
 import UserDetailsDrawer from './UserDetailsDrawer';
 import User, { users } from '../../../models/owns/user';
+import UserRoleCardList from './UserRoleCardList';
+import { Email } from '@mui/icons-material';
 
 interface PropsType {
   values?: any;
@@ -38,9 +43,36 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
     setDetailDrawerOpen(!detailDrawerOpen);
   };
 
-  let fields: Array<IField> = [];
+  const userRoleList = [
+    {
+      title: 'Administrator',
+      desc: 'Administrator has full access; including editing, adding, deleting work orders and requests'
+    },
+    {
+      title: 'Limited Administrator',
+      desc: 'Limited administrator... Lorem, ipsum dolor sit amet consectetur adipisicing elit. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Modi architecto voluptate temporibus dolorum iste odio nihil quo, esse maiores quia.'
+    },
+    {
+      title: 'Technician',
+      desc: 'Technician... Lorem, ipsum dolor sit amet consectetur adipisicing elit. Modi architecto voluptate temporibus dolorum iste odio nihil quo, esse maiores quia.'
+    },
+    {
+      title: 'Limited Technician',
+      desc: 'Technician... Lorem, ipsum dolor sit amet consectetur adipisicing elit. Modi architecto voluptate temporibus dolorum iste odio nihil quo, esse maiores quia.'
+    },
+    {
+      title: 'View Only',
+      desc: 'Technician... Lorem, ipsum dolor sit amet consectetur adipisicing elit. Modi architecto voluptate temporibus dolorum iste odio nihil quo, esse maiores quia.'
+    },
+    {
+      title: 'Requester',
+      desc: 'Technician... Lorem, ipsum dolor sit amet consectetur adipisicing elit. Modi architecto voluptate temporibus dolorum iste odio nihil quo, esse maiores quia.'
+    }
+  ];
 
-  const shape = {};
+  // let fields: Array<IField> = [];
+
+  // const shape = {};
 
   const columns: GridEnrichedColDef[] = [
     {
@@ -90,7 +122,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
   ];
 
   const RenderPeopleAddModal = () => (
-    <Dialog fullWidth maxWidth="md" open={openModal} onClose={handleCloseModal}>
+    <Dialog fullWidth maxWidth="sm" open={openModal} onClose={handleCloseModal}>
       <DialogTitle
         sx={{
           p: 3
@@ -104,11 +136,45 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
       <DialogContent
         dividers
         sx={{
-          p: 3
+          p: 3,
+          display: 'flex',
+          justifyContent: 'center'
         }}
       >
-        <Box>
-          <Form
+        <Box sx={{width: "95%"}}>
+          <UserRoleCardList listData={userRoleList} />
+          <TextField
+            sx={{ my: 4 }}
+            fullWidth
+            helperText={t('You may add 20 users at a time')}
+            label={t('Enter email address')}
+            placeholder={t('example@email.com')}
+            name="email"
+            onChange={() => {}}
+            variant={'outlined'}
+            required
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Email />
+                </InputAdornment>
+              )
+            }}
+          />
+
+          <Button
+            type="submit"
+            fullWidth
+            sx={{
+              mb: 3
+            }}
+            onClick={() => {}}
+            variant="contained"
+          >
+            {t('Invite')}
+          </Button>
+
+          {/* <Form
             fields={fields}
             validation={Yup.object().shape(shape)}
             submitText={t('Invite')}
@@ -121,7 +187,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
                 console.error(err);
               }
             }}
-          />
+          /> */}
         </Box>
       </DialogContent>
     </Dialog>
