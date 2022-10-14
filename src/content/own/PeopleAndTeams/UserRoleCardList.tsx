@@ -8,11 +8,14 @@ import {
   ListItemAvatar,
   Avatar,
   styled,
-  Radio
+  Radio,
+  Box,
+  useTheme
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import Text from 'src/components/Text';
 import { Engineering } from '@mui/icons-material';
+import React from 'react';
 
 const AvatarWrapperSuccess = styled(Avatar)(
   ({ theme }) => `
@@ -21,27 +24,27 @@ const AvatarWrapperSuccess = styled(Avatar)(
 `
 );
 
-// const userRoleList = [
-//     {
-//         title: "Administrator",
-//         desc: "administrator... Lorem, ipsum dolor sit amet consectetur adipisicing elit. Modi architecto voluptate temporibus dolorum iste odio nihil quo, esse maiores quia."
-//     },
-//     {
-//         title: "Technician",
-//         desc: "Technician... Lorem, ipsum dolor sit amet consectetur adipisicing elit. Modi architecto voluptate temporibus dolorum iste odio nihil quo, esse maiores quia."
-//     },
-// ]
-
 interface Props {
   listData: {
     title: string;
-    desc: string;
+    desc?: string;
     icon?: JSX.Element;
   }[];
+  selectedItem: string;
+  setSelectedItem: React.Dispatch<React.SetStateAction<string>>;
 }
 
-function UserRoleCardList({ listData }: Props) {
+function UserRoleCardList({ listData, selectedItem, setSelectedItem }: Props) {
   const { t }: { t: any } = useTranslation();
+  const theme = useTheme();
+
+  const isSelected = (value) => selectedItem === value;
+
+  const handleChange = (value) => {
+    if (!isSelected(value)) {
+      setSelectedItem(value);
+    }
+  };
 
   return (
     <Card>
@@ -49,16 +52,24 @@ function UserRoleCardList({ listData }: Props) {
       <Divider />
 
       <List disablePadding>
-        {listData.map((item) => (
-          <>
+        {listData.map((item, index) => (
+          <Box
+            key={`${item.title}-${index}`}
+            style={{ cursor: 'pointer' }}
+            onClick={() => handleChange(item.title)}
+          >
             <ListItem
-              sx={{
-                py: 2
-              }}
+              sx={[
+                { py: 2 },
+                isSelected(item.title) && {
+                  border: `2px solid ${theme.colors.primary.main}`,
+                  borderRadius: 0.5
+                }
+              ]}
             >
               <ListItemAvatar>
                 <AvatarWrapperSuccess>
-                  <Engineering />
+                  {item?.icon ? item.icon : <Engineering />}
                 </AvatarWrapperSuccess>
               </ListItemAvatar>
 
@@ -71,21 +82,21 @@ function UserRoleCardList({ listData }: Props) {
                   gutterBottom: true,
                   noWrap: true
                 }}
-                secondary={<Text color="black">{t(item.desc)}</Text>}
+                secondary={
+                  item?.desc && <Text color="black">{t(item.desc)}</Text>
+                }
                 secondaryTypographyProps={{ variant: 'body2' }}
               />
 
               <Radio
-                checked={true}
-                onChange={() => {}}
-                value="a"
+                checked={isSelected(item.title)}
+                onChange={() => handleChange(item.title)}
                 name="radio-buttons"
-                inputProps={{ 'aria-label': 'A' }}
                 color="primary"
               />
             </ListItem>
             <Divider />
-          </>
+          </Box>
         ))}
       </List>
     </Card>
