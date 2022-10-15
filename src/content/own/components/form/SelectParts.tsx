@@ -15,14 +15,14 @@ import {
 } from '@mui/material';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { parts } from 'src/models/owns/part';
+import Part, { parts } from 'src/models/owns/part';
 import { sets } from '../../../../models/owns/setType';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 
 interface SelectPartsProps {
   open: boolean;
   onClose: () => void;
-  onChange: (parts: { id: number; name: string }[]) => void;
+  onChange: (parts: Part[]) => void;
   selected: number[];
 }
 
@@ -46,7 +46,7 @@ export default function SelectParts({
   useEffect(() => {
     onChange(
       selectedIds.map((id) => {
-        return { id, name: parts.find((part) => part.id === id).name };
+        return parts.find((part) => part.id === id);
       })
     );
   }, [selectedIds]);

@@ -45,6 +45,7 @@ import { enumerate } from '../../../utils/displayers';
 import { categories } from '../../../models/owns/category';
 import Location, { locations } from '../../../models/owns/location';
 import Asset, { assets } from '../../../models/owns/asset';
+import Part, { parts } from '../../../models/owns/part';
 
 const AvatarPrimary = styled(Avatar)(
   ({ theme }) => `
@@ -267,6 +268,7 @@ function WorkOrders() {
     }
   ];
   const currentWorkOrderWorkers: User[] = users;
+  const currentWorkOrderParts: Part[] = [parts[0]];
   const currentWorkOrderTeam: Team = teams[0];
   const currentWorkOrderLocation: Location = locations[0];
   const currentWorkOrderAsset: Asset = assets[0];
@@ -348,6 +350,13 @@ function WorkOrders() {
       type2: 'asset',
       label: t('Asset'),
       placeholder: 'Select Asset'
+    },
+    {
+      name: 'parts',
+      type: 'select',
+      type2: 'part',
+      label: t('Parts'),
+      placeholder: 'Select Parts'
     },
     {
       name: 'files',
@@ -448,6 +457,12 @@ function WorkOrders() {
                 label: currentWorkOrder?.category.name,
                 value: currentWorkOrder?.category.id
               },
+              parts: currentWorkOrderParts.map((part) => {
+                return {
+                  label: part.name,
+                  value: part.id.toString()
+                };
+              }),
               additionalWorkers: currentWorkOrderWorkers.map((worker) => {
                 return {
                   label: `${worker.firstName} ${worker.lastName}`,

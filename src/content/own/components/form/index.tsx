@@ -33,6 +33,7 @@ import Location, {
   locations as locationsList
 } from '../../../../models/owns/location';
 import Asset, { assets as assetsList } from '../../../../models/owns/asset';
+import Part from '../../../../models/owns/part';
 
 interface PropsType {
   fields: Array<IField>;
@@ -63,9 +64,7 @@ export default (props: PropsType) => {
   const [fetchingAssets, setFetchingAssets] = useState(false);
 
   const [openPartsModal, setOpenPartsModal] = useState<boolean>(false);
-  const [selectedParts, setSelectedParts] = useState<
-    { id: number; name: string }[]
-  >([]);
+  const [selectedParts, setSelectedParts] = useState<Part[]>([]);
   const fetchCustomers = async () => {
     setFetchingCustomers(true);
     await wait(2000);
@@ -240,7 +239,7 @@ export default (props: PropsType) => {
               Add Parts
             </Button>
             <SelectParts
-              selected={options?.map((option) => Number(option.value)) ?? []}
+              selected={values?.map((value) => Number(value.value)) ?? []}
               open={openPartsModal}
               onClose={() => setOpenPartsModal(false)}
               onChange={(newParts) => {

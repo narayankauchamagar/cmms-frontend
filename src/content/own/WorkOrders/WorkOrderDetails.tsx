@@ -1,8 +1,13 @@
 import {
   Box,
+  Button,
   Divider,
   Grid,
+  IconButton,
   Link,
+  List,
+  ListItem,
+  ListItemText,
   Tab,
   Tabs,
   Typography,
@@ -14,6 +19,7 @@ import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import Asset from '../../../models/owns/asset';
+import { labors } from '../../../models/owns/labor';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;
@@ -34,25 +40,28 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
     switch (resource) {
       case 'asset':
         return `/app/assets/${id}/work-orders`;
+      case 'team':
+        return `/app/people-teams/teams/${id}`;
       default:
         return `/app/${resource}s/${id}`;
     }
   };
   const renderField = (label, value, type?, id?) => {
-    return (
-      <Grid item xs={12} lg={6}>
-        <Typography variant="h6" sx={{ color: theme.colors.alpha.black[70] }}>
-          {label}
-        </Typography>
-        {type ? (
-          <Link href={getPath(type, id)} variant="h6" fontWeight="bold">
-            {value}
-          </Link>
-        ) : (
-          <Typography variant="h6">{value}</Typography>
-        )}
-      </Grid>
-    );
+    if (!type || (type && id))
+      return (
+        <Grid item xs={12} lg={6}>
+          <Typography variant="h6" sx={{ color: theme.colors.alpha.black[70] }}>
+            {label}
+          </Typography>
+          {type ? (
+            <Link href={getPath(type, id)} variant="h6" fontWeight="bold">
+              {value}
+            </Link>
+          ) : (
+            <Typography variant="h6">{value}</Typography>
+          )}
+        </Grid>
+      );
   };
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
@@ -62,7 +71,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   ): {
     label: string;
     value: string | number;
-    type?: 'location' | 'asset';
+    type?: 'location' | 'asset' | 'team';
     id?: number;
   }[] => [
     {
@@ -88,6 +97,12 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
       value: workOrder.asset.name,
       type: 'asset',
       id: workOrder.asset.id
+    },
+    {
+      label: t('Team'),
+      value: workOrder.team.name,
+      type: 'team',
+      id: workOrder.team.id
     },
     {
       label: t('Date created'),
@@ -145,28 +160,96 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
       </Grid>
       <Grid item xs={12}>
         {currentTab === 'details' && (
-          <Grid container spacing={2}>
-            {detailsFieldsToRender(workOrder).map((field) =>
-              renderField(field.label, field.value, field.type, field.id)
-            )}
-            <Grid item xs={12} lg={6}>
-              <Typography
-                variant="h6"
-                sx={{ color: theme.colors.alpha.black[70] }}
-              >
-                Assigned To
-              </Typography>
-              {workOrder.assignedTo.map((user, index) => (
-                <Box key={user.id}>
-                  <Link
-                    href={`/app/people-teams/users/${user.id}`}
-                    variant="h6"
-                    fontWeight="bold"
-                  >{`${user.firstName} ${user.lastName}`}</Link>
-                </Box>
-              ))}
+          <Box>
+            <Grid container spacing={2}>
+              {detailsFieldsToRender(workOrder).map((field) =>
+                renderField(field.label, field.value, field.type, field.id)
+              )}
+              <Grid item xs={12} lg={6}>
+                <Typography
+                  variant="h6"
+                  sx={{ color: theme.colors.alpha.black[70] }}
+                >
+                  Assigned To
+                </Typography>
+                {workOrder.assignedTo.map((user, index) => (
+                  <Box key={user.id}>
+                    <Link
+                      href={`/app/people-teams/users/${user.id}`}
+                      variant="h6"
+                      fontWeight="bold"
+                    >{`${user.firstName} ${user.lastName}`}</Link>
+                  </Box>
+                ))}
+              </Grid>
             </Grid>
-          </Grid>
+            <Divider sx={{ mt: 2 }} />
+            <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
+              Files
+            </Typography>
+            <List>
+              {workOrder.files.map((file) => (
+                <ListItem
+                  key={file.id}
+                  secondaryAction={
+                    <IconButton edge="end" aria-label="delete">
+                      <DeleteTwoToneIcon color="error" />
+                    </IconButton>
+                  }
+                >
+                  <ListItemText
+                    primary={
+                      <Link href={file.url} variant="h6">
+                        {file.name}
+                      </Link>
+                    }
+                    secondary={file.createdAt}
+                  />
+                </ListItem>
+              ))}
+            </List>
+            <Box>
+              <Divider sx={{ mt: 2 }} />
+              <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
+                Labors
+              </Typography>
+              {!labors.length ? (
+                <Typography sx={{ color: theme.colors.alpha.black[70] }}>
+                  {t(
+                    "No labor costs have been added yet. They'll show up here when a user logs time and has an hourly rate stored in Grash."
+                  )}
+                </Typography>
+              ) : (
+                <List>
+                  {labors.map((labor) => (
+                    <ListItem
+                      key={labor.id}
+                      secondaryAction={
+                        <Typography variant="h6">
+                          {labor.laborCost.cost} $
+                        </Typography>
+                      }
+                    >
+                      <ListItemText
+                        primary={
+                          <Link
+                            href={`/app/people-teams/users/${labor.user.id}`}
+                            variant="h6"
+                          >
+                            {`${labor.user.firstName} ${labor.user.lastName}`}
+                          </Link>
+                        }
+                        secondary={labor.createdAt}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              )}
+              <Button variant="outlined" sx={{ mt: 1 }}>
+                Add Time
+              </Button>
+            </Box>
+          </Box>
         )}
       </Grid>
     </Grid>
