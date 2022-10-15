@@ -34,6 +34,7 @@ import Location, {
 } from '../../../../models/owns/location';
 import Asset, { assets as assetsList } from '../../../../models/owns/asset';
 import Part from '../../../../models/owns/part';
+import CustomSwitch from './CustomSwitch';
 
 interface PropsType {
   fields: Array<IField>;
@@ -304,6 +305,14 @@ export default (props: PropsType) => {
                       type="groupCheckbox"
                       listCheckbox={field.items}
                       key={field.name}
+                    />
+                  ) : field.type === 'switch' ? (
+                    <CustomSwitch
+                      title={field.label}
+                      description={field.helperText}
+                      name={field.name}
+                      handleChange={formik.handleChange}
+                      checked={formik.values[field.name]}
                     />
                   ) : field.type === 'titleGroupField' ? (
                     <Typography variant="h3" sx={{ pb: 1 }}>

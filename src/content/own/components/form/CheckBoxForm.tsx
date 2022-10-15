@@ -6,7 +6,7 @@ interface PropsType {
   type?: 'simpleCheckbox' | 'groupCheckbox';
   listCheckbox?: {
     label: string;
-    value: string;
+    value: string | number;
     checked?: boolean;
   }[];
   checked?: boolean;

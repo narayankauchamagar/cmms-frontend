@@ -46,6 +46,7 @@ import { categories } from '../../../models/owns/category';
 import Location, { locations } from '../../../models/owns/location';
 import Asset, { assets } from '../../../models/owns/asset';
 import Part, { parts } from '../../../models/owns/part';
+import AddTimeModal from './AddTimeModal';
 
 const AvatarPrimary = styled(Avatar)(
   ({ theme }) => `

@@ -20,6 +20,7 @@ import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import Asset from '../../../models/owns/asset';
 import { labors } from '../../../models/owns/labor';
+import AddTimeModal from './AddTimeModal';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;
@@ -29,7 +30,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const { workOrder, handleUpdate } = props;
   const theme = useTheme();
   const { t }: { t: any } = useTranslation();
-  const [openAddFloorPlan, setOpenAddFloorPlan] = useState<boolean>(false);
+  const [openAddTimeModal, setOpenAddTimeModal] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<string>('details');
   const tabs = [
     { value: 'details', label: t('Details') },
@@ -245,13 +246,21 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                   ))}
                 </List>
               )}
-              <Button variant="outlined" sx={{ mt: 1 }}>
+              <Button
+                onClick={() => setOpenAddTimeModal(true)}
+                variant="outlined"
+                sx={{ mt: 1 }}
+              >
                 Add Time
               </Button>
             </Box>
           </Box>
         )}
       </Grid>
+      <AddTimeModal
+        open={openAddTimeModal}
+        onClose={() => setOpenAddTimeModal(false)}
+      />
     </Grid>
   );
 }
