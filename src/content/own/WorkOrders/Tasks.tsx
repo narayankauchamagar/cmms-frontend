@@ -9,13 +9,15 @@ import {
   FormControl,
   Select,
   MenuItem,
-  Collapse
+  Collapse,
+  useTheme
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import TaskAltTwoToneIcon from '@mui/icons-material/TaskAltTwoTone';
 import NoteTwoToneIcon from '@mui/icons-material/NoteTwoTone';
 import { useEffect, useState } from 'react';
 import Field from '../components/form/Field';
+import AttachFileTwoToneIcon from '@mui/icons-material/AttachFileTwoTone';
 
 interface TasksProps {}
 export default function Tasks({}: TasksProps) {
@@ -32,6 +34,7 @@ export default function Tasks({}: TasksProps) {
     { id: 75, label: 'Clean', type: 'basic', status: 'OPEN', notes: '' }
   ];
   const [tasks, setTasks] = useState(defaultTasks);
+  const theme = useTheme();
   const basicOptions = [
     { label: t('Open'), value: 'OPEN' },
     { label: t('In Progress'), value: 'IN_PROGRESS' },
@@ -71,7 +74,14 @@ export default function Tasks({}: TasksProps) {
       <CardContent>
         <FormControl fullWidth>
           {tasks.map((task) => (
-            <Box key={task.id} sx={{ mt: 1 }}>
+            <Box
+              key={task.id}
+              sx={{
+                mt: 1,
+                p: 2,
+                backgroundColor: theme.colors.alpha.black[10]
+              }}
+            >
               <Box
                 display="flex"
                 flexDirection="row"
@@ -86,6 +96,7 @@ export default function Tasks({}: TasksProps) {
                     onChange={(event) =>
                       handleChange(event.target.value, task.id)
                     }
+                    sx={{ backgroundColor: 'white' }}
                   >
                     {task.type === 'basic'
                       ? basicOptions.map((option) => (
@@ -96,12 +107,17 @@ export default function Tasks({}: TasksProps) {
                       : null}
                   </Select>
                 </Box>
-                <IconButton onClick={() => toggleNotes(task.id)}>
-                  <NoteTwoToneIcon />
-                </IconButton>
+                <Box>
+                  <IconButton onClick={() => toggleNotes(task.id)}>
+                    <NoteTwoToneIcon color="primary" />
+                  </IconButton>
+                  <IconButton>
+                    <AttachFileTwoToneIcon color="primary" />
+                  </IconButton>
+                </Box>
               </Box>
               <Collapse in={notes.get(task.id)}>
-                <Box sx={{ p: 1 }}>
+                <Box sx={{ p: 1, backgroundColor: 'white' }}>
                   <Field
                     multiple={true}
                     onChange={(event) =>
