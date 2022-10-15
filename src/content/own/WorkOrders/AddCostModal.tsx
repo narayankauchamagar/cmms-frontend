@@ -12,13 +12,19 @@ import wait from '../../../utils/wait';
 import { IField } from '../type';
 import { categories } from '../../../models/owns/category';
 
-interface AddTimeProps {
+interface AddCostProps {
   open: boolean;
   onClose: () => void;
 }
-export default function AddTimeModal({ open, onClose }: AddTimeProps) {
+export default function AddCostModal({ open, onClose }: AddCostProps) {
   const { t }: { t: any } = useTranslation();
   const fields: Array<IField> = [
+    {
+      name: 'description',
+      type: 'text',
+      label: t('Cost Description'),
+      required: true
+    },
     {
       name: 'assignedTo',
       type: 'select',
@@ -27,54 +33,30 @@ export default function AddTimeModal({ open, onClose }: AddTimeProps) {
       midWidth: true
     },
     {
-      name: 'hourlyRate',
-      type: 'number',
-      label: t('Hourly Rate'),
-      midWidth: true
-    },
-    {
-      name: 'includeToTotalTime',
-      type: 'switch',
-      label: t('Include this time in the total time'),
-      helperText: t(
-        'This will add the duration to the total time spent on the Work Order'
-      )
-    },
-    {
-      name: 'startedAt',
-      type: 'date',
-      label: t('Work Started At')
-    },
-    {
       name: 'category',
       type: 'select',
       label: t('Category'),
       items: categories.map((category) => {
         return { label: category.name, value: category.id };
-      })
+      }),
+      midWidth: true
     },
     {
-      name: 'duration',
-      type: 'titleGroupField',
-      label: t('Duration')
+      name: 'date',
+      type: 'date',
+      label: t('Date')
     },
     {
-      name: 'hours',
-      type: 'number',
-      label: t('Hours'),
-      midWidth: true,
-      required: true
-    },
-    {
-      name: 'minutes',
-      type: 'number',
-      label: t('Minutes'),
-      midWidth: true,
-      required: true
+      name: 'includeToTotalCost',
+      type: 'switch',
+      label: t('Include this cost in the total cost'),
+      helperText: t(
+        'This will add the cost to the total cost spent on the Work Order'
+      )
     }
   ];
   const shape = {
-    hours: Yup.number().required(t('Hours field is required')),
+    description: Yup.string().required(t('Cost Description is required')),
     minutes: Yup.number().required(t('Minutes field is required'))
   };
   return (
@@ -85,10 +67,10 @@ export default function AddTimeModal({ open, onClose }: AddTimeProps) {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Add Time')}
+          {t('Add Additional Cost')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the fields below to create and add Time')}
+          {t('Fill in the fields below to create and add Additional Cost')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -101,7 +83,7 @@ export default function AddTimeModal({ open, onClose }: AddTimeProps) {
           fields={fields}
           validation={Yup.object().shape(shape)}
           submitText={t('Add')}
-          values={{ includeToTotalTime: true }}
+          values={{ includeToTotalCost: true }}
           onChange={({ field, e }) => {}}
           onSubmit={async (values) => {
             try {

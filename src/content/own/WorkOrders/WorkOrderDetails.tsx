@@ -21,6 +21,8 @@ import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import Asset from '../../../models/owns/asset';
 import { labors } from '../../../models/owns/labor';
 import AddTimeModal from './AddTimeModal';
+import { additionalCosts } from '../../../models/owns/additionalCost';
+import AddCostModal from './AddCostModal';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;
@@ -31,6 +33,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const theme = useTheme();
   const { t }: { t: any } = useTranslation();
   const [openAddTimeModal, setOpenAddTimeModal] = useState<boolean>(false);
+  const [openAddCostModal, setOpenAddCostModal] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<string>('details');
   const tabs = [
     { value: 'details', label: t('Details') },
@@ -184,31 +187,6 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                 ))}
               </Grid>
             </Grid>
-            <Divider sx={{ mt: 2 }} />
-            <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
-              Files
-            </Typography>
-            <List>
-              {workOrder.files.map((file) => (
-                <ListItem
-                  key={file.id}
-                  secondaryAction={
-                    <IconButton edge="end" aria-label="delete">
-                      <DeleteTwoToneIcon color="error" />
-                    </IconButton>
-                  }
-                >
-                  <ListItemText
-                    primary={
-                      <Link href={file.url} variant="h6">
-                        {file.name}
-                      </Link>
-                    }
-                    secondary={file.createdAt}
-                  />
-                </ListItem>
-              ))}
-            </List>
             <Box>
               <Divider sx={{ mt: 2 }} />
               <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
@@ -244,6 +222,25 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                       />
                     </ListItem>
                   ))}
+                  <ListItem
+                    secondaryAction={
+                      <Typography variant="h6" fontWeight="bold">
+                        {labors.reduce(
+                          (acc, labor) => acc + labor.laborCost.cost,
+                          0
+                        )}{' '}
+                        $
+                      </Typography>
+                    }
+                  >
+                    <ListItemText
+                      primary={
+                        <Typography variant="h6" fontWeight="bold">
+                          Total
+                        </Typography>
+                      }
+                    />
+                  </ListItem>
                 </List>
               )}
               <Button
@@ -254,12 +251,102 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                 Add Time
               </Button>
             </Box>
+            <Box>
+              <Divider sx={{ mt: 2 }} />
+              <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
+                Additional Costs
+              </Typography>
+              {!additionalCosts.length ? (
+                <Typography sx={{ color: theme.colors.alpha.black[70] }}>
+                  {t('No Additional costs have been added yet')}
+                </Typography>
+              ) : (
+                <List>
+                  {additionalCosts.map((additionalCost) => (
+                    <ListItem
+                      key={additionalCost.id}
+                      secondaryAction={
+                        <Typography variant="h6">
+                          {additionalCost.cost} $
+                        </Typography>
+                      }
+                    >
+                      <ListItemText
+                        primary={
+                          <Typography variant="h6">
+                            {additionalCost.description}
+                          </Typography>
+                        }
+                        secondary={additionalCost.createdAt}
+                      />
+                    </ListItem>
+                  ))}
+                  <ListItem
+                    secondaryAction={
+                      <Typography variant="h6" fontWeight="bold">
+                        {additionalCosts.reduce(
+                          (acc, additionalCost) => acc + additionalCost.cost,
+                          0
+                        )}{' '}
+                        $
+                      </Typography>
+                    }
+                  >
+                    <ListItemText
+                      primary={
+                        <Typography variant="h6" fontWeight="bold">
+                          Total
+                        </Typography>
+                      }
+                    />
+                  </ListItem>
+                </List>
+              )}
+              <Button
+                onClick={() => setOpenAddCostModal(true)}
+                variant="outlined"
+                sx={{ mt: 1 }}
+              >
+                Add Additional Cost
+              </Button>
+            </Box>
+            <Box>
+              <Divider sx={{ mt: 2 }} />
+              <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
+                Files
+              </Typography>
+              <List>
+                {workOrder.files.map((file) => (
+                  <ListItem
+                    key={file.id}
+                    secondaryAction={
+                      <IconButton edge="end" aria-label="delete">
+                        <DeleteTwoToneIcon color="error" />
+                      </IconButton>
+                    }
+                  >
+                    <ListItemText
+                      primary={
+                        <Link href={file.url} variant="h6">
+                          {file.name}
+                        </Link>
+                      }
+                      secondary={file.createdAt}
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            </Box>
           </Box>
         )}
       </Grid>
       <AddTimeModal
         open={openAddTimeModal}
         onClose={() => setOpenAddTimeModal(false)}
+      />
+      <AddCostModal
+        open={openAddCostModal}
+        onClose={() => setOpenAddCostModal(false)}
       />
     </Grid>
   );
