@@ -23,6 +23,7 @@ import { labors } from '../../../models/owns/labor';
 import AddTimeModal from './AddTimeModal';
 import { additionalCosts } from '../../../models/owns/additionalCost';
 import AddCostModal from './AddCostModal';
+import Tasks from './Tasks';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;
@@ -189,6 +190,10 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
             </Grid>
             <Box>
               <Divider sx={{ mt: 2 }} />
+              <Tasks />
+            </Box>
+            <Box>
+              <Divider sx={{ mt: 2 }} />
               <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
                 Labors
               </Typography>
@@ -309,6 +314,50 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
               >
                 Add Additional Cost
               </Button>
+            </Box>
+            <Box>
+              <Divider sx={{ mt: 2 }} />
+              <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
+                Parts
+              </Typography>
+              {workOrder.parts.length && (
+                <List>
+                  {workOrder.parts.map((part) => (
+                    <ListItem
+                      key={part.id}
+                      secondaryAction={
+                        <Typography variant="h6">{part.cost} $</Typography>
+                      }
+                    >
+                      <ListItemText
+                        primary={
+                          <Typography variant="h6">{part.name}</Typography>
+                        }
+                        secondary={part.description}
+                      />
+                    </ListItem>
+                  ))}
+                  <ListItem
+                    secondaryAction={
+                      <Typography variant="h6" fontWeight="bold">
+                        {workOrder.parts.reduce(
+                          (acc, part) => acc + part.cost,
+                          0
+                        )}{' '}
+                        $
+                      </Typography>
+                    }
+                  >
+                    <ListItemText
+                      primary={
+                        <Typography variant="h6" fontWeight="bold">
+                          Total
+                        </Typography>
+                      }
+                    />
+                  </ListItem>
+                </List>
+              )}
             </Box>
             <Box>
               <Divider sx={{ mt: 2 }} />
