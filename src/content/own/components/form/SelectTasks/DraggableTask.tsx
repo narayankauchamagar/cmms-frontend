@@ -3,6 +3,7 @@ import { Draggable } from 'react-beautiful-dnd';
 
 import {
   Box,
+  Button,
   Collapse,
   Divider,
   IconButton,
@@ -19,9 +20,10 @@ import { useTranslation } from 'react-i18next';
 import DoDisturbOnTwoToneIcon from '@mui/icons-material/DoDisturbOnTwoTone';
 import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
 import { users } from '../../../../../models/owns/user';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
 import { assets } from '../../../../../models/owns/asset';
+import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 
 const useStyles = makeStyles({
   draggingListItem: {
@@ -35,6 +37,8 @@ export type DraggableListItemProps = {
   onLabelChange: (value: string, id: number) => void;
   onTypeChange: (value: TaskType, id: number) => void;
   onUserChange: (user: number, id: number) => void;
+  onAssetChange: (user: number, id: number) => void;
+  onChoicesChange: (choices: string[], id: number) => void;
   onRemove: (id: number) => void;
 };
 
@@ -44,7 +48,9 @@ const DraggableListItem = ({
   onLabelChange,
   onTypeChange,
   onRemove,
-  onUserChange
+  onUserChange,
+  onAssetChange,
+  onChoicesChange
 }: DraggableListItemProps) => {
   const classes = useStyles();
   const { t }: { t: any } = useTranslation();
@@ -66,6 +72,23 @@ const DraggableListItem = ({
   ];
   const [openAssignUser, setOpenAssignUser] = useState<boolean>(false);
   const [openAssignAsset, setOpenAssignAsset] = useState<boolean>(false);
+  const [choices, setChoices] = useState<string[]>(['', '']);
+  const handleChoiceChange = (value: string, index: number) => {
+    const newChoices = [...choices];
+    newChoices[index] = value;
+    setChoices(newChoices);
+  };
+  const handleAddOption = () => {
+    const newChoices = [...choices, ''];
+    setChoices(newChoices);
+  };
+  const handleRemoveOption = (id: number) => {
+    const newChoices = [...choices];
+    newChoices.splice(id, 1);
+    setChoices(newChoices);
+  };
+  useEffect(() => onChoicesChange(choices, task.id), [choices]);
+
   const renderMenu = () => (
     <Menu
       id="basic-menu"
@@ -86,6 +109,7 @@ const DraggableListItem = ({
       </MenuItem>{' '}
     </Menu>
   );
+
   return (
     <Draggable draggableId={task.id.toString()} index={index}>
       {(provided, snapshot) => (
@@ -141,11 +165,16 @@ const DraggableListItem = ({
                   </IconButton>
                 </Box>
               </Box>
-              <Collapse in={openAssignUser || openAssignAsset}>
+              <Collapse
+                in={
+                  openAssignUser || openAssignAsset || task.type === 'multiple'
+                }
+              >
                 <Box
                   sx={{
                     display: 'flex',
-                    flexDirection: 'column'
+                    flexDirection: 'column',
+                    ml: 2
                   }}
                 >
                   {openAssignUser && (
@@ -170,7 +199,7 @@ const DraggableListItem = ({
                     <Select
                       sx={{ mt: 1 }}
                       onChange={(event) =>
-                        onUserChange(Number(event.target.value), task.id)
+                        onAssetChange(Number(event.target.value), task.id)
                       }
                       displayEmpty
                       defaultValue=""
@@ -182,6 +211,44 @@ const DraggableListItem = ({
                         </MenuItem>
                       ))}
                     </Select>
+                  )}
+                  {task.type === 'multiple' && (
+                    <Box>
+                      {choices.map((choice, index) => (
+                        <Box
+                          key={index}
+                          sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            width: '100%',
+                            mt: 1
+                          }}
+                        >
+                          <TextField
+                            value={choice}
+                            onChange={(event) =>
+                              handleChoiceChange(event.target.value, index)
+                            }
+                          />
+                          {choices.length > 2 && (
+                            <IconButton
+                              sx={{ ml: 2 }}
+                              onClick={() => handleRemoveOption(index)}
+                            >
+                              <DoDisturbOnTwoToneIcon color="error" />
+                            </IconButton>
+                          )}
+                        </Box>
+                      ))}
+                      <Button
+                        onClick={handleAddOption}
+                        startIcon={<AddTwoToneIcon />}
+                        sx={{ mt: 1 }}
+                      >
+                        Add New Option
+                      </Button>
+                    </Box>
                   )}
                 </Box>
               </Collapse>

@@ -58,7 +58,24 @@ export default function SelectTasks({}: SelectTasksProps) {
     });
     setTasks(newTasks);
   };
-
+  const onAssetChange = (asset: number, id: number) => {
+    const newTasks = tasks.map((task) => {
+      if (task.id === id) {
+        return { ...task, asset };
+      }
+      return task;
+    });
+    setTasks(newTasks);
+  };
+  const onChoicesChange = (choices: string[], id: number) => {
+    const newTasks = tasks.map((task) => {
+      if (task.id === id) {
+        return { ...task, options: choices };
+      }
+      return task;
+    });
+    setTasks(newTasks);
+  };
   const onSave = () => {
     if (tasks.some((task) => !task.label)) {
       enqueueSnackbar(t('Remove blank tasks'), {
@@ -153,6 +170,8 @@ export default function SelectTasks({}: SelectTasksProps) {
                 onTypeChange={onTypeChange}
                 onRemove={onRemove}
                 onUserChange={onUserChange}
+                onAssetChange={onAssetChange}
+                onChoicesChange={onChoicesChange}
               />
             </Box>
           )}
