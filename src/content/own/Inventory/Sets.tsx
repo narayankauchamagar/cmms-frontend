@@ -109,13 +109,7 @@ const Sets = ({ setAction }: PropsType) => {
       type: 'select',
       type2: 'part',
       label: t('Part'),
-      placeholder: t('Enter Part name'),
-      items: currentSet?.parts?.map((part) => {
-        return {
-          label: part.name,
-          value: part.id.toString()
-        };
-      })
+      placeholder: t('Enter Part name')
     }
   ];
   const shape = {
@@ -243,7 +237,15 @@ const Sets = ({ setAction }: PropsType) => {
             fields={fields}
             validation={Yup.object().shape(shape)}
             submitText={t('Edit Set')}
-            values={currentSet}
+            values={{
+              ...currentSet,
+              parts: currentSet?.parts?.map((part) => {
+                return {
+                  label: part.name,
+                  value: part.id.toString()
+                };
+              })
+            }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               try {

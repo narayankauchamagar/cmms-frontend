@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 interface PropsType {
   options: {
     label: string;
-    value: string;
+    value: string | number;
   }[];
   label: string;
   value: { label: string; value: string } | { label: string; value: string }[];

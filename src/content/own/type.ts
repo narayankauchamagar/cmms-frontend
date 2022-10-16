@@ -21,7 +21,8 @@ export interface IField {
     | 'select'
     | 'titleGroupField'
     | 'form'
-    | 'date';
+    | 'date'
+    | 'switch';
   type2?:
     | 'customer'
     | 'vendor'
@@ -30,7 +31,8 @@ export interface IField {
     | 'part'
     | 'location'
     | 'asset'
-    | 'priority';
+    | 'priority'
+    | 'task';
   name?: string;
   placeholder?: string;
   fileType?: 'file' | 'image';
@@ -41,7 +43,7 @@ export interface IField {
   onPress?: () => void;
   required?: boolean;
   error?: any;
-  items?: { label: string; value: string; checked?: boolean }[];
+  items?: { label: string; value: string | number; checked?: boolean }[];
   // listCheckbox?: { label: string; value: string; checked?: boolean }[];
   icon?: ReactNode | string;
   // onPressIcon?: () => void;

@@ -7,6 +7,7 @@ import Team, { teams } from './team';
 import Asset, { assets } from './asset';
 import File, { files } from './file';
 import Location, { locations } from './location';
+import Category, { categories } from './category';
 
 interface WorkOrderBase extends Audit {
   dueDate: string;
@@ -24,6 +25,7 @@ interface WorkOrderBase extends Audit {
   asset: Asset;
 }
 export default interface WorkOrder extends WorkOrderBase {
+  category: Category;
   id: number;
   completedBy: User;
   completedOn: string;
@@ -39,15 +41,16 @@ export const workOrders: WorkOrder[] = [
   {
     completedBy: users[0],
     completedOn: 'string',
+    category: categories[0],
     archived: true,
     parentRequest: requests[0],
     purchaseOrder: purchaseOrders[0],
     files,
     dueDate: 'string',
     status: 'string',
-    priority: 'string',
+    priority: 'HIGH',
     estimatedDuration: 7,
-    description: 'string',
+    description: 'description',
     requiredSignature: true,
     parts,
     location: locations[0],

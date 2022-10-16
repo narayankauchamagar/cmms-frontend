@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 interface PropsType extends IField {
   onChange: (event: any) => void;
-  onBlur: (event: any) => any;
+  onBlur?: (event: any) => any;
   value: any | '';
   placeholder?: string;
   error?: any;
@@ -26,7 +26,7 @@ export default (props: PropsType) => {
       fullWidth={props.fullWidth || true}
       helperText={t(props.error ? props.errorMessage : props.helperText)}
       label={t(`${props.label}`)}
-      placeholder={t(`${props.placeholder}`)}
+      placeholder={props.placeholder ? t(`${props.placeholder}`) : props.label}
       name={props.name}
       onBlur={props.onBlur}
       type={props.type}

@@ -33,6 +33,9 @@ import Location, {
   locations as locationsList
 } from '../../../../models/owns/location';
 import Asset, { assets as assetsList } from '../../../../models/owns/asset';
+import Part from '../../../../models/owns/part';
+import CustomSwitch from './CustomSwitch';
+import SelectTasks from './SelectTasks';
 
 interface PropsType {
   fields: Array<IField>;
@@ -63,9 +66,7 @@ export default (props: PropsType) => {
   const [fetchingAssets, setFetchingAssets] = useState(false);
 
   const [openPartsModal, setOpenPartsModal] = useState<boolean>(false);
-  const [selectedParts, setSelectedParts] = useState<
-    { id: number; name: string }[]
-  >([]);
+  const [selectedParts, setSelectedParts] = useState<Part[]>([]);
   const fetchCustomers = async () => {
     setFetchingCustomers(true);
     await wait(2000);
@@ -240,7 +241,7 @@ export default (props: PropsType) => {
               Add Parts
             </Button>
             <SelectParts
-              selected={options?.map((option) => Number(option.value)) ?? []}
+              selected={values?.map((value) => Number(value.value)) ?? []}
               open={openPartsModal}
               onClose={() => setOpenPartsModal(false)}
               onChange={(newParts) => {
@@ -250,6 +251,8 @@ export default (props: PropsType) => {
             />
           </Box>
         );
+      case 'task':
+        return <SelectTasks />;
       default:
         break;
     }
@@ -305,6 +308,14 @@ export default (props: PropsType) => {
                       type="groupCheckbox"
                       listCheckbox={field.items}
                       key={field.name}
+                    />
+                  ) : field.type === 'switch' ? (
+                    <CustomSwitch
+                      title={field.label}
+                      description={field.helperText}
+                      name={field.name}
+                      handleChange={formik.handleChange}
+                      checked={formik.values[field.name]}
                     />
                   ) : field.type === 'titleGroupField' ? (
                     <Typography variant="h3" sx={{ pb: 1 }}>

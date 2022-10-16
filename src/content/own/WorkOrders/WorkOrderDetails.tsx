@@ -1,31 +1,31 @@
 import {
   Box,
   Button,
-  Dialog,
-  DialogContent,
-  DialogTitle,
   Divider,
   Grid,
+  IconButton,
+  Link,
   List,
-  ListItemButton,
+  ListItem,
   ListItemText,
   Tab,
   Tabs,
-  Typography
+  Typography,
+  useTheme
 } from '@mui/material';
 import WorkOrder from '../../../models/owns/workOrder';
 import { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
+import DoDisturbOnTwoToneIcon from '@mui/icons-material/DoDisturbOnTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import Asset, { assets } from '../../../models/owns/asset';
-import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import { parts } from '../../../models/owns/part';
-import FloorPlan from '../../../models/owns/floorPlan';
-import Form from '../components/form';
-import * as Yup from 'yup';
-import wait from '../../../utils/wait';
-import { IField } from '../type';
+import Asset from '../../../models/owns/asset';
+import { labors } from '../../../models/owns/labor';
+import AddTimeModal from './AddTimeModal';
+import { additionalCosts } from '../../../models/owns/additionalCost';
+import AddCostModal from './AddCostModal';
+import Tasks from './Tasks';
+import { workOrderHistories } from '../../../models/owns/workOrderHistories';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;
@@ -33,107 +33,93 @@ interface WorkOrderDetailsProps {
 }
 export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const { workOrder, handleUpdate } = props;
+  const theme = useTheme();
   const { t }: { t: any } = useTranslation();
-  const [openAddFloorPlan, setOpenAddFloorPlan] = useState<boolean>(false);
-  const [currentTab, setCurrentTab] = useState<string>('assets');
+  const [openAddTimeModal, setOpenAddTimeModal] = useState<boolean>(false);
+  const [openAddCostModal, setOpenAddCostModal] = useState<boolean>(false);
+  const [currentTab, setCurrentTab] = useState<string>('details');
   const tabs = [
-    { value: 'assets', label: t('Assets') },
-    { value: 'files', label: t('Files') },
-    { value: 'workOrders', label: t('Work Orders') },
-    { value: 'parts', label: t('Parts') },
-    { value: 'floorPlans', label: t('Floor Plans') }
+    { value: 'details', label: t('Details') },
+    { value: 'updates', label: t('Updates') }
   ];
 
-  const floorPlans: FloorPlan[] = [
-    {
-      id: 212,
-      name: 'cgvg',
-      createdAt: 'dfggj',
-      createdBy: 'ghu',
-      updatedAt: 'ghfgj',
-      updatedBy: 'ghfgj'
-    },
-    {
-      id: 44,
-      name: 'fcgvc',
-      createdAt: 'dfggj',
-      createdBy: 'ghu',
-      updatedAt: 'ghfgj',
-      updatedBy: 'ghfgj'
+  const getPath = (resource, id) => {
+    switch (resource) {
+      case 'asset':
+        return `/app/assets/${id}/work-orders`;
+      case 'team':
+        return `/app/people-teams/teams/${id}`;
+      default:
+        return `/app/${resource}s/${id}`;
     }
-  ];
-  const fields: Array<IField> = [
-    {
-      name: 'name',
-      type: 'text',
-      label: t('Name'),
-      placeholder: t('Floor plan name'),
-      required: true
-    },
-    {
-      name: 'area',
-      type: 'number',
-      label: 'Area',
-      placeholder: 'Floor plan area'
-    },
-    {
-      name: 'image',
-      type: 'file',
-      label: 'File',
-      placeholder: 'Upload a file or image'
-    }
-  ];
-  const floorPlanShape = {
-    name: Yup.string().required(t('Floor plan name is required'))
   };
-  const renderAddFloorPlanModal = () => (
-    <Dialog
-      fullWidth
-      maxWidth="sm"
-      open={openAddFloorPlan}
-      onClose={() => setOpenAddFloorPlan(false)}
-    >
-      <DialogTitle
-        sx={{
-          p: 3
-        }}
-      >
-        <Typography variant="h4" gutterBottom>
-          {t('Add new Floor Plan')}
-        </Typography>
-        <Typography variant="subtitle2">
-          {t('Fill in the fields below to create a new Floor Plan')}
-        </Typography>
-      </DialogTitle>
-      <DialogContent
-        dividers
-        sx={{
-          p: 3
-        }}
-      >
-        <Box>
-          <Form
-            fields={fields}
-            validation={Yup.object().shape(floorPlanShape)}
-            submitText={t('Add Floor Plan')}
-            values={{}}
-            onChange={({ field, e }) => {}}
-            onSubmit={async (values) => {
-              try {
-                await wait(2000);
-                setOpenAddFloorPlan(false);
-              } catch (err) {
-                console.error(err);
-              }
-            }}
-          />
-        </Box>
-      </DialogContent>
-    </Dialog>
-  );
+  const renderField = (label, value, type?, id?) => {
+    if (!type || (type && id))
+      return (
+        <Grid item xs={12} lg={6}>
+          <Typography variant="h6" sx={{ color: theme.colors.alpha.black[70] }}>
+            {label}
+          </Typography>
+          {type ? (
+            <Link href={getPath(type, id)} variant="h6" fontWeight="bold">
+              {value}
+            </Link>
+          ) : (
+            <Typography variant="h6">{value}</Typography>
+          )}
+        </Grid>
+      );
+  };
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
+  const detailsFieldsToRender = (
+    workOrder: WorkOrder
+  ): {
+    label: string;
+    value: string | number;
+    type?: 'location' | 'asset' | 'team';
+    id?: number;
+  }[] => [
+    {
+      label: t('ID'),
+      value: workOrder.id
+    },
+    {
+      label: t('Due Date'),
+      value: workOrder.dueDate
+    },
+    {
+      label: t('Category'),
+      value: workOrder.category.name
+    },
+    {
+      label: t('Location'),
+      value: workOrder.location.name,
+      type: 'location',
+      id: workOrder.location.id
+    },
+    {
+      label: t('Asset'),
+      value: workOrder.asset.name,
+      type: 'asset',
+      id: workOrder.asset.id
+    },
+    {
+      label: t('Team'),
+      value: workOrder.team.name,
+      type: 'team',
+      id: workOrder.team.id
+    },
+    {
+      label: t('Date created'),
+      value: workOrder.createdAt
+    },
+    {
+      label: t('Created By'),
+      value: workOrder.createdBy
+    }
+  ];
   return (
     <Grid
       container
@@ -142,7 +128,6 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
       spacing={2}
       padding={4}
     >
-      {renderAddFloorPlanModal()}
       <Grid
         item
         xs={12}
@@ -151,8 +136,10 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
         justifyContent="space-between"
       >
         <Box>
+          {/*//TODO format*/}
+          <Typography variant="h6">{workOrder?.priority} Priority</Typography>
           <Typography variant="h2">{workOrder?.title}</Typography>
-          <Typography variant="h6">{workOrder?.address}</Typography>
+          <Typography variant="h6">{workOrder?.description}</Typography>
         </Box>
         <Box>
           <EditTwoToneIcon
@@ -179,67 +166,254 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
         </Tabs>
       </Grid>
       <Grid item xs={12}>
-        {currentTab === 'assets' && (
+        {currentTab === 'details' && (
           <Box>
-            <Box display="flex" justifyContent="right">
-              <Button startIcon={<AddTwoToneIcon fontSize="small" />}>
-                {t('Asset')}
-              </Button>
+            <Grid container spacing={2}>
+              {detailsFieldsToRender(workOrder).map((field) =>
+                renderField(field.label, field.value, field.type, field.id)
+              )}
+              <Grid item xs={12} lg={6}>
+                <Typography
+                  variant="h6"
+                  sx={{ color: theme.colors.alpha.black[70] }}
+                >
+                  Assigned To
+                </Typography>
+                {workOrder.assignedTo.map((user, index) => (
+                  <Box key={user.id}>
+                    <Link
+                      href={`/app/people-teams/users/${user.id}`}
+                      variant="h6"
+                      fontWeight="bold"
+                    >{`${user.firstName} ${user.lastName}`}</Link>
+                  </Box>
+                ))}
+              </Grid>
+            </Grid>
+            <Box>
+              <Divider sx={{ mt: 2 }} />
+              <Tasks />
             </Box>
-            <List sx={{ width: '100%' }}>
-              {assets.map((asset) => (
-                <ListItemButton key={asset.id} divider>
-                  <ListItemText
-                    primary={asset.name}
-                    secondary={asset.createdAt}
-                  />
-                </ListItemButton>
-              ))}
-            </List>
-          </Box>
-        )}
-        {currentTab === 'parts' && (
-          <Box>
-            <Box display="flex" justifyContent="right">
-              <Button startIcon={<AddTwoToneIcon fontSize="small" />}>
-                {t('Parts')}
-              </Button>
-            </Box>
-            <List sx={{ width: '100%' }}>
-              {parts.map((part) => (
-                <ListItemButton key={part.id} divider>
-                  <ListItemText
-                    primary={part.name}
-                    secondary={part.createdAt}
-                  />
-                </ListItemButton>
-              ))}
-            </List>
-          </Box>
-        )}
-        {currentTab === 'floorPlans' && (
-          <Box>
-            <Box display="flex" justifyContent="right">
+            <Box>
+              <Divider sx={{ mt: 2 }} />
+              <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
+                Labors
+              </Typography>
+              {!labors.length ? (
+                <Typography sx={{ color: theme.colors.alpha.black[70] }}>
+                  {t(
+                    "No labor costs have been added yet. They'll show up here when a user logs time and has an hourly rate stored in Grash."
+                  )}
+                </Typography>
+              ) : (
+                <List>
+                  {labors.map((labor) => (
+                    <ListItem
+                      key={labor.id}
+                      secondaryAction={
+                        <Typography variant="h6">
+                          {labor.laborCost.cost} $
+                        </Typography>
+                      }
+                    >
+                      <ListItemText
+                        primary={
+                          <Link
+                            href={`/app/people-teams/users/${labor.user.id}`}
+                            variant="h6"
+                          >
+                            {`${labor.user.firstName} ${labor.user.lastName}`}
+                          </Link>
+                        }
+                        secondary={labor.createdAt}
+                      />
+                    </ListItem>
+                  ))}
+                  <ListItem
+                    secondaryAction={
+                      <Typography variant="h6" fontWeight="bold">
+                        {labors.reduce(
+                          (acc, labor) => acc + labor.laborCost.cost,
+                          0
+                        )}{' '}
+                        $
+                      </Typography>
+                    }
+                  >
+                    <ListItemText
+                      primary={
+                        <Typography variant="h6" fontWeight="bold">
+                          Total
+                        </Typography>
+                      }
+                    />
+                  </ListItem>
+                </List>
+              )}
               <Button
-                onClick={() => setOpenAddFloorPlan(true)}
-                startIcon={<AddTwoToneIcon fontSize="small" />}
+                onClick={() => setOpenAddTimeModal(true)}
+                variant="outlined"
+                sx={{ mt: 1 }}
               >
-                {t('Floor plan')}
+                Add Time
               </Button>
             </Box>
-            <List sx={{ width: '100%' }}>
-              {floorPlans.map((floorPlan) => (
-                <ListItemButton key={floorPlan.id} divider>
-                  <ListItemText
-                    primary={floorPlan.name}
-                    secondary={floorPlan.createdAt}
-                  />
-                </ListItemButton>
-              ))}
-            </List>
+            <Box>
+              <Divider sx={{ mt: 2 }} />
+              <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
+                Additional Costs
+              </Typography>
+              {!additionalCosts.length ? (
+                <Typography sx={{ color: theme.colors.alpha.black[70] }}>
+                  {t('No Additional costs have been added yet')}
+                </Typography>
+              ) : (
+                <List>
+                  {additionalCosts.map((additionalCost) => (
+                    <ListItem
+                      key={additionalCost.id}
+                      secondaryAction={
+                        <Typography variant="h6">
+                          {additionalCost.cost} $
+                        </Typography>
+                      }
+                    >
+                      <ListItemText
+                        primary={
+                          <Typography variant="h6">
+                            {additionalCost.description}
+                          </Typography>
+                        }
+                        secondary={additionalCost.createdAt}
+                      />
+                    </ListItem>
+                  ))}
+                  <ListItem
+                    secondaryAction={
+                      <Typography variant="h6" fontWeight="bold">
+                        {additionalCosts.reduce(
+                          (acc, additionalCost) => acc + additionalCost.cost,
+                          0
+                        )}{' '}
+                        $
+                      </Typography>
+                    }
+                  >
+                    <ListItemText
+                      primary={
+                        <Typography variant="h6" fontWeight="bold">
+                          Total
+                        </Typography>
+                      }
+                    />
+                  </ListItem>
+                </List>
+              )}
+              <Button
+                onClick={() => setOpenAddCostModal(true)}
+                variant="outlined"
+                sx={{ mt: 1 }}
+              >
+                Add Additional Cost
+              </Button>
+            </Box>
+            <Box>
+              <Divider sx={{ mt: 2 }} />
+              <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
+                Parts
+              </Typography>
+              {workOrder.parts.length && (
+                <List>
+                  {workOrder.parts.map((part) => (
+                    <ListItem
+                      key={part.id}
+                      secondaryAction={
+                        <Typography variant="h6">{part.cost} $</Typography>
+                      }
+                    >
+                      <ListItemText
+                        primary={
+                          <Typography variant="h6">{part.name}</Typography>
+                        }
+                        secondary={part.description}
+                      />
+                    </ListItem>
+                  ))}
+                  <ListItem
+                    secondaryAction={
+                      <Typography variant="h6" fontWeight="bold">
+                        {workOrder.parts.reduce(
+                          (acc, part) => acc + part.cost,
+                          0
+                        )}{' '}
+                        $
+                      </Typography>
+                    }
+                  >
+                    <ListItemText
+                      primary={
+                        <Typography variant="h6" fontWeight="bold">
+                          Total
+                        </Typography>
+                      }
+                    />
+                  </ListItem>
+                </List>
+              )}
+            </Box>
+            <Box>
+              <Divider sx={{ mt: 2 }} />
+              <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
+                Files
+              </Typography>
+              <List>
+                {workOrder.files.map((file) => (
+                  <ListItem
+                    key={file.id}
+                    secondaryAction={
+                      <IconButton edge="end" aria-label="delete">
+                        <DoDisturbOnTwoToneIcon color="error" />
+                      </IconButton>
+                    }
+                  >
+                    <ListItemText
+                      primary={
+                        <Link href={file.url} variant="h6">
+                          {file.name}
+                        </Link>
+                      }
+                      secondary={file.createdAt}
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            </Box>
           </Box>
+        )}
+        {currentTab == 'updates' && (
+          <List>
+            {workOrderHistories.map((workOrderHistory) => (
+              <ListItem
+                key={workOrderHistory.id}
+                secondaryAction={workOrderHistory.date}
+              >
+                <ListItemText
+                  primary={`${workOrderHistory.user.firstName} ${workOrderHistory.user.lastName}`}
+                  secondary={workOrderHistory.description}
+                />
+              </ListItem>
+            ))}
+          </List>
         )}
       </Grid>
+      <AddTimeModal
+        open={openAddTimeModal}
+        onClose={() => setOpenAddTimeModal(false)}
+      />
+      <AddCostModal
+        open={openAddCostModal}
+        onClose={() => setOpenAddCostModal(false)}
+      />
     </Grid>
   );
 }

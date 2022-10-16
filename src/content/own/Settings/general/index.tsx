@@ -12,36 +12,8 @@ import SettingsLayout from '../SettingsLayout';
 import { Field, Formik } from 'formik';
 import * as Yup from 'yup';
 import wait from '../../../../utils/wait';
+import CustomSwitch from '../../components/form/CustomSwitch';
 
-function SwitchOption(props: {
-  title: string;
-  description: string;
-  name: string;
-  handleChange: any;
-  values: any;
-}) {
-  const { name, title, description, handleChange, values } = props;
-  return (
-    <Grid item xs={12} sx={{ mb: 2 }}>
-      <Box display="flex" flexDirection="row" alignItems="center">
-        <Field
-          onChange={handleChange}
-          checked={values[name]}
-          as={Switch}
-          name={name}
-        />
-        <Box display="flex" flexDirection="column">
-          <Typography variant="h6" fontWeight="bold" sx={{ mb: 0.5 }}>
-            {title}
-          </Typography>
-          <Typography variant="h6" fontStyle="italic">
-            {description}
-          </Typography>
-        </Box>
-      </Box>
-    </Grid>
-  );
-}
 function DashboardTasks() {
   const { t }: { t: any } = useTranslation();
   const switches = [
@@ -111,6 +83,7 @@ function DashboardTasks() {
               currency: 'MAD',
               businessType: 'PAM',
               autoAssignWorkOrder: true,
+              autoAssignRequests: false,
               disableClosedNotification: false,
               askClosedFeedback: false,
               includeLaborCost: true,
@@ -207,11 +180,11 @@ function DashboardTasks() {
                     <Divider sx={{ mt: 3 }} />
                     <Grid container spacing={2} sx={{ mt: 1 }}></Grid>
                     {switches.map((element) => (
-                      <SwitchOption
+                      <CustomSwitch
                         key={element.name}
                         title={element.title}
                         description={element.description}
-                        values={values}
+                        checked={values[element.name]}
                         name={element.name}
                         handleChange={handleChange}
                       />

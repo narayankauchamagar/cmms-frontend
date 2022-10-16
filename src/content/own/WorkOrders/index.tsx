@@ -1,5 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import {
+  Avatar,
   Box,
   Button,
   Card,
@@ -8,8 +9,10 @@ import {
   DialogTitle,
   Drawer,
   Grid,
+  styled,
   Tab,
   Tabs,
+  Tooltip,
   Typography
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -38,6 +41,21 @@ import { Vendor, vendors } from '../../../models/owns/vendor';
 import { Customer, customers } from '../../../models/owns/customer';
 import WorkOrderDetails from './WorkOrderDetails';
 import { useParams } from 'react-router-dom';
+import { enumerate } from '../../../utils/displayers';
+import { categories } from '../../../models/owns/category';
+import Location, { locations } from '../../../models/owns/location';
+import Asset, { assets } from '../../../models/owns/asset';
+import Part, { parts } from '../../../models/owns/part';
+import AddTimeModal from './AddTimeModal';
+
+const AvatarPrimary = styled(Avatar)(
+  ({ theme }) => `
+    background: ${theme.colors.primary.lighter};
+    color: ${theme.colors.primary.main};
+    width: ${theme.spacing(4)};
+    height: ${theme.spacing(4)};
+`
+);
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
@@ -61,6 +79,26 @@ function WorkOrders() {
     setCurrentWorkOrder(workOrders.find((workOrder) => workOrder.id === id));
     setOpenUpdateModal(true);
   };
+  const renderSingleUser = (user: User) => (
+    <Tooltip key={user.id} title={`${user.firstName} ${user.lastName}`} arrow>
+      <AvatarPrimary
+        sx={{
+          my: 2,
+          mr: 1
+        }}
+        variant="rounded"
+      >
+        <Typography variant="h1">
+          {Array.from(user.firstName)[0].toUpperCase()}
+        </Typography>
+      </AvatarPrimary>
+    </Tooltip>
+  );
+  const renderUsers = (users: User[]) => (
+    <Box sx={{ display: 'flex', flexDirection: 'row', p: 1 }}>
+      {users.map((user) => renderSingleUser(user))}
+    </Box>
+  );
   const handleOpenDetails = (id: number) => {
     const foundWorkOrder = workOrders.find((workOrder) => workOrder.id === id);
     if (foundWorkOrder) {
@@ -91,8 +129,7 @@ function WorkOrders() {
     {
       field: 'id',
       headerName: t('ID'),
-      description: t('ID'),
-      width: 150
+      description: t('ID')
     },
     {
       field: 'status',
@@ -127,7 +164,9 @@ function WorkOrders() {
       field: 'assignedTo',
       headerName: t('Assignees'),
       description: t('Assignees'),
-      width: 150
+      width: 150,
+      renderCell: (params: GridRenderCellParams<User[]>) =>
+        renderUsers(params.value)
     },
     {
       field: 'location',
@@ -147,7 +186,8 @@ function WorkOrders() {
       field: 'category',
       headerName: t('Category'),
       description: t('Category'),
-      width: 150
+      width: 150,
+      valueGetter: (params) => params.row.category.name
     },
     {
       field: 'asset',
@@ -178,7 +218,9 @@ function WorkOrders() {
       field: 'files',
       headerName: t('Files'),
       description: t('Files'),
-      width: 150
+      width: 150,
+      valueGetter: (params) =>
+        enumerate(params.row.files.map((file) => file.name))
     },
     {
       field: 'tasks',
@@ -190,7 +232,8 @@ function WorkOrders() {
       field: 'requestedBy',
       headerName: t('Requested By'),
       description: t('Requested By'),
-      width: 150
+      width: 150,
+      valueGetter: (params) => params.row.parentRequest.createdBy
     },
     {
       field: 'laborCost',
@@ -202,7 +245,9 @@ function WorkOrders() {
       field: 'parts',
       headerName: t('Parts'),
       description: t('Parts'),
-      width: 150
+      width: 150,
+      valueGetter: (params) =>
+        enumerate(params.row.parts.map((part) => part.name))
     },
     {
       field: 'completedOn',
@@ -224,9 +269,10 @@ function WorkOrders() {
     }
   ];
   const currentWorkOrderWorkers: User[] = users;
-  const currentWorkOrderTeams: Team[] = teams;
-  const currentWorkOrderVendors: Vendor[] = vendors;
-  const currentWorkOrderCustomers: Customer[] = customers;
+  const currentWorkOrderParts: Part[] = [parts[0]];
+  const currentWorkOrderTeam: Team = teams[0];
+  const currentWorkOrderLocation: Location = locations[0];
+  const currentWorkOrderAsset: Asset = assets[0];
 
   const fields: Array<IField> = [
     {
@@ -237,43 +283,99 @@ function WorkOrders() {
       required: true
     },
     {
-      name: 'address',
+      name: 'description',
       type: 'text',
-      label: 'Address',
-      placeholder: 'Casa, Maroc',
-      required: true
+      label: t('Description'),
+      placeholder: t('Description'),
+      multiple: true
     },
     {
-      name: 'workers',
-      multiple: true,
+      name: 'image',
+      type: 'file',
+      label: t('Image'),
+      fileType: 'image'
+    },
+    {
+      name: 'dueDate',
+      type: 'date',
+      label: t('Due Date')
+    },
+    {
+      name: 'estimatedDuration',
+      type: 'number',
+      label: t('Estimated Duration'),
+      placeholder: t('Hours')
+    },
+    {
+      name: 'priority',
       type: 'select',
-      type2: 'user',
-      label: 'Workers',
-      placeholder: 'Select workers'
+      label: t('Priority'),
+      type2: 'priority'
     },
     {
-      name: 'teams',
-      multiple: true,
+      name: 'category',
+      type: 'select',
+      label: t('Category'),
+      items: categories.map((category) => {
+        return {
+          label: category.name,
+          value: category.id.toString()
+        };
+      })
+    },
+    {
+      name: 'additionalWorkers',
+      type: 'select',
+      label: t('Worker'),
+      type2: 'user',
+      multiple: true
+    },
+
+    {
+      name: 'team',
       type: 'select',
       type2: 'team',
-      label: 'Teams',
-      placeholder: 'Select teams'
+      label: 'Team',
+      placeholder: 'Select team'
     },
     {
-      name: 'vendors',
-      multiple: true,
+      name: 'location',
       type: 'select',
-      type2: 'vendor',
-      label: 'Vendors',
-      placeholder: 'Select vendors'
+      type2: 'location',
+      label: 'Location',
+      placeholder: 'Select location'
     },
     {
-      name: 'customers',
-      multiple: true,
+      name: 'asset',
       type: 'select',
-      type2: 'customer',
-      label: 'Customers',
-      placeholder: 'Select customers'
+      type2: 'asset',
+      label: t('Asset'),
+      placeholder: 'Select Asset'
+    },
+    {
+      name: 'tasks',
+      type: 'select',
+      type2: 'task',
+      label: t('Tasks'),
+      placeholder: 'Select Tasks'
+    },
+    {
+      name: 'parts',
+      type: 'select',
+      type2: 'part',
+      label: t('Parts'),
+      placeholder: 'Select Parts'
+    },
+    {
+      name: 'files',
+      type: 'file',
+      label: t('Files'),
+      fileType: 'file'
+    },
+    {
+      name: 'requiresSignature',
+      type: 'checkbox',
+      label: t('Requires Signature')
     }
   ];
 
@@ -295,10 +397,10 @@ function WorkOrders() {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Add workOrder')}
+          {t('Add Work Order')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the fields below to create and add a new workOrder')}
+          {t('Fill in the fields below to create and add a new Work Order')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -340,10 +442,10 @@ function WorkOrders() {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Edit workOrder')}
+          {t('Edit Work Order')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the fields below to update the workOrder')}
+          {t('Fill in the fields below to update the Work Order')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -359,30 +461,34 @@ function WorkOrders() {
             submitText={t('Save')}
             values={{
               ...currentWorkOrder,
-              workers: currentWorkOrderWorkers.map((worker) => {
+              category: {
+                label: currentWorkOrder?.category.name,
+                value: currentWorkOrder?.category.id
+              },
+              parts: currentWorkOrderParts.map((part) => {
+                return {
+                  label: part.name,
+                  value: part.id.toString()
+                };
+              }),
+              additionalWorkers: currentWorkOrderWorkers.map((worker) => {
                 return {
                   label: `${worker.firstName} ${worker.lastName}`,
                   value: worker.id.toString()
                 };
               }),
-              teams: currentWorkOrderTeams.map((team) => {
-                return {
-                  label: team.name,
-                  value: team.id.toString()
-                };
-              }),
-              vendors: currentWorkOrderVendors.map((vendor) => {
-                return {
-                  label: vendor.name,
-                  value: vendor.id.toString()
-                };
-              }),
-              customers: currentWorkOrderCustomers.map((customer) => {
-                return {
-                  label: customer.name,
-                  value: customer.id.toString()
-                };
-              })
+              team: {
+                label: currentWorkOrderTeam.name,
+                value: currentWorkOrderTeam.id.toString()
+              },
+              location: {
+                label: currentWorkOrderLocation.name,
+                value: currentWorkOrderLocation.id.toString()
+              },
+              asset: {
+                label: currentWorkOrderAsset.name,
+                value: currentWorkOrderAsset.id.toString()
+              }
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
@@ -401,7 +507,7 @@ function WorkOrders() {
   return (
     <>
       <Helmet>
-        <title>{t('WorkOrders')}</title>
+        <title>{t('Work Orders')}</title>
       </Helmet>
       <Grid
         container
