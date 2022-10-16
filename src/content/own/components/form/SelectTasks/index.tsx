@@ -3,10 +3,12 @@ import {
   Button,
   Dialog,
   DialogContent,
+  DialogActions,
   DialogTitle,
   Tab,
   Tabs,
-  Typography
+  Typography,
+  Zoom
 } from '@mui/material';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { ChangeEvent, useState } from 'react';
@@ -17,11 +19,13 @@ import { Task, TaskType } from '../../../../../models/owns/tasks';
 import DraggableTaskList from './DraggableTaskList';
 import { randomInt } from '../../../../../utils/generators';
 import SingleTask from './SingleTask';
+import { useSnackbar } from 'notistack';
 
 interface SelectTasksProps {}
 export default function SelectTasks({}: SelectTasksProps) {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const { t }: { t: any } = useTranslation();
+  const { enqueueSnackbar } = useSnackbar();
   const [currentTab, setCurrentTab] = useState<string>('edit');
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
@@ -53,6 +57,19 @@ export default function SelectTasks({}: SelectTasksProps) {
       return task;
     });
     setTasks(newTasks);
+  };
+
+  const onSave = () => {
+    if (tasks.some((task) => !task.label)) {
+      enqueueSnackbar(t('Remove blank tasks'), {
+        variant: 'error',
+        anchorOrigin: {
+          vertical: 'bottom',
+          horizontal: 'center'
+        },
+        TransitionComponent: Zoom
+      });
+    }
   };
 
   const onRemove = (id: number) => {
@@ -139,14 +156,22 @@ export default function SelectTasks({}: SelectTasksProps) {
               />
             </Box>
           )}
+          {currentTab === 'preview' && (
+            <Box sx={{ p: 2 }}>
+              {tasks.map((task) => (
+                <SingleTask preview task={task} key={task.id} />
+              ))}
+            </Box>
+          )}
         </DialogContent>
-        {currentTab === 'preview' && (
-          <Box sx={{ p: 2 }}>
-            {tasks.map((task) => (
-              <SingleTask preview task={task} key={task.id} />
-            ))}
-          </Box>
-        )}
+        <DialogActions>
+          <Button variant="outlined" onClick={onClose}>
+            {t('Cancel')}
+          </Button>
+          <Button disabled={!tasks.length} onClick={onSave} variant="contained">
+            Add tasks
+          </Button>
+        </DialogActions>
       </Dialog>
 
       <Button startIcon={<AddTwoToneIcon />} onClick={() => setOpenModal(true)}>
