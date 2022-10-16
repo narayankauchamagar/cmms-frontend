@@ -19,6 +19,7 @@ import { useState } from 'react';
 import Field from '../components/form/Field';
 import AttachFileTwoToneIcon from '@mui/icons-material/AttachFileTwoTone';
 import { Task, tasks as defaultTasks } from '../../../models/owns/tasks';
+import SingleTask from '../components/form/SelectTasks/SingleTask';
 
 interface TasksProps {}
 
@@ -67,75 +68,14 @@ export default function Tasks({}: TasksProps) {
       <CardContent>
         <FormControl fullWidth>
           {tasks.map((task) => (
-            <Box
+            <SingleTask
               key={task.id}
-              sx={{
-                mt: 1,
-                p: 2,
-                backgroundColor: theme.colors.alpha.black[5]
-              }}
-            >
-              <Box
-                display="flex"
-                flexDirection="row"
-                justifyContent="space-between"
-              >
-                <Box>
-                  <Typography variant="h6" fontWeight="bold">
-                    {task.label}
-                  </Typography>
-                  {['basic'].includes(task.type) ? (
-                    <Select
-                      value={task.value}
-                      onChange={(event) =>
-                        handleChange(event.target.value, task.id)
-                      }
-                      sx={{ backgroundColor: 'white' }}
-                    >
-                      {task.type === 'subtask'
-                        ? subtaskOptions.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                              {option.label}
-                            </MenuItem>
-                          ))
-                        : null}
-                    </Select>
-                  ) : (
-                    <Box sx={{ backgroundColor: 'white' }}>
-                      <Field
-                        onChange={(event) =>
-                          handleChange(event.target.value, task.id)
-                        }
-                        value={task.value}
-                        label={t('Value')}
-                        type={task.type as 'number' | 'text'}
-                      />
-                    </Box>
-                  )}
-                </Box>
-                <Box>
-                  <IconButton onClick={() => toggleNotes(task.id)}>
-                    <NoteTwoToneIcon color="primary" />
-                  </IconButton>
-                  <IconButton>
-                    <AttachFileTwoToneIcon color="primary" />
-                  </IconButton>
-                </Box>
-              </Box>
-              <Collapse in={notes.get(task.id)}>
-                <Box sx={{ p: 1, backgroundColor: 'white' }}>
-                  <Field
-                    multiple={true}
-                    onChange={(event) =>
-                      handleNoteChange(event.target.value, task.id)
-                    }
-                    value={task.notes}
-                    label={t('Notes')}
-                    type={'text'}
-                  />
-                </Box>
-              </Collapse>
-            </Box>
+              task={task}
+              handleChange={handleChange}
+              handleNoteChange={handleNoteChange}
+              toggleNotes={toggleNotes}
+              notes={notes}
+            />
           ))}
         </FormControl>
       </CardContent>

@@ -12,6 +12,7 @@ export interface Task {
   value?: string | number;
   user?: number;
   notes: string;
+  meter?: number;
 }
 export const tasks: Task[] = [
   {

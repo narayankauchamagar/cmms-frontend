@@ -20,6 +20,7 @@ import {
 } from '../../../../../models/owns/tasks';
 import DraggableTaskList from './DraggableTaskList';
 import { randomInt } from '../../../../../utils/generators';
+import SingleTask from './SingleTask';
 
 interface SelectTasksProps {}
 export default function SelectTasks({}: SelectTasksProps) {
@@ -143,6 +144,13 @@ export default function SelectTasks({}: SelectTasksProps) {
             </Box>
           )}
         </DialogContent>
+        {currentTab === 'preview' && (
+          <Box sx={{ p: 2 }}>
+            {tasks.map((task) => (
+              <SingleTask preview task={task} key={task.id} />
+            ))}
+          </Box>
+        )}
       </Dialog>
 
       <Button startIcon={<AddTwoToneIcon />} onClick={() => setOpenModal(true)}>
