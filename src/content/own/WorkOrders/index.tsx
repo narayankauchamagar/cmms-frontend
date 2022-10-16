@@ -353,6 +353,13 @@ function WorkOrders() {
       placeholder: 'Select Asset'
     },
     {
+      name: 'tasks',
+      type: 'select',
+      type2: 'task',
+      label: t('Tasks'),
+      placeholder: 'Select Tasks'
+    },
+    {
       name: 'parts',
       type: 'select',
       type2: 'part',

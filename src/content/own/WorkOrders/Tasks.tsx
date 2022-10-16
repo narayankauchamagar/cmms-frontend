@@ -18,30 +18,13 @@ import NoteTwoToneIcon from '@mui/icons-material/NoteTwoTone';
 import { useState } from 'react';
 import Field from '../components/form/Field';
 import AttachFileTwoToneIcon from '@mui/icons-material/AttachFileTwoTone';
-import { Task } from '../../../models/owns/tasks';
+import { Task, tasks as defaultTasks } from '../../../models/owns/tasks';
 
 interface TasksProps {}
 
 export default function Tasks({}: TasksProps) {
   const { t }: { t: any } = useTranslation();
   const [notes, setNotes] = useState<Map<number, boolean>>(new Map());
-  const defaultTasks: Task[] = [
-    {
-      id: 74,
-      label: 'Clean air filter & check its condition',
-      type: 'basic',
-      value: 'OPEN',
-      notes: ''
-    },
-    { id: 75, label: 'Clean', type: 'basic', value: 'OPEN', notes: '' },
-    {
-      id: 77,
-      label: 'Clean air filter & check its condition',
-      type: 'number',
-      value: 0,
-      notes: ''
-    }
-  ];
   const [tasks, setTasks] = useState(defaultTasks);
   const theme = useTheme();
   const basicOptions = [

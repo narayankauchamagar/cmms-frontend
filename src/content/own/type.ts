@@ -31,7 +31,8 @@ export interface IField {
     | 'part'
     | 'location'
     | 'asset'
-    | 'priority';
+    | 'priority'
+    | 'task';
   name?: string;
   placeholder?: string;
   fileType?: 'file' | 'image';

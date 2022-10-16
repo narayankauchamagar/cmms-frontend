@@ -35,6 +35,7 @@ import Location, {
 import Asset, { assets as assetsList } from '../../../../models/owns/asset';
 import Part from '../../../../models/owns/part';
 import CustomSwitch from './CustomSwitch';
+import SelectTasks from './SelectTasks';
 
 interface PropsType {
   fields: Array<IField>;
@@ -250,6 +251,8 @@ export default (props: PropsType) => {
             />
           </Box>
         );
+      case 'task':
+        return <SelectTasks />;
       default:
         break;
     }
