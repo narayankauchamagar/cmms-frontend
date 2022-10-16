@@ -17,6 +17,7 @@ import WorkOrder from '../../../models/owns/workOrder';
 import { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
+import DoDisturbOnTwoToneIcon from '@mui/icons-material/DoDisturbOnTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import Asset from '../../../models/owns/asset';
 import { labors } from '../../../models/owns/labor';
@@ -24,6 +25,7 @@ import AddTimeModal from './AddTimeModal';
 import { additionalCosts } from '../../../models/owns/additionalCost';
 import AddCostModal from './AddCostModal';
 import Tasks from './Tasks';
+import { workOrderHistories } from '../../../models/owns/workOrderHistories';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;
@@ -370,7 +372,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                     key={file.id}
                     secondaryAction={
                       <IconButton edge="end" aria-label="delete">
-                        <DeleteTwoToneIcon color="error" />
+                        <DoDisturbOnTwoToneIcon color="error" />
                       </IconButton>
                     }
                   >
@@ -387,6 +389,21 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
               </List>
             </Box>
           </Box>
+        )}
+        {currentTab == 'updates' && (
+          <List>
+            {workOrderHistories.map((workOrderHistory) => (
+              <ListItem
+                key={workOrderHistory.id}
+                secondaryAction={workOrderHistory.date}
+              >
+                <ListItemText
+                  primary={`${workOrderHistory.user.firstName} ${workOrderHistory.user.lastName}`}
+                  secondary={workOrderHistory.description}
+                />
+              </ListItem>
+            ))}
+          </List>
         )}
       </Grid>
       <AddTimeModal

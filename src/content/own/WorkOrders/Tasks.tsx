@@ -1,37 +1,46 @@
 import {
-  Card,
-  CardHeader,
-  CardContent,
-  IconButton,
-  Divider,
-  Typography,
   Box,
-  FormControl,
-  Select,
-  MenuItem,
+  Card,
+  CardContent,
+  CardHeader,
   Collapse,
+  Divider,
+  FormControl,
+  IconButton,
+  MenuItem,
+  Select,
+  Typography,
   useTheme
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import TaskAltTwoToneIcon from '@mui/icons-material/TaskAltTwoTone';
 import NoteTwoToneIcon from '@mui/icons-material/NoteTwoTone';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Field from '../components/form/Field';
 import AttachFileTwoToneIcon from '@mui/icons-material/AttachFileTwoTone';
+import { Task } from '../../../models/owns/tasks';
 
 interface TasksProps {}
+
 export default function Tasks({}: TasksProps) {
   const { t }: { t: any } = useTranslation();
   const [notes, setNotes] = useState<Map<number, boolean>>(new Map());
-  const defaultTasks = [
+  const defaultTasks: Task[] = [
     {
       id: 74,
       label: 'Clean air filter & check its condition',
       type: 'basic',
-      status: 'OPEN',
+      value: 'OPEN',
       notes: ''
     },
-    { id: 75, label: 'Clean', type: 'basic', status: 'OPEN', notes: '' }
+    { id: 75, label: 'Clean', type: 'basic', value: 'OPEN', notes: '' },
+    {
+      id: 77,
+      label: 'Clean air filter & check its condition',
+      type: 'number',
+      value: 0,
+      notes: ''
+    }
   ];
   const [tasks, setTasks] = useState(defaultTasks);
   const theme = useTheme();
@@ -42,15 +51,16 @@ export default function Tasks({}: TasksProps) {
     { label: t('Complete'), value: 'COMPLETE' }
   ];
 
-  function handleChange(value: string, id: number) {
+  function handleChange(value: string | number, id: number) {
     const newTasks = tasks.map((task) => {
       if (task.id === id) {
-        return { ...task, status: value };
+        return { ...task, value };
       }
       return task;
     });
     setTasks(newTasks);
   }
+
   function handleNoteChange(value: string, id: number) {
     const newTasks = tasks.map((task) => {
       if (task.id === id) {
@@ -79,7 +89,7 @@ export default function Tasks({}: TasksProps) {
               sx={{
                 mt: 1,
                 p: 2,
-                backgroundColor: theme.colors.alpha.black[10]
+                backgroundColor: theme.colors.alpha.black[5]
               }}
             >
               <Box
@@ -91,21 +101,34 @@ export default function Tasks({}: TasksProps) {
                   <Typography variant="h6" fontWeight="bold">
                     {task.label}
                   </Typography>
-                  <Select
-                    value={task.status}
-                    onChange={(event) =>
-                      handleChange(event.target.value, task.id)
-                    }
-                    sx={{ backgroundColor: 'white' }}
-                  >
-                    {task.type === 'basic'
-                      ? basicOptions.map((option) => (
-                          <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                          </MenuItem>
-                        ))
-                      : null}
-                  </Select>
+                  {['basic'].includes(task.type) ? (
+                    <Select
+                      value={task.value}
+                      onChange={(event) =>
+                        handleChange(event.target.value, task.id)
+                      }
+                      sx={{ backgroundColor: 'white' }}
+                    >
+                      {task.type === 'basic'
+                        ? basicOptions.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                              {option.label}
+                            </MenuItem>
+                          ))
+                        : null}
+                    </Select>
+                  ) : (
+                    <Box sx={{ backgroundColor: 'white' }}>
+                      <Field
+                        onChange={(event) =>
+                          handleChange(event.target.value, task.id)
+                        }
+                        value={task.value}
+                        label={t('Value')}
+                        type={task.type as 'number' | 'text'}
+                      />
+                    </Box>
+                  )}
                 </Box>
                 <Box>
                   <IconButton onClick={() => toggleNotes(task.id)}>
@@ -129,7 +152,6 @@ export default function Tasks({}: TasksProps) {
                   />
                 </Box>
               </Collapse>
-              <Divider sx={{ mt: 1 }} />
             </Box>
           ))}
         </FormControl>
