@@ -73,7 +73,7 @@ export default function SingleTask({
           </Typography>
           {['subtask', 'inspection'].includes(task.type) ? (
             <Select
-              value={task.value}
+              value={preview ? getOptions(task.type)[0].value : task.value}
               onChange={(event) =>
                 !preview && handleChange(event.target.value, task.id)
               }

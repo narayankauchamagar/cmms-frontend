@@ -13,11 +13,7 @@ import { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DropResult } from 'react-beautiful-dnd';
 import { reorder } from '../../../../../utils/items';
-import {
-  Task,
-  tasks as defaultTasks,
-  TaskType
-} from '../../../../../models/owns/tasks';
+import { Task, TaskType } from '../../../../../models/owns/tasks';
 import DraggableTaskList from './DraggableTaskList';
 import { randomInt } from '../../../../../utils/generators';
 import SingleTask from './SingleTask';
@@ -30,7 +26,7 @@ export default function SelectTasks({}: SelectTasksProps) {
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
-  const [tasks, setTasks] = useState<Task[]>(defaultTasks);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const onLabelChange = (value: string, id: number) => {
     const newTasks = tasks.map((task) => {
       if (task.id === id) {

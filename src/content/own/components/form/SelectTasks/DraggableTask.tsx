@@ -21,6 +21,7 @@ import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
 import { users } from '../../../../../models/owns/user';
 import { useState } from 'react';
 import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
+import { assets } from '../../../../../models/owns/asset';
 
 const useStyles = makeStyles({
   draggingListItem: {
@@ -64,6 +65,7 @@ const DraggableListItem = ({
     { label: t('Meter Reading'), value: 'meter' }
   ];
   const [openAssignUser, setOpenAssignUser] = useState<boolean>(false);
+  const [openAssignAsset, setOpenAssignAsset] = useState<boolean>(false);
   const renderMenu = () => (
     <Menu
       id="basic-menu"
@@ -78,7 +80,10 @@ const DraggableListItem = ({
         {openAssignUser && <CheckTwoToneIcon />}
         Assign User
       </MenuItem>
-      <MenuItem onClick={handleClose}>Assign Asset</MenuItem>
+      <MenuItem onClick={() => setOpenAssignAsset(!openAssignAsset)}>
+        {openAssignAsset && <CheckTwoToneIcon />}
+        Assign Asset
+      </MenuItem>{' '}
     </Menu>
   );
   return (
@@ -136,21 +141,49 @@ const DraggableListItem = ({
                   </IconButton>
                 </Box>
               </Box>
-              <Collapse in={openAssignUser}>
-                <Select
-                  sx={{ mt: 1 }}
-                  onChange={(event) =>
-                    onUserChange(Number(event.target.value), task.id)
-                  }
+              <Collapse in={openAssignUser || openAssignAsset}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column'
+                  }}
                 >
-                  <MenuItem value="">{t('Select User')}</MenuItem>
-                  {users.map((user) => (
-                    <MenuItem
-                      key={user.id}
-                      value={user.id}
-                    >{`${user.firstName} ${user.lastName}`}</MenuItem>
-                  ))}
-                </Select>
+                  {openAssignUser && (
+                    <Select
+                      sx={{ mt: 1 }}
+                      onChange={(event) =>
+                        onUserChange(Number(event.target.value), task.id)
+                      }
+                      displayEmpty
+                      defaultValue=""
+                    >
+                      <MenuItem value="">{t('Select User')}</MenuItem>
+                      {users.map((user) => (
+                        <MenuItem
+                          key={user.id}
+                          value={user.id}
+                        >{`${user.firstName} ${user.lastName}`}</MenuItem>
+                      ))}
+                    </Select>
+                  )}
+                  {openAssignAsset && (
+                    <Select
+                      sx={{ mt: 1 }}
+                      onChange={(event) =>
+                        onUserChange(Number(event.target.value), task.id)
+                      }
+                      displayEmpty
+                      defaultValue=""
+                    >
+                      <MenuItem value="">{t('Select Asset')}</MenuItem>
+                      {assets.map((asset) => (
+                        <MenuItem key={asset.id} value={asset.id}>
+                          {asset.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  )}
+                </Box>
               </Collapse>
             </Box>
           </Box>
