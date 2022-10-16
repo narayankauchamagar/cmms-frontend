@@ -74,6 +74,7 @@ export default function SelectTasks({}: SelectTasksProps) {
       }
       return task;
     });
+    console.log(newTasks);
     setTasks(newTasks);
   };
   const onSave = () => {

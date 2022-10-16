@@ -70,9 +70,9 @@ const DraggableListItem = ({
     { label: t('Multiple Choice'), value: 'multiple' },
     { label: t('Meter Reading'), value: 'meter' }
   ];
-  const [openAssignUser, setOpenAssignUser] = useState<boolean>(false);
-  const [openAssignAsset, setOpenAssignAsset] = useState<boolean>(false);
-  const [choices, setChoices] = useState<string[]>(['', '']);
+  const [openAssignUser, setOpenAssignUser] = useState<boolean>(!!task.user);
+  const [openAssignAsset, setOpenAssignAsset] = useState<boolean>(!!task.asset);
+  const [choices, setChoices] = useState<string[]>(task.options ?? ['', '']);
   const handleChoiceChange = (value: string, index: number) => {
     const newChoices = [...choices];
     newChoices[index] = value;
@@ -185,6 +185,7 @@ const DraggableListItem = ({
                       }
                       displayEmpty
                       defaultValue=""
+                      value={task.user ?? ''}
                     >
                       <MenuItem value="">{t('Select User')}</MenuItem>
                       {users.map((user) => (
@@ -203,6 +204,7 @@ const DraggableListItem = ({
                       }
                       displayEmpty
                       defaultValue=""
+                      value={task.asset ?? ''}
                     >
                       <MenuItem value="">{t('Select Asset')}</MenuItem>
                       {assets.map((asset) => (
