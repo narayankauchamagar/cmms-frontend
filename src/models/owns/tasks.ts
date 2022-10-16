@@ -10,6 +10,7 @@ export interface Task {
   label: string;
   type: TaskType;
   value?: string | number;
+  user?: number;
   notes: string;
 }
 export const tasks: Task[] = [

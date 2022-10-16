@@ -48,6 +48,16 @@ export default function SelectTasks({}: SelectTasksProps) {
     });
     setTasks(newTasks);
   };
+  const onUserChange = (user: number, id: number) => {
+    const newTasks = tasks.map((task) => {
+      if (task.id === id) {
+        return { ...task, user };
+      }
+      return task;
+    });
+    setTasks(newTasks);
+  };
+
   const onRemove = (id: number) => {
     const newTasks = tasks.filter((task) => task.id !== id);
     setTasks(newTasks);
@@ -128,6 +138,7 @@ export default function SelectTasks({}: SelectTasksProps) {
                 onLabelChange={onLabelChange}
                 onTypeChange={onTypeChange}
                 onRemove={onRemove}
+                onUserChange={onUserChange}
               />
             </Box>
           )}
