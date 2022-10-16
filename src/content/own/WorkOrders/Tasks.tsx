@@ -27,7 +27,7 @@ export default function Tasks({}: TasksProps) {
   const [notes, setNotes] = useState<Map<number, boolean>>(new Map());
   const [tasks, setTasks] = useState(defaultTasks);
   const theme = useTheme();
-  const basicOptions = [
+  const subtaskOptions = [
     { label: t('Open'), value: 'OPEN' },
     { label: t('In Progress'), value: 'IN_PROGRESS' },
     { label: t('On Hold'), value: 'ON_HOLD' },
@@ -92,8 +92,8 @@ export default function Tasks({}: TasksProps) {
                       }
                       sx={{ backgroundColor: 'white' }}
                     >
-                      {task.type === 'basic'
-                        ? basicOptions.map((option) => (
+                      {task.type === 'subtask'
+                        ? subtaskOptions.map((option) => (
                             <MenuItem key={option.value} value={option.value}>
                               {option.label}
                             </MenuItem>

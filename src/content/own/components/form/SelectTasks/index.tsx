@@ -13,7 +13,11 @@ import { ChangeEvent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DropResult } from 'react-beautiful-dnd';
 import { reorder } from '../../../../../utils/items';
-import { Task, tasks as defaultTasks } from '../../../../../models/owns/tasks';
+import {
+  Task,
+  tasks as defaultTasks,
+  TaskType
+} from '../../../../../models/owns/tasks';
 import DraggableTaskList from './DraggableTaskList';
 import { randomInt } from '../../../../../utils/generators';
 
@@ -35,7 +39,19 @@ export default function SelectTasks({}: SelectTasksProps) {
     });
     setTasks(newTasks);
   };
-
+  const onTypeChange = (value: TaskType, id: number) => {
+    const newTasks = tasks.map((task) => {
+      if (task.id === id) {
+        return { ...task, type: value };
+      }
+      return task;
+    });
+    setTasks(newTasks);
+  };
+  const onRemove = (id: number) => {
+    const newTasks = tasks.filter((task) => task.id !== id);
+    setTasks(newTasks);
+  };
   const tabs = [
     { value: 'edit', label: t('Edit') },
     { value: 'preview', label: t('Preview') }
@@ -47,7 +63,7 @@ export default function SelectTasks({}: SelectTasksProps) {
       {
         id: randomInt(),
         label: '',
-        type: 'basic',
+        type: 'subtask',
         notes: ''
       }
     ]);
@@ -67,7 +83,7 @@ export default function SelectTasks({}: SelectTasksProps) {
           }}
         >
           <Typography variant="h4" gutterBottom>
-            {t('Select Parts')}
+            {t('Add Tasks')}
           </Typography>
         </DialogTitle>
         <DialogContent
@@ -107,9 +123,11 @@ export default function SelectTasks({}: SelectTasksProps) {
           {currentTab === 'edit' && (
             <Box>
               <DraggableTaskList
-                items={tasks}
+                tasks={tasks}
                 onDragEnd={onDragEnd}
                 onLabelChange={onLabelChange}
+                onTypeChange={onTypeChange}
+                onRemove={onRemove}
               />
             </Box>
           )}
