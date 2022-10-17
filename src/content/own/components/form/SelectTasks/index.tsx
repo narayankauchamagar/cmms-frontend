@@ -8,10 +8,15 @@ import {
   Tab,
   Tabs,
   Typography,
-  Zoom
+  Zoom,
+  Card,
+  IconButton
 } from '@mui/material';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import { ChangeEvent, useState } from 'react';
+import AssignmentTwoToneIcon from '@mui/icons-material/AssignmentTwoTone';
+import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone';
+import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DropResult } from 'react-beautiful-dnd';
 import { reorder } from '../../../../../utils/items';
@@ -21,8 +26,11 @@ import { randomInt } from '../../../../../utils/generators';
 import SingleTask from './SingleTask';
 import { useSnackbar } from 'notistack';
 
-interface SelectTasksProps {}
-export default function SelectTasks({}: SelectTasksProps) {
+interface SelectTasksProps {
+  selected: Task[];
+  onChange: (tasks: Task[]) => void;
+}
+export default function SelectTasks({ selected, onChange }: SelectTasksProps) {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const { t }: { t: any } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
@@ -30,7 +38,11 @@ export default function SelectTasks({}: SelectTasksProps) {
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<Task[]>(selected ?? []);
+  useEffect(() => {
+    onChange(tasks);
+  }, [tasks]);
+
   const onLabelChange = (value: string, id: number) => {
     const newTasks = tasks.map((task) => {
       if (task.id === id) {
@@ -74,7 +86,6 @@ export default function SelectTasks({}: SelectTasksProps) {
       }
       return task;
     });
-    console.log(newTasks);
     setTasks(newTasks);
   };
   const onSave = () => {
@@ -194,9 +205,34 @@ export default function SelectTasks({}: SelectTasksProps) {
         </DialogActions>
       </Dialog>
 
-      <Button startIcon={<AddTwoToneIcon />} onClick={() => setOpenModal(true)}>
-        Add Tasks
-      </Button>
+      <Card onClick={() => setOpenModal(true)} sx={{ cursor: 'pointer' }}>
+        <Box
+          sx={{
+            p: 2,
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}
+        >
+          <AssignmentTwoToneIcon />
+          <Box>
+            <Typography variant="h4" color="primary">
+              {tasks.length ? tasks.length : null} Tasks
+            </Typography>
+            <Typography variant="subtitle1">
+              {t('Assign Custom Tasks for technicians to fill out')}
+            </Typography>
+          </Box>
+          <IconButton>
+            {tasks.length ? (
+              <EditTwoToneIcon color="primary" />
+            ) : (
+              <AddCircleTwoToneIcon color="primary" />
+            )}
+          </IconButton>
+        </Box>
+      </Card>
     </Box>
   );
 }

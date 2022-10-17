@@ -252,7 +252,12 @@ export default (props: PropsType) => {
           </Box>
         );
       case 'task':
-        return <SelectTasks />;
+        return (
+          <SelectTasks
+            selected={values}
+            onChange={(tasks) => handleChange(formik, field.name, tasks)}
+          />
+        );
       default:
         break;
     }

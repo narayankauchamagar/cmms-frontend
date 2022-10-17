@@ -47,6 +47,7 @@ import Location, { locations } from '../../../models/owns/location';
 import Asset, { assets } from '../../../models/owns/asset';
 import Part, { parts } from '../../../models/owns/part';
 import AddTimeModal from './AddTimeModal';
+import { tasks } from '../../../models/owns/tasks';
 
 const AvatarPrimary = styled(Avatar)(
   ({ theme }) => `
@@ -374,7 +375,7 @@ function WorkOrders() {
     },
     {
       name: 'requiresSignature',
-      type: 'checkbox',
+      type: 'switch',
       label: t('Requires Signature')
     }
   ];
@@ -471,6 +472,7 @@ function WorkOrders() {
                   value: part.id.toString()
                 };
               }),
+              tasks: tasks,
               additionalWorkers: currentWorkOrderWorkers.map((worker) => {
                 return {
                   label: `${worker.firstName} ${worker.lastName}`,
@@ -488,7 +490,8 @@ function WorkOrders() {
               asset: {
                 label: currentWorkOrderAsset.name,
                 value: currentWorkOrderAsset.id.toString()
-              }
+              },
+              requiresSignature: false
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
