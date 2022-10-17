@@ -23,3 +23,7 @@ export const amplifyConfig = {
   aws_user_pools_web_client_id:
     process.env.REACT_APP_AWS_USER_POOLS_WEB_CLIENT_ID
 };
+
+export const googleMapsConfig = {
+  apiKey: 'AIzaSyBGk5a8ivYnqF3jFQQONB2OfCaroDGnNwM'
+};

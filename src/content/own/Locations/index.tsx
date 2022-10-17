@@ -38,6 +38,7 @@ import { Vendor, vendors } from '../../../models/owns/vendor';
 import { Customer, customers } from '../../../models/owns/customer';
 import LocationDetails from './LocationDetails';
 import { useParams } from 'react-router-dom';
+import Map from '../components/Map';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
@@ -357,33 +358,47 @@ function Files() {
             Location
           </Button>
         </Grid>
-        <Grid item xs={12}>
-          <Card
-            sx={{
-              p: 2,
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between'
-            }}
-          >
-            <Box sx={{ height: 500, width: '95%' }}>
-              <CustomDataGrid
-                columns={columns}
-                rows={locations}
-                components={{
-                  Toolbar: GridToolbar
-                }}
-                onRowClick={(params) => handleOpenDetails(Number(params.id))}
-                initialState={{
-                  columns: {
-                    columnVisibilityModel: {}
-                  }
-                }}
-              />
-            </Box>
-          </Card>
-        </Grid>
+        {currentTab === 'list' && (
+          <Grid item xs={12}>
+            <Card
+              sx={{
+                p: 2,
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+              }}
+            >
+              <Box sx={{ height: 500, width: '95%' }}>
+                <CustomDataGrid
+                  columns={columns}
+                  rows={locations}
+                  components={{
+                    Toolbar: GridToolbar
+                  }}
+                  onRowClick={(params) => handleOpenDetails(Number(params.id))}
+                  initialState={{
+                    columns: {
+                      columnVisibilityModel: {}
+                    }
+                  }}
+                />
+              </Box>
+            </Card>
+          </Grid>
+        )}
+        {currentTab === 'map' && (
+          <Grid item xs={12}>
+            <Card
+              sx={{
+                p: 2,
+                justifyContent: 'center'
+              }}
+            >
+              <Map dimensions={{ width: 1000, height: 500 }} />
+            </Card>
+          </Grid>
+        )}
       </Grid>
       {renderLocationAddModal()}
       {renderLocationUpdateModal()}
