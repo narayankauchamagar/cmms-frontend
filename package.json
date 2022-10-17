@@ -20,6 +20,7 @@
     "@mui/material": "5.8.2",
     "@mui/styles": "5.8.0",
     "@mui/x-data-grid": "^5.17.3",
+    "@mui/x-data-grid-pro": "^5.17.7",
     "@reduxjs/toolkit": "1.8.2",
     "@types/jsonwebtoken": "8.5.8",
     "@types/nprogress": "0.2.0",

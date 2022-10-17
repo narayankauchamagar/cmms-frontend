@@ -17,11 +17,13 @@ import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import CustomDataGrid from '../components/CustomDatagrid';
 import { GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import { assetDTOS } from '../../../models/owns/asset';
+import { assetsHierarchy } from '../../../models/owns/asset';
 import Form from '../components/form';
 import * as Yup from 'yup';
 import wait from '../../../utils/wait';
 import { useNavigate } from 'react-router-dom';
+import { DataGridProProps } from '@mui/x-data-grid-pro';
+import CustomGroupingCell from './CustomGroupingCell';
 
 function Assets() {
   const { t }: { t: any } = useTranslation();
@@ -301,6 +303,12 @@ function Assets() {
       </DialogContent>
     </Dialog>
   );
+
+  const groupingColDef: DataGridProProps['groupingColDef'] = {
+    headerName: 'Hierarchy',
+    renderCell: (params) => <CustomGroupingCell {...params} />
+  };
+
   return (
     <>
       {renderAssetAddModal()}
@@ -343,8 +351,13 @@ function Assets() {
           >
             <Box sx={{ height: 500, width: '95%' }}>
               <CustomDataGrid
+                treeData
                 columns={columns}
-                rows={assetDTOS}
+                rows={assetsHierarchy}
+                getTreeDataPath={(row) =>
+                  row.hierarchy.map((id) => id.toString())
+                }
+                groupingColDef={groupingColDef}
                 components={{
                   Toolbar: GridToolbar
                 }}

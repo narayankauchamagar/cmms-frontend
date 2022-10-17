@@ -1,9 +1,9 @@
-import { DataGrid, DataGridProps } from '@mui/x-data-grid';
+import { DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@mui/material';
 import gridLocaleText from './GridLocaleText';
 
-interface CustomDatagridProps extends DataGridProps {}
+interface CustomDatagridProps extends DataGridProProps {}
 
 function CustomDataGrid(props: CustomDatagridProps) {
   const { t }: { t: any } = useTranslation();
@@ -18,7 +18,7 @@ function CustomDataGrid(props: CustomDatagridProps) {
     })
   );
   return (
-    <DataGrid
+    <DataGridPro
       sx={{
         ' .MuiDataGrid-columnHeader': {
           fontWeight: 'bold',

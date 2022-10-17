@@ -23,7 +23,9 @@ export interface AssetDTO extends Audit {
   parentAsset: string;
   openWorkOrders: number;
 }
-
+export interface AssetHierarchy extends AssetDTO {
+  hierarchy: number[];
+}
 export const assets: Asset[] = [
   {
     id: 212,
@@ -66,5 +68,75 @@ export const assetDTOS: AssetDTO[] = [
     createdBy: 'ghu',
     updatedAt: 'ghfgj',
     updatedBy: 'ghfgj'
+  },
+  {
+    id: 211,
+    name: 'Name',
+    image: 'Image',
+    location: 'Location',
+    area: 'Area',
+    model: 'Model',
+    barCode: 'Barcode',
+    category: 'Category',
+    description: 'desc',
+    primaryUser: 'user',
+    users: 1,
+    teams: 4,
+    vendors: 3,
+    parentAsset: 'string',
+    openWorkOrders: 2,
+    createdAt: 'dfggj',
+    createdBy: 'ghu',
+    updatedAt: 'ghfgj',
+    updatedBy: 'ghfgj'
+  },
+  {
+    id: 52,
+    name: 'Name',
+    image: 'Image',
+    location: 'Location',
+    area: 'Area',
+    model: 'Model',
+    barCode: 'Barcode',
+    category: 'Category',
+    description: 'desc',
+    primaryUser: 'user',
+    users: 1,
+    teams: 4,
+    vendors: 3,
+    parentAsset: 'string',
+    openWorkOrders: 2,
+    createdAt: 'dfggj',
+    createdBy: 'ghu',
+    updatedAt: 'ghfgj',
+    updatedBy: 'ghfgj'
+  },
+  {
+    id: 245,
+    name: 'Name',
+    image: 'Image',
+    location: 'Location',
+    area: 'Area',
+    model: 'Model',
+    barCode: 'Barcode',
+    category: 'Category',
+    description: 'desc',
+    primaryUser: 'user',
+    users: 1,
+    teams: 4,
+    vendors: 3,
+    parentAsset: 'string',
+    openWorkOrders: 2,
+    createdAt: 'dfggj',
+    createdBy: 'ghu',
+    updatedAt: 'ghfgj',
+    updatedBy: 'ghfgj'
   }
+];
+
+export const assetsHierarchy: AssetHierarchy[] = [
+  { ...assetDTOS[0], hierarchy: [1] },
+  { ...assetDTOS[1], hierarchy: [1, 10] },
+  { ...assetDTOS[2], hierarchy: [1, 10, assetDTOS[2].id] },
+  { ...assetDTOS[3], hierarchy: [1, 10, assetDTOS[3].id] }
 ];
