@@ -3,12 +3,14 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
+  Button,
   Checkbox,
   Dialog,
   DialogContent,
   DialogTitle,
   FormControlLabel,
   FormGroup,
+  Link,
   Tab,
   Tabs,
   Typography
@@ -18,23 +20,19 @@ import { useTranslation } from 'react-i18next';
 import Part, { parts } from 'src/models/owns/part';
 import { sets } from '../../../../models/owns/setType';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
+import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 
 interface SelectPartsProps {
-  open: boolean;
-  onClose: () => void;
   onChange: (parts: Part[]) => void;
   selected: number[];
 }
 
-export default function SelectParts({
-  open,
-  onClose,
-  onChange,
-  selected
-}: SelectPartsProps) {
+export default function SelectParts({ onChange, selected }: SelectPartsProps) {
   const { t }: { t: any } = useTranslation();
   const [currentTab, setCurrentTab] = useState<string>('parts');
+  const [selectedParts, setSelectedParts] = useState<Part[]>([]);
   const [selectedIds, setSelectedIds] = useState<number[]>(selected);
+  const [openModal, setOpenModal] = useState<boolean>(false);
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
@@ -44,12 +42,16 @@ export default function SelectParts({
   ];
 
   useEffect(() => {
-    onChange(
+    setSelectedParts(
       selectedIds.map((id) => {
         return parts.find((part) => part.id === id);
       })
     );
   }, [selectedIds]);
+
+  useEffect(() => {
+    onChange(selectedParts);
+  }, [selectedParts]);
 
   const onSelect = (ids: number[]) => {
     setSelectedIds(Array.from(new Set([...selectedIds, ...ids])));
@@ -59,89 +61,115 @@ export default function SelectParts({
     setSelectedIds(newSelectedIds);
   };
   return (
-    <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
-      <DialogTitle
-        sx={{
-          p: 3
-        }}
+    <>
+      <Dialog
+        fullWidth
+        maxWidth="sm"
+        open={openModal}
+        onClose={() => setOpenModal(false)}
       >
-        <Typography variant="h4" gutterBottom>
-          {t('Select Parts')}
-        </Typography>
-      </DialogTitle>
-      <DialogContent
-        dividers
-        sx={{
-          p: 3
-        }}
-      >
-        <Tabs
-          sx={{ mb: 2 }}
-          onChange={handleTabsChange}
-          value={currentTab}
-          variant="scrollable"
-          scrollButtons="auto"
-          textColor="primary"
-          indicatorColor="primary"
+        <DialogTitle
+          sx={{
+            p: 3
+          }}
         >
-          {tabs.map((tab) => (
-            <Tab key={tab.value} label={tab.label} value={tab.value} />
-          ))}
-        </Tabs>
-        {currentTab === 'parts' && (
-          <FormGroup>
-            {parts.map((part) => (
-              <FormControlLabel
-                onChange={(event, checked) => {
-                  if (checked) {
-                    onSelect([part.id]);
-                  } else onUnSelect([part.id]);
-                }}
+          <Typography variant="h4" gutterBottom>
+            {t('Select Parts')}
+          </Typography>
+        </DialogTitle>
+        <DialogContent
+          dividers
+          sx={{
+            p: 3
+          }}
+        >
+          <Tabs
+            sx={{ mb: 2 }}
+            onChange={handleTabsChange}
+            value={currentTab}
+            variant="scrollable"
+            scrollButtons="auto"
+            textColor="primary"
+            indicatorColor="primary"
+          >
+            {tabs.map((tab) => (
+              <Tab key={tab.value} label={tab.label} value={tab.value} />
+            ))}
+          </Tabs>
+          {currentTab === 'parts' && (
+            <FormGroup>
+              {parts.map((part) => (
+                <FormControlLabel
+                  onChange={(event, checked) => {
+                    if (checked) {
+                      onSelect([part.id]);
+                    } else onUnSelect([part.id]);
+                  }}
+                  key={part.id}
+                  control={<Checkbox checked={selectedIds.includes(part.id)} />}
+                  label={part.name}
+                />
+              ))}
+            </FormGroup>
+          )}
+          {currentTab === 'sets' && (
+            <FormGroup>
+              {sets.map((set) => (
+                <FormControlLabel
+                  key={set.id}
+                  control={
+                    <Box display="flex" flexDirection="row" alignItems="center">
+                      <Checkbox
+                        checked={set.parts.every((part) =>
+                          selectedIds.includes(part.id)
+                        )}
+                        onChange={(event, checked) => {
+                          if (checked) {
+                            onSelect(set.parts.map((part) => part.id));
+                          } else onUnSelect(set.parts.map((part) => part.id));
+                        }}
+                      />
+                      <Accordion>
+                        <AccordionSummary
+                          expandIcon={<ExpandMoreTwoToneIcon />}
+                          aria-controls="panel1a-content"
+                        >
+                          {set.name}
+                        </AccordionSummary>
+                        <AccordionDetails>
+                          {set.parts.map((part) => (
+                            <Typography key={part.id}>{part.name}</Typography>
+                          ))}
+                        </AccordionDetails>
+                      </Accordion>
+                    </Box>
+                  }
+                  label=""
+                />
+              ))}
+            </FormGroup>
+          )}
+        </DialogContent>
+      </Dialog>
+      <Box display="flex" flexDirection="column">
+        {selectedParts.length
+          ? selectedParts.map((part) => (
+              <Link
+                sx={{ mb: 1 }}
+                target="_blank"
+                rel="noopener noreferrer"
+                href={`/app/inventory/parts/${part.id}`}
                 key={part.id}
-                control={<Checkbox checked={selectedIds.includes(part.id)} />}
-                label={part.name}
-              />
-            ))}
-          </FormGroup>
-        )}
-        {currentTab === 'sets' && (
-          <FormGroup>
-            {sets.map((set) => (
-              <FormControlLabel
-                key={set.id}
-                control={
-                  <Box display="flex" flexDirection="row" alignItems="center">
-                    <Checkbox
-                      checked={set.parts.every((part) =>
-                        selectedIds.includes(part.id)
-                      )}
-                      onChange={(event, checked) => {
-                        if (checked) {
-                          onSelect(set.parts.map((part) => part.id));
-                        } else onUnSelect(set.parts.map((part) => part.id));
-                      }}
-                    />
-                    <Accordion>
-                      <AccordionSummary
-                        expandIcon={<ExpandMoreTwoToneIcon />}
-                        aria-controls="panel1a-content"
-                      >
-                        {set.name}
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        {set.parts.map((part) => (
-                          <Typography key={part.id}>{part.name}</Typography>
-                        ))}
-                      </AccordionDetails>
-                    </Accordion>
-                  </Box>
-                }
-                label=""
-              />
-            ))}
-          </FormGroup>
-        )}
-      </DialogContent>
-    </Dialog>
+                variant="h4"
+              >
+                {part.name}
+              </Link>
+            ))
+          : null}
+      </Box>
+      <Button startIcon={<AddTwoToneIcon />} onClick={() => setOpenModal(true)}>
+        Add Parts
+      </Button>
+    </>
   );
 }

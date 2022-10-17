@@ -65,8 +65,6 @@ export default (props: PropsType) => {
   const [assets, setAssets] = useState<Asset[]>([]);
   const [fetchingAssets, setFetchingAssets] = useState(false);
 
-  const [openPartsModal, setOpenPartsModal] = useState<boolean>(false);
-  const [selectedParts, setSelectedParts] = useState<Part[]>([]);
   const fetchCustomers = async () => {
     setFetchingCustomers(true);
     await wait(2000);
@@ -217,39 +215,12 @@ export default (props: PropsType) => {
         break;
       case 'part':
         return (
-          <Box>
-            <Box display="flex" flexDirection="column">
-              {selectedParts.length
-                ? selectedParts.map((part) => (
-                    <Link
-                      sx={{ mb: 1 }}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      href={`/app/inventory/parts/${part.id}`}
-                      key={part.id}
-                      variant="h4"
-                    >
-                      {part.name}
-                    </Link>
-                  ))
-                : null}
-            </Box>
-            <Button
-              startIcon={<AddTwoToneIcon />}
-              onClick={() => setOpenPartsModal(true)}
-            >
-              Add Parts
-            </Button>
-            <SelectParts
-              selected={values?.map((value) => Number(value.value)) ?? []}
-              open={openPartsModal}
-              onClose={() => setOpenPartsModal(false)}
-              onChange={(newParts) => {
-                setSelectedParts(newParts);
-                handleChange(formik, field.name, newParts);
-              }}
-            />
-          </Box>
+          <SelectParts
+            selected={values?.map((value) => Number(value.value)) ?? []}
+            onChange={(newParts) => {
+              handleChange(formik, field.name, newParts);
+            }}
+          />
         );
       case 'task':
         return (
