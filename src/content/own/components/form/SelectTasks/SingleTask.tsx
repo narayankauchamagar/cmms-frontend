@@ -76,7 +76,7 @@ export default function SingleTask({
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Box>
           <Typography variant="h6" fontWeight="bold">
-            {task.label}
+            {task.label || `<${t('Enter a task name')}>`}
           </Typography>
           {['subtask', 'inspection', 'multiple'].includes(task.type) ? (
             <Select

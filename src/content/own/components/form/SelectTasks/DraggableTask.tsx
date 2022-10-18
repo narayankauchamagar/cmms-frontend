@@ -154,11 +154,8 @@ const DraggableListItem = ({
                   ))}
                 </Select>
                 <Box>
-                  <IconButton>
-                    <DoDisturbOnTwoToneIcon
-                      color="error"
-                      onClick={() => onRemove(task.id)}
-                    />
+                  <IconButton onClick={() => onRemove(task.id)}>
+                    <DoDisturbOnTwoToneIcon color="error" />
                   </IconButton>
                   <IconButton onClick={handleOpenMenu}>
                     <MoreVertTwoToneIcon />

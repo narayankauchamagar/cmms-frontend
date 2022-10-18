@@ -10,7 +10,9 @@ import {
   Typography,
   Zoom,
   Card,
-  IconButton
+  IconButton,
+  Select,
+  MenuItem
 } from '@mui/material';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import AssignmentTwoToneIcon from '@mui/icons-material/AssignmentTwoTone';
@@ -25,6 +27,7 @@ import DraggableTaskList from './DraggableTaskList';
 import { randomInt } from '../../../../../utils/generators';
 import SingleTask from './SingleTask';
 import { useSnackbar } from 'notistack';
+import { Checklist, checklists } from '../../../../../models/owns/checklists';
 
 interface SelectTasksProps {
   selected: Task[];
@@ -35,6 +38,7 @@ export default function SelectTasks({ selected, onChange }: SelectTasksProps) {
   const { t }: { t: any } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
   const [currentTab, setCurrentTab] = useState<string>('edit');
+  const [openChecklist, setOpenChecklist] = useState<boolean>(false);
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
@@ -121,6 +125,9 @@ export default function SelectTasks({ selected, onChange }: SelectTasksProps) {
       }
     ]);
   };
+  const addCheckList = (checklist: Checklist) => {
+    setTasks([...tasks, ...checklist.tasks]);
+  };
   const onDragEnd = ({ destination, source }: DropResult) => {
     // dropped outside the list
     if (!destination) return;
@@ -170,30 +177,57 @@ export default function SelectTasks({ selected, onChange }: SelectTasksProps) {
               <Button onClick={addTask} startIcon={<AddTwoToneIcon />}>
                 Task
               </Button>
-              <Button startIcon={<AddTwoToneIcon />}>Checklist</Button>
+              <Button
+                startIcon={<AddTwoToneIcon />}
+                onClick={() => setOpenChecklist(true)}
+              >
+                Checklist
+              </Button>
             </Box>
           </Box>
-          {currentTab === 'edit' && (
-            <Box>
-              <DraggableTaskList
-                tasks={tasks}
-                onDragEnd={onDragEnd}
-                onLabelChange={onLabelChange}
-                onTypeChange={onTypeChange}
-                onRemove={onRemove}
-                onUserChange={onUserChange}
-                onAssetChange={onAssetChange}
-                onChoicesChange={onChoicesChange}
-              />
-            </Box>
-          )}
-          {currentTab === 'preview' && (
-            <Box sx={{ p: 2 }}>
-              {tasks.map((task) => (
-                <SingleTask preview task={task} key={task.id} />
-              ))}
-            </Box>
-          )}
+          <Box>
+            {openChecklist && (
+              <Select
+                displayEmpty
+                defaultValue=""
+                onChange={(event) =>
+                  addCheckList(
+                    checklists.find(
+                      (checklist) => checklist.id === Number(event.target.value)
+                    )
+                  )
+                }
+              >
+                <MenuItem value="">{t('Select Checklist')}</MenuItem>
+                {checklists.map((checklist) => (
+                  <MenuItem key={checklist.id} value={checklist.id}>
+                    {checklist.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            )}
+            {currentTab === 'edit' && (
+              <Box>
+                <DraggableTaskList
+                  tasks={tasks}
+                  onDragEnd={onDragEnd}
+                  onLabelChange={onLabelChange}
+                  onTypeChange={onTypeChange}
+                  onRemove={onRemove}
+                  onUserChange={onUserChange}
+                  onAssetChange={onAssetChange}
+                  onChoicesChange={onChoicesChange}
+                />
+              </Box>
+            )}
+            {currentTab === 'preview' && (
+              <Box sx={{ p: 2 }}>
+                {tasks.map((task) => (
+                  <SingleTask preview task={task} key={task.id} />
+                ))}
+              </Box>
+            )}
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button variant="outlined" onClick={onClose}>
