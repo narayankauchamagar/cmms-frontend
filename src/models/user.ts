@@ -26,4 +26,5 @@ export interface UserResponseDTO {
   role: { name: string };
   companyId: number;
   companySettingsId: number;
+  userSettingsId: number;
 }

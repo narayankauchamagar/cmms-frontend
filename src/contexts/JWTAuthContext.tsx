@@ -4,12 +4,14 @@ import axios from 'src/utils/axios';
 import api, { authHeader } from 'src/utils/api';
 import { verify, JWT_SECRET } from 'src/utils/jwt';
 import PropTypes from 'prop-types';
-import { getUserInfos } from '../utils/userApi';
+import { getUserInfos, getUserSettings } from '../utils/userApi';
+import UserSettings from 'src/models/owns/userSettings';
 
 interface AuthState {
   isInitialized: boolean;
   isAuthenticated: boolean;
   user: UserResponseDTO | null;
+  userSettings: UserSettings | null;
 }
 
 interface AuthContextValue extends AuthState {
@@ -23,6 +25,7 @@ interface AuthContextValue extends AuthState {
     phone: string,
     password: string
   ) => Promise<void>;
+  getInfos: () => void;
 }
 
 interface AuthProviderProps {
@@ -34,6 +37,7 @@ type InitializeAction = {
   payload: {
     isAuthenticated: boolean;
     user: UserResponseDTO | null;
+    userSettings: UserSettings | null;
   };
 };
 
@@ -60,7 +64,8 @@ type Action = InitializeAction | LoginAction | LogoutAction | RegisterAction;
 const initialAuthState: AuthState = {
   isAuthenticated: false,
   isInitialized: false,
-  user: null
+  user: null,
+  userSettings: null
 };
 
 const setSession = (accessToken: string | null): void => {
@@ -76,13 +81,14 @@ const handlers: Record<
   (state: AuthState, action: Action) => AuthState
 > = {
   INITIALIZE: (state: AuthState, action: InitializeAction): AuthState => {
-    const { isAuthenticated, user } = action.payload;
+    const { isAuthenticated, user, userSettings } = action.payload;
 
     return {
       ...state,
       isAuthenticated,
       isInitialized: true,
-      user
+      user,
+      userSettings
     };
   },
   LOGIN: (state: AuthState, action: LoginAction): AuthState => {
@@ -118,50 +124,54 @@ const AuthContext = createContext<AuthContextValue>({
   method: 'JWT',
   login: () => Promise.resolve(),
   logout: () => Promise.resolve(),
-  register: () => Promise.resolve()
+  register: () => Promise.resolve(),
+  getInfos: () => Promise.resolve()
 });
 
 export const AuthProvider: FC<AuthProviderProps> = (props) => {
   const { children } = props;
   const [state, dispatch] = useReducer(reducer, initialAuthState);
 
-  useEffect(() => {
-    const initialize = async (): Promise<void> => {
-      try {
-        const accessToken = window.localStorage.getItem('accessToken');
+  const getInfos = async (): Promise<void> => {
+    try {
+      const accessToken = window.localStorage.getItem('accessToken');
 
-        if (accessToken && verify(accessToken, JWT_SECRET)) {
-          setSession(accessToken);
-          const user = await getUserInfos();
-          dispatch({
-            type: 'INITIALIZE',
-            payload: {
-              isAuthenticated: true,
-              user
-            }
-          });
-        } else {
-          dispatch({
-            type: 'INITIALIZE',
-            payload: {
-              isAuthenticated: false,
-              user: null
-            }
-          });
-        }
-      } catch (err) {
-        console.error(err);
+      if (accessToken && verify(accessToken, JWT_SECRET)) {
+        setSession(accessToken);
+        const user = await getUserInfos();
+        const userSettings = await getUserSettings(user.userSettingsId);
+        dispatch({
+          type: 'INITIALIZE',
+          payload: {
+            isAuthenticated: true,
+            user,
+            userSettings
+          }
+        });
+      } else {
         dispatch({
           type: 'INITIALIZE',
           payload: {
             isAuthenticated: false,
-            user: null
+            user: null,
+            userSettings: null
           }
         });
       }
-    };
-
-    initialize();
+    } catch (err) {
+      console.error(err);
+      dispatch({
+        type: 'INITIALIZE',
+        payload: {
+          isAuthenticated: false,
+          user: null,
+          userSettings: null
+        }
+      });
+    }
+  };
+  useEffect(() => {
+    getInfos();
   }, []);
 
   const login = async (email: string, password: string): Promise<void> => {
@@ -224,7 +234,8 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         method: 'JWT',
         login,
         logout,
-        register
+        register,
+        getInfos
       }}
     >
       {children}

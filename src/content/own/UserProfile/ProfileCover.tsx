@@ -126,7 +126,7 @@ const ProfileCover: FC<ProfileCoverProps> = ({ user }) => {
       </AvatarWrapper>
       <Box py={1} pl={2}>
         <Typography gutterBottom variant="h4">
-          {user.firstName}
+          {user.firstName} {user.lastName}
         </Typography>
       </Box>
     </>
