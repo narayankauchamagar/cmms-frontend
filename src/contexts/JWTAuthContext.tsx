@@ -1,6 +1,7 @@
 import { FC, ReactNode, createContext, useEffect, useReducer } from 'react';
 import { User } from 'src/models/user';
 import axios from 'src/utils/axios';
+import api from 'src/utils/api';
 import { verify, JWT_SECRET } from 'src/utils/jwt';
 import PropTypes from 'prop-types';
 
@@ -192,15 +193,15 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     name: string,
     password: string
   ): Promise<void> => {
-    const response = await axios.post<{ accessToken: string; user: User }>(
-      '/api/account/register',
+    const response = await api.post<{ accessToken: string; user: User }>(
+      'auth/signup',
       {
         email,
         name,
         password
       }
     );
-    const { accessToken, user } = response.data;
+    const { accessToken, user } = response;
 
     window.localStorage.setItem('accessToken', accessToken);
     dispatch({

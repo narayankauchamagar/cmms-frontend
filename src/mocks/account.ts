@@ -23,7 +23,6 @@ mock.onPost('/api/account/login').reply(async (config) => {
 
   try {
     const { email, password } = JSON.parse(config.data);
-
     const user = users.find((_user) => _user.email === email);
 
     if (!user || user.password !== password) {

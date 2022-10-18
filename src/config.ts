@@ -27,3 +27,4 @@ export const amplifyConfig = {
 export const googleMapsConfig = {
   apiKey: 'AIzaSyBGk5a8ivYnqF3jFQQONB2OfCaroDGnNwM'
 };
+export const apiUrl = 'http://localhost:8080/';
