@@ -22,7 +22,8 @@ export interface IField {
     | 'titleGroupField'
     | 'form'
     | 'date'
-    | 'switch';
+    | 'switch'
+    | 'coordinates';
   type2?:
     | 'customer'
     | 'vendor'

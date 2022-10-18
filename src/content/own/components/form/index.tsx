@@ -36,6 +36,7 @@ import Asset, { assets as assetsList } from '../../../../models/owns/asset';
 import Part from '../../../../models/owns/part';
 import CustomSwitch from './CustomSwitch';
 import SelectTasks from './SelectTasks';
+import SelectMapCoordinates from './SelectMapCoordinates';
 
 interface PropsType {
   fields: Array<IField>;
@@ -331,6 +332,8 @@ export default (props: PropsType) => {
                         )}
                       />
                     </Box>
+                  ) : field.type === 'coordinates' ? (
+                    <SelectMapCoordinates />
                   ) : (
                     <Field
                       key={index}

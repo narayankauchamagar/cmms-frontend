@@ -27,14 +27,17 @@ function LocalMap({ locations }) {
 
   useEffect(() => {
     const bounds = new window.google.maps.LatLngBounds();
-    locations.forEach((location) => bounds.extend(location.coordinates));
-    mapRef.current.fitBounds(bounds);
+    if (locations.length) {
+      locations.forEach((location) => bounds.extend(location.coordinates));
+      mapRef.current.fitBounds(bounds);
+    }
   }, [mapRef]);
-
+  const defaultCenter = { lat: 31.1728205, lng: -7.3362482 };
   return (
     <GoogleMap
       ref={mapRef}
-      defaultZoom={10}
+      defaultCenter={defaultCenter}
+      defaultZoom={6}
       defaultOptions={{ styles: mapStyle }}
     >
       {locations.map((location, index) => (
@@ -71,7 +74,7 @@ function LocalMap({ locations }) {
     </GoogleMap>
   );
 }
-export default function Map({ dimensions, locations }: MapProps) {
+export default function Map({ dimensions, locations = [] }: MapProps) {
   const { apiKey } = googleMapsConfig;
 
   const MapWrapped = withScriptjs(

@@ -181,6 +181,11 @@ function Files() {
       type2: 'customer',
       label: 'Customers',
       placeholder: 'Select customers'
+    },
+    {
+      name: 'coordinates',
+      type: 'coordinates',
+      label: 'Map Coordinates'
     }
   ];
 
