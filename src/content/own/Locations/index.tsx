@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { IField } from '../type';
-import Location from '../../../models/owns/location';
+import Location, { locations } from '../../../models/owns/location';
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
@@ -46,17 +46,6 @@ function Files() {
   const tabs = [
     { value: 'list', label: t('List View') },
     { value: 'map', label: t('Map View') }
-  ];
-  const locations: Location[] = [
-    {
-      id: 74,
-      name: 'ghgvhb',
-      address: 'GHJ HIjnjb',
-      createdAt: 'dfggj',
-      createdBy: 'ghu',
-      updatedAt: 'ghfgj',
-      updatedBy: 'ghfgj'
-    }
   ];
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
@@ -395,7 +384,14 @@ function Files() {
                 justifyContent: 'center'
               }}
             >
-              <Map dimensions={{ width: 1000, height: 500 }} />
+              <Map
+                dimensions={{ width: 1000, height: 500 }}
+                locations={locations
+                  .filter((location) => location.coordinates)
+                  .map(({ name, coordinates, address, id }) => {
+                    return { title: name, coordinates, address, id };
+                  })}
+              />
             </Card>
           </Grid>
         )}
