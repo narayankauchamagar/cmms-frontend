@@ -66,10 +66,8 @@ const initialAuthState: AuthState = {
 const setSession = (accessToken: string | null): void => {
   if (accessToken) {
     localStorage.setItem('accessToken', accessToken);
-    axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
   } else {
     localStorage.removeItem('accessToken');
-    delete axios.defaults.headers.common.Authorization;
   }
 };
 
@@ -134,12 +132,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
 
         if (accessToken && verify(accessToken, JWT_SECRET)) {
           setSession(accessToken);
-
-          const response = await axios.get<{ user: UserResponseDTO }>(
-            '/api/account/personal'
-          );
-          const { user } = response.data;
-
+          const user = await getUserInfos();
           dispatch({
             type: 'INITIALIZE',
             payload: {
