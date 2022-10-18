@@ -215,7 +215,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     );
     const { message, success } = response;
     window.localStorage.setItem('accessToken', message);
-    const user = await getUserInfos(message);
+    const user = await getUserInfos();
     dispatch({
       type: 'REGISTER',
       payload: {

@@ -5,43 +5,25 @@ import { Helmet } from 'react-helmet-async';
 import { Grid } from '@mui/material';
 import useRefMounted from 'src/hooks/useRefMounted';
 import { useTranslation } from 'react-i18next';
-import type { User } from 'src/models/user';
+import type { UserResponseDTO } from 'src/models/user';
 import ProfileCover from './ProfileCover';
 import RecentActivity from './RecentActivity';
 import MyCards from './MyCards';
 import ProfileDetails from './ProfileDetails';
 import axios from 'src/utils/axios';
 import { TitleContext } from '../../../contexts/TitleContext';
+import useAuth from '../../../hooks/useAuth';
 
 function ManagementUsersView() {
   const isMountedRef = useRefMounted();
-  const [user, setUser] = useState<User | null>(null);
+  const { user } = useAuth();
   // @ts-ignore
-  const userId = '1';
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
 
   useEffect(() => {
     setTitle(t('Profile'));
   }, []);
-  const getUser = useCallback(async () => {
-    try {
-      const response = await axios.get<{ user: User }>('/api/user', {
-        params: {
-          userId
-        }
-      });
-      if (isMountedRef.current) {
-        setUser(response.data.user);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }, [userId, isMountedRef]);
-
-  useEffect(() => {
-    getUser();
-  }, [getUser]);
 
   if (!user) {
     return null;
