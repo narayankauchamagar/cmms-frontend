@@ -40,7 +40,15 @@ function CompanyDetails(props: CompanyDetailsProps) {
     phone: { value: company.phone, title: 'Phone' }
   };
 
-  const renderKeyAndValue = (key: string, value: string, isLink: boolean) => {
+  const KeyAndValue = ({
+    key,
+    value,
+    isLink
+  }: {
+    key: string;
+    value: string;
+    isLink: boolean;
+  }) => {
     return (
       <>
         <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
@@ -251,10 +259,12 @@ function CompanyDetails(props: CompanyDetailsProps) {
               <Grid container spacing={0}>
                 {Object.keys(companyDetails).map((key) => {
                   if (key !== 'settings')
-                    return renderKeyAndValue(
-                      companyDetails[key].title,
-                      companyDetails[key].value,
-                      companyDetails[key].isLink
+                    return (
+                      <KeyAndValue
+                        key={companyDetails[key].title}
+                        value={companyDetails[key].value}
+                        isLink={companyDetails[key].isLink}
+                      />
                     );
                 })}
               </Grid>

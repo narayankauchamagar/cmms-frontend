@@ -186,8 +186,8 @@ function Block5() {
                   width: 50,
                   height: 50
                 }}
-                alt={user.name}
-                src={user.avatar}
+                alt={user.firstName}
+                src={user.firstName}
               />
             </Box>
 
@@ -237,8 +237,8 @@ function Block5() {
                   width: 50,
                   height: 50
                 }}
-                alt={user.name}
-                src={user.avatar}
+                alt={user.firstName}
+                src={user.firstName}
               />
             </Box>
             <Box
@@ -340,8 +340,8 @@ function Block5() {
                   width: 50,
                   height: 50
                 }}
-                alt={user.name}
-                src={user.avatar}
+                alt={user.firstName}
+                src={user.firstName}
               />
             </Box>
           </Box>
@@ -380,7 +380,7 @@ function Block5() {
       </CardWrapper>
       <Divider />
       <Box p={2} display="flex" alignItems="center">
-        <Avatar alt={user.name} src={user.avatar} />
+        <Avatar alt={user.firstName} src={user.firstName} />
         <DividerWrapper orientation="vertical" flexItem />
         <Box
           sx={{

@@ -144,8 +144,8 @@ function ChatContent() {
             width: 50,
             height: 50
           }}
-          alt={user.name}
-          src={user.avatar}
+          alt={user.firstName}
+          src={user.firstName}
         />
       </Box>
       <DividerWrapper>
@@ -198,8 +198,8 @@ function ChatContent() {
             width: 50,
             height: 50
           }}
-          alt={user.name}
-          src={user.avatar}
+          alt={user.firstName}
+          src={user.firstName}
         />
       </Box>
       <DividerWrapper>{t('Today')}</DividerWrapper>
@@ -302,8 +302,8 @@ function ChatContent() {
             width: 50,
             height: 50
           }}
-          alt={user.name}
-          src={user.avatar}
+          alt={user.firstName}
+          src={user.firstName}
         />
       </Box>
     </Box>

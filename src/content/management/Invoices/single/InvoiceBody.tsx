@@ -114,7 +114,7 @@ const InvoiceBody: FC<InvoiceBodyProps> = ({ invoice }) => {
               }}
               variant="h4"
             >
-              {user.name}
+              {user.firstName}
             </Typography>
             <Typography variant="h5" fontWeight="normal">
               83 Laurel Lane

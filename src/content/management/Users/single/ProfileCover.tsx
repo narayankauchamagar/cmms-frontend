@@ -112,7 +112,7 @@ const ProfileCover: FC<ProfileCoverProps> = ({ user }) => {
         </Tooltip>
         <Box>
           <Typography variant="h3" component="h3" gutterBottom>
-            {t('Profile for')} {user.name}
+            {t('Profile for')} {user.firstName}
           </Typography>
           <Typography variant="subtitle2">
             {t('This is a profile page. Easy to modify, always blazing fast')}
@@ -135,7 +135,7 @@ const ProfileCover: FC<ProfileCoverProps> = ({ user }) => {
         </CardCoverAction>
       </CardCover>
       <AvatarWrapper>
-        <Avatar variant="rounded" alt={user.name} src={user.avatar} />
+        <Avatar variant="rounded" alt={user.firstName} src={user.firstName} />
         <ButtonUploadWrapper>
           <Input
             accept="image/*"
@@ -152,7 +152,7 @@ const ProfileCover: FC<ProfileCoverProps> = ({ user }) => {
       </AvatarWrapper>
       <Box py={2} pl={2} mb={3}>
         <Typography gutterBottom variant="h4">
-          {user.name}
+          {user.firstName}
         </Typography>
         <Typography variant="subtitle2">{user.description}</Typography>
         <Typography

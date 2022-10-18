@@ -253,7 +253,7 @@ function MailboxSingle() {
       </BoxContent>
       <Divider />
       <BoxReply px={3} py={4} display="flex" alignItems="flex-start">
-        <Avatar alt={user.name} src={user.avatar} />
+        <Avatar alt={user.firstName} src={user.firstName} />
         <Box ml={2} flexGrow={1}>
           <Card>
             <Box px={3} pt={2}>

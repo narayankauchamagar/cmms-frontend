@@ -80,7 +80,7 @@ function PageHeader() {
         </AvatarPageTitle>
         <Box>
           <Typography variant="h3" component="h3" gutterBottom>
-            {t('Welcome')}, {user.name}!
+            {t('Welcome')}, {user.firstName}!
           </Typography>
           <Typography variant="subtitle2">
             {t(

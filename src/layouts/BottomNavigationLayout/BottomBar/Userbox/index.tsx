@@ -108,7 +108,7 @@ function Userbox() {
   return (
     <>
       <IconButtonPrimary color="primary" ref={ref} onClick={handleOpen}>
-        <Avatar variant="rounded" alt={user.name} src={user.avatar} />
+        <Avatar variant="rounded" alt={user.firstName} src={user.firstName} />
         <Box
           component="span"
           sx={{
@@ -142,11 +142,11 @@ function Userbox() {
           }}
           display="flex"
         >
-          <Avatar variant="rounded" alt={user.name} src={user.avatar} />
+          <Avatar variant="rounded" alt={user.firstName} src={user.firstName} />
           <UserBoxText>
-            <UserBoxLabel variant="body1">{user.name}</UserBoxLabel>
+            <UserBoxLabel variant="body1">{user.firstName}</UserBoxLabel>
             <UserBoxDescription variant="body2">
-              {user.jobtitle}
+              {user.role.name}
             </UserBoxDescription>
           </UserBoxText>
         </MenuUserBox>

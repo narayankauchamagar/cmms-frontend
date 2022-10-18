@@ -109,7 +109,7 @@ const ProfileCover: FC<ProfileCoverProps> = ({ user }) => {
         </CardCoverAction>
       </CardCover>
       <AvatarWrapper>
-        <Avatar variant="rounded" alt={user.name} src={user.avatar} />
+        <Avatar variant="rounded" alt={user.firstName} src={user.firstName} />
         <ButtonUploadWrapper>
           <Input
             accept="image/*"
@@ -126,7 +126,7 @@ const ProfileCover: FC<ProfileCoverProps> = ({ user }) => {
       </AvatarWrapper>
       <Box py={1} pl={2}>
         <Typography gutterBottom variant="h4">
-          {user.name}
+          {user.firstName}
         </Typography>
       </Box>
     </>

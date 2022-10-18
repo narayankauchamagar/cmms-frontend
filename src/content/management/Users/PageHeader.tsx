@@ -318,8 +318,8 @@ function PageHeader() {
                       <AvatarWrapper>
                         <Avatar
                           variant="rounded"
-                          alt={user.name}
-                          src={user.avatar}
+                          alt={user.firstName}
+                          src={user.firstName}
                         />
                         <ButtonUploadWrapper>
                           <Input

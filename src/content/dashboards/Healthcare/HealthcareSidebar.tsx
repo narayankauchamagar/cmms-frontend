@@ -100,11 +100,11 @@ function HealthcareSidebar() {
             height: theme.spacing(12)
           }}
           variant="rounded"
-          alt={user.name}
-          src={user.avatar}
+          alt={user.firstName}
+          src={user.firstName}
         />
         <Typography variant="h3" lineHeight={1} gutterBottom noWrap>
-          {user.name}
+          {user.firstName}
         </Typography>
         <Typography variant="subtitle2" noWrap>
           {t('Neurosurgeon')}

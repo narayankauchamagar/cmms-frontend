@@ -8,11 +8,13 @@ import {
   Typography,
   FormControlLabel,
   Link,
-  CircularProgress
+  CircularProgress,
+  Grid
 } from '@mui/material';
 import useAuth from 'src/hooks/useAuth';
 import useRefMounted from 'src/hooks/useRefMounted';
 import { useTranslation } from 'react-i18next';
+import { phoneRegExp } from '../../../../utils/validators';
 
 function RegisterJWT() {
   const { register } = useAuth() as any;
@@ -23,7 +25,9 @@ function RegisterJWT() {
     <Formik
       initialValues={{
         email: '',
-        name: '',
+        firstName: '',
+        lastName: '',
+        phone: '',
         password: '',
         terms: false,
         submit: null
@@ -33,7 +37,16 @@ function RegisterJWT() {
           .email(t('The email provided should be a valid email address'))
           .max(255)
           .required(t('The email field is required')),
-        name: Yup.string().max(255).required(t('The name field is required')),
+        firstName: Yup.string()
+          .max(255)
+          .required(t('The first name field is required')),
+        lastName: Yup.string()
+          .max(255)
+          .required(t('The last name field is required')),
+        phone: Yup.string().matches(
+          phoneRegExp,
+          t('The phone number is invalid')
+        ),
         password: Yup.string()
           .min(8)
           .max(255)
@@ -45,7 +58,13 @@ function RegisterJWT() {
       })}
       onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
         try {
-          await register(values.email, values.name, values.password);
+          await register(
+            values.email,
+            values.firstName,
+            values.lastName,
+            values.phone,
+            values.password
+          );
 
           if (isMountedRef.current) {
             setStatus({ success: true });
@@ -69,18 +88,36 @@ function RegisterJWT() {
         values
       }) => (
         <form noValidate onSubmit={handleSubmit}>
-          <TextField
-            error={Boolean(touched.name && errors.name)}
-            fullWidth
-            margin="normal"
-            helperText={touched.name && errors.name}
-            label={t('Name')}
-            name="name"
-            onBlur={handleBlur}
-            onChange={handleChange}
-            value={values.name}
-            variant="outlined"
-          />
+          <Grid container spacing={1}>
+            <Grid item xs={12} lg={6}>
+              <TextField
+                error={Boolean(touched.firstName && errors.firstName)}
+                fullWidth
+                margin="normal"
+                helperText={touched.firstName && errors.firstName}
+                label={t('First Name')}
+                name="firstName"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.firstName}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} lg={6}>
+              <TextField
+                error={Boolean(touched.lastName && errors.lastName)}
+                fullWidth
+                margin="normal"
+                helperText={touched.lastName && errors.lastName}
+                label={t('Last Name')}
+                name="lastName"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.lastName}
+                variant="outlined"
+              />
+            </Grid>
+          </Grid>
           <TextField
             error={Boolean(touched.email && errors.email)}
             fullWidth
@@ -92,6 +129,18 @@ function RegisterJWT() {
             onChange={handleChange}
             type="email"
             value={values.email}
+            variant="outlined"
+          />
+          <TextField
+            error={Boolean(touched.phone && errors.phone)}
+            fullWidth
+            margin="normal"
+            helperText={touched.phone && errors.phone}
+            label={t('Phone')}
+            name="phone"
+            onBlur={handleBlur}
+            onChange={handleChange}
+            value={values.phone}
             variant="outlined"
           />
           <TextField

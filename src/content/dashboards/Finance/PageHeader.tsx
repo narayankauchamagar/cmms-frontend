@@ -12,7 +12,7 @@ function PageHeader() {
         {t('Finance Dashboard')}
       </Typography>
       <Typography variant="subtitle2">
-        {user.name},{' '}
+        {user.firstName},{' '}
         {t('This could be your beautiful finance administration panel.')}
       </Typography>
     </>

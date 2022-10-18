@@ -31,11 +31,11 @@ function patch<T>(url, data, options?) {
 function deletes<T>(url, options?) {
   return api<T>(apiUrl + url, { ...options, method: 'DELETE' });
 }
-function authHeader(publicRoute) {
+export function authHeader(publicRoute) {
   // return authorization header with jwt token
   let accessToken = localStorage.getItem('accessToken');
 
-  if (publicRoute || (!publicRoute && accessToken)) {
+  if (!publicRoute && accessToken) {
     return {
       Authorization: 'Bearer ' + accessToken,
       Accept: 'application/json',

@@ -50,7 +50,7 @@ function ManagementUsersView() {
   return (
     <>
       <Helmet>
-        <title>{user.name} - Profile Details</title>
+        <title>{user.firstName} - Profile Details</title>
       </Helmet>
       <Grid
         sx={{

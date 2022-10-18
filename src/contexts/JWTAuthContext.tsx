@@ -1,21 +1,28 @@
 import { FC, ReactNode, createContext, useEffect, useReducer } from 'react';
-import { User } from 'src/models/user';
+import { UserResponseDTO } from 'src/models/user';
 import axios from 'src/utils/axios';
-import api from 'src/utils/api';
+import api, { authHeader } from 'src/utils/api';
 import { verify, JWT_SECRET } from 'src/utils/jwt';
 import PropTypes from 'prop-types';
+import { getUserInfos } from '../utils/userApi';
 
 interface AuthState {
   isInitialized: boolean;
   isAuthenticated: boolean;
-  user: User | null;
+  user: UserResponseDTO | null;
 }
 
 interface AuthContextValue extends AuthState {
   method: 'JWT';
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  register: (email: string, name: string, password: string) => Promise<void>;
+  register: (
+    email: string,
+    firstName: string,
+    lastName: string,
+    phone: string,
+    password: string
+  ) => Promise<void>;
 }
 
 interface AuthProviderProps {
@@ -26,14 +33,14 @@ type InitializeAction = {
   type: 'INITIALIZE';
   payload: {
     isAuthenticated: boolean;
-    user: User | null;
+    user: UserResponseDTO | null;
   };
 };
 
 type LoginAction = {
   type: 'LOGIN';
   payload: {
-    user: User;
+    user: UserResponseDTO;
   };
 };
 
@@ -44,7 +51,7 @@ type LogoutAction = {
 type RegisterAction = {
   type: 'REGISTER';
   payload: {
-    user: User;
+    user: UserResponseDTO;
   };
 };
 
@@ -128,7 +135,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         if (accessToken && verify(accessToken, JWT_SECRET)) {
           setSession(accessToken);
 
-          const response = await axios.get<{ user: User }>(
+          const response = await axios.get<{ user: UserResponseDTO }>(
             '/api/account/personal'
           );
           const { user } = response.data;
@@ -165,13 +172,13 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
   }, []);
 
   const login = async (email: string, password: string): Promise<void> => {
-    const response = await axios.post<{ accessToken: string; user: User }>(
-      '/api/account/login',
-      {
-        email,
-        password
-      }
-    );
+    const response = await axios.post<{
+      accessToken: string;
+      user: UserResponseDTO;
+    }>('/api/account/login', {
+      email,
+      password
+    });
     const { accessToken, user } = response.data;
 
     setSession(accessToken);
@@ -190,20 +197,25 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
 
   const register = async (
     email: string,
-    name: string,
+    firstName: string,
+    lastName: string,
+    phone: string,
     password: string
   ): Promise<void> => {
-    const response = await api.post<{ accessToken: string; user: User }>(
+    const response = await api.post<{ message: string; success: boolean }>(
       'auth/signup',
       {
         email,
-        name,
+        firstName,
+        lastName,
+        phone,
         password
-      }
+      },
+      { headers: authHeader(true) }
     );
-    const { accessToken, user } = response;
-
-    window.localStorage.setItem('accessToken', accessToken);
+    const { message, success } = response;
+    window.localStorage.setItem('accessToken', message);
+    const user = await getUserInfos(message);
     dispatch({
       type: 'REGISTER',
       payload: {

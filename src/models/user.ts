@@ -15,3 +15,15 @@ export interface User {
   description: string;
   [key: string]: any;
 }
+
+export interface UserResponseDTO {
+  firstName: string;
+  lastName: string;
+  username: string;
+  id: number;
+  email: string;
+  phone: string;
+  role: { name: string };
+  companyId: number;
+  companySettingsId: number;
+}

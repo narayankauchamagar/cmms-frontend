@@ -56,9 +56,9 @@ function HeaderUserbox() {
 
   return (
     <>
-      My name is: {user.name}
+      My name is: {user.firstName}
 
-      My avatar is: <img src={user.avatar} alt={user.name} />
+      My avatar is: <img src={user.firstName} alt={user.firstName} />
 
       <Button color="primary" onClick={handleLogout}>
         Sign out
