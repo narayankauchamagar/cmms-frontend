@@ -112,7 +112,7 @@ export default (props: PropsType) => {
 
   const validationSchema = Yup.object().shape(shape);
 
-  const handleChange = (formik, field, e) => {
+  const handleChange = (formik: FormikProps<IHash<any>>, field, e) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     props.onChange && props.onChange({ field, e });
     if (props.fields.length == 1) {
@@ -333,7 +333,12 @@ export default (props: PropsType) => {
                       />
                     </Box>
                   ) : field.type === 'coordinates' ? (
-                    <SelectMapCoordinates />
+                    <SelectMapCoordinates
+                      selected={formik.values[field.name]}
+                      onChange={(coordinates) => {
+                        handleChange(formik, field.name, coordinates);
+                      }}
+                    />
                   ) : (
                     <Field
                       key={index}

@@ -183,6 +183,11 @@ function Files() {
       placeholder: 'Select customers'
     },
     {
+      name: 'mapTitle',
+      type: 'titleGroupField',
+      label: t('Map Coordinates')
+    },
+    {
       name: 'coordinates',
       type: 'coordinates',
       label: 'Map Coordinates'
@@ -295,7 +300,8 @@ function Files() {
                   label: customer.name,
                   value: customer.id.toString()
                 };
-              })
+              }),
+              coordinates: currentLocation?.coordinates
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
