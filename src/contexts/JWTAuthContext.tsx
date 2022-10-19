@@ -175,16 +175,17 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
   }, []);
 
   const login = async (email: string, password: string): Promise<void> => {
-    const response = await axios.post<{
-      accessToken: string;
-      user: UserResponseDTO;
-    }>('/api/account/login', {
-      email,
-      password
-    });
-    const { accessToken, user } = response.data;
-
-    setSession(accessToken);
+    const response = await api.post<{ message: string; success: boolean }>(
+      'auth/signin',
+      {
+        email,
+        password
+      },
+      { headers: authHeader(true) }
+    );
+    const { message, success } = response;
+    setSession(message);
+    const user = await getUserInfos();
     dispatch({
       type: 'LOGIN',
       payload: {
@@ -217,7 +218,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
       { headers: authHeader(true) }
     );
     const { message, success } = response;
-    window.localStorage.setItem('accessToken', message);
+    setSession(message);
     const user = await getUserInfos();
     dispatch({
       type: 'REGISTER',
