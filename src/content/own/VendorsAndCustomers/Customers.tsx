@@ -28,8 +28,10 @@ import {
   websiteRegExp
 } from '../../../utils/validators';
 import { Close } from '@mui/icons-material';
-import { Customer, customers } from '../../../models/owns/customer';
+import { Customer } from '../../../models/owns/customer';
 import { useParams } from 'react-router-dom';
+import { addCustomer, getCustomers } from '../../../slices/customer';
+import { useDispatch, useSelector } from '../../../store';
 
 interface PropsType {
   values?: any;
@@ -42,14 +44,15 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
   const [isCustomerDetailsOpen, setIsCustomerDetailsOpen] =
     useState<boolean>(false);
   const { customerId } = useParams();
-  const [customerName, setCustomerName] = useState<string>('');
-  const [phone, setPhone] = useState<string>('');
+  const dispatch = useDispatch();
+  const { customers } = useSelector((state) => state.customers);
   const [currentCustomer, setCurrentCustomer] = useState<Customer>();
   const [viewOrUpdate, setViewOrUpdate] = useState<'view' | 'update'>('view');
-  const values = {
-    customerName: customerName,
-    phone: phone
-  };
+
+  useEffect(() => {
+    dispatch(getCustomers());
+  }, []);
+
   const handleOpenDetails = (id: number) => {
     const foundCustomer = customers.find((customer) => customer.id === id);
     if (foundCustomer) {
@@ -141,21 +144,21 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
       label: 'Billing Information'
     },
     {
-      name: 'address1',
+      name: 'billingAddress',
       type: 'text',
       label: 'Address',
-      placeholder: 'casa, maroc'
+      placeholder: 'Casa, Maroc'
     },
     {
-      name: 'address2',
+      name: 'billingAddress2',
       type: 'text',
       label: 'Address Line 2',
-      placeholder: 'casa, maroc'
+      placeholder: 'Casa, Maroc'
     },
     {
-      name: 'address3',
+      name: 'billingName',
       type: 'text',
-      label: 'Address Line 3',
+      label: 'Billing Name',
       placeholder: 'casa, maroc'
     },
     {
@@ -172,7 +175,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
   ];
 
   const shape = {
-    customerName: Yup.string().required('Customer Name is required'),
+    name: Yup.string().required('Customer Name is required'),
     phone: Yup.string()
       .matches(phoneRegExp, t('The phone number is invalid'))
       .required(t('The phone number is required')),
@@ -233,25 +236,19 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
       width: 150
     },
     {
-      field: 'address1',
-      headerName: t('Address Line 1'),
-      description: t('Address Line 1'),
+      field: 'billingAddress',
+      headerName: t('Billing Address'),
+      description: t('Billing Address'),
       width: 150
     },
     {
-      field: 'address3',
-      headerName: t('Address Line 2'),
-      description: t('Address Line 2'),
+      field: 'billingName',
+      headerName: t('Billing Name'),
+      description: t('Billing Name'),
       width: 150
     },
     {
-      field: 'address3',
-      headerName: t('Address Line 3'),
-      description: t('Address Line 3'),
-      width: 150
-    },
-    {
-      field: 'currency',
+      field: 'billingCurrency',
       headerName: t('Currency'),
       description: t('Currency'),
       width: 150
@@ -298,11 +295,15 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
             fields={fields}
             validation={Yup.object().shape(shape)}
             submitText={t('Add')}
-            values={values || {}}
+            values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               try {
-                await wait(2000);
+                const formattedValues = {
+                  ...values,
+                  rate: Number(values.rate)
+                };
+                dispatch(addCustomer(formattedValues));
                 handleCloseModal();
               } catch (err) {
                 console.error(err);
@@ -322,7 +323,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
       }}
     >
       <CustomDataGrid
-        rows={customers}
+        rows={customers ?? []}
         columns={columns}
         components={{
           Toolbar: GridToolbar
@@ -437,7 +438,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
 
             <Typography variant="subtitle1">{t('Currency')}</Typography>
             <Typography variant="h5" sx={{ mb: 1 }}>
-              {currentCustomer?.currency}
+              {currentCustomer?.billingCurrency}
             </Typography>
           </Box>
         ) : (

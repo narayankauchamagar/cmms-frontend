@@ -75,7 +75,12 @@ const setSession = (accessToken: string | null): void => {
     localStorage.setItem('accessToken', accessToken);
   } else {
     localStorage.removeItem('accessToken');
+    localStorage.removeItem('companyId');
   }
+};
+
+const setCompanyId = (companyId: number) => {
+  localStorage.setItem('companyId', companyId.toString());
 };
 
 const handlers: Record<
@@ -136,13 +141,18 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
   const { children } = props;
   const [state, dispatch] = useReducer(reducer, initialAuthState);
 
+  const updateUserInfos = async () => {
+    const user = await getUserInfos();
+    setCompanyId(user.companyId);
+    return user;
+  };
   const getInfos = async (): Promise<void> => {
     try {
       const accessToken = window.localStorage.getItem('accessToken');
 
       if (accessToken && verify(accessToken, JWT_SECRET)) {
         setSession(accessToken);
-        const user = await getUserInfos();
+        const user = await updateUserInfos();
         const userSettings = await getUserSettings(user.userSettingsId);
         dispatch({
           type: 'INITIALIZE',
@@ -190,7 +200,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     );
     const { accessToken } = response;
     setSession(accessToken);
-    const user = await getUserInfos();
+    const user = await updateUserInfos();
     const userSettings = await getUserSettings(user.userSettingsId);
 
     dispatch({
@@ -227,7 +237,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     );
     const { message, success } = response;
     setSession(message);
-    const user = await getUserInfos();
+    const user = await updateUserInfos();
     const userSettings = await getUserSettings(user.userSettingsId);
     dispatch({
       type: 'REGISTER',

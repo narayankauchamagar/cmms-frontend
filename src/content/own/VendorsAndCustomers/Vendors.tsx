@@ -250,7 +250,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
             fields={fields}
             validation={Yup.object().shape(shape)}
             submitText={t('Add')}
-            values={values || {}}
+            values={{}}
             onChange={({ field, e }) => {
               /* eslint-disable @typescript-eslint/no-unused-expressions */
               // field === 'phone' && setPhone(e);

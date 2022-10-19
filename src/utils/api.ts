@@ -15,10 +15,11 @@ function get<T>(url, options?) {
   return api<T>(apiUrl + url, options);
 }
 function post<T>(url, data, options?) {
+  const companyId = localStorage.getItem('companyId');
   return api<T>(apiUrl + url, {
     ...options,
     method: 'POST',
-    body: JSON.stringify(data)
+    body: JSON.stringify({ ...data, company: { id: companyId } })
   });
 }
 function patch<T>(url, data, options?) {

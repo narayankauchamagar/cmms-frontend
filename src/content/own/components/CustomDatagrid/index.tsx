@@ -1,6 +1,6 @@
 import { DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from '@mui/material';
+import { Stack, Typography, useTheme } from '@mui/material';
 import gridLocaleText from './GridLocaleText';
 
 interface CustomDatagridProps extends DataGridProProps {}
@@ -28,6 +28,20 @@ function CustomDataGrid(props: CustomDatagridProps) {
         '.MuiDataGrid-row': {
           cursor: 'pointer'
         }
+      }}
+      components={{
+        NoRowsOverlay: () => (
+          <Stack height="100%" alignItems="center" justifyContent="center">
+            <Typography variant="h5">{t('No rows')}</Typography>
+          </Stack>
+        ),
+        NoResultsOverlay: () => (
+          <Stack height="100%" alignItems="center" justifyContent="center">
+            <Typography variant="h5">
+              {t('No result for your search criteria')}
+            </Typography>
+          </Stack>
+        )
       }}
       {...props}
       localeText={translatedGridLocaleText}
