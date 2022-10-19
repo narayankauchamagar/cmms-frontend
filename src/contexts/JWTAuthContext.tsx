@@ -45,6 +45,7 @@ type LoginAction = {
   type: 'LOGIN';
   payload: {
     user: UserResponseDTO;
+    userSettings: UserSettings;
   };
 };
 
@@ -56,6 +57,7 @@ type RegisterAction = {
   type: 'REGISTER';
   payload: {
     user: UserResponseDTO;
+    userSettings: UserSettings;
   };
 };
 
@@ -92,12 +94,13 @@ const handlers: Record<
     };
   },
   LOGIN: (state: AuthState, action: LoginAction): AuthState => {
-    const { user } = action.payload;
+    const { user, userSettings } = action.payload;
 
     return {
       ...state,
       isAuthenticated: true,
-      user
+      user,
+      userSettings
     };
   },
   LOGOUT: (state: AuthState): AuthState => ({
@@ -106,12 +109,13 @@ const handlers: Record<
     user: null
   }),
   REGISTER: (state: AuthState, action: RegisterAction): AuthState => {
-    const { user } = action.payload;
+    const { user, userSettings } = action.payload;
 
     return {
       ...state,
       isAuthenticated: true,
-      user
+      user,
+      userSettings
     };
   }
 };
@@ -175,21 +179,25 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
   }, []);
 
   const login = async (email: string, password: string): Promise<void> => {
-    const response = await api.post<{ message: string; success: boolean }>(
+    const response = await api.post<{ accessToken: string }>(
       'auth/signin',
       {
         email,
+        type: 'client',
         password
       },
       { headers: authHeader(true) }
     );
-    const { message, success } = response;
-    setSession(message);
+    const { accessToken } = response;
+    setSession(accessToken);
     const user = await getUserInfos();
+    const userSettings = await getUserSettings(user.userSettingsId);
+
     dispatch({
       type: 'LOGIN',
       payload: {
-        user
+        user,
+        userSettings
       }
     });
   };
@@ -220,10 +228,12 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     const { message, success } = response;
     setSession(message);
     const user = await getUserInfos();
+    const userSettings = await getUserSettings(user.userSettingsId);
     dispatch({
       type: 'REGISTER',
       payload: {
-        user
+        user,
+        userSettings
       }
     });
   };

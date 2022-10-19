@@ -41,11 +41,11 @@ function CompanyDetails(props: CompanyDetailsProps) {
   };
 
   const KeyAndValue = ({
-    key,
+    label,
     value,
     isLink
   }: {
-    key: string;
+    label: string;
     value: string;
     isLink: boolean;
   }) => {
@@ -53,7 +53,7 @@ function CompanyDetails(props: CompanyDetailsProps) {
       <>
         <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
           <Box pr={3} pb={2}>
-            {t(key)}:
+            {t(label)}:
           </Box>
         </Grid>
         <Grid item xs={12} sm={8} md={9}>
@@ -261,7 +261,7 @@ function CompanyDetails(props: CompanyDetailsProps) {
                   if (key !== 'settings')
                     return (
                       <KeyAndValue
-                        key={companyDetails[key].title}
+                        label={companyDetails[key].title}
                         value={companyDetails[key].value}
                         isLink={companyDetails[key].isLink}
                       />
