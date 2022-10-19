@@ -41,6 +41,16 @@ const slice = createSlice({
         }
         return customer1;
       });
+    },
+    deleteCustomer(
+      state: CustomerState,
+      action: PayloadAction<{ id: number }>
+    ) {
+      const { id } = action.payload;
+      const customerIndex = state.customers.findIndex(
+        (customer) => customer.id === id
+      );
+      state.customers.splice(customerIndex, 1);
     }
   }
 });
@@ -66,6 +76,17 @@ export const editCustomer =
       customer
     );
     dispatch(slice.actions.editCustomer({ customer: customerResponse }));
+  };
+export const deleteCustomer =
+  (id: number): AppThunk =>
+  async (dispatch) => {
+    const customerResponse = await api.deletes<{ success: boolean }>(
+      `customers/${id}`
+    );
+    const { success } = customerResponse;
+    if (success) {
+      dispatch(slice.actions.deleteCustomer({ id }));
+    }
   };
 
 export default slice;

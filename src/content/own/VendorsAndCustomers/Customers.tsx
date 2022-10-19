@@ -32,10 +32,12 @@ import { Customer } from '../../../models/owns/customer';
 import { useParams } from 'react-router-dom';
 import {
   addCustomer,
+  deleteCustomer,
   editCustomer,
   getCustomers
 } from '../../../slices/customer';
 import { useDispatch, useSelector } from '../../../store';
+import ConfirmDialog from '../components/ConfirmDialog';
 
 interface PropsType {
   values?: any;
@@ -52,6 +54,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
   const { customers } = useSelector((state) => state.customers);
   const [currentCustomer, setCurrentCustomer] = useState<Customer>();
   const [viewOrUpdate, setViewOrUpdate] = useState<'view' | 'update'>('view');
+  const [openDelete, setOpenDelete] = useState<boolean>(false);
 
   useEffect(() => {
     dispatch(getCustomers());
@@ -77,6 +80,12 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
     );
     setIsCustomerDetailsOpen(false);
   };
+
+  const handleDelete = (id: number) => {
+    dispatch(deleteCustomer(id));
+    setOpenDelete(false);
+  };
+
   useEffect(() => {
     if (customers?.length && customerId && isNumeric(customerId)) {
       handleOpenDetails(Number(customerId));
@@ -256,20 +265,6 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
       headerName: t('Currency'),
       description: t('Currency'),
       width: 150
-    },
-    {
-      field: 'actions',
-      type: 'actions',
-      headerName: t('Actions'),
-      description: t('Actions'),
-      getActions: (params: GridRowParams) => [
-        <GridActionsCellItem
-          key="delete"
-          icon={<DeleteTwoToneIcon fontSize="small" color="error" />}
-          onClick={() => {}}
-          label="Delete"
-        />
-      ]
     }
   ];
   // const searchFilterProperties = ['customerName', 'customerType', 'email'];
@@ -377,7 +372,16 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
               {t('Go back')}
             </Typography>
           )}
-          <Typography variant="subtitle1">{t('Delete')}</Typography>
+          <Typography
+            onClick={() => {
+              setIsCustomerDetailsOpen(false);
+              setOpenDelete(true);
+            }}
+            variant="subtitle1"
+            style={{ cursor: 'pointer' }}
+          >
+            {t('Delete')}
+          </Typography>
         </Box>
         <IconButton
           aria-label="close"
@@ -488,6 +492,16 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
       <ModalCustomerDetails />
       <RenderCustomersAddModal />
       <RenderCustomersList />
+      <ConfirmDialog
+        open={openDelete}
+        onCancel={() => {
+          setOpenDelete(false);
+          setIsCustomerDetailsOpen(true);
+        }}
+        onConfirm={() => handleDelete(currentCustomer?.id)}
+        confirmText={t('Delete')}
+        question={t('Are you sure you want to delete this Customer?')}
+      />
     </Box>
   );
 };

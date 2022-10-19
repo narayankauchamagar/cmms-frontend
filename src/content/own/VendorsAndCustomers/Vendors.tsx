@@ -206,20 +206,6 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
       headerName: t('Rate'),
       description: t('Rate'),
       width: 150
-    },
-    {
-      field: 'actions',
-      type: 'actions',
-      headerName: t('Actions'),
-      description: t('Actions'),
-      getActions: (params: GridRowParams) => [
-        <GridActionsCellItem
-          key="delete"
-          icon={<DeleteTwoToneIcon fontSize="small" color="error" />}
-          onClick={() => {}}
-          label="Delete"
-        />
-      ]
     }
   ];
 
