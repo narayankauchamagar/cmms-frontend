@@ -23,10 +23,11 @@ function post<T>(url, data, options?) {
   });
 }
 function patch<T>(url, data, options?) {
+  const companyId = localStorage.getItem('companyId');
   return api<T>(apiUrl + url, {
     ...options,
     method: 'PATCH',
-    body: JSON.stringify(data)
+    body: JSON.stringify({ ...data, company: { id: companyId } })
   });
 }
 function deletes<T>(url, options?) {

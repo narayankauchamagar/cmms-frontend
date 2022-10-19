@@ -30,7 +30,11 @@ import {
 import { Close } from '@mui/icons-material';
 import { Customer } from '../../../models/owns/customer';
 import { useParams } from 'react-router-dom';
-import { addCustomer, getCustomers } from '../../../slices/customer';
+import {
+  addCustomer,
+  editCustomer,
+  getCustomers
+} from '../../../slices/customer';
 import { useDispatch, useSelector } from '../../../store';
 
 interface PropsType {
@@ -74,7 +78,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
     setIsCustomerDetailsOpen(false);
   };
   useEffect(() => {
-    if (customerId && isNumeric(customerId)) {
+    if (customers?.length && customerId && isNumeric(customerId)) {
       handleOpenDetails(Number(customerId));
     }
   }, [customers]);
@@ -446,11 +450,18 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
             <Form
               fields={fields}
               validation={Yup.object().shape(shape)}
-              submitText={t('Update')}
+              submitText={t('Save')}
               values={currentCustomer || {}}
               onChange={({ field, e }) => {}}
               onSubmit={async (values) => {
                 try {
+                  const formattedValues = values.rate
+                    ? {
+                        ...values,
+                        rate: Number(values.rate)
+                      }
+                    : values;
+                  dispatch(editCustomer(currentCustomer.id, formattedValues));
                   await wait(2000);
                   setViewOrUpdate('view');
                 } catch (err) {

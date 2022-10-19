@@ -29,6 +29,18 @@ const slice = createSlice({
     ) {
       const { customer } = action.payload;
       state.customers = [...state.customers, customer];
+    },
+    editCustomer(
+      state: CustomerState,
+      action: PayloadAction<{ customer: Customer }>
+    ) {
+      const { customer } = action.payload;
+      state.customers = state.customers.map((customer1) => {
+        if (customer1.id === customer.id) {
+          return customer;
+        }
+        return customer1;
+      });
     }
   }
 });
@@ -45,6 +57,15 @@ export const addCustomer =
   async (dispatch) => {
     const customerResponse = await api.post<Customer>('customers', customer);
     dispatch(slice.actions.addCustomer({ customer: customerResponse }));
+  };
+export const editCustomer =
+  (id: number, customer): AppThunk =>
+  async (dispatch) => {
+    const customerResponse = await api.patch<Customer>(
+      `customers/${id}`,
+      customer
+    );
+    dispatch(slice.actions.editCustomer({ customer: customerResponse }));
   };
 
 export default slice;
