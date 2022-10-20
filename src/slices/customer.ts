@@ -9,7 +9,7 @@ interface CustomerState {
 }
 
 const initialState: CustomerState = {
-  customers: null
+  customers: []
 };
 
 const slice = createSlice({

@@ -17,6 +17,14 @@ import { IField } from '../type';
 import Location, { locations } from '../../../models/owns/location';
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
+import {
+  addLocation,
+  getLocations,
+  editLocation,
+  deleteLocation
+} from '../../../slices/location';
+import ConfirmDialog from '../components/ConfirmDialog';
+import { useDispatch, useSelector } from '../../../store';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
@@ -39,10 +47,14 @@ import { Customer, customers } from '../../../models/owns/customer';
 import LocationDetails from './LocationDetails';
 import { useParams } from 'react-router-dom';
 import Map from '../components/Map';
+import { formatSelect } from '../../../utils/formatters';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
   const [currentTab, setCurrentTab] = useState<string>('list');
+  const dispatch = useDispatch();
+  const [openDelete, setOpenDelete] = useState<boolean>(false);
+  const { locations } = useSelector((state) => state.locations);
   const tabs = [
     { value: 'list', label: t('List View') },
     { value: 'map', label: t('Map View') }
@@ -56,10 +68,17 @@ function Files() {
   const { setTitle } = useContext(TitleContext);
   const { locationId } = useParams();
   const [currentLocation, setCurrentLocation] = useState<Location>();
-  const handleDelete = (id: number) => {};
   const handleUpdate = (id: number) => {
     setCurrentLocation(locations.find((location) => location.id === id));
     setOpenUpdateModal(true);
+  };
+  useEffect(() => {
+    dispatch(getLocations());
+  }, []);
+
+  const handleDelete = (id: number) => {
+    dispatch(deleteLocation(id));
+    setOpenDelete(false);
   };
   const handleOpenDetails = (id: number) => {
     const foundLocation = locations.find((location) => location.id === id);
@@ -82,7 +101,7 @@ function Files() {
   }, []);
 
   useEffect(() => {
-    if (locationId && isNumeric(locationId)) {
+    if (locations?.length && locationId && isNumeric(locationId)) {
       handleOpenDetails(Number(locationId));
     }
   }, [locations]);
@@ -132,14 +151,12 @@ function Files() {
   ];
   const currentLocationWorkers: User[] = users;
   const currentLocationTeams: Team[] = teams;
-  const currentLocationVendors: Vendor[] = vendors;
-  const currentLocationCustomers: Customer[] = customers;
 
   const fields: Array<IField> = [
     {
-      name: 'title',
+      name: 'name',
       type: 'text',
-      label: t('Title'),
+      label: t('Name'),
       placeholder: t('Enter location name'),
       required: true
     },
@@ -195,7 +212,7 @@ function Files() {
   ];
 
   const shape = {
-    title: Yup.string().required(t('Location title is required')),
+    name: Yup.string().required(t('Location title is required')),
     address: Yup.string().required(t('Location address is required'))
   };
 
@@ -233,7 +250,7 @@ function Files() {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               try {
-                await wait(2000);
+                dispatch(addLocation(values));
                 setOpenAddModal(false);
               } catch (err) {
                 console.error(err);
@@ -289,13 +306,13 @@ function Files() {
                   value: team.id.toString()
                 };
               }),
-              vendors: currentLocationVendors.map((vendor) => {
+              vendors: currentLocation?.vendors.map((vendor) => {
                 return {
-                  label: vendor.name,
+                  label: vendor.companyName,
                   value: vendor.id.toString()
                 };
               }),
-              customers: currentLocationCustomers.map((customer) => {
+              customers: currentLocation?.customers.map((customer) => {
                 return {
                   label: customer.name,
                   value: customer.id.toString()
@@ -306,7 +323,13 @@ function Files() {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               try {
-                await wait(2000);
+                values.customers = formatSelect(values.customers);
+                values.vendors = formatSelect(values.vendors);
+                // delete values.customers;
+                delete values.teams;
+                delete values.workers;
+                // delete values.vendor;
+                dispatch(editLocation(currentLocation.id, values));
                 setOpenUpdateModal(false);
               } catch (err) {
                 console.error(err);
@@ -422,6 +445,15 @@ function Files() {
           handleUpdate={handleUpdate}
         />
       </Drawer>
+      <ConfirmDialog
+        open={openDelete}
+        onCancel={() => {
+          setOpenDelete(false);
+        }}
+        onConfirm={() => handleDelete(currentLocation?.id)}
+        confirmText={t('Delete')}
+        question={t('Are you sure you want to delete this Location?')}
+      />
     </>
   );
 }

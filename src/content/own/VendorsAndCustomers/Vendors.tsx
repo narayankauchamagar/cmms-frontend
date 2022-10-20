@@ -283,7 +283,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
       }}
     >
       <CustomDataGrid
-        rows={vendors ?? []}
+        rows={vendors}
         columns={columns}
         components={{
           Toolbar: GridToolbar

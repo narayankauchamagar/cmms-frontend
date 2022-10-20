@@ -12,6 +12,7 @@ interface PropsType {
   multiple?: boolean;
   fullWidth?: boolean;
   onOpen?: () => void;
+  onChange: (event: any, values: { label: string; value: string }[]) => void;
   loading?: boolean;
   //   defaultValue: any;
   //   variant?: 'outlined' | any;
@@ -27,6 +28,7 @@ export default (props: PropsType) => {
       filterSelectedOptions
       limitTags={5}
       onOpen={props.onOpen}
+      onChange={props.onChange}
       loading={props.loading}
       // @ts-ignore
       isOptionEqualToValue={(option, value) => option.value == value.value}

@@ -322,7 +322,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
       }}
     >
       <CustomDataGrid
-        rows={customers ?? []}
+        rows={customers}
         columns={columns}
         components={{
           Toolbar: GridToolbar

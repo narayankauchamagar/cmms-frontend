@@ -9,7 +9,7 @@ interface VendorState {
 }
 
 const initialState: VendorState = {
-  vendors: null
+  vendors: []
 };
 
 const slice = createSlice({

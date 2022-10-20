@@ -33,10 +33,12 @@ import Location, {
   locations as locationsList
 } from '../../../../models/owns/location';
 import Asset, { assets as assetsList } from '../../../../models/owns/asset';
-import Part from '../../../../models/owns/part';
+import { useDispatch, useSelector } from '../../../../store';
 import CustomSwitch from './CustomSwitch';
 import SelectTasks from './SelectTasks';
 import SelectMapCoordinates from './SelectMapCoordinates';
+import { getCustomers } from '../../../../slices/customer';
+import { getVendors } from '../../../../slices/vendor';
 
 interface PropsType {
   fields: Array<IField>;
@@ -53,9 +55,10 @@ interface PropsType {
 export default (props: PropsType) => {
   const { t }: { t: any } = useTranslation();
   const shape: IHash<any> = {};
-  const [customers, setCustomers] = useState<Customer[]>([]);
+  const dispatch = useDispatch();
+  const { customers } = useSelector((state) => state.customers);
+  const { vendors } = useSelector((state) => state.vendors);
   const [fetchingCustomers, setFetchingCustomers] = useState(false);
-  const [vendors, setVendors] = useState<Vendor[]>([]);
   const [fetchingVendors, setFetchingVendors] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
   const [fetchingUsers, setFetchingUsers] = useState(false);
@@ -67,17 +70,11 @@ export default (props: PropsType) => {
   const [fetchingAssets, setFetchingAssets] = useState(false);
 
   const fetchCustomers = async () => {
-    setFetchingCustomers(true);
-    await wait(2000);
-    setFetchingCustomers(false);
-    setCustomers(customersList);
+    if (!customers.length) dispatch(getCustomers());
   };
 
   const fetchVendors = async () => {
-    setFetchingVendors(true);
-    await wait(2000);
-    setFetchingVendors(false);
-    setVendors(vendorsList);
+    if (!customers.length) dispatch(getVendors());
   };
   const fetchUsers = async () => {
     setFetchingUsers(true);
@@ -154,7 +151,7 @@ export default (props: PropsType) => {
       case 'vendor':
         options = vendors.map((vendor) => {
           return {
-            label: vendor.name,
+            label: vendor.companyName,
             value: vendor.id.toString()
           };
         });
@@ -238,6 +235,9 @@ export default (props: PropsType) => {
         options={options}
         value={values}
         label={field.label}
+        onChange={(e, values) => {
+          handleChange(formik, field.name, values);
+        }}
         loading={loading}
         onOpen={onOpen}
         placeholder={field.placeholder}
