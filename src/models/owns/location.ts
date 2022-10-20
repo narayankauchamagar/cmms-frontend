@@ -4,7 +4,8 @@ export default interface Location extends Audit {
   id: number;
   name: string;
   address: string;
-  coordinates?: { lat: number; lng: number };
+  longitude: number;
+  latitude: number;
   vendors: { companyName: string; id: number }[];
   customers: { name: string; id: number }[];
 }
@@ -20,10 +21,8 @@ export const locations: Location[] = [
     updatedBy: 'string',
     vendors: [],
     customers: [],
-    coordinates: {
-      lat: 40.744509157650334,
-      lng: -74.06030716227161
-    }
+    longitude: 40.744509157650334,
+    latitude: -74.06030716227161
   },
   {
     name: 'Location 2',
@@ -35,9 +34,7 @@ export const locations: Location[] = [
     updatedBy: 'string',
     vendors: [],
     customers: [],
-    coordinates: {
-      lat: 45.744509157650334,
-      lng: -74.06030716227161
-    }
+    longitude: 40.744509157650334,
+    latitude: -74.06030716227161
   }
 ];

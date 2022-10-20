@@ -76,7 +76,13 @@ function Files() {
     dispatch(getLocations());
   }, []);
 
+  const onOpenDeleteDialog = (id: number) => {
+    setCurrentLocation(locations.find((location) => location.id === id));
+    setOpenDelete(true);
+  };
+
   const handleDelete = (id: number) => {
+    setOpenDrawer(false);
     dispatch(deleteLocation(id));
     setOpenDelete(false);
   };
@@ -106,6 +112,15 @@ function Files() {
     }
   }, [locations]);
 
+  const formatValues = (values) => {
+    values.customers = formatSelect(values.customers);
+    values.vendors = formatSelect(values.vendors);
+    delete values.teams;
+    delete values.workers;
+    values.longitude = values.coordinates?.lng;
+    values.latitude = values.coordinates?.lat;
+    return values;
+  };
   const columns: GridEnrichedColDef[] = [
     {
       field: 'name',
@@ -143,7 +158,9 @@ function Files() {
         <GridActionsCellItem
           key="delete"
           icon={<DeleteTwoToneIcon fontSize="small" color="error" />}
-          onClick={() => handleDelete(Number(params.id))}
+          onClick={() => {
+            onOpenDeleteDialog(Number(params.id));
+          }}
           label="Delete"
         />
       ]
@@ -250,7 +267,8 @@ function Files() {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               try {
-                dispatch(addLocation(values));
+                const formattedValues = formatValues(values);
+                dispatch(addLocation(formattedValues));
                 setOpenAddModal(false);
               } catch (err) {
                 console.error(err);
@@ -318,18 +336,18 @@ function Files() {
                   value: customer.id.toString()
                 };
               }),
-              coordinates: currentLocation?.coordinates
+              coordinates: currentLocation?.longitude
+                ? {
+                    lng: currentLocation.longitude,
+                    lat: currentLocation.latitude
+                  }
+                : null
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
+              const formattedValues = formatValues(values);
               try {
-                values.customers = formatSelect(values.customers);
-                values.vendors = formatSelect(values.vendors);
-                // delete values.customers;
-                delete values.teams;
-                delete values.workers;
-                // delete values.vendor;
-                dispatch(editLocation(currentLocation.id, values));
+                dispatch(editLocation(currentLocation.id, formattedValues));
                 setOpenUpdateModal(false);
               } catch (err) {
                 console.error(err);
@@ -421,9 +439,17 @@ function Files() {
               <Map
                 dimensions={{ width: 1000, height: 500 }}
                 locations={locations
-                  .filter((location) => location.coordinates)
-                  .map(({ name, coordinates, address, id }) => {
-                    return { title: name, coordinates, address, id };
+                  .filter((location) => location.longitude)
+                  .map(({ name, longitude, latitude, address, id }) => {
+                    return {
+                      title: name,
+                      coordinates: {
+                        lng: longitude,
+                        lat: latitude
+                      },
+                      address,
+                      id
+                    };
                   })}
               />
             </Card>
@@ -443,6 +469,7 @@ function Files() {
         <LocationDetails
           location={currentLocation}
           handleUpdate={handleUpdate}
+          handleDelete={onOpenDeleteDialog}
         />
       </Drawer>
       <ConfirmDialog

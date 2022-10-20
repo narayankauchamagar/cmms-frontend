@@ -30,9 +30,10 @@ import { IField } from '../type';
 interface LocationDetailsProps {
   location: Location;
   handleUpdate: (id: number) => void;
+  handleDelete: (id: number) => void;
 }
 export default function LocationDetails(props: LocationDetailsProps) {
-  const { location, handleUpdate } = props;
+  const { location, handleUpdate, handleDelete } = props;
   const { t }: { t: any } = useTranslation();
   const [openAddFloorPlan, setOpenAddFloorPlan] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<string>('assets');
@@ -160,7 +161,11 @@ export default function LocationDetails(props: LocationDetailsProps) {
             style={{ cursor: 'pointer', marginRight: 10 }}
             color="primary"
           />
-          <DeleteTwoToneIcon style={{ cursor: 'pointer' }} color="error" />
+          <DeleteTwoToneIcon
+            onClick={() => handleDelete(location.id)}
+            style={{ cursor: 'pointer' }}
+            color="error"
+          />
         </Box>
       </Grid>
       <Divider />
