@@ -16,7 +16,7 @@ export interface User {
   [key: string]: any;
 }
 
-export interface UserResponseDTO {
+export interface OwnUser {
   firstName: string;
   lastName: string;
   username: string;
@@ -25,6 +25,14 @@ export interface UserResponseDTO {
   phone: string;
   role: { name: string };
   companyId: number;
+}
+export interface UserShowDTO {
+  firstName: string;
+  lastName: string;
+  id: number;
+}
+
+export interface UserResponseDTO extends OwnUser {
   companySettingsId: number;
   userSettingsId: number;
 }

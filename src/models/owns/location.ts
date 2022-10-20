@@ -1,4 +1,7 @@
+import { UserShowDTO } from '../user';
 import { Audit } from './audit';
+import { CustomerShowDTO } from './customer';
+import { VendorShowDTO } from './vendor';
 
 export default interface Location extends Audit {
   id: number;
@@ -6,8 +9,9 @@ export default interface Location extends Audit {
   address: string;
   longitude: number;
   latitude: number;
-  vendors: { companyName: string; id: number }[];
-  customers: { name: string; id: number }[];
+  vendors: VendorShowDTO[];
+  customers: CustomerShowDTO[];
+  workers: UserShowDTO[];
 }
 
 export const locations: Location[] = [
@@ -21,6 +25,7 @@ export const locations: Location[] = [
     updatedBy: 'string',
     vendors: [],
     customers: [],
+    workers: [],
     longitude: 40.744509157650334,
     latitude: -74.06030716227161
   },
@@ -34,6 +39,7 @@ export const locations: Location[] = [
     updatedBy: 'string',
     vendors: [],
     customers: [],
+    workers: [],
     longitude: 40.744509157650334,
     latitude: -74.06030716227161
   }

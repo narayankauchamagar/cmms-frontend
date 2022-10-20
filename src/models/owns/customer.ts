@@ -13,7 +13,10 @@ export interface Customer {
   billingName: string;
   billingCurrency: string;
 }
-
+export interface CustomerShowDTO {
+  name: string;
+  id: number;
+}
 export const customers: Customer[] = [
   {
     id: 1,

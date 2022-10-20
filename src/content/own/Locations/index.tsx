@@ -115,8 +115,8 @@ function Files() {
   const formatValues = (values) => {
     values.customers = formatSelect(values.customers);
     values.vendors = formatSelect(values.vendors);
+    values.workers = formatSelect(values.workers);
     delete values.teams;
-    delete values.workers;
     values.longitude = values.coordinates?.lng;
     values.latitude = values.coordinates?.lat;
     return values;
@@ -312,7 +312,7 @@ function Files() {
             values={{
               ...currentLocation,
               title: currentLocation?.name,
-              workers: currentLocationWorkers.map((worker) => {
+              workers: currentLocation?.workers.map((worker) => {
                 return {
                   label: `${worker.firstName} ${worker.lastName}`,
                   value: worker.id.toString()

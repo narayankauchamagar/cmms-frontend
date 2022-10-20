@@ -18,20 +18,12 @@ import SelectForm from './SelectForm';
 import FileUpload from '../FileUpload';
 import DatePicker from '@mui/lab/DatePicker';
 import { useState } from 'react';
-import {
-  Customer,
-  customers as customersList
-} from '../../../../models/owns/customer';
 import wait from '../../../../utils/wait';
-import { Vendor, vendors as vendorsList } from '../../../../models/owns/vendor';
 import User from 'src/models/owns/user';
 import Team, { teams as teamsList } from '../../../../models/owns/team';
 import SelectParts from './SelectParts';
-import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { users as usersList } from '../../../../models/owns/user';
-import Location, {
-  locations as locationsList
-} from '../../../../models/owns/location';
+import Location from '../../../../models/owns/location';
 import Asset, { assets as assetsList } from '../../../../models/owns/asset';
 import { useDispatch, useSelector } from '../../../../store';
 import CustomSwitch from './CustomSwitch';
@@ -39,6 +31,8 @@ import SelectTasks from './SelectTasks';
 import SelectMapCoordinates from './SelectMapCoordinates';
 import { getCustomers } from '../../../../slices/customer';
 import { getVendors } from '../../../../slices/vendor';
+import { getLocations } from 'src/slices/location';
+import { getUsers } from '../../../../slices/user';
 
 interface PropsType {
   fields: Array<IField>;
@@ -58,13 +52,13 @@ export default (props: PropsType) => {
   const dispatch = useDispatch();
   const { customers } = useSelector((state) => state.customers);
   const { vendors } = useSelector((state) => state.vendors);
+  const { locations } = useSelector((state) => state.locations);
+  const { users } = useSelector((state) => state.users);
   const [fetchingCustomers, setFetchingCustomers] = useState(false);
   const [fetchingVendors, setFetchingVendors] = useState(false);
-  const [users, setUsers] = useState<User[]>([]);
   const [fetchingUsers, setFetchingUsers] = useState(false);
   const [teams, setTeams] = useState<Team[]>([]);
   const [fetchingTeams, setFetchingTeams] = useState(false);
-  const [locations, setLocations] = useState<Location[]>([]);
   const [fetchingLocations, setFetchingLocations] = useState(false);
   const [assets, setAssets] = useState<Asset[]>([]);
   const [fetchingAssets, setFetchingAssets] = useState(false);
@@ -74,19 +68,13 @@ export default (props: PropsType) => {
   };
 
   const fetchVendors = async () => {
-    if (!customers.length) dispatch(getVendors());
+    if (!vendors.length) dispatch(getVendors());
   };
   const fetchUsers = async () => {
-    setFetchingUsers(true);
-    await wait(2000);
-    setFetchingUsers(false);
-    setUsers(usersList);
+    if (!users.length) dispatch(getUsers());
   };
   const fetchLocations = async () => {
-    setFetchingLocations(true);
-    await wait(2000);
-    setFetchingLocations(false);
-    setLocations(locationsList);
+    if (!locations.length) dispatch(getLocations());
   };
   const fetchAssets = async () => {
     setFetchingAssets(true);

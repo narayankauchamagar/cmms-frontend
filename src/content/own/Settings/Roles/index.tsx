@@ -12,12 +12,18 @@ import {
   useTheme,
   Zoom
 } from '@mui/material';
-
+import {
+  addRole,
+  getRoles,
+  editRole,
+  deleteRole
+} from '../../../../slices/role';
+import { useDispatch, useSelector } from '../../../../store';
 import PageHeader from './PageHeader';
 import { useTranslation } from 'react-i18next';
 import { Role } from '../../../../models/role';
 import CloseIcon from '@mui/icons-material/Close';
-import { forwardRef, ReactElement, Ref, useState } from 'react';
+import { forwardRef, ReactElement, Ref, useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { TransitionProps } from '@mui/material/transitions';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
@@ -81,12 +87,10 @@ function Roles() {
   const theme = useTheme();
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
+  const dispatch = useDispatch();
+  const { roles } = useSelector((state) => state.roles);
 
   const handleConfirmDelete = (id: number) => {
-    setOpenConfirmDelete(true);
-  };
-
-  const handleConfirmDeleteMultiple = (ids: number[]) => {
     setOpenConfirmDelete(true);
   };
   const closeConfirmDelete = () => setOpenConfirmDelete(false);
@@ -103,93 +107,9 @@ function Roles() {
       TransitionComponent: Zoom
     });
   };
-
-  let roles: Role[] = [
-    {
-      id: '1',
-      name: 'Rafael Kunde',
-      users: 1,
-      externalId: 'Admin',
-      type: 'free'
-    },
-    {
-      id: '2',
-      name: 'Edwina Collins',
-      users: 0,
-      externalId: 'Tech',
-      type: 'paid'
-    },
-    {
-      id: '3',
-      name: 'Delta Wiza',
-      users: 2,
-      externalId: 'Admin',
-      type: 'free'
-    },
-    {
-      id: '4',
-      name: 'Dan Stroman',
-      users: 0,
-      externalId: 'lorem',
-      type: 'free'
-    },
-    {
-      id: '5',
-      name: 'Oma Bogisich',
-      users: 0,
-      externalId: 'lorem',
-      type: 'paid'
-    },
-    {
-      id: '6',
-      name: 'Rafael Kunde',
-      users: 1,
-      externalId: 'Admin',
-      type: 'free'
-    },
-    {
-      id: '7',
-      name: 'Rafael Kunde',
-      users: 1,
-      externalId: 'Admin',
-      type: 'free'
-    },
-    {
-      id: '8',
-      name: 'Rafael Kunde',
-      users: 1,
-      externalId: 'Admin',
-      type: 'free'
-    },
-    {
-      id: '9',
-      name: 'Rafael Kunde',
-      users: 1,
-      externalId: 'Admin',
-      type: 'free'
-    },
-    {
-      id: '10',
-      name: 'Rafael Kunde',
-      users: 1,
-      externalId: 'Admin',
-      type: 'free'
-    },
-    {
-      id: '11',
-      name: 'Rafael Kunde',
-      users: 1,
-      externalId: 'Admin',
-      type: 'free'
-    },
-    {
-      id: '12',
-      name: 'Rafael Kunde',
-      users: 1,
-      externalId: 'Admin',
-      type: 'paid'
-    }
-  ];
+  useEffect(() => {
+    dispatch(getRoles());
+  }, []);
 
   const renderDeleteModal = () => (
     <DialogWrapper
