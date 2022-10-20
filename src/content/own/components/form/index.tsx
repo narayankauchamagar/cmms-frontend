@@ -202,6 +202,8 @@ export default (props: PropsType) => {
           handleChange(formik, field.name, values);
         }}
         loading={loading}
+        error={!!formik.errors[field.name] || field.error}
+        errorMessage={formik.errors[field.name]}
         onOpen={onOpen}
         placeholder={field.placeholder}
         multiple={field.multiple}
@@ -316,11 +318,7 @@ export default (props: PropsType) => {
                       onChange={(e) => {
                         handleChange(formik, field.name, e.target.value);
                       }}
-                      error={
-                        (formik.touched[field.name] &&
-                          !!formik.errors[field.name]) ||
-                        field.error
-                      }
+                      error={formik.errors[field.name] || field.error}
                       errorMessage={formik.errors[field.name]}
                       fullWidth={field.fullWidth}
                     />

@@ -10,6 +10,14 @@ import {
   Grid,
   Typography
 } from '@mui/material';
+import {
+  addMeter,
+  getMeters,
+  editMeter,
+  deleteMeter
+} from '../../../slices/meter';
+import { useDispatch, useSelector } from '../../../store';
+import ConfirmDialog from '../components/ConfirmDialog';
 import { useTranslation } from 'react-i18next';
 import { useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
@@ -17,7 +25,7 @@ import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import CustomDataGrid from '../components/CustomDatagrid';
 import { GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import Meter, { meters } from '../../../models/owns/meter';
+import Meter from '../../../models/owns/meter';
 import Form from '../components/form';
 import * as Yup from 'yup';
 import wait from '../../../utils/wait';
@@ -25,6 +33,7 @@ import { IField } from '../type';
 import MeterDetails from './MeterDetails';
 import { useParams } from 'react-router-dom';
 import { isNumeric } from '../../../utils/validators';
+import { formatSelectMultiple, formatSelect } from '../../../utils/formatters';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
@@ -34,16 +43,32 @@ function Files() {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [currentMeter, setCurrentMeter] = useState<Meter>();
   const { meterId } = useParams();
+  const dispatch = useDispatch();
+  const [openDelete, setOpenDelete] = useState<boolean>(false);
+  const { meters } = useSelector((state) => state.meters);
 
   useEffect(() => {
     setTitle(t('Meters'));
+    dispatch(getMeters());
   }, []);
   useEffect(() => {
-    if (meterId && isNumeric(meterId)) {
+    if (meters.length && meterId && isNumeric(meterId)) {
       handleOpenDetails(Number(meterId));
     }
   }, [meters]);
 
+  const formatValues = (values) => {
+    values.workers = formatSelectMultiple(values.workers);
+    values.teams = formatSelectMultiple(values.teams);
+    values.location = formatSelect(values.location);
+    values.asset = formatSelect(values.asset);
+    values.updateFrequency = Number(values.updateFrequency);
+    return values;
+  };
+  const handleDelete = (id: number) => {
+    dispatch(deleteMeter(id));
+    setOpenDelete(false);
+  };
   const handleUpdate = (id: number) => {
     setCurrentMeter(meters.find((meter) => meter.id === id));
     setOpenUpdateModal(true);
@@ -168,15 +193,17 @@ function Files() {
       name: 'asset',
       type: 'select',
       type2: 'asset',
-      label: t('Asset')
+      label: t('Asset'),
+      required: true
     }
   ];
   const shape = {
     name: Yup.string().required(t('Meter name is required')),
     unit: Yup.string().required(t('Meter unit is required')),
-    updateFrequency: Yup.string().required(
+    updateFrequency: Yup.number().required(
       t('Meter update frequency is required')
-    )
+    ),
+    asset: Yup.string().required(t('Asset is required'))
   };
   const renderAddModal = () => (
     <Dialog
@@ -212,7 +239,8 @@ function Files() {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               try {
-                await wait(2000);
+                const formattedValues = formatValues(values);
+                dispatch(addMeter(formattedValues));
                 setOpenAddModal(false);
               } catch (err) {
                 console.error(err);
@@ -273,7 +301,8 @@ function Files() {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               try {
-                await wait(2000);
+                const formattedValues = formatValues(values);
+                dispatch(editMeter(currentMeter.id, formattedValues));
                 setOpenAddModal(false);
               } catch (err) {
                 console.error(err);
@@ -353,6 +382,16 @@ function Files() {
       >
         <MeterDetails meter={currentMeter} handleUpdate={handleUpdate} />
       </Drawer>
+      <ConfirmDialog
+        open={openDelete}
+        onCancel={() => {
+          setOpenDelete(false);
+          setOpenDrawer(true);
+        }}
+        onConfirm={() => handleDelete(currentMeter?.id)}
+        confirmText={t('Delete')}
+        question={t('Are you sure you want to delete this Meter?')}
+      />
     </>
   );
 }

@@ -47,7 +47,7 @@ import { Customer, customers } from '../../../models/owns/customer';
 import LocationDetails from './LocationDetails';
 import { useParams } from 'react-router-dom';
 import Map from '../components/Map';
-import { formatSelect } from '../../../utils/formatters';
+import { formatSelectMultiple } from '../../../utils/formatters';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
@@ -113,10 +113,10 @@ function Files() {
   }, [locations]);
 
   const formatValues = (values) => {
-    values.customers = formatSelect(values.customers);
-    values.vendors = formatSelect(values.vendors);
-    values.workers = formatSelect(values.workers);
-    values.teams = formatSelect(values.teams);
+    values.customers = formatSelectMultiple(values.customers);
+    values.vendors = formatSelectMultiple(values.vendors);
+    values.workers = formatSelectMultiple(values.workers);
+    values.teams = formatSelectMultiple(values.teams);
     values.longitude = values.coordinates?.lng;
     values.latitude = values.coordinates?.lat;
     return values;
