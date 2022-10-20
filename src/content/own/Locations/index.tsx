@@ -116,7 +116,7 @@ function Files() {
     values.customers = formatSelect(values.customers);
     values.vendors = formatSelect(values.vendors);
     values.workers = formatSelect(values.workers);
-    delete values.teams;
+    values.teams = formatSelect(values.teams);
     values.longitude = values.coordinates?.lng;
     values.latitude = values.coordinates?.lat;
     return values;
@@ -318,7 +318,7 @@ function Files() {
                   value: worker.id.toString()
                 };
               }),
-              teams: currentLocationTeams.map((team) => {
+              teams: currentLocation?.teams.map((team) => {
                 return {
                   label: team.name,
                   value: team.id.toString()

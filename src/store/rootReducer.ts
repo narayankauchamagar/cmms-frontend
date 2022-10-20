@@ -7,6 +7,8 @@ import { reducer as vendorReducer } from 'src/slices/vendor';
 import { reducer as locationReducer } from 'src/slices/location';
 import { reducer as roleReducer } from 'src/slices/role';
 import { reducer as userReducer } from 'src/slices/user';
+import { reducer as teamReducer } from 'src/slices/team';
+import { reducer as assetReducer } from 'src/slices/asset';
 
 const rootReducer = combineReducers({
   calendar: calendarReducer,
@@ -16,7 +18,9 @@ const rootReducer = combineReducers({
   vendors: vendorReducer,
   locations: locationReducer,
   roles: roleReducer,
-  users: userReducer
+  users: userReducer,
+  teams: teamReducer,
+  assets: assetReducer
 });
 
 export default rootReducer;

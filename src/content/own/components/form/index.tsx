@@ -3,7 +3,6 @@ import {
   Button,
   CircularProgress,
   Grid,
-  Link,
   TextField,
   Typography
 } from '@mui/material';
@@ -17,14 +16,7 @@ import Field from './Field';
 import SelectForm from './SelectForm';
 import FileUpload from '../FileUpload';
 import DatePicker from '@mui/lab/DatePicker';
-import { useState } from 'react';
-import wait from '../../../../utils/wait';
-import User from 'src/models/owns/user';
-import Team, { teams as teamsList } from '../../../../models/owns/team';
 import SelectParts from './SelectParts';
-import { users as usersList } from '../../../../models/owns/user';
-import Location from '../../../../models/owns/location';
-import Asset, { assets as assetsList } from '../../../../models/owns/asset';
 import { useDispatch, useSelector } from '../../../../store';
 import CustomSwitch from './CustomSwitch';
 import SelectTasks from './SelectTasks';
@@ -33,6 +25,8 @@ import { getCustomers } from '../../../../slices/customer';
 import { getVendors } from '../../../../slices/vendor';
 import { getLocations } from 'src/slices/location';
 import { getUsers } from '../../../../slices/user';
+import { getAssets } from '../../../../slices/asset';
+import { getTeams } from '../../../../slices/team';
 
 interface PropsType {
   fields: Array<IField>;
@@ -54,14 +48,8 @@ export default (props: PropsType) => {
   const { vendors } = useSelector((state) => state.vendors);
   const { locations } = useSelector((state) => state.locations);
   const { users } = useSelector((state) => state.users);
-  const [fetchingCustomers, setFetchingCustomers] = useState(false);
-  const [fetchingVendors, setFetchingVendors] = useState(false);
-  const [fetchingUsers, setFetchingUsers] = useState(false);
-  const [teams, setTeams] = useState<Team[]>([]);
-  const [fetchingTeams, setFetchingTeams] = useState(false);
-  const [fetchingLocations, setFetchingLocations] = useState(false);
-  const [assets, setAssets] = useState<Asset[]>([]);
-  const [fetchingAssets, setFetchingAssets] = useState(false);
+  const { assets } = useSelector((state) => state.assets);
+  const { teams } = useSelector((state) => state.teams);
 
   const fetchCustomers = async () => {
     if (!customers.length) dispatch(getCustomers());
@@ -77,16 +65,10 @@ export default (props: PropsType) => {
     if (!locations.length) dispatch(getLocations());
   };
   const fetchAssets = async () => {
-    setFetchingAssets(true);
-    await wait(2000);
-    setFetchingAssets(false);
-    setAssets(assetsList);
+    if (!assets.length) dispatch(getAssets());
   };
   const fetchTeams = async () => {
-    setFetchingTeams(true);
-    await wait(2000);
-    setFetchingTeams(false);
-    setTeams(teamsList);
+    if (!teams.length) dispatch(getTeams());
   };
   props.fields.forEach((f) => {
     shape[f.name] = Yup.string();
@@ -134,7 +116,6 @@ export default (props: PropsType) => {
           };
         });
         onOpen = fetchCustomers;
-        loading = fetchingCustomers;
         break;
       case 'vendor':
         options = vendors.map((vendor) => {
@@ -144,7 +125,6 @@ export default (props: PropsType) => {
           };
         });
         onOpen = fetchVendors;
-        loading = fetchingVendors;
         break;
       case 'user':
         options = users.map((user) => {
@@ -154,7 +134,6 @@ export default (props: PropsType) => {
           };
         });
         onOpen = fetchUsers;
-        loading = fetchingUsers;
         break;
       case 'team':
         options = teams.map((team) => {
@@ -164,7 +143,6 @@ export default (props: PropsType) => {
           };
         });
         onOpen = fetchTeams;
-        loading = fetchingTeams;
         break;
       case 'location':
         options = locations.map((location) => {
@@ -174,7 +152,6 @@ export default (props: PropsType) => {
           };
         });
         onOpen = fetchLocations;
-        loading = fetchingLocations;
         break;
       case 'asset':
         options = assets.map((asset) => {
@@ -184,7 +161,6 @@ export default (props: PropsType) => {
           };
         });
         onOpen = fetchAssets;
-        loading = fetchingAssets;
         break;
       case 'priority':
         options = ['NONE', 'LOW', 'MEDIUM', 'HIGH'].map((value) => {
@@ -197,7 +173,6 @@ export default (props: PropsType) => {
           ? { label: getPriorityLabel(values), value: values }
           : null;
         onOpen = fetchAssets;
-        loading = fetchingAssets;
         break;
       case 'part':
         return (
