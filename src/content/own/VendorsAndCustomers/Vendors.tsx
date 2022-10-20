@@ -6,19 +6,23 @@ import {
   IconButton,
   Typography
 } from '@mui/material';
-import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
+import {
+  addVendor,
+  getVendors,
+  editVendor,
+  deleteVendor
+} from '../../../slices/vendor';
+import { useDispatch, useSelector } from '../../../store';
 import { useTranslation } from 'react-i18next';
 import Form from '../components/form';
 import * as Yup from 'yup';
 import { IField } from '../type';
-import wait from 'src/utils/wait';
+import ConfirmDialog from '../components/ConfirmDialog';
 import { useEffect, useState } from 'react';
 import CustomDataGrid from '../components/CustomDatagrid';
 import {
-  GridActionsCellItem,
   GridEnrichedColDef,
   GridRenderCellParams,
-  GridRowParams,
   GridToolbar
 } from '@mui/x-data-grid';
 import {
@@ -42,15 +46,23 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
   const [isVendorDetailsOpen, setIsVendorDetailsOpen] =
     useState<boolean>(false);
   const { vendorId } = useParams();
-
+  const dispatch = useDispatch();
+  const [openDelete, setOpenDelete] = useState<boolean>(false);
+  const { vendors } = useSelector((state) => state.vendors);
   const [companyName, setCompanyName] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
   const [currentVendor, setCurrentVendor] = useState<Vendor>();
   const [viewOrUpdate, setViewOrUpdate] = useState<'view' | 'update'>('view');
-  const values = {
-    companyName: companyName,
-    phone: phone
+
+  useEffect(() => {
+    dispatch(getVendors());
+  }, []);
+
+  const handleDelete = (id: number) => {
+    dispatch(deleteVendor(id));
+    setOpenDelete(false);
   };
+
   const handleOpenDetails = (id: number) => {
     const foundVendor = vendors.find((vendor) => vendor.id === id);
     if (foundVendor) {
@@ -72,7 +84,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
     setIsVendorDetailsOpen(false);
   };
   useEffect(() => {
-    if (vendorId && isNumeric(vendorId)) {
+    if (vendors?.length && vendorId && isNumeric(vendorId)) {
       handleOpenDetails(Number(vendorId));
     }
   }, [vendors]);
@@ -145,8 +157,10 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
     phone: Yup.string()
       .matches(phoneRegExp, t('The phone number is invalid'))
       .required(t('The phone number is required')),
-    website: Yup.string().matches(websiteRegExp, t('Invalid website')),
-    email: Yup.string().matches(emailRegExp, t('Invalid email'))
+    website: Yup.string()
+      .matches(websiteRegExp, t('Invalid website'))
+      .nullable(),
+    email: Yup.string().matches(emailRegExp, t('Invalid email')).nullable()
   };
 
   const columns: GridEnrichedColDef[] = [
@@ -245,7 +259,11 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
             }}
             onSubmit={async (values) => {
               try {
-                await wait(2000);
+                const formattedValues = {
+                  ...values,
+                  rate: Number(values.rate)
+                };
+                dispatch(addVendor(formattedValues));
                 handleCloseModal();
               } catch (err) {
                 console.error(err);
@@ -265,7 +283,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
       }}
     >
       <CustomDataGrid
-        rows={vendors}
+        rows={vendors ?? []}
         columns={columns}
         components={{
           Toolbar: GridToolbar
@@ -315,7 +333,16 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
               {t('Go back')}
             </Typography>
           )}
-          <Typography variant="subtitle1">{t('Delete')}</Typography>
+          <Typography
+            onClick={() => {
+              setIsVendorDetailsOpen(false);
+              setOpenDelete(true);
+            }}
+            variant="subtitle1"
+            style={{ cursor: 'pointer' }}
+          >
+            {t('Delete')}
+          </Typography>
         </Box>
         <IconButton
           aria-label="close"
@@ -383,12 +410,18 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
             <Form
               fields={fields}
               validation={Yup.object().shape(shape)}
-              submitText={t('Update')}
+              submitText={t('Save')}
               values={currentVendor || {}}
               onChange={({ field, e }) => {}}
               onSubmit={async (values) => {
                 try {
-                  await wait(2000);
+                  const formattedValues = values.rate
+                    ? {
+                        ...values,
+                        rate: Number(values.rate)
+                      }
+                    : values;
+                  dispatch(editVendor(currentVendor.id, formattedValues));
                   setViewOrUpdate('view');
                 } catch (err) {
                   console.error(err);
@@ -414,6 +447,16 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
       <ModalVendorDetails />
       <RenderVendorsAddModal />
       <RenderVendorsList />
+      <ConfirmDialog
+        open={openDelete}
+        onCancel={() => {
+          setOpenDelete(false);
+          setIsVendorDetailsOpen(true);
+        }}
+        onConfirm={() => handleDelete(currentVendor?.id)}
+        confirmText={t('Delete')}
+        question={t('Are you sure you want to delete this Vendor?')}
+      />
     </Box>
   );
 };
