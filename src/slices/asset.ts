@@ -4,6 +4,7 @@ import type { AppThunk } from 'src/store';
 import Asset from '../models/owns/asset';
 import api from '../utils/api';
 
+const basePath = 'assets';
 interface AssetState {
   assets: Asset[];
 }
@@ -44,27 +45,27 @@ const slice = createSlice({
 export const reducer = slice.reducer;
 
 export const getAssets = (): AppThunk => async (dispatch) => {
-  const assets = await api.get<Asset[]>('assets');
+  const assets = await api.get<Asset[]>(basePath);
   dispatch(slice.actions.getAssets({ assets }));
 };
 
 export const addAsset =
   (asset): AppThunk =>
   async (dispatch) => {
-    const assetResponse = await api.post<Asset>('assets', asset);
+    const assetResponse = await api.post<Asset>(basePath, asset);
     dispatch(slice.actions.addAsset({ asset: assetResponse }));
   };
 export const editAsset =
   (id: number, asset): AppThunk =>
   async (dispatch) => {
-    const assetResponse = await api.patch<Asset>(`assets/${id}`, asset);
+    const assetResponse = await api.patch<Asset>(`${basePath}/${id}`, asset);
     dispatch(slice.actions.editAsset({ asset: assetResponse }));
   };
 export const deleteAsset =
   (id: number): AppThunk =>
   async (dispatch) => {
     const assetResponse = await api.deletes<{ success: boolean }>(
-      `assets/${id}`
+      `${basePath}/${id}`
     );
     const { success } = assetResponse;
     if (success) {

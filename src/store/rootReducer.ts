@@ -8,6 +8,12 @@ import { reducer as locationReducer } from 'src/slices/location';
 import { reducer as roleReducer } from 'src/slices/role';
 import { reducer as userReducer } from 'src/slices/user';
 import { reducer as teamReducer } from 'src/slices/team';
+import { reducer as meterReducer } from 'src/slices/meter';
+import { reducer as partReducer } from 'src/slices/part';
+import { reducer as purchaseOrderReducer } from 'src/slices/purchaseOrder';
+import { reducer as requestReducer } from 'src/slices/request';
+import { reducer as setReducer } from 'src/slices/set';
+import { reducer as workOrderReducer } from 'src/slices/workOrder';
 import { reducer as assetReducer } from 'src/slices/asset';
 
 const rootReducer = combineReducers({
@@ -20,7 +26,13 @@ const rootReducer = combineReducers({
   roles: roleReducer,
   users: userReducer,
   teams: teamReducer,
-  assets: assetReducer
+  assets: assetReducer,
+  meters: meterReducer,
+  parts: partReducer,
+  purchaseOrders: purchaseOrderReducer,
+  requests: requestReducer,
+  sets: setReducer,
+  workOrders: workOrderReducer
 });
 
 export default rootReducer;
