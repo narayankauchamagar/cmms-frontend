@@ -22,9 +22,11 @@ export interface AssetDTO extends Audit {
   vendors: number;
   parentAsset: string;
   openWorkOrders: number;
+  hasChildren?: boolean;
 }
-export interface AssetHierarchy extends AssetDTO {
+export interface AssetRow extends AssetDTO {
   hierarchy: number[];
+  childrenFetched?: boolean;
 }
 export const assets: Asset[] = [
   {
@@ -134,9 +136,9 @@ export const assetDTOS: AssetDTO[] = [
   }
 ];
 
-export const assetsHierarchy: AssetHierarchy[] = [
-  { ...assetDTOS[0], hierarchy: [1] },
-  { ...assetDTOS[1], hierarchy: [1, 10] },
-  { ...assetDTOS[2], hierarchy: [1, 10, assetDTOS[2].id] },
-  { ...assetDTOS[3], hierarchy: [1, 10, assetDTOS[3].id] }
+export const assetsHierarchy: AssetRow[] = [
+  { ...assetDTOS[0], hierarchy: [1], hasChildren: true },
+  { ...assetDTOS[1], hierarchy: [2] },
+  { ...assetDTOS[2], hierarchy: [1, 10] },
+  { ...assetDTOS[3], hierarchy: [1, 10, assetDTOS[2].id] }
 ];

@@ -11,29 +11,53 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { IField } from '../type';
+import { addAsset, getAssets, deleteAsset } from '../../../slices/asset';
+import { useDispatch, useSelector } from '../../../store';
 import { useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import CustomDataGrid from '../components/CustomDatagrid';
-import { GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
+import {
+  GridEventListener,
+  GridRenderCellParams,
+  GridToolbar
+} from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import { assetsHierarchy } from '../../../models/owns/asset';
+import Asset, {
+  assetDTOS,
+  AssetRow,
+  assetsHierarchy
+} from '../../../models/owns/asset';
 import Form from '../components/form';
 import * as Yup from 'yup';
 import wait from '../../../utils/wait';
 import { useNavigate } from 'react-router-dom';
-import { DataGridProProps } from '@mui/x-data-grid-pro';
-import CustomGroupingCell from './CustomGroupingCell';
+import { DataGridProProps, useGridApiRef } from '@mui/x-data-grid-pro';
+import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
+import { GroupingCellWithLazyLoading } from './GroupingCellWithLazyLoading';
 
 function Assets() {
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
   const navigate = useNavigate();
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  const { assets } = useSelector((state) => state.assets);
+  const apiRef = useGridApiRef();
+
   useEffect(() => {
     setTitle(t('Assets'));
+    dispatch(getAssets());
   }, []);
 
+  const formatValues = (values) => {
+    values.primaryUser = formatSelect(values.primaryUser);
+    values.customers = formatSelectMultiple(values.customers);
+    values.vendors = formatSelectMultiple(values.vendors);
+    values.users = formatSelectMultiple(values.users);
+    values.teams = formatSelectMultiple(values.teams);
+    return values;
+  };
   const columns: GridEnrichedColDef[] = [
     {
       field: 'id',
@@ -258,6 +282,64 @@ function Assets() {
   const shape = {
     name: Yup.string().required(t('Asset name is required'))
   };
+  useEffect(() => {
+    const handleRowExpansionChange: GridEventListener<
+      'rowExpansionChange'
+    > = async (node) => {
+      const row = apiRef.current.getRow(node.id) as AssetRow | null;
+
+      if (!node.childrenExpanded || !row || row.childrenFetched) {
+        return;
+      }
+
+      apiRef.current.updateRows([
+        {
+          id: `placeholder-children-${node.id}`,
+          hierarchy: [...row.hierarchy, '']
+        }
+      ]);
+
+      const childrenRows = [assetsHierarchy[2]];
+      apiRef.current.updateRows([
+        ...childrenRows,
+        { id: node.id, childrenFetched: true },
+        { id: `placeholder-children-${node.id}`, _action: 'delete' }
+      ]);
+
+      if (childrenRows.length) {
+        apiRef.current.setRowChildrenExpansion(node.id, true);
+      }
+    };
+
+    /**
+     * By default, the grid does not toggle the expansion of rows with 0 children
+     * We need to override the `cellKeyDown` event listener to force the expansion if there are children on the server
+     */
+    const handleCellKeyDown: GridEventListener<'cellKeyDown'> = (
+      params,
+      event
+    ) => {
+      const cellParams = apiRef.current.getCellParams(params.id, params.field);
+      if (cellParams.colDef.type === 'treeDataGroup' && event.key === ' ') {
+        event.stopPropagation();
+        event.preventDefault();
+        event.defaultMuiPrevented = true;
+
+        apiRef.current.setRowChildrenExpansion(
+          params.id,
+          !params.rowNode.childrenExpanded
+        );
+      }
+    };
+
+    apiRef.current.subscribeEvent(
+      'rowExpansionChange',
+      handleRowExpansionChange
+    );
+    apiRef.current.subscribeEvent('cellKeyDown', handleCellKeyDown, {
+      isFirst: true
+    });
+  }, [apiRef]);
   const renderAssetAddModal = () => (
     <Dialog
       fullWidth
@@ -292,7 +374,8 @@ function Assets() {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               try {
-                await wait(2000);
+                const formattedValues = formatValues(values);
+                dispatch(addAsset(formattedValues));
                 setOpenAddModal(false);
               } catch (err) {
                 console.error(err);
@@ -306,7 +389,7 @@ function Assets() {
 
   const groupingColDef: DataGridProProps['groupingColDef'] = {
     headerName: 'Hierarchy',
-    renderCell: (params) => <CustomGroupingCell {...params} />
+    renderCell: (params) => <GroupingCellWithLazyLoading {...params} />
   };
 
   return (
@@ -354,6 +437,7 @@ function Assets() {
                 treeData
                 columns={columns}
                 rows={assetsHierarchy}
+                apiRef={apiRef}
                 getTreeDataPath={(row) =>
                   row.hierarchy.map((id) => id.toString())
                 }
