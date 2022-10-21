@@ -36,6 +36,9 @@ import { useNavigate } from 'react-router-dom';
 import { DataGridProProps, useGridApiRef } from '@mui/x-data-grid-pro';
 import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
 import { GroupingCellWithLazyLoading } from './GroupingCellWithLazyLoading';
+import { OwnUser, UserMiniDTO } from '../../../models/user';
+import UserAvatars from '../components/UserAvatars';
+import { enumerate } from '../../../utils/displayers';
 
 function Assets() {
   const { t }: { t: any } = useTranslation();
@@ -79,7 +82,8 @@ function Assets() {
       field: 'location',
       headerName: t('Location'),
       description: t('Location'),
-      width: 150
+      width: 150,
+      valueGetter: (params) => params.row.location?.name
     },
     {
       field: 'image',
@@ -124,28 +128,36 @@ function Assets() {
       width: 150
     },
     {
-      field: 'users',
+      field: 'assignedTo',
       headerName: t('Users'),
       description: t('Users'),
-      width: 150
+      width: 150,
+      renderCell: (params: GridRenderCellParams<UserMiniDTO[]>) => (
+        <UserAvatars users={params.value} />
+      )
     },
     {
       field: 'teams',
       headerName: t('Teams'),
       description: t('Teams'),
-      width: 150
+      width: 150,
+      valueGetter: (params) =>
+        enumerate(params.row.teams.map((team) => team.name))
     },
     {
       field: 'vendors',
       headerName: t('Vendors'),
       description: t('Vendors'),
-      width: 150
+      width: 150,
+      valueGetter: (params) =>
+        enumerate(params.row.vendors.map((vendor) => vendor.name))
     },
     {
       field: 'parentAsset',
       headerName: t('Parent Asset'),
       description: t('Parent Asset'),
-      width: 150
+      width: 150,
+      valueGetter: (params) => params.row.parentAsset?.name
     },
     {
       field: 'openWorkOrders',
@@ -284,36 +296,37 @@ function Assets() {
     name: Yup.string().required(t('Asset name is required'))
   };
 
-  const handleRowExpansionChange: GridEventListener<
-    'rowExpansionChange'
-  > = async (node) => {
-    const row = apiRef.current.getRow(node.id) as AssetRow | null;
-
-    if (!node.childrenExpanded || !row || row.childrenFetched) {
-      //apiRef.current.setRowChildrenExpansion(row.id, false);
-      return;
-    }
-    apiRef.current.updateRows([
-      {
-        id: `Loading assets-${node.id}`,
-        hierarchy: [...row.hierarchy, '']
-      }
-    ]);
-    dispatch(getAssetChildren(row.id, row.hierarchy));
-    // const childrenRows = assetsHierarchy1;
-    // apiRef.current.updateRows([
-    //   ...childrenRows.map((childRow) => {
-    //     return { ...childRow, hierarchy: [...row.hierarchy, childRow.id] };
-    //   }),
-    //   { id: node.id, childrenFetched: true },
-    //   { id: `placeholder-children-${node.id}`, _action: 'delete' }
-    // ]);
-    //
-    // if (childrenRows.length) {
-    //   apiRef.current.setRowChildrenExpansion(node.id, true);
-    // }
-  };
   useEffect(() => {
+    const handleRowExpansionChange: GridEventListener<
+      'rowExpansionChange'
+    > = async (node) => {
+      const row = apiRef.current.getRow(node.id) as AssetRow | null;
+      console.log('a', row);
+      if (!node.childrenExpanded || !row || row.childrenFetched) {
+        return;
+      }
+      console.log('b', row);
+
+      apiRef.current.updateRows([
+        {
+          id: `Loading assets-${node.id}`,
+          hierarchy: [...row.hierarchy, '']
+        }
+      ]);
+      dispatch(getAssetChildren(row.id, row.hierarchy));
+      // const childrenRows = assetsHierarchy1;
+      // apiRef.current.updateRows([
+      //   ...childrenRows.map((childRow) => {
+      //     return { ...childRow, hierarchy: [...row.hierarchy, childRow.id] };
+      //   }),
+      //   { id: node.id, childrenFetched: true },
+      //   { id: `placeholder-children-${node.id}`, _action: 'delete' }
+      // ]);
+      //
+      // if (childrenRows.length) {
+      //   apiRef.current.setRowChildrenExpansion(node.id, true);
+      // }
+    };
     /**
      * By default, the grid does not toggle the expansion of rows with 0 children
      * We need to override the `cellKeyDown` event listener to force the expansion if there are children on the server
@@ -335,15 +348,13 @@ function Assets() {
       }
     };
 
-    if (assetsHierarchy.length) {
-      apiRef.current.subscribeEvent(
-        'rowExpansionChange',
-        handleRowExpansionChange
-      );
-      apiRef.current.subscribeEvent('cellKeyDown', handleCellKeyDown, {
-        isFirst: true
-      });
-    }
+    apiRef.current.subscribeEvent(
+      'rowExpansionChange',
+      handleRowExpansionChange
+    );
+    apiRef.current.subscribeEvent('cellKeyDown', handleCellKeyDown, {
+      isFirst: true
+    });
   }, [apiRef]);
 
   const renderAssetAddModal = () => (

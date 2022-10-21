@@ -50,7 +50,18 @@ const slice = createSlice({
         (asset) => asset.id === id
       );
       if (parent !== -1) state.assetsHierarchy[parent].childrenFetched = true;
-      state.assetsHierarchy = [...state.assetsHierarchy, ...assets];
+
+      state.assetsHierarchy = assets.reduce((acc, asset) => {
+        //check if asset already exists in state
+        const assetInState = state.assetsHierarchy.findIndex(
+          (asset1) => asset1.id === asset.id
+        );
+        //not found
+        if (assetInState === -1) return [...acc, asset];
+        //found
+        acc[assetInState] = asset;
+        return acc;
+      }, state.assetsHierarchy);
     }
   }
 });

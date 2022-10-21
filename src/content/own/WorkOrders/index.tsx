@@ -32,10 +32,12 @@ import {
 } from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import Form from '../components/form';
+import UserAvatars from '../components/UserAvatars';
 import * as Yup from 'yup';
 import wait from '../../../utils/wait';
 import { isNumeric } from '../../../utils/validators';
 import User, { users } from '../../../models/owns/user';
+import { OwnUser, UserMiniDTO } from '../../../models/user';
 import Team, { teams } from '../../../models/owns/team';
 import { Vendor, vendors } from '../../../models/owns/vendor';
 import { Customer, customers } from '../../../models/owns/customer';
@@ -46,17 +48,7 @@ import { categories } from '../../../models/owns/category';
 import Location, { locations } from '../../../models/owns/location';
 import Asset, { assets } from '../../../models/owns/asset';
 import Part, { parts } from '../../../models/owns/part';
-import AddTimeModal from './AddTimeModal';
 import { tasks } from '../../../models/owns/tasks';
-
-const AvatarPrimary = styled(Avatar)(
-  ({ theme }) => `
-    background: ${theme.colors.primary.lighter};
-    color: ${theme.colors.primary.main};
-    width: ${theme.spacing(4)};
-    height: ${theme.spacing(4)};
-`
-);
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
@@ -80,26 +72,7 @@ function WorkOrders() {
     setCurrentWorkOrder(workOrders.find((workOrder) => workOrder.id === id));
     setOpenUpdateModal(true);
   };
-  const renderSingleUser = (user: User) => (
-    <Tooltip key={user.id} title={`${user.firstName} ${user.lastName}`} arrow>
-      <AvatarPrimary
-        sx={{
-          my: 2,
-          mr: 1
-        }}
-        variant="rounded"
-      >
-        <Typography variant="h1">
-          {Array.from(user.firstName)[0].toUpperCase()}
-        </Typography>
-      </AvatarPrimary>
-    </Tooltip>
-  );
-  const renderUsers = (users: User[]) => (
-    <Box sx={{ display: 'flex', flexDirection: 'row', p: 1 }}>
-      {users.map((user) => renderSingleUser(user))}
-    </Box>
-  );
+
   const handleOpenDetails = (id: number) => {
     const foundWorkOrder = workOrders.find((workOrder) => workOrder.id === id);
     if (foundWorkOrder) {
@@ -166,8 +139,9 @@ function WorkOrders() {
       headerName: t('Assignees'),
       description: t('Assignees'),
       width: 150,
-      renderCell: (params: GridRenderCellParams<User[]>) =>
-        renderUsers(params.value)
+      renderCell: (params: GridRenderCellParams<UserMiniDTO[]>) => (
+        <UserAvatars users={params.value} />
+      )
     },
     {
       field: 'location',
