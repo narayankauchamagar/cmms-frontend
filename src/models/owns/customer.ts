@@ -13,7 +13,7 @@ export interface Customer {
   billingName: string;
   billingCurrency: string;
 }
-export interface CustomerShowDTO {
+export interface CustomerMiniDTO {
   name: string;
   id: number;
 }

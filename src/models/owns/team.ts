@@ -2,7 +2,7 @@ export default interface Team {
   id: number;
   name: string;
 }
-export interface TeamShowDTO {
+export interface TeamMiniDTO {
   name: string;
   id: number;
 }

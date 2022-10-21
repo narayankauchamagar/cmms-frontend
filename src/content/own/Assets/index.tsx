@@ -344,11 +344,7 @@ function Assets() {
         isFirst: true
       });
     }
-  }, [apiRef, assetsHierarchy]);
-
-  useEffect(() => {
-    console.log(assetsHierarchy);
-  }, [assetsHierarchy]);
+  }, [apiRef]);
 
   const renderAssetAddModal = () => (
     <Dialog

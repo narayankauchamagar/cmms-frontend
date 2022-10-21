@@ -15,6 +15,12 @@ export default interface Part extends Audit {
   vendors: number;
   openWorkOrders: number;
 }
+export interface PartMiniDTO {
+  name: string;
+  id: number;
+  cost: number;
+  description: string;
+}
 export const parts: Part[] = [
   {
     id: 212,

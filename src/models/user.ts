@@ -26,7 +26,7 @@ export interface OwnUser {
   role: { name: string };
   companyId: number;
 }
-export interface UserShowDTO {
+export interface UserMiniDTO {
   firstName: string;
   lastName: string;
   id: number;

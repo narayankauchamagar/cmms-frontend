@@ -1,8 +1,8 @@
-import { UserShowDTO } from '../user';
+import { UserMiniDTO } from '../user';
 import { Audit } from './audit';
-import { CustomerShowDTO } from './customer';
+import { CustomerMiniDTO } from './customer';
 import { VendorShowDTO } from './vendor';
-import { TeamShowDTO } from './team';
+import { TeamMiniDTO } from './team';
 
 export default interface Location extends Audit {
   id: number;
@@ -11,9 +11,9 @@ export default interface Location extends Audit {
   longitude: number;
   latitude: number;
   vendors: VendorShowDTO[];
-  customers: CustomerShowDTO[];
-  workers: UserShowDTO[];
-  teams: TeamShowDTO[];
+  customers: CustomerMiniDTO[];
+  workers: UserMiniDTO[];
+  teams: TeamMiniDTO[];
 }
 
 export const locations: Location[] = [

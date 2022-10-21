@@ -2,12 +2,13 @@ import { Audit } from './audit';
 import User, { users } from './user';
 import Request, { requests } from './request';
 import PurchaseOrder, { purchaseOrders } from './purchaseOrder';
-import Part, { parts } from './part';
+import Part, { PartMiniDTO, parts } from './part';
 import Team, { teams } from './team';
 import Asset, { assets } from './asset';
 import File, { files } from './file';
 import Location, { locations } from './location';
 import Category, { categories } from './category';
+import { UserMiniDTO } from '../user';
 
 interface WorkOrderBase extends Audit {
   dueDate: string;
@@ -17,11 +18,11 @@ interface WorkOrderBase extends Audit {
   description: string;
   title: string;
   requiredSignature: boolean;
-  parts: Part[];
+  parts: PartMiniDTO[];
   location: Location;
   team: Team;
   primaryUser: User;
-  assignedTo: User[];
+  assignedTo: UserMiniDTO[];
   asset: Asset;
 }
 export default interface WorkOrder extends WorkOrderBase {
