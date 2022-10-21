@@ -284,37 +284,36 @@ function Assets() {
     name: Yup.string().required(t('Asset name is required'))
   };
 
-  useEffect(() => {
-    const handleRowExpansionChange: GridEventListener<
-      'rowExpansionChange'
-    > = async (node) => {
-      const row = apiRef.current.getRow(node.id) as AssetRow | null;
+  const handleRowExpansionChange: GridEventListener<
+    'rowExpansionChange'
+  > = async (node) => {
+    const row = apiRef.current.getRow(node.id) as AssetRow | null;
 
-      if (!node.childrenExpanded || !row || row.childrenFetched) {
-        return;
+    if (!node.childrenExpanded || !row || row.childrenFetched) {
+      //apiRef.current.setRowChildrenExpansion(row.id, false);
+      return;
+    }
+    apiRef.current.updateRows([
+      {
+        id: `Loading assets-${node.id}`,
+        hierarchy: [...row.hierarchy, '']
       }
-
-      apiRef.current.updateRows([
-        {
-          id: `placeholder-children-${node.id}`,
-          hierarchy: [...row.hierarchy, '']
-        }
-      ]);
-      dispatch(getAssetChildren(row.id, row.hierarchy));
-      // const childrenRows = assetsHierarchy1;
-      // apiRef.current.updateRows([
-      //   ...childrenRows.map((childRow) => {
-      //     return { ...childRow, hierarchy: [...row.hierarchy, childRow.id] };
-      //   }),
-      //   { id: node.id, childrenFetched: true },
-      //   { id: `placeholder-children-${node.id}`, _action: 'delete' }
-      // ]);
-      //
-      // if (childrenRows.length) {
-      //   apiRef.current.setRowChildrenExpansion(node.id, true);
-      // }
-    };
-
+    ]);
+    dispatch(getAssetChildren(row.id, row.hierarchy));
+    // const childrenRows = assetsHierarchy1;
+    // apiRef.current.updateRows([
+    //   ...childrenRows.map((childRow) => {
+    //     return { ...childRow, hierarchy: [...row.hierarchy, childRow.id] };
+    //   }),
+    //   { id: node.id, childrenFetched: true },
+    //   { id: `placeholder-children-${node.id}`, _action: 'delete' }
+    // ]);
+    //
+    // if (childrenRows.length) {
+    //   apiRef.current.setRowChildrenExpansion(node.id, true);
+    // }
+  };
+  useEffect(() => {
     /**
      * By default, the grid does not toggle the expansion of rows with 0 children
      * We need to override the `cellKeyDown` event listener to force the expansion if there are children on the server
@@ -336,14 +335,21 @@ function Assets() {
       }
     };
 
-    apiRef.current.subscribeEvent(
-      'rowExpansionChange',
-      handleRowExpansionChange
-    );
-    apiRef.current.subscribeEvent('cellKeyDown', handleCellKeyDown, {
-      isFirst: true
-    });
-  }, [apiRef]);
+    if (assetsHierarchy.length) {
+      apiRef.current.subscribeEvent(
+        'rowExpansionChange',
+        handleRowExpansionChange
+      );
+      apiRef.current.subscribeEvent('cellKeyDown', handleCellKeyDown, {
+        isFirst: true
+      });
+    }
+  }, [apiRef, assetsHierarchy]);
+
+  useEffect(() => {
+    console.log(assetsHierarchy);
+  }, [assetsHierarchy]);
+
   const renderAssetAddModal = () => (
     <Dialog
       fullWidth
@@ -440,9 +446,7 @@ function Assets() {
               <CustomDataGrid
                 treeData
                 columns={columns}
-                rows={assetsHierarchy.map((row) => {
-                  return { ...row, hierarchy: [row.id] };
-                })}
+                rows={assetsHierarchy}
                 apiRef={apiRef}
                 getTreeDataPath={(row) =>
                   row.hierarchy.map((id) => id.toString())
