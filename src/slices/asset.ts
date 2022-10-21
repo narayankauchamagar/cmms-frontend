@@ -1,16 +1,18 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 import type { AppThunk } from 'src/store';
-import Asset from '../models/owns/asset';
+import Asset, { AssetDTO, AssetRow } from '../models/owns/asset';
 import api from '../utils/api';
 
 const basePath = 'assets';
 interface AssetState {
   assets: Asset[];
+  assetsHierarchy: AssetRow[];
 }
 
 const initialState: AssetState = {
-  assets: []
+  assets: [],
+  assetsHierarchy: []
 };
 
 const slice = createSlice({
@@ -38,6 +40,17 @@ const slice = createSlice({
       const { id } = action.payload;
       const assetIndex = state.assets.findIndex((asset) => asset.id === id);
       state.assets.splice(assetIndex, 1);
+    },
+    getAssetChildren(
+      state: AssetState,
+      action: PayloadAction<{ assets: AssetRow[]; id: number }>
+    ) {
+      const { assets, id } = action.payload;
+      const parent = state.assetsHierarchy.findIndex(
+        (asset) => asset.id === id
+      );
+      if (parent !== -1) state.assetsHierarchy[parent].childrenFetched = true;
+      state.assetsHierarchy = [...state.assetsHierarchy, ...assets];
     }
   }
 });
@@ -71,6 +84,20 @@ export const deleteAsset =
     if (success) {
       dispatch(slice.actions.deleteAsset({ id }));
     }
+  };
+
+export const getAssetChildren =
+  (id: number, parents: number[]): AppThunk =>
+  async (dispatch) => {
+    const assets = await api.get<AssetDTO[]>(`${basePath}/children/${id}`);
+    dispatch(
+      slice.actions.getAssetChildren({
+        id,
+        assets: assets.map((asset) => {
+          return { ...asset, hierarchy: [...parents, asset.id] };
+        })
+      })
+    );
   };
 
 export default slice;

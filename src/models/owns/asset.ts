@@ -135,10 +135,3 @@ export const assetDTOS: AssetDTO[] = [
     updatedBy: 'ghfgj'
   }
 ];
-
-export const assetsHierarchy: AssetRow[] = [
-  { ...assetDTOS[0], hierarchy: [1], hasChildren: true },
-  { ...assetDTOS[1], hierarchy: [2] },
-  { ...assetDTOS[2], hierarchy: [1, 10] },
-  { ...assetDTOS[3], hierarchy: [1, 10, assetDTOS[2].id] }
-];

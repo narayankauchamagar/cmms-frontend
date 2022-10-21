@@ -11,7 +11,12 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { IField } from '../type';
-import { addAsset, getAssets, deleteAsset } from '../../../slices/asset';
+import {
+  addAsset,
+  getAssets,
+  deleteAsset,
+  getAssetChildren
+} from '../../../slices/asset';
 import { useDispatch, useSelector } from '../../../store';
 import { useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
@@ -23,11 +28,7 @@ import {
   GridToolbar
 } from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import Asset, {
-  assetDTOS,
-  AssetRow,
-  assetsHierarchy
-} from '../../../models/owns/asset';
+import Asset, { assetDTOS, AssetRow } from '../../../models/owns/asset';
 import Form from '../components/form';
 import * as Yup from 'yup';
 import wait from '../../../utils/wait';
@@ -42,12 +43,12 @@ function Assets() {
   const navigate = useNavigate();
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const { assets } = useSelector((state) => state.assets);
+  const { assetsHierarchy } = useSelector((state) => state.assets);
   const apiRef = useGridApiRef();
 
   useEffect(() => {
     setTitle(t('Assets'));
-    dispatch(getAssets());
+    dispatch(getAssetChildren(0, []));
   }, []);
 
   const formatValues = (values) => {
@@ -282,6 +283,7 @@ function Assets() {
   const shape = {
     name: Yup.string().required(t('Asset name is required'))
   };
+
   useEffect(() => {
     const handleRowExpansionChange: GridEventListener<
       'rowExpansionChange'
@@ -298,17 +300,19 @@ function Assets() {
           hierarchy: [...row.hierarchy, '']
         }
       ]);
-
-      const childrenRows = [assetsHierarchy[2]];
-      apiRef.current.updateRows([
-        ...childrenRows,
-        { id: node.id, childrenFetched: true },
-        { id: `placeholder-children-${node.id}`, _action: 'delete' }
-      ]);
-
-      if (childrenRows.length) {
-        apiRef.current.setRowChildrenExpansion(node.id, true);
-      }
+      dispatch(getAssetChildren(row.id, row.hierarchy));
+      // const childrenRows = assetsHierarchy1;
+      // apiRef.current.updateRows([
+      //   ...childrenRows.map((childRow) => {
+      //     return { ...childRow, hierarchy: [...row.hierarchy, childRow.id] };
+      //   }),
+      //   { id: node.id, childrenFetched: true },
+      //   { id: `placeholder-children-${node.id}`, _action: 'delete' }
+      // ]);
+      //
+      // if (childrenRows.length) {
+      //   apiRef.current.setRowChildrenExpansion(node.id, true);
+      // }
     };
 
     /**
@@ -436,7 +440,9 @@ function Assets() {
               <CustomDataGrid
                 treeData
                 columns={columns}
-                rows={assetsHierarchy}
+                rows={assetsHierarchy.map((row) => {
+                  return { ...row, hierarchy: [row.id] };
+                })}
                 apiRef={apiRef}
                 getTreeDataPath={(row) =>
                   row.hierarchy.map((id) => id.toString())
