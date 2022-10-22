@@ -5,11 +5,11 @@ import Category from '../models/owns/category';
 import api from '../utils/api';
 
 interface CategoryState {
-  categories: Category[];
+  categories: { [basePath: string]: Category[] };
 }
 
 const initialState: CategoryState = {
-  categories: []
+  categories: {}
 };
 
 const slice = createSlice({
@@ -18,39 +18,41 @@ const slice = createSlice({
   reducers: {
     getCategories(
       state: CategoryState,
-      action: PayloadAction<{ categories: Category[] }>
+      action: PayloadAction<{ categories: Category[]; basePath: string }>
     ) {
-      const { categories } = action.payload;
-      state.categories = categories;
+      const { categories, basePath } = action.payload;
+      state.categories[basePath] = categories;
     },
     addCategory(
       state: CategoryState,
-      action: PayloadAction<{ category: Category }>
+      action: PayloadAction<{ category: Category; basePath: string }>
     ) {
-      const { category } = action.payload;
-      state.categories = [...state.categories, category];
+      const { category, basePath } = action.payload;
+      state.categories[basePath].push(category);
     },
     editCategory(
       state: CategoryState,
-      action: PayloadAction<{ category: Category }>
+      action: PayloadAction<{ category: Category; basePath: string }>
     ) {
-      const { category } = action.payload;
-      state.categories = state.categories.map((category1) => {
-        if (category1.id === category.id) {
-          return category;
+      const { category, basePath } = action.payload;
+      state.categories[basePath] = state.categories[basePath].map(
+        (category1) => {
+          if (category1.id === category.id) {
+            return category;
+          }
+          return category1;
         }
-        return category1;
-      });
+      );
     },
     deleteCategory(
       state: CategoryState,
-      action: PayloadAction<{ id: number }>
+      action: PayloadAction<{ id: number; basePath: string }>
     ) {
-      const { id } = action.payload;
-      const categoryIndex = state.categories.findIndex(
+      const { id, basePath } = action.payload;
+      const categoryIndex = state.categories[basePath].findIndex(
         (category) => category.id === id
       );
-      state.categories.splice(categoryIndex, 1);
+      state.categories[basePath].splice(categoryIndex, 1);
     }
   }
 });
@@ -61,14 +63,16 @@ export const getCategories =
   (basePath): AppThunk =>
   async (dispatch) => {
     const categories = await api.get<Category[]>(basePath);
-    dispatch(slice.actions.getCategories({ categories }));
+    dispatch(slice.actions.getCategories({ categories, basePath }));
   };
 
 export const addCategory =
   (category, basePath): AppThunk =>
   async (dispatch) => {
     const categoryResponse = await api.post<Category>(basePath, category);
-    dispatch(slice.actions.addCategory({ category: categoryResponse }));
+    dispatch(
+      slice.actions.addCategory({ category: categoryResponse, basePath })
+    );
   };
 export const editCategory =
   (id: number, category, basePath): AppThunk =>
@@ -77,7 +81,9 @@ export const editCategory =
       `${basePath}/${id}`,
       category
     );
-    dispatch(slice.actions.editCategory({ category: categoryResponse }));
+    dispatch(
+      slice.actions.editCategory({ category: categoryResponse, basePath })
+    );
   };
 export const deleteCategory =
   (id: number, basePath): AppThunk =>
@@ -87,7 +93,7 @@ export const deleteCategory =
     );
     const { success } = categoryResponse;
     if (success) {
-      dispatch(slice.actions.deleteCategory({ id }));
+      dispatch(slice.actions.deleteCategory({ id, basePath }));
     }
   };
 

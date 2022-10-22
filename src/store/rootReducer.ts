@@ -15,6 +15,7 @@ import { reducer as requestReducer } from 'src/slices/request';
 import { reducer as setReducer } from 'src/slices/set';
 import { reducer as workOrderReducer } from 'src/slices/workOrder';
 import { reducer as assetReducer } from 'src/slices/asset';
+import { reducer as categoryReducer } from 'src/slices/category';
 
 const rootReducer = combineReducers({
   calendar: calendarReducer,
@@ -32,7 +33,8 @@ const rootReducer = combineReducers({
   purchaseOrders: purchaseOrderReducer,
   requests: requestReducer,
   sets: setReducer,
-  workOrders: workOrderReducer
+  workOrders: workOrderReducer,
+  categories: categoryReducer
 });
 
 export default rootReducer;

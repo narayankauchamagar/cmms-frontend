@@ -25,9 +25,14 @@ import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { TitleContext } from '../../../contexts/TitleContext';
-import { useDispatch } from '../../../store';
-import { addCategory } from '../../../slices/category';
+import { useDispatch, useSelector } from '../../../store';
+import {
+  addCategory,
+  editCategory,
+  getCategories
+} from '../../../slices/category';
 import useAuth from '../../../hooks/useAuth';
+import Category from '../../../models/owns/category';
 
 const IconButtonWrapper = styled(IconButton)(
   ({ theme }) => `
@@ -53,24 +58,28 @@ interface CategoriesLayoutProps {
   children?: ReactNode;
   tabIndex: number;
   basePath: string;
-  categories: { id: number; name: string }[];
 }
 
 function CategoriesLayout(props: CategoriesLayoutProps) {
-  const { children, tabIndex, categories, basePath } = props;
+  const { children, tabIndex, basePath } = props;
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
   const [openAddCategoryModal, setOpenAddCategoryModal] =
     useState<boolean>(false);
+  const [openUpdateCategoryModal, setOpenUpdateCategoryModal] =
+    useState<boolean>(false);
   const handleOpenAddCategoryModal = () => setOpenAddCategoryModal(true);
   const handleCloseAddCategoryModal = () => setOpenAddCategoryModal(false);
+  const { categories } = useSelector((state) => state.categories);
   const { setTitle } = useContext(TitleContext);
   const dispatch = useDispatch();
   const { user } = useAuth();
   const { companySettingsId } = user;
+  const [currentCategory, setCurrentCategory] = useState<Category>();
 
   useEffect(() => {
     setTitle(t('Categories'));
+    dispatch(getCategories(basePath));
   }, []);
   const tabs = [
     { value: '', label: t('Work Orders') },
@@ -182,6 +191,114 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
       </Formik>
     </Dialog>
   );
+  const renderUpdateModal = () => (
+    <Dialog
+      fullWidth
+      maxWidth="xs"
+      open={openUpdateCategoryModal}
+      onClose={() => setOpenUpdateCategoryModal(false)}
+    >
+      <DialogTitle
+        sx={{
+          p: 3
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
+          {t('Edit category')}
+        </Typography>
+        <Typography variant="subtitle2">
+          {t('Fill in the name to edit category')}
+        </Typography>
+      </DialogTitle>
+      <Formik
+        initialValues={{ name: currentCategory?.name }}
+        validationSchema={Yup.object().shape({
+          name: Yup.string().max(30).required(t('The name field is required'))
+        })}
+        onSubmit={async (
+          values,
+          { resetForm, setErrors, setStatus, setSubmitting }
+        ) => {
+          const formattedValues = {
+            ...values,
+            companySettings: { id: companySettingsId }
+          };
+          try {
+            dispatch(
+              editCategory(currentCategory.id, formattedValues, basePath)
+            );
+            setOpenUpdateCategoryModal(false);
+          } catch (err) {
+            console.error(err);
+            setStatus({ success: false });
+            setErrors({ name: err.message });
+            setSubmitting(false);
+          }
+        }}
+      >
+        {({
+          errors,
+          handleBlur,
+          handleChange,
+          handleSubmit,
+          isSubmitting,
+          touched,
+          values
+        }) => (
+          <form onSubmit={handleSubmit}>
+            <DialogContent
+              dividers
+              sx={{
+                p: 3
+              }}
+            >
+              <Grid container spacing={3}>
+                <Grid item xs={12} lg={12}>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                      <TextField
+                        error={Boolean(touched.name && errors.name)}
+                        fullWidth
+                        helperText={touched.name && errors.name}
+                        label={t('Name')}
+                        name="name"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.name}
+                        variant="outlined"
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </DialogContent>
+            <DialogActions
+              sx={{
+                p: 3
+              }}
+            >
+              <Button
+                color="secondary"
+                onClick={() => setOpenUpdateCategoryModal(false)}
+              >
+                {t('Cancel')}
+              </Button>
+              <Button
+                type="submit"
+                startIcon={
+                  isSubmitting ? <CircularProgress size="1rem" /> : null
+                }
+                disabled={isSubmitting}
+                variant="contained"
+              >
+                {t('Save')}
+              </Button>
+            </DialogActions>
+          </form>
+        )}
+      </Formik>
+    </Dialog>
+  );
   return (
     <MultipleTabsLayout
       basePath="/app/categories"
@@ -192,11 +309,12 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
       actionTitle={t('Categories')}
     >
       {renderModal()}
+      {renderUpdateModal()}
       <Grid item xs={12}>
         <Box p={4}>
-          {categories.length ? (
+          {categories[basePath]?.length ? (
             <ListWrapper disablePadding>
-              {categories.map((item) => (
+              {categories[basePath].map((item) => (
                 <Fragment key={item.id}>
                   <ListItem
                     sx={{
@@ -227,6 +345,14 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
                     >
                       <Box ml={3} textAlign="right">
                         <IconButtonWrapper
+                          onClick={() => {
+                            setCurrentCategory(
+                              categories[basePath].find(
+                                (category) => category.id === item.id
+                              )
+                            );
+                            setOpenUpdateCategoryModal(true);
+                          }}
                           sx={{
                             backgroundColor: `${theme.colors.primary.main}`,
                             color: `${theme.palette.getContrastText(
