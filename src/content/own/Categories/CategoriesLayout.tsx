@@ -1,6 +1,7 @@
 import { Fragment, ReactNode, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import MultipleTabsLayout from '../components/MultipleTabsLayout';
+import ConfirmDialog from '../components/ConfirmDialog';
 import {
   Box,
   Button,
@@ -28,11 +29,13 @@ import { TitleContext } from '../../../contexts/TitleContext';
 import { useDispatch, useSelector } from '../../../store';
 import {
   addCategory,
+  deleteCategory,
   editCategory,
   getCategories
 } from '../../../slices/category';
 import useAuth from '../../../hooks/useAuth';
 import Category from '../../../models/owns/category';
+import { deleteVendor } from '../../../slices/vendor';
 
 const IconButtonWrapper = styled(IconButton)(
   ({ theme }) => `
@@ -68,6 +71,7 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
     useState<boolean>(false);
   const [openUpdateCategoryModal, setOpenUpdateCategoryModal] =
     useState<boolean>(false);
+  const [openDelete, setOpenDelete] = useState<boolean>(false);
   const handleOpenAddCategoryModal = () => setOpenAddCategoryModal(true);
   const handleCloseAddCategoryModal = () => setOpenAddCategoryModal(false);
   const { categories } = useSelector((state) => state.categories);
@@ -77,6 +81,10 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
   const { companySettingsId } = user;
   const [currentCategory, setCurrentCategory] = useState<Category>();
 
+  const handleDelete = (id: number) => {
+    dispatch(deleteCategory(id, basePath));
+    setOpenDelete(false);
+  };
   useEffect(() => {
     setTitle(t('Categories'));
     dispatch(getCategories(basePath));
@@ -372,6 +380,14 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
                           <EditTwoToneIcon fontSize="small" />
                         </IconButtonWrapper>
                         <IconButtonWrapper
+                          onClick={() => {
+                            setCurrentCategory(
+                              categories[basePath].find(
+                                (category) => category.id === item.id
+                              )
+                            );
+                            setOpenDelete(true);
+                          }}
                           sx={{
                             ml: 1,
                             backgroundColor: `${theme.colors.error.lighter}`,
@@ -410,6 +426,15 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
           )}
         </Box>
       </Grid>
+      <ConfirmDialog
+        open={openDelete}
+        onCancel={() => {
+          setOpenDelete(false);
+        }}
+        onConfirm={() => handleDelete(currentCategory?.id)}
+        confirmText={t('Delete')}
+        question={t('Are you sure you want to delete this Category?')}
+      />
     </MultipleTabsLayout>
   );
 }
