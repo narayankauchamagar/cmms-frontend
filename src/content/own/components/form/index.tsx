@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import { Formik, FormikProps } from 'formik';
 import { useTranslation } from 'react-i18next';
+import FormikErrorFocus from 'formik-error-focus';
 import * as Yup from 'yup';
 import { ObjectSchema } from 'yup';
 import { IField, IHash } from '../../type';
@@ -358,6 +359,15 @@ export default (props: PropsType) => {
                 </Button>
               )}
             </Grid>
+            <FormikErrorFocus
+              // See scroll-to-element for configuration options: https://www.npmjs.com/package/scroll-to-element
+              offset={0}
+              align={'bottom'}
+              focusDelay={200}
+              ease={'linear'}
+              duration={500}
+              formik={formik}
+            />
           </Grid>
         )}
       </Formik>
