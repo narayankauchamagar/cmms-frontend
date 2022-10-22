@@ -1,5 +1,5 @@
 export const formatSelectMultiple = (
-  array: { label: string; value: string }[]
+  array: { label: string; value: string }[] | undefined
 ) => {
   return array
     ? array.map(({ value }) => {
@@ -8,6 +8,8 @@ export const formatSelectMultiple = (
     : [];
 };
 
-export const formatSelect = (id: string) => {
-  return id ? { id: Number(id) } : null;
+export const formatSelect = (
+  object: { label: string; value: string } | undefined
+) => {
+  return object?.value ? { id: Number(object.value) } : null;
 };

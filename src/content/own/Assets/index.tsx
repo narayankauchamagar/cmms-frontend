@@ -56,10 +56,13 @@ function Assets() {
 
   const formatValues = (values) => {
     values.primaryUser = formatSelect(values.primaryUser);
+    values.location = formatSelect(values.location);
     values.customers = formatSelectMultiple(values.customers);
     values.vendors = formatSelectMultiple(values.vendors);
-    values.users = formatSelectMultiple(values.users);
+    values.assignedTo = formatSelectMultiple(values.assignedTo);
     values.teams = formatSelectMultiple(values.teams);
+    //TODO
+    delete values.category;
     return values;
   };
   const columns: GridEnrichedColDef[] = [
@@ -186,6 +189,14 @@ function Assets() {
       required: true
     },
     {
+      name: 'location',
+      type: 'select',
+      type2: 'location',
+      label: t('Location'),
+      placeholder: t('Select asset location'),
+      required: true
+    },
+    {
       name: 'description',
       type: 'text',
       label: t('Description'),
@@ -279,7 +290,7 @@ function Assets() {
       label: t('Warranty Expiration date')
     },
     {
-      name: 'additionalInformation',
+      name: 'additionalInfos',
       type: 'text',
       label: t('Additional Information'),
       placeholder: t('Additional Information'),
@@ -293,7 +304,8 @@ function Assets() {
     //TODO parts, parent Asset, location
   ];
   const shape = {
-    name: Yup.string().required(t('Asset name is required'))
+    name: Yup.string().required(t('Asset name is required')),
+    location: Yup.object().required(t('Asset location is required')).nullable()
   };
 
   useEffect(() => {
@@ -301,12 +313,9 @@ function Assets() {
       'rowExpansionChange'
     > = async (node) => {
       const row = apiRef.current.getRow(node.id) as AssetRow | null;
-      console.log('a', row);
       if (!node.childrenExpanded || !row || row.childrenFetched) {
         return;
       }
-      console.log('b', row);
-
       apiRef.current.updateRows([
         {
           id: `Loading assets-${node.id}`,

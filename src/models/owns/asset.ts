@@ -22,6 +22,7 @@ export interface AssetDTO extends Audit {
   vendors: number;
   parentAsset: string;
   openWorkOrders: number;
+  additionalInfos: string;
   hasChildren?: boolean;
 }
 export interface AssetRow extends AssetDTO {
@@ -63,6 +64,7 @@ export const assetDTOS: AssetDTO[] = [
     primaryUser: 'user',
     users: 1,
     teams: 4,
+    additionalInfos: '',
     vendors: 3,
     parentAsset: 'string',
     openWorkOrders: 2,
@@ -76,6 +78,7 @@ export const assetDTOS: AssetDTO[] = [
     name: 'Name',
     image: 'Image',
     location: 'Location',
+    additionalInfos: '',
     area: 'Area',
     model: 'Model',
     barCode: 'Barcode',
@@ -99,9 +102,10 @@ export const assetDTOS: AssetDTO[] = [
     location: 'Location',
     area: 'Area',
     model: 'Model',
+    additionalInfos: '',
     barCode: 'Barcode',
+    description: 'bjhb',
     category: 'Category',
-    description: 'desc',
     primaryUser: 'user',
     users: 1,
     teams: 4,
@@ -127,6 +131,7 @@ export const assetDTOS: AssetDTO[] = [
     users: 1,
     teams: 4,
     vendors: 3,
+    additionalInfos: '',
     parentAsset: 'string',
     openWorkOrders: 2,
     createdAt: 'dfggj',
