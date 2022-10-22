@@ -59,7 +59,7 @@ export default function MeterDetails(props: MeterDetailsProps) {
     },
     {
       label: t('Assigned To'),
-      value: meter.workers.reduce(
+      value: meter.users.reduce(
         (acc, user, index) =>
           acc + `${index !== 0 ? ',' : ''} ${user.firstName} ${user.lastName}`,
         ''

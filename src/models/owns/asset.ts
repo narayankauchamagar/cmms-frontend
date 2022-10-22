@@ -29,6 +29,10 @@ export interface AssetRow extends AssetDTO {
   hierarchy: number[];
   childrenFetched?: boolean;
 }
+export interface AssetMiniDTO {
+  id: number;
+  name: string;
+}
 export const assets: Asset[] = [
   {
     id: 212,

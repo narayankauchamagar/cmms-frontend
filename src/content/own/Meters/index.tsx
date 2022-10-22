@@ -58,8 +58,8 @@ function Files() {
   }, [meters]);
 
   const formatValues = (values) => {
-    values.workers = formatSelectMultiple(values.workers);
-    values.teams = formatSelectMultiple(values.teams);
+    values.users = formatSelectMultiple(values.users);
+    //values.teams = formatSelectMultiple(values.teams);
     values.location = formatSelect(values.location);
     values.asset = formatSelect(values.asset);
     values.updateFrequency = Number(values.updateFrequency);
@@ -111,16 +111,16 @@ function Files() {
       field: 'lastReading',
       headerName: t('Last Reading'),
       description: t('Last Reading'),
-      width: 150,
-      valueGetter: (params) =>
-        params.row.readings[params.row.readings.length - 1].value
+      width: 150
+      // valueGetter: (params) =>
+      //   params.row.readings[params.row.readings.length - 1].value
     },
     {
       field: 'location',
       headerName: t('Location'),
       description: t('Location'),
       width: 150,
-      valueGetter: (params) => params.row.location.name
+      valueGetter: (params) => params.row.location?.name
     },
     {
       field: 'asset',
@@ -161,7 +161,7 @@ function Files() {
       name: 'updateFrequency',
       type: 'number',
       label: t('Update Frequency'),
-      placeholder: t('Update Frequency'),
+      placeholder: t('Update Frequency in days'),
       required: true
     },
     {
@@ -177,7 +177,7 @@ function Files() {
       fileType: 'image'
     },
     {
-      name: 'workers',
+      name: 'users',
       type: 'select',
       type2: 'user',
       label: t('Workers'),
@@ -203,7 +203,7 @@ function Files() {
     updateFrequency: Yup.number().required(
       t('Meter update frequency is required')
     ),
-    asset: Yup.string().required(t('Asset is required'))
+    asset: Yup.object().required(t('Asset is required')).nullable()
   };
   const renderAddModal = () => (
     <Dialog
@@ -241,7 +241,7 @@ function Files() {
               try {
                 const formattedValues = formatValues(values);
                 dispatch(addMeter(formattedValues));
-                setOpenAddModal(false);
+                //setOpenAddModal(false);
               } catch (err) {
                 console.error(err);
               }
@@ -283,7 +283,7 @@ function Files() {
             submitText={t('Save')}
             values={{
               ...currentMeter,
-              workers: currentMeter?.workers.map((worker) => {
+              users: currentMeter?.users.map((worker) => {
                 return {
                   label: `${worker?.firstName} ${worker.lastName}`,
                   value: worker.id
@@ -303,7 +303,7 @@ function Files() {
               try {
                 const formattedValues = formatValues(values);
                 dispatch(editMeter(currentMeter.id, formattedValues));
-                setOpenAddModal(false);
+                setOpenUpdateModal(false);
               } catch (err) {
                 console.error(err);
               }

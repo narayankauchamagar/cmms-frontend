@@ -15,6 +15,11 @@ export default interface Location extends Audit {
   workers: UserMiniDTO[];
   teams: TeamMiniDTO[];
 }
+export interface LocationMiniDTO {
+  id: number;
+  name: string;
+  address: string;
+}
 
 export const locations: Location[] = [
   {

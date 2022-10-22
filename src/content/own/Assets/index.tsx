@@ -128,7 +128,11 @@ function Assets() {
       field: 'primaryUser',
       headerName: t('Primary User'),
       description: t('Primary User'),
-      width: 150
+      width: 150,
+      valueGetter: (params) =>
+        params.row.primaryUser
+          ? `${params.row.primaryUser?.firstName} ${params.row.primaryUser?.lastName}`
+          : null
     },
     {
       field: 'assignedTo',
@@ -136,7 +140,7 @@ function Assets() {
       description: t('Users'),
       width: 150,
       renderCell: (params: GridRenderCellParams<UserMiniDTO[]>) => (
-        <UserAvatars users={params.value} />
+        <UserAvatars users={params.value ?? []} />
       )
     },
     {
@@ -153,7 +157,7 @@ function Assets() {
       description: t('Vendors'),
       width: 150,
       valueGetter: (params) =>
-        enumerate(params.row.vendors.map((vendor) => vendor.name))
+        enumerate(params.row.vendors.map((vendor) => vendor.companyName))
     },
     {
       field: 'parentAsset',
