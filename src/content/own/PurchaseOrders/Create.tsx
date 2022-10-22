@@ -6,7 +6,7 @@ import { useContext, useEffect } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { addPurchaseOrder } from '../../../slices/purchaseOrder';
-import { useDispatch, useSelector } from '../../../store';
+import { useDispatch } from '../../../store';
 import Form from '../components/form';
 import * as Yup from 'yup';
 import { phoneRegExp } from '../../../utils/validators';

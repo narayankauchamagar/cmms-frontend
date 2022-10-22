@@ -2,6 +2,7 @@ import {
   Box,
   Divider,
   Grid,
+  IconButton,
   Link,
   Tab,
   Tabs,
@@ -16,10 +17,11 @@ import PurchaseOrder from '../../../models/owns/purchaseOrder';
 
 interface PurchaseOrderDetailsProps {
   purchaseOrder: PurchaseOrder;
-  handleUpdate: (id: number) => void;
+  handleOpenUpdate: () => void;
+  handleDelete: () => void;
 }
 export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
-  const { purchaseOrder, handleUpdate } = props;
+  const { purchaseOrder, handleOpenUpdate, handleDelete } = props;
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
   const [currentTab, setCurrentTab] = useState<string>('details');
@@ -33,24 +35,25 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
     setCurrentTab(value);
   };
   const renderField = (label, value, type?, id?) => {
-    return (
-      <Grid item xs={12} lg={6}>
-        <Typography variant="h6" sx={{ color: theme.colors.alpha.black[70] }}>
-          {label}
-        </Typography>
-        {type === 'vendor' ? (
-          <Link
-            href={`/app/vendors-customers/vendors/${id}`}
-            variant="h6"
-            fontWeight="bold"
-          >
-            {value}
-          </Link>
-        ) : (
-          <Typography variant="h6">{value}</Typography>
-        )}
-      </Grid>
-    );
+    if (value)
+      return (
+        <Grid item xs={12} lg={6}>
+          <Typography variant="h6" sx={{ color: theme.colors.alpha.black[70] }}>
+            {label}
+          </Typography>
+          {type === 'vendor' ? (
+            <Link
+              href={`/app/vendors-customers/vendors/${id}`}
+              variant="h6"
+              fontWeight="bold"
+            >
+              {value}
+            </Link>
+          ) : (
+            <Typography variant="h6">{value}</Typography>
+          )}
+        </Grid>
+      );
   };
   const detailsFieldsToRender = (
     purchaseOrder1: PurchaseOrder
@@ -78,8 +81,8 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
     {
       label: t('Vendor'),
       type: 'vendor',
-      value: purchaseOrder1.vendor.name,
-      id: purchaseOrder1.vendor.id
+      value: purchaseOrder1.vendor?.companyName,
+      id: purchaseOrder1.vendor?.id
     }
   ];
   const shippingFieldsToRender = (
@@ -158,12 +161,15 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
           <Typography variant="h6">{purchaseOrder?.shippingAddress}</Typography>
         </Box>
         <Box>
-          <EditTwoToneIcon
-            onClick={() => handleUpdate(purchaseOrder.id)}
-            style={{ cursor: 'pointer', marginRight: 10 }}
-            color="primary"
-          />
-          <DeleteTwoToneIcon style={{ cursor: 'pointer' }} color="error" />
+          <IconButton
+            onClick={() => handleOpenUpdate()}
+            style={{ marginRight: 10 }}
+          >
+            <EditTwoToneIcon color="primary" />
+          </IconButton>
+          <IconButton onClick={handleDelete}>
+            <DeleteTwoToneIcon color="error" />
+          </IconButton>
         </Box>
       </Grid>
       <Divider />
