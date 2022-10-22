@@ -59,6 +59,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
   }, []);
 
   const handleDelete = (id: number) => {
+    handleCloseDetails();
     dispatch(deleteVendor(id));
     setOpenDelete(false);
   };

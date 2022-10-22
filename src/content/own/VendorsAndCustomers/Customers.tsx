@@ -82,6 +82,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
   };
 
   const handleDelete = (id: number) => {
+    handleCloseDetails();
     dispatch(deleteCustomer(id));
     setOpenDelete(false);
   };

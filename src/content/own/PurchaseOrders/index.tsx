@@ -80,7 +80,7 @@ function PurchaseOrders() {
   }, [purchaseOrders]);
 
   const handleDelete = (id: number) => {
-    setOpenDrawer(false);
+    handleCloseDetails();
     dispatch(deletePurchaseOrder(id));
     setOpenDelete(false);
   };

@@ -1,4 +1,11 @@
-import { Box, Divider, Grid, Typography, useTheme } from '@mui/material';
+import {
+  Box,
+  Divider,
+  Grid,
+  IconButton,
+  Typography,
+  useTheme
+} from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
@@ -6,10 +13,11 @@ import Request from '../../../models/owns/request';
 
 interface RequestDetailsProps {
   request: Request;
-  handleUpdate: (id: number) => void;
+  handleOpenUpdate: () => void;
+  handleOpenDelete: () => void;
 }
 export default function RequestDetails(props: RequestDetailsProps) {
-  const { request, handleUpdate } = props;
+  const { request, handleOpenUpdate, handleOpenDelete } = props;
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
 
@@ -27,7 +35,7 @@ export default function RequestDetails(props: RequestDetailsProps) {
     request: Request
   ): { label: string; value: any }[] => [
     {
-      label: t('Location Name'),
+      label: t('Description'),
       value: request.description
     },
     {
@@ -58,12 +66,12 @@ export default function RequestDetails(props: RequestDetailsProps) {
           <Typography variant="h2">{request?.title}</Typography>
         </Box>
         <Box>
-          <EditTwoToneIcon
-            onClick={() => handleUpdate(request.id)}
-            style={{ cursor: 'pointer', marginRight: 10 }}
-            color="primary"
-          />
-          <DeleteTwoToneIcon style={{ cursor: 'pointer' }} color="error" />
+          <IconButton style={{ marginRight: 10 }} onClick={handleOpenUpdate}>
+            <EditTwoToneIcon color="primary" />
+          </IconButton>
+          <IconButton onClick={handleOpenDelete}>
+            <DeleteTwoToneIcon color="error" />
+          </IconButton>
         </Box>
       </Grid>
       <Divider />

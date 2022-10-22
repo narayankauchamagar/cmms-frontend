@@ -66,6 +66,7 @@ function Files() {
     return values;
   };
   const handleDelete = (id: number) => {
+    handleCloseDetails();
     dispatch(deleteMeter(id));
     setOpenDelete(false);
   };

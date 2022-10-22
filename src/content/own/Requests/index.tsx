@@ -56,11 +56,11 @@ function Files() {
   }, [requests]);
 
   const handleDelete = (id: number) => {
+    handleCloseDetails();
     dispatch(deleteRequest(id));
     setOpenDelete(false);
   };
-  const handleUpdate = (id: number) => {
-    setCurrentRequest(requests.find((request) => request.id === id));
+  const handleOpenUpdate = () => {
     setOpenUpdateModal(true);
   };
   const handleOpenDetails = (id: number) => {
@@ -306,7 +306,11 @@ function Files() {
           sx: { width: '50%' }
         }}
       >
-        <RequestDetails request={currentRequest} handleUpdate={handleUpdate} />
+        <RequestDetails
+          request={currentRequest}
+          handleOpenUpdate={handleOpenUpdate}
+          handleOpenDelete={() => setOpenDelete(true)}
+        />
       </Drawer>
       <ConfirmDialog
         open={openDelete}
@@ -316,7 +320,7 @@ function Files() {
         }}
         onConfirm={() => handleDelete(currentRequest?.id)}
         confirmText={t('Delete')}
-        question={t('Are you sure you want to delete this Vendor?')}
+        question={t('Are you sure you want to delete this Request?')}
       />
     </>
   );

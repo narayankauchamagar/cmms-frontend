@@ -82,7 +82,7 @@ function Files() {
   };
 
   const handleDelete = (id: number) => {
-    setOpenDrawer(false);
+    handleCloseDetails();
     dispatch(deleteLocation(id));
     setOpenDelete(false);
   };
