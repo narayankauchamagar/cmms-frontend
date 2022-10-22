@@ -55,7 +55,7 @@ export default function RequestDetails(props: RequestDetailsProps) {
         justifyContent="space-between"
       >
         <Box>
-          <Typography variant="h2">{request?.name}</Typography>
+          <Typography variant="h2">{request?.title}</Typography>
         </Box>
         <Box>
           <EditTwoToneIcon

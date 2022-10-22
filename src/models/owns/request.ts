@@ -6,7 +6,7 @@ import Reading, { readings } from './reading';
 import File, { files } from './file';
 
 export default interface Request extends Audit {
-  name: string;
+  title: string;
   id: number;
   description: string;
   priority: string;
@@ -17,7 +17,7 @@ export default interface Request extends Audit {
 
 export const requests: Request[] = [
   {
-    name: 'Request 1',
+    title: 'Request 1',
     id: 54,
     image: files[0],
     files: [],

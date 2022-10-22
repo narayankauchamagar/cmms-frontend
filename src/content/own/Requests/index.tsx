@@ -13,14 +13,21 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
+import {
+  addRequest,
+  getRequests,
+  editRequest,
+  deleteRequest
+} from '../../../slices/request';
+import { useDispatch, useSelector } from '../../../store';
+import ConfirmDialog from '../components/ConfirmDialog';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import CustomDataGrid from '../components/CustomDatagrid';
 import { GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import Request, { requests } from '../../../models/owns/request';
+import Request from '../../../models/owns/request';
 import Form from '../components/form';
 import * as Yup from 'yup';
-import wait from '../../../utils/wait';
 import { IField } from '../type';
 import RequestDetails from './RequestDetails';
 import { useParams } from 'react-router-dom';
@@ -34,16 +41,24 @@ function Files() {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [currentRequest, setCurrentRequest] = useState<Request>();
   const { requestId } = useParams();
+  const dispatch = useDispatch();
+  const [openDelete, setOpenDelete] = useState<boolean>(false);
+  const { requests } = useSelector((state) => state.requests);
 
   useEffect(() => {
     setTitle(t('Requests'));
+    dispatch(getRequests());
   }, []);
   useEffect(() => {
-    if (requestId && isNumeric(requestId)) {
+    if (requests?.length && requestId && isNumeric(requestId)) {
       handleOpenDetails(Number(requestId));
     }
   }, [requests]);
 
+  const handleDelete = (id: number) => {
+    dispatch(deleteRequest(id));
+    setOpenDelete(false);
+  };
   const handleUpdate = (id: number) => {
     setCurrentRequest(requests.find((request) => request.id === id));
     setOpenUpdateModal(true);
@@ -66,9 +81,9 @@ function Files() {
   };
   const columns: GridEnrichedColDef[] = [
     {
-      field: 'name',
-      headerName: t('Name'),
-      description: t('Name'),
+      field: 'title',
+      headerName: t('Title'),
+      description: t('Title'),
       width: 150,
       renderCell: (params: GridRenderCellParams<string>) => (
         <Box sx={{ fontWeight: 'bold' }}>{params.value}</Box>
@@ -95,10 +110,10 @@ function Files() {
   ];
   const fields: Array<IField> = [
     {
-      name: 'name',
+      name: 'title',
       type: 'text',
-      label: t('Name'),
-      placeholder: t('Enter Request name'),
+      label: t('Title'),
+      placeholder: t('Enter Request Title'),
       required: true
     },
     {
@@ -129,7 +144,8 @@ function Files() {
     }
   ];
   const shape = {
-    name: Yup.string().required(t('Request name is required'))
+    title: Yup.string().required(t('Request name is required')),
+    priority: Yup.object().required(t('Priority is required')).nullable()
   };
   const renderAddModal = () => (
     <Dialog
@@ -165,7 +181,8 @@ function Files() {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               try {
-                await wait(2000);
+                values.priority = values.priority?.value;
+                dispatch(addRequest(values));
                 setOpenAddModal(false);
               } catch (err) {
                 console.error(err);
@@ -210,8 +227,9 @@ function Files() {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               try {
-                await wait(2000);
-                setOpenAddModal(false);
+                values.priority = values.priority?.value;
+                dispatch(editRequest(currentRequest?.id, values));
+                setOpenUpdateModal(false);
               } catch (err) {
                 console.error(err);
               }
@@ -290,6 +308,16 @@ function Files() {
       >
         <RequestDetails request={currentRequest} handleUpdate={handleUpdate} />
       </Drawer>
+      <ConfirmDialog
+        open={openDelete}
+        onCancel={() => {
+          setOpenDelete(false);
+          setOpenDrawer(true);
+        }}
+        onConfirm={() => handleDelete(currentRequest?.id)}
+        confirmText={t('Delete')}
+        question={t('Are you sure you want to delete this Vendor?')}
+      />
     </>
   );
 }
