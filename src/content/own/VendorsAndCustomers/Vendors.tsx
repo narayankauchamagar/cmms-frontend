@@ -400,10 +400,14 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
               {currentVendor?.email}
             </Typography>
 
-            <Typography variant="subtitle1">{t('Vendor Type')}</Typography>
-            <Typography variant="h5" sx={{ mb: 1 }}>
-              {currentVendor?.vendorType}
-            </Typography>
+            {currentVendor?.vendorType && (
+              <>
+                <Typography variant="subtitle1">{t('Vendor Type')}</Typography>
+                <Typography variant="h5" sx={{ mb: 1 }}>
+                  {currentVendor?.vendorType}
+                </Typography>
+              </>
+            )}
           </Box>
         ) : (
           <Box>

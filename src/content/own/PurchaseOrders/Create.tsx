@@ -5,15 +5,19 @@ import { IField } from '../type';
 import { useContext, useEffect } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
+import { addPurchaseOrder } from '../../../slices/purchaseOrder';
+import { useDispatch, useSelector } from '../../../store';
 import Form from '../components/form';
 import * as Yup from 'yup';
-import wait from '../../../utils/wait';
+import { phoneRegExp } from '../../../utils/validators';
+import { formatSelect } from '../../../utils/formatters';
+import { useNavigate } from 'react-router-dom';
 
-function Files() {
+function CreatePurchaseOrder() {
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
-  const handleDelete = (id: number) => {};
-  const handleRename = (id: number) => {};
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   useEffect(() => {
     setTitle(t('New Purchase Order'));
   }, []);
@@ -40,25 +44,24 @@ function Files() {
       midWidth: true
     },
     {
-      name: 'dueDate',
+      name: 'shippingDueDate',
       type: 'date',
       label: t('Due Date'),
       midWidth: true
     },
     {
-      name: 'additionalDetails',
+      name: 'shippingAdditionalDetail',
       type: 'text',
       label: t('Additional Details'),
       midWidth: true,
       multiple: true
     },
     {
-      name: 'vendors',
+      name: 'vendor',
       type: 'select',
       type2: 'vendor',
-      label: t('Vendors'),
-      midWidth: true,
-      multiple: true
+      label: t('Vendor'),
+      midWidth: true
     },
     {
       name: 'parts',
@@ -74,61 +77,56 @@ function Files() {
       label: t('Shipping Information')
     },
     {
-      name: 'useCompanyAddress',
-      type: 'checkbox',
-      label: t('Use Company address')
-    },
-    {
-      name: 'companyName',
+      name: 'shippingCompanyName',
       type: 'text',
       label: t('Company name'),
       placeholder: t('Company name'),
       midWidth: true
     },
     {
-      name: 'shipToName',
+      name: 'shippingShipToName',
       type: 'text',
       label: t('Ship To'),
       placeholder: t('Ship To'),
       midWidth: true
     },
     {
-      name: 'address',
+      name: 'shippingAddress',
       type: 'text',
       label: t('Address'),
       placeholder: t('Address'),
       midWidth: true
     },
     {
-      name: 'city',
+      name: 'shippingCity',
       type: 'text',
       label: t('City'),
       placeholder: t('City'),
       midWidth: true
     },
     {
-      name: 'state',
+      name: 'shippingState',
       type: 'text',
       label: t('State'),
       placeholder: t('State'),
       midWidth: true
     },
     {
-      name: 'zipCode',
-      type: 'text',
+      name: 'shippingZipCode',
+      type: 'number',
       label: t('Zip Code'),
       placeholder: t('Zip Code'),
       midWidth: true
     },
     {
-      name: 'phone',
+      name: 'shippingPhone',
       type: 'text',
       label: t('Phone number'),
       placeholder: t('Phone number'),
       midWidth: true
     },
     {
-      name: 'faxNumber',
+      name: 'shippingFax',
       type: 'text',
       label: t('Fax Number'),
       placeholder: t('Fax Number'),
@@ -140,14 +138,14 @@ function Files() {
       label: t('Additional Information')
     },
     {
-      name: 'purchaseOrderDate',
+      name: 'additionalInfoDate',
       type: 'date',
       label: t('Purchase Order Date'),
       placeholder: t('Purchase Order Date'),
       midWidth: true
     },
     {
-      name: 'notes',
+      name: 'additionalInfoNotes',
       type: 'text',
       label: t('Notes'),
       placeholder: t('Add Notes'),
@@ -155,21 +153,21 @@ function Files() {
       multiple: true
     },
     {
-      name: 'requisitioner',
+      name: 'additionalInfoRequistionerName',
       type: 'text',
       label: t('Requisitioner'),
       placeholder: t('Requisitioner'),
       midWidth: true
     },
     {
-      name: 'terms',
+      name: 'additionalInfoTerm',
       type: 'text',
       label: t('Terms'),
       placeholder: t('Terms'),
       midWidth: true
     },
     {
-      name: 'shippingMethod',
+      name: 'additionalInfoShippingOrderCategory',
       type: 'text',
       label: t('Shipping Method'),
       placeholder: t('Shipping Method'),
@@ -177,7 +175,15 @@ function Files() {
     }
   ];
   const shape = {
-    name: Yup.string().required(t('The name is required'))
+    name: Yup.string().required(t('The name is required')),
+    shippingFax: Yup.string().matches(
+      phoneRegExp,
+      t('The fax number is invalid')
+    ),
+    shippingPhone: Yup.string().matches(
+      phoneRegExp,
+      t('The phone number is invalid')
+    )
   };
   return (
     <>
@@ -225,7 +231,11 @@ function Files() {
               onChange={({ field, e }) => {}}
               onSubmit={async (values) => {
                 try {
-                  await wait(2000);
+                  //TODO category
+                  delete values.category;
+                  values.vendor = formatSelect(values.vendor);
+                  dispatch(addPurchaseOrder(values));
+                  navigate('/app/purchase-orders');
                 } catch (err) {
                   console.error(err);
                 }
@@ -238,4 +248,4 @@ function Files() {
   );
 }
 
-export default Files;
+export default CreatePurchaseOrder;

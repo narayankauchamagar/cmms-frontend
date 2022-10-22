@@ -102,7 +102,7 @@ export default function SelectTasks({ selected, onChange }: SelectTasksProps) {
         },
         TransitionComponent: Zoom
       });
-    }
+    } else setOpenModal(false);
   };
 
   const onRemove = (id: number) => {
