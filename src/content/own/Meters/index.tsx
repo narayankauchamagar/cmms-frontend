@@ -241,7 +241,7 @@ function Files() {
               try {
                 const formattedValues = formatValues(values);
                 dispatch(addMeter(formattedValues));
-                //setOpenAddModal(false);
+                setOpenAddModal(false);
               } catch (err) {
                 console.error(err);
               }
@@ -289,10 +289,12 @@ function Files() {
                   value: worker.id
                 };
               }),
-              location: {
-                label: currentMeter?.location.name,
-                value: currentMeter?.location.id
-              },
+              location: currentMeter?.location
+                ? {
+                    label: currentMeter?.location.name,
+                    value: currentMeter?.location.id
+                  }
+                : null,
               asset: {
                 label: currentMeter?.asset.name,
                 value: currentMeter?.asset.id

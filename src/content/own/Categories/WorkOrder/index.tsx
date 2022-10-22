@@ -19,7 +19,13 @@ function WorkOrderCategories() {
       name: 'Meter reading'
     }
   ];
-  return <CategoriesLayout tabIndex={0} categories={categories} />;
+  return (
+    <CategoriesLayout
+      tabIndex={0}
+      categories={categories}
+      basePath="work-order-categories"
+    />
+  );
 }
 
 export default WorkOrderCategories;

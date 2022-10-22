@@ -23,7 +23,13 @@ function MeterCategories() {
       name: 'Inspection time'
     }
   ];
-  return <CategoriesLayout tabIndex={4} categories={categories} />;
+  return (
+    <CategoriesLayout
+      tabIndex={4}
+      categories={categories}
+      basePath="time-categories"
+    />
+  );
 }
 
 export default MeterCategories;

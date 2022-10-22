@@ -11,7 +11,7 @@ export default interface Meter extends Audit {
   updateFrequency: number;
   category: string;
   users: UserMiniDTO[];
-  location: LocationMiniDTO;
+  location?: LocationMiniDTO;
   asset: AssetMiniDTO;
   nextReading: string;
 }

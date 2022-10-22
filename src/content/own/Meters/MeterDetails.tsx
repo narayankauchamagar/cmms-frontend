@@ -35,19 +35,20 @@ export default function MeterDetails(props: MeterDetailsProps) {
     setCurrentTab(value);
   };
   const renderField = (label, value) => {
-    return (
-      <Grid item xs={12} lg={6}>
-        <Typography variant="h6" sx={{ color: theme.colors.alpha.black[70] }}>
-          {label}
-        </Typography>
-        <Typography variant="h6">{value}</Typography>
-      </Grid>
-    );
+    if (value)
+      return (
+        <Grid item xs={12} lg={6}>
+          <Typography variant="h6" sx={{ color: theme.colors.alpha.black[70] }}>
+            {label}
+          </Typography>
+          <Typography variant="h6">{value}</Typography>
+        </Grid>
+      );
   };
   const fieldsToRender = (meter: Meter): { label: string; value: any }[] => [
     {
       label: t('Location Name'),
-      value: meter.location.name
+      value: meter.location?.name
     },
     {
       label: t('Asset Name'),

@@ -24,8 +24,10 @@ import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import wait from '../../../utils/wait';
 import { TitleContext } from '../../../contexts/TitleContext';
+import { useDispatch } from '../../../store';
+import { addCategory } from '../../../slices/category';
+import useAuth from '../../../hooks/useAuth';
 
 const IconButtonWrapper = styled(IconButton)(
   ({ theme }) => `
@@ -50,11 +52,12 @@ const ListWrapper = styled(List)(
 interface CategoriesLayoutProps {
   children?: ReactNode;
   tabIndex: number;
+  basePath: string;
   categories: { id: number; name: string }[];
 }
 
 function CategoriesLayout(props: CategoriesLayoutProps) {
-  const { children, tabIndex, categories } = props;
+  const { children, tabIndex, categories, basePath } = props;
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
   const [openAddCategoryModal, setOpenAddCategoryModal] =
@@ -62,6 +65,9 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
   const handleOpenAddCategoryModal = () => setOpenAddCategoryModal(true);
   const handleCloseAddCategoryModal = () => setOpenAddCategoryModal(false);
   const { setTitle } = useContext(TitleContext);
+  const dispatch = useDispatch();
+  const { user } = useAuth();
+  const { companySettingsId } = user;
 
   useEffect(() => {
     setTitle(t('Categories'));
@@ -98,15 +104,16 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
           name: Yup.string().max(30).required(t('The name field is required'))
         })}
         onSubmit={async (
-          _values,
+          values,
           { resetForm, setErrors, setStatus, setSubmitting }
         ) => {
-          console.log(_values);
+          const formattedValues = {
+            ...values,
+            companySettings: { id: companySettingsId }
+          };
           try {
-            await wait(1000);
-            resetForm();
-            setStatus({ success: true });
-            setSubmitting(false);
+            dispatch(addCategory(formattedValues, basePath));
+            handleCloseAddCategoryModal();
           } catch (err) {
             console.error(err);
             setStatus({ success: false });

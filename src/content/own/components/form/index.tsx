@@ -217,6 +217,8 @@ export default (props: PropsType) => {
     <>
       <Formik<IHash<any>>
         validationSchema={props.validation || validationSchema}
+        validateOnChange={false}
+        validateOnBlur={false}
         initialValues={props.values || {}}
         onSubmit={(
           values,
@@ -318,7 +320,7 @@ export default (props: PropsType) => {
                       onChange={(e) => {
                         handleChange(formik, field.name, e.target.value);
                       }}
-                      error={formik.errors[field.name] || field.error}
+                      error={!!formik.errors[field.name] || field.error}
                       errorMessage={formik.errors[field.name]}
                       fullWidth={field.fullWidth}
                     />
