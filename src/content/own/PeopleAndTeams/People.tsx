@@ -1,11 +1,13 @@
 import {
   Box,
   Button,
+  CircularProgress,
   Dialog,
   DialogContent,
   DialogTitle,
   Drawer,
   InputAdornment,
+  Paper,
   TextField,
   Typography,
   useTheme
@@ -25,7 +27,8 @@ import { useState } from 'react';
 import UserDetailsDrawer from './UserDetailsDrawer';
 import User, { users } from '../../../models/owns/user';
 import UserRoleCardList from './UserRoleCardList';
-import { Email } from '@mui/icons-material';
+import { EmailOutlined } from '@mui/icons-material';
+import { grey } from '@mui/material/colors';
 
 interface PropsType {
   values?: any;
@@ -39,6 +42,11 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
   const [currentUser, setCurrentUser] = useState<User>();
   const [detailDrawerOpen, setDetailDrawerOpen] = useState(false);
 
+  const [inviteUserRoleSelected, setInviteUserRoleSelected] =
+    useState<string>('');
+  const [inviteUserEmail, setInviteUserEmail] = useState<string>('');
+  const [isInviteSubmitting, setIsInviteSubmitting] = useState(false);
+
   const handleDrawerToggle = () => {
     setDetailDrawerOpen(!detailDrawerOpen);
   };
@@ -50,23 +58,23 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
     },
     {
       title: 'Limited Administrator',
-      desc: 'Limited administrator... Lorem, ipsum dolor sit amet consectetur adipisicing elit. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Modi architecto voluptate temporibus dolorum iste odio nihil quo, esse maiores quia.'
+      desc: 'Limited administrators have the same access as administrator except they are unable to view/edit settings or add/edit people and teams. They cannot delete Work Orders, Assets Locations, Meters and Purchase Orders unless they created Customers, Categories and PM triggers.'
     },
     {
       title: 'Technician',
-      desc: 'Technician... Lorem, ipsum dolor sit amet consectetur adipisicing elit. Modi architecto voluptate temporibus dolorum iste odio nihil quo, esse maiores quia.'
+      desc: 'Technicians can create and close work orders, assets and locations. Able to edit and delete only what they have created'
     },
     {
       title: 'Limited Technician',
-      desc: 'Technician... Lorem, ipsum dolor sit amet consectetur adipisicing elit. Modi architecto voluptate temporibus dolorum iste odio nihil quo, esse maiores quia.'
+      desc: 'Limited technicians can only see work orders assigned to them'
     },
     {
       title: 'View Only',
-      desc: 'Technician... Lorem, ipsum dolor sit amet consectetur adipisicing elit. Modi architecto voluptate temporibus dolorum iste odio nihil quo, esse maiores quia.'
+      desc: 'View only users have full view access, but cannot edit anything'
     },
     {
       title: 'Requester',
-      desc: 'Technician... Lorem, ipsum dolor sit amet consectetur adipisicing elit. Modi architecto voluptate temporibus dolorum iste odio nihil quo, esse maiores quia.'
+      desc: 'Requesters can only submit work requests and view their status'
     }
   ];
 
@@ -121,77 +129,78 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
     }
   ];
 
-  const RenderPeopleAddModal = () => (
-    <Dialog fullWidth maxWidth="sm" open={openModal} onClose={handleCloseModal}>
-      <DialogTitle
-        sx={{
-          p: 3
-        }}
-      >
-        <Typography variant="h4" gutterBottom>
-          {t('Invite Users')}
-        </Typography>
-      </DialogTitle>
+  // const RenderPeopleAddModal = () => (
+  //   <Dialog fullWidth maxWidth="sm" open={openModal} onClose={handleCloseModal}>
+  //     <DialogTitle
+  //       sx={{
+  //         p: 3
+  //       }}
+  //     >
+  //       <Typography variant="h4" gutterBottom>
+  //         {t('Invite Users')}
+  //       </Typography>
+  //     </DialogTitle>
 
-      <DialogContent
-        dividers
-        sx={{
-          p: 3,
-          display: 'flex',
-          justifyContent: 'center'
-        }}
-      >
-        <Box sx={{width: "95%"}}>
-          <UserRoleCardList listData={userRoleList} />
-          <TextField
-            sx={{ my: 4 }}
-            fullWidth
-            helperText={t('You may add 20 users at a time')}
-            label={t('Enter email address')}
-            placeholder={t('example@email.com')}
-            name="email"
-            onChange={() => {}}
-            variant={'outlined'}
-            required
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Email />
-                </InputAdornment>
-              )
-            }}
-          />
+  //     <DialogContent
+  //       dividers
+  //       sx={{
+  //         p: 3,
+  //         display: 'flex',
+  //         justifyContent: 'center'
+  //       }}
+  //     >
+  //       <Box sx={{ width: '95%' }}>
+  //         <UserRoleCardList
+  //           listData={userRoleList}
+  //           selectedItem={inviteUserRoleSelected}
+  //           setSelectedItem={setInviteUserRoleSelected}
+  //         />
+  //         <TextField
+  //           sx={{ my: 4 }}
+  //           fullWidth
+  //           helperText={t('You may add 20 users at a time')}
+  //           label={t('Enter email address')}
+  //           placeholder={t('example@email.com')}
+  //           name="email"
+  //           onChange={(e) => {
+  //             setInviteUserEmail(e.target.value);
+  //           }}
+  //           variant={'outlined'}
+  //           required
+  //           InputProps={{
+  //             startAdornment: (
+  //               <InputAdornment position="start">
+  //                 <EmailOutlined />
+  //               </InputAdornment>
+  //             )
+  //           }}
+  //         />
 
-          <Button
-            type="submit"
-            fullWidth
-            sx={{
-              mb: 3
-            }}
-            onClick={() => {}}
-            variant="contained"
-          >
-            {t('Invite')}
-          </Button>
-
-          {/* <Form
-            fields={fields}
-            validation={Yup.object().shape(shape)}
-            submitText={t('Invite')}
-            onChange={({ field, e }) => {}}
-            onSubmit={async (values) => {
-              try {
-                await wait(2000);
-                console.log('Values ==> ', values);
-              } catch (err) {
-                console.error(err);
-              }
-            }}
-          /> */}
-        </Box>
-      </DialogContent>
-    </Dialog>
-  );
+  //         <Button
+  //           fullWidth
+  //           sx={{
+  //             mb: 3
+  //           }}
+  //           onClick={async () => {
+  //             try {
+  //               await wait(2000);
+  //               console.log(
+  //                 'inviteUserRoleSelected -> ',
+  //                 inviteUserRoleSelected
+  //               );
+  //               console.log('inviteUserEmail -> ', inviteUserEmail);
+  //             } catch (err) {
+  //               console.error(err);
+  //             }
+  //           }}
+  //           variant="contained"
+  //         >
+  //           {t('Invite')}
+  //         </Button>
+  //       </Box>
+  //     </DialogContent>
+  //   </Dialog>
+  // );
 
   const RenderPeopleList = () => (
     <Box
@@ -229,7 +238,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
         width: '100%'
       }}
     >
-      <RenderPeopleAddModal />
+      {/* <RenderPeopleAddModal /> */}
       <RenderPeopleList />
 
       <Drawer
@@ -241,6 +250,115 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
       >
         <UserDetailsDrawer user={currentUser} />
       </Drawer>
+
+      {/* Render People Add Modal */}
+      <Dialog
+        fullWidth
+        maxWidth="sm"
+        open={openModal}
+        onClose={handleCloseModal}
+      >
+        <DialogTitle
+          sx={{
+            p: 3
+          }}
+        >
+          <Typography variant="h4" gutterBottom>
+            {t('Invite Users')}
+          </Typography>
+        </DialogTitle>
+
+        <DialogContent
+          dividers
+          sx={{
+            p: 3,
+            display: 'flex',
+            justifyContent: 'center'
+          }}
+        >
+          <Box sx={{ width: '95%' }}>
+            <Paper
+              elevation={0}
+              sx={{
+                mb: 2,
+                p: 2,
+                textAlign: 'center',
+                background: grey[100]
+              }}
+            >
+              <Box
+                component="img"
+                sx={{
+                  height: 50,
+                  width: 50
+                }}
+                alt={
+                  "<a href='https://www.flaticon.com/free-icons/team' title='team icons'>Team icons created by Freepik - Flaticon</a>"
+                }
+                src="/static/images/team.png"
+              />
+              <Typography variant="h5">
+                {t('Bring new people to the team')}
+              </Typography>
+            </Paper>
+
+            <UserRoleCardList
+              listData={userRoleList}
+              selectedItem={inviteUserRoleSelected}
+              setSelectedItem={setInviteUserRoleSelected}
+            />
+
+            <TextField
+              sx={{ my: 4 }}
+              fullWidth
+              helperText={t(
+                "You may add 20 users at a time by pressing 'tab' or 'enter' after each email entry. Any duplicate and registered emails will be removed while registering the requested users."
+              )}
+              label={t('Enter email address')}
+              placeholder={t('example@email.com')}
+              name="email"
+              onChange={(e) => {
+                setInviteUserEmail(e.target.value);
+              }}
+              variant={'outlined'}
+              required
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <EmailOutlined />
+                  </InputAdornment>
+                )
+              }}
+            />
+
+            <Button
+              fullWidth
+              sx={{ mb: 3 }}
+              onClick={async () => {
+                try {
+                  setIsInviteSubmitting(true);
+                  await wait(2000);
+                  setIsInviteSubmitting(false);
+                  console.log(
+                    'inviteUserRoleSelected -> ',
+                    inviteUserRoleSelected
+                  );
+                  console.log('inviteUserEmail -> ', inviteUserEmail);
+                } catch (err) {
+                  console.error(err);
+                }
+              }}
+              variant="contained"
+              startIcon={
+                isInviteSubmitting ? <CircularProgress size="1rem" /> : null
+              }
+              disabled={isInviteSubmitting}
+            >
+              {t('Invite')}
+            </Button>
+          </Box>
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 };
