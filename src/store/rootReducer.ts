@@ -12,10 +12,10 @@ import { reducer as meterReducer } from 'src/slices/meter';
 import { reducer as partReducer } from 'src/slices/part';
 import { reducer as purchaseOrderReducer } from 'src/slices/purchaseOrder';
 import { reducer as requestReducer } from 'src/slices/request';
-import { reducer as setReducer } from 'src/slices/set';
 import { reducer as workOrderReducer } from 'src/slices/workOrder';
 import { reducer as assetReducer } from 'src/slices/asset';
 import { reducer as categoryReducer } from 'src/slices/category';
+import { reducer as multiPartsReducer } from 'src/slices/multipart';
 
 const rootReducer = combineReducers({
   calendar: calendarReducer,
@@ -32,9 +32,9 @@ const rootReducer = combineReducers({
   parts: partReducer,
   purchaseOrders: purchaseOrderReducer,
   requests: requestReducer,
-  sets: setReducer,
   workOrders: workOrderReducer,
-  categories: categoryReducer
+  categories: categoryReducer,
+  multiParts: multiPartsReducer
 });
 
 export default rootReducer;

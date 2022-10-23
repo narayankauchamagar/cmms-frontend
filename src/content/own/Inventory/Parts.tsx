@@ -72,7 +72,7 @@ const Parts = ({ setAction }: PropsType) => {
   }, []);
 
   useEffect(() => {
-    if (partId && isNumeric(partId)) {
+    if (parts.length && partId && isNumeric(partId)) {
       handleOpenDetails(Number(partId));
     }
   }, [parts]);

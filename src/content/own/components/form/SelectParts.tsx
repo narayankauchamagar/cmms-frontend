@@ -17,10 +17,11 @@ import {
 } from '@mui/material';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import Part, { parts } from 'src/models/owns/part';
-import { sets } from '../../../../models/owns/setType';
+import Part from 'src/models/owns/part';
+import { useDispatch, useSelector } from '../../../../store';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
+import { getParts } from '../../../../slices/part';
 
 interface SelectPartsProps {
   onChange: (parts: Part[]) => void;
@@ -29,6 +30,9 @@ interface SelectPartsProps {
 
 export default function SelectParts({ onChange, selected }: SelectPartsProps) {
   const { t }: { t: any } = useTranslation();
+  const dispatch = useDispatch();
+  const { parts } = useSelector((state) => state.parts);
+  const { multiParts } = useSelector((state) => state.multiParts);
   const [currentTab, setCurrentTab] = useState<string>('parts');
   const [selectedParts, setSelectedParts] = useState<Part[]>([]);
   const [selectedIds, setSelectedIds] = useState<number[]>(selected);
@@ -48,6 +52,10 @@ export default function SelectParts({ onChange, selected }: SelectPartsProps) {
       })
     );
   }, [selectedIds]);
+
+  useEffect(() => {
+    dispatch(getParts());
+  }, []);
 
   useEffect(() => {
     onChange(selectedParts);
@@ -114,7 +122,7 @@ export default function SelectParts({ onChange, selected }: SelectPartsProps) {
           )}
           {currentTab === 'sets' && (
             <FormGroup>
-              {sets.map((set) => (
+              {multiParts.map((set) => (
                 <FormControlLabel
                   key={set.id}
                   control={

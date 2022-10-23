@@ -18,15 +18,19 @@ import CustomDataGrid from '../components/CustomDatagrid';
 import { GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import { parts } from '../../../models/owns/part';
+import ConfirmDialog from '../components/ConfirmDialog';
+import { useDispatch, useSelector } from '../../../store';
 import { ChangeEvent, useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import Form from '../components/form';
 import wait from '../../../utils/wait';
 import { IField } from '../type';
-import SetType, { sets } from '../../../models/owns/setType';
+import SetType from '../../../models/owns/setType';
 import SetDetails from './SetDetails';
 import { useParams } from 'react-router-dom';
 import { isNumeric } from '../../../utils/validators';
+import { addMultiParts, getMultiParts } from '../../../slices/multipart';
+import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
 
 interface PropsType {
   setAction: (p: () => () => void) => void;
@@ -37,6 +41,7 @@ const Sets = ({ setAction }: PropsType) => {
   const theme = useTheme();
   const [currentTab, setCurrentTab] = useState<string>('list');
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
+  const { multiParts } = useSelector((state) => state.multiParts);
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [currentSet, setCurrentSet] = useState<SetType>();
@@ -45,13 +50,21 @@ const Sets = ({ setAction }: PropsType) => {
     { value: 'card', label: t('Card View') }
   ];
   const { setId } = useParams();
+  const dispatch = useDispatch();
 
   const handleUpdate = (id: number) => {
-    setCurrentSet(sets.find((set) => set.id === id));
+    setCurrentSet(multiParts.find((set) => set.id === id));
     setOpenUpdateModal(true);
+  };
+  const formatValues = (values) => {
+    values.parts = values.parts.map((part) => {
+      return { id: part.id };
+    });
+    return values;
   };
 
   useEffect(() => {
+    dispatch(getMultiParts());
     const handleOpenModal = () => setOpenAddModal(true);
     setAction(() => handleOpenModal);
   }, []);
@@ -117,13 +130,13 @@ const Sets = ({ setAction }: PropsType) => {
   };
 
   useEffect(() => {
-    if (setId && isNumeric(setId)) {
+    if (multiParts.length && setId && isNumeric(setId)) {
       handleOpenDetails(Number(setId));
     }
-  }, [sets]);
+  }, [multiParts]);
 
   const handleOpenDetails = (id: number) => {
-    const foundSet = sets.find((set) => set.id === id);
+    const foundSet = multiParts.find((set) => set.id === id);
     if (foundSet) {
       setCurrentSet(foundSet);
       window.history.replaceState(
@@ -201,8 +214,8 @@ const Sets = ({ setAction }: PropsType) => {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               try {
-                console.log(values);
-                await wait(2000);
+                const formattedValues = formatValues(values);
+                dispatch(addMultiParts(formattedValues));
                 setOpenAddModal(false);
               } catch (err) {
                 console.error(err);
@@ -287,7 +300,7 @@ const Sets = ({ setAction }: PropsType) => {
         <Box sx={{ height: 500, width: '95%' }}>
           <CustomDataGrid
             columns={columns}
-            rows={sets}
+            rows={multiParts}
             components={{
               Toolbar: GridToolbar
             }}
@@ -305,28 +318,31 @@ const Sets = ({ setAction }: PropsType) => {
       {currentTab === 'card' && (
         <Grid item xs={12}>
           <Grid container spacing={2}>
-            {sets.map((set) => (
+            {multiParts.map((set) => (
               <Grid item xs={12} lg={3} key={set.id}>
-                <Card>
+                <Card
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => handleOpenDetails(set.id)}
+                >
                   <CardMedia
                     component="img"
                     height="280"
                     image="/static/images/placeholders/covers/2.jpg"
                     alt="..."
                   />
-                </Card>
-                <Box sx={{ p: 2 }}>
-                  <Typography variant="h4">{set.name}</Typography>
-                  <Box sx={{ mt: 1 }}>
-                    {fieldsToRender(set).map((field) => (
-                      <BasicField
-                        key={field.label}
-                        label={field.label}
-                        value={field.value}
-                      />
-                    ))}
+                  <Box sx={{ p: 2 }}>
+                    <Typography variant="h4">{set.name}</Typography>
+                    <Box sx={{ mt: 1 }}>
+                      {fieldsToRender(set).map((field) => (
+                        <BasicField
+                          key={field.label}
+                          label={field.label}
+                          value={field.value}
+                        />
+                      ))}
+                    </Box>
                   </Box>
-                </Box>
+                </Card>
               </Grid>
             ))}
           </Grid>
