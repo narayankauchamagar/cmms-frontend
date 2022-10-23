@@ -3,6 +3,7 @@ import {
   Button,
   Divider,
   Grid,
+  IconButton,
   Link,
   List,
   ListItem,
@@ -24,10 +25,11 @@ import { files } from 'src/models/owns/file';
 
 interface PartDetailsProps {
   part: Part;
-  handleUpdate: (id: number) => void;
+  handleOpenUpdate: () => void;
+  handleOpenDelete: () => void;
 }
 export default function PartDetails(props: PartDetailsProps) {
-  const { part, handleUpdate } = props;
+  const { part, handleOpenUpdate, handleOpenDelete } = props;
   const { t }: { t: any } = useTranslation();
   const [currentTab, setCurrentTab] = useState<string>('details');
   const theme = useTheme();
@@ -115,12 +117,12 @@ export default function PartDetails(props: PartDetailsProps) {
           <Typography variant="h6">{part?.description}</Typography>
         </Box>
         <Box>
-          <EditTwoToneIcon
-            onClick={() => handleUpdate(part.id)}
-            style={{ cursor: 'pointer', marginRight: 10 }}
-            color="primary"
-          />
-          <DeleteTwoToneIcon style={{ cursor: 'pointer' }} color="error" />
+          <IconButton onClick={handleOpenUpdate} style={{ marginRight: 10 }}>
+            <EditTwoToneIcon color="primary" />
+          </IconButton>
+          <IconButton onClick={handleOpenDelete}>
+            <DeleteTwoToneIcon style={{ cursor: 'pointer' }} color="error" />
+          </IconButton>
         </Box>
       </Grid>
       <Divider />

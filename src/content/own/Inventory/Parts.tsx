@@ -30,6 +30,9 @@ import PartDetails from './PartDetails';
 import { useParams } from 'react-router-dom';
 import { isNumeric } from '../../../utils/validators';
 import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
+import { UserMiniDTO } from '../../../models/user';
+import UserAvatars from '../components/UserAvatars';
+import { deleteCustomer } from '../../../slices/customer';
 
 interface PropsType {
   setAction: (p: () => () => void) => void;
@@ -41,14 +44,20 @@ const Parts = ({ setAction }: PropsType) => {
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const { parts } = useSelector((state) => state.parts);
+  const [openDelete, setOpenDelete] = useState<boolean>(false);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [currentPart, setCurrentPart] = useState<Part>();
   const { partId } = useParams();
   const dispatch = useDispatch();
 
-  const handleUpdate = (id: number) => {
-    setCurrentPart(parts.find((part) => part.id === id));
+  const handleOpenUpdate = () => {
     setOpenUpdateModal(true);
+  };
+
+  const handleDelete = (id: number) => {
+    handleCloseDetails();
+    dispatch(deletePart(id));
+    setOpenDelete(false);
   };
   const tabs = [
     { value: 'list', label: t('List View') },
@@ -119,7 +128,7 @@ const Parts = ({ setAction }: PropsType) => {
       width: 150
     },
     {
-      field: 'barCode',
+      field: 'barcode',
       headerName: t('Barcode'),
       description: t('Barcode'),
       width: 150
@@ -146,13 +155,10 @@ const Parts = ({ setAction }: PropsType) => {
       field: 'assignedTo',
       headerName: t('Assigned Users'),
       description: t('Assigned Users'),
-      width: 150
-    },
-    {
-      field: 'vendors',
-      headerName: t('Assigned Vendors'),
-      description: t('Assigned Vendors'),
-      width: 150
+      width: 150,
+      renderCell: (params: GridRenderCellParams<UserMiniDTO[]>) => (
+        <UserAvatars users={params.value} />
+      )
     },
     {
       field: 'createdAt',
@@ -516,8 +522,22 @@ const Parts = ({ setAction }: PropsType) => {
           sx: { width: '50%' }
         }}
       >
-        <PartDetails part={currentPart} handleUpdate={handleUpdate} />
+        <PartDetails
+          part={currentPart}
+          handleOpenUpdate={handleOpenUpdate}
+          handleOpenDelete={() => setOpenDelete(true)}
+        />
       </Drawer>
+      <ConfirmDialog
+        open={openDelete}
+        onCancel={() => {
+          setOpenDelete(false);
+          setOpenDrawer(true);
+        }}
+        onConfirm={() => handleDelete(currentPart?.id)}
+        confirmText={t('Delete')}
+        question={t('Are you sure you want to delete this Part?')}
+      />
     </Box>
   );
 };

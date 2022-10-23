@@ -6,7 +6,6 @@ import {
   IconButton,
   Typography
 } from '@mui/material';
-import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import { useTranslation } from 'react-i18next';
 import Form from '../components/form';
 import * as Yup from 'yup';
@@ -15,10 +14,8 @@ import wait from 'src/utils/wait';
 import { useEffect, useState } from 'react';
 import CustomDataGrid from '../components/CustomDatagrid';
 import {
-  GridActionsCellItem,
   GridEnrichedColDef,
   GridRenderCellParams,
-  GridRowParams,
   GridToolbar
 } from '@mui/x-data-grid';
 import {
@@ -82,7 +79,6 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
   };
 
   const handleDelete = (id: number) => {
-    handleCloseDetails();
     dispatch(deleteCustomer(id));
     setOpenDelete(false);
   };

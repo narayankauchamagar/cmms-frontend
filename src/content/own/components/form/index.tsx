@@ -103,13 +103,7 @@ export default (props: PropsType) => {
         break;
     }
   };
-  const Select2 = ({
-    formik,
-    field
-  }: {
-    formik: FormikProps<IHash<any>>;
-    field: IField;
-  }) => {
+  const renderSelect = (formik, field) => {
     let options = field.items;
     let loading = field.loading;
     let onOpen = field.onPress;
@@ -245,13 +239,14 @@ export default (props: PropsType) => {
               return (
                 <Grid item xs={12} lg={field.midWidth ? 6 : 12} key={index}>
                   {field.type === 'select' ? (
-                    <Select2 formik={formik} field={field} />
+                    renderSelect(formik, field)
                   ) : field.type === 'checkbox' ? (
                     <CheckBoxForm
                       label={field.label}
                       onChange={(e) => {
                         handleChange(formik, field.name, e.target.checked);
                       }}
+                      checked={formik.values[field.name]}
                     />
                   ) : field.type === 'groupCheckbox' ? (
                     <CheckBoxForm
