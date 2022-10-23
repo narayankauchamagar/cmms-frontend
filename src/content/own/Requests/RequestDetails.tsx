@@ -21,15 +21,21 @@ export default function RequestDetails(props: RequestDetailsProps) {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
 
-  const renderField = (label, value) => {
-    return (
+  const BasicField = ({
+    label,
+    value
+  }: {
+    label: string | number;
+    value: string | number;
+  }) => {
+    return value ? (
       <Grid item xs={12} lg={6}>
         <Typography variant="h6" sx={{ color: theme.colors.alpha.black[70] }}>
           {label}
         </Typography>
         <Typography variant="h6">{value}</Typography>
       </Grid>
-    );
+    ) : null;
   };
   const fieldsToRender = (
     request: Request
@@ -82,9 +88,13 @@ export default function RequestDetails(props: RequestDetailsProps) {
             Request details
           </Typography>
           <Grid container spacing={2}>
-            {fieldsToRender(request).map((field) =>
-              renderField(field.label, field.value)
-            )}
+            {fieldsToRender(request).map((field) => (
+              <BasicField
+                key={field.label}
+                label={field.label}
+                value={field.value}
+              />
+            ))}
           </Grid>
         </Box>
       </Grid>

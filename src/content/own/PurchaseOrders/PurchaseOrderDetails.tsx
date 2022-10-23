@@ -34,26 +34,35 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
-  const renderField = (label, value, type?, id?) => {
-    if (value)
-      return (
-        <Grid item xs={12} lg={6}>
-          <Typography variant="h6" sx={{ color: theme.colors.alpha.black[70] }}>
-            {label}
-          </Typography>
-          {type === 'vendor' ? (
-            <Link
-              href={`/app/vendors-customers/vendors/${id}`}
-              variant="h6"
-              fontWeight="bold"
-            >
-              {value}
-            </Link>
-          ) : (
-            <Typography variant="h6">{value}</Typography>
-          )}
-        </Grid>
-      );
+  const BasicField = ({
+    label,
+    value,
+    id,
+    type
+  }: {
+    label: string | number;
+    value: string | number;
+    type?: string;
+    id?: number;
+  }) => {
+    return value ? (
+      <Grid item xs={12} lg={6}>
+        <Typography variant="h6" sx={{ color: theme.colors.alpha.black[70] }}>
+          {label}
+        </Typography>
+        {type === 'vendor' ? (
+          <Link
+            href={`/app/vendors-customers/vendors/${id}`}
+            variant="h6"
+            fontWeight="bold"
+          >
+            {value}
+          </Link>
+        ) : (
+          <Typography variant="h6">{value}</Typography>
+        )}
+      </Grid>
+    ) : null;
   };
   const detailsFieldsToRender = (
     purchaseOrder1: PurchaseOrder
@@ -161,10 +170,7 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
           <Typography variant="h6">{purchaseOrder?.shippingAddress}</Typography>
         </Box>
         <Box>
-          <IconButton
-            onClick={() => handleOpenUpdate()}
-            style={{ marginRight: 10 }}
-          >
+          <IconButton onClick={handleOpenUpdate} style={{ marginRight: 10 }}>
             <EditTwoToneIcon color="primary" />
           </IconButton>
           <IconButton onClick={handleDelete}>
@@ -190,23 +196,37 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
       <Grid item xs={12}>
         {currentTab === 'details' && (
           <Grid container spacing={2}>
-            {detailsFieldsToRender(purchaseOrder).map((field) =>
-              renderField(field.label, field.value, field.type, field.id)
-            )}
+            {detailsFieldsToRender(purchaseOrder).map((field) => (
+              <BasicField
+                key={field.id}
+                label={field.label}
+                value={field.value}
+                type={field.type}
+                id={field.id}
+              />
+            ))}
           </Grid>
         )}
         {currentTab === 'shipping' && (
           <Grid container spacing={2}>
-            {shippingFieldsToRender(purchaseOrder).map((field) =>
-              renderField(field.label, field.value)
-            )}
+            {shippingFieldsToRender(purchaseOrder).map((field) => (
+              <BasicField
+                key={field.label}
+                label={field.label}
+                value={field.value}
+              />
+            ))}
           </Grid>
         )}
         {currentTab === 'additionalInfos' && (
           <Grid container spacing={2}>
-            {additionalInfosFieldsToRender(purchaseOrder).map((field) =>
-              renderField(field.label, field.value)
-            )}
+            {additionalInfosFieldsToRender(purchaseOrder).map((field) => (
+              <BasicField
+                key={field.label}
+                label={field.label}
+                value={field.value}
+              />
+            ))}
           </Grid>
         )}
       </Grid>

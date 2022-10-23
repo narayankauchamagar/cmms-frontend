@@ -53,8 +53,18 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
         return `/app/${resource}s/${id}`;
     }
   };
-  const renderField = (label, value, type?, id?) => {
-    if (!type || (type && id))
+  const BasicField = ({
+    label,
+    value,
+    id,
+    type
+  }: {
+    label: string | number;
+    value: string | number;
+    type?: string;
+    id?: number;
+  }) => {
+    if (!type || (type && id)) {
       return (
         <Grid item xs={12} lg={6}>
           <Typography variant="h6" sx={{ color: theme.colors.alpha.black[70] }}>
@@ -69,6 +79,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
           )}
         </Grid>
       );
+    } else return null;
   };
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
@@ -169,9 +180,15 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
         {currentTab === 'details' && (
           <Box>
             <Grid container spacing={2}>
-              {detailsFieldsToRender(workOrder).map((field) =>
-                renderField(field.label, field.value, field.type, field.id)
-              )}
+              {detailsFieldsToRender(workOrder).map((field) => (
+                <BasicField
+                  key={field.id}
+                  label={field.label}
+                  value={field.value}
+                  type={field.type}
+                  id={field.id}
+                />
+              ))}
               <Grid item xs={12} lg={6}>
                 <Typography
                   variant="h6"

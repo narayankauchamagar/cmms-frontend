@@ -34,16 +34,21 @@ export default function MeterDetails(props: MeterDetailsProps) {
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
-  const renderField = (label, value) => {
-    if (value)
-      return (
-        <Grid item xs={12} lg={6}>
-          <Typography variant="h6" sx={{ color: theme.colors.alpha.black[70] }}>
-            {label}
-          </Typography>
-          <Typography variant="h6">{value}</Typography>
-        </Grid>
-      );
+  const BasicField = ({
+    label,
+    value
+  }: {
+    label: string | number;
+    value: string | number;
+  }) => {
+    return value ? (
+      <Grid item xs={12} lg={6}>
+        <Typography variant="h6" sx={{ color: theme.colors.alpha.black[70] }}>
+          {label}
+        </Typography>
+        <Typography variant="h6">{value}</Typography>
+      </Grid>
+    ) : null;
   };
   const fieldsToRender = (meter: Meter): { label: string; value: any }[] => [
     {
@@ -141,9 +146,13 @@ export default function MeterDetails(props: MeterDetailsProps) {
               Meter details
             </Typography>
             <Grid container spacing={2}>
-              {fieldsToRender(meter).map((field) =>
-                renderField(field.label, field.value)
-              )}
+              {fieldsToRender(meter).map((field) => (
+                <BasicField
+                  key={field.label}
+                  label={field.label}
+                  value={field.value}
+                />
+              ))}
             </Grid>
           </Box>
         )}

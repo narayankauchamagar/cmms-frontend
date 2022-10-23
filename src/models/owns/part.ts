@@ -1,4 +1,8 @@
 import { Audit } from './audit';
+import { UserMiniDTO } from '../user';
+import { VendorMiniDTO } from './vendor';
+import { CustomerMiniDTO } from './customer';
+import { TeamMiniDTO } from './team';
 
 export default interface Part extends Audit {
   id: number;
@@ -6,13 +10,15 @@ export default interface Part extends Audit {
   cost: number;
   quantity: number;
   minQuantity: number;
-  barCode: string;
+  barcode: string;
   area: string;
   category: string;
+  nonStock: boolean;
   description: string;
-  location: string;
-  users: number;
-  vendors: number;
+  assignedTo: UserMiniDTO[];
+  vendors: VendorMiniDTO[];
+  customers: CustomerMiniDTO[];
+  teams: TeamMiniDTO[];
   openWorkOrders: number;
 }
 export interface PartMiniDTO {
@@ -28,14 +34,16 @@ export const parts: Part[] = [
     createdAt: 'dfggj',
     cost: 52,
     quantity: 9,
-    barCode: 'dfsad',
+    barcode: 'dfsad',
     area: 'fafcax',
+    nonStock: false,
     category: 'facacaa ',
     description: 'string',
-    location: 'string',
-    users: 24,
+    assignedTo: [],
     minQuantity: 4,
-    vendors: 4,
+    vendors: [],
+    customers: [],
+    teams: [],
     openWorkOrders: 2,
     createdBy: 'ghu',
     updatedAt: 'ghfgj',
@@ -48,13 +56,15 @@ export const parts: Part[] = [
     cost: 52,
     quantity: 9,
     minQuantity: 4,
-    barCode: 'dfsad',
+    barcode: 'dfsad',
+    nonStock: true,
     area: 'fafcax',
     category: 'facacaa ',
     description: 'string',
-    location: 'string',
-    users: 24,
-    vendors: 4,
+    assignedTo: [],
+    vendors: [],
+    customers: [],
+    teams: [],
     openWorkOrders: 2,
     createdBy: 'ghu',
     updatedAt: 'ghfgj',

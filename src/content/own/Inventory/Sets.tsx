@@ -149,8 +149,14 @@ const Sets = ({ setAction }: PropsType) => {
       value: set.parts.reduce((acc, part) => acc + part.cost, 0)
     }
   ];
-  const renderField = (label, value) => {
-    return (
+  const BasicField = ({
+    label,
+    value
+  }: {
+    label: string | number;
+    value: string | number;
+  }) => {
+    return value ? (
       <Grid item xs={12} key={label}>
         <Stack spacing={1} direction="row">
           <Typography variant="h6" sx={{ color: theme.colors.alpha.black[70] }}>
@@ -159,7 +165,7 @@ const Sets = ({ setAction }: PropsType) => {
           <Typography variant="h6">{value}</Typography>
         </Stack>
       </Grid>
-    );
+    ) : null;
   };
   const renderSetAddModal = () => (
     <Dialog
@@ -312,9 +318,13 @@ const Sets = ({ setAction }: PropsType) => {
                 <Box sx={{ p: 2 }}>
                   <Typography variant="h4">{set.name}</Typography>
                   <Box sx={{ mt: 1 }}>
-                    {fieldsToRender(set).map((field) =>
-                      renderField(field.label, field.value)
-                    )}
+                    {fieldsToRender(set).map((field) => (
+                      <BasicField
+                        key={field.label}
+                        label={field.label}
+                        value={field.value}
+                      />
+                    ))}
                   </Box>
                 </Box>
               </Grid>

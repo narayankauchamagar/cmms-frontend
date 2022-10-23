@@ -11,7 +11,7 @@ export interface Vendor {
   rate: number;
 }
 
-export interface VendorShowDTO {
+export interface VendorMiniDTO {
   companyName: string;
   id: number;
 }

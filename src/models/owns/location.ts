@@ -1,7 +1,7 @@
 import { UserMiniDTO } from '../user';
 import { Audit } from './audit';
 import { CustomerMiniDTO } from './customer';
-import { VendorShowDTO } from './vendor';
+import { VendorMiniDTO } from './vendor';
 import { TeamMiniDTO } from './team';
 
 export default interface Location extends Audit {
@@ -10,7 +10,7 @@ export default interface Location extends Audit {
   address: string;
   longitude: number;
   latitude: number;
-  vendors: VendorShowDTO[];
+  vendors: VendorMiniDTO[];
   customers: CustomerMiniDTO[];
   workers: UserMiniDTO[];
   teams: TeamMiniDTO[];

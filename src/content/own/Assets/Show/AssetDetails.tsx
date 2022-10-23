@@ -17,8 +17,14 @@ const AssetDetails = ({ asset }: PropsType) => {
     { label: t('Place in Service'), value: asset.name },
     { label: t('Warranty expiration'), value: asset.description }
   ];
-  const renderField = (label, value) => {
-    return (
+  const BasicField = ({
+    label,
+    value
+  }: {
+    label: string | number;
+    value: string | number;
+  }) => {
+    return value ? (
       <Grid item xs={12}>
         <Stack spacing={5} direction="row">
           <Typography variant="h6">{label}</Typography>
@@ -26,7 +32,7 @@ const AssetDetails = ({ asset }: PropsType) => {
         </Stack>
         <Divider sx={{ mt: 1 }} />
       </Grid>
-    );
+    ) : null;
   };
   return (
     <Box sx={{ px: 4 }}>
@@ -37,15 +43,23 @@ const AssetDetails = ({ asset }: PropsType) => {
               <Grid item xs={12}>
                 <Typography variant="h4">Asset Information</Typography>
               </Grid>
-              {informationFields.map((field) =>
-                renderField(field.label, field.value)
-              )}
+              {informationFields.map((field) => (
+                <BasicField
+                  key={field.label}
+                  label={field.label}
+                  value={field.value}
+                />
+              ))}
               <Grid item xs={12}>
                 <Typography variant="h4">More Informations</Typography>
               </Grid>
-              {moreInfosFields.map((field) =>
-                renderField(field.label, field.value)
-              )}
+              {moreInfosFields.map((field) => (
+                <BasicField
+                  key={field.label}
+                  label={field.label}
+                  value={field.value}
+                />
+              ))}
             </Grid>
           </Card>
         </Grid>

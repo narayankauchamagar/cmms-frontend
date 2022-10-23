@@ -166,8 +166,6 @@ function Files() {
       ]
     }
   ];
-  const currentLocationWorkers: User[] = users;
-  const currentLocationTeams: Team[] = teams;
 
   const fields: Array<IField> = [
     {

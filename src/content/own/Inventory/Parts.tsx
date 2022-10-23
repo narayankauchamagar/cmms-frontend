@@ -17,7 +17,10 @@ import { useTranslation } from 'react-i18next';
 import CustomDataGrid from '../components/CustomDatagrid';
 import { GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
-import Part, { parts } from '../../../models/owns/part';
+import Part from '../../../models/owns/part';
+import { addPart, getParts, editPart, deletePart } from '../../../slices/part';
+import ConfirmDialog from '../components/ConfirmDialog';
+import { useDispatch, useSelector } from '../../../store';
 import { ChangeEvent, useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import Form from '../components/form';
@@ -26,6 +29,7 @@ import { IField } from '../type';
 import PartDetails from './PartDetails';
 import { useParams } from 'react-router-dom';
 import { isNumeric } from '../../../utils/validators';
+import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
 
 interface PropsType {
   setAction: (p: () => () => void) => void;
@@ -36,9 +40,11 @@ const Parts = ({ setAction }: PropsType) => {
   const [currentTab, setCurrentTab] = useState<string>('list');
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
+  const { parts } = useSelector((state) => state.parts);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [currentPart, setCurrentPart] = useState<Part>();
   const { partId } = useParams();
+  const dispatch = useDispatch();
 
   const handleUpdate = (id: number) => {
     setCurrentPart(parts.find((part) => part.id === id));
@@ -51,6 +57,7 @@ const Parts = ({ setAction }: PropsType) => {
   const theme = useTheme();
 
   useEffect(() => {
+    dispatch(getParts());
     const handleOpenModal = () => setOpenAddModal(true);
     setAction(() => handleOpenModal);
   }, []);
@@ -79,6 +86,15 @@ const Parts = ({ setAction }: PropsType) => {
   const handleCloseDetails = () => {
     window.history.replaceState(null, 'Part', `/app/inventory/parts`);
     setOpenDrawer(false);
+  };
+  const formatValues = (values) => {
+    values.assignedTo = formatSelectMultiple(values.assignedTo);
+    values.teams = formatSelectMultiple(values.teams);
+    values.customers = formatSelectMultiple(values.customers);
+    values.vendors = formatSelectMultiple(values.vendors);
+    // values.image = formatSelect(values.image);
+    // values.files = formatSelect(values.files);
+    return values;
   };
   const columns: GridEnrichedColDef[] = [
     {
@@ -127,13 +143,7 @@ const Parts = ({ setAction }: PropsType) => {
       width: 150
     },
     {
-      field: 'location',
-      headerName: t('Location'),
-      description: t('Location'),
-      width: 150
-    },
-    {
-      field: 'users',
+      field: 'assignedTo',
       headerName: t('Assigned Users'),
       description: t('Assigned Users'),
       width: 150
@@ -221,7 +231,7 @@ const Parts = ({ setAction }: PropsType) => {
       multiple: true
     },
     {
-      name: 'workers',
+      name: 'assignedTo',
       type: 'select',
       type2: 'user',
       multiple: true,
@@ -301,7 +311,8 @@ const Parts = ({ setAction }: PropsType) => {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               try {
-                await wait(2000);
+                const formattedValues = formatValues(values);
+                dispatch(addPart(formattedValues));
                 setOpenAddModal(false);
               } catch (err) {
                 console.error(err);
@@ -312,8 +323,14 @@ const Parts = ({ setAction }: PropsType) => {
       </DialogContent>
     </Dialog>
   );
-  const renderField = (label, value) => {
-    return (
+  const BasicField = ({
+    label,
+    value
+  }: {
+    label: string | number;
+    value: string | number;
+  }) => {
+    return value ? (
       <Grid item xs={12}>
         <Stack spacing={1} direction="row">
           <Typography variant="h6" sx={{ color: theme.colors.alpha.black[70] }}>
@@ -322,7 +339,7 @@ const Parts = ({ setAction }: PropsType) => {
           <Typography variant="h6">{value}</Typography>
         </Stack>
       </Grid>
-    );
+    ) : null;
   };
   const fieldsToRender = (part: Part) => [
     {
@@ -343,7 +360,7 @@ const Parts = ({ setAction }: PropsType) => {
     },
     {
       label: t('Barcode'),
-      value: part.barCode
+      value: part.barcode
     },
     {
       label: t('Date created'),
@@ -380,11 +397,38 @@ const Parts = ({ setAction }: PropsType) => {
             fields={fields}
             validation={Yup.object().shape(shape)}
             submitText={t('Save')}
-            values={currentPart}
+            values={{
+              ...currentPart,
+              assignedTo: currentPart?.assignedTo.map((user) => {
+                return {
+                  label: `${user.firstName} ${user.lastName}`,
+                  value: user.id.toString()
+                };
+              }),
+              teams: currentPart?.teams.map((team) => {
+                return {
+                  label: team.name,
+                  value: team.id.toString()
+                };
+              }),
+              vendors: currentPart?.vendors.map((vendor) => {
+                return {
+                  label: vendor.companyName,
+                  value: vendor.id.toString()
+                };
+              }),
+              customers: currentPart?.customers.map((customer) => {
+                return {
+                  label: customer.name,
+                  value: customer.id.toString()
+                };
+              })
+            }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               try {
-                await wait(2000);
+                const formattedValues = formatValues(values);
+                dispatch(editPart(currentPart.id, formattedValues));
                 setOpenUpdateModal(false);
               } catch (err) {
                 console.error(err);
@@ -449,9 +493,13 @@ const Parts = ({ setAction }: PropsType) => {
                   <Box sx={{ p: 2 }}>
                     <Typography variant="h4">{part.name}</Typography>
                     <Box sx={{ mt: 1 }}>
-                      {fieldsToRender(part).map((field) =>
-                        renderField(field.label, field.value)
-                      )}
+                      {fieldsToRender(part).map((field) => (
+                        <BasicField
+                          key={field.label}
+                          label={field.label}
+                          value={field.value}
+                        />
+                      ))}
                     </Box>
                   </Box>
                 </Card>
