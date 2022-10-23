@@ -29,8 +29,14 @@ import SetType from '../../../models/owns/setType';
 import SetDetails from './SetDetails';
 import { useParams } from 'react-router-dom';
 import { isNumeric } from '../../../utils/validators';
-import { addMultiParts, getMultiParts } from '../../../slices/multipart';
+import {
+  addMultiParts,
+  deleteMultiParts,
+  editMultiParts,
+  getMultiParts
+} from '../../../slices/multipart';
 import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
+import { deletePart } from '../../../slices/part';
 
 interface PropsType {
   setAction: (p: () => () => void) => void;
@@ -41,6 +47,7 @@ const Sets = ({ setAction }: PropsType) => {
   const theme = useTheme();
   const [currentTab, setCurrentTab] = useState<string>('list');
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
+  const [openDelete, setOpenDelete] = useState<boolean>(false);
   const { multiParts } = useSelector((state) => state.multiParts);
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
@@ -52,9 +59,14 @@ const Sets = ({ setAction }: PropsType) => {
   const { setId } = useParams();
   const dispatch = useDispatch();
 
-  const handleUpdate = (id: number) => {
-    setCurrentSet(multiParts.find((set) => set.id === id));
+  const handleUpdate = () => {
     setOpenUpdateModal(true);
+  };
+
+  const handleDelete = (id: number) => {
+    handleCloseDetails();
+    dispatch(deleteMultiParts(id));
+    setOpenDelete(false);
   };
   const formatValues = (values) => {
     values.parts = values.parts.map((part) => {
@@ -268,7 +280,8 @@ const Sets = ({ setAction }: PropsType) => {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               try {
-                await wait(2000);
+                const formattedValues = formatValues(values);
+                dispatch(editMultiParts(currentSet.id, values));
                 setOpenUpdateModal(false);
               } catch (err) {
                 console.error(err);
@@ -356,8 +369,22 @@ const Sets = ({ setAction }: PropsType) => {
           sx: { width: '50%' }
         }}
       >
-        <SetDetails set={currentSet} handleUpdate={handleUpdate} />
+        <SetDetails
+          set={currentSet}
+          handleOpenUpdate={handleUpdate}
+          handleOpenDelete={() => setOpenDelete(true)}
+        />
       </Drawer>
+      <ConfirmDialog
+        open={openDelete}
+        onCancel={() => {
+          setOpenDelete(false);
+          setOpenDrawer(true);
+        }}
+        onConfirm={() => handleDelete(currentSet?.id)}
+        confirmText={t('Delete')}
+        question={t('Are you sure you want to delete this Set?')}
+      />
     </Box>
   );
 };
