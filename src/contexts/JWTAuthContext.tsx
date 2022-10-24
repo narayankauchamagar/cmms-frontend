@@ -6,12 +6,14 @@ import { verify, JWT_SECRET } from 'src/utils/jwt';
 import PropTypes from 'prop-types';
 import { getUserInfos, getUserSettings } from '../utils/userApi';
 import UserSettings from 'src/models/owns/userSettings';
+import CompanySettings from 'src/models/owns/companySettings';
 
 interface AuthState {
   isInitialized: boolean;
   isAuthenticated: boolean;
   user: UserResponseDTO | null;
   userSettings: UserSettings | null;
+  companySettings: CompanySettings | null;
 }
 
 interface AuthContextValue extends AuthState {
@@ -26,6 +28,8 @@ interface AuthContextValue extends AuthState {
     password: string
   ) => Promise<void>;
   getInfos: () => void;
+  patchUserSettings: (values) => Promise<void>;
+  fetchUserSettings: () => Promise<void>;
 }
 
 interface AuthProviderProps {
@@ -37,7 +41,6 @@ type InitializeAction = {
   payload: {
     isAuthenticated: boolean;
     user: UserResponseDTO | null;
-    userSettings: UserSettings | null;
   };
 };
 
@@ -45,7 +48,6 @@ type LoginAction = {
   type: 'LOGIN';
   payload: {
     user: UserResponseDTO;
-    userSettings: UserSettings;
   };
 };
 
@@ -57,17 +59,34 @@ type RegisterAction = {
   type: 'REGISTER';
   payload: {
     user: UserResponseDTO;
+  };
+};
+type PatchUserSettingsAction = {
+  type: 'PATCH_USER_SETTINGS';
+  payload: {
     userSettings: UserSettings;
   };
 };
-
-type Action = InitializeAction | LoginAction | LogoutAction | RegisterAction;
+type FetchUserSettingsAction = {
+  type: 'GET_USER_SETTINGS';
+  payload: {
+    userSettings: UserSettings;
+  };
+};
+type Action =
+  | InitializeAction
+  | LoginAction
+  | LogoutAction
+  | RegisterAction
+  | PatchUserSettingsAction
+  | FetchUserSettingsAction;
 
 const initialAuthState: AuthState = {
   isAuthenticated: false,
   isInitialized: false,
   user: null,
-  userSettings: null
+  userSettings: null,
+  companySettings: null
 };
 
 const setSession = (accessToken: string | null): void => {
@@ -88,24 +107,22 @@ const handlers: Record<
   (state: AuthState, action: Action) => AuthState
 > = {
   INITIALIZE: (state: AuthState, action: InitializeAction): AuthState => {
-    const { isAuthenticated, user, userSettings } = action.payload;
+    const { isAuthenticated, user } = action.payload;
 
     return {
       ...state,
       isAuthenticated,
       isInitialized: true,
-      user,
-      userSettings
+      user
     };
   },
   LOGIN: (state: AuthState, action: LoginAction): AuthState => {
-    const { user, userSettings } = action.payload;
+    const { user } = action.payload;
 
     return {
       ...state,
       isAuthenticated: true,
-      user,
-      userSettings
+      user
     };
   },
   LOGOUT: (state: AuthState): AuthState => ({
@@ -114,12 +131,31 @@ const handlers: Record<
     user: null
   }),
   REGISTER: (state: AuthState, action: RegisterAction): AuthState => {
-    const { user, userSettings } = action.payload;
+    const { user } = action.payload;
 
     return {
       ...state,
       isAuthenticated: true,
-      user,
+      user
+    };
+  },
+  PATCH_USER_SETTINGS: (
+    state: AuthState,
+    action: PatchUserSettingsAction
+  ): AuthState => {
+    const { userSettings } = action.payload;
+    return {
+      ...state,
+      userSettings
+    };
+  },
+  GEt_USER_SETTINGS: (
+    state: AuthState,
+    action: FetchUserSettingsAction
+  ): AuthState => {
+    const { userSettings } = action.payload;
+    return {
+      ...state,
       userSettings
     };
   }
@@ -134,7 +170,9 @@ const AuthContext = createContext<AuthContextValue>({
   login: () => Promise.resolve(),
   logout: () => Promise.resolve(),
   register: () => Promise.resolve(),
-  getInfos: () => Promise.resolve()
+  getInfos: () => Promise.resolve(),
+  patchUserSettings: () => Promise.resolve(),
+  fetchUserSettings: () => Promise.resolve()
 });
 
 export const AuthProvider: FC<AuthProviderProps> = (props) => {
@@ -153,13 +191,11 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
       if (accessToken && verify(accessToken, JWT_SECRET)) {
         setSession(accessToken);
         const user = await updateUserInfos();
-        const userSettings = await getUserSettings(user.userSettingsId);
         dispatch({
           type: 'INITIALIZE',
           payload: {
             isAuthenticated: true,
-            user,
-            userSettings
+            user
           }
         });
       } else {
@@ -167,8 +203,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
           type: 'INITIALIZE',
           payload: {
             isAuthenticated: false,
-            user: null,
-            userSettings: null
+            user: null
           }
         });
       }
@@ -178,8 +213,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         type: 'INITIALIZE',
         payload: {
           isAuthenticated: false,
-          user: null,
-          userSettings: null
+          user: null
         }
       });
     }
@@ -201,13 +235,10 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     const { accessToken } = response;
     setSession(accessToken);
     const user = await updateUserInfos();
-    const userSettings = await getUserSettings(user.userSettingsId);
-
     dispatch({
       type: 'LOGIN',
       payload: {
-        user,
-        userSettings
+        user
       }
     });
   };
@@ -238,11 +269,32 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     const { message, success } = response;
     setSession(message);
     const user = await updateUserInfos();
-    const userSettings = await getUserSettings(user.userSettingsId);
     dispatch({
       type: 'REGISTER',
       payload: {
-        user,
+        user
+      }
+    });
+  };
+
+  const patchUserSettings = async (values): Promise<void> => {
+    const userSettings = await api.patch<UserSettings>(
+      `user-settings/${state.userSettings.id}`,
+      values
+    );
+    dispatch({
+      type: 'PATCH_USER_SETTINGS',
+      payload: {
+        userSettings
+      }
+    });
+  };
+
+  const fetchUserSettings = async (): Promise<void> => {
+    const userSettings = await getUserSettings(state.user.userSettingsId);
+    dispatch({
+      type: 'GET_USER_SETTINGS',
+      payload: {
         userSettings
       }
     });
@@ -256,7 +308,9 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         login,
         logout,
         register,
-        getInfos
+        getInfos,
+        patchUserSettings,
+        fetchUserSettings
       }}
     >
       {children}

@@ -13,9 +13,11 @@ import { Field, Formik } from 'formik';
 import * as Yup from 'yup';
 import wait from '../../../../utils/wait';
 import CustomSwitch from '../../components/form/CustomSwitch';
+import useAuth from '../../../../hooks/useAuth';
 
 function DashboardTasks() {
   const { t }: { t: any } = useTranslation();
+  const { patchUserSettings } = useAuth();
   const switches = [
     {
       title: t('Auto-assign Work Orders'),
@@ -178,17 +180,24 @@ function DashboardTasks() {
                       </Grid>
                     </Grid>
                     <Divider sx={{ mt: 3 }} />
-                    <Grid container spacing={2} sx={{ mt: 1 }}></Grid>
-                    {switches.map((element) => (
-                      <CustomSwitch
-                        key={element.name}
-                        title={element.title}
-                        description={element.description}
-                        checked={values[element.name]}
-                        name={element.name}
-                        handleChange={handleChange}
-                      />
-                    ))}
+                    <Grid container spacing={2} sx={{ mt: 1 }}>
+                      {switches.map((element) => (
+                        <CustomSwitch
+                          key={element.name}
+                          title={element.title}
+                          description={element.description}
+                          checked={values[element.name]}
+                          name={element.name}
+                          handleChange={(event) => {
+                            handleChange(event);
+                            patchUserSettings({
+                              [element.name]:
+                                event.target.getAttribute('checked')
+                            });
+                          }}
+                        />
+                      ))}
+                    </Grid>
                   </Grid>
                 </Grid>
               </form>
