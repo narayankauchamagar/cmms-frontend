@@ -5,7 +5,7 @@ interface CustomSwitchProps {
   title: string;
   description: string;
   name: string;
-  handleChange: (event: ChangeEvent) => void;
+  handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
   checked: boolean;
 }
 export default function CustomSwitch(props: CustomSwitchProps) {

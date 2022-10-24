@@ -11,6 +11,7 @@ import {
 } from '../utils/userApi';
 import UserSettings from 'src/models/owns/userSettings';
 import CompanySettings from 'src/models/owns/companySettings';
+import { GeneralPreferences } from '../models/owns/generalPreferences';
 
 interface AuthState {
   isInitialized: boolean;
@@ -32,9 +33,12 @@ interface AuthContextValue extends AuthState {
     password: string
   ) => Promise<void>;
   getInfos: () => void;
-  patchUserSettings: (values) => Promise<void>;
+  patchUserSettings: (values: Partial<UserSettings>) => Promise<void>;
   fetchUserSettings: () => Promise<void>;
   fetchCompanySettings: () => Promise<void>;
+  patchGeneralPreferences: (
+    values: Partial<GeneralPreferences>
+  ) => Promise<void>;
 }
 
 interface AuthProviderProps {
@@ -46,6 +50,7 @@ type InitializeAction = {
   payload: {
     isAuthenticated: boolean;
     user: UserResponseDTO | null;
+    companySettings: CompanySettings | null;
   };
 };
 
@@ -84,6 +89,12 @@ type FetchCompanySettingsAction = {
     companySettings: CompanySettings;
   };
 };
+type PatchGeneralPreferencesAction = {
+  type: 'PATCH_GENERAL_PREFERENCES';
+  payload: {
+    generalPreferences: GeneralPreferences;
+  };
+};
 type Action =
   | InitializeAction
   | LoginAction
@@ -91,7 +102,8 @@ type Action =
   | RegisterAction
   | PatchUserSettingsAction
   | FetchUserSettingsAction
-  | FetchCompanySettingsAction;
+  | FetchCompanySettingsAction
+  | PatchGeneralPreferencesAction;
 
 const initialAuthState: AuthState = {
   isAuthenticated: false,
@@ -119,13 +131,14 @@ const handlers: Record<
   (state: AuthState, action: Action) => AuthState
 > = {
   INITIALIZE: (state: AuthState, action: InitializeAction): AuthState => {
-    const { isAuthenticated, user } = action.payload;
+    const { isAuthenticated, user, companySettings } = action.payload;
 
     return {
       ...state,
       isAuthenticated,
       isInitialized: true,
-      user
+      user,
+      companySettings
     };
   },
   LOGIN: (state: AuthState, action: LoginAction): AuthState => {
@@ -180,6 +193,19 @@ const handlers: Record<
       ...state,
       companySettings
     };
+  },
+  PATCH_GENERAL_PREFERENCES: (
+    state: AuthState,
+    action: PatchGeneralPreferencesAction
+  ): AuthState => {
+    const { generalPreferences } = action.payload;
+    return {
+      ...state,
+      companySettings: {
+        ...state.companySettings,
+        generalPreferences
+      }
+    };
   }
 };
 
@@ -195,7 +221,8 @@ const AuthContext = createContext<AuthContextValue>({
   getInfos: () => Promise.resolve(),
   patchUserSettings: () => Promise.resolve(),
   fetchUserSettings: () => Promise.resolve(),
-  fetchCompanySettings: () => Promise.resolve()
+  fetchCompanySettings: () => Promise.resolve(),
+  patchGeneralPreferences: () => Promise.resolve()
 });
 
 export const AuthProvider: FC<AuthProviderProps> = (props) => {
@@ -214,11 +241,15 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
       if (accessToken && verify(accessToken, JWT_SECRET)) {
         setSession(accessToken);
         const user = await updateUserInfos();
+        const companySettings = await getCompanySettings(
+          user.companySettingsId
+        );
         dispatch({
           type: 'INITIALIZE',
           payload: {
             isAuthenticated: true,
-            user
+            user,
+            companySettings
           }
         });
       } else {
@@ -226,7 +257,8 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
           type: 'INITIALIZE',
           payload: {
             isAuthenticated: false,
-            user: null
+            user: null,
+            companySettings: null
           }
         });
       }
@@ -236,16 +268,12 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         type: 'INITIALIZE',
         payload: {
           isAuthenticated: false,
-          user: null
+          user: null,
+          companySettings: null
         }
       });
     }
   };
-  useEffect(() => {
-    getInfos();
-    fetchCompanySettings();
-  }, []);
-
   const login = async (email: string, password: string): Promise<void> => {
     const response = await api.post<{ accessToken: string }>(
       'auth/signin',
@@ -301,7 +329,9 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     });
   };
 
-  const patchUserSettings = async (values): Promise<void> => {
+  const patchUserSettings = async (
+    values: Partial<UserSettings>
+  ): Promise<void> => {
     const userSettings = await api.patch<UserSettings>(
       `user-settings/${state.userSettings.id}`,
       values
@@ -335,6 +365,23 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
       }
     });
   };
+  const patchGeneralPreferences = async (
+    values: Partial<GeneralPreferences>
+  ): Promise<void> => {
+    const generalPreferences = await api.patch<GeneralPreferences>(
+      `general-preferences/${state.companySettings.generalPreferences.id}`,
+      { ...state.companySettings.generalPreferences, ...values }
+    );
+    dispatch({
+      type: 'PATCH_GENERAL_PREFERENCES',
+      payload: {
+        generalPreferences
+      }
+    });
+  };
+  useEffect(() => {
+    getInfos();
+  }, []);
 
   return (
     <AuthContext.Provider
@@ -347,7 +394,8 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         getInfos,
         patchUserSettings,
         fetchUserSettings,
-        fetchCompanySettings
+        fetchCompanySettings,
+        patchGeneralPreferences
       }}
     >
       {children}

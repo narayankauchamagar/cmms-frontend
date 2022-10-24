@@ -16,5 +16,5 @@ export interface GeneralPreferences {
 
   laborCostInTotalCost: boolean;
 
-  wOUpdateForRequesters: boolean;
+  woUpdateForRequesters: boolean;
 }
