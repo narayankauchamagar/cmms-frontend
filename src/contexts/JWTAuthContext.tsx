@@ -4,7 +4,11 @@ import axios from 'src/utils/axios';
 import api, { authHeader } from 'src/utils/api';
 import { verify, JWT_SECRET } from 'src/utils/jwt';
 import PropTypes from 'prop-types';
-import { getUserInfos, getUserSettings } from '../utils/userApi';
+import {
+  getCompanySettings,
+  getUserInfos,
+  getUserSettings
+} from '../utils/userApi';
 import UserSettings from 'src/models/owns/userSettings';
 import CompanySettings from 'src/models/owns/companySettings';
 
@@ -30,6 +34,7 @@ interface AuthContextValue extends AuthState {
   getInfos: () => void;
   patchUserSettings: (values) => Promise<void>;
   fetchUserSettings: () => Promise<void>;
+  fetchCompanySettings: () => Promise<void>;
 }
 
 interface AuthProviderProps {
@@ -73,13 +78,20 @@ type FetchUserSettingsAction = {
     userSettings: UserSettings;
   };
 };
+type FetchCompanySettingsAction = {
+  type: 'GET_COMPANY_SETTINGS';
+  payload: {
+    companySettings: CompanySettings;
+  };
+};
 type Action =
   | InitializeAction
   | LoginAction
   | LogoutAction
   | RegisterAction
   | PatchUserSettingsAction
-  | FetchUserSettingsAction;
+  | FetchUserSettingsAction
+  | FetchCompanySettingsAction;
 
 const initialAuthState: AuthState = {
   isAuthenticated: false,
@@ -149,7 +161,7 @@ const handlers: Record<
       userSettings
     };
   },
-  GEt_USER_SETTINGS: (
+  GET_USER_SETTINGS: (
     state: AuthState,
     action: FetchUserSettingsAction
   ): AuthState => {
@@ -157,6 +169,16 @@ const handlers: Record<
     return {
       ...state,
       userSettings
+    };
+  },
+  GET_COMPANY_SETTINGS: (
+    state: AuthState,
+    action: FetchCompanySettingsAction
+  ): AuthState => {
+    const { companySettings } = action.payload;
+    return {
+      ...state,
+      companySettings
     };
   }
 };
@@ -172,7 +194,8 @@ const AuthContext = createContext<AuthContextValue>({
   register: () => Promise.resolve(),
   getInfos: () => Promise.resolve(),
   patchUserSettings: () => Promise.resolve(),
-  fetchUserSettings: () => Promise.resolve()
+  fetchUserSettings: () => Promise.resolve(),
+  fetchCompanySettings: () => Promise.resolve()
 });
 
 export const AuthProvider: FC<AuthProviderProps> = (props) => {
@@ -220,6 +243,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
   };
   useEffect(() => {
     getInfos();
+    fetchCompanySettings();
   }, []);
 
   const login = async (email: string, password: string): Promise<void> => {
@@ -300,6 +324,18 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     });
   };
 
+  const fetchCompanySettings = async (): Promise<void> => {
+    const companySettings = await getCompanySettings(
+      state.user.companySettingsId
+    );
+    dispatch({
+      type: 'GET_COMPANY_SETTINGS',
+      payload: {
+        companySettings
+      }
+    });
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -310,7 +346,8 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         register,
         getInfos,
         patchUserSettings,
-        fetchUserSettings
+        fetchUserSettings,
+        fetchCompanySettings
       }}
     >
       {children}
