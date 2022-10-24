@@ -14,17 +14,22 @@ import * as Yup from 'yup';
 import wait from '../../../../utils/wait';
 import CustomSwitch from '../../components/form/CustomSwitch';
 import useAuth from '../../../../hooks/useAuth';
+import internationalization from '../../../../i18n/i18n';
 
 function DashboardTasks() {
   const { t }: { t: any } = useTranslation();
-  const { patchUserSettings } = useAuth();
+  const switchLanguage = ({ lng }: { lng: any }) => {
+    internationalization.changeLanguage(lng);
+  };
+  const { patchGeneralPreferences, companySettings } = useAuth();
+  const { generalPreferences } = companySettings;
   const switches = [
     {
       title: t('Auto-assign Work Orders'),
       description: t(
         'Automatically assign new work orders to the person that creates them'
       ),
-      name: 'autoAssignWorkOrder'
+      name: 'autoAssignWorkOrders'
     },
     {
       title: t('Auto-assign requests'),
@@ -38,24 +43,24 @@ function DashboardTasks() {
       description: t(
         'Disable notifications when closed Work Orders are updated'
       ),
-      name: 'disableClosedNotification'
+      name: 'disableClosedWorkOrdersNotif'
     },
     {
       title: t('Ask for feedback when Work Order is closed'),
       description: t('Users are asked to give feedback on the job done'),
-      name: 'askClosedFeedback'
+      name: 'askFeedBackOnWOClosed'
     },
     {
       title: t('Include labor cost in the total cost'),
       description: t(
         'Add labor costs to the total when a user logs time and has an hourly rate stored'
       ),
-      name: 'includeLaborCost'
+      name: 'laborCostInTotalCost'
     },
     {
       title: t('Enable work order updates for Requesters'),
       description: t('Users get updates for the work orders they requested'),
-      name: 'enableRequesterUpdate'
+      name: 'woUpdateForRequesters'
     }
   ];
   const onSubmit = async (
@@ -80,28 +85,19 @@ function DashboardTasks() {
         <Box p={4}>
           <Formik
             initialValues={{
-              language: 'fr',
-              dateFormat: 'MM/DD/YY',
-              currency: 'MAD',
-              businessType: 'PAM',
-              autoAssignWorkOrder: true,
-              autoAssignRequests: false,
-              disableClosedNotification: false,
-              askClosedFeedback: false,
-              includeLaborCost: true,
-              enableRequesterUpdate: true
+              generalPreferences
             }}
             validationSchema={Yup.object().shape({
               language: Yup.string(),
               dateFormat: Yup.string(),
               currency: Yup.string(),
               businessType: Yup.string(),
-              autoAssignWorkOrder: Yup.bool(),
+              autoAssignWorkOrders: Yup.bool(),
               autoAssignRequests: Yup.bool(),
-              disableClosedNotification: Yup.bool(),
-              askClosedFeedback: Yup.bool(),
-              includeLaborCost: Yup.bool(),
-              enableRequesterUpdate: Yup.bool()
+              disableClosedWorkOrdersNotif: Yup.bool(),
+              askFeedBackOnWOClosed: Yup.bool(),
+              laborCostInTotalCost: Yup.bool(),
+              woUpdateForRequesters: Yup.bool()
             })}
             onSubmit={onSubmit}
           >
@@ -123,13 +119,20 @@ function DashboardTasks() {
                           {t('Language')}
                         </Typography>
                         <Field
-                          onChange={handleChange}
-                          value={values.language}
+                          onChange={(event) => {
+                            patchGeneralPreferences({
+                              language: event.target.value
+                            });
+                            switchLanguage({
+                              lng: event.target.value.toLowerCase()
+                            });
+                          }}
+                          value={generalPreferences.language}
                           as={Select}
                           name="language"
                         >
-                          <MenuItem value="en">English</MenuItem>
-                          <MenuItem value="fr">Français</MenuItem>
+                          <MenuItem value="EN">English</MenuItem>
+                          <MenuItem value="FR">Français</MenuItem>
                         </Field>
                       </Grid>
                       <Grid item xs={12}>
@@ -137,13 +140,17 @@ function DashboardTasks() {
                           {t('Date format')}
                         </Typography>
                         <Field
-                          onChange={handleChange}
-                          value={values.dateFormat}
+                          onChange={(event) =>
+                            patchGeneralPreferences({
+                              dateFormat: event.target.value
+                            })
+                          }
+                          value={generalPreferences.dateFormat}
                           as={Select}
                           name="dateFormat"
                         >
-                          <MenuItem value="MM/DD/YY">MM/DD/YY</MenuItem>
-                          <MenuItem value="DD/MM/YY">DD/MM/YY</MenuItem>
+                          <MenuItem value="MMDDYY">MM/DD/YY</MenuItem>
+                          <MenuItem value="DDMMYY">DD/MM/YY</MenuItem>
                         </Field>
                       </Grid>
                       <Grid item xs={12}>
@@ -168,12 +175,19 @@ function DashboardTasks() {
                           {t('Business type')}
                         </Typography>
                         <Field
-                          onChange={handleChange}
-                          value={values.businessType}
+                          onChange={(event) =>
+                            patchGeneralPreferences({
+                              businessType: event.target.value
+                            })
+                          }
+                          value={generalPreferences.businessType}
                           as={Select}
                           name="businessType"
                         >
-                          <MenuItem value="PAM">
+                          <MenuItem value="GENERAL_ASSET_MANAGEMENT">
+                            {t('General asset management')}
+                          </MenuItem>
+                          <MenuItem value="PHYSICAL_ASSET_MANAGEMENT">
                             {t('Physical asset management')}
                           </MenuItem>
                         </Field>
@@ -190,9 +204,8 @@ function DashboardTasks() {
                           name={element.name}
                           handleChange={(event) => {
                             handleChange(event);
-                            patchUserSettings({
-                              [element.name]:
-                                event.target.getAttribute('checked')
+                            patchGeneralPreferences({
+                              [element.name]: event.target.checked
                             });
                           }}
                         />

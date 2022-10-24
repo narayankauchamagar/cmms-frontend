@@ -12,6 +12,7 @@ import {
 import UserSettings from 'src/models/owns/userSettings';
 import CompanySettings from 'src/models/owns/companySettings';
 import { GeneralPreferences } from '../models/owns/generalPreferences';
+import internationalization from '../i18n/i18n';
 
 interface AuthState {
   isInitialized: boolean;
@@ -228,7 +229,9 @@ const AuthContext = createContext<AuthContextValue>({
 export const AuthProvider: FC<AuthProviderProps> = (props) => {
   const { children } = props;
   const [state, dispatch] = useReducer(reducer, initialAuthState);
-
+  const switchLanguage = ({ lng }: { lng: any }) => {
+    internationalization.changeLanguage(lng);
+  };
   const updateUserInfos = async () => {
     const user = await getUserInfos();
     setCompanyId(user.companyId);
@@ -244,6 +247,10 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         const companySettings = await getCompanySettings(
           user.companySettingsId
         );
+        switchLanguage({
+          lng: companySettings.generalPreferences.language.toLowerCase()
+        });
+
         dispatch({
           type: 'INITIALIZE',
           payload: {
