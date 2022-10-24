@@ -16,6 +16,14 @@ import {
   GridRenderCellParams,
   GridToolbar
 } from '@mui/x-data-grid';
+import { addTeam, getTeams, editTeam, deleteTeam } from '../../../slices/team';
+import { useDispatch, useSelector } from '../../../store';
+import ConfirmDialog from '../components/ConfirmDialog';
+import { useEffect, useState } from 'react';
+import { formatSelectMultiple } from '../../../utils/formatters';
+import Team from '../../../models/owns/team';
+import { UserMiniDTO } from '../../../models/user';
+import UserAvatars from '../components/UserAvatars';
 
 interface PropsType {
   values?: any;
@@ -25,6 +33,19 @@ interface PropsType {
 
 const Teams = ({ openModal, handleCloseModal }: PropsType) => {
   const { t }: { t: any } = useTranslation();
+  const dispatch = useDispatch();
+  const [openDelete, setOpenDelete] = useState<boolean>(false);
+  const [currentTeam, setCurrentTeam] = useState<Team>();
+  const { teams } = useSelector((state) => state.teams);
+
+  useEffect(() => {
+    dispatch(getTeams());
+  }, []);
+
+  const handleDelete = (id: number) => {
+    dispatch(deleteTeam(id));
+    setOpenDelete(false);
+  };
 
   let fields: Array<IField> = [
     {
@@ -42,7 +63,7 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
       placeholder: 'Description'
     },
     {
-      name: 'teamUsers',
+      name: 'users',
       type: 'select',
       type2: 'user',
       multiple: true,
@@ -55,21 +76,6 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
     name: Yup.string().required('Team Name is required'),
     description: Yup.string().required('Description is required')
   };
-
-  let TeamsList = [
-    {
-      id: '1',
-      name: 'Team one',
-      description: 'first',
-      teamUsers: []
-    },
-    {
-      id: '2',
-      name: 'Team two',
-      description: 'second team',
-      teamUsers: []
-    }
-  ];
 
   const columns: GridEnrichedColDef[] = [
     {
@@ -86,9 +92,12 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
       width: 150
     },
     {
-      field: 'teamUsers',
+      field: 'users',
       headerName: t('People in the team'),
-      width: 200
+      width: 200,
+      renderCell: (params: GridRenderCellParams<UserMiniDTO[]>) => (
+        <UserAvatars users={params.value} />
+      )
     }
   ];
 
@@ -120,9 +129,10 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
             submitText={t('Submit')}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
+              values.users = formatSelectMultiple(values.users);
               try {
-                await wait(2000);
-                console.log('Values ==> ', values);
+                dispatch(addTeam(values));
+                //handleCloseModal();
               } catch (err) {
                 console.error(err);
               }
@@ -133,16 +143,16 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
     </Dialog>
   );
 
-  const RenderTeamsList = () => (
+  const Renderteams = () => (
     <Box
       sx={{
         height: 400,
         width: '95%'
       }}
     >
-      {TeamsList.length !== 0 ? (
+      {teams.length !== 0 ? (
         <CustomDataGrid
-          rows={TeamsList}
+          rows={teams}
           columns={columns}
           components={{
             Toolbar: GridToolbar
@@ -177,7 +187,16 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
       }}
     >
       <RenderTeamsAddModal />
-      <RenderTeamsList />
+      <Renderteams />
+      <ConfirmDialog
+        open={openDelete}
+        onCancel={() => {
+          setOpenDelete(false);
+        }}
+        onConfirm={() => handleDelete(currentTeam?.id)}
+        confirmText={t('Delete')}
+        question={t('Are you sure you want to delete this Vendor?')}
+      />
     </Box>
   );
 };
