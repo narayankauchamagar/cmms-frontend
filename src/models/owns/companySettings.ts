@@ -5,5 +5,5 @@ import { WorkOrderRequestConfiguration } from './workOrderRequestConfiguration';
 export default interface CompanySettings {
   generalPreferences: GeneralPreferences;
   workOrderConfiguration: WorkOrderConfiguration;
-  WorkOrderRequestConfiguration: WorkOrderRequestConfiguration;
+  workOrderRequestConfiguration: WorkOrderRequestConfiguration;
 }

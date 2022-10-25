@@ -10,11 +10,13 @@ import {
 import { Field, Formik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { FC } from 'react';
+import { FieldConfigurationsType } from '../../../contexts/JWTAuthContext';
+import useAuth from '../../../hooks/useAuth';
 
 interface FieldsConfigurationFormProps {
   initialValues: any;
   onSubmit: any;
-  fields: { label: string; name: string }[];
+  fields: { label: string; name: string; type: FieldConfigurationsType }[];
 }
 
 const FieldsConfigurationForm: FC<FieldsConfigurationFormProps> = ({
@@ -23,45 +25,69 @@ const FieldsConfigurationForm: FC<FieldsConfigurationFormProps> = ({
   fields
 }) => {
   const { t }: { t: any } = useTranslation();
+  const { patchFieldConfiguration, companySettings } = useAuth();
+  const workOrderFieldConfigurations =
+    companySettings?.workOrderConfiguration?.workOrderFieldConfigurations;
+  const requestFieldConfigurations =
+    companySettings?.workOrderRequestConfiguration?.fieldConfigurations;
   const theme = useTheme();
   const renderFields = (
-    fields: { label: string; name: string }[],
-    values: any
+    fields: { label: string; name: string; type: FieldConfigurationsType }[]
   ) => {
-    return fields.map((field, index) => (
-      <Grid
-        style={
-          index % 2 === 0
-            ? { backgroundColor: theme.colors.alpha.black[10] }
-            : undefined
-        }
-        key={field.name}
-        item
-        xs={12}
-        md={12}
-        lg={12}
-      >
-        <Box
-          display="flex"
-          flexDirection="row"
-          justifyContent="space-between"
-          alignItems="center"
-          padding={0.5}
+    return (
+      !!companySettings &&
+      fields.map((field, index) => (
+        <Grid
+          style={
+            index % 2 === 0
+              ? { backgroundColor: theme.colors.alpha.black[10] }
+              : undefined
+          }
+          key={field.name}
+          item
+          xs={12}
+          md={12}
+          lg={12}
         >
-          <Typography variant="h6">{field.label}</Typography>
-          <Field
-            style={{ backgroundColor: 'white' }}
-            as={Select}
-            value={values[field.name]}
-            name={field.name}
+          <Box
+            display="flex"
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="center"
+            padding={0.5}
           >
-            <MenuItem value="optional">Optional</MenuItem>
-            <MenuItem value="required">Required</MenuItem>
-            <MenuItem value="hidden">Hidden</MenuItem>
-          </Field>
-        </Box>
-      </Grid>
-    ));
+            <Typography variant="h6">{field.label}</Typography>
+            <Field
+              style={{ backgroundColor: 'white' }}
+              as={Select}
+              onChange={(event) =>
+                patchFieldConfiguration(
+                  field.name,
+                  event.target.value,
+                  field.type
+                )
+              }
+              value={
+                field.type === 'workOrder'
+                  ? workOrderFieldConfigurations.find(
+                      (fieldConfiguration) =>
+                        fieldConfiguration.fieldName === field.name
+                    ).fieldType
+                  : requestFieldConfigurations.find(
+                      (fieldConfiguration) =>
+                        fieldConfiguration.fieldName === field.name
+                    ).fieldType
+              }
+              name={field.name}
+            >
+              <MenuItem value="OPTIONAL">Optional</MenuItem>
+              <MenuItem value="REQUIRED">Required</MenuItem>
+              <MenuItem value="HIDDEN">Hidden</MenuItem>
+            </Field>
+          </Box>
+        </Grid>
+      ))
+    );
   };
   return (
     <Box>
@@ -80,10 +106,7 @@ const FieldsConfigurationForm: FC<FieldsConfigurationFormProps> = ({
         }) => (
           <form onSubmit={handleSubmit}>
             <Grid container spacing={1}>
-              {renderFields(fields, values)}
-              <Button sx={{ mt: 3 }} type="submit" variant="contained">
-                {t('Save')}
-              </Button>
+              {renderFields(fields)}
             </Grid>
           </form>
         )}

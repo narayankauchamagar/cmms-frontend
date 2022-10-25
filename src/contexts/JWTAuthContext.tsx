@@ -13,6 +13,10 @@ import UserSettings from 'src/models/owns/userSettings';
 import CompanySettings from 'src/models/owns/companySettings';
 import { GeneralPreferences } from '../models/owns/generalPreferences';
 import internationalization from '../i18n/i18n';
+import {
+  FieldConfiguration,
+  FieldType
+} from '../models/owns/fieldConfiguration';
 
 interface AuthState {
   isInitialized: boolean;
@@ -21,6 +25,7 @@ interface AuthState {
   userSettings: UserSettings | null;
   companySettings: CompanySettings | null;
 }
+export type FieldConfigurationsType = 'workOrder' | 'request';
 
 interface AuthContextValue extends AuthState {
   method: 'JWT';
@@ -39,6 +44,11 @@ interface AuthContextValue extends AuthState {
   fetchCompanySettings: () => Promise<void>;
   patchGeneralPreferences: (
     values: Partial<GeneralPreferences>
+  ) => Promise<void>;
+  patchFieldConfiguration: (
+    fieldName: string,
+    fieldType: FieldType,
+    fieldConfigurationsType: FieldConfigurationsType
   ) => Promise<void>;
 }
 
@@ -96,6 +106,13 @@ type PatchGeneralPreferencesAction = {
     generalPreferences: GeneralPreferences;
   };
 };
+type PatchFieldConfigurationAction = {
+  type: 'PATCH_FIELD_CONFIGURATION';
+  payload: {
+    type: FieldConfigurationsType;
+    fieldConfiguration: FieldConfiguration;
+  };
+};
 type Action =
   | InitializeAction
   | LoginAction
@@ -104,7 +121,8 @@ type Action =
   | PatchUserSettingsAction
   | FetchUserSettingsAction
   | FetchCompanySettingsAction
-  | PatchGeneralPreferencesAction;
+  | PatchGeneralPreferencesAction
+  | PatchFieldConfigurationAction;
 
 const initialAuthState: AuthState = {
   isAuthenticated: false,
@@ -207,6 +225,35 @@ const handlers: Record<
         generalPreferences
       }
     };
+  },
+  PATCH_FIELD_CONFIGURATION: (
+    state: AuthState,
+    action: PatchFieldConfigurationAction
+  ): AuthState => {
+    const { type, fieldConfiguration } = action.payload;
+    const stateClone = { ...state };
+    if (type === 'workOrder') {
+      stateClone.companySettings.workOrderConfiguration.workOrderFieldConfigurations =
+        stateClone.companySettings.workOrderConfiguration.workOrderFieldConfigurations.map(
+          (fC) => {
+            if (fieldConfiguration.id === fC.id) {
+              return fieldConfiguration;
+            }
+            return fC;
+          }
+        );
+    } else {
+      stateClone.companySettings.workOrderRequestConfiguration.fieldConfigurations =
+        stateClone.companySettings.workOrderRequestConfiguration.fieldConfigurations.map(
+          (fC) => {
+            if (fieldConfiguration.id === fC.id) {
+              return fieldConfiguration;
+            }
+            return fC;
+          }
+        );
+    }
+    return stateClone;
   }
 };
 
@@ -223,7 +270,8 @@ const AuthContext = createContext<AuthContextValue>({
   patchUserSettings: () => Promise.resolve(),
   fetchUserSettings: () => Promise.resolve(),
   fetchCompanySettings: () => Promise.resolve(),
-  patchGeneralPreferences: () => Promise.resolve()
+  patchGeneralPreferences: () => Promise.resolve(),
+  patchFieldConfiguration: () => Promise.resolve()
 });
 
 export const AuthProvider: FC<AuthProviderProps> = (props) => {
@@ -386,6 +434,37 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
       }
     });
   };
+
+  const patchFieldConfiguration = async (
+    fieldName: string,
+    fieldType: FieldType,
+    fieldConfigurationsType: FieldConfigurationsType
+  ): Promise<void> => {
+    let id;
+    if (fieldConfigurationsType === 'workOrder') {
+      id =
+        state.companySettings.workOrderConfiguration.workOrderFieldConfigurations.find(
+          (workOrderFieldConfiguration) =>
+            workOrderFieldConfiguration.fieldName === fieldName
+        ).id;
+    } else {
+      id =
+        state.companySettings.workOrderRequestConfiguration.fieldConfigurations.find(
+          (fieldConfiguration) => fieldConfiguration.fieldName === fieldName
+        ).id;
+    }
+    const fieldConfiguration = await api.patch<FieldConfiguration>(
+      `field-configurations/${id}`,
+      { fieldType }
+    );
+    dispatch({
+      type: 'PATCH_FIELD_CONFIGURATION',
+      payload: {
+        type: fieldConfigurationsType,
+        fieldConfiguration
+      }
+    });
+  };
   useEffect(() => {
     getInfos();
   }, []);
@@ -402,7 +481,8 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         patchUserSettings,
         fetchUserSettings,
         fetchCompanySettings,
-        patchGeneralPreferences
+        patchGeneralPreferences,
+        patchFieldConfiguration
       }}
     >
       {children}
