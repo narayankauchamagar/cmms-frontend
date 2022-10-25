@@ -22,6 +22,10 @@ import {
 } from '@mui/material';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { useSnackbar } from 'notistack';
+import { useDispatch } from '../../../../store';
+import { addRole } from '../../../../slices/role';
+import useAuth from '../../../../hooks/useAuth';
+import { BasicPermission } from '../../../../models/owns/role';
 
 // const roles = [
 //   { label: 'Free', value: 'free' },
@@ -36,6 +40,27 @@ function PageHeader({ rolesNumber }: PageHeaderProps) {
   const { t }: { t: any } = useTranslation();
   const [open, setOpen] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
+  const dispatch = useDispatch();
+  const { companySettings } = useAuth();
+  const permissionsMapping = new Map<string, BasicPermission>([
+    ['createPeopleTeams', BasicPermission.CREATE_EDIT_PEOPLE_AND_TEAMS],
+    ['createCategories', BasicPermission.CREATE_EDIT_CATEGORIES],
+    ['deleteWorkOrders', BasicPermission.DELETE_WORK_ORDERS],
+    [
+      'deletePreventiveMaintenanceTrigger',
+      BasicPermission.DELETE_PREVENTIVE_MAINTENANCE_TRIGGERS
+    ],
+    ['deleteLocations', BasicPermission.DELETE_LOCATIONS],
+    ['deleteAssets', BasicPermission.DELETE_ASSETS],
+    ['deletePartsAndSets', BasicPermission.DELETE_PARTS_AND_MULTI_PARTS],
+    ['deletePurchaseOrders', BasicPermission.DELETE_PURCHASE_ORDERS],
+    ['deleteMeters', BasicPermission.DELETE_METERS],
+    ['deleteVendorsCustomers', BasicPermission.DELETE_VENDORS_AND_CUSTOMERS],
+    ['deleteCategories', BasicPermission.DELETE_CATEGORIES],
+    ['deleteFiles', BasicPermission.DELETE_FILES],
+    ['deletePeopleTeams', BasicPermission.DELETE_PEOPLE_AND_TEAMS],
+    ['accessSettings', BasicPermission.ACCESS_SETTINGS]
+  ]);
 
   const handleCreateRoleOpen = () => {
     setOpen(true);
@@ -43,6 +68,19 @@ function PageHeader({ rolesNumber }: PageHeaderProps) {
 
   const handleCreateRoleClose = () => {
     setOpen(false);
+  };
+
+  const formatValues = (values) => {
+    values.companySettings = { id: companySettings.id };
+    values.roleType = 'ROLE_CLIENT';
+    values.permissions = [];
+    permissionsMapping.forEach((permission, name) => {
+      if (values[name] && values[name][0] === 'on') {
+        delete values[name];
+        values.permissions.push(permission);
+      }
+    });
+    return values;
   };
 
   const handleCreateRoleSuccess = () => {
@@ -122,9 +160,9 @@ function PageHeader({ rolesNumber }: PageHeaderProps) {
             _values,
             { resetForm, setErrors, setStatus, setSubmitting }
           ) => {
+            const formattedValues = formatValues(_values);
             try {
-              await wait(1000);
-              resetForm();
+              dispatch(addRole(formattedValues));
               setStatus({ success: true });
               setSubmitting(false);
               handleCreateRoleSuccess();
@@ -229,10 +267,14 @@ function PageHeader({ rolesNumber }: PageHeaderProps) {
                           {t('Create/Edit')}
                         </Typography>
                         <FormControlLabel
-                          control={<Checkbox checked />}
+                          onChange={handleChange}
+                          name={'createPeopleTeams'}
+                          control={<Checkbox />}
                           label="People & teams"
                         />
                         <FormControlLabel
+                          onChange={handleChange}
+                          name={'createCategories'}
                           control={<Checkbox />}
                           label="Categories"
                         />
@@ -248,46 +290,68 @@ function PageHeader({ rolesNumber }: PageHeaderProps) {
                           {t('Delete')}
                         </Typography>
                         <FormControlLabel
-                          control={<Checkbox checked />}
+                          onChange={handleChange}
+                          name={'deleteWorkOrders'}
+                          control={<Checkbox />}
                           label="Work Orders"
                         />
                         <FormControlLabel
-                          control={<Checkbox checked />}
+                          onChange={handleChange}
+                          name={'deletePreventiveMaintenanceTrigger'}
+                          control={<Checkbox />}
                           label="Preventative Maintenance Trigger"
                         />
                         <FormControlLabel
-                          control={<Checkbox checked />}
+                          onChange={handleChange}
+                          name={'deleteLocations'}
+                          control={<Checkbox />}
                           label="Locations"
                         />
                         <FormControlLabel
+                          onChange={handleChange}
+                          name={'deleteAssets'}
                           control={<Checkbox />}
                           label="Assets"
                         />
                         <FormControlLabel
+                          onChange={handleChange}
+                          name={'deletePartsAndSets'}
                           control={<Checkbox />}
-                          label="Parts and sets of part"
+                          label="Parts and Sets of Parts"
                         />
                         <FormControlLabel
+                          onChange={handleChange}
+                          name={'deletePurchaseOrders'}
                           control={<Checkbox />}
-                          label="Purchase Orders"
+                          label="Purchase Order"
                         />
                         <FormControlLabel
+                          onChange={handleChange}
+                          name={'deleteMeters'}
                           control={<Checkbox />}
                           label="Meters"
                         />
                         <FormControlLabel
+                          onChange={handleChange}
+                          name={'deleteVendorsCustomers'}
                           control={<Checkbox />}
                           label="Vendors & Customers"
                         />
                         <FormControlLabel
-                          control={<Checkbox checked />}
+                          onChange={handleChange}
+                          name={'deleteCategories'}
+                          control={<Checkbox />}
                           label="Categories"
                         />
                         <FormControlLabel
-                          control={<Checkbox checked />}
-                          label="Delete Files"
+                          onChange={handleChange}
+                          name={'deleteFiles'}
+                          control={<Checkbox />}
+                          label="Files"
                         />
                         <FormControlLabel
+                          onChange={handleChange}
+                          name={'deletePeopleTeams'}
                           control={<Checkbox />}
                           label="People and Teams"
                         />
@@ -302,8 +366,10 @@ function PageHeader({ rolesNumber }: PageHeaderProps) {
                           {t('Access')}
                         </Typography>
                         <FormControlLabel
+                          onChange={handleChange}
+                          name={'accessSettings'}
                           control={<Checkbox />}
-                          label="Setting"
+                          label="Settings"
                         />
                       </Box>
                     </Box>
