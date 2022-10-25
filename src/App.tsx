@@ -9,6 +9,7 @@ import useAuth from 'src/hooks/useAuth';
 import { CssBaseline } from '@mui/material';
 import ThemeProvider from './theme/ThemeProvider';
 import AppInit from './components/AppInit';
+import { CustomSnackBarProvider } from './contexts/CustomSnackBarContext';
 
 function App() {
   const content = useRoutes(router);
@@ -24,8 +25,10 @@ function App() {
             horizontal: 'right'
           }}
         >
-          <CssBaseline />
-          {auth.isInitialized ? content : <AppInit />}
+          <CustomSnackBarProvider>
+            <CssBaseline />
+            {auth.isInitialized ? content : <AppInit />}
+          </CustomSnackBarProvider>
         </SnackbarProvider>
       </LocalizationProvider>
     </ThemeProvider>

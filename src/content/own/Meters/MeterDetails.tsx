@@ -2,6 +2,7 @@ import {
   Box,
   Divider,
   Grid,
+  IconButton,
   Tab,
   Tabs,
   Typography,
@@ -19,10 +20,11 @@ import { IField } from '../type';
 
 interface MeterDetailsProps {
   meter: Meter;
-  handleUpdate: (id: number) => void;
+  handleOpenUpdate: () => void;
+  handleOpenDelete: () => void;
 }
 export default function MeterDetails(props: MeterDetailsProps) {
-  const { meter, handleUpdate } = props;
+  const { meter, handleOpenUpdate, handleOpenDelete } = props;
   const { t }: { t: any } = useTranslation();
   const [currentTab, setCurrentTab] = useState<string>('details');
   const theme = useTheme();
@@ -103,12 +105,12 @@ export default function MeterDetails(props: MeterDetailsProps) {
           <Typography variant="h2">{meter?.name}</Typography>
         </Box>
         <Box>
-          <EditTwoToneIcon
-            onClick={() => handleUpdate(meter.id)}
-            style={{ cursor: 'pointer', marginRight: 10 }}
-            color="primary"
-          />
-          <DeleteTwoToneIcon style={{ cursor: 'pointer' }} color="error" />
+          <IconButton onClick={handleOpenUpdate} style={{ marginRight: 10 }}>
+            <EditTwoToneIcon color="primary" />
+          </IconButton>
+          <IconButton onClick={handleOpenDelete}>
+            <DeleteTwoToneIcon color="error" />
+          </IconButton>
         </Box>
       </Grid>
       <Divider />

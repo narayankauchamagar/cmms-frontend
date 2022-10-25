@@ -224,14 +224,14 @@ export default (props: PropsType) => {
         onSubmit={(
           values,
           { resetForm, setErrors, setStatus, setSubmitting }
-        ) =>
+        ) => {
+          setSubmitting(true);
           props.onSubmit(values).finally(() => {
-            setSubmitting(false);
             // resetForm();
             setStatus({ success: true });
             setSubmitting(false);
-          })
-        }
+          });
+        }}
       >
         {(formik) => (
           <Grid container spacing={2}>

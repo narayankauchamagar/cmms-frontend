@@ -12,9 +12,9 @@ import {
 } from '@mui/material';
 import {
   addMeter,
-  getMeters,
+  deleteMeter,
   editMeter,
-  deleteMeter
+  getMeters
 } from '../../../slices/meter';
 import { useDispatch, useSelector } from '../../../store';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -28,14 +28,14 @@ import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import Meter from '../../../models/owns/meter';
 import Form from '../components/form';
 import * as Yup from 'yup';
-import wait from '../../../utils/wait';
 import { IField } from '../type';
 import MeterDetails from './MeterDetails';
 import { useParams } from 'react-router-dom';
 import { isNumeric } from '../../../utils/validators';
-import { formatSelectMultiple, formatSelect } from '../../../utils/formatters';
+import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
+import { CustomSnackBarContext } from 'src/contexts/CustomSnackBarContext';
 
-function Files() {
+function Meters() {
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
@@ -44,6 +44,7 @@ function Files() {
   const [currentMeter, setCurrentMeter] = useState<Meter>();
   const { meterId } = useParams();
   const dispatch = useDispatch();
+  const { showSnackBar } = useContext(CustomSnackBarContext);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const { meters } = useSelector((state) => state.meters);
 
@@ -67,11 +68,10 @@ function Files() {
   };
   const handleDelete = (id: number) => {
     handleCloseDetails();
-    dispatch(deleteMeter(id));
+    dispatch(deleteMeter(id)).then(onDeleteSuccess).catch(onDeleteFailure);
     setOpenDelete(false);
   };
-  const handleUpdate = (id: number) => {
-    setCurrentMeter(meters.find((meter) => meter.id === id));
+  const handleOpenUpdate = () => {
     setOpenUpdateModal(true);
   };
   const handleOpenDetails = (id: number) => {
@@ -86,6 +86,23 @@ function Files() {
     window.history.replaceState(null, 'Meter', `/app/meters`);
     setOpenDrawer(false);
   };
+  const onCreationSuccess = () => {
+    setOpenAddModal(false);
+    showSnackBar(t('The meter has been created successfully'), 'success');
+  };
+  const onCreationFailure = (err) =>
+    showSnackBar(t("The meter couldn't be created"), 'error');
+  const onEditSuccess = () => {
+    setOpenUpdateModal(false);
+    showSnackBar(t('The changes have been saved'), 'success');
+  };
+  const onEditFailure = (err) =>
+    showSnackBar(t("The meter couldn't be edited"), 'error');
+  const onDeleteSuccess = () => {
+    showSnackBar(t('The meter has been deleted successfully'), 'success');
+  };
+  const onDeleteFailure = (err) =>
+    showSnackBar(t("The meter couldn't be deleted"), 'error');
   const columns: GridEnrichedColDef[] = [
     {
       field: 'name',
@@ -239,13 +256,10 @@ function Files() {
             values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              try {
-                const formattedValues = formatValues(values);
-                dispatch(addMeter(formattedValues));
-                setOpenAddModal(false);
-              } catch (err) {
-                console.error(err);
-              }
+              const formattedValues = formatValues(values);
+              dispatch(addMeter(formattedValues))
+                .then(onCreationSuccess)
+                .catch(onCreationFailure);
             }}
           />
         </Box>
@@ -303,13 +317,10 @@ function Files() {
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              try {
-                const formattedValues = formatValues(values);
-                dispatch(editMeter(currentMeter.id, formattedValues));
-                setOpenUpdateModal(false);
-              } catch (err) {
-                console.error(err);
-              }
+              const formattedValues = formatValues(values);
+              dispatch(editMeter(currentMeter.id, formattedValues))
+                .then(onEditSuccess)
+                .catch(onEditFailure);
             }}
           />
         </Box>
@@ -383,7 +394,11 @@ function Files() {
           sx: { width: '50%' }
         }}
       >
-        <MeterDetails meter={currentMeter} handleUpdate={handleUpdate} />
+        <MeterDetails
+          meter={currentMeter}
+          handleOpenUpdate={handleOpenUpdate}
+          handleOpenDelete={() => setOpenDelete(true)}
+        />
       </Drawer>
       <ConfirmDialog
         open={openDelete}
@@ -399,4 +414,4 @@ function Files() {
   );
 }
 
-export default Files;
+export default Meters;
