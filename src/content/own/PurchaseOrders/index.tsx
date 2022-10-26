@@ -33,6 +33,7 @@ import * as Yup from 'yup';
 import wait from '../../../utils/wait';
 import { isNumeric } from '../../../utils/validators';
 import { formatSelect } from '../../../utils/formatters';
+import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 
 function PurchaseOrders() {
   const { t }: { t: any } = useTranslation();
@@ -46,6 +47,7 @@ function PurchaseOrders() {
   const { purchaseOrders } = useSelector((state) => state.purchaseOrders);
   const [currentPurchaseOrder, setCurrentPurchaseOrder] =
     useState<PurchaseOrder>();
+  const { showSnackBar } = useContext(CustomSnackBarContext);
 
   const handleOpenUpdate = () => {
     setOpenUpdateModal(true);
@@ -81,14 +83,29 @@ function PurchaseOrders() {
 
   const handleDelete = (id: number) => {
     handleCloseDetails();
-    dispatch(deletePurchaseOrder(id));
+    dispatch(deletePurchaseOrder(id))
+      .then(onDeleteSuccess)
+      .catch(onDeleteFailure);
     setOpenDelete(false);
   };
   const handleCloseDetails = () => {
     window.history.replaceState(null, 'PurchaseOrder', `/app/purchase-orders`);
     setOpenDrawer(false);
   };
-
+  const onEditSuccess = () => {
+    setOpenUpdateModal(false);
+    showSnackBar(t('The changes have been saved'), 'success');
+  };
+  const onEditFailure = (err) =>
+    showSnackBar(t("The Purchase Order couldn't be edited"), 'error');
+  const onDeleteSuccess = () => {
+    showSnackBar(
+      t('The Purchase Order has been deleted successfully'),
+      'success'
+    );
+  };
+  const onDeleteFailure = (err) =>
+    showSnackBar(t("The Purchase Order couldn't be deleted"), 'error');
   const columns: GridEnrichedColDef[] = [
     {
       field: 'id',
@@ -367,13 +384,10 @@ function PurchaseOrders() {
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              try {
-                values.vendor = formatSelect(values.vendor);
-                dispatch(editPurchaseOrder(currentPurchaseOrder.id, values));
-                setOpenUpdateModal(false);
-              } catch (err) {
-                console.error(err);
-              }
+              values.vendor = formatSelect(values.vendor);
+              dispatch(editPurchaseOrder(currentPurchaseOrder.id, values))
+                .then(onEditSuccess)
+                .catch(onEditFailure);
             }}
           />
         </Box>

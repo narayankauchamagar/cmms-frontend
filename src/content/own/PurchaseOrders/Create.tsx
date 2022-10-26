@@ -12,16 +12,26 @@ import * as Yup from 'yup';
 import { phoneRegExp } from '../../../utils/validators';
 import { formatSelect } from '../../../utils/formatters';
 import { useNavigate } from 'react-router-dom';
+import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 
 function CreatePurchaseOrder() {
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { showSnackBar } = useContext(CustomSnackBarContext);
   useEffect(() => {
     setTitle(t('New Purchase Order'));
   }, []);
-
+  const onCreationSuccess = () => {
+    showSnackBar(
+      t('The Purchase Order has been created successfully'),
+      'success'
+    );
+    navigate('/app/purchase-orders');
+  };
+  const onCreationFailure = (err) =>
+    showSnackBar(t("The Purchase Order couldn't be created"), 'error');
   const fields: Array<IField> = [
     {
       name: 'purchaseOrderDetails',
@@ -230,15 +240,12 @@ function CreatePurchaseOrder() {
               values={{}}
               onChange={({ field, e }) => {}}
               onSubmit={async (values) => {
-                try {
-                  //TODO category
-                  delete values.category;
-                  values.vendor = formatSelect(values.vendor);
-                  dispatch(addPurchaseOrder(values));
-                  navigate('/app/purchase-orders');
-                } catch (err) {
-                  console.error(err);
-                }
+                //TODO category
+                delete values.category;
+                values.vendor = formatSelect(values.vendor);
+                dispatch(addPurchaseOrder(values))
+                  .then(onCreationSuccess)
+                  .catch(onCreationFailure);
               }}
             />
           </Card>
