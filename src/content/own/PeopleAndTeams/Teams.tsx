@@ -19,11 +19,12 @@ import {
 import { addTeam, getTeams, editTeam, deleteTeam } from '../../../slices/team';
 import { useDispatch, useSelector } from '../../../store';
 import ConfirmDialog from '../components/ConfirmDialog';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { formatSelectMultiple } from '../../../utils/formatters';
 import Team from '../../../models/owns/team';
 import { UserMiniDTO } from '../../../models/user';
 import UserAvatars from '../components/UserAvatars';
+import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 
 interface PropsType {
   values?: any;
@@ -35,18 +36,36 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
   const { t }: { t: any } = useTranslation();
   const dispatch = useDispatch();
   const [openDelete, setOpenDelete] = useState<boolean>(false);
+  const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const [currentTeam, setCurrentTeam] = useState<Team>();
   const { teams } = useSelector((state) => state.teams);
+  const { showSnackBar } = useContext(CustomSnackBarContext);
 
   useEffect(() => {
     dispatch(getTeams());
   }, []);
 
   const handleDelete = (id: number) => {
-    dispatch(deleteTeam(id));
+    dispatch(deleteTeam(id)).then(onDeleteSuccess).catch(onDeleteFailure);
     setOpenDelete(false);
   };
-
+  const onCreationSuccess = () => {
+    handleCloseModal();
+    showSnackBar(t('The Team has been created successfully'), 'success');
+  };
+  const onCreationFailure = (err) =>
+    showSnackBar(t("The Team couldn't be created"), 'error');
+  const onEditSuccess = () => {
+    setOpenUpdateModal(false);
+    showSnackBar(t('The changes have been saved'), 'success');
+  };
+  const onEditFailure = (err) =>
+    showSnackBar(t("The Team couldn't be edited"), 'error');
+  const onDeleteSuccess = () => {
+    showSnackBar(t('The Team has been deleted successfully'), 'success');
+  };
+  const onDeleteFailure = (err) =>
+    showSnackBar(t("The Team couldn't be deleted"), 'error');
   let fields: Array<IField> = [
     {
       name: 'name',
@@ -130,12 +149,9 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               values.users = formatSelectMultiple(values.users);
-              try {
-                dispatch(addTeam(values));
-                //handleCloseModal();
-              } catch (err) {
-                console.error(err);
-              }
+              dispatch(addTeam(values))
+                .then(onCreationSuccess)
+                .catch(onCreationFailure);
             }}
           />
         </Box>
