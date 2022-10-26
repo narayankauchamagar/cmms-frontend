@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   Dialog,
+  Drawer,
   Grid,
   Slide,
   styled,
@@ -12,16 +13,11 @@ import {
   useTheme,
   Zoom
 } from '@mui/material';
-import {
-  addRole,
-  getRoles,
-  editRole,
-  deleteRole
-} from '../../../../slices/role';
+import { getRoles } from '../../../../slices/role';
 import { useDispatch, useSelector } from '../../../../store';
 import PageHeader from './PageHeader';
 import { useTranslation } from 'react-i18next';
-import { Role } from '../../../../models/role';
+import { Role } from '../../../../models/owns/role';
 import CloseIcon from '@mui/icons-material/Close';
 import { forwardRef, ReactElement, Ref, useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
@@ -35,6 +31,7 @@ import {
 } from '@mui/x-data-grid';
 import CustomDatagrid from '../../components/CustomDatagrid';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
+import RoleDetails from './RoleDetails';
 
 const DialogWrapper = styled(Dialog)(
   () => `
@@ -85,18 +82,26 @@ const LabelWrapper = styled(Box)(
 function Roles() {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
-  const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [openDrawer, setOpenDrawer] = useState<boolean>(false);
+  const [currentRole, setCurrentRole] = useState<Role>();
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
   const { roles } = useSelector((state) => state.roles);
-
-  const handleConfirmDelete = (id: number) => {
-    setOpenConfirmDelete(true);
+  const handleOpenDetails = (id: number) => {
+    const foundRole = roles.find((role) => role.id === id);
+    if (foundRole) {
+      setCurrentRole(foundRole);
+      setOpenDrawer(true);
+    }
   };
-  const closeConfirmDelete = () => setOpenConfirmDelete(false);
+  const handleConfirmDelete = (id: number) => {
+    setOpenDelete(true);
+  };
+  const closeConfirmDelete = () => setOpenDelete(false);
 
-  const handleDeleteCompleted = () => {
-    setOpenConfirmDelete(false);
+  const handleDeleteCompleted = (id: number) => {
+    setOpenDelete(false);
 
     enqueueSnackbar(t('The role has been removed'), {
       variant: 'success',
@@ -113,7 +118,7 @@ function Roles() {
 
   const renderDeleteModal = () => (
     <DialogWrapper
-      open={openConfirmDelete}
+      open={openDelete}
       maxWidth="sm"
       fullWidth
       TransitionComponent={Transition}
@@ -154,7 +159,7 @@ function Roles() {
             {t('Cancel')}
           </Button>
           <ButtonError
-            onClick={handleDeleteCompleted}
+            onClick={() => handleDeleteCompleted(currentRole.id)}
             size="large"
             sx={{
               mx: 1,
@@ -245,6 +250,7 @@ function Roles() {
                 // Toolbar: GridToolbarColumnsButton,
                 // Toolbar: GridToolbarDensitySelector
               }}
+              onRowClick={(params) => handleOpenDetails(Number(params.id))}
               initialState={{
                 columns: {
                   columnVisibilityModel: {}
@@ -254,6 +260,20 @@ function Roles() {
           </Box>
         </Box>
       </Grid>
+      <Drawer
+        anchor="right"
+        open={openDrawer}
+        onClose={() => setOpenDrawer(false)}
+        PaperProps={{
+          sx: { width: '50%' }
+        }}
+      >
+        <RoleDetails
+          role={currentRole}
+          handleOpenUpdate={() => {}}
+          handleOpenDelete={() => setOpenDelete(true)}
+        />
+      </Drawer>
     </SettingsLayout>
   );
 }

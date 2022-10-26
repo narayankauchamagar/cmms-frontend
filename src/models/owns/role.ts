@@ -22,6 +22,7 @@ export interface Role {
   name: string;
   users: number;
   externalId?: string;
+  description?: string;
   type: RoleType;
   permissions: BasicPermission[];
 }
