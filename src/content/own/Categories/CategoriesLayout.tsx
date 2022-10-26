@@ -36,6 +36,7 @@ import {
 import useAuth from '../../../hooks/useAuth';
 import Category from '../../../models/owns/category';
 import { deleteVendor } from '../../../slices/vendor';
+import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 
 const IconButtonWrapper = styled(IconButton)(
   ({ theme }) => `
@@ -72,23 +73,45 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
   const [openUpdateCategoryModal, setOpenUpdateCategoryModal] =
     useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
-  const handleOpenAddCategoryModal = () => setOpenAddCategoryModal(true);
-  const handleCloseAddCategoryModal = () => setOpenAddCategoryModal(false);
+  const handleOpenAdd = () => setOpenAddCategoryModal(true);
+  const handleCloseAdd = () => setOpenAddCategoryModal(false);
   const { categories } = useSelector((state) => state.categories);
   const { setTitle } = useContext(TitleContext);
   const dispatch = useDispatch();
   const { user } = useAuth();
   const { companySettingsId } = user;
   const [currentCategory, setCurrentCategory] = useState<Category>();
+  const { showSnackBar } = useContext(CustomSnackBarContext);
 
   const handleDelete = (id: number) => {
-    dispatch(deleteCategory(id, basePath));
+    dispatch(deleteCategory(id, basePath))
+      .then(onDeleteSuccess)
+      .catch(onDeleteFailure);
     setOpenDelete(false);
   };
   useEffect(() => {
     setTitle(t('Categories'));
     dispatch(getCategories(basePath));
   }, []);
+
+  const onCreationSuccess = () => {
+    handleCloseAdd();
+    showSnackBar(t('The Category has been created successfully'), 'success');
+  };
+  const onCreationFailure = (err) =>
+    showSnackBar(t("The Category couldn't be created"), 'error');
+  const onEditSuccess = () => {
+    setOpenUpdateCategoryModal(false);
+    showSnackBar(t('The changes have been saved'), 'success');
+  };
+  const onEditFailure = (err) =>
+    showSnackBar(t("The Category couldn't be edited"), 'error');
+  const onDeleteSuccess = () => {
+    showSnackBar(t('The Category has been deleted successfully'), 'success');
+  };
+  const onDeleteFailure = (err) =>
+    showSnackBar(t("The Category couldn't be deleted"), 'error');
+
   const tabs = [
     { value: '', label: t('Work Orders') },
     { value: 'asset-status', label: t('Asset Status') },
@@ -101,7 +124,7 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
       fullWidth
       maxWidth="xs"
       open={openAddCategoryModal}
-      onClose={handleCloseAddCategoryModal}
+      onClose={handleCloseAdd}
     >
       <DialogTitle
         sx={{
@@ -128,15 +151,9 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
             ...values,
             companySettings: { id: companySettingsId }
           };
-          try {
-            dispatch(addCategory(formattedValues, basePath));
-            handleCloseAddCategoryModal();
-          } catch (err) {
-            console.error(err);
-            setStatus({ success: false });
-            setErrors({ name: err.message });
-            setSubmitting(false);
-          }
+          dispatch(addCategory(formattedValues, basePath))
+            .then(onCreationSuccess)
+            .catch(onCreationFailure);
         }}
       >
         {({
@@ -180,7 +197,7 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
                 p: 3
               }}
             >
-              <Button color="secondary" onClick={handleCloseAddCategoryModal}>
+              <Button color="secondary" onClick={handleCloseAdd}>
                 {t('Cancel')}
               </Button>
               <Button
@@ -231,17 +248,9 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
             ...values,
             companySettings: { id: companySettingsId }
           };
-          try {
-            dispatch(
-              editCategory(currentCategory.id, formattedValues, basePath)
-            );
-            setOpenUpdateCategoryModal(false);
-          } catch (err) {
-            console.error(err);
-            setStatus({ success: false });
-            setErrors({ name: err.message });
-            setSubmitting(false);
-          }
+          dispatch(editCategory(currentCategory.id, formattedValues, basePath))
+            .then(onEditSuccess)
+            .catch(onEditFailure);
         }}
       >
         {({
@@ -313,7 +322,7 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
       tabs={tabs}
       tabIndex={tabIndex}
       title={`${tabs[tabIndex].label} Categories`}
-      action={handleOpenAddCategoryModal}
+      action={handleOpenAdd}
       actionTitle={t('Categories')}
     >
       {renderModal()}

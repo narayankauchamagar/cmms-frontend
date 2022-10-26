@@ -284,15 +284,10 @@ function Locations() {
             values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              try {
-                const formattedValues = formatValues(values);
-                dispatch(addLocation(formattedValues))
-                  .then(onCreationSuccess)
-                  .catch(onCreationFailure);
-                setOpenAddModal(false);
-              } catch (err) {
-                console.error(err);
-              }
+              const formattedValues = formatValues(values);
+              dispatch(addLocation(formattedValues))
+                .then(onCreationSuccess)
+                .catch(onCreationFailure);
             }}
           />
         </Box>
@@ -366,14 +361,9 @@ function Locations() {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               const formattedValues = formatValues(values);
-              try {
-                dispatch(editLocation(currentLocation.id, formattedValues))
-                  .then(onEditSuccess)
-                  .catch(onEditFailure);
-                setOpenUpdateModal(false);
-              } catch (err) {
-                console.error(err);
-              }
+              dispatch(editLocation(currentLocation.id, formattedValues))
+                .then(onEditSuccess)
+                .catch(onEditFailure);
             }}
           />
         </Box>
