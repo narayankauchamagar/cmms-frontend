@@ -14,14 +14,14 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { IField } from '../type';
-import Location, { locations } from '../../../models/owns/location';
+import Location from '../../../models/owns/location';
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
 import {
   addLocation,
-  getLocations,
+  deleteLocation,
   editLocation,
-  deleteLocation
+  getLocations
 } from '../../../slices/location';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useDispatch, useSelector } from '../../../store';
@@ -38,21 +38,21 @@ import {
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import Form from '../components/form';
 import * as Yup from 'yup';
-import wait from '../../../utils/wait';
 import { isNumeric } from '../../../utils/validators';
-import User, { users } from '../../../models/owns/user';
-import Team, { teams } from '../../../models/owns/team';
-import { Vendor, vendors } from '../../../models/owns/vendor';
-import { Customer, customers } from '../../../models/owns/customer';
+import { teams } from '../../../models/owns/team';
+import { vendors } from '../../../models/owns/vendor';
+import { customers } from '../../../models/owns/customer';
 import LocationDetails from './LocationDetails';
 import { useParams } from 'react-router-dom';
 import Map from '../components/Map';
 import { formatSelectMultiple } from '../../../utils/formatters';
+import { CustomSnackBarContext } from 'src/contexts/CustomSnackBarContext';
 
-function Files() {
+function Locations() {
   const { t }: { t: any } = useTranslation();
   const [currentTab, setCurrentTab] = useState<string>('list');
   const dispatch = useDispatch();
+  const { showSnackBar } = useContext(CustomSnackBarContext);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const { locations } = useSelector((state) => state.locations);
   const tabs = [
@@ -68,24 +68,39 @@ function Files() {
   const { setTitle } = useContext(TitleContext);
   const { locationId } = useParams();
   const [currentLocation, setCurrentLocation] = useState<Location>();
-  const handleUpdate = (id: number) => {
-    setCurrentLocation(locations.find((location) => location.id === id));
+  const handleOpenUpdate = () => {
     setOpenUpdateModal(true);
   };
-  useEffect(() => {
-    dispatch(getLocations());
-  }, []);
-
-  const onOpenDeleteDialog = (id: number) => {
-    setCurrentLocation(locations.find((location) => location.id === id));
+  const onOpenDeleteDialog = () => {
     setOpenDelete(true);
   };
 
+  const changeCurrentLocation = (id: number) => {
+    setCurrentLocation(locations.find((location) => location.id === id));
+  };
   const handleDelete = (id: number) => {
     handleCloseDetails();
-    dispatch(deleteLocation(id));
+    dispatch(deleteLocation(id)).then(onDeleteSuccess).catch(onDeleteFailure);
     setOpenDelete(false);
   };
+  const onCreationSuccess = () => {
+    setOpenAddModal(false);
+    showSnackBar(t('The location has been created successfully'), 'success');
+  };
+  const onCreationFailure = (err) =>
+    showSnackBar(t("The location couldn't be created"), 'error');
+  const onEditSuccess = () => {
+    setOpenUpdateModal(false);
+    showSnackBar(t('The changes have been saved'), 'success');
+  };
+  const onEditFailure = (err) =>
+    showSnackBar(t("The location couldn't be edited"), 'error');
+  const onDeleteSuccess = () => {
+    showSnackBar(t('The location has been deleted successfully'), 'success');
+  };
+  const onDeleteFailure = (err) =>
+    showSnackBar(t("The location couldn't be deleted"), 'error');
+
   const handleOpenDetails = (id: number) => {
     const foundLocation = locations.find((location) => location.id === id);
     if (foundLocation) {
@@ -104,6 +119,7 @@ function Files() {
   };
   useEffect(() => {
     setTitle(t('Locations'));
+    dispatch(getLocations());
   }, []);
 
   useEffect(() => {
@@ -152,14 +168,18 @@ function Files() {
         <GridActionsCellItem
           key="edit"
           icon={<EditTwoToneIcon fontSize="small" color="primary" />}
-          onClick={() => handleUpdate(Number(params.id))}
+          onClick={() => {
+            changeCurrentLocation(Number(params.id));
+            handleOpenUpdate();
+          }}
           label="Edit"
         />,
         <GridActionsCellItem
           key="delete"
           icon={<DeleteTwoToneIcon fontSize="small" color="error" />}
           onClick={() => {
-            onOpenDeleteDialog(Number(params.id));
+            changeCurrentLocation(Number(params.id));
+            setOpenDelete(true);
           }}
           label="Delete"
         />
@@ -266,7 +286,9 @@ function Files() {
             onSubmit={async (values) => {
               try {
                 const formattedValues = formatValues(values);
-                dispatch(addLocation(formattedValues));
+                dispatch(addLocation(formattedValues))
+                  .then(onCreationSuccess)
+                  .catch(onCreationFailure);
                 setOpenAddModal(false);
               } catch (err) {
                 console.error(err);
@@ -345,7 +367,9 @@ function Files() {
             onSubmit={async (values) => {
               const formattedValues = formatValues(values);
               try {
-                dispatch(editLocation(currentLocation.id, formattedValues));
+                dispatch(editLocation(currentLocation.id, formattedValues))
+                  .then(onEditSuccess)
+                  .catch(onEditFailure);
                 setOpenUpdateModal(false);
               } catch (err) {
                 console.error(err);
@@ -466,8 +490,8 @@ function Files() {
       >
         <LocationDetails
           location={currentLocation}
-          handleUpdate={handleUpdate}
-          handleDelete={onOpenDeleteDialog}
+          handleOpenUpdate={handleOpenUpdate}
+          handleOpenDelete={onOpenDeleteDialog}
         />
       </Drawer>
       <ConfirmDialog
@@ -483,4 +507,4 @@ function Files() {
   );
 }
 
-export default Files;
+export default Locations;

@@ -6,6 +6,7 @@ import {
   DialogTitle,
   Divider,
   Grid,
+  IconButton,
   List,
   ListItemButton,
   ListItemText,
@@ -29,11 +30,11 @@ import { IField } from '../type';
 
 interface LocationDetailsProps {
   location: Location;
-  handleUpdate: (id: number) => void;
-  handleDelete: (id: number) => void;
+  handleOpenUpdate: () => void;
+  handleOpenDelete: () => void;
 }
 export default function LocationDetails(props: LocationDetailsProps) {
-  const { location, handleUpdate, handleDelete } = props;
+  const { location, handleOpenUpdate, handleOpenDelete } = props;
   const { t }: { t: any } = useTranslation();
   const [openAddFloorPlan, setOpenAddFloorPlan] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<string>('assets');
@@ -156,16 +157,12 @@ export default function LocationDetails(props: LocationDetailsProps) {
           <Typography variant="h6">{location?.address}</Typography>
         </Box>
         <Box>
-          <EditTwoToneIcon
-            onClick={() => handleUpdate(location.id)}
-            style={{ cursor: 'pointer', marginRight: 10 }}
-            color="primary"
-          />
-          <DeleteTwoToneIcon
-            onClick={() => handleDelete(location.id)}
-            style={{ cursor: 'pointer' }}
-            color="error"
-          />
+          <IconButton onClick={handleOpenUpdate} style={{ marginRight: 10 }}>
+            <EditTwoToneIcon color="primary" />
+          </IconButton>
+          <IconButton onClick={handleOpenDelete}>
+            <DeleteTwoToneIcon color="error" />
+          </IconButton>
         </Box>
       </Grid>
       <Divider />
