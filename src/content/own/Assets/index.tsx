@@ -39,6 +39,7 @@ import { GroupingCellWithLazyLoading } from './GroupingCellWithLazyLoading';
 import { OwnUser, UserMiniDTO } from '../../../models/user';
 import UserAvatars from '../components/UserAvatars';
 import { enumerate } from '../../../utils/displayers';
+import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 
 function Assets() {
   const { t }: { t: any } = useTranslation();
@@ -48,6 +49,7 @@ function Assets() {
   const dispatch = useDispatch();
   const { assetsHierarchy } = useSelector((state) => state.assets);
   const apiRef = useGridApiRef();
+  const { showSnackBar } = useContext(CustomSnackBarContext);
 
   useEffect(() => {
     setTitle(t('Assets'));
@@ -65,6 +67,13 @@ function Assets() {
     delete values.category;
     return values;
   };
+  const onCreationSuccess = () => {
+    setOpenAddModal(false);
+    showSnackBar(t('The Asset has been created successfully'), 'success');
+  };
+  const onCreationFailure = (err) =>
+    showSnackBar(t("The Asset couldn't be created"), 'error');
+
   const columns: GridEnrichedColDef[] = [
     {
       field: 'id',
@@ -403,13 +412,10 @@ function Assets() {
             values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              try {
-                const formattedValues = formatValues(values);
-                dispatch(addAsset(formattedValues));
-                setOpenAddModal(false);
-              } catch (err) {
-                console.error(err);
-              }
+              const formattedValues = formatValues(values);
+              dispatch(addAsset(formattedValues))
+                .then(onCreationSuccess)
+                .catch(onCreationFailure);
             }}
           />
         </Box>

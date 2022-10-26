@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import { useTranslation } from 'react-i18next';
@@ -26,6 +26,7 @@ import { useDispatch } from '../../../../store';
 import { addRole } from '../../../../slices/role';
 import useAuth from '../../../../hooks/useAuth';
 import { BasicPermission } from '../../../../models/owns/role';
+import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContext';
 
 // const roles = [
 //   { label: 'Free', value: 'free' },
@@ -42,6 +43,7 @@ function PageHeader({ rolesNumber }: PageHeaderProps) {
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
   const { companySettings } = useAuth();
+  const { showSnackBar } = useContext(CustomSnackBarContext);
   const permissionsMapping = new Map<string, BasicPermission>([
     ['createPeopleTeams', BasicPermission.CREATE_EDIT_PEOPLE_AND_TEAMS],
     ['createCategories', BasicPermission.CREATE_EDIT_CATEGORIES],
@@ -69,6 +71,12 @@ function PageHeader({ rolesNumber }: PageHeaderProps) {
   const handleCreateRoleClose = () => {
     setOpen(false);
   };
+  const onCreationSuccess = () => {
+    handleCreateRoleClose();
+    showSnackBar(t('The Role has been created successfully'), 'success');
+  };
+  const onCreationFailure = (err) =>
+    showSnackBar(t("The Role couldn't be created"), 'error');
 
   const formatValues = (values) => {
     values.companySettings = { id: companySettings.id };
@@ -81,19 +89,6 @@ function PageHeader({ rolesNumber }: PageHeaderProps) {
       }
     });
     return values;
-  };
-
-  const handleCreateRoleSuccess = () => {
-    enqueueSnackbar(t('The role was created successfully'), {
-      variant: 'success',
-      anchorOrigin: {
-        vertical: 'top',
-        horizontal: 'right'
-      },
-      TransitionComponent: Zoom
-    });
-
-    setOpen(false);
   };
 
   return (
@@ -152,26 +147,17 @@ function PageHeader({ rolesNumber }: PageHeaderProps) {
               .max(255)
               .required(t('The name field is required')),
             description: Yup.string().max(255),
-            externalId: Yup.string()
-              .max(255)
-              .required(t('The external ID field is required'))
+            externalId: Yup.string().max(255)
           })}
           onSubmit={async (
             _values,
             { resetForm, setErrors, setStatus, setSubmitting }
           ) => {
             const formattedValues = formatValues(_values);
-            try {
-              dispatch(addRole(formattedValues));
-              setStatus({ success: true });
-              setSubmitting(false);
-              handleCreateRoleSuccess();
-            } catch (err) {
-              console.error(err);
-              setStatus({ success: false });
-              setErrors({ submit: err.message });
-              setSubmitting(false);
-            }
+            dispatch(addRole(formattedValues))
+              .then(onCreationSuccess)
+              .catch(onCreationFailure)
+              .finally(() => setSubmitting(false));
           }}
         >
           {({
