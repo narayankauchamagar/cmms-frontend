@@ -11,7 +11,7 @@ import Form from '../components/form';
 import * as Yup from 'yup';
 import { IField } from '../type';
 import wait from 'src/utils/wait';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import CustomDataGrid from '../components/CustomDatagrid';
 import {
   GridEnrichedColDef,
@@ -35,6 +35,7 @@ import {
 } from '../../../slices/customer';
 import { useDispatch, useSelector } from '../../../store';
 import ConfirmDialog from '../components/ConfirmDialog';
+import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 
 interface PropsType {
   values?: any;
@@ -52,6 +53,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
   const [currentCustomer, setCurrentCustomer] = useState<Customer>();
   const [viewOrUpdate, setViewOrUpdate] = useState<'view' | 'update'>('view');
   const [openDelete, setOpenDelete] = useState<boolean>(false);
+  const { showSnackBar } = useContext(CustomSnackBarContext);
 
   useEffect(() => {
     dispatch(getCustomers());
@@ -79,9 +81,27 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
   };
 
   const handleDelete = (id: number) => {
-    dispatch(deleteCustomer(id));
+    handleCloseDetails();
+    dispatch(deleteCustomer(id)).then(onDeleteSuccess).catch(onDeleteFailure);
     setOpenDelete(false);
   };
+  const onCreationSuccess = () => {
+    handleCloseModal();
+    showSnackBar(t('The Customer has been created successfully'), 'success');
+  };
+  const onCreationFailure = (err) =>
+    showSnackBar(t("The Customer couldn't be created"), 'error');
+  const onEditSuccess = () => {
+    setViewOrUpdate('view');
+    showSnackBar(t('The changes have been saved'), 'success');
+  };
+  const onEditFailure = (err) =>
+    showSnackBar(t("The Customer couldn't be edited"), 'error');
+  const onDeleteSuccess = () => {
+    showSnackBar(t('The Customer has been deleted successfully'), 'success');
+  };
+  const onDeleteFailure = (err) =>
+    showSnackBar(t("The Customer couldn't be deleted"), 'error');
 
   useEffect(() => {
     if (customers?.length && customerId && isNumeric(customerId)) {
@@ -189,8 +209,10 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
     phone: Yup.string()
       .matches(phoneRegExp, t('The phone number is invalid'))
       .required(t('The phone number is required')),
-    website: Yup.string().matches(websiteRegExp, t('Invalid website')),
-    email: Yup.string().matches(emailRegExp, t('Invalid email'))
+    website: Yup.string()
+      .matches(websiteRegExp, t('Invalid website'))
+      .nullable(),
+    email: Yup.string().matches(emailRegExp, t('Invalid email')).nullable()
   };
 
   const columns: GridEnrichedColDef[] = [
@@ -294,16 +316,13 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
             values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              try {
-                const formattedValues = {
-                  ...values,
-                  rate: Number(values.rate)
-                };
-                dispatch(addCustomer(formattedValues));
-                handleCloseModal();
-              } catch (err) {
-                console.error(err);
-              }
+              const formattedValues = {
+                ...values,
+                rate: Number(values.rate)
+              };
+              dispatch(addCustomer(formattedValues))
+                .then(onCreationSuccess)
+                .catch(onCreationFailure);
             }}
           />
         </Box>
@@ -455,19 +474,15 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
               values={currentCustomer || {}}
               onChange={({ field, e }) => {}}
               onSubmit={async (values) => {
-                try {
-                  const formattedValues = values.rate
-                    ? {
-                        ...values,
-                        rate: Number(values.rate)
-                      }
-                    : values;
-                  dispatch(editCustomer(currentCustomer.id, formattedValues));
-                  await wait(2000);
-                  setViewOrUpdate('view');
-                } catch (err) {
-                  console.error(err);
-                }
+                const formattedValues = values.rate
+                  ? {
+                      ...values,
+                      rate: Number(values.rate)
+                    }
+                  : values;
+                dispatch(editCustomer(currentCustomer.id, formattedValues))
+                  .then(onEditSuccess)
+                  .catch(onEditFailure);
               }}
             />
           </Box>

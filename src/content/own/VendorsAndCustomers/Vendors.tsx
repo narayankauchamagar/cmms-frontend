@@ -18,8 +18,9 @@ import Form from '../components/form';
 import * as Yup from 'yup';
 import { IField } from '../type';
 import ConfirmDialog from '../components/ConfirmDialog';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import CustomDataGrid from '../components/CustomDatagrid';
+import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import {
   GridEnrichedColDef,
   GridRenderCellParams,
@@ -49,10 +50,9 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
   const dispatch = useDispatch();
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const { vendors } = useSelector((state) => state.vendors);
-  const [companyName, setCompanyName] = useState<string>('');
-  const [phone, setPhone] = useState<string>('');
   const [currentVendor, setCurrentVendor] = useState<Vendor>();
   const [viewOrUpdate, setViewOrUpdate] = useState<'view' | 'update'>('view');
+  const { showSnackBar } = useContext(CustomSnackBarContext);
 
   useEffect(() => {
     dispatch(getVendors());
@@ -60,10 +60,26 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
 
   const handleDelete = (id: number) => {
     handleCloseDetails();
-    dispatch(deleteVendor(id));
+    dispatch(deleteVendor(id)).then(onDeleteSuccess).catch(onDeleteFailure);
     setOpenDelete(false);
   };
-
+  const onCreationSuccess = () => {
+    handleCloseModal();
+    showSnackBar(t('The Vendor has been created successfully'), 'success');
+  };
+  const onCreationFailure = (err) =>
+    showSnackBar(t("The Vendor couldn't be created"), 'error');
+  const onEditSuccess = () => {
+    setViewOrUpdate('view');
+    showSnackBar(t('The changes have been saved'), 'success');
+  };
+  const onEditFailure = (err) =>
+    showSnackBar(t("The Vendor couldn't be edited"), 'error');
+  const onDeleteSuccess = () => {
+    showSnackBar(t('The Vendor has been deleted successfully'), 'success');
+  };
+  const onDeleteFailure = (err) =>
+    showSnackBar(t("The Customer couldn't be deleted"), 'error');
   const handleOpenDetails = (id: number) => {
     const foundVendor = vendors.find((vendor) => vendor.id === id);
     if (foundVendor) {
@@ -259,16 +275,13 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
               // field === 'term' && setAcceptTerm(e);
             }}
             onSubmit={async (values) => {
-              try {
-                const formattedValues = {
-                  ...values,
-                  rate: Number(values.rate)
-                };
-                dispatch(addVendor(formattedValues));
-                handleCloseModal();
-              } catch (err) {
-                console.error(err);
-              }
+              const formattedValues = {
+                ...values,
+                rate: Number(values.rate)
+              };
+              dispatch(addVendor(formattedValues))
+                .then(onCreationSuccess)
+                .catch(onCreationFailure);
             }}
           />
         </Box>
@@ -419,18 +432,15 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
               values={currentVendor || {}}
               onChange={({ field, e }) => {}}
               onSubmit={async (values) => {
-                try {
-                  const formattedValues = values.rate
-                    ? {
-                        ...values,
-                        rate: Number(values.rate)
-                      }
-                    : values;
-                  dispatch(editVendor(currentVendor.id, formattedValues));
-                  setViewOrUpdate('view');
-                } catch (err) {
-                  console.error(err);
-                }
+                const formattedValues = values.rate
+                  ? {
+                      ...values,
+                      rate: Number(values.rate)
+                    }
+                  : values;
+                dispatch(editVendor(currentVendor.id, formattedValues))
+                  .then(onEditSuccess)
+                  .catch(onEditFailure);
               }}
             />
           </Box>
