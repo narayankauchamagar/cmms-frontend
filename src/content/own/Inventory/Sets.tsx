@@ -20,7 +20,7 @@ import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import { parts } from '../../../models/owns/part';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useDispatch, useSelector } from '../../../store';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import Form from '../components/form';
 import wait from '../../../utils/wait';
@@ -37,6 +37,7 @@ import {
 } from '../../../slices/multipart';
 import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
 import { deletePart } from '../../../slices/part';
+import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 
 interface PropsType {
   setAction: (p: () => () => void) => void;
@@ -52,6 +53,8 @@ const Sets = ({ setAction }: PropsType) => {
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [currentSet, setCurrentSet] = useState<SetType>();
+  const { showSnackBar } = useContext(CustomSnackBarContext);
+
   const tabs = [
     { value: 'list', label: t('List View') },
     { value: 'card', label: t('Card View') }
@@ -65,7 +68,7 @@ const Sets = ({ setAction }: PropsType) => {
 
   const handleDelete = (id: number) => {
     handleCloseDetails();
-    dispatch(deleteMultiParts(id));
+    dispatch(deleteMultiParts(id)).then(onDeleteSuccess).catch(onDeleteFailure);
     setOpenDelete(false);
   };
   const formatValues = (values) => {
@@ -74,6 +77,23 @@ const Sets = ({ setAction }: PropsType) => {
     });
     return values;
   };
+  const onCreationSuccess = () => {
+    setOpenAddModal(false);
+    showSnackBar(t('The Set has been created successfully'), 'success');
+  };
+  const onCreationFailure = (err) =>
+    showSnackBar(t("The Set couldn't be created"), 'error');
+  const onEditSuccess = () => {
+    setOpenUpdateModal(false);
+    showSnackBar(t('The changes have been saved'), 'success');
+  };
+  const onEditFailure = (err) =>
+    showSnackBar(t("The Set couldn't be edited"), 'error');
+  const onDeleteSuccess = () => {
+    showSnackBar(t('The Set has been deleted successfully'), 'success');
+  };
+  const onDeleteFailure = (err) =>
+    showSnackBar(t("The Set couldn't be deleted"), 'error');
 
   useEffect(() => {
     dispatch(getMultiParts());
@@ -225,13 +245,10 @@ const Sets = ({ setAction }: PropsType) => {
             values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              try {
-                const formattedValues = formatValues(values);
-                dispatch(addMultiParts(formattedValues));
-                setOpenAddModal(false);
-              } catch (err) {
-                console.error(err);
-              }
+              const formattedValues = formatValues(values);
+              dispatch(addMultiParts(formattedValues))
+                .then(onCreationSuccess)
+                .catch(onCreationFailure);
             }}
           />
         </Box>
@@ -279,13 +296,10 @@ const Sets = ({ setAction }: PropsType) => {
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              try {
-                const formattedValues = formatValues(values);
-                dispatch(editMultiParts(currentSet.id, values));
-                setOpenUpdateModal(false);
-              } catch (err) {
-                console.error(err);
-              }
+              const formattedValues = formatValues(values);
+              dispatch(editMultiParts(currentSet.id, formattedValues))
+                .then(onEditSuccess)
+                .catch(onEditFailure);
             }}
           />
         </Box>

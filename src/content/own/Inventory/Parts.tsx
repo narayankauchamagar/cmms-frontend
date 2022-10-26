@@ -21,10 +21,9 @@ import Part from '../../../models/owns/part';
 import { addPart, getParts, editPart, deletePart } from '../../../slices/part';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useDispatch, useSelector } from '../../../store';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import Form from '../components/form';
-import wait from '../../../utils/wait';
 import { IField } from '../type';
 import PartDetails from './PartDetails';
 import { useParams } from 'react-router-dom';
@@ -33,6 +32,7 @@ import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
 import { UserMiniDTO } from '../../../models/user';
 import UserAvatars from '../components/UserAvatars';
 import { deleteCustomer } from '../../../slices/customer';
+import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 
 interface PropsType {
   setAction: (p: () => () => void) => void;
@@ -49,6 +49,7 @@ const Parts = ({ setAction }: PropsType) => {
   const [currentPart, setCurrentPart] = useState<Part>();
   const { partId } = useParams();
   const dispatch = useDispatch();
+  const { showSnackBar } = useContext(CustomSnackBarContext);
 
   const handleOpenUpdate = () => {
     setOpenUpdateModal(true);
@@ -56,7 +57,7 @@ const Parts = ({ setAction }: PropsType) => {
 
   const handleDelete = (id: number) => {
     handleCloseDetails();
-    dispatch(deletePart(id));
+    dispatch(deletePart(id)).then(onDeleteSuccess).catch(onDeleteFailure);
     setOpenDelete(false);
   };
   const tabs = [
@@ -64,7 +65,23 @@ const Parts = ({ setAction }: PropsType) => {
     { value: 'card', label: t('Card View') }
   ];
   const theme = useTheme();
-
+  const onCreationSuccess = () => {
+    setOpenAddModal(false);
+    showSnackBar(t('The Part has been created successfully'), 'success');
+  };
+  const onCreationFailure = (err) =>
+    showSnackBar(t("The Part couldn't be created"), 'error');
+  const onEditSuccess = () => {
+    setOpenUpdateModal(false);
+    showSnackBar(t('The changes have been saved'), 'success');
+  };
+  const onEditFailure = (err) =>
+    showSnackBar(t("The Part couldn't be edited"), 'error');
+  const onDeleteSuccess = () => {
+    showSnackBar(t('The Part has been deleted successfully'), 'success');
+  };
+  const onDeleteFailure = (err) =>
+    showSnackBar(t("The meter couldn't be deleted"), 'error');
   useEffect(() => {
     dispatch(getParts());
     const handleOpenModal = () => setOpenAddModal(true);
@@ -316,13 +333,10 @@ const Parts = ({ setAction }: PropsType) => {
             values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              try {
-                const formattedValues = formatValues(values);
-                dispatch(addPart(formattedValues));
-                setOpenAddModal(false);
-              } catch (err) {
-                console.error(err);
-              }
+              const formattedValues = formatValues(values);
+              dispatch(addPart(formattedValues))
+                .then(onCreationSuccess)
+                .catch(onCreationFailure);
             }}
           />
         </Box>
@@ -432,13 +446,10 @@ const Parts = ({ setAction }: PropsType) => {
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              try {
-                const formattedValues = formatValues(values);
-                dispatch(editPart(currentPart.id, formattedValues));
-                setOpenUpdateModal(false);
-              } catch (err) {
-                console.error(err);
-              }
+              const formattedValues = formatValues(values);
+              dispatch(editPart(currentPart.id, formattedValues))
+                .then(onEditSuccess)
+                .catch(onEditFailure);
             }}
           />
         </Box>
