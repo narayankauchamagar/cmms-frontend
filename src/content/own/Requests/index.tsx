@@ -32,6 +32,7 @@ import { IField } from '../type';
 import RequestDetails from './RequestDetails';
 import { useParams } from 'react-router-dom';
 import { isNumeric } from '../../../utils/validators';
+import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
@@ -44,6 +45,7 @@ function Files() {
   const dispatch = useDispatch();
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const { requests } = useSelector((state) => state.requests);
+  const { showSnackBar } = useContext(CustomSnackBarContext);
 
   useEffect(() => {
     setTitle(t('Requests'));
@@ -57,12 +59,30 @@ function Files() {
 
   const handleDelete = (id: number) => {
     handleCloseDetails();
-    dispatch(deleteRequest(id));
+    dispatch(deleteRequest(id)).then(onDeleteSuccess).catch(onDeleteFailure);
     setOpenDelete(false);
   };
   const handleOpenUpdate = () => {
     setOpenUpdateModal(true);
   };
+  const onCreationSuccess = () => {
+    setOpenAddModal(false);
+    showSnackBar(t('The Request has been created successfully'), 'success');
+  };
+  const onCreationFailure = (err) =>
+    showSnackBar(t("The Request couldn't be created"), 'error');
+  const onEditSuccess = () => {
+    setOpenUpdateModal(false);
+    showSnackBar(t('The changes have been saved'), 'success');
+  };
+  const onEditFailure = (err) =>
+    showSnackBar(t("The Request couldn't be edited"), 'error');
+  const onDeleteSuccess = () => {
+    showSnackBar(t('The Request has been deleted successfully'), 'success');
+  };
+  const onDeleteFailure = (err) =>
+    showSnackBar(t("The Request couldn't be deleted"), 'error');
+
   const handleOpenDetails = (id: number) => {
     const foundRequest = requests.find((request) => request.id === id);
     if (foundRequest) {
@@ -180,13 +200,10 @@ function Files() {
             values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              try {
-                values.priority = values.priority?.value;
-                dispatch(addRequest(values));
-                setOpenAddModal(false);
-              } catch (err) {
-                console.error(err);
-              }
+              values.priority = values.priority?.value;
+              dispatch(addRequest(values))
+                .then(onCreationSuccess)
+                .catch(onCreationFailure);
             }}
           />
         </Box>
@@ -226,13 +243,10 @@ function Files() {
             values={currentRequest}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              try {
-                values.priority = values.priority?.value;
-                dispatch(editRequest(currentRequest?.id, values));
-                setOpenUpdateModal(false);
-              } catch (err) {
-                console.error(err);
-              }
+              values.priority = values.priority?.value;
+              dispatch(editRequest(currentRequest?.id, values))
+                .then(onEditSuccess)
+                .catch(onEditFailure);
             }}
           />
         </Box>
