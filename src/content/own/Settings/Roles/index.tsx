@@ -15,9 +15,10 @@ import {
 } from '@mui/material';
 import { getRoles } from '../../../../slices/role';
 import { useDispatch, useSelector } from '../../../../store';
+import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import PageHeader from './PageHeader';
 import { useTranslation } from 'react-i18next';
-import { Role } from '../../../../models/owns/role';
+import { BasicPermission, Role } from '../../../../models/owns/role';
 import CloseIcon from '@mui/icons-material/Close';
 import { forwardRef, ReactElement, Ref, useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
@@ -32,6 +33,8 @@ import {
 import CustomDatagrid from '../../components/CustomDatagrid';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import RoleDetails from './RoleDetails';
+import EditRole from './EditRole';
+import useAuth from '../../../../hooks/useAuth';
 
 const DialogWrapper = styled(Dialog)(
   () => `
@@ -82,12 +85,46 @@ const LabelWrapper = styled(Box)(
 function Roles() {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
+  const { companySettings } = useAuth();
   const [openDelete, setOpenDelete] = useState(false);
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [currentRole, setCurrentRole] = useState<Role>();
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
   const { roles } = useSelector((state) => state.roles);
+  const permissionsMapping = new Map<string, BasicPermission>([
+    ['createPeopleTeams', BasicPermission.CREATE_EDIT_PEOPLE_AND_TEAMS],
+    ['createCategories', BasicPermission.CREATE_EDIT_CATEGORIES],
+    ['deleteWorkOrders', BasicPermission.DELETE_WORK_ORDERS],
+    [
+      'deletePreventiveMaintenanceTrigger',
+      BasicPermission.DELETE_PREVENTIVE_MAINTENANCE_TRIGGERS
+    ],
+    ['deleteLocations', BasicPermission.DELETE_LOCATIONS],
+    ['deleteAssets', BasicPermission.DELETE_ASSETS],
+    ['deletePartsAndSets', BasicPermission.DELETE_PARTS_AND_MULTI_PARTS],
+    ['deletePurchaseOrders', BasicPermission.DELETE_PURCHASE_ORDERS],
+    ['deleteMeters', BasicPermission.DELETE_METERS],
+    ['deleteVendorsCustomers', BasicPermission.DELETE_VENDORS_AND_CUSTOMERS],
+    ['deleteCategories', BasicPermission.DELETE_CATEGORIES],
+    ['deleteFiles', BasicPermission.DELETE_FILES],
+    ['deletePeopleTeams', BasicPermission.DELETE_PEOPLE_AND_TEAMS],
+    ['accessSettings', BasicPermission.ACCESS_SETTINGS]
+  ]);
+
+  const formatValues = (values) => {
+    values.companySettings = { id: companySettings.id };
+    values.roleType = 'ROLE_CLIENT';
+    values.permissions = [];
+    permissionsMapping.forEach((permission, name) => {
+      if ((values[name] && values[name][0] === 'on') || values[name]) {
+        delete values[name];
+        values.permissions.push(permission);
+      }
+    });
+    return values;
+  };
   const handleOpenDetails = (id: number) => {
     const foundRole = roles.find((role) => role.id === id);
     if (foundRole) {
@@ -95,8 +132,17 @@ function Roles() {
       setOpenDrawer(true);
     }
   };
-  const handleConfirmDelete = (id: number) => {
+  const handleOpenDelete = (id: number) => {
+    changeCurrentLocation(id);
     setOpenDelete(true);
+  };
+  const changeCurrentLocation = (id: number) => {
+    const foundRole = roles.find((role) => role.id === id);
+    setCurrentRole(foundRole);
+  };
+  const handleOpenUpdate = (id: number) => {
+    changeCurrentLocation(id);
+    setOpenUpdateModal(true);
   };
   const closeConfirmDelete = () => setOpenDelete(false);
 
@@ -226,9 +272,15 @@ function Roles() {
       description: t('Actions'),
       getActions: (params: GridRowParams) => [
         <GridActionsCellItem
+          key="edit"
+          icon={<EditTwoToneIcon fontSize="small" color="primary" />}
+          onClick={() => handleOpenUpdate(Number(params.id))}
+          label="Edit"
+        />,
+        <GridActionsCellItem
           key="delete"
           icon={<DeleteTwoToneIcon fontSize="small" color="error" />}
-          onClick={() => handleConfirmDelete(Number(params.id))}
+          onClick={() => handleOpenDelete(Number(params.id))}
           label="Delete"
         />
       ]
@@ -239,7 +291,13 @@ function Roles() {
     <SettingsLayout tabIndex={3}>
       <Grid item xs={12}>
         <Box p={4}>
-          <PageHeader rolesNumber={roles.length} />
+          <PageHeader rolesNumber={roles.length} formatValues={formatValues} />
+          <EditRole
+            open={openUpdateModal}
+            role={currentRole}
+            onClose={() => setOpenUpdateModal(false)}
+            formatValues={formatValues}
+          />
           {renderDeleteModal()}
           <Box sx={{ mt: 4, height: 500, width: '95%' }}>
             <CustomDatagrid
@@ -270,7 +328,7 @@ function Roles() {
       >
         <RoleDetails
           role={currentRole}
-          handleOpenUpdate={() => {}}
+          handleOpenUpdate={() => setOpenUpdateModal(true)}
           handleOpenDelete={() => setOpenDelete(true)}
         />
       </Drawer>

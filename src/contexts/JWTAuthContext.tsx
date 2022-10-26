@@ -69,6 +69,7 @@ type LoginAction = {
   type: 'LOGIN';
   payload: {
     user: UserResponseDTO;
+    companySettings: CompanySettings;
   };
 };
 
@@ -80,6 +81,7 @@ type RegisterAction = {
   type: 'REGISTER';
   payload: {
     user: UserResponseDTO;
+    companySettings: CompanySettings;
   };
 };
 type PatchUserSettingsAction = {
@@ -161,12 +163,13 @@ const handlers: Record<
     };
   },
   LOGIN: (state: AuthState, action: LoginAction): AuthState => {
-    const { user } = action.payload;
+    const { user, companySettings } = action.payload;
 
     return {
       ...state,
       isAuthenticated: true,
-      user
+      user,
+      companySettings
     };
   },
   LOGOUT: (state: AuthState): AuthState => ({
@@ -175,12 +178,13 @@ const handlers: Record<
     user: null
   }),
   REGISTER: (state: AuthState, action: RegisterAction): AuthState => {
-    const { user } = action.payload;
+    const { user, companySettings } = action.payload;
 
     return {
       ...state,
       isAuthenticated: true,
-      user
+      user,
+      companySettings
     };
   },
   PATCH_USER_SETTINGS: (
@@ -285,6 +289,13 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     setCompanyId(user.companyId);
     return user;
   };
+  const setupUser = async (user: UserResponseDTO) => {
+    const companySettings = await getCompanySettings(user.companySettingsId);
+    switchLanguage({
+      lng: companySettings.generalPreferences.language.toLowerCase()
+    });
+    return companySettings;
+  };
   const getInfos = async (): Promise<void> => {
     try {
       const accessToken = window.localStorage.getItem('accessToken');
@@ -292,13 +303,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
       if (accessToken && verify(accessToken, JWT_SECRET)) {
         setSession(accessToken);
         const user = await updateUserInfos();
-        const companySettings = await getCompanySettings(
-          user.companySettingsId
-        );
-        switchLanguage({
-          lng: companySettings.generalPreferences.language.toLowerCase()
-        });
-
+        const companySettings = await setupUser(user);
         dispatch({
           type: 'INITIALIZE',
           payload: {
@@ -342,10 +347,12 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     const { accessToken } = response;
     setSession(accessToken);
     const user = await updateUserInfos();
+    const companySettings = await setupUser(user);
     dispatch({
       type: 'LOGIN',
       payload: {
-        user
+        user,
+        companySettings
       }
     });
   };
@@ -376,10 +383,12 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     const { message, success } = response;
     setSession(message);
     const user = await updateUserInfos();
+    const companySettings = await setupUser(user);
     dispatch({
       type: 'REGISTER',
       payload: {
-        user
+        user,
+        companySettings
       }
     });
   };

@@ -35,34 +35,14 @@ import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContex
 
 interface PageHeaderProps {
   rolesNumber: number;
+  formatValues: (values) => any;
 }
 
-function PageHeader({ rolesNumber }: PageHeaderProps) {
+function PageHeader({ rolesNumber, formatValues }: PageHeaderProps) {
   const { t }: { t: any } = useTranslation();
   const [open, setOpen] = useState(false);
-  const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
-  const { companySettings } = useAuth();
   const { showSnackBar } = useContext(CustomSnackBarContext);
-  const permissionsMapping = new Map<string, BasicPermission>([
-    ['createPeopleTeams', BasicPermission.CREATE_EDIT_PEOPLE_AND_TEAMS],
-    ['createCategories', BasicPermission.CREATE_EDIT_CATEGORIES],
-    ['deleteWorkOrders', BasicPermission.DELETE_WORK_ORDERS],
-    [
-      'deletePreventiveMaintenanceTrigger',
-      BasicPermission.DELETE_PREVENTIVE_MAINTENANCE_TRIGGERS
-    ],
-    ['deleteLocations', BasicPermission.DELETE_LOCATIONS],
-    ['deleteAssets', BasicPermission.DELETE_ASSETS],
-    ['deletePartsAndSets', BasicPermission.DELETE_PARTS_AND_MULTI_PARTS],
-    ['deletePurchaseOrders', BasicPermission.DELETE_PURCHASE_ORDERS],
-    ['deleteMeters', BasicPermission.DELETE_METERS],
-    ['deleteVendorsCustomers', BasicPermission.DELETE_VENDORS_AND_CUSTOMERS],
-    ['deleteCategories', BasicPermission.DELETE_CATEGORIES],
-    ['deleteFiles', BasicPermission.DELETE_FILES],
-    ['deletePeopleTeams', BasicPermission.DELETE_PEOPLE_AND_TEAMS],
-    ['accessSettings', BasicPermission.ACCESS_SETTINGS]
-  ]);
 
   const handleCreateRoleOpen = () => {
     setOpen(true);
@@ -77,19 +57,6 @@ function PageHeader({ rolesNumber }: PageHeaderProps) {
   };
   const onCreationFailure = (err) =>
     showSnackBar(t("The Role couldn't be created"), 'error');
-
-  const formatValues = (values) => {
-    values.companySettings = { id: companySettings.id };
-    values.roleType = 'ROLE_CLIENT';
-    values.permissions = [];
-    permissionsMapping.forEach((permission, name) => {
-      if (values[name] && values[name][0] === 'on') {
-        delete values[name];
-        values.permissions.push(permission);
-      }
-    });
-    return values;
-  };
 
   return (
     <>
@@ -146,13 +113,14 @@ function PageHeader({ rolesNumber }: PageHeaderProps) {
             name: Yup.string()
               .max(255)
               .required(t('The name field is required')),
-            description: Yup.string().max(255),
-            externalId: Yup.string().max(255)
+            description: Yup.string().max(255).nullable(),
+            externalId: Yup.string().max(255).nullable()
           })}
           onSubmit={async (
             _values,
             { resetForm, setErrors, setStatus, setSubmitting }
           ) => {
+            setSubmitting(true);
             const formattedValues = formatValues(_values);
             dispatch(addRole(formattedValues))
               .then(onCreationSuccess)
