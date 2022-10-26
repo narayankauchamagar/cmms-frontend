@@ -10,7 +10,6 @@ import { useTranslation } from 'react-i18next';
 import Form from '../components/form';
 import * as Yup from 'yup';
 import { IField } from '../type';
-import wait from 'src/utils/wait';
 import { useContext, useEffect, useState } from 'react';
 import CustomDataGrid from '../components/CustomDatagrid';
 import {

@@ -15,9 +15,9 @@ import { useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
 import {
   addRequest,
-  getRequests,
+  deleteRequest,
   editRequest,
-  deleteRequest
+  getRequests
 } from '../../../slices/request';
 import { useDispatch, useSelector } from '../../../store';
 import ConfirmDialog from '../components/ConfirmDialog';

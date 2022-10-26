@@ -3,8 +3,7 @@ import {
   CardContent,
   CardHeader,
   Divider,
-  FormControl,
-  useTheme
+  FormControl
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import TaskAltTwoToneIcon from '@mui/icons-material/TaskAltTwoTone';

@@ -18,7 +18,7 @@ import CustomDataGrid from '../components/CustomDatagrid';
 import { GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import Part from '../../../models/owns/part';
-import { addPart, getParts, editPart, deletePart } from '../../../slices/part';
+import { addPart, deletePart, editPart, getParts } from '../../../slices/part';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useDispatch, useSelector } from '../../../store';
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
@@ -28,10 +28,9 @@ import { IField } from '../type';
 import PartDetails from './PartDetails';
 import { useParams } from 'react-router-dom';
 import { isNumeric } from '../../../utils/validators';
-import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
+import { formatSelectMultiple } from '../../../utils/formatters';
 import { UserMiniDTO } from '../../../models/user';
 import UserAvatars from '../components/UserAvatars';
-import { deleteCustomer } from '../../../slices/customer';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 
 interface PropsType {

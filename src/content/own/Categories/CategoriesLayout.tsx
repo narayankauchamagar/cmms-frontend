@@ -35,7 +35,6 @@ import {
 } from '../../../slices/category';
 import useAuth from '../../../hooks/useAuth';
 import Category from '../../../models/owns/category';
-import { deleteVendor } from '../../../slices/vendor';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 
 const IconButtonWrapper = styled(IconButton)(

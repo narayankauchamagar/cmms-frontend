@@ -1,16 +1,14 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 
 import { Helmet } from 'react-helmet-async';
 
 import { Grid } from '@mui/material';
 import useRefMounted from 'src/hooks/useRefMounted';
 import { useTranslation } from 'react-i18next';
-import type { UserResponseDTO } from 'src/models/user';
 import ProfileCover from './ProfileCover';
 import RecentActivity from './RecentActivity';
 import MyCards from './MyCards';
 import ProfileDetails from './ProfileDetails';
-import axios from 'src/utils/axios';
 import { TitleContext } from '../../../contexts/TitleContext';
 import useAuth from '../../../hooks/useAuth';
 

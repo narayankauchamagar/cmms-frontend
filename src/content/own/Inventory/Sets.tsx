@@ -23,7 +23,6 @@ import { useDispatch, useSelector } from '../../../store';
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import Form from '../components/form';
-import wait from '../../../utils/wait';
 import { IField } from '../type';
 import SetType from '../../../models/owns/setType';
 import SetDetails from './SetDetails';
@@ -35,8 +34,6 @@ import {
   editMultiParts,
   getMultiParts
 } from '../../../slices/multipart';
-import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
-import { deletePart } from '../../../slices/part';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 
 interface PropsType {

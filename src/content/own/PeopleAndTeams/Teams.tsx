@@ -9,14 +9,13 @@ import { useTranslation } from 'react-i18next';
 import Form from '../components/form';
 import * as Yup from 'yup';
 import { IField } from '../type';
-import wait from 'src/utils/wait';
 import CustomDataGrid from '../components/CustomDatagrid';
 import {
   GridEnrichedColDef,
   GridRenderCellParams,
   GridToolbar
 } from '@mui/x-data-grid';
-import { addTeam, getTeams, editTeam, deleteTeam } from '../../../slices/team';
+import { addTeam, deleteTeam, getTeams } from '../../../slices/team';
 import { useDispatch, useSelector } from '../../../store';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useContext, useEffect, useState } from 'react';

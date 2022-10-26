@@ -10,18 +10,23 @@ import {
   Slide,
   styled,
   Typography,
-  useTheme,
-  Zoom
+  useTheme
 } from '@mui/material';
-import { getRoles } from '../../../../slices/role';
+import { deleteRole, getRoles } from '../../../../slices/role';
 import { useDispatch, useSelector } from '../../../../store';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import PageHeader from './PageHeader';
 import { useTranslation } from 'react-i18next';
 import { BasicPermission, Role } from '../../../../models/owns/role';
 import CloseIcon from '@mui/icons-material/Close';
-import { forwardRef, ReactElement, Ref, useEffect, useState } from 'react';
-import { useSnackbar } from 'notistack';
+import {
+  forwardRef,
+  ReactElement,
+  Ref,
+  useContext,
+  useEffect,
+  useState
+} from 'react';
 import { TransitionProps } from '@mui/material/transitions';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import {
@@ -35,6 +40,7 @@ import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import RoleDetails from './RoleDetails';
 import EditRole from './EditRole';
 import useAuth from '../../../../hooks/useAuth';
+import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContext';
 
 const DialogWrapper = styled(Dialog)(
   () => `
@@ -90,7 +96,7 @@ function Roles() {
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [currentRole, setCurrentRole] = useState<Role>();
-  const { enqueueSnackbar } = useSnackbar();
+  const { showSnackBar } = useContext(CustomSnackBarContext);
   const dispatch = useDispatch();
   const { roles } = useSelector((state) => state.roles);
   const permissionsMapping = new Map<string, BasicPermission>([
@@ -125,6 +131,12 @@ function Roles() {
     });
     return values;
   };
+  const onDeleteSuccess = () => {
+    showSnackBar(t('The Role has been deleted successfully'), 'success');
+  };
+  const onDeleteFailure = (err) =>
+    showSnackBar(t("The Role couldn't be deleted"), 'error');
+
   const handleOpenDetails = (id: number) => {
     const foundRole = roles.find((role) => role.id === id);
     if (foundRole) {
@@ -146,17 +158,10 @@ function Roles() {
   };
   const closeConfirmDelete = () => setOpenDelete(false);
 
-  const handleDeleteCompleted = (id: number) => {
+  const handleDelete = (id: number) => {
+    setOpenDrawer(false);
+    dispatch(deleteRole(id)).then(onDeleteSuccess).catch(onDeleteFailure);
     setOpenDelete(false);
-
-    enqueueSnackbar(t('The role has been removed'), {
-      variant: 'success',
-      anchorOrigin: {
-        vertical: 'top',
-        horizontal: 'right'
-      },
-      TransitionComponent: Zoom
-    });
   };
   useEffect(() => {
     dispatch(getRoles());
@@ -205,7 +210,7 @@ function Roles() {
             {t('Cancel')}
           </Button>
           <ButtonError
-            onClick={() => handleDeleteCompleted(currentRole.id)}
+            onClick={() => handleDelete(currentRole.id)}
             size="large"
             sx={{
               mx: 1,

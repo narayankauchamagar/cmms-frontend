@@ -1,15 +1,15 @@
 import {
+  Avatar,
+  Box,
   Card,
   CardHeader,
-  ListItemText,
+  Divider,
   List,
   ListItem,
-  Divider,
   ListItemAvatar,
-  Avatar,
-  styled,
+  ListItemText,
   Radio,
-  Box,
+  styled,
   useTheme
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';

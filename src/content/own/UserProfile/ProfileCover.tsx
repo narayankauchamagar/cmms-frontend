@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import PropTypes from 'prop-types';
-import type { User, UserResponseDTO } from 'src/models/user';
+import type { UserResponseDTO } from 'src/models/user';
 import {
   Avatar,
   Box,

@@ -2,7 +2,6 @@ import { useContext, useState } from 'react';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import { useTranslation } from 'react-i18next';
-import wait from 'src/utils/wait';
 
 import {
   Box,
@@ -17,15 +16,11 @@ import {
   FormControlLabel,
   Grid,
   TextField,
-  Typography,
-  Zoom
+  Typography
 } from '@mui/material';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import { useSnackbar } from 'notistack';
 import { useDispatch } from '../../../../store';
 import { addRole } from '../../../../slices/role';
-import useAuth from '../../../../hooks/useAuth';
-import { BasicPermission } from '../../../../models/owns/role';
 import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContext';
 
 // const roles = [

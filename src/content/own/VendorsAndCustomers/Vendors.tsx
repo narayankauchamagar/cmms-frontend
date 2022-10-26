@@ -8,9 +8,9 @@ import {
 } from '@mui/material';
 import {
   addVendor,
-  getVendors,
+  deleteVendor,
   editVendor,
-  deleteVendor
+  getVendors
 } from '../../../slices/vendor';
 import { useDispatch, useSelector } from '../../../store';
 import { useTranslation } from 'react-i18next';
@@ -33,7 +33,7 @@ import {
   websiteRegExp
 } from '../../../utils/validators';
 import { Close } from '@mui/icons-material';
-import { Vendor, vendors } from '../../../models/owns/vendor';
+import { Vendor } from '../../../models/owns/vendor';
 import { useParams } from 'react-router-dom';
 
 interface PropsType {

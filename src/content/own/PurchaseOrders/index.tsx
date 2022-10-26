@@ -20,9 +20,9 @@ import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import PurchaseOrder from '../../../models/owns/purchaseOrder';
 import { useDispatch, useSelector } from '../../../store';
 import {
-  getPurchaseOrders,
+  deletePurchaseOrder,
   editPurchaseOrder,
-  deletePurchaseOrder
+  getPurchaseOrders
 } from '../../../slices/purchaseOrder';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -30,7 +30,6 @@ import PurchaseOrderDetails from './PurchaseOrderDetails';
 import { IField } from '../type';
 import Form from '../components/form';
 import * as Yup from 'yup';
-import wait from '../../../utils/wait';
 import { isNumeric } from '../../../utils/validators';
 import { formatSelect } from '../../../utils/formatters';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';

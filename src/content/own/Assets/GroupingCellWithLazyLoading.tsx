@@ -1,16 +1,9 @@
 import * as React from 'react';
 import {
-  DataGridPro,
-  getDataGridUtilityClass,
-  GridColumns,
   DataGridProProps,
-  GridEventListener,
-  GridGroupingColDefOverride,
+  getDataGridUtilityClass,
   GridRenderCellParams,
-  GridRowModel,
-  GridRowsProp,
   useGridApiContext,
-  useGridApiRef,
   useGridRootProps
 } from '@mui/x-data-grid-pro';
 import { unstable_composeClasses as composeClasses } from '@mui/material';

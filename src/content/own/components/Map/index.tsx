@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
-  withGoogleMap,
-  withScriptjs,
   GoogleMap,
+  InfoWindow,
   Marker,
-  InfoWindow
+  withGoogleMap,
+  withScriptjs
 } from 'react-google-maps';
 import { mapStyle } from './mapStyle';
 import { googleMapsConfig } from '../../../../config';
