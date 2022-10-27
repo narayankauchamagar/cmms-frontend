@@ -108,6 +108,8 @@ export default (props: PropsType) => {
     let loading = field.loading;
     let onOpen = field.onPress;
     let values = formik.values[field.name];
+    const excluded = field.excluded;
+
     switch (field.type2) {
       case 'customer':
         options = customers.map((customer) => {
@@ -155,12 +157,14 @@ export default (props: PropsType) => {
         onOpen = fetchLocations;
         break;
       case 'asset':
-        options = assets.map((asset) => {
-          return {
-            label: asset.name,
-            value: asset.id.toString()
-          };
-        });
+        options = assets
+          .filter((asset) => asset.id !== excluded)
+          .map((asset) => {
+            return {
+              label: asset.name,
+              value: asset.id.toString()
+            };
+          });
         onOpen = fetchAssets;
         break;
       case 'priority':

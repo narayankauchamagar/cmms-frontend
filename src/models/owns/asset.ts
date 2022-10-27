@@ -1,4 +1,5 @@
 import { Audit } from './audit';
+import { PartMiniDTO } from './part';
 
 export default interface Asset extends Audit {
   id: number;
@@ -26,6 +27,7 @@ export interface AssetDTO extends Audit {
   hasChildren?: boolean;
   warrantyExpirationDate?: string;
   inServiceDate?: string;
+  parts: PartMiniDTO[];
 }
 export interface AssetRow extends AssetDTO {
   hierarchy: number[];
@@ -77,7 +79,8 @@ export const assetDTOS: AssetDTO[] = [
     createdAt: 'dfggj',
     createdBy: 'ghu',
     updatedAt: 'ghfgj',
-    updatedBy: 'ghfgj'
+    updatedBy: 'ghfgj',
+    parts: []
   },
   {
     id: 211,
@@ -99,7 +102,8 @@ export const assetDTOS: AssetDTO[] = [
     createdAt: 'dfggj',
     createdBy: 'ghu',
     updatedAt: 'ghfgj',
-    updatedBy: 'ghfgj'
+    updatedBy: 'ghfgj',
+    parts: []
   },
   {
     id: 52,
@@ -121,7 +125,8 @@ export const assetDTOS: AssetDTO[] = [
     createdAt: 'dfggj',
     createdBy: 'ghu',
     updatedAt: 'ghfgj',
-    updatedBy: 'ghfgj'
+    updatedBy: 'ghfgj',
+    parts: []
   },
   {
     id: 245,
@@ -143,6 +148,7 @@ export const assetDTOS: AssetDTO[] = [
     createdAt: 'dfggj',
     createdBy: 'ghu',
     updatedAt: 'ghfgj',
-    updatedBy: 'ghfgj'
+    updatedBy: 'ghfgj',
+    parts: []
   }
 ];

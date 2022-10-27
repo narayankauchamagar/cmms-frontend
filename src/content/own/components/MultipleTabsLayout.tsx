@@ -4,6 +4,7 @@ import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { Box, Button, Card, styled, Tab, Tabs } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 
 const TabsContainerWrapper = styled(Box)(
   ({ theme }) => `
@@ -96,6 +97,7 @@ interface SettingsLayoutProps {
   tabIndex: number;
   action?: () => void;
   actionTitle?: string;
+  editAction?: boolean;
   withoutCard?: boolean;
 }
 
@@ -108,7 +110,8 @@ function MultipleTabsLayout(props: SettingsLayoutProps) {
     basePath,
     action,
     actionTitle,
-    withoutCard
+    withoutCard,
+    editAction
   } = props;
   const { t }: { t: any } = useTranslation();
   const navigate = useNavigate();
@@ -136,11 +139,11 @@ function MultipleTabsLayout(props: SettingsLayoutProps) {
             {tabs.map((tab) => (
               <Tab key={tab.value} label={tab.label} value={tab.value} />
             ))}
-          </Tabs>{' '}
+          </Tabs>
         </TabsContainerWrapper>
         {action && (
           <Button
-            startIcon={<AddTwoToneIcon />}
+            startIcon={editAction ? <EditTwoToneIcon /> : <AddTwoToneIcon />}
             sx={{ mx: 6, my: 1 }}
             variant="contained"
             onClick={action}

@@ -50,6 +50,7 @@ export interface IField {
   // onPressIcon?: () => void;
   checked?: boolean;
   loading?: boolean;
+  excluded?: number;
 }
 
 export interface IHash<E> {

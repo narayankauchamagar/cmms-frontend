@@ -5,18 +5,18 @@ import { getAssetDetails } from '../../../../slices/asset';
 import { useEffect } from 'react';
 
 interface PropsType {
-  id: number;
+  assetId: number;
 }
 
-const AssetDetails = ({ id }: PropsType) => {
+const AssetDetails = ({ assetId }: PropsType) => {
   const { t }: { t: any } = useTranslation();
   const { assetInfos } = useSelector((state) => state.assets);
-  const asset = assetInfos[id]?.asset;
+  const asset = assetInfos[assetId]?.asset;
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAssetDetails(id));
-  }, [id]);
+    dispatch(getAssetDetails(assetId));
+  }, [assetId]);
 
   const informationFields = [
     { label: t('Name'), value: asset?.name },

@@ -307,8 +307,14 @@ function Assets() {
       name: 'structure',
       type: 'titleGroupField',
       label: t('Structure')
+    },
+    { name: 'parts', type: 'select', type2: 'part', label: t('Parts') },
+    {
+      name: 'parentAsset',
+      type: 'select',
+      type2: 'asset',
+      label: t('Parent Asset')
     }
-    //TODO parts, parent Asset, location
   ];
   const shape = {
     name: Yup.string().required(t('Asset name is required')),
