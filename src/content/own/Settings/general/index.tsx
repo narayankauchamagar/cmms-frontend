@@ -4,7 +4,6 @@ import {
   Grid,
   MenuItem,
   Select,
-  Switch,
   Typography
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -84,9 +83,7 @@ function DashboardTasks() {
       <Grid item xs={12}>
         <Box p={4}>
           <Formik
-            initialValues={{
-              generalPreferences
-            }}
+            initialValues={generalPreferences}
             validationSchema={Yup.object().shape({
               language: Yup.string(),
               dateFormat: Yup.string(),

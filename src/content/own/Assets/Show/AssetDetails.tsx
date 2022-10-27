@@ -1,21 +1,33 @@
-import Asset from '../../../../models/owns/asset';
 import { Box, Card, Divider, Grid, Stack, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from '../../../../store';
+import { getAssetDetails } from '../../../../slices/asset';
+import { useEffect } from 'react';
 
 interface PropsType {
-  asset: Asset;
+  id: number;
 }
 
-const AssetDetails = ({ asset }: PropsType) => {
+const AssetDetails = ({ id }: PropsType) => {
   const { t }: { t: any } = useTranslation();
+  const { assetInfos } = useSelector((state) => state.assets);
+  const asset = assetInfos[id]?.asset;
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAssetDetails(id));
+  }, [id]);
 
   const informationFields = [
-    { label: t('Name'), value: asset.name },
-    { label: t('Description'), value: asset.description }
+    { label: t('Name'), value: asset?.name },
+    { label: t('Description'), value: asset?.description },
+    { label: t('Model'), value: asset?.model },
+    { label: t('Area'), value: asset?.area },
+    { label: t('Barcode'), value: asset?.barCode }
   ];
   const moreInfosFields = [
-    { label: t('Place in Service'), value: asset.name },
-    { label: t('Warranty expiration'), value: asset.description }
+    { label: t('Placed in Service'), value: asset?.inServiceDate },
+    { label: t('Warranty expiration'), value: asset?.warrantyExpirationDate }
   ];
   const BasicField = ({
     label,

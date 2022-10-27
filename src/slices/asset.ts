@@ -1,33 +1,39 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 import type { AppThunk } from 'src/store';
-import Asset, { AssetDTO, AssetRow } from '../models/owns/asset';
+import { AssetDTO, AssetRow } from '../models/owns/asset';
 import api from '../utils/api';
+import WorkOrder from '../models/owns/workOrder';
 
 const basePath = 'assets';
 interface AssetState {
-  assets: Asset[];
+  assets: AssetDTO[];
   assetsHierarchy: AssetRow[];
+  assetInfos: { [key: number]: { asset: AssetDTO; workOrders: WorkOrder[] } };
 }
 
 const initialState: AssetState = {
   assets: [],
-  assetsHierarchy: []
+  assetsHierarchy: [],
+  assetInfos: {}
 };
 
 const slice = createSlice({
   name: 'assets',
   initialState,
   reducers: {
-    getAssets(state: AssetState, action: PayloadAction<{ assets: Asset[] }>) {
+    getAssets(
+      state: AssetState,
+      action: PayloadAction<{ assets: AssetDTO[] }>
+    ) {
       const { assets } = action.payload;
       state.assets = assets;
     },
-    addAsset(state: AssetState, action: PayloadAction<{ asset: Asset }>) {
+    addAsset(state: AssetState, action: PayloadAction<{ asset: AssetDTO }>) {
       const { asset } = action.payload;
       state.assets = [...state.assets, asset];
     },
-    editAsset(state: AssetState, action: PayloadAction<{ asset: Asset }>) {
+    editAsset(state: AssetState, action: PayloadAction<{ asset: AssetDTO }>) {
       const { asset } = action.payload;
       state.assets = state.assets.map((asset1) => {
         if (asset1.id === asset.id) {
@@ -62,6 +68,15 @@ const slice = createSlice({
         acc[assetInState] = asset;
         return acc;
       }, state.assetsHierarchy);
+    },
+    getAssetDetails(
+      state: AssetState,
+      action: PayloadAction<{ asset: AssetDTO; id: number }>
+    ) {
+      const { asset, id } = action.payload;
+      if (state.assetInfos[id]) {
+        state.assetInfos[id] = { ...state.assetInfos[id], asset };
+      } else state.assetInfos[id] = { asset, workOrders: [] };
     }
   }
 });
@@ -69,20 +84,20 @@ const slice = createSlice({
 export const reducer = slice.reducer;
 
 export const getAssets = (): AppThunk => async (dispatch) => {
-  const assets = await api.get<Asset[]>(basePath);
+  const assets = await api.get<AssetDTO[]>(basePath);
   dispatch(slice.actions.getAssets({ assets }));
 };
 
 export const addAsset =
   (asset): AppThunk =>
   async (dispatch) => {
-    const assetResponse = await api.post<Asset>(basePath, asset);
+    const assetResponse = await api.post<AssetDTO>(basePath, asset);
     dispatch(slice.actions.addAsset({ asset: assetResponse }));
   };
 export const editAsset =
   (id: number, asset): AppThunk =>
   async (dispatch) => {
-    const assetResponse = await api.patch<Asset>(`${basePath}/${id}`, asset);
+    const assetResponse = await api.patch<AssetDTO>(`${basePath}/${id}`, asset);
     dispatch(slice.actions.editAsset({ asset: assetResponse }));
   };
 export const deleteAsset =
@@ -111,4 +126,15 @@ export const getAssetChildren =
     );
   };
 
+export const getAssetDetails =
+  (id: number): AppThunk =>
+  async (dispatch) => {
+    const asset = await api.get<AssetDTO>(`${basePath}/${id}`);
+    dispatch(
+      slice.actions.getAssetDetails({
+        id,
+        asset
+      })
+    );
+  };
 export default slice;

@@ -24,6 +24,8 @@ export interface AssetDTO extends Audit {
   openWorkOrders: number;
   additionalInfos: string;
   hasChildren?: boolean;
+  warrantyExpirationDate?: string;
+  inServiceDate?: string;
 }
 export interface AssetRow extends AssetDTO {
   hierarchy: number[];

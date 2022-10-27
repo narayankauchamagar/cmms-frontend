@@ -19,14 +19,14 @@ import Text from 'src/components/Text';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import wait from '../../../utils/wait';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { phoneRegExp } from '../../../utils/validators';
 import CustomDialog from '../components/CustomDialog';
 import useAuth from '../../../hooks/useAuth';
 
 function ProfileDetails() {
   const { t }: { t: any } = useTranslation();
-  const { user, userSettings } = useAuth();
+  const { user, userSettings, fetchUserSettings } = useAuth();
   const [openEditModal, setOpenEditModal] = useState<boolean>(false);
   const handleOpenEditModal = () => setOpenEditModal(true);
   const handleCloseEditModal = () => setOpenEditModal(false);
@@ -34,6 +34,11 @@ function ProfileDetails() {
   const [openPasswordModal, setOpenPasswordModal] = useState<boolean>(false);
   const handleOpenPasswordModal = () => setOpenPasswordModal(true);
   const handleClosePasswordModal = () => setOpenPasswordModal(false);
+
+  useEffect(() => {
+    fetchUserSettings();
+  }, []);
+
   const userConfig = {
     firstName: { value: user.firstName, title: t('First Name') },
     lastName: { value: user.lastName, title: t('Last Name') },
@@ -41,20 +46,20 @@ function ProfileDetails() {
     jobTitle: { value: user.role.name, title: t('Job Title') },
     settings: {
       isNotified: {
-        value: userSettings.emailNotified,
+        value: userSettings?.emailNotified,
         title: t('Email notifications')
       },
       emailForWorkOrders: {
-        value: userSettings.emailUpdatesForWorkOrders,
+        value: userSettings?.emailUpdatesForWorkOrders,
         title: t('Email Updates for Work Orders and Messages')
       },
       emailForRequest: {
-        value: userSettings.emailUpdatesForRequests,
+        value: userSettings?.emailUpdatesForRequests,
         title: t('Email Updates for Requested Work Orders')
       },
-      // dailyEmailSummary: { value: userSettings., title: t('Daily Summary Emails') },
+      // dailyEmailSummary: { value: userSettings?., title: t('Daily Summary Emails') },
       purchaseOrderEmail: {
-        value: userSettings.emailUpdatesForPurchaseOrders,
+        value: userSettings?.emailUpdatesForPurchaseOrders,
         title: t('Purchase Order Emails')
       }
     }

@@ -7,6 +7,7 @@ import Asset, { assets } from '../../../../models/owns/asset';
 import AssetWorkOrders from './AssetWorkOrders';
 import AssetDetails from './AssetDetails';
 import AssetParts from './AssetParts';
+import { isNumeric } from 'src/utils/validators';
 
 interface PropsType {}
 
@@ -48,11 +49,11 @@ const VendorsAndCustomers = ({}: PropsType) => {
       actionTitle={t('Edit')}
       withoutCard={true}
     >
-      {asset ? (
+      {isNumeric(assetId) ? (
         tabIndex === 0 ? (
           <AssetWorkOrders asset={asset} />
         ) : tabIndex === 1 ? (
-          <AssetDetails asset={asset} />
+          <AssetDetails id={Number(assetId)} />
         ) : (
           tabIndex === 2 && <AssetParts asset={asset} />
         )

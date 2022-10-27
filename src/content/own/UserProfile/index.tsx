@@ -18,7 +18,6 @@ function ManagementUsersView() {
   // @ts-ignore
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
-
   useEffect(() => {
     setTitle(t('Profile'));
   }, []);
