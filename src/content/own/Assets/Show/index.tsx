@@ -280,7 +280,7 @@ const VendorsAndCustomers = ({}: PropsType) => {
         tabIndex === 0 ? (
           <AssetWorkOrders asset={asset} />
         ) : tabIndex === 1 ? (
-          <AssetDetails assetId={Number(assetId)} />
+          <AssetDetails asset={asset} />
         ) : (
           tabIndex === 2 && <AssetParts asset={asset} />
         )

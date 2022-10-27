@@ -1,23 +1,13 @@
 import { Box, Card, Divider, Grid, Stack, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from '../../../../store';
-import { getAssetDetails } from '../../../../slices/asset';
-import { useEffect } from 'react';
+import { AssetDTO } from '../../../../models/owns/asset';
 
 interface PropsType {
-  assetId: number;
+  asset: AssetDTO;
 }
 
-const AssetDetails = ({ assetId }: PropsType) => {
+const AssetDetails = ({ asset }: PropsType) => {
   const { t }: { t: any } = useTranslation();
-  const { assetInfos } = useSelector((state) => state.assets);
-  const asset = assetInfos[assetId]?.asset;
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(getAssetDetails(assetId));
-  }, [assetId]);
-
   const informationFields = [
     { label: t('Name'), value: asset?.name },
     { label: t('Description'), value: asset?.description },
