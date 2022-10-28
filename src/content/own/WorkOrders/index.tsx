@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { IField } from '../type';
-import WorkOrder, { workOrders } from '../../../models/owns/workOrder';
+import WorkOrder from '../../../models/owns/workOrder';
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
@@ -38,13 +38,14 @@ import Asset, { assets } from '../../../models/owns/asset';
 import Part, { parts } from '../../../models/owns/part';
 import { tasks } from '../../../models/owns/tasks';
 import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
-import { addWorkOrder } from '../../../slices/workOrder';
+import { addWorkOrder, getWorkOrders } from '../../../slices/workOrder';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
-import { useDispatch } from '../../../store';
+import { useDispatch, useSelector } from '../../../store';
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
   const [currentTab, setCurrentTab] = useState<string>('list');
+  const { workOrders } = useSelector((state) => state.workOrders);
   const dispatch = useDispatch();
   const tabs = [
     { value: 'list', label: t('List View') },
@@ -85,6 +86,7 @@ function WorkOrders() {
   };
   useEffect(() => {
     setTitle(t('Work Orders'));
+    dispatch(getWorkOrders());
   }, []);
 
   useEffect(() => {
@@ -166,21 +168,21 @@ function WorkOrders() {
       headerName: t('Location name'),
       description: t('Location name'),
       width: 150,
-      valueGetter: (params) => params.row.location.name
+      valueGetter: (params) => params.row.location?.name
     },
     {
       field: 'locationAddress',
       headerName: t('Location address'),
       description: t('Location address'),
       width: 150,
-      valueGetter: (params) => params.row.location.address
+      valueGetter: (params) => params.row.location?.address
     },
     {
       field: 'category',
       headerName: t('Category'),
       description: t('Category'),
       width: 150,
-      valueGetter: (params) => params.row.category.name
+      valueGetter: (params) => params.row.category?.name
     },
     {
       field: 'asset',
@@ -226,7 +228,7 @@ function WorkOrders() {
       headerName: t('Requested By'),
       description: t('Requested By'),
       width: 150,
-      valueGetter: (params) => params.row.parentRequest.createdBy
+      valueGetter: (params) => params.row.parentRequest?.createdBy
     },
     {
       field: 'laborCost',
@@ -459,36 +461,43 @@ function WorkOrders() {
             submitText={t('Save')}
             values={{
               ...currentWorkOrder,
-              category: {
-                label: currentWorkOrder?.category.name,
-                value: currentWorkOrder?.category.id
-              },
-              parts: currentWorkOrderParts.map((part) => {
+              category: currentWorkOrder?.category
+                ? {
+                    label: currentWorkOrder?.category?.name,
+                    value: currentWorkOrder?.category?.id
+                  }
+                : null,
+              parts: currentWorkOrder?.parts.map((part) => {
                 return {
                   label: part.name,
                   value: part.id.toString()
                 };
               }),
               tasks: tasks,
-              additionalWorkers: currentWorkOrderWorkers.map((worker) => {
+              additionalWorkers: currentWorkOrder?.assignedTo.map((worker) => {
                 return {
                   label: `${worker.firstName} ${worker.lastName}`,
                   value: worker.id.toString()
                 };
               }),
-              team: {
-                label: currentWorkOrderTeam.name,
-                value: currentWorkOrderTeam.id.toString()
-              },
-              location: {
-                label: currentWorkOrderLocation.name,
-                value: currentWorkOrderLocation.id.toString()
-              },
-              asset: {
-                label: currentWorkOrderAsset.name,
-                value: currentWorkOrderAsset.id.toString()
-              },
-              requiredSignature: false
+              team: currentWorkOrder?.team
+                ? {
+                    label: currentWorkOrder.team?.name,
+                    value: currentWorkOrder.team?.id.toString()
+                  }
+                : null,
+              location: currentWorkOrder?.location
+                ? {
+                    label: currentWorkOrder.location.name,
+                    value: currentWorkOrder.location.id.toString()
+                  }
+                : null,
+              asset: currentWorkOrder?.asset
+                ? {
+                    label: currentWorkOrder.asset?.name,
+                    value: currentWorkOrder.asset?.id.toString()
+                  }
+                : null
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {

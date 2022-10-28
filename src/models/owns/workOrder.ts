@@ -2,7 +2,7 @@ import { Audit } from './audit';
 import User, { users } from './user';
 import Request, { requests } from './request';
 import PurchaseOrder, { purchaseOrders } from './purchaseOrder';
-import Part, { PartMiniDTO, parts } from './part';
+import { PartMiniDTO, parts } from './part';
 import Team, { teams } from './team';
 import Asset, { assets } from './asset';
 import File, { files } from './file';
@@ -26,7 +26,7 @@ interface WorkOrderBase extends Audit {
   asset: Asset;
 }
 export default interface WorkOrder extends WorkOrderBase {
-  category: Category;
+  category: Category | null;
   id: number;
   completedBy: User;
   completedOn: string;
