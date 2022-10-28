@@ -12,6 +12,7 @@ const AssetDetails = ({ asset }: PropsType) => {
     { label: t('Name'), value: asset?.name },
     { label: t('Description'), value: asset?.description },
     { label: t('Model'), value: asset?.model },
+    { label: t('Serial Number'), value: asset?.serialNumber },
     { label: t('Area'), value: asset?.area },
     { label: t('Barcode'), value: asset?.barCode }
   ];

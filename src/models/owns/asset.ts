@@ -14,6 +14,7 @@ export interface AssetDTO extends Audit {
   location: string;
   area: string;
   model: string;
+  serialNumber: string;
   barCode: string;
   category: string;
   description: string;
@@ -66,6 +67,7 @@ export const assetDTOS: AssetDTO[] = [
     location: 'Location',
     area: 'Area',
     model: 'Model',
+    serialNumber: 'fdsf',
     barCode: 'Barcode',
     category: 'Category',
     description: 'desc',
@@ -93,6 +95,7 @@ export const assetDTOS: AssetDTO[] = [
     barCode: 'Barcode',
     category: 'Category',
     description: 'desc',
+    serialNumber: 'fdsf',
     primaryUser: 'user',
     users: 1,
     teams: 4,
@@ -115,6 +118,7 @@ export const assetDTOS: AssetDTO[] = [
     additionalInfos: '',
     barCode: 'Barcode',
     description: 'bjhb',
+    serialNumber: 'fdsf',
     category: 'Category',
     primaryUser: 'user',
     users: 1,
@@ -143,6 +147,7 @@ export const assetDTOS: AssetDTO[] = [
     teams: 4,
     vendors: 3,
     additionalInfos: '',
+    serialNumber: 'fdsf',
     parentAsset: 'string',
     openWorkOrders: 2,
     createdAt: 'dfggj',

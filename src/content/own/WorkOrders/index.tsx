@@ -37,10 +37,15 @@ import Location, { locations } from '../../../models/owns/location';
 import Asset, { assets } from '../../../models/owns/asset';
 import Part, { parts } from '../../../models/owns/part';
 import { tasks } from '../../../models/owns/tasks';
+import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
+import { addWorkOrder } from '../../../slices/workOrder';
+import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
+import { useDispatch } from '../../../store';
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
   const [currentTab, setCurrentTab] = useState<string>('list');
+  const dispatch = useDispatch();
   const tabs = [
     { value: 'list', label: t('List View') },
     { value: 'map', label: t('Map View') }
@@ -54,6 +59,7 @@ function WorkOrders() {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const { setTitle } = useContext(TitleContext);
   const { workOrderId } = useParams();
+  const { showSnackBar } = useContext(CustomSnackBarContext);
   const [currentWorkOrder, setCurrentWorkOrder] = useState<WorkOrder>();
   const handleDelete = (id: number) => {};
   const handleUpdate = (id: number) => {
@@ -86,6 +92,30 @@ function WorkOrders() {
       handleOpenDetails(Number(workOrderId));
     }
   }, [workOrders]);
+
+  const formatValues = (values) => {
+    values.primaryUser = formatSelect(values.primaryUser);
+    values.location = formatSelect(values.location);
+    values.team = formatSelect(values.team);
+    values.asset = formatSelect(values.asset);
+    values.assignedTo = formatSelectMultiple(values.assignedTo);
+    values.priority = values.priority?.value;
+    values.requiredSignature =
+      Array.isArray(values.requiredSignature) &&
+      values?.requiredSignature.includes('on');
+    values.parts = values.parts.map((part) => {
+      return { id: part.id };
+    });
+    //TODO
+    delete values.category;
+    return values;
+  };
+  const onCreationSuccess = () => {
+    setOpenAddModal(false);
+    showSnackBar(t('The Work Order has been created successfully'), 'success');
+  };
+  const onCreationFailure = (err) =>
+    showSnackBar(t("The Work Order couldn't be created"), 'error');
 
   const columns: GridEnrichedColDef[] = [
     {
@@ -242,7 +272,7 @@ function WorkOrders() {
       name: 'title',
       type: 'text',
       label: t('Title'),
-      placeholder: t('Enter workOrder name'),
+      placeholder: t('Enter Work Order title'),
       required: true
     },
     {
@@ -287,9 +317,15 @@ function WorkOrders() {
       })
     },
     {
-      name: 'additionalWorkers',
+      name: 'primaryUser',
       type: 'select',
-      label: t('Worker'),
+      label: t('Primary Worker'),
+      type2: 'user'
+    },
+    {
+      name: 'assignedTo',
+      type: 'select',
+      label: t('Additional Workers'),
       type2: 'user',
       multiple: true
     },
@@ -313,7 +349,8 @@ function WorkOrders() {
       type: 'select',
       type2: 'asset',
       label: t('Asset'),
-      placeholder: 'Select Asset'
+      placeholder: 'Select Asset',
+      required: true
     },
     {
       name: 'tasks',
@@ -336,7 +373,7 @@ function WorkOrders() {
       fileType: 'file'
     },
     {
-      name: 'requiresSignature',
+      name: 'requiredSignature',
       type: 'switch',
       label: t('Requires Signature')
     }
@@ -344,7 +381,7 @@ function WorkOrders() {
 
   const shape = {
     title: Yup.string().required(t('WorkOrder title is required')),
-    address: Yup.string().required(t('WorkOrder address is required'))
+    asset: Yup.object().required(t('The asset field is required')).nullable()
   };
 
   const renderWorkOrderAddModal = () => (
@@ -377,15 +414,13 @@ function WorkOrders() {
             fields={fields}
             validation={Yup.object().shape(shape)}
             submitText={t('Add')}
-            values={{}}
+            values={{ requiredSignature: false }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              try {
-                await wait(2000);
-                setOpenAddModal(false);
-              } catch (err) {
-                console.error(err);
-              }
+              const formattedValues = formatValues(values);
+              dispatch(addWorkOrder(formattedValues))
+                .then(onCreationSuccess)
+                .catch(onCreationFailure);
             }}
           />
         </Box>
@@ -453,7 +488,7 @@ function WorkOrders() {
                 label: currentWorkOrderAsset.name,
                 value: currentWorkOrderAsset.id.toString()
               },
-              requiresSignature: false
+              requiredSignature: false
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
