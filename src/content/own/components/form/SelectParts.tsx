@@ -47,11 +47,13 @@ export default function SelectParts({ onChange, selected }: SelectPartsProps) {
 
   useEffect(() => {
     setSelectedParts(
-      selectedIds.map((id) => {
-        return parts.find((part) => part.id === id);
-      })
+      selectedIds
+        .map((id) => {
+          return parts.find((part) => part.id == id);
+        })
+        .filter((part) => !!part)
     );
-  }, [selectedIds]);
+  }, [selectedIds, parts]);
 
   useEffect(() => {
     dispatch(getParts());

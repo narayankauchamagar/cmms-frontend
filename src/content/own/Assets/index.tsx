@@ -28,7 +28,7 @@ import Form from '../components/form';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { DataGridProProps, useGridApiRef } from '@mui/x-data-grid-pro';
-import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
+import { formatAssetValues } from '../../../utils/formatters';
 import { GroupingCellWithLazyLoading } from './GroupingCellWithLazyLoading';
 import { UserMiniDTO } from '../../../models/user';
 import UserAvatars from '../components/UserAvatars';
@@ -50,17 +50,6 @@ function Assets() {
     dispatch(getAssetChildren(0, []));
   }, []);
 
-  const formatValues = (values) => {
-    values.primaryUser = formatSelect(values.primaryUser);
-    values.location = formatSelect(values.location);
-    values.customers = formatSelectMultiple(values.customers);
-    values.vendors = formatSelectMultiple(values.vendors);
-    values.assignedTo = formatSelectMultiple(values.assignedTo);
-    values.teams = formatSelectMultiple(values.teams);
-    //TODO
-    delete values.category;
-    return values;
-  };
   const onCreationSuccess = () => {
     setOpenAddModal(false);
     showSnackBar(t('The Asset has been created successfully'), 'success');
@@ -412,7 +401,7 @@ function Assets() {
             values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              const formattedValues = formatValues(values);
+              const formattedValues = formatAssetValues(values);
               dispatch(addAsset(formattedValues))
                 .then(onCreationSuccess)
                 .catch(onCreationFailure);

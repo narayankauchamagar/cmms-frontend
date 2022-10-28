@@ -13,3 +13,19 @@ export const formatSelect = (
 ) => {
   return object?.value ? { id: Number(object.value) } : null;
 };
+
+export const formatAssetValues = (values) => {
+  values.primaryUser = formatSelect(values.primaryUser);
+  values.location = formatSelect(values.location);
+  values.parentAsset = formatSelect(values.parentAsset);
+  values.customers = formatSelectMultiple(values.customers);
+  values.vendors = formatSelectMultiple(values.vendors);
+  values.assignedTo = formatSelectMultiple(values.assignedTo);
+  values.teams = formatSelectMultiple(values.teams);
+  values.parts = values.parts.map((part) => {
+    return { id: part.id };
+  });
+  //TODO
+  delete values.category;
+  return values;
+};

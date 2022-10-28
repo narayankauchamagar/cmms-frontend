@@ -21,10 +21,7 @@ import * as Yup from 'yup';
 import { editAsset, getAssetDetails } from '../../../../slices/asset';
 import { useDispatch, useSelector } from '../../../../store';
 import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContext';
-import {
-  formatSelect,
-  formatSelectMultiple
-} from '../../../../utils/formatters';
+import { formatAssetValues } from '../../../../utils/formatters';
 
 interface PropsType {}
 
@@ -198,17 +195,6 @@ const VendorsAndCustomers = ({}: PropsType) => {
     name: Yup.string().required(t('Asset name is required')),
     location: Yup.object().required(t('Asset location is required')).nullable()
   };
-  const formatValues = (values) => {
-    values.primaryUser = formatSelect(values.primaryUser);
-    values.location = formatSelect(values.location);
-    values.customers = formatSelectMultiple(values.customers);
-    values.vendors = formatSelectMultiple(values.vendors);
-    values.assignedTo = formatSelectMultiple(values.assignedTo);
-    values.teams = formatSelectMultiple(values.teams);
-    //TODO
-    delete values.category;
-    return values;
-  };
   const onEditSuccess = () => {
     setOpenUpdateModal(false);
     showSnackBar(t('The changes have been saved'), 'success');
@@ -251,11 +237,18 @@ const VendorsAndCustomers = ({}: PropsType) => {
               location: {
                 label: asset?.location.name,
                 value: asset?.location.id
-              }
+              },
+              parts:
+                asset?.parts?.map((part) => {
+                  return {
+                    label: part.name,
+                    value: part.id.toString()
+                  };
+                }) ?? []
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              const formattedValues = formatValues(values);
+              const formattedValues = formatAssetValues(values);
               dispatch(editAsset(Number(assetId), formattedValues))
                 .then(onEditSuccess)
                 .catch(onEditFailure);
