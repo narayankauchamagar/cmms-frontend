@@ -24,7 +24,6 @@ import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import Form from '../components/form';
 import UserAvatars from '../components/UserAvatars';
 import * as Yup from 'yup';
-import wait from '../../../utils/wait';
 import { isNumeric } from '../../../utils/validators';
 import User, { users } from '../../../models/owns/user';
 import { UserMiniDTO } from '../../../models/user';
@@ -38,7 +37,11 @@ import Asset, { assets } from '../../../models/owns/asset';
 import Part, { parts } from '../../../models/owns/part';
 import { tasks } from '../../../models/owns/tasks';
 import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
-import { addWorkOrder, getWorkOrders } from '../../../slices/workOrder';
+import {
+  addWorkOrder,
+  editWorkOrder,
+  getWorkOrders
+} from '../../../slices/workOrder';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import { useDispatch, useSelector } from '../../../store';
 
@@ -110,6 +113,7 @@ function WorkOrders() {
     });
     //TODO
     delete values.category;
+    delete values.tasks;
     return values;
   };
   const onCreationSuccess = () => {
@@ -118,6 +122,12 @@ function WorkOrders() {
   };
   const onCreationFailure = (err) =>
     showSnackBar(t("The Work Order couldn't be created"), 'error');
+  const onEditSuccess = () => {
+    setOpenUpdateModal(false);
+    showSnackBar(t('The changes have been saved'), 'success');
+  };
+  const onEditFailure = (err) =>
+    showSnackBar(t("The Work Order couldn't be edited"), 'error');
 
   const columns: GridEnrichedColDef[] = [
     {
@@ -474,7 +484,13 @@ function WorkOrders() {
                 };
               }),
               tasks: tasks,
-              additionalWorkers: currentWorkOrder?.assignedTo.map((worker) => {
+              primaryUser: currentWorkOrder?.primaryUser
+                ? {
+                    label: `${currentWorkOrder.primaryUser.firstName} ${currentWorkOrder.primaryUser.lastName}`,
+                    value: currentWorkOrder.primaryUser.id.toString()
+                  }
+                : null,
+              assignedTo: currentWorkOrder?.assignedTo.map((worker) => {
                 return {
                   label: `${worker.firstName} ${worker.lastName}`,
                   value: worker.id.toString()
@@ -501,12 +517,10 @@ function WorkOrders() {
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              try {
-                await wait(2000);
-                setOpenUpdateModal(false);
-              } catch (err) {
-                console.error(err);
-              }
+              const formattedValues = formatValues(values);
+              dispatch(editWorkOrder(currentWorkOrder?.id, formattedValues))
+                .then(onEditSuccess)
+                .catch(onEditFailure);
             }}
           />
         </Box>
