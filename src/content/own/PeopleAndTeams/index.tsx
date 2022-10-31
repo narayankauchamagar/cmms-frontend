@@ -22,8 +22,8 @@ const PeopleAndTeams = ({}: PropsType) => {
     setTitle(t('People & Teams'));
   }, []);
 
-  let regex = /(\/app\/people-teams)\/?$/;
-  const tabIndex = regex.test(location.pathname) ? 0 : 1;
+  let regex = /(\/app\/people-teams\/teams)(\/.*)?$/;
+  const tabIndex = regex.test(location.pathname) ? 1 : 0;
 
   const tabs = [
     { value: '', label: t('People') },

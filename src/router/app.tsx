@@ -255,11 +255,18 @@ const appRoutes = [
     children: [
       {
         path: '',
-        element: <PeopleAndTeams />
+        children: [
+          { path: '', element: <PeopleAndTeams /> },
+          { path: ':peopleId', element: <PeopleAndTeams /> }
+        ]
       },
       {
         path: 'teams',
-        element: <PeopleAndTeams />
+        children: [
+          { path: '', element: <PeopleAndTeams /> },
+          { path: ':teamId', element: <PeopleAndTeams /> }
+        ]
+        // element: <PeopleAndTeams />
       }
     ]
   }

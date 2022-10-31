@@ -1,14 +1,22 @@
+import User from './user';
+
 export default interface Team {
   id: number;
   name: string;
+  description?: string;
+  teamUsers?: User[];
 }
 export const teams: Team[] = [
   {
-    id: 55,
-    name: 'dxcv'
+    id: 1,
+    name: 'Team one',
+    description: 'first',
+    teamUsers: []
   },
   {
-    id: 475,
-    name: 'tctvu'
+    id: 2,
+    name: 'Team two',
+    description: 'second team',
+    teamUsers: []
   }
 ];
