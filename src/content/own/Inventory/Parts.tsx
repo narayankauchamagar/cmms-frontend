@@ -17,15 +17,21 @@ import { useTranslation } from 'react-i18next';
 import CustomDataGrid from '../components/CustomDatagrid';
 import { GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
-import Part, { parts } from '../../../models/owns/part';
-import { ChangeEvent, useEffect, useState } from 'react';
+import Part from '../../../models/owns/part';
+import { addPart, deletePart, editPart, getParts } from '../../../slices/part';
+import ConfirmDialog from '../components/ConfirmDialog';
+import { useDispatch, useSelector } from '../../../store';
+import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import Form from '../components/form';
-import wait from '../../../utils/wait';
 import { IField } from '../type';
 import PartDetails from './PartDetails';
 import { useParams } from 'react-router-dom';
 import { isNumeric } from '../../../utils/validators';
+import { formatSelectMultiple } from '../../../utils/formatters';
+import { UserMiniDTO } from '../../../models/user';
+import UserAvatars from '../components/UserAvatars';
+import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 
 interface PropsType {
   setAction: (p: () => () => void) => void;
@@ -36,27 +42,53 @@ const Parts = ({ setAction }: PropsType) => {
   const [currentTab, setCurrentTab] = useState<string>('list');
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
+  const { parts } = useSelector((state) => state.parts);
+  const [openDelete, setOpenDelete] = useState<boolean>(false);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [currentPart, setCurrentPart] = useState<Part>();
   const { partId } = useParams();
+  const dispatch = useDispatch();
+  const { showSnackBar } = useContext(CustomSnackBarContext);
 
-  const handleUpdate = (id: number) => {
-    setCurrentPart(parts.find((part) => part.id === id));
+  const handleOpenUpdate = () => {
     setOpenUpdateModal(true);
+  };
+
+  const handleDelete = (id: number) => {
+    handleCloseDetails();
+    dispatch(deletePart(id)).then(onDeleteSuccess).catch(onDeleteFailure);
+    setOpenDelete(false);
   };
   const tabs = [
     { value: 'list', label: t('List View') },
     { value: 'card', label: t('Card View') }
   ];
   const theme = useTheme();
-
+  const onCreationSuccess = () => {
+    setOpenAddModal(false);
+    showSnackBar(t('The Part has been created successfully'), 'success');
+  };
+  const onCreationFailure = (err) =>
+    showSnackBar(t("The Part couldn't be created"), 'error');
+  const onEditSuccess = () => {
+    setOpenUpdateModal(false);
+    showSnackBar(t('The changes have been saved'), 'success');
+  };
+  const onEditFailure = (err) =>
+    showSnackBar(t("The Part couldn't be edited"), 'error');
+  const onDeleteSuccess = () => {
+    showSnackBar(t('The Part has been deleted successfully'), 'success');
+  };
+  const onDeleteFailure = (err) =>
+    showSnackBar(t("The meter couldn't be deleted"), 'error');
   useEffect(() => {
+    dispatch(getParts());
     const handleOpenModal = () => setOpenAddModal(true);
     setAction(() => handleOpenModal);
   }, []);
 
   useEffect(() => {
-    if (partId && isNumeric(partId)) {
+    if (parts.length && partId && isNumeric(partId)) {
       handleOpenDetails(Number(partId));
     }
   }, [parts]);
@@ -79,6 +111,15 @@ const Parts = ({ setAction }: PropsType) => {
   const handleCloseDetails = () => {
     window.history.replaceState(null, 'Part', `/app/inventory/parts`);
     setOpenDrawer(false);
+  };
+  const formatValues = (values) => {
+    values.assignedTo = formatSelectMultiple(values.assignedTo);
+    values.teams = formatSelectMultiple(values.teams);
+    values.customers = formatSelectMultiple(values.customers);
+    values.vendors = formatSelectMultiple(values.vendors);
+    // values.image = formatSelect(values.image);
+    // values.files = formatSelect(values.files);
+    return values;
   };
   const columns: GridEnrichedColDef[] = [
     {
@@ -103,7 +144,7 @@ const Parts = ({ setAction }: PropsType) => {
       width: 150
     },
     {
-      field: 'barCode',
+      field: 'barcode',
       headerName: t('Barcode'),
       description: t('Barcode'),
       width: 150
@@ -127,22 +168,13 @@ const Parts = ({ setAction }: PropsType) => {
       width: 150
     },
     {
-      field: 'location',
-      headerName: t('Location'),
-      description: t('Location'),
-      width: 150
-    },
-    {
-      field: 'users',
+      field: 'assignedTo',
       headerName: t('Assigned Users'),
       description: t('Assigned Users'),
-      width: 150
-    },
-    {
-      field: 'vendors',
-      headerName: t('Assigned Vendors'),
-      description: t('Assigned Vendors'),
-      width: 150
+      width: 150,
+      renderCell: (params: GridRenderCellParams<UserMiniDTO[]>) => (
+        <UserAvatars users={params.value} />
+      )
     },
     {
       field: 'createdAt',
@@ -221,7 +253,7 @@ const Parts = ({ setAction }: PropsType) => {
       multiple: true
     },
     {
-      name: 'workers',
+      name: 'assignedTo',
       type: 'select',
       type2: 'user',
       multiple: true,
@@ -300,20 +332,24 @@ const Parts = ({ setAction }: PropsType) => {
             values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              try {
-                await wait(2000);
-                setOpenAddModal(false);
-              } catch (err) {
-                console.error(err);
-              }
+              const formattedValues = formatValues(values);
+              dispatch(addPart(formattedValues))
+                .then(onCreationSuccess)
+                .catch(onCreationFailure);
             }}
           />
         </Box>
       </DialogContent>
     </Dialog>
   );
-  const renderField = (label, value) => {
-    return (
+  const BasicField = ({
+    label,
+    value
+  }: {
+    label: string | number;
+    value: string | number;
+  }) => {
+    return value ? (
       <Grid item xs={12}>
         <Stack spacing={1} direction="row">
           <Typography variant="h6" sx={{ color: theme.colors.alpha.black[70] }}>
@@ -322,7 +358,7 @@ const Parts = ({ setAction }: PropsType) => {
           <Typography variant="h6">{value}</Typography>
         </Stack>
       </Grid>
-    );
+    ) : null;
   };
   const fieldsToRender = (part: Part) => [
     {
@@ -343,7 +379,7 @@ const Parts = ({ setAction }: PropsType) => {
     },
     {
       label: t('Barcode'),
-      value: part.barCode
+      value: part.barcode
     },
     {
       label: t('Date created'),
@@ -380,15 +416,39 @@ const Parts = ({ setAction }: PropsType) => {
             fields={fields}
             validation={Yup.object().shape(shape)}
             submitText={t('Save')}
-            values={currentPart}
+            values={{
+              ...currentPart,
+              assignedTo: currentPart?.assignedTo.map((user) => {
+                return {
+                  label: `${user.firstName} ${user.lastName}`,
+                  value: user.id.toString()
+                };
+              }),
+              teams: currentPart?.teams.map((team) => {
+                return {
+                  label: team.name,
+                  value: team.id.toString()
+                };
+              }),
+              vendors: currentPart?.vendors.map((vendor) => {
+                return {
+                  label: vendor.companyName,
+                  value: vendor.id.toString()
+                };
+              }),
+              customers: currentPart?.customers.map((customer) => {
+                return {
+                  label: customer.name,
+                  value: customer.id.toString()
+                };
+              })
+            }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              try {
-                await wait(2000);
-                setOpenUpdateModal(false);
-              } catch (err) {
-                console.error(err);
-              }
+              const formattedValues = formatValues(values);
+              dispatch(editPart(currentPart.id, formattedValues))
+                .then(onEditSuccess)
+                .catch(onEditFailure);
             }}
           />
         </Box>
@@ -449,9 +509,13 @@ const Parts = ({ setAction }: PropsType) => {
                   <Box sx={{ p: 2 }}>
                     <Typography variant="h4">{part.name}</Typography>
                     <Box sx={{ mt: 1 }}>
-                      {fieldsToRender(part).map((field) =>
-                        renderField(field.label, field.value)
-                      )}
+                      {fieldsToRender(part).map((field) => (
+                        <BasicField
+                          key={field.label}
+                          label={field.label}
+                          value={field.value}
+                        />
+                      ))}
                     </Box>
                   </Box>
                 </Card>
@@ -468,8 +532,22 @@ const Parts = ({ setAction }: PropsType) => {
           sx: { width: '50%' }
         }}
       >
-        <PartDetails part={currentPart} handleUpdate={handleUpdate} />
+        <PartDetails
+          part={currentPart}
+          handleOpenUpdate={handleOpenUpdate}
+          handleOpenDelete={() => setOpenDelete(true)}
+        />
       </Drawer>
+      <ConfirmDialog
+        open={openDelete}
+        onCancel={() => {
+          setOpenDelete(false);
+          setOpenDrawer(true);
+        }}
+        onConfirm={() => handleDelete(currentPart?.id)}
+        confirmText={t('Delete')}
+        question={t('Are you sure you want to delete this Part?')}
+      />
     </Box>
   );
 };

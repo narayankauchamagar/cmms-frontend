@@ -1,8 +1,7 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import { useTranslation } from 'react-i18next';
-import wait from 'src/utils/wait';
 
 import {
   Box,
@@ -17,11 +16,12 @@ import {
   FormControlLabel,
   Grid,
   TextField,
-  Typography,
-  Zoom
+  Typography
 } from '@mui/material';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import { useSnackbar } from 'notistack';
+import { useDispatch } from '../../../../store';
+import { addRole } from '../../../../slices/role';
+import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContext';
 
 // const roles = [
 //   { label: 'Free', value: 'free' },
@@ -30,12 +30,14 @@ import { useSnackbar } from 'notistack';
 
 interface PageHeaderProps {
   rolesNumber: number;
+  formatValues: (values) => any;
 }
 
-function PageHeader({ rolesNumber }: PageHeaderProps) {
+function PageHeader({ rolesNumber, formatValues }: PageHeaderProps) {
   const { t }: { t: any } = useTranslation();
   const [open, setOpen] = useState(false);
-  const { enqueueSnackbar } = useSnackbar();
+  const dispatch = useDispatch();
+  const { showSnackBar } = useContext(CustomSnackBarContext);
 
   const handleCreateRoleOpen = () => {
     setOpen(true);
@@ -44,19 +46,12 @@ function PageHeader({ rolesNumber }: PageHeaderProps) {
   const handleCreateRoleClose = () => {
     setOpen(false);
   };
-
-  const handleCreateRoleSuccess = () => {
-    enqueueSnackbar(t('The role was created successfully'), {
-      variant: 'success',
-      anchorOrigin: {
-        vertical: 'top',
-        horizontal: 'right'
-      },
-      TransitionComponent: Zoom
-    });
-
-    setOpen(false);
+  const onCreationSuccess = () => {
+    handleCreateRoleClose();
+    showSnackBar(t('The Role has been created successfully'), 'success');
   };
+  const onCreationFailure = (err) =>
+    showSnackBar(t("The Role couldn't be created"), 'error');
 
   return (
     <>
@@ -113,27 +108,19 @@ function PageHeader({ rolesNumber }: PageHeaderProps) {
             name: Yup.string()
               .max(255)
               .required(t('The name field is required')),
-            description: Yup.string().max(255),
-            externalId: Yup.string()
-              .max(255)
-              .required(t('The external ID field is required'))
+            description: Yup.string().max(255).nullable(),
+            externalId: Yup.string().max(255).nullable()
           })}
           onSubmit={async (
             _values,
             { resetForm, setErrors, setStatus, setSubmitting }
           ) => {
-            try {
-              await wait(1000);
-              resetForm();
-              setStatus({ success: true });
-              setSubmitting(false);
-              handleCreateRoleSuccess();
-            } catch (err) {
-              console.error(err);
-              setStatus({ success: false });
-              setErrors({ submit: err.message });
-              setSubmitting(false);
-            }
+            setSubmitting(true);
+            const formattedValues = formatValues(_values);
+            dispatch(addRole(formattedValues))
+              .then(onCreationSuccess)
+              .catch(onCreationFailure)
+              .finally(() => setSubmitting(false));
           }}
         >
           {({
@@ -229,10 +216,14 @@ function PageHeader({ rolesNumber }: PageHeaderProps) {
                           {t('Create/Edit')}
                         </Typography>
                         <FormControlLabel
-                          control={<Checkbox checked />}
+                          onChange={handleChange}
+                          name={'createPeopleTeams'}
+                          control={<Checkbox />}
                           label="People & teams"
                         />
                         <FormControlLabel
+                          onChange={handleChange}
+                          name={'createCategories'}
                           control={<Checkbox />}
                           label="Categories"
                         />
@@ -248,46 +239,68 @@ function PageHeader({ rolesNumber }: PageHeaderProps) {
                           {t('Delete')}
                         </Typography>
                         <FormControlLabel
-                          control={<Checkbox checked />}
+                          onChange={handleChange}
+                          name={'deleteWorkOrders'}
+                          control={<Checkbox />}
                           label="Work Orders"
                         />
                         <FormControlLabel
-                          control={<Checkbox checked />}
+                          onChange={handleChange}
+                          name={'deletePreventiveMaintenanceTrigger'}
+                          control={<Checkbox />}
                           label="Preventative Maintenance Trigger"
                         />
                         <FormControlLabel
-                          control={<Checkbox checked />}
+                          onChange={handleChange}
+                          name={'deleteLocations'}
+                          control={<Checkbox />}
                           label="Locations"
                         />
                         <FormControlLabel
+                          onChange={handleChange}
+                          name={'deleteAssets'}
                           control={<Checkbox />}
                           label="Assets"
                         />
                         <FormControlLabel
+                          onChange={handleChange}
+                          name={'deletePartsAndSets'}
                           control={<Checkbox />}
-                          label="Parts and sets of part"
+                          label="Parts and Sets of Parts"
                         />
                         <FormControlLabel
+                          onChange={handleChange}
+                          name={'deletePurchaseOrders'}
                           control={<Checkbox />}
-                          label="Purchase Orders"
+                          label="Purchase Order"
                         />
                         <FormControlLabel
+                          onChange={handleChange}
+                          name={'deleteMeters'}
                           control={<Checkbox />}
                           label="Meters"
                         />
                         <FormControlLabel
+                          onChange={handleChange}
+                          name={'deleteVendorsCustomers'}
                           control={<Checkbox />}
                           label="Vendors & Customers"
                         />
                         <FormControlLabel
-                          control={<Checkbox checked />}
+                          onChange={handleChange}
+                          name={'deleteCategories'}
+                          control={<Checkbox />}
                           label="Categories"
                         />
                         <FormControlLabel
-                          control={<Checkbox checked />}
-                          label="Delete Files"
+                          onChange={handleChange}
+                          name={'deleteFiles'}
+                          control={<Checkbox />}
+                          label="Files"
                         />
                         <FormControlLabel
+                          onChange={handleChange}
+                          name={'deletePeopleTeams'}
                           control={<Checkbox />}
                           label="People and Teams"
                         />
@@ -302,8 +315,10 @@ function PageHeader({ rolesNumber }: PageHeaderProps) {
                           {t('Access')}
                         </Typography>
                         <FormControlLabel
+                          onChange={handleChange}
+                          name={'accessSettings'}
                           control={<Checkbox />}
-                          label="Setting"
+                          label="Settings"
                         />
                       </Box>
                     </Box>

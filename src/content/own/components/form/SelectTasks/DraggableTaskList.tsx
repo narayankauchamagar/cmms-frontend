@@ -12,8 +12,10 @@ export type DraggableListProps = {
   onDragEnd: OnDragEndResponder;
   onLabelChange: (value: string, id: number) => void;
   onTypeChange: (value: TaskType, id: number) => void;
+  onAssetChange: (user: number, id: number) => void;
   onRemove: (id: number) => void;
   onUserChange: (user: number, id: number) => void;
+  onChoicesChange: (choices: string[], id: number) => void;
 };
 
 const DraggableTaskList = React.memo(
@@ -23,7 +25,9 @@ const DraggableTaskList = React.memo(
     onLabelChange,
     onTypeChange,
     onRemove,
-    onUserChange
+    onUserChange,
+    onAssetChange,
+    onChoicesChange
   }: DraggableListProps) => {
     return (
       <DragDropContext onDragEnd={onDragEnd}>
@@ -39,6 +43,8 @@ const DraggableTaskList = React.memo(
                   onTypeChange={onTypeChange}
                   onRemove={onRemove}
                   onUserChange={onUserChange}
+                  onAssetChange={onAssetChange}
+                  onChoicesChange={onChoicesChange}
                 />
               ))}
               {provided.placeholder}

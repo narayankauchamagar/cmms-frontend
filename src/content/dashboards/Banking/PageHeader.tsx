@@ -35,7 +35,7 @@ function PageHeader() {
     <Grid container justifyContent="space-between" alignItems="center">
       <Grid item>
         <Typography variant="h3" component="h3" gutterBottom>
-          {t('Hello')}, {user.name}!
+          {t('Hello')}, {user.firstName}!
         </Typography>
         <Typography variant="subtitle2">
           {t('Check the latest banking stats under this beautiful dashboard!')}

@@ -186,7 +186,7 @@ function Weather() {
               }}
               gutterBottom
             >
-              {t('Hello')}, {user.name}!
+              {t('Hello')}, {user.firstName}!
             </Typography>
             <Typography
               sx={{

@@ -145,7 +145,7 @@ function Devices() {
   const locations = [
     {
       value: 'all',
-      text: user.name + t("'s Home")
+      text: user.firstName + t("'s Home")
     },
     {
       value: 'living_room',

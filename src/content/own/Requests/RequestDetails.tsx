@@ -1,4 +1,11 @@
-import { Box, Divider, Grid, Typography, useTheme } from '@mui/material';
+import {
+  Box,
+  Divider,
+  Grid,
+  IconButton,
+  Typography,
+  useTheme
+} from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
@@ -6,28 +13,35 @@ import Request from '../../../models/owns/request';
 
 interface RequestDetailsProps {
   request: Request;
-  handleUpdate: (id: number) => void;
+  handleOpenUpdate: () => void;
+  handleOpenDelete: () => void;
 }
 export default function RequestDetails(props: RequestDetailsProps) {
-  const { request, handleUpdate } = props;
+  const { request, handleOpenUpdate, handleOpenDelete } = props;
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
 
-  const renderField = (label, value) => {
-    return (
+  const BasicField = ({
+    label,
+    value
+  }: {
+    label: string | number;
+    value: string | number;
+  }) => {
+    return value ? (
       <Grid item xs={12} lg={6}>
         <Typography variant="h6" sx={{ color: theme.colors.alpha.black[70] }}>
           {label}
         </Typography>
         <Typography variant="h6">{value}</Typography>
       </Grid>
-    );
+    ) : null;
   };
   const fieldsToRender = (
     request: Request
   ): { label: string; value: any }[] => [
     {
-      label: t('Location Name'),
+      label: t('Description'),
       value: request.description
     },
     {
@@ -55,15 +69,15 @@ export default function RequestDetails(props: RequestDetailsProps) {
         justifyContent="space-between"
       >
         <Box>
-          <Typography variant="h2">{request?.name}</Typography>
+          <Typography variant="h2">{request?.title}</Typography>
         </Box>
         <Box>
-          <EditTwoToneIcon
-            onClick={() => handleUpdate(request.id)}
-            style={{ cursor: 'pointer', marginRight: 10 }}
-            color="primary"
-          />
-          <DeleteTwoToneIcon style={{ cursor: 'pointer' }} color="error" />
+          <IconButton style={{ marginRight: 10 }} onClick={handleOpenUpdate}>
+            <EditTwoToneIcon color="primary" />
+          </IconButton>
+          <IconButton onClick={handleOpenDelete}>
+            <DeleteTwoToneIcon color="error" />
+          </IconButton>
         </Box>
       </Grid>
       <Divider />
@@ -74,9 +88,13 @@ export default function RequestDetails(props: RequestDetailsProps) {
             Request details
           </Typography>
           <Grid container spacing={2}>
-            {fieldsToRender(request).map((field) =>
-              renderField(field.label, field.value)
-            )}
+            {fieldsToRender(request).map((field) => (
+              <BasicField
+                key={field.label}
+                label={field.label}
+                value={field.value}
+              />
+            ))}
           </Grid>
         </Box>
       </Grid>

@@ -12,7 +12,7 @@ export default interface PurchaseOrder extends Audit {
   partPurchases: PartPurchase[];
   category: string;
   additionalDetails: string;
-  vendor: Vendor;
+  vendor?: Vendor;
   shippingDueDate: string;
   shippingAdditionalDetail: string;
   shippingShipToName: string;

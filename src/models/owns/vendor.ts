@@ -11,6 +11,10 @@ export interface Vendor {
   rate: number;
 }
 
+export interface VendorMiniDTO {
+  companyName: string;
+  id: number;
+}
 export const vendors: Vendor[] = [
   {
     id: 2,

@@ -47,12 +47,19 @@ export default function SingleTask({
     { label: t('Fail'), value: 'FAIL' }
   ];
 
-  const getOptions = (type: TaskType) => {
+  const getOptions = (type: TaskType, options: string[]) => {
     switch (type) {
       case 'subtask':
         return subtaskOptions;
       case 'inspection':
         return inspectionOptions;
+      case 'multiple':
+        return options.map((option) => {
+          return {
+            label: option,
+            value: option
+          };
+        });
       default:
         break;
     }
@@ -69,17 +76,21 @@ export default function SingleTask({
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Box>
           <Typography variant="h6" fontWeight="bold">
-            {task.label}
+            {task.label || `<${t('Enter a task name')}>`}
           </Typography>
-          {['subtask', 'inspection'].includes(task.type) ? (
+          {['subtask', 'inspection', 'multiple'].includes(task.type) ? (
             <Select
-              value={task.value}
+              value={
+                preview
+                  ? getOptions(task.type, task.options)[0].value
+                  : task.value
+              }
               onChange={(event) =>
                 !preview && handleChange(event.target.value, task.id)
               }
               sx={{ backgroundColor: 'white' }}
             >
-              {getOptions(task.type).map((option) => (
+              {getOptions(task.type, task.options).map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>

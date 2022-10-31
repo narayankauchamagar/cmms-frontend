@@ -1,6 +1,5 @@
 import { Helmet } from 'react-helmet-async';
 import {
-  Avatar,
   Box,
   Button,
   Card,
@@ -9,36 +8,27 @@ import {
   DialogTitle,
   Drawer,
   Grid,
-  styled,
   Tab,
   Tabs,
-  Tooltip,
   Typography
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { IField } from '../type';
-import WorkOrder, { workOrders } from '../../../models/owns/workOrder';
+import WorkOrder from '../../../models/owns/workOrder';
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
-import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import CustomDataGrid from '../components/CustomDatagrid';
-import {
-  GridActionsCellItem,
-  GridRenderCellParams,
-  GridRowParams,
-  GridToolbar
-} from '@mui/x-data-grid';
+import { GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import Form from '../components/form';
+import UserAvatars from '../components/UserAvatars';
 import * as Yup from 'yup';
 import wait from '../../../utils/wait';
 import { isNumeric } from '../../../utils/validators';
 import User, { users } from '../../../models/owns/user';
+import { UserMiniDTO } from '../../../models/user';
 import Team, { teams } from '../../../models/owns/team';
-import { Vendor, vendors } from '../../../models/owns/vendor';
-import { Customer, customers } from '../../../models/owns/customer';
 import WorkOrderDetails from './WorkOrderDetails';
 import { useParams } from 'react-router-dom';
 import { enumerate } from '../../../utils/displayers';
@@ -46,20 +36,17 @@ import { categories } from '../../../models/owns/category';
 import Location, { locations } from '../../../models/owns/location';
 import Asset, { assets } from '../../../models/owns/asset';
 import Part, { parts } from '../../../models/owns/part';
-import AddTimeModal from './AddTimeModal';
-
-const AvatarPrimary = styled(Avatar)(
-  ({ theme }) => `
-    background: ${theme.colors.primary.lighter};
-    color: ${theme.colors.primary.main};
-    width: ${theme.spacing(4)};
-    height: ${theme.spacing(4)};
-`
-);
+import { tasks } from '../../../models/owns/tasks';
+import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
+import { addWorkOrder, getWorkOrders } from '../../../slices/workOrder';
+import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
+import { useDispatch, useSelector } from '../../../store';
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
   const [currentTab, setCurrentTab] = useState<string>('list');
+  const { workOrders } = useSelector((state) => state.workOrders);
+  const dispatch = useDispatch();
   const tabs = [
     { value: 'list', label: t('List View') },
     { value: 'map', label: t('Map View') }
@@ -73,32 +60,14 @@ function WorkOrders() {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const { setTitle } = useContext(TitleContext);
   const { workOrderId } = useParams();
+  const { showSnackBar } = useContext(CustomSnackBarContext);
   const [currentWorkOrder, setCurrentWorkOrder] = useState<WorkOrder>();
   const handleDelete = (id: number) => {};
   const handleUpdate = (id: number) => {
     setCurrentWorkOrder(workOrders.find((workOrder) => workOrder.id === id));
     setOpenUpdateModal(true);
   };
-  const renderSingleUser = (user: User) => (
-    <Tooltip key={user.id} title={`${user.firstName} ${user.lastName}`} arrow>
-      <AvatarPrimary
-        sx={{
-          my: 2,
-          mr: 1
-        }}
-        variant="rounded"
-      >
-        <Typography variant="h1">
-          {Array.from(user.firstName)[0].toUpperCase()}
-        </Typography>
-      </AvatarPrimary>
-    </Tooltip>
-  );
-  const renderUsers = (users: User[]) => (
-    <Box sx={{ display: 'flex', flexDirection: 'row', p: 1 }}>
-      {users.map((user) => renderSingleUser(user))}
-    </Box>
-  );
+
   const handleOpenDetails = (id: number) => {
     const foundWorkOrder = workOrders.find((workOrder) => workOrder.id === id);
     if (foundWorkOrder) {
@@ -117,6 +86,7 @@ function WorkOrders() {
   };
   useEffect(() => {
     setTitle(t('Work Orders'));
+    dispatch(getWorkOrders());
   }, []);
 
   useEffect(() => {
@@ -124,6 +94,30 @@ function WorkOrders() {
       handleOpenDetails(Number(workOrderId));
     }
   }, [workOrders]);
+
+  const formatValues = (values) => {
+    values.primaryUser = formatSelect(values.primaryUser);
+    values.location = formatSelect(values.location);
+    values.team = formatSelect(values.team);
+    values.asset = formatSelect(values.asset);
+    values.assignedTo = formatSelectMultiple(values.assignedTo);
+    values.priority = values.priority?.value;
+    values.requiredSignature =
+      Array.isArray(values.requiredSignature) &&
+      values?.requiredSignature.includes('on');
+    values.parts = values.parts.map((part) => {
+      return { id: part.id };
+    });
+    //TODO
+    delete values.category;
+    return values;
+  };
+  const onCreationSuccess = () => {
+    setOpenAddModal(false);
+    showSnackBar(t('The Work Order has been created successfully'), 'success');
+  };
+  const onCreationFailure = (err) =>
+    showSnackBar(t("The Work Order couldn't be created"), 'error');
 
   const columns: GridEnrichedColDef[] = [
     {
@@ -165,29 +159,30 @@ function WorkOrders() {
       headerName: t('Assignees'),
       description: t('Assignees'),
       width: 150,
-      renderCell: (params: GridRenderCellParams<User[]>) =>
-        renderUsers(params.value)
+      renderCell: (params: GridRenderCellParams<UserMiniDTO[]>) => (
+        <UserAvatars users={params.value} />
+      )
     },
     {
       field: 'location',
       headerName: t('Location name'),
       description: t('Location name'),
       width: 150,
-      valueGetter: (params) => params.row.location.name
+      valueGetter: (params) => params.row.location?.name
     },
     {
       field: 'locationAddress',
       headerName: t('Location address'),
       description: t('Location address'),
       width: 150,
-      valueGetter: (params) => params.row.location.address
+      valueGetter: (params) => params.row.location?.address
     },
     {
       field: 'category',
       headerName: t('Category'),
       description: t('Category'),
       width: 150,
-      valueGetter: (params) => params.row.category.name
+      valueGetter: (params) => params.row.category?.name
     },
     {
       field: 'asset',
@@ -233,7 +228,7 @@ function WorkOrders() {
       headerName: t('Requested By'),
       description: t('Requested By'),
       width: 150,
-      valueGetter: (params) => params.row.parentRequest.createdBy
+      valueGetter: (params) => params.row.parentRequest?.createdBy
     },
     {
       field: 'laborCost',
@@ -279,7 +274,7 @@ function WorkOrders() {
       name: 'title',
       type: 'text',
       label: t('Title'),
-      placeholder: t('Enter workOrder name'),
+      placeholder: t('Enter Work Order title'),
       required: true
     },
     {
@@ -324,9 +319,15 @@ function WorkOrders() {
       })
     },
     {
-      name: 'additionalWorkers',
+      name: 'primaryUser',
       type: 'select',
-      label: t('Worker'),
+      label: t('Primary Worker'),
+      type2: 'user'
+    },
+    {
+      name: 'assignedTo',
+      type: 'select',
+      label: t('Additional Workers'),
       type2: 'user',
       multiple: true
     },
@@ -350,7 +351,8 @@ function WorkOrders() {
       type: 'select',
       type2: 'asset',
       label: t('Asset'),
-      placeholder: 'Select Asset'
+      placeholder: 'Select Asset',
+      required: true
     },
     {
       name: 'tasks',
@@ -373,15 +375,15 @@ function WorkOrders() {
       fileType: 'file'
     },
     {
-      name: 'requiresSignature',
-      type: 'checkbox',
+      name: 'requiredSignature',
+      type: 'switch',
       label: t('Requires Signature')
     }
   ];
 
   const shape = {
     title: Yup.string().required(t('WorkOrder title is required')),
-    address: Yup.string().required(t('WorkOrder address is required'))
+    asset: Yup.object().required(t('The asset field is required')).nullable()
   };
 
   const renderWorkOrderAddModal = () => (
@@ -414,15 +416,13 @@ function WorkOrders() {
             fields={fields}
             validation={Yup.object().shape(shape)}
             submitText={t('Add')}
-            values={{}}
+            values={{ requiredSignature: false }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              try {
-                await wait(2000);
-                setOpenAddModal(false);
-              } catch (err) {
-                console.error(err);
-              }
+              const formattedValues = formatValues(values);
+              dispatch(addWorkOrder(formattedValues))
+                .then(onCreationSuccess)
+                .catch(onCreationFailure);
             }}
           />
         </Box>
@@ -461,34 +461,43 @@ function WorkOrders() {
             submitText={t('Save')}
             values={{
               ...currentWorkOrder,
-              category: {
-                label: currentWorkOrder?.category.name,
-                value: currentWorkOrder?.category.id
-              },
-              parts: currentWorkOrderParts.map((part) => {
+              category: currentWorkOrder?.category
+                ? {
+                    label: currentWorkOrder?.category?.name,
+                    value: currentWorkOrder?.category?.id
+                  }
+                : null,
+              parts: currentWorkOrder?.parts.map((part) => {
                 return {
                   label: part.name,
                   value: part.id.toString()
                 };
               }),
-              additionalWorkers: currentWorkOrderWorkers.map((worker) => {
+              tasks: tasks,
+              additionalWorkers: currentWorkOrder?.assignedTo.map((worker) => {
                 return {
                   label: `${worker.firstName} ${worker.lastName}`,
                   value: worker.id.toString()
                 };
               }),
-              team: {
-                label: currentWorkOrderTeam.name,
-                value: currentWorkOrderTeam.id.toString()
-              },
-              location: {
-                label: currentWorkOrderLocation.name,
-                value: currentWorkOrderLocation.id.toString()
-              },
-              asset: {
-                label: currentWorkOrderAsset.name,
-                value: currentWorkOrderAsset.id.toString()
-              }
+              team: currentWorkOrder?.team
+                ? {
+                    label: currentWorkOrder.team?.name,
+                    value: currentWorkOrder.team?.id.toString()
+                  }
+                : null,
+              location: currentWorkOrder?.location
+                ? {
+                    label: currentWorkOrder.location.name,
+                    value: currentWorkOrder.location.id.toString()
+                  }
+                : null,
+              asset: currentWorkOrder?.asset
+                ? {
+                    label: currentWorkOrder.asset?.name,
+                    value: currentWorkOrder.asset?.id.toString()
+                  }
+                : null
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {

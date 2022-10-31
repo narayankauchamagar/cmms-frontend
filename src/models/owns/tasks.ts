@@ -9,8 +9,10 @@ export interface Task {
   id: number;
   label: string;
   type: TaskType;
+  options?: string[];
   value?: string | number;
   user?: number;
+  asset?: number;
   notes: string;
   meter?: number;
 }

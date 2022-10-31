@@ -9,9 +9,12 @@ interface PropsType {
   label: string;
   value: { label: string; value: string } | { label: string; value: string }[];
   placeholder?: string;
+  error: boolean;
+  errorMessage: any;
   multiple?: boolean;
   fullWidth?: boolean;
   onOpen?: () => void;
+  onChange: (event: any, values: { label: string; value: string }[]) => void;
   loading?: boolean;
   //   defaultValue: any;
   //   variant?: 'outlined' | any;
@@ -27,10 +30,11 @@ export default (props: PropsType) => {
       filterSelectedOptions
       limitTags={5}
       onOpen={props.onOpen}
+      onChange={props.onChange}
       loading={props.loading}
       // @ts-ignore
       isOptionEqualToValue={(option, value) => option.value == value.value}
-      defaultValue={props.value}
+      defaultValue={props.value || (props.multiple ? [] : null)}
       options={props.options}
       // @ts-ignore
       getOptionLabel={(option) => option.label}
@@ -42,6 +46,8 @@ export default (props: PropsType) => {
           variant="outlined"
           label={t(props.label)}
           placeholder={t(props.placeholder || props.label)}
+          error={props.error}
+          helperText={props.error && props.errorMessage}
         />
       )}
     />

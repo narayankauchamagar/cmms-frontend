@@ -97,7 +97,7 @@ function HeaderUserbox() {
       }}
     >
       <UserBoxButton color="secondary" ref={ref} onClick={handleOpen}>
-        <Avatar alt={user.name} src={user.avatar} />
+        <Avatar alt={user.firstName} src={user.firstName} />
         <ExpandMoreTwoToneIcon
           fontSize="small"
           sx={{
@@ -125,11 +125,11 @@ function HeaderUserbox() {
           }}
           display="flex"
         >
-          <Avatar variant="rounded" alt={user.name} src={user.avatar} />
+          <Avatar variant="rounded" alt={user.firstName} src={user.firstName} />
           <UserBoxText>
-            <UserBoxLabel variant="body1">{user.name}</UserBoxLabel>
+            <UserBoxLabel variant="body1">{user.firstName}</UserBoxLabel>
             <UserBoxDescription variant="body2">
-              {user.jobtitle}
+              {user.role.name}
             </UserBoxDescription>
           </UserBoxText>
         </MenuUserBox>

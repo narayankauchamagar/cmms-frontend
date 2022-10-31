@@ -17,6 +17,14 @@ import { IField } from '../type';
 import Location from '../../../models/owns/location';
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
+import {
+  addLocation,
+  deleteLocation,
+  editLocation,
+  getLocations
+} from '../../../slices/location';
+import ConfirmDialog from '../components/ConfirmDialog';
+import { useDispatch, useSelector } from '../../../store';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
@@ -30,32 +38,26 @@ import {
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import Form from '../components/form';
 import * as Yup from 'yup';
-import wait from '../../../utils/wait';
 import { isNumeric } from '../../../utils/validators';
-import User, { users } from '../../../models/owns/user';
-import Team, { teams } from '../../../models/owns/team';
-import { Vendor, vendors } from '../../../models/owns/vendor';
-import { Customer, customers } from '../../../models/owns/customer';
+import { teams } from '../../../models/owns/team';
+import { vendors } from '../../../models/owns/vendor';
+import { customers } from '../../../models/owns/customer';
 import LocationDetails from './LocationDetails';
 import { useParams } from 'react-router-dom';
+import Map from '../components/Map';
+import { formatSelectMultiple } from '../../../utils/formatters';
+import { CustomSnackBarContext } from 'src/contexts/CustomSnackBarContext';
 
-function Files() {
+function Locations() {
   const { t }: { t: any } = useTranslation();
   const [currentTab, setCurrentTab] = useState<string>('list');
+  const dispatch = useDispatch();
+  const { showSnackBar } = useContext(CustomSnackBarContext);
+  const [openDelete, setOpenDelete] = useState<boolean>(false);
+  const { locations } = useSelector((state) => state.locations);
   const tabs = [
     { value: 'list', label: t('List View') },
     { value: 'map', label: t('Map View') }
-  ];
-  const locations: Location[] = [
-    {
-      id: 74,
-      name: 'ghgvhb',
-      address: 'GHJ HIjnjb',
-      createdAt: 'dfggj',
-      createdBy: 'ghu',
-      updatedAt: 'ghfgj',
-      updatedBy: 'ghfgj'
-    }
   ];
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
@@ -66,11 +68,39 @@ function Files() {
   const { setTitle } = useContext(TitleContext);
   const { locationId } = useParams();
   const [currentLocation, setCurrentLocation] = useState<Location>();
-  const handleDelete = (id: number) => {};
-  const handleUpdate = (id: number) => {
-    setCurrentLocation(locations.find((location) => location.id === id));
+  const handleOpenUpdate = () => {
     setOpenUpdateModal(true);
   };
+  const onOpenDeleteDialog = () => {
+    setOpenDelete(true);
+  };
+
+  const changeCurrentLocation = (id: number) => {
+    setCurrentLocation(locations.find((location) => location.id === id));
+  };
+  const handleDelete = (id: number) => {
+    handleCloseDetails();
+    dispatch(deleteLocation(id)).then(onDeleteSuccess).catch(onDeleteFailure);
+    setOpenDelete(false);
+  };
+  const onCreationSuccess = () => {
+    setOpenAddModal(false);
+    showSnackBar(t('The location has been created successfully'), 'success');
+  };
+  const onCreationFailure = (err) =>
+    showSnackBar(t("The location couldn't be created"), 'error');
+  const onEditSuccess = () => {
+    setOpenUpdateModal(false);
+    showSnackBar(t('The changes have been saved'), 'success');
+  };
+  const onEditFailure = (err) =>
+    showSnackBar(t("The location couldn't be edited"), 'error');
+  const onDeleteSuccess = () => {
+    showSnackBar(t('The location has been deleted successfully'), 'success');
+  };
+  const onDeleteFailure = (err) =>
+    showSnackBar(t("The location couldn't be deleted"), 'error');
+
   const handleOpenDetails = (id: number) => {
     const foundLocation = locations.find((location) => location.id === id);
     if (foundLocation) {
@@ -89,14 +119,24 @@ function Files() {
   };
   useEffect(() => {
     setTitle(t('Locations'));
+    dispatch(getLocations());
   }, []);
 
   useEffect(() => {
-    if (locationId && isNumeric(locationId)) {
+    if (locations?.length && locationId && isNumeric(locationId)) {
       handleOpenDetails(Number(locationId));
     }
   }, [locations]);
 
+  const formatValues = (values) => {
+    values.customers = formatSelectMultiple(values.customers);
+    values.vendors = formatSelectMultiple(values.vendors);
+    values.workers = formatSelectMultiple(values.workers);
+    values.teams = formatSelectMultiple(values.teams);
+    values.longitude = values.coordinates?.lng;
+    values.latitude = values.coordinates?.lat;
+    return values;
+  };
   const columns: GridEnrichedColDef[] = [
     {
       field: 'name',
@@ -128,28 +168,30 @@ function Files() {
         <GridActionsCellItem
           key="edit"
           icon={<EditTwoToneIcon fontSize="small" color="primary" />}
-          onClick={() => handleUpdate(Number(params.id))}
+          onClick={() => {
+            changeCurrentLocation(Number(params.id));
+            handleOpenUpdate();
+          }}
           label="Edit"
         />,
         <GridActionsCellItem
           key="delete"
           icon={<DeleteTwoToneIcon fontSize="small" color="error" />}
-          onClick={() => handleDelete(Number(params.id))}
+          onClick={() => {
+            changeCurrentLocation(Number(params.id));
+            setOpenDelete(true);
+          }}
           label="Delete"
         />
       ]
     }
   ];
-  const currentLocationWorkers: User[] = users;
-  const currentLocationTeams: Team[] = teams;
-  const currentLocationVendors: Vendor[] = vendors;
-  const currentLocationCustomers: Customer[] = customers;
 
   const fields: Array<IField> = [
     {
-      name: 'title',
+      name: 'name',
       type: 'text',
-      label: t('Title'),
+      label: t('Name'),
       placeholder: t('Enter location name'),
       required: true
     },
@@ -191,11 +233,21 @@ function Files() {
       type2: 'customer',
       label: 'Customers',
       placeholder: 'Select customers'
+    },
+    {
+      name: 'mapTitle',
+      type: 'titleGroupField',
+      label: t('Map Coordinates')
+    },
+    {
+      name: 'coordinates',
+      type: 'coordinates',
+      label: 'Map Coordinates'
     }
   ];
 
   const shape = {
-    title: Yup.string().required(t('Location title is required')),
+    name: Yup.string().required(t('Location title is required')),
     address: Yup.string().required(t('Location address is required'))
   };
 
@@ -232,12 +284,10 @@ function Files() {
             values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              try {
-                await wait(2000);
-                setOpenAddModal(false);
-              } catch (err) {
-                console.error(err);
-              }
+              const formattedValues = formatValues(values);
+              dispatch(addLocation(formattedValues))
+                .then(onCreationSuccess)
+                .catch(onCreationFailure);
             }}
           />
         </Box>
@@ -277,39 +327,43 @@ function Files() {
             values={{
               ...currentLocation,
               title: currentLocation?.name,
-              workers: currentLocationWorkers.map((worker) => {
+              workers: currentLocation?.workers.map((worker) => {
                 return {
                   label: `${worker.firstName} ${worker.lastName}`,
                   value: worker.id.toString()
                 };
               }),
-              teams: currentLocationTeams.map((team) => {
+              teams: currentLocation?.teams.map((team) => {
                 return {
                   label: team.name,
                   value: team.id.toString()
                 };
               }),
-              vendors: currentLocationVendors.map((vendor) => {
+              vendors: currentLocation?.vendors.map((vendor) => {
                 return {
-                  label: vendor.name,
+                  label: vendor.companyName,
                   value: vendor.id.toString()
                 };
               }),
-              customers: currentLocationCustomers.map((customer) => {
+              customers: currentLocation?.customers.map((customer) => {
                 return {
                   label: customer.name,
                   value: customer.id.toString()
                 };
-              })
+              }),
+              coordinates: currentLocation?.longitude
+                ? {
+                    lng: currentLocation.longitude,
+                    lat: currentLocation.latitude
+                  }
+                : null
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              try {
-                await wait(2000);
-                setOpenUpdateModal(false);
-              } catch (err) {
-                console.error(err);
-              }
+              const formattedValues = formatValues(values);
+              dispatch(editLocation(currentLocation.id, formattedValues))
+                .then(onEditSuccess)
+                .catch(onEditFailure);
             }}
           />
         </Box>
@@ -357,33 +411,62 @@ function Files() {
             Location
           </Button>
         </Grid>
-        <Grid item xs={12}>
-          <Card
-            sx={{
-              p: 2,
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between'
-            }}
-          >
-            <Box sx={{ height: 500, width: '95%' }}>
-              <CustomDataGrid
-                columns={columns}
-                rows={locations}
-                components={{
-                  Toolbar: GridToolbar
-                }}
-                onRowClick={(params) => handleOpenDetails(Number(params.id))}
-                initialState={{
-                  columns: {
-                    columnVisibilityModel: {}
-                  }
-                }}
+        {currentTab === 'list' && (
+          <Grid item xs={12}>
+            <Card
+              sx={{
+                p: 2,
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+              }}
+            >
+              <Box sx={{ height: 500, width: '95%' }}>
+                <CustomDataGrid
+                  columns={columns}
+                  rows={locations}
+                  components={{
+                    Toolbar: GridToolbar
+                  }}
+                  onRowClick={(params) => handleOpenDetails(Number(params.id))}
+                  initialState={{
+                    columns: {
+                      columnVisibilityModel: {}
+                    }
+                  }}
+                />
+              </Box>
+            </Card>
+          </Grid>
+        )}
+        {currentTab === 'map' && (
+          <Grid item xs={12}>
+            <Card
+              sx={{
+                p: 2,
+                justifyContent: 'center'
+              }}
+            >
+              <Map
+                dimensions={{ width: 1000, height: 500 }}
+                locations={locations
+                  .filter((location) => location.longitude)
+                  .map(({ name, longitude, latitude, address, id }) => {
+                    return {
+                      title: name,
+                      coordinates: {
+                        lng: longitude,
+                        lat: latitude
+                      },
+                      address,
+                      id
+                    };
+                  })}
               />
-            </Box>
-          </Card>
-        </Grid>
+            </Card>
+          </Grid>
+        )}
       </Grid>
       {renderLocationAddModal()}
       {renderLocationUpdateModal()}
@@ -397,11 +480,21 @@ function Files() {
       >
         <LocationDetails
           location={currentLocation}
-          handleUpdate={handleUpdate}
+          handleOpenUpdate={handleOpenUpdate}
+          handleOpenDelete={onOpenDeleteDialog}
         />
       </Drawer>
+      <ConfirmDialog
+        open={openDelete}
+        onCancel={() => {
+          setOpenDelete(false);
+        }}
+        onConfirm={() => handleDelete(currentLocation?.id)}
+        confirmText={t('Delete')}
+        question={t('Are you sure you want to delete this Location?')}
+      />
     </>
   );
 }
 
-export default Files;
+export default Locations;

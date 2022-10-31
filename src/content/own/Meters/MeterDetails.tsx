@@ -2,6 +2,7 @@ import {
   Box,
   Divider,
   Grid,
+  IconButton,
   Tab,
   Tabs,
   Typography,
@@ -19,10 +20,11 @@ import { IField } from '../type';
 
 interface MeterDetailsProps {
   meter: Meter;
-  handleUpdate: (id: number) => void;
+  handleOpenUpdate: () => void;
+  handleOpenDelete: () => void;
 }
 export default function MeterDetails(props: MeterDetailsProps) {
-  const { meter, handleUpdate } = props;
+  const { meter, handleOpenUpdate, handleOpenDelete } = props;
   const { t }: { t: any } = useTranslation();
   const [currentTab, setCurrentTab] = useState<string>('details');
   const theme = useTheme();
@@ -34,20 +36,26 @@ export default function MeterDetails(props: MeterDetailsProps) {
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
-  const renderField = (label, value) => {
-    return (
+  const BasicField = ({
+    label,
+    value
+  }: {
+    label: string | number;
+    value: string | number;
+  }) => {
+    return value ? (
       <Grid item xs={12} lg={6}>
         <Typography variant="h6" sx={{ color: theme.colors.alpha.black[70] }}>
           {label}
         </Typography>
         <Typography variant="h6">{value}</Typography>
       </Grid>
-    );
+    ) : null;
   };
   const fieldsToRender = (meter: Meter): { label: string; value: any }[] => [
     {
       label: t('Location Name'),
-      value: meter.location.name
+      value: meter.location?.name
     },
     {
       label: t('Asset Name'),
@@ -59,7 +67,7 @@ export default function MeterDetails(props: MeterDetailsProps) {
     },
     {
       label: t('Assigned To'),
-      value: meter.workers.reduce(
+      value: meter.users.reduce(
         (acc, user, index) =>
           acc + `${index !== 0 ? ',' : ''} ${user.firstName} ${user.lastName}`,
         ''
@@ -97,12 +105,12 @@ export default function MeterDetails(props: MeterDetailsProps) {
           <Typography variant="h2">{meter?.name}</Typography>
         </Box>
         <Box>
-          <EditTwoToneIcon
-            onClick={() => handleUpdate(meter.id)}
-            style={{ cursor: 'pointer', marginRight: 10 }}
-            color="primary"
-          />
-          <DeleteTwoToneIcon style={{ cursor: 'pointer' }} color="error" />
+          <IconButton onClick={handleOpenUpdate} style={{ marginRight: 10 }}>
+            <EditTwoToneIcon color="primary" />
+          </IconButton>
+          <IconButton onClick={handleOpenDelete}>
+            <DeleteTwoToneIcon color="error" />
+          </IconButton>
         </Box>
       </Grid>
       <Divider />
@@ -140,9 +148,13 @@ export default function MeterDetails(props: MeterDetailsProps) {
               Meter details
             </Typography>
             <Grid container spacing={2}>
-              {fieldsToRender(meter).map((field) =>
-                renderField(field.label, field.value)
-              )}
+              {fieldsToRender(meter).map((field) => (
+                <BasicField
+                  key={field.label}
+                  label={field.label}
+                  value={field.value}
+                />
+              ))}
             </Grid>
           </Box>
         )}

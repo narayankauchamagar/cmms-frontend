@@ -261,7 +261,7 @@ function PageHeader() {
                   width: 134,
                   height: 134
                 }}
-                src={user.avatar}
+                src={user.firstName}
               />
             </Box>
             <CircularProgress
@@ -336,7 +336,7 @@ function PageHeader() {
                     fontSize: `${theme.typography.pxToRem(24)}`
                   }}
                 >
-                  {user.name}, {t('you did a great job last week!')}
+                  {user.firstName}, {t('you did a great job last week!')}
                 </TypographyPrimary>
               </Box>
             </Box>

@@ -11,26 +11,51 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { IField } from '../type';
+import { addAsset, getAssetChildren } from '../../../slices/asset';
+import { useDispatch, useSelector } from '../../../store';
 import { useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import CustomDataGrid from '../components/CustomDatagrid';
-import { GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
+import {
+  GridEventListener,
+  GridRenderCellParams,
+  GridToolbar
+} from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import { assetDTOS } from '../../../models/owns/asset';
+import { AssetRow } from '../../../models/owns/asset';
 import Form from '../components/form';
 import * as Yup from 'yup';
-import wait from '../../../utils/wait';
 import { useNavigate } from 'react-router-dom';
+import { DataGridProProps, useGridApiRef } from '@mui/x-data-grid-pro';
+import { formatAssetValues } from '../../../utils/formatters';
+import { GroupingCellWithLazyLoading } from './GroupingCellWithLazyLoading';
+import { UserMiniDTO } from '../../../models/user';
+import UserAvatars from '../components/UserAvatars';
+import { enumerate } from '../../../utils/displayers';
+import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 
 function Assets() {
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
   const navigate = useNavigate();
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  const { assetsHierarchy } = useSelector((state) => state.assets);
+  const apiRef = useGridApiRef();
+  const { showSnackBar } = useContext(CustomSnackBarContext);
+
   useEffect(() => {
     setTitle(t('Assets'));
+    dispatch(getAssetChildren(0, []));
   }, []);
+
+  const onCreationSuccess = () => {
+    setOpenAddModal(false);
+    showSnackBar(t('The Asset has been created successfully'), 'success');
+  };
+  const onCreationFailure = (err) =>
+    showSnackBar(t("The Asset couldn't be created"), 'error');
 
   const columns: GridEnrichedColDef[] = [
     {
@@ -52,7 +77,8 @@ function Assets() {
       field: 'location',
       headerName: t('Location'),
       description: t('Location'),
-      width: 150
+      width: 150,
+      valueGetter: (params) => params.row.location?.name
     },
     {
       field: 'image',
@@ -94,31 +120,43 @@ function Assets() {
       field: 'primaryUser',
       headerName: t('Primary User'),
       description: t('Primary User'),
-      width: 150
+      width: 150,
+      valueGetter: (params) =>
+        params.row.primaryUser
+          ? `${params.row.primaryUser?.firstName} ${params.row.primaryUser?.lastName}`
+          : null
     },
     {
-      field: 'users',
+      field: 'assignedTo',
       headerName: t('Users'),
       description: t('Users'),
-      width: 150
+      width: 150,
+      renderCell: (params: GridRenderCellParams<UserMiniDTO[]>) => (
+        <UserAvatars users={params.value ?? []} />
+      )
     },
     {
       field: 'teams',
       headerName: t('Teams'),
       description: t('Teams'),
-      width: 150
+      width: 150,
+      valueGetter: (params) =>
+        enumerate(params.row.teams.map((team) => team.name))
     },
     {
       field: 'vendors',
       headerName: t('Vendors'),
       description: t('Vendors'),
-      width: 150
+      width: 150,
+      valueGetter: (params) =>
+        enumerate(params.row.vendors.map((vendor) => vendor.companyName))
     },
     {
       field: 'parentAsset',
       headerName: t('Parent Asset'),
       description: t('Parent Asset'),
-      width: 150
+      width: 150,
+      valueGetter: (params) => params.row.parentAsset?.name
     },
     {
       field: 'openWorkOrders',
@@ -147,6 +185,14 @@ function Assets() {
       required: true
     },
     {
+      name: 'location',
+      type: 'select',
+      type2: 'location',
+      label: t('Location'),
+      placeholder: t('Select asset location'),
+      required: true
+    },
+    {
       name: 'description',
       type: 'text',
       label: t('Description'),
@@ -157,7 +203,15 @@ function Assets() {
       name: 'model',
       type: 'text',
       label: t('Model'),
-      placeholder: t('Model')
+      placeholder: t('Model'),
+      midWidth: true
+    },
+    {
+      name: 'serialNumber',
+      type: 'text',
+      label: t('Serial Number'),
+      placeholder: t('Serial Number'),
+      midWidth: true
     },
     {
       name: 'category',
@@ -240,7 +294,7 @@ function Assets() {
       label: t('Warranty Expiration date')
     },
     {
-      name: 'additionalInformation',
+      name: 'additionalInfos',
       type: 'text',
       label: t('Additional Information'),
       placeholder: t('Additional Information'),
@@ -250,12 +304,78 @@ function Assets() {
       name: 'structure',
       type: 'titleGroupField',
       label: t('Structure')
+    },
+    { name: 'parts', type: 'select', type2: 'part', label: t('Parts') },
+    {
+      name: 'parentAsset',
+      type: 'select',
+      type2: 'asset',
+      label: t('Parent Asset')
     }
-    //TODO parts, parent Asset, location
   ];
   const shape = {
-    name: Yup.string().required(t('Asset name is required'))
+    name: Yup.string().required(t('Asset name is required')),
+    location: Yup.object().required(t('Asset location is required')).nullable()
   };
+
+  useEffect(() => {
+    const handleRowExpansionChange: GridEventListener<
+      'rowExpansionChange'
+    > = async (node) => {
+      const row = apiRef.current.getRow(node.id) as AssetRow | null;
+      if (!node.childrenExpanded || !row || row.childrenFetched) {
+        return;
+      }
+      apiRef.current.updateRows([
+        {
+          id: `Loading assets-${node.id}`,
+          hierarchy: [...row.hierarchy, '']
+        }
+      ]);
+      dispatch(getAssetChildren(row.id, row.hierarchy));
+      // const childrenRows = assetsHierarchy1;
+      // apiRef.current.updateRows([
+      //   ...childrenRows.map((childRow) => {
+      //     return { ...childRow, hierarchy: [...row.hierarchy, childRow.id] };
+      //   }),
+      //   { id: node.id, childrenFetched: true },
+      //   { id: `placeholder-children-${node.id}`, _action: 'delete' }
+      // ]);
+      //
+      // if (childrenRows.length) {
+      //   apiRef.current.setRowChildrenExpansion(node.id, true);
+      // }
+    };
+    /**
+     * By default, the grid does not toggle the expansion of rows with 0 children
+     * We need to override the `cellKeyDown` event listener to force the expansion if there are children on the server
+     */
+    const handleCellKeyDown: GridEventListener<'cellKeyDown'> = (
+      params,
+      event
+    ) => {
+      const cellParams = apiRef.current.getCellParams(params.id, params.field);
+      if (cellParams.colDef.type === 'treeDataGroup' && event.key === ' ') {
+        event.stopPropagation();
+        event.preventDefault();
+        event.defaultMuiPrevented = true;
+
+        apiRef.current.setRowChildrenExpansion(
+          params.id,
+          !params.rowNode.childrenExpanded
+        );
+      }
+    };
+
+    apiRef.current.subscribeEvent(
+      'rowExpansionChange',
+      handleRowExpansionChange
+    );
+    apiRef.current.subscribeEvent('cellKeyDown', handleCellKeyDown, {
+      isFirst: true
+    });
+  }, [apiRef]);
+
   const renderAssetAddModal = () => (
     <Dialog
       fullWidth
@@ -289,18 +409,22 @@ function Assets() {
             values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              try {
-                await wait(2000);
-                setOpenAddModal(false);
-              } catch (err) {
-                console.error(err);
-              }
+              const formattedValues = formatAssetValues(values);
+              dispatch(addAsset(formattedValues))
+                .then(onCreationSuccess)
+                .catch(onCreationFailure);
             }}
           />
         </Box>
       </DialogContent>
     </Dialog>
   );
+
+  const groupingColDef: DataGridProProps['groupingColDef'] = {
+    headerName: 'Hierarchy',
+    renderCell: (params) => <GroupingCellWithLazyLoading {...params} />
+  };
+
   return (
     <>
       {renderAssetAddModal()}
@@ -343,8 +467,14 @@ function Assets() {
           >
             <Box sx={{ height: 500, width: '95%' }}>
               <CustomDataGrid
+                treeData
                 columns={columns}
-                rows={assetDTOS}
+                rows={assetsHierarchy}
+                apiRef={apiRef}
+                getTreeDataPath={(row) =>
+                  row.hierarchy.map((id) => id.toString())
+                }
+                groupingColDef={groupingColDef}
                 components={{
                   Toolbar: GridToolbar
                 }}

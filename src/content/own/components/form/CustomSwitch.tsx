@@ -1,10 +1,12 @@
 import { Box, Grid, Switch, Typography } from '@mui/material';
 import { Field } from 'formik';
+import { ChangeEvent } from 'react';
+
 interface CustomSwitchProps {
   title: string;
   description: string;
   name: string;
-  handleChange: any;
+  handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
   checked: boolean;
 }
 export default function CustomSwitch(props: CustomSwitchProps) {

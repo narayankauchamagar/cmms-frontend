@@ -6,19 +6,24 @@ import {
   IconButton,
   Typography
 } from '@mui/material';
-import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
+import {
+  addVendor,
+  deleteVendor,
+  editVendor,
+  getVendors
+} from '../../../slices/vendor';
+import { useDispatch, useSelector } from '../../../store';
 import { useTranslation } from 'react-i18next';
 import Form from '../components/form';
 import * as Yup from 'yup';
 import { IField } from '../type';
-import wait from 'src/utils/wait';
-import { useEffect, useState } from 'react';
+import ConfirmDialog from '../components/ConfirmDialog';
+import { useContext, useEffect, useState } from 'react';
 import CustomDataGrid from '../components/CustomDatagrid';
+import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import {
-  GridActionsCellItem,
   GridEnrichedColDef,
   GridRenderCellParams,
-  GridRowParams,
   GridToolbar
 } from '@mui/x-data-grid';
 import {
@@ -28,7 +33,7 @@ import {
   websiteRegExp
 } from '../../../utils/validators';
 import { Close } from '@mui/icons-material';
-import { Vendor, vendors } from '../../../models/owns/vendor';
+import { Vendor } from '../../../models/owns/vendor';
 import { useParams } from 'react-router-dom';
 
 interface PropsType {
@@ -42,15 +47,39 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
   const [isVendorDetailsOpen, setIsVendorDetailsOpen] =
     useState<boolean>(false);
   const { vendorId } = useParams();
-
-  const [companyName, setCompanyName] = useState<string>('');
-  const [phone, setPhone] = useState<string>('');
+  const dispatch = useDispatch();
+  const [openDelete, setOpenDelete] = useState<boolean>(false);
+  const { vendors } = useSelector((state) => state.vendors);
   const [currentVendor, setCurrentVendor] = useState<Vendor>();
   const [viewOrUpdate, setViewOrUpdate] = useState<'view' | 'update'>('view');
-  const values = {
-    companyName: companyName,
-    phone: phone
+  const { showSnackBar } = useContext(CustomSnackBarContext);
+
+  useEffect(() => {
+    dispatch(getVendors());
+  }, []);
+
+  const handleDelete = (id: number) => {
+    handleCloseDetails();
+    dispatch(deleteVendor(id)).then(onDeleteSuccess).catch(onDeleteFailure);
+    setOpenDelete(false);
   };
+  const onCreationSuccess = () => {
+    handleCloseModal();
+    showSnackBar(t('The Vendor has been created successfully'), 'success');
+  };
+  const onCreationFailure = (err) =>
+    showSnackBar(t("The Vendor couldn't be created"), 'error');
+  const onEditSuccess = () => {
+    setViewOrUpdate('view');
+    showSnackBar(t('The changes have been saved'), 'success');
+  };
+  const onEditFailure = (err) =>
+    showSnackBar(t("The Vendor couldn't be edited"), 'error');
+  const onDeleteSuccess = () => {
+    showSnackBar(t('The Vendor has been deleted successfully'), 'success');
+  };
+  const onDeleteFailure = (err) =>
+    showSnackBar(t("The Customer couldn't be deleted"), 'error');
   const handleOpenDetails = (id: number) => {
     const foundVendor = vendors.find((vendor) => vendor.id === id);
     if (foundVendor) {
@@ -72,7 +101,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
     setIsVendorDetailsOpen(false);
   };
   useEffect(() => {
-    if (vendorId && isNumeric(vendorId)) {
+    if (vendors?.length && vendorId && isNumeric(vendorId)) {
       handleOpenDetails(Number(vendorId));
     }
   }, [vendors]);
@@ -145,8 +174,10 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
     phone: Yup.string()
       .matches(phoneRegExp, t('The phone number is invalid'))
       .required(t('The phone number is required')),
-    website: Yup.string().matches(websiteRegExp, t('Invalid website')),
-    email: Yup.string().matches(emailRegExp, t('Invalid email'))
+    website: Yup.string()
+      .matches(websiteRegExp, t('Invalid website'))
+      .nullable(),
+    email: Yup.string().matches(emailRegExp, t('Invalid email')).nullable()
   };
 
   const columns: GridEnrichedColDef[] = [
@@ -206,20 +237,6 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
       headerName: t('Rate'),
       description: t('Rate'),
       width: 150
-    },
-    {
-      field: 'actions',
-      type: 'actions',
-      headerName: t('Actions'),
-      description: t('Actions'),
-      getActions: (params: GridRowParams) => [
-        <GridActionsCellItem
-          key="delete"
-          icon={<DeleteTwoToneIcon fontSize="small" color="error" />}
-          onClick={() => {}}
-          label="Delete"
-        />
-      ]
     }
   ];
 
@@ -250,7 +267,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
             fields={fields}
             validation={Yup.object().shape(shape)}
             submitText={t('Add')}
-            values={values || {}}
+            values={{}}
             onChange={({ field, e }) => {
               /* eslint-disable @typescript-eslint/no-unused-expressions */
               // field === 'phone' && setPhone(e);
@@ -258,12 +275,13 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
               // field === 'term' && setAcceptTerm(e);
             }}
             onSubmit={async (values) => {
-              try {
-                await wait(2000);
-                handleCloseModal();
-              } catch (err) {
-                console.error(err);
-              }
+              const formattedValues = {
+                ...values,
+                rate: Number(values.rate)
+              };
+              dispatch(addVendor(formattedValues))
+                .then(onCreationSuccess)
+                .catch(onCreationFailure);
             }}
           />
         </Box>
@@ -329,7 +347,16 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
               {t('Go back')}
             </Typography>
           )}
-          <Typography variant="subtitle1">{t('Delete')}</Typography>
+          <Typography
+            onClick={() => {
+              setIsVendorDetailsOpen(false);
+              setOpenDelete(true);
+            }}
+            variant="subtitle1"
+            style={{ cursor: 'pointer' }}
+          >
+            {t('Delete')}
+          </Typography>
         </Box>
         <IconButton
           aria-label="close"
@@ -387,26 +414,33 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
               {currentVendor?.email}
             </Typography>
 
-            <Typography variant="subtitle1">{t('Vendor Type')}</Typography>
-            <Typography variant="h5" sx={{ mb: 1 }}>
-              {currentVendor?.vendorType}
-            </Typography>
+            {currentVendor?.vendorType && (
+              <>
+                <Typography variant="subtitle1">{t('Vendor Type')}</Typography>
+                <Typography variant="h5" sx={{ mb: 1 }}>
+                  {currentVendor?.vendorType}
+                </Typography>
+              </>
+            )}
           </Box>
         ) : (
           <Box>
             <Form
               fields={fields}
               validation={Yup.object().shape(shape)}
-              submitText={t('Update')}
+              submitText={t('Save')}
               values={currentVendor || {}}
               onChange={({ field, e }) => {}}
               onSubmit={async (values) => {
-                try {
-                  await wait(2000);
-                  setViewOrUpdate('view');
-                } catch (err) {
-                  console.error(err);
-                }
+                const formattedValues = values.rate
+                  ? {
+                      ...values,
+                      rate: Number(values.rate)
+                    }
+                  : values;
+                dispatch(editVendor(currentVendor.id, formattedValues))
+                  .then(onEditSuccess)
+                  .catch(onEditFailure);
               }}
             />
           </Box>
@@ -428,6 +462,16 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
       <ModalVendorDetails />
       <RenderVendorsAddModal />
       <RenderVendorsList />
+      <ConfirmDialog
+        open={openDelete}
+        onCancel={() => {
+          setOpenDelete(false);
+          setIsVendorDetailsOpen(true);
+        }}
+        onConfirm={() => handleDelete(currentVendor?.id)}
+        confirmText={t('Delete')}
+        question={t('Are you sure you want to delete this Vendor?')}
+      />
     </Box>
   );
 };

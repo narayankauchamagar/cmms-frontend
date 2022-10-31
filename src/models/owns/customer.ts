@@ -8,12 +8,15 @@ export interface Customer {
   customerType: string;
   description: string;
   rate: number;
-  address1: string;
-  address2: string;
-  address3: string;
-  currency: string;
+  billingAddress: string;
+  billingAddress2: string;
+  billingName: string;
+  billingCurrency: string;
 }
-
+export interface CustomerMiniDTO {
+  name: string;
+  id: number;
+}
 export const customers: Customer[] = [
   {
     id: 1,
@@ -25,10 +28,10 @@ export const customers: Customer[] = [
     customerType: 'Plumbing',
     description: 'Describe...',
     rate: 10,
-    address1: 'Add 1',
-    address2: '-',
-    address3: 'Add 3',
-    currency: 'MAD, dirham'
+    billingAddress: 'Add 1',
+    billingAddress2: '-',
+    billingName: 'Add 3',
+    billingCurrency: 'MAD, dirham'
   },
   {
     id: 2,
@@ -40,9 +43,9 @@ export const customers: Customer[] = [
     customerType: 'Electrical',
     description: 'Describe 2...',
     rate: 15,
-    address1: 'Add 1',
-    address2: '-',
-    address3: '-',
-    currency: 'Euro'
+    billingAddress: 'Add 1',
+    billingAddress2: '-',
+    billingName: '-',
+    billingCurrency: 'Euro'
   }
 ];

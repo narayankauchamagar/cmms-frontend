@@ -3,6 +3,8 @@ import {
   Button,
   Divider,
   Grid,
+  IconButton,
+  Link,
   List,
   ListItem,
   ListItemButton,
@@ -23,10 +25,11 @@ import { files } from 'src/models/owns/file';
 
 interface PartDetailsProps {
   part: Part;
-  handleUpdate: (id: number) => void;
+  handleOpenUpdate: () => void;
+  handleOpenDelete: () => void;
 }
 export default function PartDetails(props: PartDetailsProps) {
-  const { part, handleUpdate } = props;
+  const { part, handleOpenUpdate, handleOpenDelete } = props;
   const { t }: { t: any } = useTranslation();
   const [currentTab, setCurrentTab] = useState<string>('details');
   const theme = useTheme();
@@ -41,15 +44,21 @@ export default function PartDetails(props: PartDetailsProps) {
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
-  const renderField = (label, value) => {
-    return (
+  const BasicField = ({
+    label,
+    value
+  }: {
+    label: string | number;
+    value: string | number;
+  }) => {
+    return value ? (
       <Grid item xs={12} lg={6}>
         <Typography variant="h6" sx={{ color: theme.colors.alpha.black[70] }}>
           {label}
         </Typography>
         <Typography variant="h6">{value}</Typography>
       </Grid>
-    );
+    ) : null;
   };
   const firstFieldsToRender = (part: Part): { label: string; value: any }[] => [
     {
@@ -78,31 +87,16 @@ export default function PartDetails(props: PartDetailsProps) {
     },
     {
       label: t('Barcode'),
-      value: part.barCode
+      value: part.barcode
     }
   ];
   const areaFieldsToRender = (part: Part): { label: string; value: any }[] => [
     {
       label: t('Area'),
       value: part.area
-    },
-    {
-      label: t('Assigned Location'),
-      value: part.location
     }
   ];
-  const assignedFieldsToRender = (
-    part: Part
-  ): { label: string; value: any }[] => [
-    {
-      label: t('Assigned Users'),
-      value: part.users
-    },
-    {
-      label: t('Assigned Vendors'),
-      value: part.vendors
-    }
-  ];
+
   return (
     <Grid
       container
@@ -120,15 +114,15 @@ export default function PartDetails(props: PartDetailsProps) {
       >
         <Box>
           <Typography variant="h2">{part?.name}</Typography>
-          <Typography variant="h6">{part?.location}</Typography>
+          <Typography variant="h6">{part?.description}</Typography>
         </Box>
         <Box>
-          <EditTwoToneIcon
-            onClick={() => handleUpdate(part.id)}
-            style={{ cursor: 'pointer', marginRight: 10 }}
-            color="primary"
-          />
-          <DeleteTwoToneIcon style={{ cursor: 'pointer' }} color="error" />
+          <IconButton onClick={handleOpenUpdate} style={{ marginRight: 10 }}>
+            <EditTwoToneIcon color="primary" />
+          </IconButton>
+          <IconButton onClick={handleOpenDelete}>
+            <DeleteTwoToneIcon style={{ cursor: 'pointer' }} color="error" />
+          </IconButton>
         </Box>
       </Grid>
       <Divider />
@@ -153,24 +147,103 @@ export default function PartDetails(props: PartDetailsProps) {
               Part details
             </Typography>
             <Grid container spacing={2}>
-              {firstFieldsToRender(part).map((field) =>
-                renderField(field.label, field.value)
-              )}
+              {firstFieldsToRender(part).map((field) => (
+                <BasicField
+                  key={field.label}
+                  label={field.label}
+                  value={field.value}
+                />
+              ))}
             </Grid>
             <Typography sx={{ mt: 2, mb: 1 }} variant="h4">
               Area details
             </Typography>
             <Grid container spacing={2}>
-              {areaFieldsToRender(part).map((field) =>
-                renderField(field.label, field.value)
-              )}
+              {areaFieldsToRender(part).map((field) => (
+                <BasicField
+                  key={field.label}
+                  label={field.label}
+                  value={field.value}
+                />
+              ))}
             </Grid>
             <Typography sx={{ mt: 2, mb: 1 }} variant="h4">
               Assigned people
             </Typography>
             <Grid container spacing={2}>
-              {assignedFieldsToRender(part).map((field) =>
-                renderField(field.label, field.value)
+              {!!part.assignedTo.length && (
+                <Grid item xs={12} lg={6}>
+                  <Typography
+                    variant="h6"
+                    sx={{ color: theme.colors.alpha.black[70] }}
+                  >
+                    Assigned users
+                  </Typography>
+                  {part.assignedTo.map((user) => (
+                    <Link
+                      key={user.id}
+                      href={`/app/people-teams/${user.id}`}
+                      variant="h6"
+                    >{`${user.firstName} ${user.lastName}`}</Link>
+                  ))}
+                </Grid>
+              )}
+              {!!part.customers.length && (
+                <Grid item xs={12} lg={6}>
+                  <Typography
+                    variant="h6"
+                    sx={{ color: theme.colors.alpha.black[70] }}
+                  >
+                    Assigned customers
+                  </Typography>
+                  {part.customers.map((customer) => (
+                    <Link
+                      key={customer.id}
+                      href={`/app/vendors-customers/customers/${customer.id}`}
+                      variant="h6"
+                    >
+                      {customer.name}
+                    </Link>
+                  ))}
+                </Grid>
+              )}
+              {!!part.vendors.length && (
+                <Grid item xs={12} lg={6}>
+                  <Typography
+                    variant="h6"
+                    sx={{ color: theme.colors.alpha.black[70] }}
+                  >
+                    Assigned vendors
+                  </Typography>
+                  {part.vendors.map((vendor) => (
+                    <Link
+                      key={vendor.id}
+                      href={`/app/vendors-customers/vendors/${vendor.id}`}
+                      variant="h6"
+                    >
+                      {vendor.companyName}
+                    </Link>
+                  ))}
+                </Grid>
+              )}
+              {!!part.teams.length && (
+                <Grid item xs={12} lg={6}>
+                  <Typography
+                    variant="h6"
+                    sx={{ color: theme.colors.alpha.black[70] }}
+                  >
+                    Assigned teams
+                  </Typography>
+                  {part.teams.map((team) => (
+                    <Link
+                      key={team.id}
+                      href={`/app/people-teams/teams/${team.id}`}
+                      variant="h6"
+                    >
+                      {team.name}
+                    </Link>
+                  ))}
+                </Grid>
               )}
             </Grid>
           </Box>

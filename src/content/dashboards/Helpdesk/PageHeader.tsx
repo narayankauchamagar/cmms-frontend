@@ -34,8 +34,9 @@ function PageHeader() {
           {t('Helpdesk')}
         </Typography>
         <Typography variant="subtitle2">
-          {user.name}, {t('this is your helpdesk dashboard overview for today')}
-          , <b>{format(new Date(), 'MMMM dd yyyy')}</b>
+          {user.firstName},{' '}
+          {t('this is your helpdesk dashboard overview for today')},{' '}
+          <b>{format(new Date(), 'MMMM dd yyyy')}</b>
         </Typography>
       </Box>
     </Box>

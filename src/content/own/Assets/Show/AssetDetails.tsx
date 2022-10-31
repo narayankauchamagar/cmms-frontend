@@ -1,24 +1,33 @@
-import Asset from '../../../../models/owns/asset';
 import { Box, Card, Divider, Grid, Stack, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { AssetDTO } from '../../../../models/owns/asset';
 
 interface PropsType {
-  asset: Asset;
+  asset: AssetDTO;
 }
 
 const AssetDetails = ({ asset }: PropsType) => {
   const { t }: { t: any } = useTranslation();
-
   const informationFields = [
-    { label: t('Name'), value: asset.name },
-    { label: t('Description'), value: asset.description }
+    { label: t('Name'), value: asset?.name },
+    { label: t('Description'), value: asset?.description },
+    { label: t('Model'), value: asset?.model },
+    { label: t('Serial Number'), value: asset?.serialNumber },
+    { label: t('Area'), value: asset?.area },
+    { label: t('Barcode'), value: asset?.barCode }
   ];
   const moreInfosFields = [
-    { label: t('Place in Service'), value: asset.name },
-    { label: t('Warranty expiration'), value: asset.description }
+    { label: t('Placed in Service'), value: asset?.inServiceDate },
+    { label: t('Warranty expiration'), value: asset?.warrantyExpirationDate }
   ];
-  const renderField = (label, value) => {
-    return (
+  const BasicField = ({
+    label,
+    value
+  }: {
+    label: string | number;
+    value: string | number;
+  }) => {
+    return value ? (
       <Grid item xs={12}>
         <Stack spacing={5} direction="row">
           <Typography variant="h6">{label}</Typography>
@@ -26,7 +35,7 @@ const AssetDetails = ({ asset }: PropsType) => {
         </Stack>
         <Divider sx={{ mt: 1 }} />
       </Grid>
-    );
+    ) : null;
   };
   return (
     <Box sx={{ px: 4 }}>
@@ -37,15 +46,23 @@ const AssetDetails = ({ asset }: PropsType) => {
               <Grid item xs={12}>
                 <Typography variant="h4">Asset Information</Typography>
               </Grid>
-              {informationFields.map((field) =>
-                renderField(field.label, field.value)
-              )}
+              {informationFields.map((field) => (
+                <BasicField
+                  key={field.label}
+                  label={field.label}
+                  value={field.value}
+                />
+              ))}
               <Grid item xs={12}>
                 <Typography variant="h4">More Informations</Typography>
               </Grid>
-              {moreInfosFields.map((field) =>
-                renderField(field.label, field.value)
-              )}
+              {moreInfosFields.map((field) => (
+                <BasicField
+                  key={field.label}
+                  label={field.label}
+                  value={field.value}
+                />
+              ))}
             </Grid>
           </Card>
         </Grid>

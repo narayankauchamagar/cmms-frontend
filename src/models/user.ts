@@ -15,3 +15,24 @@ export interface User {
   description: string;
   [key: string]: any;
 }
+
+export interface OwnUser {
+  firstName: string;
+  lastName: string;
+  username: string;
+  id: number;
+  email: string;
+  phone: string;
+  role: { name: string };
+  companyId: number;
+}
+export interface UserMiniDTO {
+  firstName: string;
+  lastName: string;
+  id: number;
+}
+
+export interface UserResponseDTO extends OwnUser {
+  companySettingsId: number;
+  userSettingsId: number;
+}

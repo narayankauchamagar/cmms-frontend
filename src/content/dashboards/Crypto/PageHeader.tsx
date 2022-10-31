@@ -17,13 +17,13 @@ function PageHeader() {
             height: theme.spacing(8)
           }}
           variant="rounded"
-          alt={user.name}
-          src={user.avatar}
+          alt={user.firstName}
+          src={user.firstName}
         />
       </Grid>
       <Grid item>
         <Typography variant="h3" component="h3" gutterBottom>
-          {t('Welcome')}, {user.name}!
+          {t('Welcome')}, {user.firstName}!
         </Typography>
         <Typography variant="subtitle2">
           {t('Today is a good day to start trading crypto assets!')}

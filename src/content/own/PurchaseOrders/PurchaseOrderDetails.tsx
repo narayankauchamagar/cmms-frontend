@@ -2,6 +2,7 @@ import {
   Box,
   Divider,
   Grid,
+  IconButton,
   Link,
   Tab,
   Tabs,
@@ -16,10 +17,11 @@ import PurchaseOrder from '../../../models/owns/purchaseOrder';
 
 interface PurchaseOrderDetailsProps {
   purchaseOrder: PurchaseOrder;
-  handleUpdate: (id: number) => void;
+  handleOpenUpdate: () => void;
+  handleDelete: () => void;
 }
 export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
-  const { purchaseOrder, handleUpdate } = props;
+  const { purchaseOrder, handleOpenUpdate, handleDelete } = props;
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
   const [currentTab, setCurrentTab] = useState<string>('details');
@@ -32,8 +34,18 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
-  const renderField = (label, value, type?, id?) => {
-    return (
+  const BasicField = ({
+    label,
+    value,
+    id,
+    type
+  }: {
+    label: string | number;
+    value: string | number;
+    type?: string;
+    id?: number;
+  }) => {
+    return value ? (
       <Grid item xs={12} lg={6}>
         <Typography variant="h6" sx={{ color: theme.colors.alpha.black[70] }}>
           {label}
@@ -50,7 +62,7 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
           <Typography variant="h6">{value}</Typography>
         )}
       </Grid>
-    );
+    ) : null;
   };
   const detailsFieldsToRender = (
     purchaseOrder1: PurchaseOrder
@@ -78,8 +90,8 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
     {
       label: t('Vendor'),
       type: 'vendor',
-      value: purchaseOrder1.vendor.name,
-      id: purchaseOrder1.vendor.id
+      value: purchaseOrder1.vendor?.companyName,
+      id: purchaseOrder1.vendor?.id
     }
   ];
   const shippingFieldsToRender = (
@@ -158,12 +170,12 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
           <Typography variant="h6">{purchaseOrder?.shippingAddress}</Typography>
         </Box>
         <Box>
-          <EditTwoToneIcon
-            onClick={() => handleUpdate(purchaseOrder.id)}
-            style={{ cursor: 'pointer', marginRight: 10 }}
-            color="primary"
-          />
-          <DeleteTwoToneIcon style={{ cursor: 'pointer' }} color="error" />
+          <IconButton onClick={handleOpenUpdate} style={{ marginRight: 10 }}>
+            <EditTwoToneIcon color="primary" />
+          </IconButton>
+          <IconButton onClick={handleDelete}>
+            <DeleteTwoToneIcon color="error" />
+          </IconButton>
         </Box>
       </Grid>
       <Divider />
@@ -184,23 +196,37 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
       <Grid item xs={12}>
         {currentTab === 'details' && (
           <Grid container spacing={2}>
-            {detailsFieldsToRender(purchaseOrder).map((field) =>
-              renderField(field.label, field.value, field.type, field.id)
-            )}
+            {detailsFieldsToRender(purchaseOrder).map((field) => (
+              <BasicField
+                key={field.id}
+                label={field.label}
+                value={field.value}
+                type={field.type}
+                id={field.id}
+              />
+            ))}
           </Grid>
         )}
         {currentTab === 'shipping' && (
           <Grid container spacing={2}>
-            {shippingFieldsToRender(purchaseOrder).map((field) =>
-              renderField(field.label, field.value)
-            )}
+            {shippingFieldsToRender(purchaseOrder).map((field) => (
+              <BasicField
+                key={field.label}
+                label={field.label}
+                value={field.value}
+              />
+            ))}
           </Grid>
         )}
         {currentTab === 'additionalInfos' && (
           <Grid container spacing={2}>
-            {additionalInfosFieldsToRender(purchaseOrder).map((field) =>
-              renderField(field.label, field.value)
-            )}
+            {additionalInfosFieldsToRender(purchaseOrder).map((field) => (
+              <BasicField
+                key={field.label}
+                label={field.label}
+                value={field.value}
+              />
+            ))}
           </Grid>
         )}
       </Grid>

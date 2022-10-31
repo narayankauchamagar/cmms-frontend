@@ -17,16 +17,22 @@ import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import CustomDataGrid from '../components/CustomDatagrid';
 import { GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import PurchaseOrder, {
-  purchaseOrders
-} from '../../../models/owns/purchaseOrder';
+import PurchaseOrder from '../../../models/owns/purchaseOrder';
+import { useDispatch, useSelector } from '../../../store';
+import {
+  deletePurchaseOrder,
+  editPurchaseOrder,
+  getPurchaseOrders
+} from '../../../slices/purchaseOrder';
+import ConfirmDialog from '../components/ConfirmDialog';
 import { useNavigate, useParams } from 'react-router-dom';
 import PurchaseOrderDetails from './PurchaseOrderDetails';
 import { IField } from '../type';
 import Form from '../components/form';
 import * as Yup from 'yup';
-import wait from '../../../utils/wait';
 import { isNumeric } from '../../../utils/validators';
+import { formatSelect } from '../../../utils/formatters';
+import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 
 function PurchaseOrders() {
   const { t }: { t: any } = useTranslation();
@@ -35,14 +41,14 @@ function PurchaseOrders() {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const { purchaseOrderId } = useParams();
-
+  const dispatch = useDispatch();
+  const [openDelete, setOpenDelete] = useState<boolean>(false);
+  const { purchaseOrders } = useSelector((state) => state.purchaseOrders);
   const [currentPurchaseOrder, setCurrentPurchaseOrder] =
     useState<PurchaseOrder>();
+  const { showSnackBar } = useContext(CustomSnackBarContext);
 
-  const handleUpdate = (id: number) => {
-    setCurrentPurchaseOrder(
-      purchaseOrders.find((purchaseOrder) => purchaseOrder.id === id)
-    );
+  const handleOpenUpdate = () => {
     setOpenUpdateModal(true);
   };
   const handleOpenDetails = (id: number) => {
@@ -61,19 +67,44 @@ function PurchaseOrders() {
   };
   useEffect(() => {
     setTitle(t('Purchase Orders'));
+    dispatch(getPurchaseOrders());
   }, []);
 
   useEffect(() => {
-    if (purchaseOrderId && isNumeric(purchaseOrderId)) {
+    if (
+      purchaseOrders?.length &&
+      purchaseOrderId &&
+      isNumeric(purchaseOrderId)
+    ) {
       handleOpenDetails(Number(purchaseOrderId));
     }
   }, [purchaseOrders]);
 
+  const handleDelete = (id: number) => {
+    handleCloseDetails();
+    dispatch(deletePurchaseOrder(id))
+      .then(onDeleteSuccess)
+      .catch(onDeleteFailure);
+    setOpenDelete(false);
+  };
   const handleCloseDetails = () => {
     window.history.replaceState(null, 'PurchaseOrder', `/app/purchase-orders`);
     setOpenDrawer(false);
   };
-
+  const onEditSuccess = () => {
+    setOpenUpdateModal(false);
+    showSnackBar(t('The changes have been saved'), 'success');
+  };
+  const onEditFailure = (err) =>
+    showSnackBar(t("The Purchase Order couldn't be edited"), 'error');
+  const onDeleteSuccess = () => {
+    showSnackBar(
+      t('The Purchase Order has been deleted successfully'),
+      'success'
+    );
+  };
+  const onDeleteFailure = (err) =>
+    showSnackBar(t("The Purchase Order couldn't be deleted"), 'error');
   const columns: GridEnrichedColDef[] = [
     {
       field: 'id',
@@ -94,32 +125,32 @@ function PurchaseOrders() {
       field: 'itemsNumber',
       headerName: t('Number of items'),
       description: t('Number of items'),
-      width: 150,
-      valueGetter: (params: GridRenderCellParams<string>) =>
-        params.row.partPurchases.length
+      width: 150
+      // valueGetter: (params: GridRenderCellParams<string>) =>
+      //   params.row.partPurchases.length
     },
     {
       field: 'totalCost',
       headerName: t('Total Cost'),
       description: t('Total Cost'),
-      width: 150,
-      valueGetter: (params: GridRenderCellParams<string>) =>
-        params.row.partPurchases.reduce(
-          (acc, partPurchase) =>
-            acc + partPurchase.quantity * partPurchase.part.cost,
-          0
-        )
+      width: 150
+      // valueGetter: (params: GridRenderCellParams<string>) =>
+      //   params.row.partPurchases.reduce(
+      //     (acc, partPurchase) =>
+      //       acc + partPurchase.quantity * partPurchase.part.cost,
+      //     0
+      //   )
     },
     {
       field: 'totalQuantity',
       headerName: t('Total Quantity'),
       description: t('Total Quantity'),
-      width: 150,
-      valueGetter: (params: GridRenderCellParams<string>) =>
-        params.row.partPurchases.reduce(
-          (acc, partPurchase) => acc + partPurchase.quantity,
-          0
-        )
+      width: 150
+      // valueGetter: (params: GridRenderCellParams<string>) =>
+      //   params.row.partPurchases.reduce(
+      //     (acc, partPurchase) => acc + partPurchase.quantity,
+      //     0
+      //   )
     },
     {
       field: 'category',
@@ -180,13 +211,13 @@ function PurchaseOrders() {
       midWidth: true
     },
     {
-      name: 'dueDate',
+      name: 'shippingDueDate',
       type: 'date',
       label: t('Due Date'),
       midWidth: true
     },
     {
-      name: 'additionalDetails',
+      name: 'shippingAdditionalDetail',
       type: 'text',
       label: t('Additional Details'),
       midWidth: true,
@@ -213,61 +244,56 @@ function PurchaseOrders() {
       label: t('Shipping Information')
     },
     {
-      name: 'useCompanyAddress',
-      type: 'checkbox',
-      label: t('Use Company address')
-    },
-    {
-      name: 'companyName',
+      name: 'shippingCompanyName',
       type: 'text',
       label: t('Company name'),
       placeholder: t('Company name'),
       midWidth: true
     },
     {
-      name: 'shipToName',
+      name: 'shippingShipToName',
       type: 'text',
       label: t('Ship To'),
       placeholder: t('Ship To'),
       midWidth: true
     },
     {
-      name: 'address',
+      name: 'shippingAddress',
       type: 'text',
       label: t('Address'),
       placeholder: t('Address'),
       midWidth: true
     },
     {
-      name: 'city',
+      name: 'shippingCity',
       type: 'text',
       label: t('City'),
       placeholder: t('City'),
       midWidth: true
     },
     {
-      name: 'state',
+      name: 'shippingState',
       type: 'text',
       label: t('State'),
       placeholder: t('State'),
       midWidth: true
     },
     {
-      name: 'zipCode',
-      type: 'text',
+      name: 'shippingZipCode',
+      type: 'number',
       label: t('Zip Code'),
       placeholder: t('Zip Code'),
       midWidth: true
     },
     {
-      name: 'phone',
+      name: 'shippingPhone',
       type: 'text',
       label: t('Phone number'),
       placeholder: t('Phone number'),
       midWidth: true
     },
     {
-      name: 'faxNumber',
+      name: 'shippingFax',
       type: 'text',
       label: t('Fax Number'),
       placeholder: t('Fax Number'),
@@ -279,14 +305,14 @@ function PurchaseOrders() {
       label: t('Additional Information')
     },
     {
-      name: 'purchaseOrderDate',
+      name: 'additionalInfoDate',
       type: 'date',
       label: t('Purchase Order Date'),
       placeholder: t('Purchase Order Date'),
       midWidth: true
     },
     {
-      name: 'notes',
+      name: 'additionalInfoNotes',
       type: 'text',
       label: t('Notes'),
       placeholder: t('Add Notes'),
@@ -294,21 +320,21 @@ function PurchaseOrders() {
       multiple: true
     },
     {
-      name: 'requisitioner',
+      name: 'additionalInfoRequistionerName',
       type: 'text',
       label: t('Requisitioner'),
       placeholder: t('Requisitioner'),
       midWidth: true
     },
     {
-      name: 'terms',
+      name: 'additionalInfoTerm',
       type: 'text',
       label: t('Terms'),
       placeholder: t('Terms'),
       midWidth: true
     },
     {
-      name: 'shippingMethod',
+      name: 'additionalInfoShippingOrderCategory',
       type: 'text',
       label: t('Shipping Method'),
       placeholder: t('Shipping Method'),
@@ -351,18 +377,16 @@ function PurchaseOrders() {
             values={{
               ...currentPurchaseOrder,
               vendor: {
-                label: currentPurchaseOrder?.vendor.name,
-                value: currentPurchaseOrder?.vendor.id.toString()
+                label: currentPurchaseOrder?.vendor?.name,
+                value: currentPurchaseOrder?.vendor?.id.toString()
               }
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              try {
-                await wait(2000);
-                setOpenUpdateModal(false);
-              } catch (err) {
-                console.error(err);
-              }
+              values.vendor = formatSelect(values.vendor);
+              dispatch(editPurchaseOrder(currentPurchaseOrder.id, values))
+                .then(onEditSuccess)
+                .catch(onEditFailure);
             }}
           />
         </Box>
@@ -436,10 +460,21 @@ function PurchaseOrders() {
       >
         <PurchaseOrderDetails
           purchaseOrder={currentPurchaseOrder}
-          handleUpdate={handleUpdate}
+          handleOpenUpdate={handleOpenUpdate}
+          handleDelete={() => setOpenDelete(true)}
         />
       </Drawer>
       {renderUpdateModal()}
+      <ConfirmDialog
+        open={openDelete}
+        onCancel={() => {
+          setOpenDelete(false);
+          setOpenDrawer(true);
+        }}
+        onConfirm={() => handleDelete(currentPurchaseOrder?.id)}
+        confirmText={t('Delete')}
+        question={t('Are you sure you want to delete this Purchase Order?')}
+      />
     </>
   );
 }

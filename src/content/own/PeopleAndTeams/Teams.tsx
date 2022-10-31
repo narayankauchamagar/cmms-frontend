@@ -10,7 +10,6 @@ import { useTranslation } from 'react-i18next';
 import Form from '../components/form';
 import * as Yup from 'yup';
 import { IField } from '../type';
-import wait from 'src/utils/wait';
 import CustomDataGrid from '../components/CustomDatagrid';
 import Team, { teams } from '../../../models/owns/team';
 import {
@@ -18,10 +17,18 @@ import {
   GridRenderCellParams,
   GridToolbar
 } from '@mui/x-data-grid';
-import { useEffect, useState } from 'react';
 import { Close } from '@mui/icons-material';
 import { isNumeric } from 'src/utils/validators';
 import { useParams } from 'react-router-dom';
+import { addTeam, deleteTeam, getTeams } from '../../../slices/team';
+import { useDispatch, useSelector } from '../../../store';
+import ConfirmDialog from '../components/ConfirmDialog';
+import { useContext, useEffect, useState } from 'react';
+import { formatSelectMultiple } from '../../../utils/formatters';
+import { UserMiniDTO } from '../../../models/user';
+import UserAvatars from '../components/UserAvatars';
+import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
+import wait from 'src/utils/wait';
 
 interface PropsType {
   values?: any;
@@ -31,12 +38,42 @@ interface PropsType {
 
 const Teams = ({ openModal, handleCloseModal }: PropsType) => {
   const { t }: { t: any } = useTranslation();
+  const dispatch = useDispatch();
+  const [openDelete, setOpenDelete] = useState<boolean>(false);
+  const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
+  const [currentTeam, setCurrentTeam] = useState<Team>();
+  const { teams } = useSelector((state) => state.teams);
+  const { showSnackBar } = useContext(CustomSnackBarContext);
 
   const [isTeamDetailsOpen, setIsTeamDetailsOpen] = useState(false);
-  const [currentTeam, setCurrentTeam] = useState<Team>();
   const [viewOrUpdate, setViewOrUpdate] = useState<'view' | 'update'>('view');
   const { teamId } = useParams();
 
+  useEffect(() => {
+    dispatch(getTeams());
+  }, []);
+
+  const handleDelete = (id: number) => {
+    dispatch(deleteTeam(id)).then(onDeleteSuccess).catch(onDeleteFailure);
+    setOpenDelete(false);
+  };
+  const onCreationSuccess = () => {
+    handleCloseModal();
+    showSnackBar(t('The Team has been created successfully'), 'success');
+  };
+  const onCreationFailure = (err) =>
+    showSnackBar(t("The Team couldn't be created"), 'error');
+  const onEditSuccess = () => {
+    setOpenUpdateModal(false);
+    showSnackBar(t('The changes have been saved'), 'success');
+  };
+  const onEditFailure = (err) =>
+    showSnackBar(t("The Team couldn't be edited"), 'error');
+  const onDeleteSuccess = () => {
+    showSnackBar(t('The Team has been deleted successfully'), 'success');
+  };
+  const onDeleteFailure = (err) =>
+    showSnackBar(t("The Team couldn't be deleted"), 'error');
   let fields: Array<IField> = [
     {
       name: 'name',
@@ -53,7 +90,7 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
       placeholder: 'Description'
     },
     {
-      name: 'teamUsers',
+      name: 'users',
       type: 'select',
       type2: 'user',
       multiple: true,
@@ -82,9 +119,12 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
       width: 150
     },
     {
-      field: 'teamUsers',
+      field: 'users',
       headerName: t('People in the team'),
-      width: 200
+      width: 200,
+      renderCell: (params: GridRenderCellParams<UserMiniDTO[]>) => (
+        <UserAvatars users={params.value} />
+      )
     }
   ];
 
@@ -135,12 +175,10 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
             submitText={t('Submit')}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              try {
-                await wait(2000);
-                console.log('Values ==> ', values);
-              } catch (err) {
-                console.error(err);
-              }
+              values.users = formatSelectMultiple(values.users);
+              dispatch(addTeam(values))
+                .then(onCreationSuccess)
+                .catch(onCreationFailure);
             }}
           />
         </Box>
@@ -148,7 +186,7 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
     </Dialog>
   );
 
-  const RenderTeamsList = () => (
+  const Renderteams = () => (
     <Box
       sx={{
         height: 400,
@@ -291,7 +329,16 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
     >
       <RenderTeamsAddModal />
       <ModalTeamDetails />
-      <RenderTeamsList />
+      <Renderteams />
+      <ConfirmDialog
+        open={openDelete}
+        onCancel={() => {
+          setOpenDelete(false);
+        }}
+        onConfirm={() => handleDelete(currentTeam?.id)}
+        confirmText={t('Delete')}
+        question={t('Are you sure you want to delete this Vendor?')}
+      />
     </Box>
   );
 };

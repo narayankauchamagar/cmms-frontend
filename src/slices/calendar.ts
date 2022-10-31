@@ -151,14 +151,17 @@ export const selectRange =
         end: end.getTime()
       })
     );
+    return Promise.resolve();
   };
 
 export const openDrawerPanel = (): AppThunk => (dispatch) => {
   dispatch(slice.actions.openDrawerPanel());
+  return Promise.resolve();
 };
 
 export const closeDrawerPanel = (): AppThunk => (dispatch) => {
   dispatch(slice.actions.closeDrawerPanel());
+  return Promise.resolve();
 };
 
 export default slice;

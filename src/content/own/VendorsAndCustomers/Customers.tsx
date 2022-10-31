@@ -6,19 +6,15 @@ import {
   IconButton,
   Typography
 } from '@mui/material';
-import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import { useTranslation } from 'react-i18next';
 import Form from '../components/form';
 import * as Yup from 'yup';
 import { IField } from '../type';
-import wait from 'src/utils/wait';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import CustomDataGrid from '../components/CustomDatagrid';
 import {
-  GridActionsCellItem,
   GridEnrichedColDef,
   GridRenderCellParams,
-  GridRowParams,
   GridToolbar
 } from '@mui/x-data-grid';
 import {
@@ -28,8 +24,17 @@ import {
   websiteRegExp
 } from '../../../utils/validators';
 import { Close } from '@mui/icons-material';
-import { Customer, customers } from '../../../models/owns/customer';
+import { Customer } from '../../../models/owns/customer';
 import { useParams } from 'react-router-dom';
+import {
+  addCustomer,
+  deleteCustomer,
+  editCustomer,
+  getCustomers
+} from '../../../slices/customer';
+import { useDispatch, useSelector } from '../../../store';
+import ConfirmDialog from '../components/ConfirmDialog';
+import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 
 interface PropsType {
   values?: any;
@@ -42,14 +47,17 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
   const [isCustomerDetailsOpen, setIsCustomerDetailsOpen] =
     useState<boolean>(false);
   const { customerId } = useParams();
-  const [customerName, setCustomerName] = useState<string>('');
-  const [phone, setPhone] = useState<string>('');
+  const dispatch = useDispatch();
+  const { customers } = useSelector((state) => state.customers);
   const [currentCustomer, setCurrentCustomer] = useState<Customer>();
   const [viewOrUpdate, setViewOrUpdate] = useState<'view' | 'update'>('view');
-  const values = {
-    customerName: customerName,
-    phone: phone
-  };
+  const [openDelete, setOpenDelete] = useState<boolean>(false);
+  const { showSnackBar } = useContext(CustomSnackBarContext);
+
+  useEffect(() => {
+    dispatch(getCustomers());
+  }, []);
+
   const handleOpenDetails = (id: number) => {
     const foundCustomer = customers.find((customer) => customer.id === id);
     if (foundCustomer) {
@@ -70,8 +78,32 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
     );
     setIsCustomerDetailsOpen(false);
   };
+
+  const handleDelete = (id: number) => {
+    handleCloseDetails();
+    dispatch(deleteCustomer(id)).then(onDeleteSuccess).catch(onDeleteFailure);
+    setOpenDelete(false);
+  };
+  const onCreationSuccess = () => {
+    handleCloseModal();
+    showSnackBar(t('The Customer has been created successfully'), 'success');
+  };
+  const onCreationFailure = (err) =>
+    showSnackBar(t("The Customer couldn't be created"), 'error');
+  const onEditSuccess = () => {
+    setViewOrUpdate('view');
+    showSnackBar(t('The changes have been saved'), 'success');
+  };
+  const onEditFailure = (err) =>
+    showSnackBar(t("The Customer couldn't be edited"), 'error');
+  const onDeleteSuccess = () => {
+    showSnackBar(t('The Customer has been deleted successfully'), 'success');
+  };
+  const onDeleteFailure = (err) =>
+    showSnackBar(t("The Customer couldn't be deleted"), 'error');
+
   useEffect(() => {
-    if (customerId && isNumeric(customerId)) {
+    if (customers?.length && customerId && isNumeric(customerId)) {
       handleOpenDetails(Number(customerId));
     }
   }, [customers]);
@@ -141,21 +173,21 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
       label: 'Billing Information'
     },
     {
-      name: 'address1',
+      name: 'billingAddress',
       type: 'text',
       label: 'Address',
-      placeholder: 'casa, maroc'
+      placeholder: 'Casa, Maroc'
     },
     {
-      name: 'address2',
+      name: 'billingAddress2',
       type: 'text',
       label: 'Address Line 2',
-      placeholder: 'casa, maroc'
+      placeholder: 'Casa, Maroc'
     },
     {
-      name: 'address3',
+      name: 'billingName',
       type: 'text',
-      label: 'Address Line 3',
+      label: 'Billing Name',
       placeholder: 'casa, maroc'
     },
     {
@@ -172,12 +204,14 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
   ];
 
   const shape = {
-    customerName: Yup.string().required('Customer Name is required'),
+    name: Yup.string().required('Customer Name is required'),
     phone: Yup.string()
       .matches(phoneRegExp, t('The phone number is invalid'))
       .required(t('The phone number is required')),
-    website: Yup.string().matches(websiteRegExp, t('Invalid website')),
-    email: Yup.string().matches(emailRegExp, t('Invalid email'))
+    website: Yup.string()
+      .matches(websiteRegExp, t('Invalid website'))
+      .nullable(),
+    email: Yup.string().matches(emailRegExp, t('Invalid email')).nullable()
   };
 
   const columns: GridEnrichedColDef[] = [
@@ -233,42 +267,22 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
       width: 150
     },
     {
-      field: 'address1',
-      headerName: t('Address Line 1'),
-      description: t('Address Line 1'),
+      field: 'billingAddress',
+      headerName: t('Billing Address'),
+      description: t('Billing Address'),
       width: 150
     },
     {
-      field: 'address3',
-      headerName: t('Address Line 2'),
-      description: t('Address Line 2'),
+      field: 'billingName',
+      headerName: t('Billing Name'),
+      description: t('Billing Name'),
       width: 150
     },
     {
-      field: 'address3',
-      headerName: t('Address Line 3'),
-      description: t('Address Line 3'),
-      width: 150
-    },
-    {
-      field: 'currency',
+      field: 'billingCurrency',
       headerName: t('Currency'),
       description: t('Currency'),
       width: 150
-    },
-    {
-      field: 'actions',
-      type: 'actions',
-      headerName: t('Actions'),
-      description: t('Actions'),
-      getActions: (params: GridRowParams) => [
-        <GridActionsCellItem
-          key="delete"
-          icon={<DeleteTwoToneIcon fontSize="small" color="error" />}
-          onClick={() => {}}
-          label="Delete"
-        />
-      ]
     }
   ];
   // const searchFilterProperties = ['customerName', 'customerType', 'email'];
@@ -298,15 +312,16 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
             fields={fields}
             validation={Yup.object().shape(shape)}
             submitText={t('Add')}
-            values={values || {}}
+            values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              try {
-                await wait(2000);
-                handleCloseModal();
-              } catch (err) {
-                console.error(err);
-              }
+              const formattedValues = {
+                ...values,
+                rate: Number(values.rate)
+              };
+              dispatch(addCustomer(formattedValues))
+                .then(onCreationSuccess)
+                .catch(onCreationFailure);
             }}
           />
         </Box>
@@ -372,7 +387,16 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
               {t('Go back')}
             </Typography>
           )}
-          <Typography variant="subtitle1">{t('Delete')}</Typography>
+          <Typography
+            onClick={() => {
+              setIsCustomerDetailsOpen(false);
+              setOpenDelete(true);
+            }}
+            variant="subtitle1"
+            style={{ cursor: 'pointer' }}
+          >
+            {t('Delete')}
+          </Typography>
         </Box>
         <IconButton
           aria-label="close"
@@ -437,7 +461,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
 
             <Typography variant="subtitle1">{t('Currency')}</Typography>
             <Typography variant="h5" sx={{ mb: 1 }}>
-              {currentCustomer?.currency}
+              {currentCustomer?.billingCurrency}
             </Typography>
           </Box>
         ) : (
@@ -445,16 +469,19 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
             <Form
               fields={fields}
               validation={Yup.object().shape(shape)}
-              submitText={t('Update')}
+              submitText={t('Save')}
               values={currentCustomer || {}}
               onChange={({ field, e }) => {}}
               onSubmit={async (values) => {
-                try {
-                  await wait(2000);
-                  setViewOrUpdate('view');
-                } catch (err) {
-                  console.error(err);
-                }
+                const formattedValues = values.rate
+                  ? {
+                      ...values,
+                      rate: Number(values.rate)
+                    }
+                  : values;
+                dispatch(editCustomer(currentCustomer.id, formattedValues))
+                  .then(onEditSuccess)
+                  .catch(onEditFailure);
               }}
             />
           </Box>
@@ -476,6 +503,16 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
       <ModalCustomerDetails />
       <RenderCustomersAddModal />
       <RenderCustomersList />
+      <ConfirmDialog
+        open={openDelete}
+        onCancel={() => {
+          setOpenDelete(false);
+          setIsCustomerDetailsOpen(true);
+        }}
+        onConfirm={() => handleDelete(currentCustomer?.id)}
+        confirmText={t('Delete')}
+        question={t('Are you sure you want to delete this Customer?')}
+      />
     </Box>
   );
 };

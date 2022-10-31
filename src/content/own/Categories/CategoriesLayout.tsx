@@ -1,6 +1,7 @@
 import { Fragment, ReactNode, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import MultipleTabsLayout from '../components/MultipleTabsLayout';
+import ConfirmDialog from '../components/ConfirmDialog';
 import {
   Box,
   Button,
@@ -24,8 +25,17 @@ import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import wait from '../../../utils/wait';
 import { TitleContext } from '../../../contexts/TitleContext';
+import { useDispatch, useSelector } from '../../../store';
+import {
+  addCategory,
+  deleteCategory,
+  editCategory,
+  getCategories
+} from '../../../slices/category';
+import useAuth from '../../../hooks/useAuth';
+import Category from '../../../models/owns/category';
+import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 
 const IconButtonWrapper = styled(IconButton)(
   ({ theme }) => `
@@ -50,22 +60,57 @@ const ListWrapper = styled(List)(
 interface CategoriesLayoutProps {
   children?: ReactNode;
   tabIndex: number;
-  categories: { id: number; name: string }[];
+  basePath: string;
 }
 
 function CategoriesLayout(props: CategoriesLayoutProps) {
-  const { children, tabIndex, categories } = props;
+  const { children, tabIndex, basePath } = props;
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
   const [openAddCategoryModal, setOpenAddCategoryModal] =
     useState<boolean>(false);
-  const handleOpenAddCategoryModal = () => setOpenAddCategoryModal(true);
-  const handleCloseAddCategoryModal = () => setOpenAddCategoryModal(false);
+  const [openUpdateCategoryModal, setOpenUpdateCategoryModal] =
+    useState<boolean>(false);
+  const [openDelete, setOpenDelete] = useState<boolean>(false);
+  const handleOpenAdd = () => setOpenAddCategoryModal(true);
+  const handleCloseAdd = () => setOpenAddCategoryModal(false);
+  const { categories } = useSelector((state) => state.categories);
   const { setTitle } = useContext(TitleContext);
+  const dispatch = useDispatch();
+  const { user } = useAuth();
+  const { companySettingsId } = user;
+  const [currentCategory, setCurrentCategory] = useState<Category>();
+  const { showSnackBar } = useContext(CustomSnackBarContext);
 
+  const handleDelete = (id: number) => {
+    dispatch(deleteCategory(id, basePath))
+      .then(onDeleteSuccess)
+      .catch(onDeleteFailure);
+    setOpenDelete(false);
+  };
   useEffect(() => {
     setTitle(t('Categories'));
+    dispatch(getCategories(basePath));
   }, []);
+
+  const onCreationSuccess = () => {
+    handleCloseAdd();
+    showSnackBar(t('The Category has been created successfully'), 'success');
+  };
+  const onCreationFailure = (err) =>
+    showSnackBar(t("The Category couldn't be created"), 'error');
+  const onEditSuccess = () => {
+    setOpenUpdateCategoryModal(false);
+    showSnackBar(t('The changes have been saved'), 'success');
+  };
+  const onEditFailure = (err) =>
+    showSnackBar(t("The Category couldn't be edited"), 'error');
+  const onDeleteSuccess = () => {
+    showSnackBar(t('The Category has been deleted successfully'), 'success');
+  };
+  const onDeleteFailure = (err) =>
+    showSnackBar(t("The Category couldn't be deleted"), 'error');
+
   const tabs = [
     { value: '', label: t('Work Orders') },
     { value: 'asset-status', label: t('Asset Status') },
@@ -78,7 +123,7 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
       fullWidth
       maxWidth="xs"
       open={openAddCategoryModal}
-      onClose={handleCloseAddCategoryModal}
+      onClose={handleCloseAdd}
     >
       <DialogTitle
         sx={{
@@ -98,21 +143,16 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
           name: Yup.string().max(30).required(t('The name field is required'))
         })}
         onSubmit={async (
-          _values,
+          values,
           { resetForm, setErrors, setStatus, setSubmitting }
         ) => {
-          console.log(_values);
-          try {
-            await wait(1000);
-            resetForm();
-            setStatus({ success: true });
-            setSubmitting(false);
-          } catch (err) {
-            console.error(err);
-            setStatus({ success: false });
-            setErrors({ name: err.message });
-            setSubmitting(false);
-          }
+          const formattedValues = {
+            ...values,
+            companySettings: { id: companySettingsId }
+          };
+          dispatch(addCategory(formattedValues, basePath))
+            .then(onCreationSuccess)
+            .catch(onCreationFailure);
         }}
       >
         {({
@@ -156,7 +196,7 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
                 p: 3
               }}
             >
-              <Button color="secondary" onClick={handleCloseAddCategoryModal}>
+              <Button color="secondary" onClick={handleCloseAdd}>
                 {t('Cancel')}
               </Button>
               <Button
@@ -175,21 +215,122 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
       </Formik>
     </Dialog>
   );
+  const renderUpdateModal = () => (
+    <Dialog
+      fullWidth
+      maxWidth="xs"
+      open={openUpdateCategoryModal}
+      onClose={() => setOpenUpdateCategoryModal(false)}
+    >
+      <DialogTitle
+        sx={{
+          p: 3
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
+          {t('Edit category')}
+        </Typography>
+        <Typography variant="subtitle2">
+          {t('Fill in the name to edit category')}
+        </Typography>
+      </DialogTitle>
+      <Formik
+        initialValues={{ name: currentCategory?.name }}
+        validationSchema={Yup.object().shape({
+          name: Yup.string().max(30).required(t('The name field is required'))
+        })}
+        onSubmit={async (
+          values,
+          { resetForm, setErrors, setStatus, setSubmitting }
+        ) => {
+          const formattedValues = {
+            ...values,
+            companySettings: { id: companySettingsId }
+          };
+          dispatch(editCategory(currentCategory.id, formattedValues, basePath))
+            .then(onEditSuccess)
+            .catch(onEditFailure);
+        }}
+      >
+        {({
+          errors,
+          handleBlur,
+          handleChange,
+          handleSubmit,
+          isSubmitting,
+          touched,
+          values
+        }) => (
+          <form onSubmit={handleSubmit}>
+            <DialogContent
+              dividers
+              sx={{
+                p: 3
+              }}
+            >
+              <Grid container spacing={3}>
+                <Grid item xs={12} lg={12}>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                      <TextField
+                        error={Boolean(touched.name && errors.name)}
+                        fullWidth
+                        helperText={touched.name && errors.name}
+                        label={t('Name')}
+                        name="name"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.name}
+                        variant="outlined"
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </DialogContent>
+            <DialogActions
+              sx={{
+                p: 3
+              }}
+            >
+              <Button
+                color="secondary"
+                onClick={() => setOpenUpdateCategoryModal(false)}
+              >
+                {t('Cancel')}
+              </Button>
+              <Button
+                type="submit"
+                startIcon={
+                  isSubmitting ? <CircularProgress size="1rem" /> : null
+                }
+                disabled={isSubmitting}
+                variant="contained"
+              >
+                {t('Save')}
+              </Button>
+            </DialogActions>
+          </form>
+        )}
+      </Formik>
+    </Dialog>
+  );
   return (
     <MultipleTabsLayout
       basePath="/app/categories"
       tabs={tabs}
       tabIndex={tabIndex}
       title={`${tabs[tabIndex].label} Categories`}
-      action={handleOpenAddCategoryModal}
+      action={handleOpenAdd}
       actionTitle={t('Categories')}
     >
       {renderModal()}
+      {renderUpdateModal()}
       <Grid item xs={12}>
         <Box p={4}>
-          {categories.length ? (
+          {categories[basePath]?.length ? (
             <ListWrapper disablePadding>
-              {categories.map((item) => (
+              {categories[basePath].map((item) => (
                 <Fragment key={item.id}>
                   <ListItem
                     sx={{
@@ -220,6 +361,14 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
                     >
                       <Box ml={3} textAlign="right">
                         <IconButtonWrapper
+                          onClick={() => {
+                            setCurrentCategory(
+                              categories[basePath].find(
+                                (category) => category.id === item.id
+                              )
+                            );
+                            setOpenUpdateCategoryModal(true);
+                          }}
                           sx={{
                             backgroundColor: `${theme.colors.primary.main}`,
                             color: `${theme.palette.getContrastText(
@@ -239,6 +388,14 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
                           <EditTwoToneIcon fontSize="small" />
                         </IconButtonWrapper>
                         <IconButtonWrapper
+                          onClick={() => {
+                            setCurrentCategory(
+                              categories[basePath].find(
+                                (category) => category.id === item.id
+                              )
+                            );
+                            setOpenDelete(true);
+                          }}
                           sx={{
                             ml: 1,
                             backgroundColor: `${theme.colors.error.lighter}`,
@@ -277,6 +434,15 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
           )}
         </Box>
       </Grid>
+      <ConfirmDialog
+        open={openDelete}
+        onCancel={() => {
+          setOpenDelete(false);
+        }}
+        onConfirm={() => handleDelete(currentCategory?.id)}
+        confirmText={t('Delete')}
+        question={t('Are you sure you want to delete this Category?')}
+      />
     </MultipleTabsLayout>
   );
 }

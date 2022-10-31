@@ -449,7 +449,7 @@ const Results: FC<ResultsProps> = ({ users }) => {
                                 sx={{
                                   mr: 1
                                 }}
-                                src={user.avatar}
+                                src={user.firstName}
                               />
                               <Box>
                                 <Link
@@ -461,10 +461,10 @@ const Results: FC<ResultsProps> = ({ users }) => {
                                     }/management/users/single/` + user.id
                                   }
                                 >
-                                  {user.name}
+                                  {user.firstName}
                                 </Link>
                                 <Typography noWrap variant="subtitle2">
-                                  {user.jobtitle}
+                                  {user.jobTitle}
                                 </Typography>
                               </Box>
                             </Box>
@@ -641,7 +641,7 @@ const Results: FC<ResultsProps> = ({ users }) => {
                                 height: 50,
                                 mr: 2
                               }}
-                              src={user.avatar}
+                              src={user.firstName}
                             />
                             <Box>
                               <Box>
@@ -652,7 +652,7 @@ const Results: FC<ResultsProps> = ({ users }) => {
                                     location.pathname.split('/')[1]
                                   }/management/users/single/${user.id}`}
                                 >
-                                  {user.name}
+                                  {user.firstName}
                                 </Link>{' '}
                                 <Typography
                                   component="span"
@@ -668,7 +668,7 @@ const Results: FC<ResultsProps> = ({ users }) => {
                                 }}
                                 variant="subtitle2"
                               >
-                                {user.jobtitle}
+                                {user.jobTitle}
                               </Typography>
                               <Typography
                                 sx={{

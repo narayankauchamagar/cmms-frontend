@@ -2,6 +2,7 @@ import {
   Box,
   Divider,
   Grid,
+  IconButton,
   List,
   ListItem,
   ListItemButton,
@@ -18,10 +19,11 @@ import AttachMoneyTwoToneIcon from '@mui/icons-material/AttachMoneyTwoTone';
 
 interface PartDetailsProps {
   set: SetType;
-  handleUpdate: (id: number) => void;
+  handleOpenUpdate: () => void;
+  handleOpenDelete: () => void;
 }
 export default function SetDetails(props: PartDetailsProps) {
-  const { set, handleUpdate } = props;
+  const { set, handleOpenUpdate, handleOpenDelete } = props;
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
 
@@ -45,12 +47,12 @@ export default function SetDetails(props: PartDetailsProps) {
           <Typography variant="h6">{set?.createdAt}</Typography>
         </Box>
         <Box>
-          <EditTwoToneIcon
-            onClick={() => handleUpdate(set?.id)}
-            style={{ cursor: 'pointer', marginRight: 10 }}
-            color="primary"
-          />
-          <DeleteTwoToneIcon style={{ cursor: 'pointer' }} color="error" />
+          <IconButton onClick={handleOpenUpdate} style={{ marginRight: 10 }}>
+            <EditTwoToneIcon color="primary" />
+          </IconButton>
+          <IconButton onClick={handleOpenDelete}>
+            <DeleteTwoToneIcon color="error" />
+          </IconButton>
         </Box>
       </Grid>
       <Divider />

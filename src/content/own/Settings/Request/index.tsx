@@ -53,7 +53,9 @@ function WorkOrderSettings() {
               <FieldsConfigurationForm
                 initialValues={initialValues}
                 onSubmit={onSubmit}
-                fields={fields}
+                fields={fields.map((field) => {
+                  return { ...field, type: 'request' };
+                })}
               />
             </Box>
           </Box>

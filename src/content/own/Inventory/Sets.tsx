@@ -18,15 +18,23 @@ import CustomDataGrid from '../components/CustomDatagrid';
 import { GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import { parts } from '../../../models/owns/part';
-import { ChangeEvent, useEffect, useState } from 'react';
+import ConfirmDialog from '../components/ConfirmDialog';
+import { useDispatch, useSelector } from '../../../store';
+import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import Form from '../components/form';
-import wait from '../../../utils/wait';
 import { IField } from '../type';
-import SetType, { sets } from '../../../models/owns/setType';
+import SetType from '../../../models/owns/setType';
 import SetDetails from './SetDetails';
 import { useParams } from 'react-router-dom';
 import { isNumeric } from '../../../utils/validators';
+import {
+  addMultiParts,
+  deleteMultiParts,
+  editMultiParts,
+  getMultiParts
+} from '../../../slices/multipart';
+import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 
 interface PropsType {
   setAction: (p: () => () => void) => void;
@@ -37,21 +45,55 @@ const Sets = ({ setAction }: PropsType) => {
   const theme = useTheme();
   const [currentTab, setCurrentTab] = useState<string>('list');
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
+  const [openDelete, setOpenDelete] = useState<boolean>(false);
+  const { multiParts } = useSelector((state) => state.multiParts);
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [currentSet, setCurrentSet] = useState<SetType>();
+  const { showSnackBar } = useContext(CustomSnackBarContext);
+
   const tabs = [
     { value: 'list', label: t('List View') },
     { value: 'card', label: t('Card View') }
   ];
   const { setId } = useParams();
+  const dispatch = useDispatch();
 
-  const handleUpdate = (id: number) => {
-    setCurrentSet(sets.find((set) => set.id === id));
+  const handleUpdate = () => {
     setOpenUpdateModal(true);
   };
 
+  const handleDelete = (id: number) => {
+    handleCloseDetails();
+    dispatch(deleteMultiParts(id)).then(onDeleteSuccess).catch(onDeleteFailure);
+    setOpenDelete(false);
+  };
+  const formatValues = (values) => {
+    values.parts = values.parts.map((part) => {
+      return { id: part.id };
+    });
+    return values;
+  };
+  const onCreationSuccess = () => {
+    setOpenAddModal(false);
+    showSnackBar(t('The Set has been created successfully'), 'success');
+  };
+  const onCreationFailure = (err) =>
+    showSnackBar(t("The Set couldn't be created"), 'error');
+  const onEditSuccess = () => {
+    setOpenUpdateModal(false);
+    showSnackBar(t('The changes have been saved'), 'success');
+  };
+  const onEditFailure = (err) =>
+    showSnackBar(t("The Set couldn't be edited"), 'error');
+  const onDeleteSuccess = () => {
+    showSnackBar(t('The Set has been deleted successfully'), 'success');
+  };
+  const onDeleteFailure = (err) =>
+    showSnackBar(t("The Set couldn't be deleted"), 'error');
+
   useEffect(() => {
+    dispatch(getMultiParts());
     const handleOpenModal = () => setOpenAddModal(true);
     setAction(() => handleOpenModal);
   }, []);
@@ -117,13 +159,13 @@ const Sets = ({ setAction }: PropsType) => {
   };
 
   useEffect(() => {
-    if (setId && isNumeric(setId)) {
+    if (multiParts.length && setId && isNumeric(setId)) {
       handleOpenDetails(Number(setId));
     }
-  }, [sets]);
+  }, [multiParts]);
 
   const handleOpenDetails = (id: number) => {
-    const foundSet = sets.find((set) => set.id === id);
+    const foundSet = multiParts.find((set) => set.id === id);
     if (foundSet) {
       setCurrentSet(foundSet);
       window.history.replaceState(
@@ -149,8 +191,14 @@ const Sets = ({ setAction }: PropsType) => {
       value: set.parts.reduce((acc, part) => acc + part.cost, 0)
     }
   ];
-  const renderField = (label, value) => {
-    return (
+  const BasicField = ({
+    label,
+    value
+  }: {
+    label: string | number;
+    value: string | number;
+  }) => {
+    return value ? (
       <Grid item xs={12} key={label}>
         <Stack spacing={1} direction="row">
           <Typography variant="h6" sx={{ color: theme.colors.alpha.black[70] }}>
@@ -159,7 +207,7 @@ const Sets = ({ setAction }: PropsType) => {
           <Typography variant="h6">{value}</Typography>
         </Stack>
       </Grid>
-    );
+    ) : null;
   };
   const renderSetAddModal = () => (
     <Dialog
@@ -194,13 +242,10 @@ const Sets = ({ setAction }: PropsType) => {
             values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              try {
-                console.log(values);
-                await wait(2000);
-                setOpenAddModal(false);
-              } catch (err) {
-                console.error(err);
-              }
+              const formattedValues = formatValues(values);
+              dispatch(addMultiParts(formattedValues))
+                .then(onCreationSuccess)
+                .catch(onCreationFailure);
             }}
           />
         </Box>
@@ -248,12 +293,10 @@ const Sets = ({ setAction }: PropsType) => {
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              try {
-                await wait(2000);
-                setOpenUpdateModal(false);
-              } catch (err) {
-                console.error(err);
-              }
+              const formattedValues = formatValues(values);
+              dispatch(editMultiParts(currentSet.id, formattedValues))
+                .then(onEditSuccess)
+                .catch(onEditFailure);
             }}
           />
         </Box>
@@ -281,7 +324,7 @@ const Sets = ({ setAction }: PropsType) => {
         <Box sx={{ height: 500, width: '95%' }}>
           <CustomDataGrid
             columns={columns}
-            rows={sets}
+            rows={multiParts}
             components={{
               Toolbar: GridToolbar
             }}
@@ -299,24 +342,31 @@ const Sets = ({ setAction }: PropsType) => {
       {currentTab === 'card' && (
         <Grid item xs={12}>
           <Grid container spacing={2}>
-            {sets.map((set) => (
+            {multiParts.map((set) => (
               <Grid item xs={12} lg={3} key={set.id}>
-                <Card>
+                <Card
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => handleOpenDetails(set.id)}
+                >
                   <CardMedia
                     component="img"
                     height="280"
                     image="/static/images/placeholders/covers/2.jpg"
                     alt="..."
                   />
-                </Card>
-                <Box sx={{ p: 2 }}>
-                  <Typography variant="h4">{set.name}</Typography>
-                  <Box sx={{ mt: 1 }}>
-                    {fieldsToRender(set).map((field) =>
-                      renderField(field.label, field.value)
-                    )}
+                  <Box sx={{ p: 2 }}>
+                    <Typography variant="h4">{set.name}</Typography>
+                    <Box sx={{ mt: 1 }}>
+                      {fieldsToRender(set).map((field) => (
+                        <BasicField
+                          key={field.label}
+                          label={field.label}
+                          value={field.value}
+                        />
+                      ))}
+                    </Box>
                   </Box>
-                </Box>
+                </Card>
               </Grid>
             ))}
           </Grid>
@@ -330,8 +380,22 @@ const Sets = ({ setAction }: PropsType) => {
           sx: { width: '50%' }
         }}
       >
-        <SetDetails set={currentSet} handleUpdate={handleUpdate} />
+        <SetDetails
+          set={currentSet}
+          handleOpenUpdate={handleUpdate}
+          handleOpenDelete={() => setOpenDelete(true)}
+        />
       </Drawer>
+      <ConfirmDialog
+        open={openDelete}
+        onCancel={() => {
+          setOpenDelete(false);
+          setOpenDrawer(true);
+        }}
+        onConfirm={() => handleDelete(currentSet?.id)}
+        confirmText={t('Delete')}
+        question={t('Are you sure you want to delete this Set?')}
+      />
     </Box>
   );
 };

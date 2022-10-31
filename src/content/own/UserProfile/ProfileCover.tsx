@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import PropTypes from 'prop-types';
-import type { User } from 'src/models/user';
+import type { UserResponseDTO } from 'src/models/user';
 import {
   Avatar,
   Box,
@@ -77,7 +77,7 @@ const CardCoverAction = styled(Box)(
 );
 
 interface ProfileCoverProps {
-  user: User;
+  user: UserResponseDTO;
 }
 
 const ProfileCover: FC<ProfileCoverProps> = ({ user }) => {
@@ -94,7 +94,7 @@ const ProfileCover: FC<ProfileCoverProps> = ({ user }) => {
   return (
     <>
       <CardCover>
-        <CardMedia image={user.coverImg} />
+        <CardMedia image={user.firstName} />
         <CardCoverAction>
           <Input accept="image/*" id="change-cover" multiple type="file" />
           <label htmlFor="change-cover">
@@ -109,7 +109,7 @@ const ProfileCover: FC<ProfileCoverProps> = ({ user }) => {
         </CardCoverAction>
       </CardCover>
       <AvatarWrapper>
-        <Avatar variant="rounded" alt={user.name} src={user.avatar} />
+        <Avatar variant="rounded" alt={user.firstName} src={user.firstName} />
         <ButtonUploadWrapper>
           <Input
             accept="image/*"
@@ -126,7 +126,7 @@ const ProfileCover: FC<ProfileCoverProps> = ({ user }) => {
       </AvatarWrapper>
       <Box py={1} pl={2}>
         <Typography gutterBottom variant="h4">
-          {user.name}
+          {user.firstName} {user.lastName}
         </Typography>
       </Box>
     </>

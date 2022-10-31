@@ -104,14 +104,18 @@ function WorkOrderSettings() {
                 <FieldsConfigurationForm
                   initialValues={initialCreateValues}
                   onSubmit={onCreateSubmit}
-                  fields={createFields}
+                  fields={createFields.map((field) => {
+                    return { ...field, type: 'workOrder' };
+                  })}
                 />
               )}
               {currentTab === 'complete' && (
                 <FieldsConfigurationForm
                   initialValues={initialCompleteValues}
                   onSubmit={onCompleteSubmit}
-                  fields={completeFields}
+                  fields={completeFields.map((field) => {
+                    return { ...field, type: 'workOrder' };
+                  })}
                 />
               )}
             </Box>

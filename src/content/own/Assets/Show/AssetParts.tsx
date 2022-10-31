@@ -1,4 +1,3 @@
-import Asset from '../../../../models/owns/asset';
 import { Box, Card, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import CustomDataGrid from '../../components/CustomDatagrid';
@@ -7,13 +6,13 @@ import {
   GridRowParams,
   GridToolbar
 } from '@mui/x-data-grid';
-import { parts } from '../../../../models/owns/part';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import { useNavigate } from 'react-router-dom';
+import { AssetDTO } from '../../../../models/owns/asset';
 
 interface PropsType {
-  asset: Asset;
+  asset: AssetDTO;
 }
 
 const AssetParts = ({ asset }: PropsType) => {
@@ -34,9 +33,9 @@ const AssetParts = ({ asset }: PropsType) => {
       width: 150
     },
     {
-      field: 'number',
-      headerName: t('Number'),
-      description: t('Number'),
+      field: 'description',
+      headerName: t('Description'),
+      description: t('Description'),
       width: 150
     },
     {
@@ -62,12 +61,12 @@ const AssetParts = ({ asset }: PropsType) => {
             <Box sx={{ height: 500, width: '95%' }}>
               <CustomDataGrid
                 columns={columns}
-                rows={parts}
+                rows={asset?.parts ?? []}
                 components={{
                   Toolbar: GridToolbar
                 }}
                 onRowClick={(params) => {
-                  navigate(`/app/parts/${params.id}/`);
+                  navigate(`/app/inventory/parts/${params.id}/`);
                 }}
                 initialState={{
                   columns: {

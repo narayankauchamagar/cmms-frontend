@@ -22,7 +22,8 @@ export interface IField {
     | 'titleGroupField'
     | 'form'
     | 'date'
-    | 'switch';
+    | 'switch'
+    | 'coordinates';
   type2?:
     | 'customer'
     | 'vendor'
@@ -49,6 +50,7 @@ export interface IField {
   // onPressIcon?: () => void;
   checked?: boolean;
   loading?: boolean;
+  excluded?: number;
 }
 
 export interface IHash<E> {

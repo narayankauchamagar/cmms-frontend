@@ -105,8 +105,8 @@ function SidebarTopSection() {
           mb: 2,
           mx: 'auto'
         }}
-        alt={user.name}
-        src={user.avatar}
+        alt={user.firstName}
+        src={user.firstName}
       />
 
       <Typography
@@ -115,7 +115,7 @@ function SidebarTopSection() {
           color: `${theme.colors.alpha.trueWhite[100]}`
         }}
       >
-        {user.name}
+        {user.firstName}
       </Typography>
       <Typography
         variant="subtitle1"
@@ -123,7 +123,7 @@ function SidebarTopSection() {
           color: `${theme.colors.alpha.trueWhite[70]}`
         }}
       >
-        {user.jobtitle}
+        {user.role.name}
       </Typography>
       <IconButton
         size="small"
@@ -164,13 +164,13 @@ function SidebarTopSection() {
           }}
           display="flex"
         >
-          <Avatar variant="rounded" alt={user.name} src={user.avatar} />
+          <Avatar variant="rounded" alt={user.firstName} src={user.firstName} />
           <UserBoxText>
             <UserBoxLabel className="popoverTypo" variant="body1">
-              {user.name}
+              {user.firstName}
             </UserBoxLabel>
             <UserBoxDescription className="popoverTypo" variant="body2">
-              {user.jobtitle}
+              {user.role.name}
             </UserBoxDescription>
           </UserBoxText>
         </MenuUserBox>

@@ -53,8 +53,18 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
         return `/app/${resource}s/${id}`;
     }
   };
-  const renderField = (label, value, type?, id?) => {
-    if (!type || (type && id))
+  const BasicField = ({
+    label,
+    value,
+    id,
+    type
+  }: {
+    label: string | number;
+    value: string | number;
+    type?: string;
+    id?: number;
+  }) => {
+    if (value && (!type || (type && id))) {
       return (
         <Grid item xs={12} lg={6}>
           <Typography variant="h6" sx={{ color: theme.colors.alpha.black[70] }}>
@@ -69,6 +79,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
           )}
         </Grid>
       );
+    } else return null;
   };
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
@@ -91,13 +102,13 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
     },
     {
       label: t('Category'),
-      value: workOrder.category.name
+      value: workOrder.category?.name
     },
     {
       label: t('Location'),
-      value: workOrder.location.name,
+      value: workOrder.location?.name,
       type: 'location',
-      id: workOrder.location.id
+      id: workOrder.location?.id
     },
     {
       label: t('Asset'),
@@ -107,9 +118,9 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
     },
     {
       label: t('Team'),
-      value: workOrder.team.name,
+      value: workOrder.team?.name,
       type: 'team',
-      id: workOrder.team.id
+      id: workOrder.team?.id
     },
     {
       label: t('Date created'),
@@ -169,9 +180,15 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
         {currentTab === 'details' && (
           <Box>
             <Grid container spacing={2}>
-              {detailsFieldsToRender(workOrder).map((field) =>
-                renderField(field.label, field.value, field.type, field.id)
-              )}
+              {detailsFieldsToRender(workOrder).map((field) => (
+                <BasicField
+                  key={field.id}
+                  label={field.label}
+                  value={field.value}
+                  type={field.type}
+                  id={field.id}
+                />
+              ))}
               <Grid item xs={12} lg={6}>
                 <Typography
                   variant="h6"
@@ -317,12 +334,13 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                 Add Additional Cost
               </Button>
             </Box>
-            <Box>
-              <Divider sx={{ mt: 2 }} />
-              <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
-                Parts
-              </Typography>
-              {workOrder.parts.length && (
+            {!!workOrder.parts.length && (
+              <Box>
+                <Divider sx={{ mt: 2 }} />
+                <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
+                  Parts
+                </Typography>
+                (
                 <List>
                   {workOrder.parts.map((part) => (
                     <ListItem
@@ -359,35 +377,37 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                     />
                   </ListItem>
                 </List>
-              )}
-            </Box>
-            <Box>
-              <Divider sx={{ mt: 2 }} />
-              <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
-                Files
-              </Typography>
-              <List>
-                {workOrder.files.map((file) => (
-                  <ListItem
-                    key={file.id}
-                    secondaryAction={
-                      <IconButton edge="end" aria-label="delete">
-                        <DoDisturbOnTwoToneIcon color="error" />
-                      </IconButton>
-                    }
-                  >
-                    <ListItemText
-                      primary={
-                        <Link href={file.url} variant="h6">
-                          {file.name}
-                        </Link>
+              </Box>
+            )}
+            {!!workOrder.files.length && (
+              <Box>
+                <Divider sx={{ mt: 2 }} />
+                <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
+                  Files
+                </Typography>
+                <List>
+                  {workOrder.files.map((file) => (
+                    <ListItem
+                      key={file.id}
+                      secondaryAction={
+                        <IconButton edge="end" aria-label="delete">
+                          <DoDisturbOnTwoToneIcon color="error" />
+                        </IconButton>
                       }
-                      secondary={file.createdAt}
-                    />
-                  </ListItem>
-                ))}
-              </List>
-            </Box>
+                    >
+                      <ListItemText
+                        primary={
+                          <Link href={file.url} variant="h6">
+                            {file.name}
+                          </Link>
+                        }
+                        secondary={file.createdAt}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
+            )}
           </Box>
         )}
         {currentTab == 'updates' && (

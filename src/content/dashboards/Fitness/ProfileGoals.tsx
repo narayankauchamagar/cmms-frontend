@@ -94,8 +94,8 @@ function ProfileGoals() {
             height: theme.spacing(9)
           }}
           variant="rounded"
-          alt={user.name}
-          src={user.avatar}
+          alt={user.firstName}
+          src={user.firstName}
         />
         <Box>
           <Typography
@@ -105,7 +105,7 @@ function ProfileGoals() {
             }}
             gutterBottom
           >
-            {user.name}
+            {user.firstName}
           </Typography>
           <Typography variant="subtitle2">San Francisco, USA</Typography>
         </Box>

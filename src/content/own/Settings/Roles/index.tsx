@@ -5,20 +5,28 @@ import {
   Box,
   Button,
   Dialog,
+  Drawer,
   Grid,
   Slide,
   styled,
   Typography,
-  useTheme,
-  Zoom
+  useTheme
 } from '@mui/material';
-
+import { deleteRole, getRoles } from '../../../../slices/role';
+import { useDispatch, useSelector } from '../../../../store';
+import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import PageHeader from './PageHeader';
 import { useTranslation } from 'react-i18next';
-import { Role } from '../../../../models/role';
+import { BasicPermission, Role } from '../../../../models/owns/role';
 import CloseIcon from '@mui/icons-material/Close';
-import { forwardRef, ReactElement, Ref, useState } from 'react';
-import { useSnackbar } from 'notistack';
+import {
+  forwardRef,
+  ReactElement,
+  Ref,
+  useContext,
+  useEffect,
+  useState
+} from 'react';
 import { TransitionProps } from '@mui/material/transitions';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import {
@@ -29,6 +37,10 @@ import {
 } from '@mui/x-data-grid';
 import CustomDatagrid from '../../components/CustomDatagrid';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
+import RoleDetails from './RoleDetails';
+import EditRole from './EditRole';
+import useAuth from '../../../../hooks/useAuth';
+import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContext';
 
 const DialogWrapper = styled(Dialog)(
   () => `
@@ -79,121 +91,85 @@ const LabelWrapper = styled(Box)(
 function Roles() {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
-  const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
-  const { enqueueSnackbar } = useSnackbar();
+  const { companySettings } = useAuth();
+  const [openDelete, setOpenDelete] = useState(false);
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
+  const [openDrawer, setOpenDrawer] = useState<boolean>(false);
+  const [currentRole, setCurrentRole] = useState<Role>();
+  const { showSnackBar } = useContext(CustomSnackBarContext);
+  const dispatch = useDispatch();
+  const { roles } = useSelector((state) => state.roles);
+  const permissionsMapping = new Map<string, BasicPermission>([
+    ['createPeopleTeams', BasicPermission.CREATE_EDIT_PEOPLE_AND_TEAMS],
+    ['createCategories', BasicPermission.CREATE_EDIT_CATEGORIES],
+    ['deleteWorkOrders', BasicPermission.DELETE_WORK_ORDERS],
+    [
+      'deletePreventiveMaintenanceTrigger',
+      BasicPermission.DELETE_PREVENTIVE_MAINTENANCE_TRIGGERS
+    ],
+    ['deleteLocations', BasicPermission.DELETE_LOCATIONS],
+    ['deleteAssets', BasicPermission.DELETE_ASSETS],
+    ['deletePartsAndSets', BasicPermission.DELETE_PARTS_AND_MULTI_PARTS],
+    ['deletePurchaseOrders', BasicPermission.DELETE_PURCHASE_ORDERS],
+    ['deleteMeters', BasicPermission.DELETE_METERS],
+    ['deleteVendorsCustomers', BasicPermission.DELETE_VENDORS_AND_CUSTOMERS],
+    ['deleteCategories', BasicPermission.DELETE_CATEGORIES],
+    ['deleteFiles', BasicPermission.DELETE_FILES],
+    ['deletePeopleTeams', BasicPermission.DELETE_PEOPLE_AND_TEAMS],
+    ['accessSettings', BasicPermission.ACCESS_SETTINGS]
+  ]);
 
-  const handleConfirmDelete = (id: number) => {
-    setOpenConfirmDelete(true);
-  };
-
-  const handleConfirmDeleteMultiple = (ids: number[]) => {
-    setOpenConfirmDelete(true);
-  };
-  const closeConfirmDelete = () => setOpenConfirmDelete(false);
-
-  const handleDeleteCompleted = () => {
-    setOpenConfirmDelete(false);
-
-    enqueueSnackbar(t('The role has been removed'), {
-      variant: 'success',
-      anchorOrigin: {
-        vertical: 'top',
-        horizontal: 'right'
-      },
-      TransitionComponent: Zoom
+  const formatValues = (values) => {
+    values.companySettings = { id: companySettings.id };
+    values.roleType = 'ROLE_CLIENT';
+    values.permissions = [];
+    permissionsMapping.forEach((permission, name) => {
+      if ((values[name] && values[name][0] === 'on') || values[name]) {
+        delete values[name];
+        values.permissions.push(permission);
+      }
     });
+    return values;
   };
+  const onDeleteSuccess = () => {
+    showSnackBar(t('The Role has been deleted successfully'), 'success');
+  };
+  const onDeleteFailure = (err) =>
+    showSnackBar(t("The Role couldn't be deleted"), 'error');
 
-  let roles: Role[] = [
-    {
-      id: '1',
-      name: 'Rafael Kunde',
-      users: 1,
-      externalId: 'Admin',
-      type: 'free'
-    },
-    {
-      id: '2',
-      name: 'Edwina Collins',
-      users: 0,
-      externalId: 'Tech',
-      type: 'paid'
-    },
-    {
-      id: '3',
-      name: 'Delta Wiza',
-      users: 2,
-      externalId: 'Admin',
-      type: 'free'
-    },
-    {
-      id: '4',
-      name: 'Dan Stroman',
-      users: 0,
-      externalId: 'lorem',
-      type: 'free'
-    },
-    {
-      id: '5',
-      name: 'Oma Bogisich',
-      users: 0,
-      externalId: 'lorem',
-      type: 'paid'
-    },
-    {
-      id: '6',
-      name: 'Rafael Kunde',
-      users: 1,
-      externalId: 'Admin',
-      type: 'free'
-    },
-    {
-      id: '7',
-      name: 'Rafael Kunde',
-      users: 1,
-      externalId: 'Admin',
-      type: 'free'
-    },
-    {
-      id: '8',
-      name: 'Rafael Kunde',
-      users: 1,
-      externalId: 'Admin',
-      type: 'free'
-    },
-    {
-      id: '9',
-      name: 'Rafael Kunde',
-      users: 1,
-      externalId: 'Admin',
-      type: 'free'
-    },
-    {
-      id: '10',
-      name: 'Rafael Kunde',
-      users: 1,
-      externalId: 'Admin',
-      type: 'free'
-    },
-    {
-      id: '11',
-      name: 'Rafael Kunde',
-      users: 1,
-      externalId: 'Admin',
-      type: 'free'
-    },
-    {
-      id: '12',
-      name: 'Rafael Kunde',
-      users: 1,
-      externalId: 'Admin',
-      type: 'paid'
+  const handleOpenDetails = (id: number) => {
+    const foundRole = roles.find((role) => role.id === id);
+    if (foundRole) {
+      setCurrentRole(foundRole);
+      setOpenDrawer(true);
     }
-  ];
+  };
+  const handleOpenDelete = (id: number) => {
+    changeCurrentLocation(id);
+    setOpenDelete(true);
+  };
+  const changeCurrentLocation = (id: number) => {
+    const foundRole = roles.find((role) => role.id === id);
+    setCurrentRole(foundRole);
+  };
+  const handleOpenUpdate = (id: number) => {
+    changeCurrentLocation(id);
+    setOpenUpdateModal(true);
+  };
+  const closeConfirmDelete = () => setOpenDelete(false);
+
+  const handleDelete = (id: number) => {
+    setOpenDrawer(false);
+    dispatch(deleteRole(id)).then(onDeleteSuccess).catch(onDeleteFailure);
+    setOpenDelete(false);
+  };
+  useEffect(() => {
+    dispatch(getRoles());
+  }, []);
 
   const renderDeleteModal = () => (
     <DialogWrapper
-      open={openConfirmDelete}
+      open={openDelete}
       maxWidth="sm"
       fullWidth
       TransitionComponent={Transition}
@@ -234,7 +210,7 @@ function Roles() {
             {t('Cancel')}
           </Button>
           <ButtonError
-            onClick={handleDeleteCompleted}
+            onClick={() => handleDelete(currentRole.id)}
             size="large"
             sx={{
               mx: 1,
@@ -301,9 +277,15 @@ function Roles() {
       description: t('Actions'),
       getActions: (params: GridRowParams) => [
         <GridActionsCellItem
+          key="edit"
+          icon={<EditTwoToneIcon fontSize="small" color="primary" />}
+          onClick={() => handleOpenUpdate(Number(params.id))}
+          label="Edit"
+        />,
+        <GridActionsCellItem
           key="delete"
           icon={<DeleteTwoToneIcon fontSize="small" color="error" />}
-          onClick={() => handleConfirmDelete(Number(params.id))}
+          onClick={() => handleOpenDelete(Number(params.id))}
           label="Delete"
         />
       ]
@@ -314,7 +296,13 @@ function Roles() {
     <SettingsLayout tabIndex={3}>
       <Grid item xs={12}>
         <Box p={4}>
-          <PageHeader rolesNumber={roles.length} />
+          <PageHeader rolesNumber={roles.length} formatValues={formatValues} />
+          <EditRole
+            open={openUpdateModal}
+            role={currentRole}
+            onClose={() => setOpenUpdateModal(false)}
+            formatValues={formatValues}
+          />
           {renderDeleteModal()}
           <Box sx={{ mt: 4, height: 500, width: '95%' }}>
             <CustomDatagrid
@@ -325,6 +313,7 @@ function Roles() {
                 // Toolbar: GridToolbarColumnsButton,
                 // Toolbar: GridToolbarDensitySelector
               }}
+              onRowClick={(params) => handleOpenDetails(Number(params.id))}
               initialState={{
                 columns: {
                   columnVisibilityModel: {}
@@ -334,6 +323,20 @@ function Roles() {
           </Box>
         </Box>
       </Grid>
+      <Drawer
+        anchor="right"
+        open={openDrawer}
+        onClose={() => setOpenDrawer(false)}
+        PaperProps={{
+          sx: { width: '50%' }
+        }}
+      >
+        <RoleDetails
+          role={currentRole}
+          handleOpenUpdate={() => setOpenUpdateModal(true)}
+          handleOpenDelete={() => setOpenDelete(true)}
+        />
+      </Drawer>
     </SettingsLayout>
   );
 }

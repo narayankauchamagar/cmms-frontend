@@ -1,10 +1,4 @@
-import {
-  Box,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Typography
-} from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import Form from '../components/form';
 import * as Yup from 'yup';

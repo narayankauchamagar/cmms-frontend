@@ -23,7 +23,6 @@ mock.onPost('/api/account/login').reply(async (config) => {
 
   try {
     const { email, password } = JSON.parse(config.data);
-
     const user = users.find((_user) => _user.email === email);
 
     if (!user || user.password !== password) {
@@ -41,17 +40,7 @@ mock.onPost('/api/account/login').reply(async (config) => {
       200,
       {
         accessToken,
-        user: {
-          id: user.id,
-          avatar: user.avatar,
-          jobtitle: user.jobtitle,
-          email: user.email,
-          name: user.name,
-          location: user.location,
-          username: user.username,
-          role: user.role,
-          posts: user.posts
-        }
+        user
       }
     ];
   } catch (err) {
@@ -95,17 +84,7 @@ mock.onPost('/api/account/register').reply(async (config) => {
       200,
       {
         accessToken,
-        user: {
-          id: user.id,
-          avatar: user.avatar,
-          jobtitle: user.jobtitle,
-          email: user.email,
-          name: user.name,
-          location: user.location,
-          username: user.username,
-          role: user.role,
-          posts: user.posts
-        }
+        user
       }
     ];
   } catch (err) {

@@ -6,6 +6,10 @@ export default interface Team {
   description?: string;
   teamUsers?: User[];
 }
+export interface TeamMiniDTO {
+  name: string;
+  id: number;
+}
 export const teams: Team[] = [
   {
     id: 1,

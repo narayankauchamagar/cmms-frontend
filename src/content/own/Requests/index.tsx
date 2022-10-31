@@ -13,18 +13,26 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
+import {
+  addRequest,
+  deleteRequest,
+  editRequest,
+  getRequests
+} from '../../../slices/request';
+import { useDispatch, useSelector } from '../../../store';
+import ConfirmDialog from '../components/ConfirmDialog';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import CustomDataGrid from '../components/CustomDatagrid';
 import { GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import Request, { requests } from '../../../models/owns/request';
+import Request from '../../../models/owns/request';
 import Form from '../components/form';
 import * as Yup from 'yup';
-import wait from '../../../utils/wait';
 import { IField } from '../type';
 import RequestDetails from './RequestDetails';
 import { useParams } from 'react-router-dom';
 import { isNumeric } from '../../../utils/validators';
+import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
@@ -34,20 +42,47 @@ function Files() {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [currentRequest, setCurrentRequest] = useState<Request>();
   const { requestId } = useParams();
+  const dispatch = useDispatch();
+  const [openDelete, setOpenDelete] = useState<boolean>(false);
+  const { requests } = useSelector((state) => state.requests);
+  const { showSnackBar } = useContext(CustomSnackBarContext);
 
   useEffect(() => {
     setTitle(t('Requests'));
+    dispatch(getRequests());
   }, []);
   useEffect(() => {
-    if (requestId && isNumeric(requestId)) {
+    if (requests?.length && requestId && isNumeric(requestId)) {
       handleOpenDetails(Number(requestId));
     }
   }, [requests]);
 
-  const handleUpdate = (id: number) => {
-    setCurrentRequest(requests.find((request) => request.id === id));
+  const handleDelete = (id: number) => {
+    handleCloseDetails();
+    dispatch(deleteRequest(id)).then(onDeleteSuccess).catch(onDeleteFailure);
+    setOpenDelete(false);
+  };
+  const handleOpenUpdate = () => {
     setOpenUpdateModal(true);
   };
+  const onCreationSuccess = () => {
+    setOpenAddModal(false);
+    showSnackBar(t('The Request has been created successfully'), 'success');
+  };
+  const onCreationFailure = (err) =>
+    showSnackBar(t("The Request couldn't be created"), 'error');
+  const onEditSuccess = () => {
+    setOpenUpdateModal(false);
+    showSnackBar(t('The changes have been saved'), 'success');
+  };
+  const onEditFailure = (err) =>
+    showSnackBar(t("The Request couldn't be edited"), 'error');
+  const onDeleteSuccess = () => {
+    showSnackBar(t('The Request has been deleted successfully'), 'success');
+  };
+  const onDeleteFailure = (err) =>
+    showSnackBar(t("The Request couldn't be deleted"), 'error');
+
   const handleOpenDetails = (id: number) => {
     const foundRequest = requests.find((request) => request.id === id);
     if (foundRequest) {
@@ -66,9 +101,9 @@ function Files() {
   };
   const columns: GridEnrichedColDef[] = [
     {
-      field: 'name',
-      headerName: t('Name'),
-      description: t('Name'),
+      field: 'title',
+      headerName: t('Title'),
+      description: t('Title'),
       width: 150,
       renderCell: (params: GridRenderCellParams<string>) => (
         <Box sx={{ fontWeight: 'bold' }}>{params.value}</Box>
@@ -95,10 +130,10 @@ function Files() {
   ];
   const fields: Array<IField> = [
     {
-      name: 'name',
+      name: 'title',
       type: 'text',
-      label: t('Name'),
-      placeholder: t('Enter Request name'),
+      label: t('Title'),
+      placeholder: t('Enter Request Title'),
       required: true
     },
     {
@@ -129,7 +164,8 @@ function Files() {
     }
   ];
   const shape = {
-    name: Yup.string().required(t('Request name is required'))
+    title: Yup.string().required(t('Request name is required')),
+    priority: Yup.object().required(t('Priority is required')).nullable()
   };
   const renderAddModal = () => (
     <Dialog
@@ -164,12 +200,10 @@ function Files() {
             values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              try {
-                await wait(2000);
-                setOpenAddModal(false);
-              } catch (err) {
-                console.error(err);
-              }
+              values.priority = values.priority?.value;
+              dispatch(addRequest(values))
+                .then(onCreationSuccess)
+                .catch(onCreationFailure);
             }}
           />
         </Box>
@@ -209,12 +243,10 @@ function Files() {
             values={currentRequest}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              try {
-                await wait(2000);
-                setOpenAddModal(false);
-              } catch (err) {
-                console.error(err);
-              }
+              values.priority = values.priority?.value;
+              dispatch(editRequest(currentRequest?.id, values))
+                .then(onEditSuccess)
+                .catch(onEditFailure);
             }}
           />
         </Box>
@@ -288,8 +320,22 @@ function Files() {
           sx: { width: '50%' }
         }}
       >
-        <RequestDetails request={currentRequest} handleUpdate={handleUpdate} />
+        <RequestDetails
+          request={currentRequest}
+          handleOpenUpdate={handleOpenUpdate}
+          handleOpenDelete={() => setOpenDelete(true)}
+        />
       </Drawer>
+      <ConfirmDialog
+        open={openDelete}
+        onCancel={() => {
+          setOpenDelete(false);
+          setOpenDrawer(true);
+        }}
+        onConfirm={() => handleDelete(currentRequest?.id)}
+        confirmText={t('Delete')}
+        question={t('Are you sure you want to delete this Request?')}
+      />
     </>
   );
 }

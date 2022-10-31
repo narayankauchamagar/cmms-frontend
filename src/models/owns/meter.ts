@@ -1,8 +1,8 @@
 import { Audit } from './audit';
 import User, { users } from './user';
-import Asset, { assets } from './asset';
-import Location, { locations } from './location';
-import Reading, { readings } from './reading';
+import Asset, { AssetMiniDTO, assets } from './asset';
+import Location, { LocationMiniDTO, locations } from './location';
+import { UserMiniDTO } from '../user';
 
 export default interface Meter extends Audit {
   name: string;
@@ -10,10 +10,9 @@ export default interface Meter extends Audit {
   unit: string;
   updateFrequency: number;
   category: string;
-  workers: User[];
-  location: Location;
-  readings: Reading[];
-  asset: Asset;
+  users: UserMiniDTO[];
+  location?: LocationMiniDTO;
+  asset: AssetMiniDTO;
   nextReading: string;
 }
 
@@ -23,9 +22,8 @@ export const meters: Meter[] = [
     id: 54,
     category: 'jvjhbh',
     unit: 'V',
-    readings,
     updateFrequency: 7,
-    workers: users,
+    users: users,
     location: locations[0],
     asset: assets[0],
     createdAt: 'fghb',

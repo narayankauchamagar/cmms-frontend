@@ -1,10 +1,10 @@
 import { Audit } from './audit';
-import Part, { parts } from './part';
+import { PartMiniDTO, parts } from './part';
 
 export default interface SetType extends Audit {
   id: number;
   name: string;
-  parts: Part[];
+  parts: PartMiniDTO[];
 }
 export const sets: SetType[] = [
   {

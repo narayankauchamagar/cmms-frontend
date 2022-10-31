@@ -19,12 +19,14 @@ import Text from 'src/components/Text';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import wait from '../../../utils/wait';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { phoneRegExp } from '../../../utils/validators';
 import CustomDialog from '../components/CustomDialog';
+import useAuth from '../../../hooks/useAuth';
 
 function ProfileDetails() {
   const { t }: { t: any } = useTranslation();
+  const { user, userSettings, fetchUserSettings } = useAuth();
   const [openEditModal, setOpenEditModal] = useState<boolean>(false);
   const handleOpenEditModal = () => setOpenEditModal(true);
   const handleCloseEditModal = () => setOpenEditModal(false);
@@ -32,23 +34,34 @@ function ProfileDetails() {
   const [openPasswordModal, setOpenPasswordModal] = useState<boolean>(false);
   const handleOpenPasswordModal = () => setOpenPasswordModal(true);
   const handleClosePasswordModal = () => setOpenPasswordModal(false);
-  const user = {
-    firstName: { value: 'firstName', title: t('First Name') },
-    lastName: { value: 'lastName', title: t('Last Name') },
-    phone: { value: '55386865', title: t('Phone') },
-    jobTitle: { value: 'Carrier', title: t('Job Title') },
+
+  useEffect(() => {
+    fetchUserSettings();
+  }, []);
+
+  const userConfig = {
+    firstName: { value: user.firstName, title: t('First Name') },
+    lastName: { value: user.lastName, title: t('Last Name') },
+    phone: { value: user.phone, title: t('Phone') },
+    jobTitle: { value: user.role.name, title: t('Job Title') },
     settings: {
-      isNotified: { value: true, title: t('Email notifications') },
+      isNotified: {
+        value: userSettings?.emailNotified,
+        title: t('Email notifications')
+      },
       emailForWorkOrders: {
-        value: false,
+        value: userSettings?.emailUpdatesForWorkOrders,
         title: t('Email Updates for Work Orders and Messages')
       },
       emailForRequest: {
-        value: true,
+        value: userSettings?.emailUpdatesForRequests,
         title: t('Email Updates for Requested Work Orders')
       },
-      dailyEmailSummary: { value: false, title: t('Daily Summary Emails') },
-      purchaseOrderEmail: { value: true, title: t('Purchase Order Emails') }
+      // dailyEmailSummary: { value: userSettings?., title: t('Daily Summary Emails') },
+      purchaseOrderEmail: {
+        value: userSettings?.emailUpdatesForPurchaseOrders,
+        title: t('Purchase Order Emails')
+      }
     }
   };
 
@@ -91,10 +104,10 @@ function ProfileDetails() {
     >
       <Formik
         initialValues={{
-          firstName: user.firstName.value,
-          lastName: user.lastName.value,
-          phone: user.phone.value,
-          jobTitle: user.jobTitle.value
+          firstName: userConfig.firstName.value,
+          lastName: userConfig.lastName.value,
+          phone: userConfig.phone.value,
+          jobTitle: userConfig.jobTitle.value
         }}
         validationSchema={Yup.object().shape({
           firstName: Yup.string()
@@ -414,9 +427,12 @@ function ProfileDetails() {
           >
             <Typography variant="subtitle2">
               <Grid container spacing={0}>
-                {Object.keys(user).map((key) => {
+                {Object.keys(userConfig).map((key) => {
                   if (key !== 'settings')
-                    return renderKeyAndValue(user[key].title, user[key].value);
+                    return renderKeyAndValue(
+                      userConfig[key].title,
+                      userConfig[key].value
+                    );
                 })}
               </Grid>
             </Typography>
@@ -448,10 +464,10 @@ function ProfileDetails() {
           >
             <Typography variant="subtitle2">
               <Grid container spacing={0}>
-                {Object.keys(user.settings).map((key) =>
+                {Object.keys(userConfig.settings).map((key) =>
                   renderKeyAndSwitch(
-                    user.settings[key].title,
-                    user.settings[key].value
+                    userConfig.settings[key].title,
+                    userConfig.settings[key].value
                   )
                 )}
               </Grid>
