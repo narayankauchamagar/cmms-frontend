@@ -11,7 +11,7 @@ import Form from '../components/form';
 import * as Yup from 'yup';
 import { IField } from '../type';
 import CustomDataGrid from '../components/CustomDatagrid';
-import Team, { teams } from '../../../models/owns/team';
+import Team from '../../../models/owns/team';
 import {
   GridEnrichedColDef,
   GridRenderCellParams,
@@ -127,25 +127,29 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
       )
     }
   ];
-
-  const handleDetailsModalToggle = (id: number) => {
-    if (!isTeamDetailsOpen) {
-      setCurrentTeam(teams.find((team) => team.id === id));
+  const handleOpenDetails = (id: number) => {
+    const foundTeam = teams.find((team) => team.id === id);
+    if (foundTeam) {
+      setCurrentTeam(foundTeam);
+      window.history.replaceState(
+        null,
+        'Team details',
+        `/app/people-teams/teams/${id}`
+      );
+      setIsTeamDetailsOpen(true);
     }
-    window.history.replaceState(
-      null,
-      'Team details',
-      `/app/people-teams/teams/${isTeamDetailsOpen ? '' : id}`
-    );
-    setIsTeamDetailsOpen(!isTeamDetailsOpen);
+  };
+  const handleCloseDetails = () => {
+    window.history.replaceState(null, 'Team', `/app/people-teams/teams`);
+    setIsTeamDetailsOpen(false);
   };
 
   // if reload with teamId
   useEffect(() => {
     if (teamId && isNumeric(teamId)) {
-      handleDetailsModalToggle(Number(teamId));
+      handleOpenDetails(Number(teamId));
     }
-  }, []);
+  }, [teams]);
 
   const RenderTeamsAddModal = () => (
     <Dialog fullWidth maxWidth="md" open={openModal} onClose={handleCloseModal}>
@@ -206,7 +210,7 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
             }
           }}
           onRowClick={(params) => {
-            handleDetailsModalToggle(Number(params.id));
+            handleOpenDetails(Number(params.id));
           }}
         />
       ) : (
@@ -227,7 +231,7 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
       fullWidth
       maxWidth="sm"
       open={isTeamDetailsOpen}
-      onClose={handleDetailsModalToggle}
+      onClose={handleCloseDetails}
     >
       <DialogTitle
         sx={{
@@ -261,9 +265,7 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
         </Box>
         <IconButton
           aria-label="close"
-          onClick={() => {
-            handleDetailsModalToggle(null);
-          }}
+          onClick={handleCloseDetails}
           sx={{
             position: 'absolute',
             right: 8,

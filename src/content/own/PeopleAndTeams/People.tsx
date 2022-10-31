@@ -47,24 +47,29 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
   const [inviteUserEmail, setInviteUserEmail] = useState<string>('');
   const [isInviteSubmitting, setIsInviteSubmitting] = useState(false);
 
-  const handleDrawerToggle = (id: number) => {
-    if (!detailDrawerOpen) {
-      setCurrentUser(users.find((user) => user.id === id));
+  const handleOpenDetails = (id: number) => {
+    const foundUser = users.find((user) => user.id === id);
+    if (foundUser) {
+      setCurrentUser(foundUser);
+      window.history.replaceState(
+        null,
+        'User details',
+        `/app/people-teams/${id}`
+      );
+      setDetailDrawerOpen(true);
     }
-    window.history.replaceState(
-      null,
-      'User details',
-      `/app/people-teams/${detailDrawerOpen ? '' : id}`
-    );
-    setDetailDrawerOpen(!detailDrawerOpen);
+  };
+  const handleCloseDetails = () => {
+    window.history.replaceState(null, 'User', `//app/people-teams`);
+    setDetailDrawerOpen(false);
   };
 
   // if reload with peopleId
   useEffect(() => {
     if (peopleId && isNumeric(peopleId)) {
-      handleDrawerToggle(Number(peopleId));
+      handleOpenDetails(Number(peopleId));
     }
-  }, []);
+  }, [users]);
 
   const userRoleList = [
     {
@@ -237,7 +242,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
         }}
         onRowClick={(params) => {
           // setCurrentUser(users.find((user) => user.id === params.id));
-          handleDrawerToggle(Number(params.id));
+          handleOpenDetails(Number(params.id));
         }}
       />
     </Box>
@@ -260,7 +265,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
         variant="temporary"
         anchor={theme.direction === 'rtl' ? 'left' : 'right'}
         open={detailDrawerOpen}
-        onClose={handleDrawerToggle}
+        onClose={handleCloseDetails}
         elevation={9}
       >
         <UserDetailsDrawer user={currentUser} />
