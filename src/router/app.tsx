@@ -10,7 +10,7 @@ const Loader = (Component) => (props) =>
   );
 
 const GeneralSettings = Loader(
-  lazy(() => import('../content/own/Settings/General/index'))
+  lazy(() => import('../content/own/Settings/General'))
 );
 const WorkOrderSettings = Loader(
   lazy(() => import('../content/own/Settings/WorkOrder'))
