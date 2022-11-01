@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react';
+import { lazy, Suspense } from 'react';
 import { Navigate } from 'react-router-dom';
 
 import SuspenseLoader from 'src/components/SuspenseLoader';
@@ -12,23 +12,23 @@ const Loader = (Component) => (props) =>
 
 // Management
 
-const Users = Loader(lazy(() => import('src/content/management/Users')));
+const Users = Loader(lazy(() => import('../content/management/Users')));
 const SingleUser = Loader(
-  lazy(() => import('src/content/management/Users/single'))
+  lazy(() => import('../content/management/Users/single'))
 );
-const Projects = Loader(lazy(() => import('src/content/management/Projects')));
-const Invoices = Loader(lazy(() => import('src/content/management/Invoices')));
+const Projects = Loader(lazy(() => import('../content/management/Projects')));
+const Invoices = Loader(lazy(() => import('../content/management/Invoices')));
 const SingleInvoice = Loader(
-  lazy(() => import('src/content/management/Invoices/single'))
+  lazy(() => import('../content/management/Invoices/single'))
 );
-const Products = Loader(lazy(() => import('src/content/management/Products')));
+const Products = Loader(lazy(() => import('../content/management/Products')));
 const CreateProduct = Loader(
-  lazy(() => import('src/content/management/Products/create'))
+  lazy(() => import('../content/management/Products/create'))
 );
 const SingleProduct = Loader(
-  lazy(() => import('src/content/management/Products/single'))
+  lazy(() => import('../content/management/Products/single'))
 );
-const Shop = Loader(lazy(() => import('src/content/management/Products/shop')));
+const Shop = Loader(lazy(() => import('../content/management/Products/shop')));
 
 const managementRoutes = [
   {

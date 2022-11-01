@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react';
+import { lazy, Suspense } from 'react';
 
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import Guest from 'src/components/Guest';
@@ -13,24 +13,24 @@ const Loader = (Component) => (props) =>
 // Account
 
 const LoginCover = Loader(
-  lazy(() => import('src/content/pages/Auth/Login/Cover'))
+  lazy(() => import('../content/pages/Auth/Login/Cover'))
 );
 const LoginBasic = Loader(
-  lazy(() => import('src/content/pages/Auth/Login/Basic'))
+  lazy(() => import('../content/pages/Auth/Login/Basic'))
 );
 
 const RegisterCover = Loader(
-  lazy(() => import('src/content/pages/Auth/Register/Cover'))
+  lazy(() => import('../content/pages/Auth/Register/Cover'))
 );
 const RegisterBasic = Loader(
-  lazy(() => import('src/content/pages/Auth/Register/Basic'))
+  lazy(() => import('../content/pages/Auth/Register/Basic'))
 );
 const RegisterWizard = Loader(
-  lazy(() => import('src/content/pages/Auth/Register/Wizard'))
+  lazy(() => import('../content/pages/Auth/Register/Wizard'))
 );
 
 const RecoverPassword = Loader(
-  lazy(() => import('src/content/pages/Auth/RecoverPassword'))
+  lazy(() => import('../content/pages/Auth/RecoverPassword'))
 );
 
 const accountRoutes = [

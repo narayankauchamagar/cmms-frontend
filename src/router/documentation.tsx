@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react';
+import { lazy, Suspense } from 'react';
 import { Navigate } from 'react-router-dom';
 
 import SuspenseLoader from 'src/components/SuspenseLoader';
@@ -12,30 +12,24 @@ const Loader = (Component) => (props) =>
 
 // Docs
 
-const Introduction = Loader(
-  lazy(() => import('src/content/docs/Introduction'))
-);
+const Introduction = Loader(lazy(() => import('../content/docs/Introduction')));
 const Authentication = Loader(
-  lazy(() => import('src/content/docs/Authentication'))
+  lazy(() => import('../content/docs/Authentication'))
 );
-const Changelog = Loader(lazy(() => import('src/content/docs/Changelog')));
+const Changelog = Loader(lazy(() => import('../content/docs/Changelog')));
 const ContactSupport = Loader(
-  lazy(() => import('src/content/docs/ContactSupport'))
+  lazy(() => import('../content/docs/ContactSupport'))
 );
-const Dependencies = Loader(
-  lazy(() => import('src/content/docs/Dependencies'))
-);
-const Installation = Loader(
-  lazy(() => import('src/content/docs/Installation'))
-);
+const Dependencies = Loader(lazy(() => import('../content/docs/Dependencies')));
+const Installation = Loader(lazy(() => import('../content/docs/Installation')));
 const Internationalization = Loader(
-  lazy(() => import('src/content/docs/Internationalization'))
+  lazy(() => import('../content/docs/Internationalization'))
 );
-const Routing = Loader(lazy(() => import('src/content/docs/Routing')));
-const RtlLayout = Loader(lazy(() => import('src/content/docs/RtlLayout')));
-const ApiRequests = Loader(lazy(() => import('src/content/docs/ApiRequests')));
+const Routing = Loader(lazy(() => import('../content/docs/Routing')));
+const RtlLayout = Loader(lazy(() => import('../content/docs/RtlLayout')));
+const ApiRequests = Loader(lazy(() => import('../content/docs/ApiRequests')));
 const ThemesCustomization = Loader(
-  lazy(() => import('src/content/docs/ThemesCustomization'))
+  lazy(() => import('../content/docs/ThemesCustomization'))
 );
 
 const documentationRoutes = [

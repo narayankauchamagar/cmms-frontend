@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react';
+import { lazy, Suspense } from 'react';
 import { Navigate } from 'react-router-dom';
 
 import SuspenseLoader from 'src/components/SuspenseLoader';
@@ -13,21 +13,19 @@ const Loader = (Component) => (props) =>
 // Applications
 
 const FileManager = Loader(
-  lazy(() => import('src/content/applications/FileManager'))
+  lazy(() => import('../content/applications/FileManager'))
 );
 const Messenger = Loader(
-  lazy(() => import('src/content/applications/Messenger'))
+  lazy(() => import('../content/applications/Messenger'))
 );
-const Calendar = Loader(
-  lazy(() => import('src/content/applications/Calendar'))
-);
+const Calendar = Loader(lazy(() => import('../content/applications/Calendar')));
 const JobsPlatform = Loader(
-  lazy(() => import('src/content/applications/JobsPlatform'))
+  lazy(() => import('../content/applications/JobsPlatform'))
 );
 const ProjectsBoard = Loader(
-  lazy(() => import('src/content/applications/ProjectsBoard'))
+  lazy(() => import('../content/applications/ProjectsBoard'))
 );
-const Mailbox = Loader(lazy(() => import('src/content/applications/Mailbox')));
+const Mailbox = Loader(lazy(() => import('../content/applications/Mailbox')));
 
 const applicationsRoutes = [
   {

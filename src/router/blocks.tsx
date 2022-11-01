@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react';
+import { lazy, Suspense } from 'react';
 
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import { Navigate } from 'react-router-dom';
@@ -12,38 +12,34 @@ const Loader = (Component) => (props) =>
 
 // Blocks
 
-const ChartsLarge = Loader(
-  lazy(() => import('src/content/blocks/ChartsLarge'))
-);
-const ChartsSmall = Loader(
-  lazy(() => import('src/content/blocks/ChartsSmall'))
-);
+const ChartsLarge = Loader(lazy(() => import('../content/blocks/ChartsLarge')));
+const ChartsSmall = Loader(lazy(() => import('../content/blocks/ChartsSmall')));
 const ComposedCards = Loader(
-  lazy(() => import('src/content/blocks/ComposedCards'))
+  lazy(() => import('../content/blocks/ComposedCards'))
 );
-const Grids = Loader(lazy(() => import('src/content/blocks/Grids')));
-const IconCards = Loader(lazy(() => import('src/content/blocks/IconCards')));
-const ImageCards = Loader(lazy(() => import('src/content/blocks/ImageCards')));
-const ListsLarge = Loader(lazy(() => import('src/content/blocks/ListsLarge')));
-const ListsSmall = Loader(lazy(() => import('src/content/blocks/ListsSmall')));
-const Navigation = Loader(lazy(() => import('src/content/blocks/Navigation')));
+const Grids = Loader(lazy(() => import('../content/blocks/Grids')));
+const IconCards = Loader(lazy(() => import('../content/blocks/IconCards')));
+const ImageCards = Loader(lazy(() => import('../content/blocks/ImageCards')));
+const ListsLarge = Loader(lazy(() => import('../content/blocks/ListsLarge')));
+const ListsSmall = Loader(lazy(() => import('../content/blocks/ListsSmall')));
+const Navigation = Loader(lazy(() => import('../content/blocks/Navigation')));
 const ProfileCards = Loader(
-  lazy(() => import('src/content/blocks/ProfileCards'))
+  lazy(() => import('../content/blocks/ProfileCards'))
 );
 const ProgressCircular = Loader(
-  lazy(() => import('src/content/blocks/ProgressCircular'))
+  lazy(() => import('../content/blocks/ProgressCircular'))
 );
 const ProgressHorizontal = Loader(
-  lazy(() => import('src/content/blocks/ProgressHorizontal'))
+  lazy(() => import('../content/blocks/ProgressHorizontal'))
 );
 const SparklinesLarge = Loader(
-  lazy(() => import('src/content/blocks/SparklinesLarge'))
+  lazy(() => import('../content/blocks/SparklinesLarge'))
 );
 const SparklinesSmall = Loader(
-  lazy(() => import('src/content/blocks/SparklinesSmall'))
+  lazy(() => import('../content/blocks/SparklinesSmall'))
 );
 const StatisticsBlocks = Loader(
-  lazy(() => import('src/content/blocks/Statistics'))
+  lazy(() => import('../content/blocks/Statistics'))
 );
 
 const blocksRoutes = [

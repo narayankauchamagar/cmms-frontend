@@ -1,5 +1,4 @@
-import { Suspense, lazy } from 'react';
-import { Navigate } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
 
 import SuspenseLoader from 'src/components/SuspenseLoader';
 
@@ -11,61 +10,61 @@ const Loader = (Component) => (props) =>
   );
 
 const GeneralSettings = Loader(
-  lazy(() => import('src/content/own/Settings/General'))
+  lazy(() => import('../content/own/Settings/General'))
 );
 const WorkOrderSettings = Loader(
-  lazy(() => import('src/content/own/Settings/WorkOrder'))
+  lazy(() => import('../content/own/Settings/WorkOrder'))
 );
 const RequestSettings = Loader(
-  lazy(() => import('src/content/own/Settings/Request'))
+  lazy(() => import('../content/own/Settings/Request'))
 );
 const RolesSettings = Loader(
-  lazy(() => import('src/content/own/Settings/Roles'))
+  lazy(() => import('../content/own/Settings/Roles'))
 );
 
-const UserProfile = Loader(lazy(() => import('src/content/own/UserProfile')));
+const UserProfile = Loader(lazy(() => import('../content/own/UserProfile')));
 const CompanyProfile = Loader(
-  lazy(() => import('src/content/own/CompanyProfile'))
+  lazy(() => import('../content/own/CompanyProfile'))
 );
 const WorkOrderCategories = Loader(
-  lazy(() => import('src/content/own/Categories/WorkOrder'))
+  lazy(() => import('../content/own/Categories/WorkOrder'))
 );
 const AssetStatusCategories = Loader(
-  lazy(() => import('src/content/own/Categories/AssetStatus'))
+  lazy(() => import('../content/own/Categories/AssetStatus'))
 );
 const PurchaseOrderCategories = Loader(
-  lazy(() => import('src/content/own/Categories/PurchaseOrder'))
+  lazy(() => import('../content/own/Categories/PurchaseOrder'))
 );
 const MeterCategories = Loader(
-  lazy(() => import('src/content/own/Categories/Meter'))
+  lazy(() => import('../content/own/Categories/Meter'))
 );
 const TimeCategories = Loader(
-  lazy(() => import('src/content/own/Categories/Timer'))
+  lazy(() => import('../content/own/Categories/Timer'))
 );
 const SubscriptionPlans = Loader(
-  lazy(() => import('src/content/own/Subscription/Plans'))
+  lazy(() => import('../content/own/Subscription/Plans'))
 );
-const Files = Loader(lazy(() => import('src/content/own/Files')));
-const Meters = Loader(lazy(() => import('src/content/own/Meters')));
+const Files = Loader(lazy(() => import('../content/own/Files')));
+const Meters = Loader(lazy(() => import('../content/own/Meters')));
 const PurchaseOrders = Loader(
-  lazy(() => import('src/content/own/PurchaseOrders'))
+  lazy(() => import('../content/own/PurchaseOrders'))
 );
 const CreatePurchaseOrders = Loader(
-  lazy(() => import('src/content/own/PurchaseOrders/Create'))
+  lazy(() => import('../content/own/PurchaseOrders/Create'))
 );
-const Locations = Loader(lazy(() => import('src/content/own/Locations')));
-const WorkOrders = Loader(lazy(() => import('src/content/own/WorkOrders')));
+const Locations = Loader(lazy(() => import('../content/own/Locations')));
+const WorkOrders = Loader(lazy(() => import('../content/own/WorkOrders')));
 
 const VendorsAndCustomers = Loader(
-  lazy(() => import('src/content/own/VendorsAndCustomers'))
+  lazy(() => import('../content/own/VendorsAndCustomers'))
 );
-const Assets = Loader(lazy(() => import('src/content/own/Assets')));
-const ShowAsset = Loader(lazy(() => import('src/content/own/Assets/Show')));
-const Inventory = Loader(lazy(() => import('src/content/own/Inventory')));
-const Requests = Loader(lazy(() => import('src/content/own/Requests')));
+const Assets = Loader(lazy(() => import('../content/own/Assets')));
+const ShowAsset = Loader(lazy(() => import('../content/own/Assets/Show')));
+const Inventory = Loader(lazy(() => import('../content/own/Inventory')));
+const Requests = Loader(lazy(() => import('../content/own/Requests')));
 
 const PeopleAndTeams = Loader(
-  lazy(() => import('src/content/own/PeopleAndTeams'))
+  lazy(() => import('../content/own/PeopleAndTeams'))
 );
 
 const appRoutes = [

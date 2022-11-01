@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react';
+import { lazy, Suspense } from 'react';
 import { Navigate } from 'react-router-dom';
 
 import SuspenseLoader from 'src/components/SuspenseLoader';
@@ -13,34 +13,32 @@ const Loader = (Component) => (props) =>
 // Dashboards
 
 const Automation = Loader(
-  lazy(() => import('src/content/dashboards/Automation'))
+  lazy(() => import('../content/dashboards/Automation'))
 );
-const Analytics = Loader(
-  lazy(() => import('src/content/dashboards/Analytics'))
-);
-const Reports = Loader(lazy(() => import('src/content/dashboards/Reports')));
-const Banking = Loader(lazy(() => import('src/content/dashboards/Banking')));
-const Commerce = Loader(lazy(() => import('src/content/dashboards/Commerce')));
-const Expenses = Loader(lazy(() => import('src/content/dashboards/Expenses')));
-const Crypto = Loader(lazy(() => import('src/content/dashboards/Crypto')));
-const Finance = Loader(lazy(() => import('src/content/dashboards/Finance')));
-const Fitness = Loader(lazy(() => import('src/content/dashboards/Fitness')));
+const Analytics = Loader(lazy(() => import('../content/dashboards/Analytics')));
+const Reports = Loader(lazy(() => import('../content/dashboards/Reports')));
+const Banking = Loader(lazy(() => import('../content/dashboards/Banking')));
+const Commerce = Loader(lazy(() => import('../content/dashboards/Commerce')));
+const Expenses = Loader(lazy(() => import('../content/dashboards/Expenses')));
+const Crypto = Loader(lazy(() => import('../content/dashboards/Crypto')));
+const Finance = Loader(lazy(() => import('../content/dashboards/Finance')));
+const Fitness = Loader(lazy(() => import('../content/dashboards/Fitness')));
 const HealthcareDoctor = Loader(
-  lazy(() => import('src/content/dashboards/Healthcare'))
+  lazy(() => import('../content/dashboards/Healthcare'))
 );
 const HealthcareHospital = Loader(
-  lazy(() => import('src/content/dashboards/Healthcare/HospitalView'))
+  lazy(() => import('../content/dashboards/Healthcare/HospitalView'))
 );
-const Helpdesk = Loader(lazy(() => import('src/content/dashboards/Helpdesk')));
-const Learning = Loader(lazy(() => import('src/content/dashboards/Learning')));
+const Helpdesk = Loader(lazy(() => import('../content/dashboards/Helpdesk')));
+const Learning = Loader(lazy(() => import('../content/dashboards/Learning')));
 const Monitoring = Loader(
-  lazy(() => import('src/content/dashboards/Monitoring'))
+  lazy(() => import('../content/dashboards/Monitoring'))
 );
-const Products = Loader(lazy(() => import('src/content/dashboards/Products')));
+const Products = Loader(lazy(() => import('../content/dashboards/Products')));
 const Statistics = Loader(
-  lazy(() => import('src/content/dashboards/Statistics'))
+  lazy(() => import('../content/dashboards/Statistics'))
 );
-const Tasks = Loader(lazy(() => import('src/content/dashboards/Tasks')));
+const Tasks = Loader(lazy(() => import('../content/dashboards/Tasks')));
 
 const dashboardsRoutes = [
   {
