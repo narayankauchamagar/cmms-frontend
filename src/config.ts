@@ -27,4 +27,7 @@ export const amplifyConfig = {
 export const googleMapsConfig = {
   apiKey: 'AIzaSyBGk5a8ivYnqF3jFQQONB2OfCaroDGnNwM'
 };
-export const apiUrl = 'http://localhost:8080/';
+export const apiUrl =
+  process.env.NODE_ENV === 'test'
+    ? 'https://grash-api.herokuapp.com/'
+    : 'http://localhost:8080/';
