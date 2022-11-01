@@ -60,7 +60,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
     }
   };
   const handleCloseDetails = () => {
-    window.history.replaceState(null, 'User', `//app/people-teams`);
+    window.history.replaceState(null, 'User', `/app/people-teams`);
     setDetailDrawerOpen(false);
   };
 
