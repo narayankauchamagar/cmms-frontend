@@ -29,5 +29,5 @@ export const googleMapsConfig = {
 };
 export const apiUrl =
   process.env.NODE_ENV == 'test'
-    ? 'https://grash-api.herokuapp.com/'
+    ? process.env.REACT_APP_API_URL
     : 'http://localhost:8080/';
