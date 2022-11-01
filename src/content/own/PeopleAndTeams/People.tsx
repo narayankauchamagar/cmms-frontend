@@ -20,12 +20,14 @@ import {
   GridRenderCellParams,
   GridToolbar
 } from '@mui/x-data-grid';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import UserDetailsDrawer from './UserDetailsDrawer';
 import User, { users } from '../../../models/owns/user';
 import UserRoleCardList from './UserRoleCardList';
 import { EmailOutlined } from '@mui/icons-material';
 import { grey } from '@mui/material/colors';
+import { useParams } from 'react-router-dom';
+import { isNumeric } from 'src/utils/validators';
 
 interface PropsType {
   values?: any;
@@ -38,15 +40,36 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
   const theme = useTheme();
   const [currentUser, setCurrentUser] = useState<User>();
   const [detailDrawerOpen, setDetailDrawerOpen] = useState(false);
+  const { peopleId } = useParams();
 
   const [inviteUserRoleSelected, setInviteUserRoleSelected] =
     useState<string>('');
   const [inviteUserEmail, setInviteUserEmail] = useState<string>('');
   const [isInviteSubmitting, setIsInviteSubmitting] = useState(false);
 
-  const handleDrawerToggle = () => {
-    setDetailDrawerOpen(!detailDrawerOpen);
+  const handleOpenDetails = (id: number) => {
+    const foundUser = users.find((user) => user.id === id);
+    if (foundUser) {
+      setCurrentUser(foundUser);
+      window.history.replaceState(
+        null,
+        'User details',
+        `/app/people-teams/${id}`
+      );
+      setDetailDrawerOpen(true);
+    }
   };
+  const handleCloseDetails = () => {
+    window.history.replaceState(null, 'User', `//app/people-teams`);
+    setDetailDrawerOpen(false);
+  };
+
+  // if reload with peopleId
+  useEffect(() => {
+    if (peopleId && isNumeric(peopleId)) {
+      handleOpenDetails(Number(peopleId));
+    }
+  }, [users]);
 
   const userRoleList = [
     {
@@ -218,8 +241,8 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
           }
         }}
         onRowClick={(params) => {
-          setCurrentUser(users.find((user) => user.id === params.id));
-          handleDrawerToggle();
+          // setCurrentUser(users.find((user) => user.id === params.id));
+          handleOpenDetails(Number(params.id));
         }}
       />
     </Box>
@@ -242,7 +265,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
         variant="temporary"
         anchor={theme.direction === 'rtl' ? 'left' : 'right'}
         open={detailDrawerOpen}
-        onClose={handleDrawerToggle}
+        onClose={handleCloseDetails}
         elevation={9}
       >
         <UserDetailsDrawer user={currentUser} />
