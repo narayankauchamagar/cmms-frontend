@@ -1,7 +1,6 @@
 import { Box, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import SettingsLayout from '../SettingsLayout';
-import wait from '../../../../utils/wait';
 import FieldsConfigurationForm from '../FieldsConfigurationForm';
 
 function WorkOrderSettings() {
@@ -27,23 +26,6 @@ function WorkOrderSettings() {
     category: 'optional',
     team: 'optional'
   };
-  const onSubmit = async (
-    _values,
-    { resetForm, setErrors, setStatus, setSubmitting }
-  ) => {
-    try {
-      await wait(1000);
-      resetForm();
-      setStatus({ success: true });
-      setSubmitting(false);
-    } catch (err) {
-      console.error(err);
-      setStatus({ success: false });
-      setErrors({ submit: err.message });
-      setSubmitting(false);
-    }
-  };
-
   return (
     <SettingsLayout tabIndex={2}>
       <Grid item xs={12}>
@@ -52,7 +34,6 @@ function WorkOrderSettings() {
             <Box p={3}>
               <FieldsConfigurationForm
                 initialValues={initialValues}
-                onSubmit={onSubmit}
                 fields={fields.map((field) => {
                   return { ...field, type: 'request' };
                 })}

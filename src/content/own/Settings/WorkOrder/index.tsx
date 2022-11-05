@@ -1,7 +1,6 @@
 import { Box, Divider, Grid, Tab, Tabs } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import SettingsLayout from '../SettingsLayout';
-import wait from '../../../../utils/wait';
 import { ChangeEvent, useState } from 'react';
 import FieldsConfigurationForm from '../FieldsConfigurationForm';
 
@@ -57,38 +56,6 @@ function WorkOrderSettings() {
     parts: 'optional',
     cost: 'optional'
   };
-  const onCreateSubmit = async (
-    _values,
-    { resetForm, setErrors, setStatus, setSubmitting }
-  ) => {
-    try {
-      await wait(1000);
-      resetForm();
-      setStatus({ success: true });
-      setSubmitting(false);
-    } catch (err) {
-      console.error(err);
-      setStatus({ success: false });
-      setErrors({ submit: err.message });
-      setSubmitting(false);
-    }
-  };
-  const onCompleteSubmit = async (
-    _values,
-    { resetForm, setErrors, setStatus, setSubmitting }
-  ) => {
-    try {
-      await wait(1000);
-      resetForm();
-      setStatus({ success: true });
-      setSubmitting(false);
-    } catch (err) {
-      console.error(err);
-      setStatus({ success: false });
-      setErrors({ submit: err.message });
-      setSubmitting(false);
-    }
-  };
 
   return (
     <SettingsLayout tabIndex={1}>
@@ -112,7 +79,6 @@ function WorkOrderSettings() {
               {currentTab === 'create' && (
                 <FieldsConfigurationForm
                   initialValues={initialCreateValues}
-                  onSubmit={onCreateSubmit}
                   fields={createFields.map((field) => {
                     return { ...field, type: 'workOrder' };
                   })}
@@ -121,7 +87,6 @@ function WorkOrderSettings() {
               {currentTab === 'complete' && (
                 <FieldsConfigurationForm
                   initialValues={initialCompleteValues}
-                  onSubmit={onCompleteSubmit}
                   fields={completeFields.map((field) => {
                     return { ...field, type: 'workOrder' };
                   })}

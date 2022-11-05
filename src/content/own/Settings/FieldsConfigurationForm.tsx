@@ -14,13 +14,11 @@ import useAuth from '../../../hooks/useAuth';
 
 interface FieldsConfigurationFormProps {
   initialValues: any;
-  onSubmit: any;
   fields: { label: string; name: string; type: FieldConfigurationsType }[];
 }
 
 const FieldsConfigurationForm: FC<FieldsConfigurationFormProps> = ({
   initialValues,
-  onSubmit,
   fields
 }) => {
   const { t }: { t: any } = useTranslation();
@@ -93,7 +91,7 @@ const FieldsConfigurationForm: FC<FieldsConfigurationFormProps> = ({
       <Typography variant="h5" sx={{ mb: 2 }}>
         {t('You can mark fields as Optional, Hidden or Required')}
       </Typography>
-      <Formik initialValues={initialValues} onSubmit={onSubmit}>
+      <Formik initialValues={initialValues} onSubmit={() => null}>
         {({
           errors,
           handleBlur,
