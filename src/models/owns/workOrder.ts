@@ -2,7 +2,6 @@ import { Audit } from './audit';
 import User, { users } from './user';
 import Request, { requests } from './request';
 import PurchaseOrder, { purchaseOrders } from './purchaseOrder';
-import { PartMiniDTO, parts } from './part';
 import Team, { teams } from './team';
 import Asset, { assets } from './asset';
 import File, { files } from './file';
@@ -18,7 +17,6 @@ interface WorkOrderBase extends Audit {
   description: string;
   title: string;
   requiredSignature: boolean;
-  parts: PartMiniDTO[];
   location: Location;
   team: Team;
   primaryUser: User;
@@ -53,7 +51,6 @@ export const workOrders: WorkOrder[] = [
     estimatedDuration: 7,
     description: 'description',
     requiredSignature: true,
-    parts,
     location: locations[0],
     team: teams[0],
     primaryUser: users[0],

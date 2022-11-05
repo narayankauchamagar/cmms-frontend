@@ -25,16 +25,14 @@ import Form from '../components/form';
 import UserAvatars from '../components/UserAvatars';
 import * as Yup from 'yup';
 import { isNumeric } from '../../../utils/validators';
-import User, { users } from '../../../models/owns/user';
 import { UserMiniDTO } from '../../../models/user';
-import Team, { teams } from '../../../models/owns/team';
+import Team from '../../../models/owns/team';
 import WorkOrderDetails from './WorkOrderDetails';
 import { useParams } from 'react-router-dom';
 import { enumerate } from '../../../utils/displayers';
 import { categories } from '../../../models/owns/category';
-import Location, { locations } from '../../../models/owns/location';
-import Asset, { assets } from '../../../models/owns/asset';
-import Part, { parts } from '../../../models/owns/part';
+import Location from '../../../models/owns/location';
+import Asset from '../../../models/owns/asset';
 import { tasks } from '../../../models/owns/tasks';
 import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
 import {
@@ -108,9 +106,6 @@ function WorkOrders() {
     values.requiredSignature =
       Array.isArray(values.requiredSignature) &&
       values?.requiredSignature.includes('on');
-    values.parts = values.parts.map((part) => {
-      return { id: part.id };
-    });
     //TODO
     delete values.category;
     delete values.tasks;
@@ -250,9 +245,8 @@ function WorkOrders() {
       field: 'parts',
       headerName: t('Parts'),
       description: t('Parts'),
-      width: 150,
-      valueGetter: (params) =>
-        enumerate(params.row.parts.map((part) => part.name))
+      width: 150
+      //TODO
     },
     {
       field: 'completedOn',
@@ -273,12 +267,6 @@ function WorkOrders() {
       width: 150
     }
   ];
-  const currentWorkOrderWorkers: User[] = users;
-  const currentWorkOrderParts: Part[] = [parts[0]];
-  const currentWorkOrderTeam: Team = teams[0];
-  const currentWorkOrderLocation: Location = locations[0];
-  const currentWorkOrderAsset: Asset = assets[0];
-
   const fields: Array<IField> = [
     {
       name: 'title',
@@ -370,13 +358,6 @@ function WorkOrders() {
       type2: 'task',
       label: t('Tasks'),
       placeholder: 'Select Tasks'
-    },
-    {
-      name: 'parts',
-      type: 'select',
-      type2: 'part',
-      label: t('Parts'),
-      placeholder: 'Select Parts'
     },
     {
       name: 'files',
@@ -477,12 +458,6 @@ function WorkOrders() {
                     value: currentWorkOrder?.category?.id
                   }
                 : null,
-              parts: currentWorkOrder?.parts.map((part) => {
-                return {
-                  label: part.name,
-                  value: part.id.toString()
-                };
-              }),
               tasks: tasks,
               primaryUser: currentWorkOrder?.primaryUser
                 ? {

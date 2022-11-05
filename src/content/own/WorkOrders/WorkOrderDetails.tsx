@@ -26,6 +26,7 @@ import { additionalCosts } from '../../../models/owns/additionalCost';
 import AddCostModal from './AddCostModal';
 import Tasks from './Tasks';
 import { workOrderHistories } from '../../../models/owns/workOrderHistories';
+import { partQuantities } from '../../../models/owns/partQuantity';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;
@@ -334,34 +335,40 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                 Add Additional Cost
               </Button>
             </Box>
-            {!!workOrder.parts.length && (
+            {!!partQuantities.length && (
               <Box>
                 <Divider sx={{ mt: 2 }} />
                 <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
                   Parts
                 </Typography>
-                (
                 <List>
-                  {workOrder.parts.map((part) => (
+                  {partQuantities.map((partQuantity) => (
                     <ListItem
-                      key={part.id}
+                      key={partQuantity.id}
                       secondaryAction={
-                        <Typography variant="h6">{part.cost} $</Typography>
+                        <Typography variant="h6">
+                          {partQuantity.part.quantity} *{' '}
+                          {partQuantity.part.cost} $
+                        </Typography>
                       }
                     >
                       <ListItemText
                         primary={
-                          <Typography variant="h6">{part.name}</Typography>
+                          <Typography variant="h6">
+                            {partQuantity.part.name}
+                          </Typography>
                         }
-                        secondary={part.description}
+                        secondary={partQuantity.part.description}
                       />
                     </ListItem>
                   ))}
                   <ListItem
                     secondaryAction={
                       <Typography variant="h6" fontWeight="bold">
-                        {workOrder.parts.reduce(
-                          (acc, part) => acc + part.cost,
+                        {partQuantities.reduce(
+                          (acc, partQuantity) =>
+                            acc +
+                            partQuantity.part.cost * partQuantity.quantity,
                           0
                         )}{' '}
                         $
