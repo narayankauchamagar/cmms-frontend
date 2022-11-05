@@ -22,18 +22,27 @@ function WorkOrderSettings() {
       label: t('Priority'),
       name: 'priority'
     },
-    { label: t('Images'), name: 'images' }
+    { label: t('Images'), name: 'images' },
+    { label: t('Primary User'), name: 'primaryUser' },
+    { label: t('Additional Workers'), name: 'additionalAssigned' },
+    { label: t('Team'), name: 'team' },
+    { label: t('Location'), name: 'location' },
+    { label: t('Due date'), name: 'dueDate' },
+    { label: t('Category'), name: 'category' },
+    { label: t('Purchase Order'), name: 'purchaseOrder' },
+    { label: t('Files'), name: 'files' },
+    { label: t('Signature'), name: 'signature' }
   ];
 
   const completeFields = [
-    { label: t('Files'), name: 'files' },
+    { label: t('Files'), name: 'completeFiles' },
     {
       label: t('Tasks'),
-      name: 'tasks'
+      name: 'completeTasks'
     },
-    { label: t('Time'), name: 'time' },
-    { label: t('Parts'), name: 'parts' },
-    { label: t('Cost'), name: 'cost' }
+    { label: t('Time'), name: 'completeTime' },
+    { label: t('Parts'), name: 'completeParts' },
+    { label: t('Cost'), name: 'completeCost' }
   ];
 
   const initialCreateValues = {
