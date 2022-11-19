@@ -1,4 +1,4 @@
-import { Box, Grid } from '@mui/material';
+import { Box, Button, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import SettingsLayout from '../SettingsLayout';
 import CustomDataGrid from '../../components/CustomDatagrid';
@@ -9,9 +9,13 @@ import {
   GridValueGetterParams
 } from '@mui/x-data-grid';
 import { Checklist, checklists } from '../../../../models/owns/checklists';
+import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
+import SelectTasksModal from '../../components/form/SelectTasks';
+import { useState } from 'react';
 
 function Checklists() {
   const { t }: { t: any } = useTranslation();
+  const [openTask, setOpenTask] = useState(false);
   const columns: GridEnrichedColDef[] = [
     {
       field: 'name',
@@ -53,6 +57,16 @@ function Checklists() {
             p: 4
           }}
         >
+          <Button
+            sx={{
+              mb: 2
+            }}
+            variant="contained"
+            onClick={() => setOpenTask(true)}
+            startIcon={<AddTwoToneIcon fontSize="small" />}
+          >
+            {t('Create Checklist')}
+          </Button>
           <CustomDataGrid
             columns={columns}
             rows={checklists}
@@ -67,6 +81,13 @@ function Checklists() {
           />
         </Box>
       </Grid>
+      <SelectTasksModal
+        open={openTask}
+        onClose={() => setOpenTask(false)}
+        selected={[]}
+        onSelect={(tasks, { name, description, category }) => {}}
+        createChecklist={true}
+      />
     </SettingsLayout>
   );
 }
