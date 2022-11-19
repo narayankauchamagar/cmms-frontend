@@ -21,7 +21,9 @@ const RequestSettings = Loader(
 const RolesSettings = Loader(
   lazy(() => import('../content/own/Settings/Roles'))
 );
-
+const ChecklistsSettings = Loader(
+  lazy(() => import('../content/own/Settings/Checklists'))
+);
 const UserProfile = Loader(lazy(() => import('../content/own/UserProfile')));
 const CompanyProfile = Loader(
   lazy(() => import('../content/own/CompanyProfile'))
@@ -86,6 +88,10 @@ const appRoutes = [
       {
         path: 'roles',
         element: <RolesSettings />
+      },
+      {
+        path: 'checklists',
+        element: <ChecklistsSettings />
       }
     ]
   },

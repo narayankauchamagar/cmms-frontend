@@ -15,7 +15,7 @@ import CustomSwitch from '../../components/form/CustomSwitch';
 import useAuth from '../../../../hooks/useAuth';
 import internationalization from '../../../../i18n/i18n';
 
-function DashboardTasks() {
+function GeneralSettings() {
   const { t }: { t: any } = useTranslation();
   const switchLanguage = ({ lng }: { lng: any }) => {
     internationalization.changeLanguage(lng);
@@ -219,4 +219,4 @@ function DashboardTasks() {
   );
 }
 
-export default DashboardTasks;
+export default GeneralSettings;
