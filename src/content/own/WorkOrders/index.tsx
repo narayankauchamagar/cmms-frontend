@@ -102,6 +102,7 @@ function WorkOrders() {
     values.team = formatSelect(values.team);
     values.asset = formatSelect(values.asset);
     values.assignedTo = formatSelectMultiple(values.assignedTo);
+    values.customers = formatSelectMultiple(values.customers);
     values.priority = values.priority?.value;
     values.requiredSignature =
       Array.isArray(values.requiredSignature) &&
@@ -329,7 +330,13 @@ function WorkOrders() {
       type2: 'user',
       multiple: true
     },
-
+    {
+      name: 'customers',
+      type: 'select',
+      label: t('Customers'),
+      type2: 'customer',
+      multiple: true
+    },
     {
       name: 'team',
       type: 'select',
@@ -469,6 +476,12 @@ function WorkOrders() {
                 return {
                   label: `${worker.firstName} ${worker.lastName}`,
                   value: worker.id.toString()
+                };
+              }),
+              customers: currentWorkOrder?.customers.map((customer) => {
+                return {
+                  label: customer.name,
+                  value: customer.id.toString()
                 };
               }),
               team: currentWorkOrder?.team

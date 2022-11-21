@@ -190,23 +190,46 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                   id={field.id}
                 />
               ))}
-              <Grid item xs={12} lg={6}>
-                <Typography
-                  variant="h6"
-                  sx={{ color: theme.colors.alpha.black[70] }}
-                >
-                  Assigned To
-                </Typography>
-                {workOrder.assignedTo.map((user, index) => (
-                  <Box key={user.id}>
-                    <Link
-                      href={`/app/people-teams/users/${user.id}`}
-                      variant="h6"
-                      fontWeight="bold"
-                    >{`${user.firstName} ${user.lastName}`}</Link>
-                  </Box>
-                ))}
-              </Grid>
+              {!!workOrder.assignedTo.length && (
+                <Grid item xs={12} lg={6}>
+                  <Typography
+                    variant="h6"
+                    sx={{ color: theme.colors.alpha.black[70] }}
+                  >
+                    Assigned To
+                  </Typography>
+                  {workOrder.assignedTo.map((user, index) => (
+                    <Box key={user.id}>
+                      <Link
+                        href={`/app/people-teams/users/${user.id}`}
+                        variant="h6"
+                        fontWeight="bold"
+                      >{`${user.firstName} ${user.lastName}`}</Link>
+                    </Box>
+                  ))}
+                </Grid>
+              )}
+              {!!workOrder.customers.length && (
+                <Grid item xs={12} lg={6}>
+                  <Typography
+                    variant="h6"
+                    sx={{ color: theme.colors.alpha.black[70] }}
+                  >
+                    {t('Customers')}
+                  </Typography>
+                  {workOrder.customers.map((customer, index) => (
+                    <Box key={customer.id}>
+                      <Link
+                        href={`/app/vendors-customers/customers/${customer.id}`}
+                        variant="h6"
+                        fontWeight="bold"
+                      >
+                        {customer.name}
+                      </Link>
+                    </Box>
+                  ))}
+                </Grid>
+              )}
             </Grid>
             <Box>
               <Divider sx={{ mt: 2 }} />

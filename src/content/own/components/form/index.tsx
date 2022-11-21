@@ -219,14 +219,14 @@ export default (props: PropsType) => {
                 <AssignmentTwoToneIcon />
                 <Box>
                   <Typography variant="h4" color="primary">
-                    {values.length ? values.length : null} Tasks
+                    {values ? values.length : null} Tasks
                   </Typography>
                   <Typography variant="subtitle1">
                     {t('Assign Custom Tasks for technicians to fill out')}
                   </Typography>
                 </Box>
                 <IconButton>
-                  {values.length ? (
+                  {values?.length ? (
                     <EditTwoToneIcon color="primary" />
                   ) : (
                     <AddCircleTwoToneIcon color="primary" />

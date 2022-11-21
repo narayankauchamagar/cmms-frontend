@@ -8,6 +8,7 @@ import File, { files } from './file';
 import Location, { locations } from './location';
 import Category, { categories } from './category';
 import { UserMiniDTO } from '../user';
+import { CustomerMiniDTO, customers } from './customer';
 
 interface WorkOrderBase extends Audit {
   dueDate: string;
@@ -21,6 +22,7 @@ interface WorkOrderBase extends Audit {
   team: Team;
   primaryUser: User;
   assignedTo: UserMiniDTO[];
+  customers: CustomerMiniDTO[];
   asset: Asset;
 }
 export default interface WorkOrder extends WorkOrderBase {
@@ -63,6 +65,7 @@ export const workOrders: WorkOrder[] = [
     createdAt: 'fghb',
     createdBy: 'vvty',
     updatedAt: 'string',
-    updatedBy: 'string'
+    updatedBy: 'string',
+    customers
   }
 ];
