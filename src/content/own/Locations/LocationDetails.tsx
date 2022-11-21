@@ -7,12 +7,14 @@ import {
   Divider,
   Grid,
   IconButton,
+  Link,
   List,
   ListItemButton,
   ListItemText,
   Tab,
   Tabs,
-  Typography
+  Typography,
+  useTheme
 } from '@mui/material';
 import Location from '../../../models/owns/location';
 import { ChangeEvent, useState } from 'react';
@@ -38,12 +40,14 @@ export default function LocationDetails(props: LocationDetailsProps) {
   const { t }: { t: any } = useTranslation();
   const [openAddFloorPlan, setOpenAddFloorPlan] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<string>('assets');
+  const theme = useTheme();
   const tabs = [
     { value: 'assets', label: t('Assets') },
     { value: 'files', label: t('Files') },
     { value: 'workOrders', label: t('Work Orders') },
     { value: 'parts', label: t('Parts') },
-    { value: 'floorPlans', label: t('Floor Plans') }
+    { value: 'floorPlans', label: t('Floor Plans') },
+    { value: 'people', label: t('People') }
   ];
 
   const floorPlans: FloorPlan[] = [
@@ -240,6 +244,94 @@ export default function LocationDetails(props: LocationDetailsProps) {
               ))}
             </List>
           </Box>
+        )}
+        {currentTab === 'people' && (
+          <Grid container>
+            {!!location.workers.length && (
+              <Grid item xs={12} lg={6}>
+                <Typography
+                  variant="h6"
+                  sx={{ color: theme.colors.alpha.black[70] }}
+                >
+                  {t('Assigned Workers')}
+                </Typography>
+                {location.workers.map((worker, index) => (
+                  <Box key={worker.id}>
+                    <Link
+                      href={`/app/people-teams/${worker.id}`}
+                      variant="h6"
+                      fontWeight="bold"
+                    >
+                      {`${worker.firstName} ${worker.lastName}`}
+                    </Link>
+                  </Box>
+                ))}
+              </Grid>
+            )}
+            {!!location.teams.length && (
+              <Grid item xs={12} lg={6}>
+                <Typography
+                  variant="h6"
+                  sx={{ color: theme.colors.alpha.black[70] }}
+                >
+                  {t('Assigned Teams')}
+                </Typography>
+                {location.teams.map((team, index) => (
+                  <Box key={team.id}>
+                    <Link
+                      href={`/app/people-teams/teams/${team.id}`}
+                      variant="h6"
+                      fontWeight="bold"
+                    >
+                      {team.name}
+                    </Link>
+                  </Box>
+                ))}
+              </Grid>
+            )}
+            {!!location.customers.length && (
+              <Grid item xs={12} lg={6}>
+                <Typography
+                  variant="h6"
+                  sx={{ color: theme.colors.alpha.black[70] }}
+                >
+                  {t('Assigned Customers')}
+                </Typography>
+                {location.customers.map((customer, index) => (
+                  <Box key={customer.id}>
+                    <Link
+                      href={`/app/vendors-customers/customers/${customer.id}`}
+                      variant="h6"
+                      fontWeight="bold"
+                    >
+                      {customer.name}
+                    </Link>
+                  </Box>
+                ))}
+              </Grid>
+            )}
+            {!!location.vendors.length && (
+              <Grid item xs={12} lg={6}>
+                <Typography
+                  variant="h6"
+                  sx={{ color: theme.colors.alpha.black[70] }}
+                >
+                  {t('Assigned Vendors')}
+                </Typography>
+                {location.vendors.map((vendor, index) => (
+                  <Box key={vendor.id}>
+                    <Link
+                      href={`/app/vendors-customers/vendors/${vendor.id}`}
+                      variant="h6"
+                      fontWeight="bold"
+                    >
+                      {vendor.companyName}
+                    </Link>
+                  </Box>
+                ))}
+              </Grid>
+            )}
+          </Grid>
         )}
       </Grid>
     </Grid>
