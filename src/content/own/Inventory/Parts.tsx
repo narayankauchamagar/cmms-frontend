@@ -141,7 +141,13 @@ const Parts = ({ setAction }: PropsType) => {
       field: 'quantity',
       headerName: t('Quantity'),
       description: t('Quantity'),
-      width: 150
+      width: 150,
+      renderCell: (params: GridRenderCellParams<number>) => (
+        <Box sx={params.value < params.row.minQuantity ? { color: 'red' } : {}}>
+          {params.value}{' '}
+          {params.value < params.row.minQuantity && t('(Running Low!)')}
+        </Box>
+      )
     },
     {
       field: 'barcode',
