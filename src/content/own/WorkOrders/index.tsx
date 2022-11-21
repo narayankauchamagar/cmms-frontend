@@ -10,7 +10,8 @@ import {
   Grid,
   Tab,
   Tabs,
-  Typography
+  Typography,
+  useTheme
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { IField } from '../type';
@@ -42,6 +43,7 @@ import {
 } from '../../../slices/workOrder';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import { useDispatch, useSelector } from '../../../store';
+import PriorityWrapper from './PriorityWrapper';
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
@@ -52,7 +54,7 @@ function WorkOrders() {
     { value: 'list', label: t('List View') },
     { value: 'map', label: t('Map View') }
   ];
-
+  const theme = useTheme();
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
@@ -151,7 +153,10 @@ function WorkOrders() {
       field: 'priority',
       headerName: t('Priority'),
       description: t('Priority'),
-      width: 150
+      width: 150,
+      renderCell: (params: GridRenderCellParams<string>) => (
+        <PriorityWrapper priority={params.value} />
+      )
     },
     {
       field: 'description',

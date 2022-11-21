@@ -27,6 +27,7 @@ import AddCostModal from './AddCostModal';
 import Tasks from './Tasks';
 import { workOrderHistories } from '../../../models/owns/workOrderHistories';
 import { partQuantities } from '../../../models/owns/partQuantity';
+import PriorityWrapper from './PriorityWrapper';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;
@@ -148,8 +149,9 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
         justifyContent="space-between"
       >
         <Box>
-          {/*//TODO format*/}
-          <Typography variant="h6">{workOrder?.priority} Priority</Typography>
+          <Box sx={{ mb: 2 }}>
+            <PriorityWrapper priority={workOrder?.priority} withSuffix />
+          </Box>
           <Typography variant="h2">{workOrder?.title}</Typography>
           <Typography variant="h6">{workOrder?.description}</Typography>
         </Box>

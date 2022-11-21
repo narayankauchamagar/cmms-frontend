@@ -145,7 +145,7 @@ const Parts = ({ setAction }: PropsType) => {
       renderCell: (params: GridRenderCellParams<number>) => (
         <Box sx={params.value < params.row.minQuantity ? { color: 'red' } : {}}>
           {params.value}{' '}
-          {params.value < params.row.minQuantity && t('(Running Low!)')}
+          {params.value < params.row.minQuantity && t('(Running Low !)')}
         </Box>
       )
     },
