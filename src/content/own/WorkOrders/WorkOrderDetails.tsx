@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   Divider,
   Grid,
   IconButton,
@@ -8,6 +9,8 @@ import {
   List,
   ListItem,
   ListItemText,
+  MenuItem,
+  Select,
   Tab,
   Tabs,
   Typography,
@@ -28,6 +31,8 @@ import Tasks from './Tasks';
 import { workOrderHistories } from '../../../models/owns/workOrderHistories';
 import { partQuantities } from '../../../models/owns/partQuantity';
 import PriorityWrapper from './PriorityWrapper';
+import { editWorkOrder } from '../../../slices/workOrder';
+import { useDispatch } from '../../../store';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;
@@ -40,6 +45,14 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const [openAddTimeModal, setOpenAddTimeModal] = useState<boolean>(false);
   const [openAddCostModal, setOpenAddCostModal] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<string>('details');
+  const [changingStatus, setChangingStatus] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  const workOrderStatuses = [
+    { label: t('Open'), value: 'OPEN' },
+    { label: t('In Progress'), value: 'IN_PROGRESS' },
+    { label: t('On Hold'), value: 'ON_HOLD' },
+    { label: t('Complete'), value: 'COMPLETE' }
+  ];
   const tabs = [
     { value: 'details', label: t('Details') },
     { value: 'updates', label: t('Updates') }
@@ -183,6 +196,44 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
         {currentTab === 'details' && (
           <Box>
             <Grid container spacing={2}>
+              <Grid item xs={12}>
+                {changingStatus ? (
+                  <CircularProgress />
+                ) : (
+                  <Select
+                    onChange={(event) => {
+                      setChangingStatus(true);
+                      dispatch(
+                        editWorkOrder(workOrder?.id, {
+                          ...workOrder,
+                          status: event.target.value
+                        })
+                      ).finally(() => setChangingStatus(false));
+                    }}
+                    value={workOrder.status}
+                    sx={
+                      workOrder.status === 'OPEN'
+                        ? {}
+                        : {
+                            backgroundColor:
+                              workOrder.status === 'IN_PROGRESS'
+                                ? theme.colors.success.main
+                                : workOrder.status === 'ON_HOLD'
+                                ? theme.colors.warning.main
+                                : theme.colors.alpha.black[30],
+                            color: 'white',
+                            fontWeight: 'bold'
+                          }
+                    }
+                  >
+                    {workOrderStatuses.map((workOrderStatus, index) => (
+                      <MenuItem key={index} value={workOrderStatus.value}>
+                        {workOrderStatus.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                )}
+              </Grid>
               {detailsFieldsToRender(workOrder).map((field) => (
                 <BasicField
                   key={field.id}

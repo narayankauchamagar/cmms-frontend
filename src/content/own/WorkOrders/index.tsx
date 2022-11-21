@@ -14,6 +14,7 @@ import {
   useTheme
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import CircleTwoToneIcon from '@mui/icons-material/CircleTwoTone';
 import { IField } from '../type';
 import WorkOrder from '../../../models/owns/workOrder';
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
@@ -66,7 +67,7 @@ function WorkOrders() {
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const [currentWorkOrder, setCurrentWorkOrder] = useState<WorkOrder>();
   const handleDelete = (id: number) => {};
-  const handleUpdate = (id: number) => {
+  const handleOpenUpdate = (id: number) => {
     setCurrentWorkOrder(workOrders.find((workOrder) => workOrder.id === id));
     setOpenUpdateModal(true);
   };
@@ -126,6 +127,12 @@ function WorkOrders() {
   };
   const onEditFailure = (err) =>
     showSnackBar(t("The Work Order couldn't be edited"), 'error');
+  const workOrderStatuses = [
+    { label: t('Open'), value: 'OPEN' },
+    { label: t('In Progress'), value: 'IN_PROGRESS' },
+    { label: t('On Hold'), value: 'ON_HOLD' },
+    { label: t('Complete'), value: 'COMPLETE' }
+  ];
 
   const columns: GridEnrichedColDef[] = [
     {
@@ -137,7 +144,30 @@ function WorkOrders() {
       field: 'status',
       headerName: t('Status'),
       description: t('Status'),
-      width: 150
+      width: 150,
+      renderCell: (params: GridRenderCellParams<string>) => (
+        <Box display="flex" flexDirection="row" justifyContent="center">
+          <CircleTwoToneIcon
+            fontSize="small"
+            color={
+              params.value === 'IN_PROGRESS'
+                ? 'success'
+                : params.value === 'ON_HOLD'
+                ? 'warning'
+                : params.value === 'COMPLETE'
+                ? 'info'
+                : 'secondary'
+            }
+          />
+          <Typography sx={{ ml: 1 }}>
+            {
+              workOrderStatuses.find(
+                (workOrderStatus) => workOrderStatus.value === params.value
+              ).label
+            }
+          </Typography>
+        </Box>
+      )
     },
     {
       field: 'title',
@@ -601,7 +631,7 @@ function WorkOrders() {
       >
         <WorkOrderDetails
           workOrder={currentWorkOrder}
-          handleUpdate={handleUpdate}
+          handleUpdate={handleOpenUpdate}
         />
       </Drawer>
     </>
