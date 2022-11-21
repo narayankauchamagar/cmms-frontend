@@ -34,7 +34,6 @@ import AssignmentTwoToneIcon from '@mui/icons-material/AssignmentTwoTone';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone';
 import { useState } from 'react';
-import { Task } from '../../../../models/owns/tasks';
 
 interface PropsType {
   fields: Array<IField>;
@@ -52,7 +51,6 @@ export default (props: PropsType) => {
   const { t }: { t: any } = useTranslation();
   const shape: IHash<any> = {};
   const [openTask, setOpenTask] = useState(false);
-  const [tasks, setTasks] = useState<Task[]>([]);
   const dispatch = useDispatch();
   const { customers } = useSelector((state) => state.customers);
   const { vendors } = useSelector((state) => state.vendors);
@@ -203,9 +201,8 @@ export default (props: PropsType) => {
             <SelectTasksModal
               open={openTask}
               onClose={() => setOpenTask(false)}
-              selected={values}
+              selected={values ?? []}
               onSelect={(tasks) => {
-                setTasks(tasks);
                 handleChange(formik, field.name, tasks);
               }}
             />
@@ -222,14 +219,14 @@ export default (props: PropsType) => {
                 <AssignmentTwoToneIcon />
                 <Box>
                   <Typography variant="h4" color="primary">
-                    {tasks.length ? tasks.length : null} Tasks
+                    {values.length ? values.length : null} Tasks
                   </Typography>
                   <Typography variant="subtitle1">
                     {t('Assign Custom Tasks for technicians to fill out')}
                   </Typography>
                 </Box>
                 <IconButton>
-                  {tasks.length ? (
+                  {values.length ? (
                     <EditTwoToneIcon color="primary" />
                   ) : (
                     <AddCircleTwoToneIcon color="primary" />

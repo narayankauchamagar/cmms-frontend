@@ -15,7 +15,7 @@ import {
   Zoom
 } from '@mui/material';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DropResult } from 'react-beautiful-dnd';
 import { reorder } from '../../../../../utils/items';
@@ -28,17 +28,19 @@ import { Checklist, checklists } from '../../../../../models/owns/checklists';
 
 interface SelectTasksProps {
   selected: Task[];
+  infos?: { name: string; description: string; category: string };
   open: boolean;
   onClose: () => void;
   onSelect: (tasks: Task[], { name, description, category }) => void;
-  createChecklist?: boolean;
+  action?: 'createChecklist' | 'editChecklist';
 }
 export default function SelectTasks({
   selected,
   onSelect,
   onClose,
   open,
-  createChecklist
+  action,
+  infos
 }: SelectTasksProps) {
   const { t }: { t: any } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
@@ -47,10 +49,20 @@ export default function SelectTasks({
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
-  const [tasks, setTasks] = useState<Task[]>(selected ?? []);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>();
   const [category, setCategory] = useState<string>();
+
+  useEffect(() => {
+    setTasks(selected);
+  }, [selected]);
+
+  useEffect(() => {
+    setName(infos?.name);
+    setDescription(infos?.description);
+    setCategory(infos?.category);
+  }, [infos]);
 
   const onLabelChange = (value: string, id: number) => {
     const newTasks = tasks.map((task) => {
@@ -150,7 +162,11 @@ export default function SelectTasks({
           }}
         >
           <Typography variant="h4" gutterBottom>
-            {createChecklist ? t('Create checklist') : t('Add Tasks')}
+            {action === 'createChecklist'
+              ? t('Create checklist')
+              : action === 'editChecklist'
+              ? t('Edit Checklist')
+              : t('Add Tasks')}
           </Typography>
         </DialogTitle>
         <DialogContent
@@ -216,32 +232,38 @@ export default function SelectTasks({
             {currentTab === 'edit' && (
               <Box>
                 <Grid container spacing={1}>
-                  <Grid item>
-                    <TextField
-                      variant="outlined"
-                      label="Name"
-                      value={name}
-                      onChange={(event) => setName(event.target.value)}
-                      error={name?.trim() === ''}
-                      helperText={t('The name is required')}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <TextField
-                      variant="outlined"
-                      label="Description"
-                      value={description}
-                      onChange={(event) => setDescription(event.target.value)}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <TextField
-                      variant="outlined"
-                      value={category}
-                      label="Category"
-                      onChange={(event) => setCategory(event.target.value)}
-                    />
-                  </Grid>
+                  {['createChecklist', 'editChecklist'].includes(action) && (
+                    <>
+                      <Grid item>
+                        <TextField
+                          variant="outlined"
+                          label="Name"
+                          value={name}
+                          onChange={(event) => setName(event.target.value)}
+                          error={name?.trim() === ''}
+                          helperText={t('The name is required')}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <TextField
+                          variant="outlined"
+                          label="Description"
+                          value={description}
+                          onChange={(event) =>
+                            setDescription(event.target.value)
+                          }
+                        />
+                      </Grid>
+                      <Grid item>
+                        <TextField
+                          variant="outlined"
+                          value={category}
+                          label="Category"
+                          onChange={(event) => setCategory(event.target.value)}
+                        />
+                      </Grid>
+                    </>
+                  )}
                   <Grid item>
                     <DraggableTaskList
                       tasks={tasks}
@@ -271,11 +293,17 @@ export default function SelectTasks({
             {t('Cancel')}
           </Button>
           <Button
-            disabled={!tasks.length || (createChecklist && name.trim() === '')}
+            disabled={
+              !tasks.length ||
+              (['createChecklist', 'editChecklist'].includes(action) &&
+                name.trim() === '')
+            }
             onClick={onSave}
             variant="contained"
           >
-            {createChecklist ? t('Save Checklist') : t('Add tasks')}
+            {['createChecklist', 'editChecklist'].includes(action)
+              ? t('Save Checklist')
+              : t('Add tasks')}
           </Button>
         </DialogActions>
       </Dialog>
