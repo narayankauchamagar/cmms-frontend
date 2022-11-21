@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import Request from '../../../models/owns/request';
+import { getPriorityLabel } from '../../../utils/formatters';
 
 interface RequestDetailsProps {
   request: Request;
@@ -23,17 +24,21 @@ export default function RequestDetails(props: RequestDetailsProps) {
 
   const BasicField = ({
     label,
-    value
+    value,
+    isPriority
   }: {
     label: string | number;
     value: string | number;
+    isPriority?: boolean;
   }) => {
     return value ? (
       <Grid item xs={12} lg={6}>
         <Typography variant="h6" sx={{ color: theme.colors.alpha.black[70] }}>
           {label}
         </Typography>
-        <Typography variant="h6">{value}</Typography>
+        <Typography variant="h6">
+          {isPriority ? getPriorityLabel(value.toString(), t) : value}
+        </Typography>
       </Grid>
     ) : null;
   };
@@ -93,6 +98,7 @@ export default function RequestDetails(props: RequestDetailsProps) {
                 key={field.label}
                 label={field.label}
                 value={field.value}
+                isPriority={field.label === t('Priority')}
               />
             ))}
           </Grid>

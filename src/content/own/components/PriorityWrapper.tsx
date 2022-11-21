@@ -12,13 +12,13 @@ const LabelWrapper = styled(Box)(
   `
 );
 export default function PriorityWrapper(props: {
-  priority: string;
+  priority: string | null;
   withSuffix?: boolean;
 }) {
   const { priority, withSuffix } = props;
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
-
+  if (!priority) return null;
   return priority === 'NONE' ? (
     <Typography>{priority}</Typography>
   ) : (

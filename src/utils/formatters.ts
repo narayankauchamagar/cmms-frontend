@@ -29,3 +29,18 @@ export const formatAssetValues = (values) => {
   delete values.category;
   return values;
 };
+
+export const getPriorityLabel = (str: string, t: any) => {
+  switch (str) {
+    case 'NONE':
+      return t('None');
+    case 'LOW':
+      return t('Low');
+    case 'MEDIUM':
+      return t('Medium');
+    case 'HIGH':
+      return t('High');
+    default:
+      break;
+  }
+};

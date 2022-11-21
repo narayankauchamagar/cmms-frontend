@@ -34,6 +34,7 @@ import AssignmentTwoToneIcon from '@mui/icons-material/AssignmentTwoTone';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone';
 import { useState } from 'react';
+import { getPriorityLabel } from '../../../../utils/formatters';
 
 interface PropsType {
   fields: Array<IField>;
@@ -96,21 +97,8 @@ export default (props: PropsType) => {
     formik.setFieldValue(field, e);
     return formik.handleChange(field);
   };
-  const getPriorityLabel = (str: string) => {
-    switch (str) {
-      case 'NONE':
-        return t('None');
-      case 'LOW':
-        return t('Low');
-      case 'MEDIUM':
-        return t('Medium');
-      case 'HIGH':
-        return t('High');
-      default:
-        break;
-    }
-  };
-  const renderSelect = (formik, field) => {
+
+  const ComplexSelect = ({ formik, field }: { formik; field }) => {
     let options = field.items;
     let loading = field.loading;
     let onOpen = field.onPress;
@@ -177,14 +165,10 @@ export default (props: PropsType) => {
       case 'priority':
         options = ['NONE', 'LOW', 'MEDIUM', 'HIGH'].map((value) => {
           return {
-            label: getPriorityLabel(value),
+            label: getPriorityLabel(value, t),
             value
           };
         });
-        values = values
-          ? { label: getPriorityLabel(values), value: values }
-          : null;
-        onOpen = fetchAssets;
         break;
       case 'part':
         return (
@@ -284,7 +268,7 @@ export default (props: PropsType) => {
               return (
                 <Grid item xs={12} lg={field.midWidth ? 6 : 12} key={index}>
                   {field.type === 'select' ? (
-                    renderSelect(formik, field)
+                    <ComplexSelect formik={formik} field={field} />
                   ) : field.type === 'checkbox' ? (
                     <CheckBoxForm
                       label={field.label}

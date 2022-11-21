@@ -30,7 +30,7 @@ import AddCostModal from './AddCostModal';
 import Tasks from './Tasks';
 import { workOrderHistories } from '../../../models/owns/workOrderHistories';
 import { partQuantities } from '../../../models/owns/partQuantity';
-import PriorityWrapper from './PriorityWrapper';
+import PriorityWrapper from '../components/PriorityWrapper';
 import { editWorkOrder } from '../../../slices/workOrder';
 import { useDispatch } from '../../../store';
 

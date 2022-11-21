@@ -22,7 +22,6 @@ interface PropsType {
 
 export default (props: PropsType) => {
   const { t }: { t: any } = useTranslation();
-
   return (
     <Autocomplete
       fullWidth={props.fullWidth || true}

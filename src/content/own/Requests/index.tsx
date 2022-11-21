@@ -33,6 +33,8 @@ import RequestDetails from './RequestDetails';
 import { useParams } from 'react-router-dom';
 import { isNumeric } from '../../../utils/validators';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
+import PriorityWrapper from '../components/PriorityWrapper';
+import { getPriorityLabel } from '../../../utils/formatters';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
@@ -119,7 +121,10 @@ function Files() {
       field: 'priority',
       headerName: t('Priority'),
       description: t('Priority'),
-      width: 150
+      width: 150,
+      renderCell: (params: GridRenderCellParams<string>) => (
+        <PriorityWrapper priority={params.value} />
+      )
     },
     {
       field: 'status',
@@ -164,8 +169,7 @@ function Files() {
     }
   ];
   const shape = {
-    title: Yup.string().required(t('Request name is required')),
-    priority: Yup.object().required(t('Priority is required')).nullable()
+    title: Yup.string().required(t('Request name is required'))
   };
   const renderAddModal = () => (
     <Dialog
@@ -240,7 +244,15 @@ function Files() {
             fields={fields}
             validation={Yup.object().shape(shape)}
             submitText={t('Save')}
-            values={currentRequest}
+            values={{
+              ...currentRequest,
+              priority: currentRequest?.priority
+                ? {
+                    label: getPriorityLabel(currentRequest?.priority, t),
+                    value: currentRequest?.priority
+                  }
+                : null
+            }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               values.priority = values.priority?.value;

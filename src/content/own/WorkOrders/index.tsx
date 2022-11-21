@@ -36,7 +36,11 @@ import { categories } from '../../../models/owns/category';
 import Location from '../../../models/owns/location';
 import Asset from '../../../models/owns/asset';
 import { tasks } from '../../../models/owns/tasks';
-import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
+import {
+  formatSelect,
+  formatSelectMultiple,
+  getPriorityLabel
+} from '../../../utils/formatters';
 import {
   addWorkOrder,
   editWorkOrder,
@@ -44,7 +48,7 @@ import {
 } from '../../../slices/workOrder';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import { useDispatch, useSelector } from '../../../store';
-import PriorityWrapper from './PriorityWrapper';
+import PriorityWrapper from '../components/PriorityWrapper';
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
@@ -106,6 +110,7 @@ function WorkOrders() {
     values.asset = formatSelect(values.asset);
     values.assignedTo = formatSelectMultiple(values.assignedTo);
     values.customers = formatSelectMultiple(values.customers);
+    console.log(values.priority);
     values.priority = values.priority?.value;
     values.requiredSignature =
       Array.isArray(values.requiredSignature) &&
@@ -494,6 +499,12 @@ function WorkOrders() {
             submitText={t('Save')}
             values={{
               ...currentWorkOrder,
+              priority: currentWorkOrder?.priority
+                ? {
+                    label: getPriorityLabel(currentWorkOrder?.priority, t),
+                    value: currentWorkOrder?.priority
+                  }
+                : null,
               category: currentWorkOrder?.category
                 ? {
                     label: currentWorkOrder?.category?.name,
