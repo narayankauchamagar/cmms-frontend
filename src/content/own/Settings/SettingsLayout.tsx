@@ -15,7 +15,8 @@ function SettingsLayout(props: SettingsLayoutProps) {
     { value: '', label: t('General Settings') },
     { value: 'work-order', label: t('Work order configuration') },
     { value: 'request', label: t('Request form configuration') },
-    { value: 'roles', label: t('Roles') }
+    { value: 'roles', label: t('Roles') },
+    { value: 'checklists', label: t('Checklists') }
   ];
   const { setTitle } = useContext(TitleContext);
 

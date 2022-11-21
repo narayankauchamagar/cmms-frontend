@@ -1,8 +1,10 @@
 import {
   Box,
   Button,
+  Card,
   CircularProgress,
   Grid,
+  IconButton,
   TextField,
   Typography
 } from '@mui/material';
@@ -20,7 +22,7 @@ import DatePicker from '@mui/lab/DatePicker';
 import SelectParts from './SelectParts';
 import { useDispatch, useSelector } from '../../../../store';
 import CustomSwitch from './CustomSwitch';
-import SelectTasks from './SelectTasks';
+import SelectTasksModal from './SelectTasks';
 import SelectMapCoordinates from './SelectMapCoordinates';
 import { getCustomers } from '../../../../slices/customer';
 import { getVendors } from '../../../../slices/vendor';
@@ -28,6 +30,10 @@ import { getLocations } from 'src/slices/location';
 import { getUsers } from '../../../../slices/user';
 import { getAssets } from '../../../../slices/asset';
 import { getTeams } from '../../../../slices/team';
+import AssignmentTwoToneIcon from '@mui/icons-material/AssignmentTwoTone';
+import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
+import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone';
+import { useState } from 'react';
 
 interface PropsType {
   fields: Array<IField>;
@@ -44,6 +50,7 @@ interface PropsType {
 export default (props: PropsType) => {
   const { t }: { t: any } = useTranslation();
   const shape: IHash<any> = {};
+  const [openTask, setOpenTask] = useState(false);
   const dispatch = useDispatch();
   const { customers } = useSelector((state) => state.customers);
   const { vendors } = useSelector((state) => state.vendors);
@@ -190,10 +197,44 @@ export default (props: PropsType) => {
         );
       case 'task':
         return (
-          <SelectTasks
-            selected={values}
-            onChange={(tasks) => handleChange(formik, field.name, tasks)}
-          />
+          <>
+            <SelectTasksModal
+              open={openTask}
+              onClose={() => setOpenTask(false)}
+              selected={values ?? []}
+              onSelect={(tasks) => {
+                handleChange(formik, field.name, tasks);
+              }}
+            />
+            <Card onClick={() => setOpenTask(true)} sx={{ cursor: 'pointer' }}>
+              <Box
+                sx={{
+                  p: 2,
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
+                }}
+              >
+                <AssignmentTwoToneIcon />
+                <Box>
+                  <Typography variant="h4" color="primary">
+                    {values ? values.length : null} Tasks
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    {t('Assign Custom Tasks for technicians to fill out')}
+                  </Typography>
+                </Box>
+                <IconButton>
+                  {values?.length ? (
+                    <EditTwoToneIcon color="primary" />
+                  ) : (
+                    <AddCircleTwoToneIcon color="primary" />
+                  )}
+                </IconButton>
+              </Box>
+            </Card>
+          </>
         );
       default:
         break;

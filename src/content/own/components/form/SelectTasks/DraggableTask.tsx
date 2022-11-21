@@ -141,6 +141,7 @@ const DraggableListItem = ({
                   />
                 </Box>
                 <Select
+                  sx={{ ml: 1 }}
                   value={task.type}
                   onChange={(event) =>
                     onTypeChange(event.target.value as TaskType, task.id)

@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   Divider,
   Grid,
   IconButton,
@@ -8,6 +9,8 @@ import {
   List,
   ListItem,
   ListItemText,
+  MenuItem,
+  Select,
   Tab,
   Tabs,
   Typography,
@@ -27,6 +30,9 @@ import AddCostModal from './AddCostModal';
 import Tasks from './Tasks';
 import { workOrderHistories } from '../../../models/owns/workOrderHistories';
 import { partQuantities } from '../../../models/owns/partQuantity';
+import PriorityWrapper from './PriorityWrapper';
+import { editWorkOrder } from '../../../slices/workOrder';
+import { useDispatch } from '../../../store';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;
@@ -39,6 +45,14 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const [openAddTimeModal, setOpenAddTimeModal] = useState<boolean>(false);
   const [openAddCostModal, setOpenAddCostModal] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<string>('details');
+  const [changingStatus, setChangingStatus] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  const workOrderStatuses = [
+    { label: t('Open'), value: 'OPEN' },
+    { label: t('In Progress'), value: 'IN_PROGRESS' },
+    { label: t('On Hold'), value: 'ON_HOLD' },
+    { label: t('Complete'), value: 'COMPLETE' }
+  ];
   const tabs = [
     { value: 'details', label: t('Details') },
     { value: 'updates', label: t('Updates') }
@@ -148,8 +162,9 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
         justifyContent="space-between"
       >
         <Box>
-          {/*//TODO format*/}
-          <Typography variant="h6">{workOrder?.priority} Priority</Typography>
+          <Box sx={{ mb: 2 }}>
+            <PriorityWrapper priority={workOrder?.priority} withSuffix />
+          </Box>
           <Typography variant="h2">{workOrder?.title}</Typography>
           <Typography variant="h6">{workOrder?.description}</Typography>
         </Box>
@@ -181,6 +196,44 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
         {currentTab === 'details' && (
           <Box>
             <Grid container spacing={2}>
+              <Grid item xs={12}>
+                {changingStatus ? (
+                  <CircularProgress />
+                ) : (
+                  <Select
+                    onChange={(event) => {
+                      setChangingStatus(true);
+                      dispatch(
+                        editWorkOrder(workOrder?.id, {
+                          ...workOrder,
+                          status: event.target.value
+                        })
+                      ).finally(() => setChangingStatus(false));
+                    }}
+                    value={workOrder.status}
+                    sx={
+                      workOrder.status === 'OPEN'
+                        ? {}
+                        : {
+                            backgroundColor:
+                              workOrder.status === 'IN_PROGRESS'
+                                ? theme.colors.success.main
+                                : workOrder.status === 'ON_HOLD'
+                                ? theme.colors.warning.main
+                                : theme.colors.alpha.black[30],
+                            color: 'white',
+                            fontWeight: 'bold'
+                          }
+                    }
+                  >
+                    {workOrderStatuses.map((workOrderStatus, index) => (
+                      <MenuItem key={index} value={workOrderStatus.value}>
+                        {workOrderStatus.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                )}
+              </Grid>
               {detailsFieldsToRender(workOrder).map((field) => (
                 <BasicField
                   key={field.id}
@@ -190,23 +243,46 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                   id={field.id}
                 />
               ))}
-              <Grid item xs={12} lg={6}>
-                <Typography
-                  variant="h6"
-                  sx={{ color: theme.colors.alpha.black[70] }}
-                >
-                  Assigned To
-                </Typography>
-                {workOrder.assignedTo.map((user, index) => (
-                  <Box key={user.id}>
-                    <Link
-                      href={`/app/people-teams/users/${user.id}`}
-                      variant="h6"
-                      fontWeight="bold"
-                    >{`${user.firstName} ${user.lastName}`}</Link>
-                  </Box>
-                ))}
-              </Grid>
+              {!!workOrder.assignedTo.length && (
+                <Grid item xs={12} lg={6}>
+                  <Typography
+                    variant="h6"
+                    sx={{ color: theme.colors.alpha.black[70] }}
+                  >
+                    Assigned To
+                  </Typography>
+                  {workOrder.assignedTo.map((user, index) => (
+                    <Box key={user.id}>
+                      <Link
+                        href={`/app/people-teams/users/${user.id}`}
+                        variant="h6"
+                        fontWeight="bold"
+                      >{`${user.firstName} ${user.lastName}`}</Link>
+                    </Box>
+                  ))}
+                </Grid>
+              )}
+              {!!workOrder.customers.length && (
+                <Grid item xs={12} lg={6}>
+                  <Typography
+                    variant="h6"
+                    sx={{ color: theme.colors.alpha.black[70] }}
+                  >
+                    {t('Customers')}
+                  </Typography>
+                  {workOrder.customers.map((customer, index) => (
+                    <Box key={customer.id}>
+                      <Link
+                        href={`/app/vendors-customers/customers/${customer.id}`}
+                        variant="h6"
+                        fontWeight="bold"
+                      >
+                        {customer.name}
+                      </Link>
+                    </Box>
+                  ))}
+                </Grid>
+              )}
             </Grid>
             <Box>
               <Divider sx={{ mt: 2 }} />

@@ -16,6 +16,7 @@ import { reducer as workOrderReducer } from 'src/slices/workOrder';
 import { reducer as assetReducer } from 'src/slices/asset';
 import { reducer as categoryReducer } from 'src/slices/category';
 import { reducer as multiPartsReducer } from 'src/slices/multipart';
+import { reducer as checklistReducer } from 'src/slices/checklist';
 
 const rootReducer = combineReducers({
   calendar: calendarReducer,
@@ -34,7 +35,8 @@ const rootReducer = combineReducers({
   requests: requestReducer,
   workOrders: workOrderReducer,
   categories: categoryReducer,
-  multiParts: multiPartsReducer
+  multiParts: multiPartsReducer,
+  checklists: checklistReducer
 });
 
 export default rootReducer;

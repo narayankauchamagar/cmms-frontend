@@ -10,9 +10,11 @@ import {
   Grid,
   Tab,
   Tabs,
-  Typography
+  Typography,
+  useTheme
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import CircleTwoToneIcon from '@mui/icons-material/CircleTwoTone';
 import { IField } from '../type';
 import WorkOrder from '../../../models/owns/workOrder';
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
@@ -42,6 +44,7 @@ import {
 } from '../../../slices/workOrder';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import { useDispatch, useSelector } from '../../../store';
+import PriorityWrapper from './PriorityWrapper';
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
@@ -52,7 +55,7 @@ function WorkOrders() {
     { value: 'list', label: t('List View') },
     { value: 'map', label: t('Map View') }
   ];
-
+  const theme = useTheme();
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
@@ -64,7 +67,7 @@ function WorkOrders() {
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const [currentWorkOrder, setCurrentWorkOrder] = useState<WorkOrder>();
   const handleDelete = (id: number) => {};
-  const handleUpdate = (id: number) => {
+  const handleOpenUpdate = (id: number) => {
     setCurrentWorkOrder(workOrders.find((workOrder) => workOrder.id === id));
     setOpenUpdateModal(true);
   };
@@ -102,6 +105,7 @@ function WorkOrders() {
     values.team = formatSelect(values.team);
     values.asset = formatSelect(values.asset);
     values.assignedTo = formatSelectMultiple(values.assignedTo);
+    values.customers = formatSelectMultiple(values.customers);
     values.priority = values.priority?.value;
     values.requiredSignature =
       Array.isArray(values.requiredSignature) &&
@@ -123,6 +127,12 @@ function WorkOrders() {
   };
   const onEditFailure = (err) =>
     showSnackBar(t("The Work Order couldn't be edited"), 'error');
+  const workOrderStatuses = [
+    { label: t('Open'), value: 'OPEN' },
+    { label: t('In Progress'), value: 'IN_PROGRESS' },
+    { label: t('On Hold'), value: 'ON_HOLD' },
+    { label: t('Complete'), value: 'COMPLETE' }
+  ];
 
   const columns: GridEnrichedColDef[] = [
     {
@@ -134,7 +144,30 @@ function WorkOrders() {
       field: 'status',
       headerName: t('Status'),
       description: t('Status'),
-      width: 150
+      width: 150,
+      renderCell: (params: GridRenderCellParams<string>) => (
+        <Box display="flex" flexDirection="row" justifyContent="center">
+          <CircleTwoToneIcon
+            fontSize="small"
+            color={
+              params.value === 'IN_PROGRESS'
+                ? 'success'
+                : params.value === 'ON_HOLD'
+                ? 'warning'
+                : params.value === 'COMPLETE'
+                ? 'info'
+                : 'secondary'
+            }
+          />
+          <Typography sx={{ ml: 1 }}>
+            {
+              workOrderStatuses.find(
+                (workOrderStatus) => workOrderStatus.value === params.value
+              ).label
+            }
+          </Typography>
+        </Box>
+      )
     },
     {
       field: 'title',
@@ -150,7 +183,10 @@ function WorkOrders() {
       field: 'priority',
       headerName: t('Priority'),
       description: t('Priority'),
-      width: 150
+      width: 150,
+      renderCell: (params: GridRenderCellParams<string>) => (
+        <PriorityWrapper priority={params.value} />
+      )
     },
     {
       field: 'description',
@@ -329,7 +365,13 @@ function WorkOrders() {
       type2: 'user',
       multiple: true
     },
-
+    {
+      name: 'customers',
+      type: 'select',
+      label: t('Customers'),
+      type2: 'customer',
+      multiple: true
+    },
     {
       name: 'team',
       type: 'select',
@@ -471,6 +513,12 @@ function WorkOrders() {
                   value: worker.id.toString()
                 };
               }),
+              customers: currentWorkOrder?.customers.map((customer) => {
+                return {
+                  label: customer.name,
+                  value: customer.id.toString()
+                };
+              }),
               team: currentWorkOrder?.team
                 ? {
                     label: currentWorkOrder.team?.name,
@@ -583,7 +631,7 @@ function WorkOrders() {
       >
         <WorkOrderDetails
           workOrder={currentWorkOrder}
-          handleUpdate={handleUpdate}
+          handleUpdate={handleOpenUpdate}
         />
       </Drawer>
     </>
