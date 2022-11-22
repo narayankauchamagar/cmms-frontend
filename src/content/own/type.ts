@@ -33,7 +33,9 @@ export interface IField {
     | 'location'
     | 'asset'
     | 'priority'
-    | 'task';
+    | 'task'
+    | 'category';
+  category?: 'purchase-order-categories';
   name?: string;
   placeholder?: string;
   fileType?: 'file' | 'image';

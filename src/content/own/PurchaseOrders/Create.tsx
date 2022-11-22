@@ -48,8 +48,10 @@ function CreatePurchaseOrder() {
     },
     {
       name: 'category',
-      type: 'text',
+      type: 'select',
       label: t('Category'),
+      type2: 'category',
+      category: 'purchase-order-categories',
       placeholder: t('Category'),
       midWidth: true
     },

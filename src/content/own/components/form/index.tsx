@@ -35,6 +35,7 @@ import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone';
 import { useState } from 'react';
 import { getPriorityLabel } from '../../../../utils/formatters';
+import { getCategories } from '../../../../slices/category';
 
 interface PropsType {
   fields: Array<IField>;
@@ -56,6 +57,7 @@ export default (props: PropsType) => {
   const { customers } = useSelector((state) => state.customers);
   const { vendors } = useSelector((state) => state.vendors);
   const { locations } = useSelector((state) => state.locations);
+  const { categories } = useSelector((state) => state.categories);
   const { users } = useSelector((state) => state.users);
   const { assets } = useSelector((state) => state.assets);
   const { teams } = useSelector((state) => state.teams);
@@ -72,6 +74,9 @@ export default (props: PropsType) => {
   };
   const fetchLocations = async () => {
     if (!locations.length) dispatch(getLocations());
+  };
+  const fetchCategories = async (category: string) => {
+    if (!categories[category]) dispatch(getCategories(category));
   };
   const fetchAssets = async () => {
     if (!assets.length) dispatch(getAssets());
@@ -161,6 +166,16 @@ export default (props: PropsType) => {
             };
           });
         onOpen = fetchAssets;
+        break;
+      case 'category':
+        options =
+          categories[field.category]?.map((category) => {
+            return {
+              label: category.name,
+              value: category.id.toString()
+            };
+          }) ?? [];
+        onOpen = () => fetchCategories(field.category);
         break;
       case 'priority':
         options = ['NONE', 'LOW', 'MEDIUM', 'HIGH'].map((value) => {
