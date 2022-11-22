@@ -1,7 +1,7 @@
 import CategoriesLayout from '../CategoriesLayout';
 
-function MeterCategories() {
+function TimerCategories() {
   return <CategoriesLayout tabIndex={4} basePath="time-categories" />;
 }
 
-export default MeterCategories;
+export default TimerCategories;

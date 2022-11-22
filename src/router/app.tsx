@@ -43,6 +43,9 @@ const MeterCategories = Loader(
 const TimeCategories = Loader(
   lazy(() => import('../content/own/Categories/Timer'))
 );
+const CostCategories = Loader(
+  lazy(() => import('../content/own/Categories/Cost'))
+);
 const SubscriptionPlans = Loader(
   lazy(() => import('../content/own/Subscription/Plans'))
 );
@@ -233,6 +236,10 @@ const appRoutes = [
       {
         path: 'time',
         element: <TimeCategories />
+      },
+      {
+        path: 'cost',
+        element: <CostCategories />
       }
     ]
   },

@@ -4,7 +4,6 @@ import Form from '../components/form';
 import * as Yup from 'yup';
 import wait from '../../../utils/wait';
 import { IField } from '../type';
-import { categories } from '../../../models/owns/category';
 
 interface AddTimeProps {
   open: boolean;
@@ -43,9 +42,8 @@ export default function AddTimeModal({ open, onClose }: AddTimeProps) {
       name: 'category',
       type: 'select',
       label: t('Category'),
-      items: categories.map((category) => {
-        return { label: category.name, value: category.id };
-      })
+      type2: 'category',
+      category: 'time-categories'
     },
     {
       name: 'duration',

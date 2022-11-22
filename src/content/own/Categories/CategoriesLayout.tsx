@@ -116,7 +116,8 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
     { value: 'asset-status', label: t('Asset Status') },
     { value: 'purchase-order', label: t('Purchase Orders') },
     { value: 'meter', label: t('Meters') },
-    { value: 'time', label: t('Timers') }
+    { value: 'time', label: t('Timers') },
+    { value: 'cost', label: t('Costs') }
   ];
   const renderModal = () => (
     <Dialog

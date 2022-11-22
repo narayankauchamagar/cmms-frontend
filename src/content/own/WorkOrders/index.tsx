@@ -32,7 +32,6 @@ import Team from '../../../models/owns/team';
 import WorkOrderDetails from './WorkOrderDetails';
 import { useParams } from 'react-router-dom';
 import { enumerate } from '../../../utils/displayers';
-import { categories } from '../../../models/owns/category';
 import Location from '../../../models/owns/location';
 import Asset from '../../../models/owns/asset';
 import { tasks } from '../../../models/owns/tasks';
@@ -350,12 +349,8 @@ function WorkOrders() {
       name: 'category',
       type: 'select',
       label: t('Category'),
-      items: categories.map((category) => {
-        return {
-          label: category.name,
-          value: category.id.toString()
-        };
-      })
+      type2: 'category',
+      category: 'work-order-categories'
     },
     {
       name: 'primaryUser',

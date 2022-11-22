@@ -35,7 +35,11 @@ export interface IField {
     | 'priority'
     | 'task'
     | 'category';
-  category?: 'purchase-order-categories';
+  category?:
+    | 'purchase-order-categories'
+    | 'cost-categories'
+    | 'time-categories'
+    | 'work-order-categories';
   name?: string;
   placeholder?: string;
   fileType?: 'file' | 'image';
