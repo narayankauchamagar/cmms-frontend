@@ -13,6 +13,7 @@ import {
   Select,
   Tab,
   Tabs,
+  TextField,
   Typography,
   useTheme
 } from '@mui/material';
@@ -29,10 +30,14 @@ import { additionalCosts } from '../../../models/owns/additionalCost';
 import AddCostModal from './AddCostModal';
 import Tasks from './Tasks';
 import { workOrderHistories } from '../../../models/owns/workOrderHistories';
-import { partQuantities } from '../../../models/owns/partQuantity';
+import {
+  partQuantities as defaultPartQuantities,
+  PartQuantityMiniDTO
+} from '../../../models/owns/partQuantity';
 import PriorityWrapper from '../components/PriorityWrapper';
 import { editWorkOrder } from '../../../slices/workOrder';
 import { useDispatch } from '../../../store';
+import SelectParts from '../components/form/SelectParts';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;
@@ -46,6 +51,9 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const [openAddCostModal, setOpenAddCostModal] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<string>('details');
   const [changingStatus, setChangingStatus] = useState<boolean>(false);
+  const [partQuantities, setPartQuantities] = useState<PartQuantityMiniDTO[]>(
+    defaultPartQuantities
+  );
   const dispatch = useDispatch();
   const workOrderStatuses = [
     { label: t('Open'), value: 'OPEN' },
@@ -411,57 +419,112 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                 Add Additional Cost
               </Button>
             </Box>
-            {!!partQuantities.length && (
-              <Box>
-                <Divider sx={{ mt: 2 }} />
-                <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
-                  Parts
-                </Typography>
-                <List>
-                  {partQuantities.map((partQuantity) => (
-                    <ListItem
-                      key={partQuantity.id}
-                      secondaryAction={
+            <Box>
+              <Divider sx={{ mt: 2 }} />
+              <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
+                Parts
+              </Typography>
+              <List>
+                {partQuantities.map((partQuantity, index) => (
+                  <ListItem
+                    key={partQuantity.part.id}
+                    secondaryAction={
+                      <Box
+                        display="flex"
+                        flexDirection="row"
+                        alignItems="center"
+                      >
+                        <TextField
+                          label={t('Quantity')}
+                          variant="outlined"
+                          sx={{ mr: 1 }}
+                          value={partQuantity.quantity}
+                          type="number"
+                          size="small"
+                          onChange={(event) => {
+                            const partQuantitiesClone = [...partQuantities];
+                            partQuantitiesClone[index] = {
+                              ...partQuantitiesClone[index],
+                              quantity: Number(event.target.value)
+                            };
+                            setPartQuantities(partQuantitiesClone);
+                          }}
+                        />
                         <Typography variant="h6">
-                          {partQuantity.part.quantity} *{' '}
+                          {' * '}
                           {partQuantity.part.cost} $
                         </Typography>
-                      }
-                    >
-                      <ListItemText
-                        primary={
-                          <Typography variant="h6">
-                            {partQuantity.part.name}
-                          </Typography>
-                        }
-                        secondary={partQuantity.part.description}
-                      />
-                    </ListItem>
-                  ))}
-                  <ListItem
-                    secondaryAction={
-                      <Typography variant="h6" fontWeight="bold">
-                        {partQuantities.reduce(
-                          (acc, partQuantity) =>
-                            acc +
-                            partQuantity.part.cost * partQuantity.quantity,
-                          0
-                        )}{' '}
-                        $
-                      </Typography>
+                      </Box>
                     }
                   >
                     <ListItemText
                       primary={
-                        <Typography variant="h6" fontWeight="bold">
-                          Total
-                        </Typography>
+                        <Link
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          href={`/app/inventory/parts/${partQuantity.part.id}`}
+                          key={partQuantity.part.id}
+                          variant="h6"
+                        >
+                          {partQuantity.part.name}
+                        </Link>
                       }
+                      secondary={partQuantity.part.description}
                     />
                   </ListItem>
-                </List>
-              </Box>
-            )}
+                ))}
+                <ListItem
+                  secondaryAction={
+                    <Typography variant="h6" fontWeight="bold">
+                      {partQuantities.reduce(
+                        (acc, partQuantity) =>
+                          acc + partQuantity.part.cost * partQuantity.quantity,
+                        0
+                      )}{' '}
+                      $
+                    </Typography>
+                  }
+                >
+                  <ListItemText
+                    primary={
+                      <Typography variant="h6" fontWeight="bold">
+                        Total
+                      </Typography>
+                    }
+                  />
+                </ListItem>
+              </List>
+              <SelectParts
+                selected={partQuantities.map(
+                  (partQuantity) => partQuantity.part.id
+                )}
+                onChange={(selectedParts) => {
+                  const filteredPartQuantities = partQuantities.filter(
+                    (partQuantity) =>
+                      selectedParts
+                        .map((part) => part.id)
+                        .includes(partQuantity.part.id)
+                  );
+                  const newParts = selectedParts.filter(
+                    (part) =>
+                      !partQuantities
+                        .map((partQuantity) => partQuantity.part.id)
+                        .includes(part.id)
+                  );
+                  const newPartQuantities = [
+                    ...filteredPartQuantities,
+                    ...newParts.map((part) => {
+                      return {
+                        quantity: 1,
+                        part
+                      };
+                    })
+                  ];
+                  setPartQuantities(newPartQuantities);
+                }}
+                hideSelected
+              />
+            </Box>
             {!!workOrder.files.length && (
               <Box>
                 <Divider sx={{ mt: 2 }} />

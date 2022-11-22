@@ -7,6 +7,10 @@ export default interface PartQuantity extends Audit {
   part: Part;
 }
 
+export interface PartQuantityMiniDTO {
+  quantity: number;
+  part: Part;
+}
 export const partQuantities: PartQuantity[] = [
   {
     id: 75,

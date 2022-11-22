@@ -26,9 +26,14 @@ import { getParts } from '../../../../slices/part';
 interface SelectPartsProps {
   onChange: (parts: Part[]) => void;
   selected: number[];
+  hideSelected?: boolean;
 }
 
-export default function SelectParts({ onChange, selected }: SelectPartsProps) {
+export default function SelectParts({
+  onChange,
+  selected,
+  hideSelected
+}: SelectPartsProps) {
   const { t }: { t: any } = useTranslation();
   const dispatch = useDispatch();
   const { parts } = useSelector((state) => state.parts);
@@ -161,22 +166,24 @@ export default function SelectParts({ onChange, selected }: SelectPartsProps) {
           )}
         </DialogContent>
       </Dialog>
-      <Box display="flex" flexDirection="column">
-        {selectedParts.length
-          ? selectedParts.map((part) => (
-              <Link
-                sx={{ mb: 1 }}
-                target="_blank"
-                rel="noopener noreferrer"
-                href={`/app/inventory/parts/${part.id}`}
-                key={part.id}
-                variant="h4"
-              >
-                {part.name}
-              </Link>
-            ))
-          : null}
-      </Box>
+      {!hideSelected && (
+        <Box display="flex" flexDirection="column">
+          {selectedParts.length
+            ? selectedParts.map((part) => (
+                <Link
+                  sx={{ mb: 1 }}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={`/app/inventory/parts/${part.id}`}
+                  key={part.id}
+                  variant="h4"
+                >
+                  {part.name}
+                </Link>
+              ))
+            : null}
+        </Box>
+      )}
       <Button startIcon={<AddTwoToneIcon />} onClick={() => setOpenModal(true)}>
         Add Parts
       </Button>
