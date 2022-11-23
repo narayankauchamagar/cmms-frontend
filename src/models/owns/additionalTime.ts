@@ -10,7 +10,10 @@ export default interface AdditionalTime extends Audit {
   startedAt: string;
   timeCategory: Category;
   hours: number;
+  primaryTime: boolean;
+  status: 'RUNNING' | 'STOPPED';
   minutes: number;
+  duration: number;
 }
 
 export const additionalTimes: AdditionalTime[] = [
@@ -23,7 +26,10 @@ export const additionalTimes: AdditionalTime[] = [
     minutes: 4,
     startedAt: 'fdtyg',
     timeCategory: categories[0],
+    primaryTime: false,
+    duration: 4,
     createdAt: 'fghb',
+    status: 'STOPPED',
     createdBy: 'vvty',
     updatedAt: 'string',
     updatedBy: 'string'

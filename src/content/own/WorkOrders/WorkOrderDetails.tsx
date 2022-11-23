@@ -30,6 +30,7 @@ import AddCostModal from './AddCostModal';
 import Tasks from './Tasks';
 import { workOrderHistories } from '../../../models/owns/workOrderHistories';
 import PriorityWrapper from '../components/PriorityWrapper';
+import TimerTwoToneIcon from '@mui/icons-material/TimerTwoTone';
 import { editWorkOrder } from '../../../slices/workOrder';
 import { useDispatch, useSelector } from '../../../store';
 import SelectParts from '../components/form/SelectParts';
@@ -40,9 +41,11 @@ import {
 } from '../../../slices/partQuantity';
 import AdditionalTime from '../../../models/owns/additionalTime';
 import {
+  controlTimer,
   deleteAdditionalTime,
   getAdditionalTimes
 } from '../../../slices/additionalTime';
+import { getHHMMSSFromDuration } from '../../../utils/formatters';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;
@@ -60,6 +63,10 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const partQuantities = workOrders[workOrder.id] ?? [];
   const { workOrdersRoot } = useSelector((state) => state.additionalTimes);
   const additionalTimes = workOrdersRoot[workOrder.id] ?? [];
+  const primaryTime = additionalTimes.find(
+    (additionalTime) => additionalTime.primaryTime
+  );
+  const runningTimer = primaryTime?.status === 'RUNNING';
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getPartQuantitys(workOrder.id));
@@ -223,46 +230,70 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
         {currentTab === 'details' && (
           <Box>
             <Grid container spacing={2}>
-              <Grid item xs={12}>
-                {changingStatus ? (
-                  <CircularProgress />
-                ) : (
-                  <Select
-                    onChange={(event) => {
-                      setChangingStatus(true);
-                      dispatch(
-                        editWorkOrder(workOrder?.id, {
-                          ...workOrder,
-                          status: event.target.value
-                        })
-                      ).finally(() => setChangingStatus(false));
-                    }}
-                    value={workOrder.status}
-                    sx={
-                      workOrder.status === 'OPEN'
-                        ? {}
-                        : {
-                            backgroundColor:
-                              workOrder.status === 'IN_PROGRESS'
-                                ? theme.colors.success.main
-                                : workOrder.status === 'ON_HOLD'
-                                ? theme.colors.warning.main
-                                : theme.colors.alpha.black[30],
-                            color: 'white',
-                            fontWeight: 'bold',
-                            '.MuiSvgIcon-root ': {
-                              fill: 'white !important'
+              <Grid
+                item
+                xs={12}
+                display="flex"
+                flexDirection="row"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Box>
+                  {changingStatus ? (
+                    <CircularProgress />
+                  ) : (
+                    <Select
+                      onChange={(event) => {
+                        setChangingStatus(true);
+                        dispatch(
+                          editWorkOrder(workOrder?.id, {
+                            ...workOrder,
+                            status: event.target.value
+                          })
+                        ).finally(() => setChangingStatus(false));
+                      }}
+                      value={workOrder.status}
+                      sx={
+                        workOrder.status === 'OPEN'
+                          ? {}
+                          : {
+                              backgroundColor:
+                                workOrder.status === 'IN_PROGRESS'
+                                  ? theme.colors.success.main
+                                  : workOrder.status === 'ON_HOLD'
+                                  ? theme.colors.warning.main
+                                  : theme.colors.alpha.black[30],
+                              color: 'white',
+                              fontWeight: 'bold',
+                              '.MuiSvgIcon-root ': {
+                                fill: 'white !important'
+                              }
                             }
-                          }
+                      }
+                    >
+                      {workOrderStatuses.map((workOrderStatus, index) => (
+                        <MenuItem key={index} value={workOrderStatus.value}>
+                          {workOrderStatus.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  )}
+                </Box>
+                <Box>
+                  <Button
+                    startIcon={<TimerTwoToneIcon />}
+                    onClick={() =>
+                      dispatch(controlTimer(!runningTimer, workOrder.id))
                     }
+                    variant={runningTimer ? 'contained' : 'outlined'}
                   >
-                    {workOrderStatuses.map((workOrderStatus, index) => (
-                      <MenuItem key={index} value={workOrderStatus.value}>
-                        {workOrderStatus.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                )}
+                    {runningTimer
+                      ? t('Timer running')
+                      : t('Run Timer') +
+                        ' - ' +
+                        getHHMMSSFromDuration(primaryTime?.duration)}
+                  </Button>
+                </Box>
               </Grid>
               {detailsFieldsToRender(workOrder).map((field) => (
                 <BasicField
@@ -323,7 +354,9 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
               <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
                 Labors
               </Typography>
-              {!additionalTimes.length ? (
+              {!additionalTimes.filter(
+                (additionalTime) => !additionalTime.primaryTime
+              ).length ? (
                 <Typography sx={{ color: theme.colors.alpha.black[70] }}>
                   {t(
                     "No labor costs have been added yet. They'll show up here when a user logs time and has an hourly rate stored in Grash."
@@ -331,56 +364,61 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                 </Typography>
               ) : (
                 <List>
-                  {additionalTimes.map((additionalTime) => (
-                    <ListItem
-                      key={additionalTime.id}
-                      secondaryAction={
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            justifyContent: 'flex-end'
-                          }}
-                        >
-                          <Typography variant="h6">
-                            {getAdditionalTimeCost(additionalTime)} $
-                          </Typography>
-                          <IconButton
-                            sx={{ ml: 1 }}
-                            onClick={() =>
-                              dispatch(
-                                deleteAdditionalTime(
-                                  workOrder.id,
-                                  additionalTime.id
-                                )
-                              )
-                            }
+                  {additionalTimes
+                    .filter((additionalTime) => !additionalTime.primaryTime)
+                    .map((additionalTime) => (
+                      <ListItem
+                        key={additionalTime.id}
+                        secondaryAction={
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                              justifyContent: 'flex-end'
+                            }}
                           >
-                            <DeleteTwoToneIcon fontSize="small" color="error" />
-                          </IconButton>
-                        </Box>
-                      }
-                    >
-                      <ListItemText
-                        primary={
-                          <>
-                            {additionalTime.assignedTo ? (
-                              <Link
-                                href={`/app/people-teams/users/${additionalTime.assignedTo.id}`}
-                                variant="h6"
-                              >
-                                {`${additionalTime.assignedTo.firstName} ${additionalTime.assignedTo.lastName}`}
-                              </Link>
-                            ) : (
-                              <Typography>{t('Not Assigned')}</Typography>
-                            )}
-                          </>
+                            <Typography variant="h6">
+                              {getAdditionalTimeCost(additionalTime)} $
+                            </Typography>
+                            <IconButton
+                              sx={{ ml: 1 }}
+                              onClick={() =>
+                                dispatch(
+                                  deleteAdditionalTime(
+                                    workOrder.id,
+                                    additionalTime.id
+                                  )
+                                )
+                              }
+                            >
+                              <DeleteTwoToneIcon
+                                fontSize="small"
+                                color="error"
+                              />
+                            </IconButton>
+                          </Box>
                         }
-                        secondary={`${additionalTime.hours}h ${additionalTime.minutes}m`}
-                      />
-                    </ListItem>
-                  ))}
+                      >
+                        <ListItemText
+                          primary={
+                            <>
+                              {additionalTime.assignedTo ? (
+                                <Link
+                                  href={`/app/people-teams/users/${additionalTime.assignedTo.id}`}
+                                  variant="h6"
+                                >
+                                  {`${additionalTime.assignedTo.firstName} ${additionalTime.assignedTo.lastName}`}
+                                </Link>
+                              ) : (
+                                <Typography>{t('Not Assigned')}</Typography>
+                              )}
+                            </>
+                          }
+                          secondary={`${additionalTime.hours}h ${additionalTime.minutes}m`}
+                        />
+                      </ListItem>
+                    ))}
                   <ListItem
                     secondaryAction={
                       <Box>

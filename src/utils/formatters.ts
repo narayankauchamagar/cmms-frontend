@@ -22,9 +22,10 @@ export const formatAssetValues = (values) => {
   values.vendors = formatSelectMultiple(values.vendors);
   values.assignedTo = formatSelectMultiple(values.assignedTo);
   values.teams = formatSelectMultiple(values.teams);
-  values.parts = values.parts.map((part) => {
-    return { id: part.id };
-  });
+  values.parts =
+    values.parts?.map((part) => {
+      return { id: part.id };
+    }) ?? [];
   //TODO
   delete values.category;
   return values;
@@ -43,4 +44,10 @@ export const getPriorityLabel = (str: string, t: any) => {
     default:
       break;
   }
+};
+
+export const getHHMMSSFromDuration = (duration: number | undefined) => {
+  const date = new Date(0);
+  date.setSeconds(duration ?? 0); // specify value for SECONDS here
+  return date.toISOString().substring(11, 19);
 };

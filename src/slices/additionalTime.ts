@@ -45,6 +45,20 @@ const slice = createSlice({
       state.workOrdersRoot[workOrderId] = state.workOrdersRoot[
         workOrderId
       ].filter((additionalTime) => additionalTime.id !== id);
+    },
+    controlTimer(
+      state: AdditionalTimeState,
+      action: PayloadAction<{
+        workOrderId: number;
+        additionalTime: AdditionalTime;
+      }>
+    ) {
+      const { additionalTime, workOrderId } = action.payload;
+      const filteredAdditionalTimes = state.workOrdersRoot[workOrderId].filter(
+        (aT) => aT.id !== additionalTime.id
+      );
+      filteredAdditionalTimes.push(additionalTime);
+      state.workOrdersRoot[workOrderId] = filteredAdditionalTimes;
     }
   }
 });
@@ -85,6 +99,21 @@ export const deleteAdditionalTime =
     if (success) {
       dispatch(slice.actions.deleteAdditionalTime({ workOrderId, id }));
     }
+  };
+
+export const controlTimer =
+  (start: boolean, id: number): AppThunk =>
+  async (dispatch) => {
+    const response = await api.post<AdditionalTime>(
+      `${basePath}/work-order/${id}?start=${start}`,
+      {}
+    );
+    dispatch(
+      slice.actions.controlTimer({
+        additionalTime: response,
+        workOrderId: id
+      })
+    );
   };
 
 export default slice;
