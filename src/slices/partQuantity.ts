@@ -23,6 +23,23 @@ const slice = createSlice({
     ) {
       const { partQuantities, id } = action.payload;
       state.workOrders[id] = partQuantities;
+    },
+    editPartQuantity(
+      state: PartQuantityState,
+      action: PayloadAction<{
+        workOrderId: number;
+        id: number;
+        partQuantity: PartQuantity;
+      }>
+    ) {
+      const { partQuantity, id, workOrderId } = action.payload;
+      state.workOrders[workOrderId] = state.workOrders[workOrderId].map(
+        (pq) => {
+          if (pq.id === id) {
+            return partQuantity;
+          } else return pq;
+        }
+      );
     }
   }
 });
@@ -38,7 +55,7 @@ export const getPartQuantitys =
     dispatch(slice.actions.getPartQuantitys({ id, partQuantities }));
   };
 
-export const editPartQuantity =
+export const editWOPartQuantities =
   (id: number, parts: number[]): AppThunk =>
   async (dispatch) => {
     const partQuantities = await api.patch<PartQuantity[]>(
@@ -51,6 +68,24 @@ export const editPartQuantity =
       slice.actions.getPartQuantitys({
         id,
         partQuantities
+      })
+    );
+  };
+
+export const editPartQuantity =
+  (workOrderId: number, id: number, quantity: number): AppThunk =>
+  async (dispatch) => {
+    const partQuantity = await api.patch<PartQuantity>(
+      `${basePath}/${id}`,
+      { quantity },
+      null,
+      true
+    );
+    dispatch(
+      slice.actions.editPartQuantity({
+        workOrderId,
+        id,
+        partQuantity
       })
     );
   };

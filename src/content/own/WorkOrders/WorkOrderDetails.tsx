@@ -36,6 +36,7 @@ import { useDispatch, useSelector } from '../../../store';
 import SelectParts from '../components/form/SelectParts';
 import {
   editPartQuantity,
+  editWOPartQuantities,
   getPartQuantitys
 } from '../../../slices/partQuantity';
 
@@ -443,7 +444,15 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                           value={partQuantity.quantity}
                           type="number"
                           size="small"
-                          onChange={(event) => {}}
+                          onChange={(event) => {
+                            dispatch(
+                              editPartQuantity(
+                                workOrder.id,
+                                partQuantity.id,
+                                Number(event.target.value)
+                              )
+                            );
+                          }}
                         />
                         <Typography variant="h6">
                           {' * '}
@@ -495,7 +504,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                 )}
                 onChange={(selectedParts) => {
                   dispatch(
-                    editPartQuantity(
+                    editWOPartQuantities(
                       workOrder.id,
                       selectedParts.map((part) => part.id)
                     )
