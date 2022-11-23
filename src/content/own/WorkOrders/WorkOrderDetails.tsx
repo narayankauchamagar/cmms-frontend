@@ -24,7 +24,6 @@ import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DoDisturbOnTwoToneIcon from '@mui/icons-material/DoDisturbOnTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import Asset from '../../../models/owns/asset';
-import { labors } from '../../../models/owns/labor';
 import AddTimeModal from './AddTimeModal';
 import { additionalCosts } from '../../../models/owns/additionalCost';
 import AddCostModal from './AddCostModal';
@@ -39,6 +38,11 @@ import {
   editWOPartQuantities,
   getPartQuantitys
 } from '../../../slices/partQuantity';
+import AdditionalTime from '../../../models/owns/additionalTime';
+import {
+  deleteAdditionalTime,
+  getAdditionalTimes
+} from '../../../slices/additionalTime';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;
@@ -54,10 +58,22 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const [changingStatus, setChangingStatus] = useState<boolean>(false);
   const { workOrders } = useSelector((state) => state.partQuantities);
   const partQuantities = workOrders[workOrder.id] ?? [];
+  const { workOrdersRoot } = useSelector((state) => state.additionalTimes);
+  const additionalTimes = workOrdersRoot[workOrder.id] ?? [];
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getPartQuantitys(workOrder.id));
+    dispatch(getAdditionalTimes(workOrder.id));
   }, []);
+
+  const getAdditionalTimeCost = (additionalTime: AdditionalTime): number => {
+    return Number(
+      (
+        additionalTime.hourlyRate *
+        (additionalTime.hours + additionalTime.minutes / 60)
+      ).toFixed(2)
+    );
+  };
   const workOrderStatuses = [
     { label: t('Open'), value: 'OPEN' },
     { label: t('In Progress'), value: 'IN_PROGRESS' },
@@ -233,7 +249,10 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                                 ? theme.colors.warning.main
                                 : theme.colors.alpha.black[30],
                             color: 'white',
-                            fontWeight: 'bold'
+                            fontWeight: 'bold',
+                            '.MuiSvgIcon-root ': {
+                              fill: 'white !important'
+                            }
                           }
                     }
                   >
@@ -304,7 +323,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
               <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
                 Labors
               </Typography>
-              {!labors.length ? (
+              {!additionalTimes.length ? (
                 <Typography sx={{ color: theme.colors.alpha.black[70] }}>
                   {t(
                     "No labor costs have been added yet. They'll show up here when a user logs time and has an hourly rate stored in Grash."
@@ -312,37 +331,70 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                 </Typography>
               ) : (
                 <List>
-                  {labors.map((labor) => (
+                  {additionalTimes.map((additionalTime) => (
                     <ListItem
-                      key={labor.id}
+                      key={additionalTime.id}
                       secondaryAction={
-                        <Typography variant="h6">
-                          {labor.laborCost.cost} $
-                        </Typography>
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'flex-end'
+                          }}
+                        >
+                          <Typography variant="h6">
+                            {getAdditionalTimeCost(additionalTime)} $
+                          </Typography>
+                          <IconButton
+                            sx={{ ml: 1 }}
+                            onClick={() =>
+                              dispatch(
+                                deleteAdditionalTime(
+                                  workOrder.id,
+                                  additionalTime.id
+                                )
+                              )
+                            }
+                          >
+                            <DeleteTwoToneIcon fontSize="small" color="error" />
+                          </IconButton>
+                        </Box>
                       }
                     >
                       <ListItemText
                         primary={
-                          <Link
-                            href={`/app/people-teams/users/${labor.user.id}`}
-                            variant="h6"
-                          >
-                            {`${labor.user.firstName} ${labor.user.lastName}`}
-                          </Link>
+                          <>
+                            {additionalTime.assignedTo ? (
+                              <Link
+                                href={`/app/people-teams/users/${additionalTime.assignedTo.id}`}
+                                variant="h6"
+                              >
+                                {`${additionalTime.assignedTo.firstName} ${additionalTime.assignedTo.lastName}`}
+                              </Link>
+                            ) : (
+                              <Typography>{t('Not Assigned')}</Typography>
+                            )}
+                          </>
                         }
-                        secondary={labor.createdAt}
+                        secondary={`${additionalTime.hours}h ${additionalTime.minutes}m`}
                       />
                     </ListItem>
                   ))}
                   <ListItem
                     secondaryAction={
-                      <Typography variant="h6" fontWeight="bold">
-                        {labors.reduce(
-                          (acc, labor) => acc + labor.laborCost.cost,
-                          0
-                        )}{' '}
-                        $
-                      </Typography>
+                      <Box>
+                        <Typography variant="h6" fontWeight="bold">
+                          {additionalTimes.reduce(
+                            (acc, additionalTime) =>
+                              additionalTime.includeToTotalTime
+                                ? acc + getAdditionalTimeCost(additionalTime)
+                                : acc,
+                            0
+                          )}{' '}
+                          $
+                        </Typography>
+                      </Box>
                     }
                   >
                     <ListItemText
@@ -563,6 +615,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
       <AddTimeModal
         open={openAddTimeModal}
         onClose={() => setOpenAddTimeModal(false)}
+        workOrderId={workOrder.id}
       />
       <AddCostModal
         open={openAddCostModal}

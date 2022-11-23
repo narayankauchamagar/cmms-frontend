@@ -3,12 +3,14 @@ import User, { users } from './user';
 import Category, { categories } from './category';
 
 export default interface AdditionalTime extends Audit {
-  assignedTo: User;
+  assignedTo: User | null;
   id: number;
   hourlyRate: number;
   includeToTotalTime: boolean;
   startedAt: string;
   timeCategory: Category;
+  hours: number;
+  minutes: number;
 }
 
 export const additionalTimes: AdditionalTime[] = [
@@ -17,6 +19,8 @@ export const additionalTimes: AdditionalTime[] = [
     id: 54,
     hourlyRate: 22,
     includeToTotalTime: false,
+    hours: 5,
+    minutes: 4,
     startedAt: 'fdtyg',
     timeCategory: categories[0],
     createdAt: 'fghb',

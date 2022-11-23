@@ -2,15 +2,23 @@ import { Dialog, DialogContent, DialogTitle, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import Form from '../components/form';
 import * as Yup from 'yup';
-import wait from '../../../utils/wait';
 import { IField } from '../type';
+import { formatSelect } from '../../../utils/formatters';
+import { useDispatch } from '../../../store';
+import { createAdditionalTime } from '../../../slices/additionalTime';
 
 interface AddTimeProps {
   open: boolean;
   onClose: () => void;
+  workOrderId: number;
 }
-export default function AddTimeModal({ open, onClose }: AddTimeProps) {
+export default function AddTimeModal({
+  open,
+  onClose,
+  workOrderId
+}: AddTimeProps) {
   const { t }: { t: any } = useTranslation();
+  const dispatch = useDispatch();
   const fields: Array<IField> = [
     {
       name: 'assignedTo',
@@ -39,7 +47,7 @@ export default function AddTimeModal({ open, onClose }: AddTimeProps) {
       label: t('Work Started At')
     },
     {
-      name: 'category',
+      name: 'timeCategory',
       type: 'select',
       label: t('Category'),
       type2: 'category',
@@ -97,8 +105,16 @@ export default function AddTimeModal({ open, onClose }: AddTimeProps) {
           onChange={({ field, e }) => {}}
           onSubmit={async (values) => {
             try {
-              await wait(2000);
-              onClose();
+              const formattedValues = { ...values };
+              formattedValues.assignedTo = formatSelect(
+                formattedValues.assignedTo
+              );
+              formattedValues.timeCategory = formatSelect(
+                formattedValues.timeCategory
+              );
+              dispatch(
+                createAdditionalTime(workOrderId, formattedValues)
+              ).finally(() => onClose());
             } catch (err) {
               console.error(err);
             }
