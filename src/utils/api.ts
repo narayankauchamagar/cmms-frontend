@@ -22,12 +22,14 @@ function post<T>(url, data, options?) {
     body: JSON.stringify({ ...data, company: { id: companyId } })
   });
 }
-function patch<T>(url, data, options?) {
+function patch<T>(url, data, options?, withoutCompany?: boolean) {
   const companyId = localStorage.getItem('companyId');
   return api<T>(apiUrl + url, {
     ...options,
     method: 'PATCH',
-    body: JSON.stringify({ ...data, company: { id: companyId } })
+    body: JSON.stringify(
+      withoutCompany ? data : { ...data, company: { id: companyId } }
+    )
   });
 }
 function deletes<T>(url, options?) {

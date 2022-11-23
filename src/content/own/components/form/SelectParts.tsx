@@ -40,7 +40,8 @@ export default function SelectParts({
   const { multiParts } = useSelector((state) => state.multiParts);
   const [currentTab, setCurrentTab] = useState<string>('parts');
   const [selectedParts, setSelectedParts] = useState<Part[]>([]);
-  const [selectedIds, setSelectedIds] = useState<number[]>(selected);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [initialized, setInitialized] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
@@ -51,22 +52,26 @@ export default function SelectParts({
   ];
 
   useEffect(() => {
-    setSelectedParts(
-      selectedIds
+    if (parts.length) {
+      const newSelectedParts = selectedIds
         .map((id) => {
           return parts.find((part) => part.id == id);
         })
-        .filter((part) => !!part)
-    );
+        .filter((part) => !!part);
+      setSelectedParts(newSelectedParts);
+      if (initialized) {
+        onChange(newSelectedParts);
+      } else setInitialized(true);
+    }
   }, [selectedIds, parts]);
+
+  useEffect(() => {
+    if (!selectedIds.length) setSelectedIds(selected);
+  }, [selected]);
 
   useEffect(() => {
     dispatch(getParts());
   }, []);
-
-  useEffect(() => {
-    onChange(selectedParts);
-  }, [selectedParts]);
 
   const onSelect = (ids: number[]) => {
     setSelectedIds(Array.from(new Set([...selectedIds, ...ids])));

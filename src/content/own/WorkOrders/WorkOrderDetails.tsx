@@ -18,7 +18,7 @@ import {
   useTheme
 } from '@mui/material';
 import WorkOrder from '../../../models/owns/workOrder';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DoDisturbOnTwoToneIcon from '@mui/icons-material/DoDisturbOnTwoTone';
@@ -30,14 +30,14 @@ import { additionalCosts } from '../../../models/owns/additionalCost';
 import AddCostModal from './AddCostModal';
 import Tasks from './Tasks';
 import { workOrderHistories } from '../../../models/owns/workOrderHistories';
-import {
-  partQuantities as defaultPartQuantities,
-  PartQuantityMiniDTO
-} from '../../../models/owns/partQuantity';
 import PriorityWrapper from '../components/PriorityWrapper';
 import { editWorkOrder } from '../../../slices/workOrder';
-import { useDispatch } from '../../../store';
+import { useDispatch, useSelector } from '../../../store';
 import SelectParts from '../components/form/SelectParts';
+import {
+  editPartQuantity,
+  getPartQuantitys
+} from '../../../slices/partQuantity';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;
@@ -51,10 +51,12 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const [openAddCostModal, setOpenAddCostModal] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<string>('details');
   const [changingStatus, setChangingStatus] = useState<boolean>(false);
-  const [partQuantities, setPartQuantities] = useState<PartQuantityMiniDTO[]>(
-    defaultPartQuantities
-  );
+  const { workOrders } = useSelector((state) => state.partQuantities);
+  const partQuantities = workOrders[workOrder.id] ?? [];
   const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getPartQuantitys(workOrder.id));
+  }, []);
   const workOrderStatuses = [
     { label: t('Open'), value: 'OPEN' },
     { label: t('In Progress'), value: 'IN_PROGRESS' },
@@ -441,14 +443,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                           value={partQuantity.quantity}
                           type="number"
                           size="small"
-                          onChange={(event) => {
-                            const partQuantitiesClone = [...partQuantities];
-                            partQuantitiesClone[index] = {
-                              ...partQuantitiesClone[index],
-                              quantity: Number(event.target.value)
-                            };
-                            setPartQuantities(partQuantitiesClone);
-                          }}
+                          onChange={(event) => {}}
                         />
                         <Typography variant="h6">
                           {' * '}
@@ -499,28 +494,12 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                   (partQuantity) => partQuantity.part.id
                 )}
                 onChange={(selectedParts) => {
-                  const filteredPartQuantities = partQuantities.filter(
-                    (partQuantity) =>
-                      selectedParts
-                        .map((part) => part.id)
-                        .includes(partQuantity.part.id)
+                  dispatch(
+                    editPartQuantity(
+                      workOrder.id,
+                      selectedParts.map((part) => part.id)
+                    )
                   );
-                  const newParts = selectedParts.filter(
-                    (part) =>
-                      !partQuantities
-                        .map((partQuantity) => partQuantity.part.id)
-                        .includes(part.id)
-                  );
-                  const newPartQuantities = [
-                    ...filteredPartQuantities,
-                    ...newParts.map((part) => {
-                      return {
-                        quantity: 1,
-                        part
-                      };
-                    })
-                  ];
-                  setPartQuantities(newPartQuantities);
                 }}
                 hideSelected
               />
