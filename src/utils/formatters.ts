@@ -1,3 +1,6 @@
+import { randomInt } from './generators';
+import { Task, TaskBase } from '../models/owns/tasks';
+
 export const formatSelectMultiple = (
   array: { label: string; value: string }[] | undefined
 ) => {
@@ -50,4 +53,8 @@ export const getHHMMSSFromDuration = (duration: number | undefined) => {
   const date = new Date(0);
   date.setSeconds(duration ?? 0); // specify value for SECONDS here
   return date.toISOString().substring(11, 19);
+};
+
+export const getTaskFromTaskBase = (taskBase: TaskBase): Task => {
+  return { taskBase, id: randomInt(), notes: '', value: '' };
 };

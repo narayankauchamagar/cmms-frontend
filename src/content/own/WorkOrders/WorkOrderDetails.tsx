@@ -203,7 +203,9 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
       >
         <Box>
           <Box sx={{ mb: 2 }}>
-            <PriorityWrapper priority={workOrder?.priority} withSuffix />
+            {workOrder?.priority !== 'NONE' && (
+              <PriorityWrapper priority={workOrder?.priority} withSuffix />
+            )}
           </Box>
           <Typography variant="h2">{workOrder?.title}</Typography>
           <Typography variant="h6">{workOrder?.description}</Typography>

@@ -69,9 +69,15 @@ const DraggableListItem = ({
     { label: t('Multiple Choice'), value: 'multiple' },
     { label: t('Meter Reading'), value: 'meter' }
   ];
-  const [openAssignUser, setOpenAssignUser] = useState<boolean>(!!task.user);
-  const [openAssignAsset, setOpenAssignAsset] = useState<boolean>(!!task.asset);
-  const [choices, setChoices] = useState<string[]>(task.options ?? ['', '']);
+  const [openAssignUser, setOpenAssignUser] = useState<boolean>(
+    !!task.taskBase.user
+  );
+  const [openAssignAsset, setOpenAssignAsset] = useState<boolean>(
+    !!task.taskBase.asset
+  );
+  const [choices, setChoices] = useState<string[]>(
+    task.taskBase.options ?? ['', '']
+  );
   const handleChoiceChange = (value: string, index: number) => {
     const newChoices = [...choices];
     newChoices[index] = value;
@@ -137,12 +143,12 @@ const DraggableListItem = ({
                     onChange={(event) =>
                       onLabelChange(event.target.value, task.id)
                     }
-                    value={task.label}
+                    value={task.taskBase.label}
                   />
                 </Box>
                 <Select
                   sx={{ ml: 1 }}
-                  value={task.type}
+                  value={task.taskBase.type}
                   onChange={(event) =>
                     onTypeChange(event.target.value as TaskType, task.id)
                   }
@@ -164,7 +170,9 @@ const DraggableListItem = ({
               </Box>
               <Collapse
                 in={
-                  openAssignUser || openAssignAsset || task.type === 'multiple'
+                  openAssignUser ||
+                  openAssignAsset ||
+                  task.taskBase.type === 'multiple'
                 }
               >
                 <Box
@@ -182,7 +190,7 @@ const DraggableListItem = ({
                       }
                       displayEmpty
                       defaultValue=""
-                      value={task.user ?? ''}
+                      value={task.taskBase.user ?? ''}
                     >
                       <MenuItem value="">{t('Select User')}</MenuItem>
                       {users.map((user) => (
@@ -201,7 +209,7 @@ const DraggableListItem = ({
                       }
                       displayEmpty
                       defaultValue=""
-                      value={task.asset ?? ''}
+                      value={task.taskBase.asset ?? ''}
                     >
                       <MenuItem value="">{t('Select Asset')}</MenuItem>
                       {assets.map((asset) => (
@@ -211,7 +219,7 @@ const DraggableListItem = ({
                       ))}
                     </Select>
                   )}
-                  {task.type === 'multiple' && (
+                  {task.taskBase.type === 'multiple' && (
                     <Box>
                       {choices.map((choice, index) => (
                         <Box

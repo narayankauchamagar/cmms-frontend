@@ -20,6 +20,7 @@ import { reducer as checklistReducer } from 'src/slices/checklist';
 import { reducer as partQuantityReducer } from 'src/slices/partQuantity';
 import { reducer as additionalTimeReducer } from 'src/slices/additionalTime';
 import { reducer as additionalCostReducer } from 'src/slices/additionalCost';
+import { reducer as taskReducer } from 'src/slices/task';
 
 const rootReducer = combineReducers({
   calendar: calendarReducer,
@@ -42,7 +43,8 @@ const rootReducer = combineReducers({
   checklists: checklistReducer,
   partQuantities: partQuantityReducer,
   additionalTimes: additionalTimeReducer,
-  additionalCosts: additionalCostReducer
+  additionalCosts: additionalCostReducer,
+  tasks: taskReducer
 });
 
 export default rootReducer;

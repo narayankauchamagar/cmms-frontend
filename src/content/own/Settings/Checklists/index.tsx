@@ -19,6 +19,7 @@ import { useDispatch } from '../../../../store';
 import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContext';
 import { deleteChecklist } from '../../../../slices/checklist';
 import ConfirmDialog from '../../components/ConfirmDialog';
+import { getTaskFromTaskBase } from '../../../../utils/formatters';
 
 function Checklists() {
   const { t }: { t: any } = useTranslation();
@@ -135,7 +136,11 @@ function Checklists() {
       <SelectTasksModal
         open={openEditChecklist}
         onClose={() => setOpenEditChecklist(false)}
-        selected={currentChecklist?.tasks ?? []}
+        selected={
+          currentChecklist?.taskBases.map((taskBase) =>
+            getTaskFromTaskBase(taskBase)
+          ) ?? []
+        }
         onSelect={(tasks, { name, description, category }) => {}}
         action="editChecklist"
         infos={{

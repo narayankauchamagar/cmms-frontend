@@ -14,12 +14,14 @@ function api<T>(url: string, options): Promise<T> {
 function get<T>(url, options?) {
   return api<T>(apiUrl + url, options);
 }
-function post<T>(url, data, options?) {
+function post<T>(url, data, options?, withoutCompany?: boolean) {
   const companyId = localStorage.getItem('companyId');
   return api<T>(apiUrl + url, {
     ...options,
     method: 'POST',
-    body: JSON.stringify({ ...data, company: { id: companyId } })
+    body: JSON.stringify(
+      withoutCompany ? data : { ...data, company: { id: companyId } }
+    )
   });
 }
 function patch<T>(url, data, options?, withoutCompany?: boolean) {

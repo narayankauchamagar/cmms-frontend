@@ -76,13 +76,16 @@ export default function SingleTask({
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Box>
           <Typography variant="h6" fontWeight="bold">
-            {task.label || `<${t('Enter a task name')}>`}
+            {task.taskBase.label || `<${t('Enter a task name')}>`}
           </Typography>
-          {['subtask', 'inspection', 'multiple'].includes(task.type) ? (
+          {['subtask', 'inspection', 'multiple'].includes(
+            task.taskBase.type
+          ) ? (
             <Select
               value={
                 preview
-                  ? getOptions(task.type, task.options)[0].value
+                  ? getOptions(task.taskBase.type, task.taskBase.options)[0]
+                      .value
                   : task.value
               }
               onChange={(event) =>
@@ -90,11 +93,13 @@ export default function SingleTask({
               }
               sx={{ backgroundColor: 'white' }}
             >
-              {getOptions(task.type, task.options).map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
+              {getOptions(task.taskBase.type, task.taskBase.options).map(
+                (option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                )
+              )}
             </Select>
           ) : (
             <Box sx={{ backgroundColor: 'white' }}>
@@ -105,18 +110,20 @@ export default function SingleTask({
                 value={task.value}
                 label={t('Value')}
                 type={
-                  task.type === 'meter'
+                  task.taskBase.type === 'meter'
                     ? 'number'
-                    : (task.type as 'number' | 'text')
+                    : (task.taskBase.type as 'number' | 'text')
                 }
               />
             </Box>
           )}
         </Box>
         <Box>
-          {task.type === 'meter' && (
+          {task.taskBase.type === 'meter' && (
             <IconButton
-              onClick={() => !preview && navigate(`/app/meters/${task.meter}`)}
+              onClick={() =>
+                !preview && navigate(`/app/meters/${task.taskBase.meter}`)
+              }
             >
               <SpeedTwoToneIcon color="primary" />
             </IconButton>

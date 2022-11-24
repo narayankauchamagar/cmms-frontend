@@ -5,31 +5,40 @@ export type TaskType =
   | 'inspection'
   | 'multiple'
   | 'meter';
-export interface Task {
+export interface TaskBase {
   id: number;
   label: string;
   type: TaskType;
   options?: string[];
-  value?: string | number;
   user?: number;
   asset?: number;
-  notes: string;
   meter?: number;
+}
+export interface Task {
+  id: number;
+  value?: string | number;
+  notes: string;
+  taskBase: TaskBase;
 }
 export const tasks: Task[] = [
   {
     id: 74,
-    label: 'Clean air filter & check its condition',
-    type: 'subtask',
+    taskBase: {
+      id: 12,
+      label: 'Clean air filter & check its condition',
+      type: 'subtask'
+    },
     value: 'OPEN',
     notes: ''
   },
-  { id: 75, label: 'Clean', type: 'subtask', value: 'OPEN', notes: '' },
   {
-    id: 77,
-    label: 'Clean air filter & check its condition',
-    type: 'number',
-    value: 0,
+    id: 75,
+    taskBase: {
+      id: 11,
+      label: 'Check nothing',
+      type: 'subtask'
+    },
+    value: 'OPEN',
     notes: ''
   }
 ];

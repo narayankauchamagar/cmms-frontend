@@ -25,6 +25,7 @@ import { randomInt } from '../../../../../utils/generators';
 import SingleTask from './SingleTask';
 import { useSnackbar } from 'notistack';
 import { Checklist, checklists } from '../../../../../models/owns/checklists';
+import { getTaskFromTaskBase } from '../../../../../utils/formatters';
 
 interface SelectTasksProps {
   selected: Task[];
@@ -67,7 +68,7 @@ export default function SelectTasks({
   const onLabelChange = (value: string, id: number) => {
     const newTasks = tasks.map((task) => {
       if (task.id === id) {
-        return { ...task, label: value };
+        return { ...task, taskBase: { ...task.taskBase, label: value } };
       }
       return task;
     });
@@ -76,7 +77,7 @@ export default function SelectTasks({
   const onTypeChange = (value: TaskType, id: number) => {
     const newTasks = tasks.map((task) => {
       if (task.id === id) {
-        return { ...task, type: value };
+        return { ...task, taskBase: { ...task.taskBase, type: value } };
       }
       return task;
     });
@@ -85,7 +86,7 @@ export default function SelectTasks({
   const onUserChange = (user: number, id: number) => {
     const newTasks = tasks.map((task) => {
       if (task.id === id) {
-        return { ...task, user };
+        return { ...task, taskBase: { ...task.taskBase, user } };
       }
       return task;
     });
@@ -94,7 +95,7 @@ export default function SelectTasks({
   const onAssetChange = (asset: number, id: number) => {
     const newTasks = tasks.map((task) => {
       if (task.id === id) {
-        return { ...task, asset };
+        return { ...task, taskBase: { ...task.taskBase, asset } };
       }
       return task;
     });
@@ -103,14 +104,14 @@ export default function SelectTasks({
   const onChoicesChange = (choices: string[], id: number) => {
     const newTasks = tasks.map((task) => {
       if (task.id === id) {
-        return { ...task, options: choices };
+        return { ...task, taskBase: { ...task.taskBase, options: choices } };
       }
       return task;
     });
     setTasks(newTasks);
   };
   const onSave = () => {
-    if (tasks.some((task) => !task.label)) {
+    if (tasks.some((task) => !task.taskBase.label)) {
       enqueueSnackbar(t('Remove blank tasks'), {
         variant: 'error',
         anchorOrigin: {
@@ -138,14 +139,20 @@ export default function SelectTasks({
       ...tasks,
       {
         id: randomInt(),
-        label: '',
-        type: 'subtask',
+        taskBase: {
+          id: randomInt(),
+          label: '',
+          type: 'subtask'
+        },
         notes: ''
       }
     ]);
   };
   const addCheckList = (checklist: Checklist) => {
-    setTasks([...tasks, ...checklist.tasks]);
+    setTasks([
+      ...tasks,
+      ...checklist.taskBases.map((taskBase) => getTaskFromTaskBase(taskBase))
+    ]);
   };
   const onDragEnd = ({ destination, source }: DropResult) => {
     // dropped outside the list

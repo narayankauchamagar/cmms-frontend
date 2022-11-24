@@ -34,7 +34,6 @@ import { useParams } from 'react-router-dom';
 import { enumerate } from '../../../utils/displayers';
 import Location from '../../../models/owns/location';
 import Asset from '../../../models/owns/asset';
-import { tasks } from '../../../models/owns/tasks';
 import {
   formatSelect,
   formatSelectMultiple,
@@ -48,6 +47,7 @@ import {
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import { useDispatch, useSelector } from '../../../store';
 import PriorityWrapper from '../components/PriorityWrapper';
+import { createTasks, getTasks } from '../../../slices/task';
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
@@ -69,6 +69,8 @@ function WorkOrders() {
   const { workOrderId } = useParams();
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const [currentWorkOrder, setCurrentWorkOrder] = useState<WorkOrder>();
+  const { workOrdersRoot2 } = useSelector((state) => state.tasks);
+  const tasks = workOrdersRoot2[currentWorkOrder?.id] ?? [];
   const handleDelete = (id: number) => {};
   const handleOpenUpdate = (id: number) => {
     setCurrentWorkOrder(workOrders.find((workOrder) => workOrder.id === id));
@@ -79,6 +81,7 @@ function WorkOrders() {
     const foundWorkOrder = workOrders.find((workOrder) => workOrder.id === id);
     if (foundWorkOrder) {
       setCurrentWorkOrder(foundWorkOrder);
+      dispatch(getTasks(id));
       window.history.replaceState(
         null,
         'WorkOrder details',
@@ -109,14 +112,12 @@ function WorkOrders() {
     values.asset = formatSelect(values.asset);
     values.assignedTo = formatSelectMultiple(values.assignedTo);
     values.customers = formatSelectMultiple(values.customers);
-    console.log(values.priority);
     values.priority = values.priority?.value;
     values.requiredSignature =
       Array.isArray(values.requiredSignature) &&
       values?.requiredSignature.includes('on');
     //TODO
     delete values.category;
-    delete values.tasks;
     return values;
   };
   const onCreationSuccess = () => {
@@ -453,8 +454,17 @@ function WorkOrders() {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               const formattedValues = formatValues(values);
-              dispatch(addWorkOrder(formattedValues))
-                .then(onCreationSuccess)
+              dispatch(
+                createTasks(
+                  currentWorkOrder?.id,
+                  formattedValues.tasks.map((task) => task.taskBase)
+                )
+              )
+                .then(() =>
+                  dispatch(addWorkOrder(formattedValues)).then(
+                    onCreationSuccess
+                  )
+                )
                 .catch(onCreationFailure);
             }}
           />
@@ -547,9 +557,17 @@ function WorkOrders() {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               const formattedValues = formatValues(values);
-              dispatch(editWorkOrder(currentWorkOrder?.id, formattedValues))
-                .then(onEditSuccess)
-                .catch(onEditFailure);
+              dispatch(
+                //TODO editTask
+                createTasks(
+                  currentWorkOrder?.id,
+                  formattedValues.tasks.map((task) => task.taskBase)
+                )
+              ).then(() =>
+                dispatch(editWorkOrder(currentWorkOrder?.id, formattedValues))
+                  .then(onEditSuccess)
+                  .catch(onEditFailure)
+              );
             }}
           />
         </Box>
