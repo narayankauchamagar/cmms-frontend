@@ -1,6 +1,11 @@
 import Asset from '../../../../models/owns/asset';
 import { Box, Card, Grid, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from '../../../../store';
+import { useEffect } from 'react';
+import { getAssetWorkOrders } from '../../../../slices/asset';
+import { getStatusLabel } from '../../../../utils/formatters';
+import { useNavigate } from 'react-router-dom';
 
 interface PropsType {
   asset: Asset;
@@ -8,29 +13,25 @@ interface PropsType {
 
 const AssetWorkOrders = ({ asset }: PropsType) => {
   const { t }: { t: any } = useTranslation();
-  const workOrders = [
-    {
-      id: 1,
-      name: 'hgfjb',
-      dueDate: 'new Date()',
-      status: 'In progress',
-      worker: 'hvbujb'
-    },
-    {
-      id: 52,
-      name: 'hgfjb',
-      dueDate: 'new Date()',
-      status: 'In progress',
-      worker: ' ukhbcy'
-    }
-  ];
+  const { assetInfos } = useSelector((state) => state.assets);
+  const workOrders = assetInfos[asset?.id]?.workOrders;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (asset) dispatch(getAssetWorkOrders(asset.id));
+  }, [asset]);
+
   return (
     <Box sx={{ px: 4 }}>
       <Grid container spacing={2}>
-        {workOrders.length ? (
+        {workOrders?.length ? (
           workOrders.map((workOrder) => (
             <Grid key={workOrder.id} item xs={12}>
-              <Card>
+              <Card
+                sx={{ cursor: 'pointer' }}
+                onClick={() => navigate(`/app/work-orders/${workOrder.id}`)}
+              >
                 <Box
                   sx={{
                     p: 2,
@@ -42,15 +43,26 @@ const AssetWorkOrders = ({ asset }: PropsType) => {
                 >
                   <Box>
                     <Typography variant="h4" gutterBottom>
-                      {workOrder.name}
+                      {workOrder.title}
                     </Typography>
                     <Typography variant="subtitle1">{`#${workOrder.id}`}</Typography>
                   </Box>
-                  <Typography variant="h6" color="error">
-                    {`Due ${workOrder.dueDate}`}
+                  <Typography
+                    variant="h6"
+                    color={workOrder.dueDate ? 'error' : 'primary'}
+                  >
+                    {workOrder.dueDate
+                      ? `Due ${workOrder.dueDate}`
+                      : t('No Due Date')}
                   </Typography>
-                  <Typography variant="h6">{workOrder.worker}</Typography>
-                  <Typography variant="h6">{workOrder.status}</Typography>
+                  <Typography variant="h6">
+                    {workOrder.primaryUser
+                      ? `${workOrder.primaryUser.firstName} ${workOrder.primaryUser.lastName}`
+                      : t('No primary User')}
+                  </Typography>
+                  <Typography variant="h6">
+                    {getStatusLabel(workOrder.status, t)}
+                  </Typography>
                 </Box>
               </Card>
             </Grid>

@@ -9,7 +9,7 @@ const basePath = 'assets';
 interface AssetState {
   assets: AssetDTO[];
   assetsHierarchy: AssetRow[];
-  assetInfos: { [key: number]: { asset: AssetDTO; workOrders: WorkOrder[] } };
+  assetInfos: { [key: number]: { asset?: AssetDTO; workOrders: WorkOrder[] } };
 }
 
 const initialState: AssetState = {
@@ -77,6 +77,15 @@ const slice = createSlice({
       if (state.assetInfos[id]) {
         state.assetInfos[id] = { ...state.assetInfos[id], asset };
       } else state.assetInfos[id] = { asset, workOrders: [] };
+    },
+    getAssetWorkOrders(
+      state: AssetState,
+      action: PayloadAction<{ workOrders: WorkOrder[]; id: number }>
+    ) {
+      const { workOrders, id } = action.payload;
+      if (state.assetInfos[id]) {
+        state.assetInfos[id] = { ...state.assetInfos[id], workOrders };
+      } else state.assetInfos[id] = { workOrders };
     }
   }
 });
@@ -134,6 +143,17 @@ export const getAssetDetails =
       slice.actions.getAssetDetails({
         id,
         asset
+      })
+    );
+  };
+export const getAssetWorkOrders =
+  (id: number): AppThunk =>
+  async (dispatch) => {
+    const workOrders = await api.get<WorkOrder[]>(`work-orders/asset/${id}`);
+    dispatch(
+      slice.actions.getAssetWorkOrders({
+        id,
+        workOrders
       })
     );
   };

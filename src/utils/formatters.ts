@@ -49,6 +49,20 @@ export const getPriorityLabel = (str: string, t: any) => {
   }
 };
 
+export const getStatusLabel = (str: string, t: any) => {
+  switch (str) {
+    case 'OPEN':
+      return t('Open');
+    case 'IN_PROGRESS':
+      return t('In Progress');
+    case 'ON_HOLD':
+      return t('On Hold');
+    case 'COMPLETE':
+      return t('Complete');
+    default:
+      break;
+  }
+};
 export const getHHMMSSFromDuration = (duration: number | undefined) => {
   const date = new Date(0);
   date.setSeconds(duration ?? 0); // specify value for SECONDS here

@@ -66,7 +66,7 @@ const AssetParts = ({ asset }: PropsType) => {
                   Toolbar: GridToolbar
                 }}
                 onRowClick={(params) => {
-                  navigate(`/app/inventory/parts/${params.id}/`);
+                  navigate(`/app/inventory/parts/${params.id}`);
                 }}
                 initialState={{
                   columns: {

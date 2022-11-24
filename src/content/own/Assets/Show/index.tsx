@@ -25,7 +25,7 @@ import { formatAssetValues } from '../../../../utils/formatters';
 
 interface PropsType {}
 
-const VendorsAndCustomers = ({}: PropsType) => {
+const ShowAsset = ({}: PropsType) => {
   const { t }: { t: any } = useTranslation();
   const { assetId } = useParams();
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
@@ -283,4 +283,4 @@ const VendorsAndCustomers = ({}: PropsType) => {
   );
 };
 
-export default VendorsAndCustomers;
+export default ShowAsset;
