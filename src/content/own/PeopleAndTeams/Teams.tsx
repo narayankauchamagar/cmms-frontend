@@ -302,7 +302,17 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
               fields={fields}
               validation={Yup.object().shape(shape)}
               submitText={t('Update')}
-              values={currentTeam || {}}
+              values={
+                {
+                  ...currentTeam,
+                  users: currentTeam.users.map((user) => {
+                    return {
+                      label: `${user.firstName} ${user.lastName}`,
+                      value: user.id
+                    };
+                  })
+                } || {}
+              }
               onChange={({ field, e }) => {}}
               onSubmit={async (values) => {
                 try {

@@ -31,8 +31,8 @@ const CompanyProfile = Loader(
 const WorkOrderCategories = Loader(
   lazy(() => import('../content/own/Categories/WorkOrder'))
 );
-const AssetStatusCategories = Loader(
-  lazy(() => import('../content/own/Categories/AssetStatus'))
+const AssetCategories = Loader(
+  lazy(() => import('../content/own/Categories/Asset'))
 );
 const PurchaseOrderCategories = Loader(
   lazy(() => import('../content/own/Categories/PurchaseOrder'))
@@ -222,8 +222,8 @@ const appRoutes = [
         element: <WorkOrderCategories />
       },
       {
-        path: 'asset-status',
-        element: <AssetStatusCategories />
+        path: 'asset',
+        element: <AssetCategories />
       },
       {
         path: 'purchase-order',

@@ -92,10 +92,12 @@ const ShowAsset = ({}: PropsType) => {
     },
     {
       name: 'category',
-      type: 'text',
       midWidth: true,
       label: t('Category'),
-      placeholder: t('Category')
+      placeholder: t('Category'),
+      type: 'select',
+      type2: 'category',
+      category: 'asset-categories'
     },
     {
       name: 'area',

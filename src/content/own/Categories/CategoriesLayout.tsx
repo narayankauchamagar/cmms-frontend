@@ -113,7 +113,7 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
 
   const tabs = [
     { value: '', label: t('Work Orders') },
-    { value: 'asset-status', label: t('Asset Status') },
+    { value: 'asset', label: t('Assets') },
     { value: 'purchase-order', label: t('Purchase Orders') },
     { value: 'meter', label: t('Meters') },
     { value: 'time', label: t('Timers') },

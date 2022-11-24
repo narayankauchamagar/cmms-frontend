@@ -39,7 +39,8 @@ export interface IField {
     | 'purchase-order-categories'
     | 'cost-categories'
     | 'time-categories'
-    | 'work-order-categories';
+    | 'work-order-categories'
+    | 'asset-categories';
   name?: string;
   placeholder?: string;
   fileType?: 'file' | 'image';

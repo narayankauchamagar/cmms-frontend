@@ -1,7 +1,7 @@
 import CategoriesLayout from '../CategoriesLayout';
 
-function AssetStatusCategories() {
+function AssetCategories() {
   return <CategoriesLayout tabIndex={1} basePath="asset-categories" />;
 }
 
-export default AssetStatusCategories;
+export default AssetCategories;
