@@ -24,7 +24,7 @@ const slice = createSlice({
       const { tasks, id } = action.payload;
       state.workOrdersRoot2[id] = tasks;
     },
-    createTasks(
+    patchTasks(
       state: TaskState,
       action: PayloadAction<{
         workOrderId: number;
@@ -58,17 +58,17 @@ export const getTasks =
     dispatch(slice.actions.getTasks({ id, tasks }));
   };
 
-export const createTasks =
+export const patchTasks =
   (workOrderId: number, taskBases: any[]): AppThunk =>
   async (dispatch) => {
-    const tasks = await api.post<Task[]>(
+    const tasks = await api.patch<Task[]>(
       `${basePath}/work-order/${workOrderId}`,
       taskBases,
       null,
       true
     );
     dispatch(
-      slice.actions.createTasks({
+      slice.actions.patchTasks({
         workOrderId,
         tasks
       })

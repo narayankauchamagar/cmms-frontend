@@ -47,7 +47,7 @@ import {
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import { useDispatch, useSelector } from '../../../store';
 import PriorityWrapper from '../components/PriorityWrapper';
-import { createTasks } from '../../../slices/task';
+import { patchTasks } from '../../../slices/task';
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
@@ -454,7 +454,7 @@ function WorkOrders() {
             onSubmit={async (values) => {
               const formattedValues = formatValues(values);
               dispatch(
-                createTasks(
+                patchTasks(
                   currentWorkOrder?.id,
                   formattedValues.tasks.map((task) => task.taskBase)
                 )
@@ -558,7 +558,7 @@ function WorkOrders() {
               const formattedValues = formatValues(values);
               dispatch(
                 //TODO editTask
-                createTasks(
+                patchTasks(
                   currentWorkOrder?.id,
                   formattedValues.tasks.map((task) => task.taskBase)
                 )
@@ -655,6 +655,7 @@ function WorkOrders() {
         <WorkOrderDetails
           workOrder={currentWorkOrder}
           handleUpdate={handleOpenUpdate}
+          tasks={tasks}
         />
       </Drawer>
     </>

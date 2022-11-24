@@ -50,13 +50,15 @@ import {
   getAdditionalCosts
 } from '../../../slices/additionalCost';
 import { getTasks } from '../../../slices/task';
+import { Task } from '../../../models/owns/tasks';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;
   handleUpdate: (id: number) => void;
+  tasks: Task[];
 }
 export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
-  const { workOrder, handleUpdate } = props;
+  const { workOrder, handleUpdate, tasks } = props;
   const theme = useTheme();
   const { t }: { t: any } = useTranslation();
   const [openAddTimeModal, setOpenAddTimeModal] = useState<boolean>(false);
@@ -355,10 +357,12 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                 </Grid>
               )}
             </Grid>
-            <Box>
-              <Divider sx={{ mt: 2 }} />
-              <Tasks />
-            </Box>
+            {!!tasks.length && (
+              <Box>
+                <Divider sx={{ mt: 2 }} />
+                <Tasks tasksProps={tasks} />
+              </Box>
+            )}
             <Box>
               <Divider sx={{ mt: 2 }} />
               <Typography sx={{ mt: 2, mb: 1 }} variant="h3">

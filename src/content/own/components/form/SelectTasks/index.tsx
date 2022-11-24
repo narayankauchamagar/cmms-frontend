@@ -77,7 +77,7 @@ export default function SelectTasks({
   const onTypeChange = (value: TaskType, id: number) => {
     const newTasks = tasks.map((task) => {
       if (task.id === id) {
-        return { ...task, taskBase: { ...task.taskBase, type: value } };
+        return { ...task, taskBase: { ...task.taskBase, taskType: value } };
       }
       return task;
     });

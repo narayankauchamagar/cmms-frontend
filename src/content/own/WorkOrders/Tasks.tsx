@@ -7,16 +7,20 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import TaskAltTwoToneIcon from '@mui/icons-material/TaskAltTwoTone';
-import { useState } from 'react';
-import { tasks as defaultTasks } from '../../../models/owns/tasks';
+import { useEffect, useState } from 'react';
 import SingleTask from '../components/form/SelectTasks/SingleTask';
+import { Task } from '../../../models/owns/tasks';
 
-interface TasksProps {}
+interface TasksProps {
+  tasksProps: Task[];
+}
 
-export default function Tasks({}: TasksProps) {
+export default function Tasks({ tasksProps }: TasksProps) {
   const { t }: { t: any } = useTranslation();
   const [notes, setNotes] = useState<Map<number, boolean>>(new Map());
-  const [tasks, setTasks] = useState(defaultTasks);
+  const [tasks, setTasks] = useState<Task[]>(tasksProps);
+
+  useEffect(() => setTasks(tasksProps), [tasksProps]);
 
   function handleChange(value: string | number, id: number) {
     const newTasks = tasks.map((task) => {
