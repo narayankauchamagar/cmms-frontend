@@ -19,6 +19,7 @@ import { reducer as multiPartsReducer } from 'src/slices/multipart';
 import { reducer as checklistReducer } from 'src/slices/checklist';
 import { reducer as partQuantityReducer } from 'src/slices/partQuantity';
 import { reducer as additionalTimeReducer } from 'src/slices/additionalTime';
+import { reducer as additionalCostReducer } from 'src/slices/additionalCost';
 
 const rootReducer = combineReducers({
   calendar: calendarReducer,
@@ -40,7 +41,8 @@ const rootReducer = combineReducers({
   multiParts: multiPartsReducer,
   checklists: checklistReducer,
   partQuantities: partQuantityReducer,
-  additionalTimes: additionalTimeReducer
+  additionalTimes: additionalTimeReducer,
+  additionalCosts: additionalCostReducer
 });
 
 export default rootReducer;

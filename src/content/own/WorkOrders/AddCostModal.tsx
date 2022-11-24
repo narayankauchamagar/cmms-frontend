@@ -2,15 +2,23 @@ import { Dialog, DialogContent, DialogTitle, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import Form from '../components/form';
 import * as Yup from 'yup';
-import wait from '../../../utils/wait';
 import { IField } from '../type';
+import { formatSelect } from '../../../utils/formatters';
+import { useDispatch } from '../../../store';
+import { createAdditionalCost } from '../../../slices/additionalCost';
 
 interface AddCostProps {
   open: boolean;
   onClose: () => void;
+  workOrderId: number;
 }
-export default function AddCostModal({ open, onClose }: AddCostProps) {
+export default function AddCostModal({
+  open,
+  onClose,
+  workOrderId
+}: AddCostProps) {
   const { t }: { t: any } = useTranslation();
+  const dispatch = useDispatch();
   const fields: Array<IField> = [
     {
       name: 'description',
@@ -36,7 +44,14 @@ export default function AddCostModal({ open, onClose }: AddCostProps) {
     {
       name: 'date',
       type: 'date',
-      label: t('Date')
+      label: t('Date'),
+      midWidth: true
+    },
+    {
+      name: 'cost',
+      type: 'number',
+      label: t('Cost'),
+      midWidth: true
     },
     {
       name: 'includeToTotalCost',
@@ -49,7 +64,7 @@ export default function AddCostModal({ open, onClose }: AddCostProps) {
   ];
   const shape = {
     description: Yup.string().required(t('Cost Description is required')),
-    minutes: Yup.number().required(t('Minutes field is required'))
+    cost: Yup.number().required(t('Cost is required'))
   };
   return (
     <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
@@ -78,9 +93,16 @@ export default function AddCostModal({ open, onClose }: AddCostProps) {
           values={{ includeToTotalCost: true }}
           onChange={({ field, e }) => {}}
           onSubmit={async (values) => {
+            console.log(values);
             try {
-              await wait(2000);
-              onClose();
+              const formattedValues = { ...values };
+              formattedValues.assignedTo = formatSelect(
+                formattedValues.assignedTo
+              );
+              formattedValues.category = formatSelect(formattedValues.category);
+              dispatch(
+                createAdditionalCost(workOrderId, formattedValues)
+              ).finally(() => onClose());
             } catch (err) {
               console.error(err);
             }

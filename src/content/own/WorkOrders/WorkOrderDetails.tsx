@@ -25,7 +25,6 @@ import DoDisturbOnTwoToneIcon from '@mui/icons-material/DoDisturbOnTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import Asset from '../../../models/owns/asset';
 import AddTimeModal from './AddTimeModal';
-import { additionalCosts } from '../../../models/owns/additionalCost';
 import AddCostModal from './AddCostModal';
 import Tasks from './Tasks';
 import { workOrderHistories } from '../../../models/owns/workOrderHistories';
@@ -46,6 +45,10 @@ import {
   getAdditionalTimes
 } from '../../../slices/additionalTime';
 import { getHHMMSSFromDuration } from '../../../utils/formatters';
+import {
+  deleteAdditionalCost,
+  getAdditionalCosts
+} from '../../../slices/additionalCost';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;
@@ -67,10 +70,13 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
     (additionalTime) => additionalTime.primaryTime
   );
   const runningTimer = primaryTime?.status === 'RUNNING';
+  const { workOrdersRoot1 } = useSelector((state) => state.additionalCosts);
+  const additionalCosts = workOrdersRoot1[workOrder.id] ?? [];
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getPartQuantitys(workOrder.id));
     dispatch(getAdditionalTimes(workOrder.id));
+    dispatch(getAdditionalCosts(workOrder.id));
   }, []);
 
   const getAdditionalTimeCost = (additionalTime: AdditionalTime): number => {
@@ -295,9 +301,9 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                   </Button>
                 </Box>
               </Grid>
-              {detailsFieldsToRender(workOrder).map((field) => (
+              {detailsFieldsToRender(workOrder).map((field, index) => (
                 <BasicField
-                  key={field.id}
+                  key={index}
                   label={field.label}
                   value={field.value}
                   type={field.type}
@@ -468,9 +474,31 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                     <ListItem
                       key={additionalCost.id}
                       secondaryAction={
-                        <Typography variant="h6">
-                          {additionalCost.cost} $
-                        </Typography>
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'flex-end'
+                          }}
+                        >
+                          <Typography variant="h6">
+                            {additionalCost.cost} $
+                          </Typography>
+                          <IconButton
+                            sx={{ ml: 1 }}
+                            onClick={() =>
+                              dispatch(
+                                deleteAdditionalCost(
+                                  workOrder.id,
+                                  additionalCost.id
+                                )
+                              )
+                            }
+                          >
+                            <DeleteTwoToneIcon fontSize="small" color="error" />
+                          </IconButton>
+                        </Box>
                       }
                     >
                       <ListItemText
@@ -487,7 +515,10 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                     secondaryAction={
                       <Typography variant="h6" fontWeight="bold">
                         {additionalCosts.reduce(
-                          (acc, additionalCost) => acc + additionalCost.cost,
+                          (acc, additionalCost) =>
+                            additionalCost.includeToTotalCost
+                              ? acc + additionalCost.cost
+                              : acc,
                           0
                         )}{' '}
                         $
@@ -657,6 +688,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
       <AddCostModal
         open={openAddCostModal}
         onClose={() => setOpenAddCostModal(false)}
+        workOrderId={workOrder.id}
       />
     </Grid>
   );
