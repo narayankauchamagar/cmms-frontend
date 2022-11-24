@@ -600,7 +600,6 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                     )
                   );
                 }}
-                hideSelected
               />
             </Box>
             {!!workOrder.files.length && (

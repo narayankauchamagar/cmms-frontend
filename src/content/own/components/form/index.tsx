@@ -5,6 +5,7 @@ import {
   CircularProgress,
   Grid,
   IconButton,
+  Link,
   TextField,
   Typography
 } from '@mui/material';
@@ -187,12 +188,30 @@ export default (props: PropsType) => {
         break;
       case 'part':
         return (
-          <SelectParts
-            selected={values?.map((value) => Number(value.value)) ?? []}
-            onChange={(newParts) => {
-              handleChange(formik, field.name, newParts);
-            }}
-          />
+          <>
+            <Box display="flex" flexDirection="column">
+              {values?.length
+                ? values.map((part) => (
+                    <Link
+                      sx={{ mb: 1 }}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={`/app/inventory/parts/${part.id}`}
+                      key={part.id}
+                      variant="h4"
+                    >
+                      {part.name}
+                    </Link>
+                  ))
+                : null}
+            </Box>
+            <SelectParts
+              selected={values?.map((value) => Number(value.value)) ?? []}
+              onChange={(newParts) => {
+                handleChange(formik, field.name, newParts);
+              }}
+            />
+          </>
         );
       case 'task':
         return (

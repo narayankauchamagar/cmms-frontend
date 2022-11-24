@@ -6,11 +6,11 @@ import {
   Button,
   Checkbox,
   Dialog,
+  DialogActions,
   DialogContent,
   DialogTitle,
   FormControlLabel,
   FormGroup,
-  Link,
   Tab,
   Tabs,
   Typography
@@ -26,14 +26,9 @@ import { getParts } from '../../../../slices/part';
 interface SelectPartsProps {
   onChange: (parts: Part[]) => void;
   selected: number[];
-  hideSelected?: boolean;
 }
 
-export default function SelectParts({
-  onChange,
-  selected,
-  hideSelected
-}: SelectPartsProps) {
+export default function SelectParts({ onChange, selected }: SelectPartsProps) {
   const { t }: { t: any } = useTranslation();
   const dispatch = useDispatch();
   const { parts } = useSelector((state) => state.parts);
@@ -41,7 +36,6 @@ export default function SelectParts({
   const [currentTab, setCurrentTab] = useState<string>('parts');
   const [selectedParts, setSelectedParts] = useState<Part[]>([]);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
-  const [initialized, setInitialized] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
@@ -59,9 +53,6 @@ export default function SelectParts({
         })
         .filter((part) => !!part);
       setSelectedParts(newSelectedParts);
-      if (initialized) {
-        onChange(newSelectedParts);
-      } else setInitialized(true);
     }
   }, [selectedIds, parts]);
 
@@ -170,25 +161,21 @@ export default function SelectParts({
             </FormGroup>
           )}
         </DialogContent>
+        <DialogActions>
+          <Button variant="outlined" onClick={() => setOpenModal(false)}>
+            {t('Cancel')}
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => {
+              onChange(selectedParts);
+              setOpenModal(false);
+            }}
+          >
+            {t('Add Parts')}
+          </Button>
+        </DialogActions>
       </Dialog>
-      {!hideSelected && (
-        <Box display="flex" flexDirection="column">
-          {selectedParts.length
-            ? selectedParts.map((part) => (
-                <Link
-                  sx={{ mb: 1 }}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href={`/app/inventory/parts/${part.id}`}
-                  key={part.id}
-                  variant="h4"
-                >
-                  {part.name}
-                </Link>
-              ))
-            : null}
-        </Box>
-      )}
       <Button startIcon={<AddTwoToneIcon />} onClick={() => setOpenModal(true)}>
         Add Parts
       </Button>
