@@ -62,12 +62,12 @@ const DraggableListItem = ({
     setAnchorEl(null);
   };
   const taskTypes = [
-    { label: t('Sub-task Status'), value: 'subtask' },
-    { label: t('Text Field'), value: 'text' },
-    { label: t('Number Field'), value: 'number' },
-    { label: t('Inspection Check'), value: 'inspection' },
-    { label: t('Multiple Choice'), value: 'multiple' },
-    { label: t('Meter Reading'), value: 'meter' }
+    { label: t('Sub-task Status'), value: 'SUBTASK' },
+    { label: t('Text Field'), value: 'TEXT' },
+    { label: t('Number Field'), value: 'NUMBER' },
+    { label: t('Inspection Check'), value: 'INSPECTION' },
+    { label: t('Multiple Choice'), value: 'MULTIPLE' },
+    { label: t('Meter Reading'), value: 'METER' }
   ];
   const [openAssignUser, setOpenAssignUser] = useState<boolean>(
     !!task.taskBase.user
@@ -148,7 +148,7 @@ const DraggableListItem = ({
                 </Box>
                 <Select
                   sx={{ ml: 1 }}
-                  value={task.taskBase.type}
+                  value={task.taskBase.taskType}
                   onChange={(event) =>
                     onTypeChange(event.target.value as TaskType, task.id)
                   }
@@ -172,7 +172,7 @@ const DraggableListItem = ({
                 in={
                   openAssignUser ||
                   openAssignAsset ||
-                  task.taskBase.type === 'multiple'
+                  task.taskBase.taskType === 'MULTIPLE'
                 }
               >
                 <Box
@@ -219,7 +219,7 @@ const DraggableListItem = ({
                       ))}
                     </Select>
                   )}
-                  {task.taskBase.type === 'multiple' && (
+                  {task.taskBase.taskType === 'MULTIPLE' && (
                     <Box>
                       {choices.map((choice, index) => (
                         <Box

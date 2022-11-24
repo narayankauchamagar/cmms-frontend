@@ -1,14 +1,14 @@
 export type TaskType =
-  | 'subtask'
-  | 'number'
-  | 'text'
-  | 'inspection'
-  | 'multiple'
-  | 'meter';
+  | 'SUBTASK'
+  | 'NUMBER'
+  | 'TEXT'
+  | 'INSPECTION'
+  | 'MULTIPLE'
+  | 'METER';
 export interface TaskBase {
   id: number;
   label: string;
-  type: TaskType;
+  taskType: TaskType;
   options?: string[];
   user?: number;
   asset?: number;
@@ -26,7 +26,7 @@ export const tasks: Task[] = [
     taskBase: {
       id: 12,
       label: 'Clean air filter & check its condition',
-      type: 'subtask'
+      taskType: 'SUBTASK'
     },
     value: 'OPEN',
     notes: ''
@@ -36,7 +36,7 @@ export const tasks: Task[] = [
     taskBase: {
       id: 11,
       label: 'Check nothing',
-      type: 'subtask'
+      taskType: 'SUBTASK'
     },
     value: 'OPEN',
     notes: ''

@@ -49,11 +49,11 @@ export default function SingleTask({
 
   const getOptions = (type: TaskType, options: string[]) => {
     switch (type) {
-      case 'subtask':
+      case 'SUBTASK':
         return subtaskOptions;
-      case 'inspection':
+      case 'INSPECTION':
         return inspectionOptions;
-      case 'multiple':
+      case 'MULTIPLE':
         return options.map((option) => {
           return {
             label: option,
@@ -78,13 +78,13 @@ export default function SingleTask({
           <Typography variant="h6" fontWeight="bold">
             {task.taskBase.label || `<${t('Enter a task name')}>`}
           </Typography>
-          {['subtask', 'inspection', 'multiple'].includes(
-            task.taskBase.type
+          {['SUBTASK', 'INSPECTION', 'MULTIPLE'].includes(
+            task.taskBase.taskType
           ) ? (
             <Select
               value={
                 preview
-                  ? getOptions(task.taskBase.type, task.taskBase.options)[0]
+                  ? getOptions(task.taskBase.taskType, task.taskBase.options)[0]
                       .value
                   : task.value
               }
@@ -93,7 +93,7 @@ export default function SingleTask({
               }
               sx={{ backgroundColor: 'white' }}
             >
-              {getOptions(task.taskBase.type, task.taskBase.options).map(
+              {getOptions(task.taskBase.taskType, task.taskBase.options).map(
                 (option) => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.label}
@@ -110,16 +110,16 @@ export default function SingleTask({
                 value={task.value}
                 label={t('Value')}
                 type={
-                  task.taskBase.type === 'meter'
+                  task.taskBase.taskType === 'METER'
                     ? 'number'
-                    : (task.taskBase.type as 'number' | 'text')
+                    : (task.taskBase.taskType as 'number' | 'text')
                 }
               />
             </Box>
           )}
         </Box>
         <Box>
-          {task.taskBase.type === 'meter' && (
+          {task.taskBase.taskType === 'METER' && (
             <IconButton
               onClick={() =>
                 !preview && navigate(`/app/meters/${task.taskBase.meter}`)

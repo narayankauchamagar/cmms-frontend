@@ -142,7 +142,7 @@ export default function SelectTasks({
         taskBase: {
           id: randomInt(),
           label: '',
-          type: 'subtask'
+          taskType: 'SUBTASK'
         },
         notes: ''
       }

@@ -47,7 +47,7 @@ import {
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import { useDispatch, useSelector } from '../../../store';
 import PriorityWrapper from '../components/PriorityWrapper';
-import { createTasks, getTasks } from '../../../slices/task';
+import { createTasks } from '../../../slices/task';
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
@@ -81,7 +81,6 @@ function WorkOrders() {
     const foundWorkOrder = workOrders.find((workOrder) => workOrder.id === id);
     if (foundWorkOrder) {
       setCurrentWorkOrder(foundWorkOrder);
-      dispatch(getTasks(id));
       window.history.replaceState(
         null,
         'WorkOrder details',

@@ -49,6 +49,7 @@ import {
   deleteAdditionalCost,
   getAdditionalCosts
 } from '../../../slices/additionalCost';
+import { getTasks } from '../../../slices/task';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;
@@ -77,6 +78,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
     dispatch(getPartQuantitys(workOrder.id));
     dispatch(getAdditionalTimes(workOrder.id));
     dispatch(getAdditionalCosts(workOrder.id));
+    dispatch(getTasks(workOrder.id));
   }, []);
 
   const getAdditionalTimeCost = (additionalTime: AdditionalTime): number => {
