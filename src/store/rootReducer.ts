@@ -21,6 +21,7 @@ import { reducer as partQuantityReducer } from 'src/slices/partQuantity';
 import { reducer as additionalTimeReducer } from 'src/slices/additionalTime';
 import { reducer as additionalCostReducer } from 'src/slices/additionalCost';
 import { reducer as taskReducer } from 'src/slices/task';
+import { reducer as floorPlanReducer } from 'src/slices/floorPlan';
 
 const rootReducer = combineReducers({
   calendar: calendarReducer,
@@ -44,7 +45,8 @@ const rootReducer = combineReducers({
   partQuantities: partQuantityReducer,
   additionalTimes: additionalTimeReducer,
   additionalCosts: additionalCostReducer,
-  tasks: taskReducer
+  tasks: taskReducer,
+  floorPlans: floorPlanReducer
 });
 
 export default rootReducer;

@@ -9,6 +9,7 @@ import {
   IconButton,
   Link,
   List,
+  ListItem,
   ListItemButton,
   ListItemText,
   Tab,
@@ -23,16 +24,19 @@ import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import Asset, { assets } from '../../../models/owns/asset';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import FloorPlan from '../../../models/owns/floorPlan';
 import Form from '../components/form';
 import * as Yup from 'yup';
-import wait from '../../../utils/wait';
 import { IField } from '../type';
 import { useDispatch, useSelector } from '../../../store';
 import { getAssetsByLocation } from '../../../slices/asset';
 import { useNavigate } from 'react-router-dom';
 import { workOrders } from '../../../models/owns/workOrder';
 import { getWorkOrdersByLocation } from '../../../slices/workOrder';
+import {
+  createFloorPlan,
+  deleteFloorPlan,
+  getFloorPlans
+} from '../../../slices/floorPlan';
 
 interface LocationDetailsProps {
   location: Location;
@@ -47,8 +51,10 @@ export default function LocationDetails(props: LocationDetailsProps) {
   const [currentTab, setCurrentTab] = useState<string>('assets');
   const { locations } = useSelector((state) => state.assets);
   const { locations1 } = useSelector((state) => state.workOrders);
+  const { locationRoot } = useSelector((state) => state.floorPlans);
   const locationAssets = locations[location.id] ?? [];
   const locationWorkOrders = locations1[location.id] ?? [];
+  const floorPlans = locationRoot[location.id] ?? [];
   const theme = useTheme();
   const navigate = useNavigate();
   const tabs = [
@@ -59,24 +65,6 @@ export default function LocationDetails(props: LocationDetailsProps) {
     { value: 'people', label: t('People') }
   ];
 
-  const floorPlans: FloorPlan[] = [
-    {
-      id: 212,
-      name: 'cgvg',
-      createdAt: 'dfggj',
-      createdBy: 'ghu',
-      updatedAt: 'ghfgj',
-      updatedBy: 'ghfgj'
-    },
-    {
-      id: 44,
-      name: 'fcgvc',
-      createdAt: 'dfggj',
-      createdBy: 'ghu',
-      updatedAt: 'ghfgj',
-      updatedBy: 'ghfgj'
-    }
-  ];
   const fields: Array<IField> = [
     {
       name: 'name',
@@ -105,6 +93,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
   useEffect(() => {
     dispatch(getAssetsByLocation(location.id));
     dispatch(getWorkOrdersByLocation(location.id));
+    dispatch(getFloorPlans(location.id));
   }, [location]);
 
   const renderAddFloorPlanModal = () => (
@@ -141,8 +130,9 @@ export default function LocationDetails(props: LocationDetailsProps) {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               try {
-                await wait(2000);
-                setOpenAddFloorPlan(false);
+                dispatch(createFloorPlan(location.id, values)).then(() =>
+                  setOpenAddFloorPlan(false)
+                );
               } catch (err) {
                 console.error(err);
               }
@@ -229,7 +219,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
           <Box>
             <Box display="flex" justifyContent="right">
               <Button startIcon={<AddTwoToneIcon fontSize="small" />}>
-                {t('Asset')}
+                {t('Work Order')}
               </Button>
             </Box>
             <List sx={{ width: '100%' }}>
@@ -261,10 +251,23 @@ export default function LocationDetails(props: LocationDetailsProps) {
             <List sx={{ width: '100%' }}>
               {floorPlans.map((floorPlan) => (
                 <ListItemButton key={floorPlan.id} divider>
-                  <ListItemText
-                    primary={floorPlan.name}
-                    secondary={floorPlan.createdAt}
-                  />
+                  <ListItem
+                    secondaryAction={
+                      <IconButton
+                        sx={{ ml: 1 }}
+                        onClick={() =>
+                          dispatch(deleteFloorPlan(location.id, floorPlan.id))
+                        }
+                      >
+                        <DeleteTwoToneIcon fontSize="small" color="error" />
+                      </IconButton>
+                    }
+                  >
+                    <ListItemText
+                      primary={floorPlan.name}
+                      secondary={floorPlan.area}
+                    />
+                  </ListItem>
                 </ListItemButton>
               ))}
             </List>
