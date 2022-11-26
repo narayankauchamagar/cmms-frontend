@@ -23,6 +23,7 @@ import { reducer as additionalCostReducer } from 'src/slices/additionalCost';
 import { reducer as taskReducer } from 'src/slices/task';
 import { reducer as floorPlanReducer } from 'src/slices/floorPlan';
 import { reducer as currenciesReducer } from 'src/slices/currency';
+import { reducer as workOrderHistoriesReducer } from 'src/slices/workOrderHistory';
 
 const rootReducer = combineReducers({
   calendar: calendarReducer,
@@ -48,7 +49,8 @@ const rootReducer = combineReducers({
   additionalCosts: additionalCostReducer,
   tasks: taskReducer,
   floorPlans: floorPlanReducer,
-  currencies: currenciesReducer
+  currencies: currenciesReducer,
+  workOrderHistories: workOrderHistoriesReducer
 });
 
 export default rootReducer;

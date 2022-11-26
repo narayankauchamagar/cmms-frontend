@@ -27,7 +27,6 @@ import Asset from '../../../models/owns/asset';
 import AddTimeModal from './AddTimeModal';
 import AddCostModal from './AddCostModal';
 import Tasks from './Tasks';
-import { workOrderHistories } from '../../../models/owns/workOrderHistories';
 import PriorityWrapper from '../components/PriorityWrapper';
 import TimerTwoToneIcon from '@mui/icons-material/TimerTwoTone';
 import { editWorkOrder } from '../../../slices/workOrder';
@@ -51,6 +50,7 @@ import {
 } from '../../../slices/additionalCost';
 import { getTasks } from '../../../slices/task';
 import { Task } from '../../../models/owns/tasks';
+import { getWorkOrderHistories } from '../../../slices/workOrderHistory';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;
@@ -68,6 +68,10 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const { workOrders } = useSelector((state) => state.partQuantities);
   const partQuantities = workOrders[workOrder.id] ?? [];
   const { workOrdersRoot } = useSelector((state) => state.additionalTimes);
+  const { workOrderHistories } = useSelector(
+    (state) => state.workOrderHistories
+  );
+  const currentWorkOrderHistories = workOrderHistories[workOrder.id] ?? [];
   const additionalTimes = workOrdersRoot[workOrder.id] ?? [];
   const primaryTime = additionalTimes.find(
     (additionalTime) => additionalTime.primaryTime
@@ -142,6 +146,8 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   };
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
+    if (value === 'updates' && !currentWorkOrderHistories.length)
+      dispatch(getWorkOrderHistories(workOrder.id));
   };
   const detailsFieldsToRender = (
     workOrder: WorkOrder
@@ -674,14 +680,14 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
         )}
         {currentTab == 'updates' && (
           <List>
-            {workOrderHistories.map((workOrderHistory) => (
+            {currentWorkOrderHistories.map((workOrderHistory) => (
               <ListItem
                 key={workOrderHistory.id}
-                secondaryAction={workOrderHistory.date}
+                secondaryAction={workOrderHistory.createdAt}
               >
                 <ListItemText
                   primary={`${workOrderHistory.user.firstName} ${workOrderHistory.user.lastName}`}
-                  secondary={workOrderHistory.description}
+                  secondary={workOrderHistory.name}
                 />
               </ListItem>
             ))}
