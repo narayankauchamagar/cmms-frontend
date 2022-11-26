@@ -17,7 +17,7 @@ import {
   useTheme
 } from '@mui/material';
 import Location from '../../../models/owns/location';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
@@ -28,6 +28,9 @@ import Form from '../components/form';
 import * as Yup from 'yup';
 import wait from '../../../utils/wait';
 import { IField } from '../type';
+import { useDispatch, useSelector } from '../../../store';
+import { getAssetsByLocation } from '../../../slices/asset';
+import { useNavigate } from 'react-router-dom';
 
 interface LocationDetailsProps {
   location: Location;
@@ -37,9 +40,13 @@ interface LocationDetailsProps {
 export default function LocationDetails(props: LocationDetailsProps) {
   const { location, handleOpenUpdate, handleOpenDelete } = props;
   const { t }: { t: any } = useTranslation();
+  const dispatch = useDispatch();
   const [openAddFloorPlan, setOpenAddFloorPlan] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<string>('assets');
+  const { locations } = useSelector((state) => state.assets);
+  const locationAssets = locations[location.id] ?? [];
   const theme = useTheme();
+  const navigate = useNavigate();
   const tabs = [
     { value: 'assets', label: t('Assets') },
     { value: 'files', label: t('Files') },
@@ -90,6 +97,11 @@ export default function LocationDetails(props: LocationDetailsProps) {
   const floorPlanShape = {
     name: Yup.string().required(t('Floor plan name is required'))
   };
+
+  useEffect(() => {
+    dispatch(getAssetsByLocation(location.id));
+  }, [location]);
+
   const renderAddFloorPlanModal = () => (
     <Dialog
       fullWidth
@@ -191,8 +203,14 @@ export default function LocationDetails(props: LocationDetailsProps) {
               </Button>
             </Box>
             <List sx={{ width: '100%' }}>
-              {assets.map((asset) => (
-                <ListItemButton key={asset.id} divider>
+              {locationAssets.map((asset) => (
+                <ListItemButton
+                  key={asset.id}
+                  divider
+                  onClick={() =>
+                    navigate(`/app/assets/${asset.id}/work-orders`)
+                  }
+                >
                   <ListItemText
                     primary={asset.name}
                     secondary={asset.createdAt}

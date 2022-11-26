@@ -10,12 +10,14 @@ interface AssetState {
   assets: AssetDTO[];
   assetsHierarchy: AssetRow[];
   assetInfos: { [key: number]: { asset?: AssetDTO; workOrders: WorkOrder[] } };
+  locations: { [key: number]: AssetDTO[] };
 }
 
 const initialState: AssetState = {
   assets: [],
   assetsHierarchy: [],
-  assetInfos: {}
+  assetInfos: {},
+  locations: {}
 };
 
 const slice = createSlice({
@@ -86,6 +88,13 @@ const slice = createSlice({
       if (state.assetInfos[id]) {
         state.assetInfos[id] = { ...state.assetInfos[id], workOrders };
       } else state.assetInfos[id] = { workOrders };
+    },
+    getAssetsByLocation(
+      state: AssetState,
+      action: PayloadAction<{ assets: AssetDTO[]; id: number }>
+    ) {
+      const { assets, id } = action.payload;
+      state.locations[id] = assets;
     }
   }
 });
@@ -154,6 +163,18 @@ export const getAssetWorkOrders =
       slice.actions.getAssetWorkOrders({
         id,
         workOrders
+      })
+    );
+  };
+
+export const getAssetsByLocation =
+  (id: number): AppThunk =>
+  async (dispatch) => {
+    const assets = await api.get<AssetDTO[]>(`${basePath}/location/${id}`);
+    dispatch(
+      slice.actions.getAssetsByLocation({
+        id,
+        assets
       })
     );
   };
