@@ -10,10 +10,12 @@ import { useTranslation } from 'react-i18next';
 import SettingsLayout from '../SettingsLayout';
 import { Field, Formik } from 'formik';
 import * as Yup from 'yup';
-import wait from '../../../../utils/wait';
 import CustomSwitch from '../../components/form/CustomSwitch';
 import useAuth from '../../../../hooks/useAuth';
 import internationalization from '../../../../i18n/i18n';
+import { useDispatch, useSelector } from '../../../../store';
+import { getCurrencies } from '../../../../slices/currency';
+import { useEffect } from 'react';
 
 function GeneralSettings() {
   const { t }: { t: any } = useTranslation();
@@ -22,6 +24,13 @@ function GeneralSettings() {
   };
   const { patchGeneralPreferences, companySettings } = useAuth();
   const { generalPreferences } = companySettings;
+  const dispatch = useDispatch();
+  const { currencies } = useSelector((state) => state.currencies);
+
+  useEffect(() => {
+    dispatch(getCurrencies());
+  }, []);
+
   const switches = [
     {
       title: t('Auto-assign Work Orders'),
@@ -65,19 +74,7 @@ function GeneralSettings() {
   const onSubmit = async (
     _values,
     { resetForm, setErrors, setStatus, setSubmitting }
-  ) => {
-    try {
-      await wait(1000);
-      resetForm();
-      setStatus({ success: true });
-      setSubmitting(false);
-    } catch (err) {
-      console.error(err);
-      setStatus({ success: false });
-      setErrors({ submit: err.message });
-      setSubmitting(false);
-    }
-  };
+  ) => {};
   return (
     <SettingsLayout tabIndex={0}>
       <Grid item xs={12}>
@@ -155,16 +152,24 @@ function GeneralSettings() {
                           {t('Currency')}
                         </Typography>
                         <Field
-                          onChange={handleChange}
-                          value={values.currency}
+                          onChange={(event) =>
+                            patchGeneralPreferences({
+                              currency: currencies.find(
+                                (currency) =>
+                                  currency.id === Number(event.target.value)
+                              )
+                            })
+                          }
+                          value={generalPreferences.currency?.id}
                           as={Select}
                           name="currency"
                         >
-                          <MenuItem value="MAD">MAD - Dirham - DH</MenuItem>
-                          <MenuItem value="EUR">EUR - Euro - €</MenuItem>
-                          <MenuItem value="USD">
-                            USD - United States Dollar - $
-                          </MenuItem>
+                          {currencies.map((currency) => (
+                            <MenuItem
+                              key={currency.id}
+                              value={currency.id}
+                            >{`${currency.name} - ${currency.code}`}</MenuItem>
+                          ))}
                         </Field>
                       </Grid>
                       <Grid item xs={12}>

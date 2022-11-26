@@ -77,13 +77,13 @@ export default function LocationDetails(props: LocationDetailsProps) {
       name: 'area',
       type: 'number',
       label: 'Area',
-      placeholder: 'Floor plan area'
+      placeholder: t('Floor plan area in m²')
     },
     {
       name: 'image',
       type: 'file',
       label: 'File',
-      placeholder: 'Upload a file or image'
+      placeholder: t('Upload a file or image')
     }
   ];
   const floorPlanShape = {
@@ -265,7 +265,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
                   >
                     <ListItemText
                       primary={floorPlan.name}
-                      secondary={floorPlan.area}
+                      secondary={`${floorPlan.area} m²`}
                     />
                   </ListItem>
                 </ListItemButton>

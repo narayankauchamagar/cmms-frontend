@@ -1,8 +1,10 @@
+import Currency from './currency';
+
 export interface GeneralPreferences {
   id: number;
   language: string;
   dateFormat: string;
-  currency: string;
+  currency: Currency;
   businessType: string;
   timeZone: string;
 
