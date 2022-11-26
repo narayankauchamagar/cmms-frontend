@@ -24,8 +24,10 @@ import DraggableTaskList from './DraggableTaskList';
 import { randomInt } from '../../../../../utils/generators';
 import SingleTask from './SingleTask';
 import { useSnackbar } from 'notistack';
-import { Checklist, checklists } from '../../../../../models/owns/checklists';
+import { Checklist } from '../../../../../models/owns/checklists';
 import { getTaskFromTaskBase } from '../../../../../utils/formatters';
+import { useDispatch, useSelector } from '../../../../../store';
+import { getChecklists } from '../../../../../slices/checklist';
 
 interface SelectTasksProps {
   selected: Task[];
@@ -54,7 +56,12 @@ export default function SelectTasks({
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>();
   const [category, setCategory] = useState<string>();
+  const dispatch = useDispatch();
+  const { checklists } = useSelector((state) => state.checklists);
 
+  useEffect(() => {
+    if (!checklists.length) dispatch(getChecklists());
+  }, []);
   useEffect(() => {
     setTasks(selected);
   }, [selected]);
@@ -220,6 +227,7 @@ export default function SelectTasks({
               <Select
                 displayEmpty
                 defaultValue=""
+                sx={{ mb: 1 }}
                 onChange={(event) =>
                   addCheckList(
                     checklists.find(
@@ -303,7 +311,7 @@ export default function SelectTasks({
             disabled={
               !tasks.length ||
               (['createChecklist', 'editChecklist'].includes(action) &&
-                name.trim() === '')
+                (!name || name.trim() === ''))
             }
             onClick={onSave}
             variant="contained"

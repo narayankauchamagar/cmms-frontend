@@ -10,16 +10,22 @@ import {
   GridToolbar,
   GridValueGetterParams
 } from '@mui/x-data-grid';
-import { Checklist, checklists } from '../../../../models/owns/checklists';
+import { Checklist } from '../../../../models/owns/checklists';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import SelectTasksModal from '../../components/form/SelectTasks';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import { useDispatch } from '../../../../store';
+import { useDispatch, useSelector } from '../../../../store';
 import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContext';
-import { deleteChecklist } from '../../../../slices/checklist';
+import {
+  addChecklist,
+  deleteChecklist,
+  editChecklist,
+  getChecklists
+} from '../../../../slices/checklist';
 import ConfirmDialog from '../../components/ConfirmDialog';
 import { getTaskFromTaskBase } from '../../../../utils/formatters';
+import useAuth from '../../../../hooks/useAuth';
 
 function Checklists() {
   const { t }: { t: any } = useTranslation();
@@ -28,8 +34,14 @@ function Checklists() {
   const [currentChecklist, setCurrentChecklist] = useState<Checklist>();
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const dispatch = useDispatch();
+  const { user } = useAuth();
+  const { companySettingsId } = user;
   const { showSnackBar } = useContext(CustomSnackBarContext);
+  const { checklists } = useSelector((state) => state.checklists);
 
+  useEffect(() => {
+    dispatch(getChecklists());
+  }, []);
   const onDeleteSuccess = () => {
     showSnackBar(t('The Checklist has been deleted successfully'), 'success');
   };
@@ -130,7 +142,14 @@ function Checklists() {
         open={openCreateChecklist}
         onClose={() => setOpenCreateChecklist(false)}
         selected={[]}
-        onSelect={(tasks, { name, description, category }) => {}}
+        onSelect={(tasks, infos) => {
+          dispatch(
+            addChecklist(
+              { ...infos, taskBases: tasks.map((task) => task.taskBase) },
+              companySettingsId
+            )
+          );
+        }}
         action="createChecklist"
       />
       <SelectTasksModal
@@ -141,7 +160,14 @@ function Checklists() {
             getTaskFromTaskBase(taskBase)
           ) ?? []
         }
-        onSelect={(tasks, { name, description, category }) => {}}
+        onSelect={(tasks, infos) => {
+          dispatch(
+            editChecklist(currentChecklist.id, {
+              ...infos,
+              taskBases: tasks.map((task) => task.taskBase)
+            })
+          );
+        }}
         action="editChecklist"
         infos={{
           name: currentChecklist?.name,

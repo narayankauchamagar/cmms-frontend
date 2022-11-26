@@ -63,12 +63,12 @@ export const getChecklists = (): AppThunk => async (dispatch) => {
 };
 
 export const addChecklist =
-  (checklist): AppThunk =>
+  (checklist, companySettingsId): AppThunk =>
   async (dispatch) => {
-    const checklistResponse = await api.post<Checklist>(
-      'checklists',
-      checklist
-    );
+    const checklistResponse = await api.post<Checklist>('checklists', {
+      ...checklist,
+      companySettings: { id: companySettingsId }
+    });
     dispatch(slice.actions.addChecklist({ checklist: checklistResponse }));
   };
 export const editChecklist =
