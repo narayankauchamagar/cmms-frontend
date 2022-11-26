@@ -9,8 +9,10 @@ import {
   List,
   ListItem,
   ListItemText,
+  Menu,
   MenuItem,
   Select,
+  Stack,
   Tab,
   Tabs,
   TextField,
@@ -18,7 +20,7 @@ import {
   useTheme
 } from '@mui/material';
 import WorkOrder from '../../../models/owns/workOrder';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DoDisturbOnTwoToneIcon from '@mui/icons-material/DoDisturbOnTwoTone';
@@ -27,10 +29,13 @@ import Asset from '../../../models/owns/asset';
 import AddTimeModal from './AddTimeModal';
 import AddCostModal from './AddCostModal';
 import Tasks from './Tasks';
+import LinkTwoToneIcon from '@mui/icons-material/LinkTwoTone';
+import ArchiveTwoToneIcon from '@mui/icons-material/ArchiveTwoTone';
 import PriorityWrapper from '../components/PriorityWrapper';
 import TimerTwoToneIcon from '@mui/icons-material/TimerTwoTone';
 import { editWorkOrder } from '../../../slices/workOrder';
 import { useDispatch, useSelector } from '../../../store';
+import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
 import SelectParts from '../components/form/SelectParts';
 import {
   editPartQuantity,
@@ -51,6 +56,8 @@ import {
 import { getTasks } from '../../../slices/task';
 import { Task } from '../../../models/owns/tasks';
 import { getWorkOrderHistories } from '../../../slices/workOrderHistory';
+import LinkModal from './LinkModal';
+import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;
@@ -60,9 +67,11 @@ interface WorkOrderDetailsProps {
 export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const { workOrder, handleUpdate, tasks } = props;
   const theme = useTheme();
+  const { showSnackBar } = useContext(CustomSnackBarContext);
   const { t }: { t: any } = useTranslation();
   const [openAddTimeModal, setOpenAddTimeModal] = useState<boolean>(false);
   const [openAddCostModal, setOpenAddCostModal] = useState<boolean>(false);
+  const [openLinkModal, setOpenLinkModal] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<string>('details');
   const [changingStatus, setChangingStatus] = useState<boolean>(false);
   const { workOrders } = useSelector((state) => state.partQuantities);
@@ -80,6 +89,31 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const { workOrdersRoot1 } = useSelector((state) => state.additionalCosts);
   const additionalCosts = workOrdersRoot1[workOrder.id] ?? [];
   const dispatch = useDispatch();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const openMenu = Boolean(anchorEl);
+  const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+  const onArchiveSuccess = () => {
+    showSnackBar(t('The Work Order has been archived'), 'success');
+  };
+  const onArchiveFailure = (err) =>
+    showSnackBar(t("The Work Order couldn't be archived"), 'error');
+  const onArchive = () => {
+    handleCloseMenu();
+    if (
+      window.confirm(
+        t('Are you sure you want to archive ') + workOrder.title + ' ?'
+      )
+    ) {
+      dispatch(editWorkOrder(workOrder?.id, { ...workOrder, archived: true }))
+        .then(onArchiveSuccess)
+        .catch(onArchiveFailure);
+    }
+  };
   useEffect(() => {
     dispatch(getPartQuantitys(workOrder.id));
     dispatch(getAdditionalTimes(workOrder.id));
@@ -221,12 +255,18 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
           <Typography variant="h6">{workOrder?.description}</Typography>
         </Box>
         <Box>
-          <EditTwoToneIcon
+          <IconButton style={{ marginRight: 10 }} onClick={handleOpenMenu}>
+            <MoreVertTwoToneIcon />
+          </IconButton>
+          <IconButton
             onClick={() => handleUpdate(workOrder.id)}
-            style={{ cursor: 'pointer', marginRight: 10 }}
-            color="primary"
-          />
-          <DeleteTwoToneIcon style={{ cursor: 'pointer' }} color="error" />
+            style={{ marginRight: 10 }}
+          >
+            <EditTwoToneIcon color="primary" />
+          </IconButton>
+          <IconButton>
+            <DeleteTwoToneIcon color="error" />
+          </IconButton>
         </Box>
       </Grid>
       <Divider />
@@ -704,6 +744,30 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
         onClose={() => setOpenAddCostModal(false)}
         workOrderId={workOrder.id}
       />
+      <LinkModal
+        open={openLinkModal}
+        onClose={() => setOpenLinkModal(false)}
+        workOrderId={workOrder.id}
+      />
+      <Menu anchorEl={anchorEl} open={openMenu} onClose={handleCloseMenu}>
+        <MenuItem
+          onClick={() => {
+            setOpenLinkModal(true);
+            handleCloseMenu();
+          }}
+        >
+          <Stack spacing={2} direction="row">
+            <LinkTwoToneIcon />
+            <Typography variant="h6">{t('Link')}</Typography>
+          </Stack>
+        </MenuItem>
+        <MenuItem onClick={onArchive}>
+          <Stack spacing={2} direction="row">
+            <ArchiveTwoToneIcon />
+            <Typography variant="h6">{t('Archive')}</Typography>
+          </Stack>
+        </MenuItem>
+      </Menu>
     </Grid>
   );
 }
