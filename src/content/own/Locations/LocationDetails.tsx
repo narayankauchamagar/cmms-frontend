@@ -31,6 +31,8 @@ import { IField } from '../type';
 import { useDispatch, useSelector } from '../../../store';
 import { getAssetsByLocation } from '../../../slices/asset';
 import { useNavigate } from 'react-router-dom';
+import { workOrders } from '../../../models/owns/workOrder';
+import { getWorkOrdersByLocation } from '../../../slices/workOrder';
 
 interface LocationDetailsProps {
   location: Location;
@@ -44,7 +46,9 @@ export default function LocationDetails(props: LocationDetailsProps) {
   const [openAddFloorPlan, setOpenAddFloorPlan] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<string>('assets');
   const { locations } = useSelector((state) => state.assets);
+  const { locations1 } = useSelector((state) => state.workOrders);
   const locationAssets = locations[location.id] ?? [];
+  const locationWorkOrders = locations1[location.id] ?? [];
   const theme = useTheme();
   const navigate = useNavigate();
   const tabs = [
@@ -100,6 +104,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
 
   useEffect(() => {
     dispatch(getAssetsByLocation(location.id));
+    dispatch(getWorkOrdersByLocation(location.id));
   }, [location]);
 
   const renderAddFloorPlanModal = () => (
@@ -214,6 +219,29 @@ export default function LocationDetails(props: LocationDetailsProps) {
                   <ListItemText
                     primary={asset.name}
                     secondary={asset.createdAt}
+                  />
+                </ListItemButton>
+              ))}
+            </List>
+          </Box>
+        )}
+        {currentTab === 'workOrders' && (
+          <Box>
+            <Box display="flex" justifyContent="right">
+              <Button startIcon={<AddTwoToneIcon fontSize="small" />}>
+                {t('Asset')}
+              </Button>
+            </Box>
+            <List sx={{ width: '100%' }}>
+              {locationWorkOrders.map((workOrder) => (
+                <ListItemButton
+                  key={workOrder.id}
+                  divider
+                  onClick={() => navigate(`/app/work-orders/${workOrder.id}`)}
+                >
+                  <ListItemText
+                    primary={workOrder.title}
+                    secondary={workOrder.createdAt}
                   />
                 </ListItemButton>
               ))}

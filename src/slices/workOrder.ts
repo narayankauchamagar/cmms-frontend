@@ -7,10 +7,12 @@ import api from '../utils/api';
 const basePath = 'work-orders';
 interface WorkOrderState {
   workOrders: WorkOrder[];
+  locations1: { [key: number]: WorkOrder[] };
 }
 
 const initialState: WorkOrderState = {
-  workOrders: []
+  workOrders: [],
+  locations1: {}
 };
 
 const slice = createSlice({
@@ -52,6 +54,13 @@ const slice = createSlice({
         (workOrder) => workOrder.id === id
       );
       state.workOrders.splice(workOrderIndex, 1);
+    },
+    getWorkOrdersByLocation(
+      state: WorkOrderState,
+      action: PayloadAction<{ workOrders: WorkOrder[]; id: number }>
+    ) {
+      const { workOrders, id } = action.payload;
+      state.locations1[id] = workOrders;
     }
   }
 });
@@ -90,4 +99,15 @@ export const deleteWorkOrder =
     }
   };
 
+export const getWorkOrdersByLocation =
+  (id: number): AppThunk =>
+  async (dispatch) => {
+    const workOrders = await api.get<WorkOrder[]>(`${basePath}/location/${id}`);
+    dispatch(
+      slice.actions.getWorkOrdersByLocation({
+        id,
+        workOrders
+      })
+    );
+  };
 export default slice;
