@@ -20,7 +20,8 @@ import CustomDataGrid from '../components/CustomDatagrid';
 import {
   GridEventListener,
   GridRenderCellParams,
-  GridToolbar
+  GridToolbar,
+  GridValueGetterParams
 } from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { AssetRow } from '../../../models/owns/asset';
@@ -121,7 +122,7 @@ function Assets() {
       headerName: t('Primary User'),
       description: t('Primary User'),
       width: 150,
-      valueGetter: (params) =>
+      valueGetter: (params: GridValueGetterParams<UserMiniDTO>) =>
         params.row.primaryUser
           ? `${params.row.primaryUser?.firstName} ${params.row.primaryUser?.lastName}`
           : null

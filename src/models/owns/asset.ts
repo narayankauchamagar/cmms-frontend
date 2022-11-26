@@ -1,5 +1,11 @@
+import { UserMiniDTO } from '../user';
 import { Audit } from './audit';
 import { PartMiniDTO } from './part';
+import { TeamMiniDTO, teams } from './team';
+import { VendorMiniDTO, vendors } from './vendor';
+import Location, { locations } from './location';
+import { CustomerMiniDTO, customers } from './customer';
+import { users } from './user';
 
 export default interface Asset extends Audit {
   id: number;
@@ -11,17 +17,18 @@ export interface AssetDTO extends Audit {
   id: number;
   name: string;
   image: string;
-  location: string;
+  location: Location;
   area: string;
   model: string;
   serialNumber: string;
   barCode: string;
   category: string;
   description: string;
-  primaryUser: string;
-  users: number;
-  teams: number;
-  vendors: number;
+  primaryUser: UserMiniDTO;
+  assignedTo: UserMiniDTO[];
+  teams: TeamMiniDTO[];
+  vendors: VendorMiniDTO[];
+  customers: CustomerMiniDTO[];
   parentAsset: string;
   openWorkOrders: number;
   additionalInfos: string;
@@ -64,18 +71,19 @@ export const assetDTOS: AssetDTO[] = [
     id: 212,
     name: 'Name',
     image: 'Image',
-    location: 'Location',
+    location: locations[1],
     area: 'Area',
     model: 'Model',
     serialNumber: 'fdsf',
     barCode: 'Barcode',
     category: 'Category',
     description: 'desc',
-    primaryUser: 'user',
-    users: 1,
-    teams: 4,
+    primaryUser: users[0],
+    assignedTo: users,
+    teams,
     additionalInfos: '',
-    vendors: 3,
+    vendors,
+    customers,
     parentAsset: 'string',
     openWorkOrders: 2,
     createdAt: 'dfggj',
@@ -88,66 +96,19 @@ export const assetDTOS: AssetDTO[] = [
     id: 211,
     name: 'Name',
     image: 'Image',
-    location: 'Location',
-    additionalInfos: '',
+    location: locations[1],
     area: 'Area',
     model: 'Model',
+    serialNumber: 'fdsf',
     barCode: 'Barcode',
     category: 'Category',
     description: 'desc',
-    serialNumber: 'fdsf',
-    primaryUser: 'user',
-    users: 1,
-    teams: 4,
-    vendors: 3,
-    parentAsset: 'string',
-    openWorkOrders: 2,
-    createdAt: 'dfggj',
-    createdBy: 'ghu',
-    updatedAt: 'ghfgj',
-    updatedBy: 'ghfgj',
-    parts: []
-  },
-  {
-    id: 52,
-    name: 'Name',
-    image: 'Image',
-    location: 'Location',
-    area: 'Area',
-    model: 'Model',
+    primaryUser: users[0],
+    assignedTo: users,
+    teams,
     additionalInfos: '',
-    barCode: 'Barcode',
-    description: 'bjhb',
-    serialNumber: 'fdsf',
-    category: 'Category',
-    primaryUser: 'user',
-    users: 1,
-    teams: 4,
-    vendors: 3,
-    parentAsset: 'string',
-    openWorkOrders: 2,
-    createdAt: 'dfggj',
-    createdBy: 'ghu',
-    updatedAt: 'ghfgj',
-    updatedBy: 'ghfgj',
-    parts: []
-  },
-  {
-    id: 245,
-    name: 'Name',
-    image: 'Image',
-    location: 'Location',
-    area: 'Area',
-    model: 'Model',
-    barCode: 'Barcode',
-    category: 'Category',
-    description: 'desc',
-    primaryUser: 'user',
-    users: 1,
-    teams: 4,
-    vendors: 3,
-    additionalInfos: '',
-    serialNumber: 'fdsf',
+    vendors,
+    customers,
     parentAsset: 'string',
     openWorkOrders: 2,
     createdAt: 'dfggj',

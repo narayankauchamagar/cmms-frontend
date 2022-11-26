@@ -240,6 +240,34 @@ const ShowAsset = ({}: PropsType) => {
                 label: asset?.location.name,
                 value: asset?.location.id
               },
+              primaryUser: {
+                label: `${asset?.primaryUser.firstName} ${asset?.primaryUser.lastName}`,
+                value: asset?.primaryUser.id
+              },
+              assignedTo: asset?.assignedTo?.map((user) => {
+                return {
+                  label: `${user.firstName} ${user.lastName}`,
+                  value: user.id
+                };
+              }),
+              customers: asset?.customers?.map((customer) => {
+                return {
+                  label: customer.name,
+                  value: customer.id
+                };
+              }),
+              vendors: asset?.vendors?.map((vendor) => {
+                return {
+                  label: vendor.companyName,
+                  value: vendor.id
+                };
+              }),
+              teams: asset?.teams?.map((team) => {
+                return {
+                  label: team.name,
+                  value: team.id
+                };
+              }),
               parts:
                 asset?.parts?.map((part) => {
                   return {

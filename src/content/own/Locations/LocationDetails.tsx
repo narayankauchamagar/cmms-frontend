@@ -23,7 +23,6 @@ import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import Asset, { assets } from '../../../models/owns/asset';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import { parts } from '../../../models/owns/part';
 import FloorPlan from '../../../models/owns/floorPlan';
 import Form from '../components/form';
 import * as Yup from 'yup';
@@ -45,7 +44,6 @@ export default function LocationDetails(props: LocationDetailsProps) {
     { value: 'assets', label: t('Assets') },
     { value: 'files', label: t('Files') },
     { value: 'workOrders', label: t('Work Orders') },
-    { value: 'parts', label: t('Parts') },
     { value: 'floorPlans', label: t('Floor Plans') },
     { value: 'people', label: t('People') }
   ];
@@ -198,25 +196,6 @@ export default function LocationDetails(props: LocationDetailsProps) {
                   <ListItemText
                     primary={asset.name}
                     secondary={asset.createdAt}
-                  />
-                </ListItemButton>
-              ))}
-            </List>
-          </Box>
-        )}
-        {currentTab === 'parts' && (
-          <Box>
-            <Box display="flex" justifyContent="right">
-              <Button startIcon={<AddTwoToneIcon fontSize="small" />}>
-                {t('Parts')}
-              </Button>
-            </Box>
-            <List sx={{ width: '100%' }}>
-              {parts.map((part) => (
-                <ListItemButton key={part.id} divider>
-                  <ListItemText
-                    primary={part.name}
-                    secondary={part.createdAt}
                   />
                 </ListItemButton>
               ))}
