@@ -453,17 +453,8 @@ function WorkOrders() {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               const formattedValues = formatValues(values);
-              return dispatch(
-                patchTasks(
-                  currentWorkOrder?.id,
-                  formattedValues.tasks?.map((task) => task.taskBase) ?? []
-                )
-              )
-                .then(() =>
-                  dispatch(addWorkOrder(formattedValues)).then(
-                    onCreationSuccess
-                  )
-                )
+              return dispatch(addWorkOrder(formattedValues))
+                .then(onCreationSuccess)
                 .catch(onCreationFailure);
             }}
           />

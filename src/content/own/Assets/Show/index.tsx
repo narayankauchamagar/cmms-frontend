@@ -240,10 +240,12 @@ const ShowAsset = ({}: PropsType) => {
                 label: asset?.location.name,
                 value: asset?.location.id
               },
-              primaryUser: {
-                label: `${asset?.primaryUser.firstName} ${asset?.primaryUser.lastName}`,
-                value: asset?.primaryUser.id
-              },
+              primaryUser: asset?.primaryUser
+                ? {
+                    label: `${asset?.primaryUser.firstName} ${asset?.primaryUser.lastName}`,
+                    value: asset?.primaryUser.id
+                  }
+                : null,
               assignedTo: asset?.assignedTo?.map((user) => {
                 return {
                   label: `${user.firstName} ${user.lastName}`,
@@ -272,7 +274,7 @@ const ShowAsset = ({}: PropsType) => {
                 asset?.parts?.map((part) => {
                   return {
                     label: part.name,
-                    value: part.id.toString()
+                    value: part.id
                   };
                 }) ?? []
             }}

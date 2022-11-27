@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { AppThunk } from 'src/store';
 import WorkOrder from '../models/owns/workOrder';
 import api from '../utils/api';
+import { Task } from '../models/owns/tasks';
 
 const basePath = 'work-orders';
 interface WorkOrderState {
@@ -77,6 +78,15 @@ export const addWorkOrder =
   async (dispatch) => {
     const workOrderResponse = await api.post<WorkOrder>(basePath, workOrder);
     dispatch(slice.actions.addWorkOrder({ workOrder: workOrderResponse }));
+    const taskBases = workOrder.tasks?.map((task) => task.taskBase) ?? [];
+    if (taskBases.length) {
+      const tasks = await api.patch<Task[]>(
+        `tasks/work-order/${workOrderResponse.id}`,
+        taskBases,
+        null,
+        true
+      );
+    }
   };
 export const editWorkOrder =
   (id: number, workOrder): AppThunk =>

@@ -104,7 +104,7 @@ export default (props: PropsType) => {
     return formik.handleChange(field);
   };
 
-  const ComplexSelect = ({ formik, field }: { formik; field }) => {
+  const renderSelect = (formik, field) => {
     let options = field.items;
     let loading = field.loading;
     let onOpen = field.onPress;
@@ -191,22 +191,22 @@ export default (props: PropsType) => {
           <>
             <Box display="flex" flexDirection="column">
               {values?.length
-                ? values.map((part) => (
+                ? values.map(({ label, value }) => (
                     <Link
                       sx={{ mb: 1 }}
                       target="_blank"
                       rel="noopener noreferrer"
-                      href={`/app/inventory/parts/${part.id}`}
-                      key={part.id}
+                      href={`/app/inventory/parts/${value}`}
+                      key={value}
                       variant="h4"
                     >
-                      {part.name}
+                      {label}
                     </Link>
                   ))
                 : null}
             </Box>
             <SelectParts
-              selected={values?.map((value) => Number(value.value)) ?? []}
+              selected={values?.map(({ label, value }) => Number(value)) ?? []}
               onChange={(newParts) => {
                 handleChange(formik, field.name, newParts);
               }}
@@ -302,7 +302,7 @@ export default (props: PropsType) => {
               return (
                 <Grid item xs={12} lg={field.midWidth ? 6 : 12} key={index}>
                   {field.type === 'select' ? (
-                    <ComplexSelect formik={formik} field={field} />
+                    renderSelect(formik, field)
                   ) : field.type === 'checkbox' ? (
                     <CheckBoxForm
                       label={field.label}

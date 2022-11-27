@@ -26,10 +26,7 @@ export const formatAssetValues = (values) => {
   values.vendors = formatSelectMultiple(values.vendors);
   values.assignedTo = formatSelectMultiple(values.assignedTo);
   values.teams = formatSelectMultiple(values.teams);
-  values.parts =
-    values.parts?.map((part) => {
-      return { id: part.id };
-    }) ?? [];
+  values.parts = formatSelectMultiple(values.parts);
   return values;
 };
 
