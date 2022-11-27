@@ -61,18 +61,20 @@ export const getTasks =
 export const patchTasks =
   (workOrderId: number, taskBases: any[]): AppThunk =>
   async (dispatch) => {
-    const tasks = await api.patch<Task[]>(
-      `${basePath}/work-order/${workOrderId}`,
-      taskBases,
-      null,
-      true
-    );
-    dispatch(
-      slice.actions.patchTasks({
-        workOrderId,
-        tasks
-      })
-    );
+    if (taskBases.length) {
+      const tasks = await api.patch<Task[]>(
+        `${basePath}/work-order/${workOrderId}`,
+        taskBases,
+        null,
+        true
+      );
+      dispatch(
+        slice.actions.patchTasks({
+          workOrderId,
+          tasks
+        })
+      );
+    }
   };
 
 export const deleteTask =

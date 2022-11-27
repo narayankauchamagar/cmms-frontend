@@ -41,7 +41,6 @@ import * as Yup from 'yup';
 import { isNumeric } from '../../../utils/validators';
 import { teams } from '../../../models/owns/team';
 import { vendors } from '../../../models/owns/vendor';
-import { customers } from '../../../models/owns/customer';
 import LocationDetails from './LocationDetails';
 import { useParams } from 'react-router-dom';
 import Map from '../components/Map';
@@ -285,7 +284,7 @@ function Locations() {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               const formattedValues = formatValues(values);
-              dispatch(addLocation(formattedValues))
+              return dispatch(addLocation(formattedValues))
                 .then(onCreationSuccess)
                 .catch(onCreationFailure);
             }}
@@ -361,7 +360,7 @@ function Locations() {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               const formattedValues = formatValues(values);
-              dispatch(editLocation(currentLocation.id, formattedValues))
+              return dispatch(editLocation(currentLocation.id, formattedValues))
                 .then(onEditSuccess)
                 .catch(onEditFailure);
             }}

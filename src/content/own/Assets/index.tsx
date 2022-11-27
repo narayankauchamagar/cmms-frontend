@@ -413,7 +413,7 @@ function Assets() {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               const formattedValues = formatAssetValues(values);
-              dispatch(addAsset(formattedValues))
+              return dispatch(addAsset(formattedValues))
                 .then(onCreationSuccess)
                 .catch(onCreationFailure);
             }}

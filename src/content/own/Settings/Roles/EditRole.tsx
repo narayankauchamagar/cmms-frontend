@@ -109,7 +109,7 @@ function EditRole({ role, open, onClose, formatValues }: EditRoleProps) {
         ) => {
           const formattedValues = formatValues(_values);
           setSubmitting(true);
-          dispatch(editRole(role.id, formattedValues))
+          return dispatch(editRole(role.id, formattedValues))
             .then(onEditSuccess)
             .catch(onEditFailure)
             .finally(() => setSubmitting(false));

@@ -104,20 +104,16 @@ export default function AddTimeModal({
           values={{ includeToTotalTime: true }}
           onChange={({ field, e }) => {}}
           onSubmit={async (values) => {
-            try {
-              const formattedValues = { ...values };
-              formattedValues.assignedTo = formatSelect(
-                formattedValues.assignedTo
-              );
-              formattedValues.timeCategory = formatSelect(
-                formattedValues.timeCategory
-              );
-              dispatch(
-                createAdditionalTime(workOrderId, formattedValues)
-              ).finally(() => onClose());
-            } catch (err) {
-              console.error(err);
-            }
+            const formattedValues = { ...values };
+            formattedValues.assignedTo = formatSelect(
+              formattedValues.assignedTo
+            );
+            formattedValues.timeCategory = formatSelect(
+              formattedValues.timeCategory
+            );
+            return dispatch(
+              createAdditionalTime(workOrderId, formattedValues)
+            ).finally(() => onClose());
           }}
         />
       </DialogContent>

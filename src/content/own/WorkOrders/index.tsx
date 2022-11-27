@@ -453,10 +453,10 @@ function WorkOrders() {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               const formattedValues = formatValues(values);
-              dispatch(
+              return dispatch(
                 patchTasks(
                   currentWorkOrder?.id,
-                  formattedValues.tasks.map((task) => task.taskBase)
+                  formattedValues.tasks?.map((task) => task.taskBase) ?? []
                 )
               )
                 .then(() =>
@@ -556,7 +556,7 @@ function WorkOrders() {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               const formattedValues = formatValues(values);
-              dispatch(
+              return dispatch(
                 //TODO editTask
                 patchTasks(
                   currentWorkOrder?.id,

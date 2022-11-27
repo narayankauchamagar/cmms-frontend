@@ -151,7 +151,7 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
             ...values,
             companySettings: { id: companySettingsId }
           };
-          dispatch(addCategory(formattedValues, basePath))
+          return dispatch(addCategory(formattedValues, basePath))
             .then(onCreationSuccess)
             .catch(onCreationFailure);
         }}
@@ -248,7 +248,9 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
             ...values,
             companySettings: { id: companySettingsId }
           };
-          dispatch(editCategory(currentCategory.id, formattedValues, basePath))
+          return dispatch(
+            editCategory(currentCategory.id, formattedValues, basePath)
+          )
             .then(onEditSuccess)
             .catch(onEditFailure);
         }}

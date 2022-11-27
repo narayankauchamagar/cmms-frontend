@@ -279,7 +279,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
                 ...values,
                 rate: Number(values.rate)
               };
-              dispatch(addVendor(formattedValues))
+              return dispatch(addVendor(formattedValues))
                 .then(onCreationSuccess)
                 .catch(onCreationFailure);
             }}
@@ -438,7 +438,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
                       rate: Number(values.rate)
                     }
                   : values;
-                dispatch(editVendor(currentVendor.id, formattedValues))
+                return dispatch(editVendor(currentVendor.id, formattedValues))
                   .then(onEditSuccess)
                   .catch(onEditFailure);
               }}

@@ -245,7 +245,7 @@ function CreatePurchaseOrder() {
                 //TODO category
                 delete values.category;
                 values.vendor = formatSelect(values.vendor);
-                dispatch(addPurchaseOrder(values))
+                return dispatch(addPurchaseOrder(values))
                   .then(onCreationSuccess)
                   .catch(onCreationFailure);
               }}

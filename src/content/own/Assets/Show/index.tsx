@@ -279,7 +279,7 @@ const ShowAsset = ({}: PropsType) => {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               const formattedValues = formatAssetValues(values);
-              dispatch(editAsset(Number(assetId), formattedValues))
+              return dispatch(editAsset(Number(assetId), formattedValues))
                 .then(onEditSuccess)
                 .catch(onEditFailure);
             }}

@@ -180,7 +180,7 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               values.users = formatSelectMultiple(values.users);
-              dispatch(addTeam(values))
+              return dispatch(addTeam(values))
                 .then(onCreationSuccess)
                 .catch(onCreationFailure);
             }}

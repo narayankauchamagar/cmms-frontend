@@ -205,7 +205,7 @@ function Files() {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               values.priority = values.priority?.value;
-              dispatch(addRequest(values))
+              return dispatch(addRequest(values))
                 .then(onCreationSuccess)
                 .catch(onCreationFailure);
             }}
@@ -256,7 +256,7 @@ function Files() {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               values.priority = values.priority?.value;
-              dispatch(editRequest(currentRequest?.id, values))
+              return dispatch(editRequest(currentRequest?.id, values))
                 .then(onEditSuccess)
                 .catch(onEditFailure);
             }}

@@ -243,7 +243,7 @@ const Sets = ({ setAction }: PropsType) => {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               const formattedValues = formatValues(values);
-              dispatch(addMultiParts(formattedValues))
+              return dispatch(addMultiParts(formattedValues))
                 .then(onCreationSuccess)
                 .catch(onCreationFailure);
             }}
@@ -294,7 +294,7 @@ const Sets = ({ setAction }: PropsType) => {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               const formattedValues = formatValues(values);
-              dispatch(editMultiParts(currentSet.id, formattedValues))
+              return dispatch(editMultiParts(currentSet.id, formattedValues))
                 .then(onEditSuccess)
                 .catch(onEditFailure);
             }}

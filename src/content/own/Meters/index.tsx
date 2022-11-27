@@ -257,7 +257,7 @@ function Meters() {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               const formattedValues = formatValues(values);
-              dispatch(addMeter(formattedValues))
+              return dispatch(addMeter(formattedValues))
                 .then(onCreationSuccess)
                 .catch(onCreationFailure);
             }}
@@ -318,7 +318,7 @@ function Meters() {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               const formattedValues = formatValues(values);
-              dispatch(editMeter(currentMeter.id, formattedValues))
+              return dispatch(editMeter(currentMeter.id, formattedValues))
                 .then(onEditSuccess)
                 .catch(onEditFailure);
             }}

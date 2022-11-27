@@ -129,13 +129,9 @@ export default function LocationDetails(props: LocationDetailsProps) {
             values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              try {
-                dispatch(createFloorPlan(location.id, values)).then(() =>
-                  setOpenAddFloorPlan(false)
-                );
-              } catch (err) {
-                console.error(err);
-              }
+              return dispatch(createFloorPlan(location.id, values)).then(() =>
+                setOpenAddFloorPlan(false)
+              );
             }}
           />
         </Box>

@@ -339,7 +339,7 @@ const Parts = ({ setAction }: PropsType) => {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               const formattedValues = formatValues(values);
-              dispatch(addPart(formattedValues))
+              return dispatch(addPart(formattedValues))
                 .then(onCreationSuccess)
                 .catch(onCreationFailure);
             }}
@@ -452,7 +452,7 @@ const Parts = ({ setAction }: PropsType) => {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               const formattedValues = formatValues(values);
-              dispatch(editPart(currentPart.id, formattedValues))
+              return dispatch(editPart(currentPart.id, formattedValues))
                 .then(onEditSuccess)
                 .catch(onEditFailure);
             }}

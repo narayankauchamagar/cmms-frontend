@@ -93,19 +93,14 @@ export default function AddCostModal({
           values={{ includeToTotalCost: true }}
           onChange={({ field, e }) => {}}
           onSubmit={async (values) => {
-            console.log(values);
-            try {
-              const formattedValues = { ...values };
-              formattedValues.assignedTo = formatSelect(
-                formattedValues.assignedTo
-              );
-              formattedValues.category = formatSelect(formattedValues.category);
-              dispatch(
-                createAdditionalCost(workOrderId, formattedValues)
-              ).finally(() => onClose());
-            } catch (err) {
-              console.error(err);
-            }
+            const formattedValues = { ...values };
+            formattedValues.assignedTo = formatSelect(
+              formattedValues.assignedTo
+            );
+            formattedValues.category = formatSelect(formattedValues.category);
+            return dispatch(
+              createAdditionalCost(workOrderId, formattedValues)
+            ).finally(() => onClose());
           }}
         />
       </DialogContent>

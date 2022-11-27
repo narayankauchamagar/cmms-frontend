@@ -384,7 +384,9 @@ function PurchaseOrders() {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               values.vendor = formatSelect(values.vendor);
-              dispatch(editPurchaseOrder(currentPurchaseOrder.id, values))
+              return dispatch(
+                editPurchaseOrder(currentPurchaseOrder.id, values)
+              )
                 .then(onEditSuccess)
                 .catch(onEditFailure);
             }}

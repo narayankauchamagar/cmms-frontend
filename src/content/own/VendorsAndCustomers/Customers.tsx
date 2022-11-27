@@ -319,7 +319,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
                 ...values,
                 rate: Number(values.rate)
               };
-              dispatch(addCustomer(formattedValues))
+              return dispatch(addCustomer(formattedValues))
                 .then(onCreationSuccess)
                 .catch(onCreationFailure);
             }}
@@ -479,7 +479,9 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
                       rate: Number(values.rate)
                     }
                   : values;
-                dispatch(editCustomer(currentCustomer.id, formattedValues))
+                return dispatch(
+                  editCustomer(currentCustomer.id, formattedValues)
+                )
                   .then(onEditSuccess)
                   .catch(onEditFailure);
               }}
