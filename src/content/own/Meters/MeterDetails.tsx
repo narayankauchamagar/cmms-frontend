@@ -3,6 +3,9 @@ import {
   Divider,
   Grid,
   IconButton,
+  List,
+  ListItem,
+  ListItemText,
   Tab,
   Tabs,
   Typography,
@@ -14,9 +17,10 @@ import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import Meter from '../../../models/owns/meter';
 import * as Yup from 'yup';
-import wait from '../../../utils/wait';
 import Form from '../components/form';
 import { IField } from '../type';
+import { useDispatch, useSelector } from '../../../store';
+import { createReading, getReadings } from '../../../slices/reading';
 
 interface MeterDetailsProps {
   meter: Meter;
@@ -26,8 +30,11 @@ interface MeterDetailsProps {
 export default function MeterDetails(props: MeterDetailsProps) {
   const { meter, handleOpenUpdate, handleOpenDelete } = props;
   const { t }: { t: any } = useTranslation();
+  const dispatch = useDispatch();
   const [currentTab, setCurrentTab] = useState<string>('details');
   const theme = useTheme();
+  const { metersReadings } = useSelector((state) => state.readings);
+  const currentMeterReadings = metersReadings[meter?.id] ?? [];
   const tabs = [
     { value: 'details', label: t('Details') },
     { value: 'history', label: t('History') }
@@ -35,6 +42,8 @@ export default function MeterDetails(props: MeterDetailsProps) {
 
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
+    if (value === 'history' && !currentMeterReadings.length)
+      dispatch(getReadings(meter.id));
   };
   const BasicField = ({
     label,
@@ -76,15 +85,15 @@ export default function MeterDetails(props: MeterDetailsProps) {
   ];
   const fields: Array<IField> = [
     {
-      name: 'reading',
-      type: 'text',
+      name: 'value',
+      type: 'number',
       label: t('Reading'),
       placeholder: t('Enter Meter value'),
       required: true
     }
   ];
   const shape = {
-    reading: Yup.string().required(t('Reading value is required'))
+    value: Yup.number().required(t('Reading value is required'))
   };
   return (
     <Grid
@@ -135,13 +144,9 @@ export default function MeterDetails(props: MeterDetailsProps) {
               fields={fields}
               validation={Yup.object().shape(shape)}
               submitText={t('Add Reading')}
-              values={{ reading: 0 }}
+              values={{ value: 0 }}
               onSubmit={async (values) => {
-                try {
-                  await wait(2000);
-                } catch (err) {
-                  console.error(err);
-                }
+                return dispatch(createReading(meter.id, values));
               }}
             />
             <Typography sx={{ mt: 2, mb: 1 }} variant="h4">
@@ -157,6 +162,18 @@ export default function MeterDetails(props: MeterDetailsProps) {
               ))}
             </Grid>
           </Box>
+        )}
+        {currentTab === 'history' && (
+          <List>
+            {currentMeterReadings.map((reading) => (
+              <ListItem key={reading.id} divider>
+                <ListItemText
+                  primary={`${reading.value} ${meter.unit}`}
+                  secondary={reading.createdAt}
+                />
+              </ListItem>
+            ))}
+          </List>
         )}
       </Grid>
     </Grid>

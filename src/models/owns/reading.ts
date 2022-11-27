@@ -1,15 +1,7 @@
 import { Audit } from './audit';
-import User, { users } from './user';
-import Asset, { assets } from './asset';
-import Location, { locations } from './location';
 
-export default interface Reading {
+export default interface Reading extends Audit {
+  id: number;
   value: number;
+  date: string;
 }
-
-export const readings: Reading[] = [
-  {
-    value: 57
-  },
-  { value: 75 }
-];

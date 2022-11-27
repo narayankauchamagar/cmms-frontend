@@ -1,8 +1,4 @@
 import { Audit } from './audit';
-import User, { users } from './user';
-import Asset, { assets } from './asset';
-import Location, { locations } from './location';
-import Reading, { readings } from './reading';
 import File, { files } from './file';
 
 export default interface Request extends Audit {

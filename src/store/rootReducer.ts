@@ -25,6 +25,7 @@ import { reducer as floorPlanReducer } from 'src/slices/floorPlan';
 import { reducer as currenciesReducer } from 'src/slices/currency';
 import { reducer as workOrderHistoriesReducer } from 'src/slices/workOrderHistory';
 import { reducer as relationReducer } from 'src/slices/relation';
+import { reducer as readingReducer } from 'src/slices/reading';
 
 const rootReducer = combineReducers({
   calendar: calendarReducer,
@@ -52,7 +53,8 @@ const rootReducer = combineReducers({
   floorPlans: floorPlanReducer,
   currencies: currenciesReducer,
   workOrderHistories: workOrderHistoriesReducer,
-  relations: relationReducer
+  relations: relationReducer,
+  readings: readingReducer
 });
 
 export default rootReducer;
