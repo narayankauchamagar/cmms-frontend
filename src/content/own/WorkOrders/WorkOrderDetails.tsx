@@ -9,6 +9,7 @@ import {
   List,
   ListItem,
   ListItemText,
+  ListSubheader,
   Menu,
   MenuItem,
   Select,
@@ -58,6 +59,8 @@ import { Task } from '../../../models/owns/tasks';
 import { getWorkOrderHistories } from '../../../slices/workOrderHistory';
 import LinkModal from './LinkModal';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
+import { deleteRelation, getRelations } from '../../../slices/relation';
+import Relation, { relationTypes } from '../../../models/owns/relation';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;
@@ -80,7 +83,9 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const { workOrderHistories } = useSelector(
     (state) => state.workOrderHistories
   );
+  const { workOrdersRelations } = useSelector((state) => state.relations);
   const currentWorkOrderHistories = workOrderHistories[workOrder.id] ?? [];
+  const currentWorkOrderRelations = workOrdersRelations[workOrder.id] ?? [];
   const additionalTimes = workOrdersRoot[workOrder.id] ?? [];
   const primaryTime = additionalTimes.find(
     (additionalTime) => additionalTime.primaryTime
@@ -119,8 +124,70 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
     dispatch(getAdditionalTimes(workOrder.id));
     dispatch(getAdditionalCosts(workOrder.id));
     dispatch(getTasks(workOrder.id));
+    dispatch(getRelations(workOrder.id));
   }, []);
 
+  const isParent = (relation: Relation): boolean => {
+    return relation.parent.id === workOrder.id;
+  };
+  const groupRelations = (
+    relations: Relation[]
+  ): { [key: string]: { id: number; workOrder: WorkOrder }[] } => {
+    const result = {};
+    relationTypes.forEach((relationType) => {
+      result[relationType] = [];
+    });
+    relations.forEach((relation) => {
+      switch (relation.relationType) {
+        case 'BLOCKS':
+          if (isParent(relation)) {
+            result['BLOCKS'].push({
+              id: relation.id,
+              workOrder: relation.child
+            });
+          } else
+            result['BLOCKED_BY'].push({
+              id: relation.id,
+              workOrder: relation.parent
+            });
+          break;
+        case 'DUPLICATE_OF':
+          if (isParent(relation)) {
+            result['DUPLICATE_OF'].push({
+              id: relation.id,
+              workOrder: relation.child
+            });
+          } else
+            result['DUPLICATED_BY'].push({
+              id: relation.id,
+              workOrder: relation.parent
+            });
+          break;
+        case 'RELATED_TO':
+          result['RELATED_TO'].push({
+            id: relation.id,
+            workOrder: isParent(relation) ? relation.child : relation.parent
+          });
+          break;
+        case 'SPLIT_FROM':
+          if (isParent(relation)) {
+            result['SPLIT_FROM'].push({
+              id: relation.id,
+              workOrder: relation.child
+            });
+          } else
+            result['SPLIT_TO'].push({
+              id: relation.id,
+              workOrder: relation.parent
+            });
+          break;
+        default:
+          break;
+      }
+    });
+
+    return result;
+  };
   const getAdditionalTimeCost = (additionalTime: AdditionalTime): number => {
     return Number(
       (
@@ -687,6 +754,80 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                 }}
               />
             </Box>
+            {!!currentWorkOrderRelations.length && (
+              <Box>
+                <Divider sx={{ mt: 2 }} />
+                <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
+                  {t('Links')}
+                </Typography>
+                {
+                  <List>
+                    {Object.entries(
+                      groupRelations(currentWorkOrderRelations)
+                    ).map(
+                      ([relationType, relations]) =>
+                        !!relations.length && (
+                          <Box key={relationType}>
+                            <ListSubheader
+                              sx={{ fontWeight: 'bold', fontSize: 20 }}
+                            >
+                              {t(relationType)}
+                            </ListSubheader>
+                            {relations.map((relation) => (
+                              <ListItem
+                                key={relation.id}
+                                secondaryAction={
+                                  <Box
+                                    sx={{
+                                      display: 'flex',
+                                      flexDirection: 'row',
+                                      alignItems: 'center',
+                                      justifyContent: 'flex-end'
+                                    }}
+                                  >
+                                    <IconButton
+                                      sx={{ ml: 1 }}
+                                      onClick={() =>
+                                        dispatch(
+                                          deleteRelation(
+                                            workOrder.id,
+                                            relation.id
+                                          )
+                                        )
+                                      }
+                                    >
+                                      <DeleteTwoToneIcon
+                                        fontSize="small"
+                                        color="error"
+                                      />
+                                    </IconButton>
+                                  </Box>
+                                }
+                              >
+                                <ListItemText
+                                  primary={
+                                    <Typography variant="h6">
+                                      {relation.workOrder.title}
+                                    </Typography>
+                                  }
+                                  secondary={relation.workOrder.createdAt}
+                                />
+                              </ListItem>
+                            ))}
+                          </Box>
+                        )
+                    )}
+                  </List>
+                }
+                <Button
+                  onClick={() => setOpenLinkModal(true)}
+                  variant="outlined"
+                  sx={{ mt: 1 }}
+                >
+                  {t('Link Work Orders')}
+                </Button>
+              </Box>
+            )}
             {!!workOrder.files.length && (
               <Box>
                 <Divider sx={{ mt: 2 }} />

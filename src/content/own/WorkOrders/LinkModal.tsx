@@ -17,6 +17,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from '../../../store';
 import { createRelation } from '../../../slices/relation';
+import { relationTypes } from 'src/models/owns/relation';
 
 interface LinkModalProps {
   open: boolean;
@@ -32,15 +33,6 @@ export default function LinkModal({
   const dispatch = useDispatch();
   const { workOrders } = useSelector((state) => state.workOrders);
 
-  const relationTypes = [
-    'DUPLICATE_OF',
-    'DUPLICATED_BY',
-    'RELATED_TO',
-    'SPLIT_TO',
-    'SPLIT_FROM',
-    'BLOCKED_BY',
-    'BLOCKS'
-  ];
   return (
     <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
       <DialogTitle

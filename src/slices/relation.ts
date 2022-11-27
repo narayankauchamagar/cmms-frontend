@@ -6,11 +6,11 @@ import api from '../utils/api';
 
 const basePath = 'relations';
 interface RelationState {
-  workOrdersRoot: { [id: number]: Relation[] };
+  workOrdersRelations: { [id: number]: Relation[] };
 }
 
 const initialState: RelationState = {
-  workOrdersRoot: {}
+  workOrdersRelations: {}
 };
 
 const slice = createSlice({
@@ -22,7 +22,7 @@ const slice = createSlice({
       action: PayloadAction<{ id: number; relations: Relation[] }>
     ) {
       const { relations, id } = action.payload;
-      state.workOrdersRoot[id] = relations;
+      state.workOrdersRelations[id] = relations;
     },
     createRelation(
       state: RelationState,
@@ -32,9 +32,9 @@ const slice = createSlice({
       }>
     ) {
       const { relation, workOrderId } = action.payload;
-      if (state.workOrdersRoot[workOrderId]) {
-        state.workOrdersRoot[workOrderId].push(relation);
-      } else state.workOrdersRoot[workOrderId] = [relation];
+      if (state.workOrdersRelations[workOrderId]) {
+        state.workOrdersRelations[workOrderId].push(relation);
+      } else state.workOrdersRelations[workOrderId] = [relation];
     },
     deleteRelation(
       state: RelationState,
@@ -44,7 +44,7 @@ const slice = createSlice({
       }>
     ) {
       const { id, workOrderId } = action.payload;
-      state.workOrdersRoot[workOrderId] = state.workOrdersRoot[
+      state.workOrdersRelations[workOrderId] = state.workOrdersRelations[
         workOrderId
       ].filter((relation) => relation.id !== id);
     }
