@@ -13,7 +13,7 @@ export const formatSelectMultiple = (
 
 export const formatSelect = (
   object: { label: string; value: string } | undefined
-) => {
+): { id: number } | null => {
   return object?.value ? { id: Number(object.value) } : null;
 };
 

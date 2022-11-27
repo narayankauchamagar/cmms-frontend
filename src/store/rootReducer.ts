@@ -24,6 +24,7 @@ import { reducer as taskReducer } from 'src/slices/task';
 import { reducer as floorPlanReducer } from 'src/slices/floorPlan';
 import { reducer as currenciesReducer } from 'src/slices/currency';
 import { reducer as workOrderHistoriesReducer } from 'src/slices/workOrderHistory';
+import { reducer as relationReducer } from 'src/slices/relation';
 
 const rootReducer = combineReducers({
   calendar: calendarReducer,
@@ -50,7 +51,8 @@ const rootReducer = combineReducers({
   tasks: taskReducer,
   floorPlans: floorPlanReducer,
   currencies: currenciesReducer,
-  workOrderHistories: workOrderHistoriesReducer
+  workOrderHistories: workOrderHistoriesReducer,
+  relations: relationReducer
 });
 
 export default rootReducer;

@@ -32,7 +32,9 @@ const slice = createSlice({
       }>
     ) {
       const { additionalCost, workOrderId } = action.payload;
-      state.workOrdersRoot1[workOrderId].push(additionalCost);
+      if (state.workOrdersRoot1[workOrderId]) {
+        state.workOrdersRoot1[workOrderId].push(additionalCost);
+      } else state.workOrdersRoot1[workOrderId] = [additionalCost];
     },
     deleteAdditionalCost(
       state: AdditionalCostState,

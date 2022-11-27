@@ -1,5 +1,6 @@
 import {
   Button,
+  CircularProgress,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -8,13 +9,14 @@ import {
   Select,
   Typography
 } from '@mui/material';
+import FormHelperText from '@mui/material/FormHelperText';
 import { useTranslation } from 'react-i18next';
 
 import { Formik } from 'formik';
 
 import * as Yup from 'yup';
-import { useDispatch } from '../../../store';
-import wait from '../../../utils/wait';
+import { useDispatch, useSelector } from '../../../store';
+import { createRelation } from '../../../slices/relation';
 
 interface LinkModalProps {
   open: boolean;
@@ -28,6 +30,8 @@ export default function LinkModal({
 }: LinkModalProps) {
   const { t }: { t: any } = useTranslation();
   const dispatch = useDispatch();
+  const { workOrders } = useSelector((state) => state.workOrders);
+
   const relationTypes = [
     'DUPLICATE_OF',
     'DUPLICATED_BY',
@@ -54,31 +58,24 @@ export default function LinkModal({
       <Formik
         initialValues={{
           relationType: 'BLOCKED_BY',
-          workOrder: null
+          child: null
         }}
         validationSchema={Yup.object().shape({
           relationType: Yup.string().required(
             t('Please select the relationship type.')
           ),
-          workOrder: Yup.number().required(
-            t('The Work Order field is required.')
-          )
+          child: Yup.number().required(t('The Work Order field is required.'))
         })}
-        onSubmit={async (
+        onSubmit={(
           _values,
           { resetForm, setErrors, setStatus, setSubmitting }
         ) => {
-          console.log(_values);
-          try {
-            await wait(1000);
-            resetForm();
-            setStatus({ success: true });
+          setSubmitting(true);
+          _values.child = { id: _values.child };
+          dispatch(createRelation(workOrderId, _values)).finally(() => {
             setSubmitting(false);
-          } catch (err) {
-            console.error(err);
-            setStatus({ success: false });
-            setSubmitting(false);
-          }
+            onClose();
+          });
         }}
       >
         {({
@@ -119,10 +116,44 @@ export default function LinkModal({
                         ))}
                       </Select>
                     </Grid>
+                    <Grid item xs={12}>
+                      <Typography variant="h6" fontWeight="bold">
+                        {t('The Work Order')}
+                      </Typography>
+                      <Select
+                        fullWidth
+                        name="child"
+                        onBlur={handleBlur}
+                        error={Boolean(errors.child)}
+                        onChange={handleChange}
+                        value={values.child}
+                        variant="outlined"
+                      >
+                        {workOrders
+                          .filter((workOrder) => workOrder.id !== workOrderId)
+                          .map((child, index) => (
+                            <MenuItem key={index} value={child.id}>
+                              {child.title}
+                            </MenuItem>
+                          ))}
+                      </Select>
+                      {!!errors.child && (
+                        <FormHelperText color="error">
+                          {t('Please select a Work Order')}
+                        </FormHelperText>
+                      )}
+                    </Grid>
                   </Grid>
                 </Grid>
                 <Grid item xs={12} lg={12}>
-                  <Button variant="contained" type="submit">
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    startIcon={
+                      isSubmitting ? <CircularProgress size="1rem" /> : null
+                    }
+                    disabled={isSubmitting}
+                  >
                     {t('Link')}
                   </Button>
                 </Grid>

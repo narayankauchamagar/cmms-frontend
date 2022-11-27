@@ -32,7 +32,9 @@ const slice = createSlice({
       }>
     ) {
       const { additionalTime, workOrderId } = action.payload;
-      state.workOrdersRoot[workOrderId].push(additionalTime);
+      if (state.workOrdersRoot[workOrderId]) {
+        state.workOrdersRoot[workOrderId].push(additionalTime);
+      } else state.workOrdersRoot[workOrderId] = [additionalTime];
     },
     deleteAdditionalTime(
       state: AdditionalTimeState,
