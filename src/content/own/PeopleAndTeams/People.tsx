@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Chip,
   CircularProgress,
   Dialog,
   DialogContent,
@@ -8,27 +9,29 @@ import {
   Drawer,
   InputAdornment,
   Paper,
+  Stack,
   TextField,
   Typography,
   useTheme
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import wait from 'src/utils/wait';
 import CustomDataGrid from '../components/CustomDatagrid';
 import {
   GridEnrichedColDef,
   GridRenderCellParams,
   GridToolbar
 } from '@mui/x-data-grid';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import UserDetailsDrawer from './UserDetailsDrawer';
 import User, { users } from '../../../models/owns/user';
 import UserRoleCardList from './UserRoleCardList';
 import { EmailOutlined } from '@mui/icons-material';
 import { grey } from '@mui/material/colors';
 import { useParams } from 'react-router-dom';
-import { isNumeric } from 'src/utils/validators';
+import { emailRegExp, isNumeric } from 'src/utils/validators';
 import { useDispatch } from '../../../store';
+import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
+import { inviteUsers } from '../../../slices/user';
 
 interface PropsType {
   values?: any;
@@ -43,11 +46,11 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
   const [detailDrawerOpen, setDetailDrawerOpen] = useState(false);
   const { peopleId } = useParams();
   const dispatch = useDispatch();
-
-  const [inviteUserRoleSelected, setInviteUserRoleSelected] =
-    useState<string>('');
-  const [inviteUserEmail, setInviteUserEmail] = useState<string>('');
+  const { showSnackBar } = useContext(CustomSnackBarContext);
+  const [emails, setEmails] = useState<string[]>([]);
+  const [currentEmail, setCurrentEmail] = useState<string>('');
   const [isInviteSubmitting, setIsInviteSubmitting] = useState(false);
+  const [roleId, setRoleId] = useState<number>();
 
   const handleOpenDetails = (id: number) => {
     const foundUser = users.find((user) => user.id === id);
@@ -66,6 +69,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
     setDetailDrawerOpen(false);
   };
 
+  const onRoleChange = (id: number) => setRoleId(id);
   // if reload with peopleId
   useEffect(() => {
     if (peopleId && isNumeric(peopleId)) {
@@ -123,80 +127,6 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
       width: 150
     }
   ];
-
-  // const RenderPeopleAddModal = () => (
-  //   <Dialog fullWidth maxWidth="sm" open={openModal} onClose={handleCloseModal}>
-  //     <DialogTitle
-  //       sx={{
-  //         p: 3
-  //       }}
-  //     >
-  //       <Typography variant="h4" gutterBottom>
-  //         {t('Invite Users')}
-  //       </Typography>
-  //     </DialogTitle>
-
-  //     <DialogContent
-  //       dividers
-  //       sx={{
-  //         p: 3,
-  //         display: 'flex',
-  //         justifyContent: 'center'
-  //       }}
-  //     >
-  //       <Box sx={{ width: '95%' }}>
-  //         <UserRoleCardList
-  //           listData={userRoleList}
-  //           selectedItem={inviteUserRoleSelected}
-  //           setSelectedItem={setInviteUserRoleSelected}
-  //         />
-  //         <TextField
-  //           sx={{ my: 4 }}
-  //           fullWidth
-  //           helperText={t('You may add 20 users at a time')}
-  //           label={t('Enter email address')}
-  //           placeholder={t('example@email.com')}
-  //           name="email"
-  //           onChange={(e) => {
-  //             setInviteUserEmail(e.target.value);
-  //           }}
-  //           variant={'outlined'}
-  //           required
-  //           InputProps={{
-  //             startAdornment: (
-  //               <InputAdornment position="start">
-  //                 <EmailOutlined />
-  //               </InputAdornment>
-  //             )
-  //           }}
-  //         />
-
-  //         <Button
-  //           fullWidth
-  //           sx={{
-  //             mb: 3
-  //           }}
-  //           onClick={async () => {
-  //             try {
-  //               await wait(2000);
-  //               console.log(
-  //                 'inviteUserRoleSelected -> ',
-  //                 inviteUserRoleSelected
-  //               );
-  //               console.log('inviteUserEmail -> ', inviteUserEmail);
-  //             } catch (err) {
-  //               console.error(err);
-  //             }
-  //           }}
-  //           variant="contained"
-  //         >
-  //           {t('Invite')}
-  //         </Button>
-  //       </Box>
-  //     </DialogContent>
-  //   </Dialog>
-  // );
-
   const RenderPeopleList = () => (
     <Box
       sx={{
@@ -297,13 +227,22 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
               </Typography>
             </Paper>
 
-            <UserRoleCardList
-              selectedItem={inviteUserRoleSelected}
-              setSelectedItem={setInviteUserRoleSelected}
-            />
-
+            <UserRoleCardList onChange={onRoleChange} />
+            <Stack sx={{ mt: 2 }} direction="row" spacing={1}>
+              {emails.map((email, index) => (
+                <Chip
+                  key={index}
+                  label={email}
+                  onDelete={() => {
+                    const emailsClone = [...emails];
+                    emailsClone.splice(index, 1);
+                    setEmails(emailsClone);
+                  }}
+                />
+              ))}
+            </Stack>
             <TextField
-              sx={{ my: 4 }}
+              sx={{ my: 2 }}
               fullWidth
               helperText={t(
                 "You may add 20 users at a time by pressing 'tab' or 'enter' after each email entry. Any duplicate and registered emails will be removed while registering the requested users."
@@ -311,8 +250,28 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
               label={t('Enter email address')}
               placeholder={t('example@email.com')}
               name="email"
-              onChange={(e) => {
-                setInviteUserEmail(e.target.value);
+              value={currentEmail}
+              onChange={(event) => {
+                setCurrentEmail(event.target.value);
+              }}
+              onKeyDown={(event) => {
+                if (['Enter', 'Tab'].includes(event.key)) {
+                  let error;
+                  if (emails.length < 20) {
+                    const emailsClone = [...emails];
+                    if (emailsClone.includes(currentEmail)) {
+                      error = 'This email is already selected';
+                    } else {
+                      if (currentEmail.match(emailRegExp)) {
+                        emailsClone.push(currentEmail);
+                        setEmails(emailsClone);
+                        setCurrentEmail('');
+                      } else error = 'This email is invalid';
+                    }
+                  } else
+                    error = t('You can invite a maximum of 20 users at once');
+                  if (error) showSnackBar(t(error), 'error');
+                }
               }}
               variant={'outlined'}
               required
@@ -324,23 +283,23 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
                 )
               }}
             />
-
             <Button
               fullWidth
               sx={{ mb: 3 }}
               onClick={async () => {
-                try {
-                  setIsInviteSubmitting(true);
-                  await wait(2000);
-                  setIsInviteSubmitting(false);
-                  console.log(
-                    'inviteUserRoleSelected -> ',
-                    inviteUserRoleSelected
-                  );
-                  console.log('inviteUserEmail -> ', inviteUserEmail);
-                } catch (err) {
-                  console.error(err);
-                }
+                if (roleId) {
+                  if (emails.length) {
+                    setIsInviteSubmitting(true);
+                    dispatch(inviteUsers(roleId, emails))
+                      .then(() => {
+                        handleCloseModal();
+                        setEmails([]);
+                        setCurrentEmail('');
+                      })
+                      .finally(() => setIsInviteSubmitting(false));
+                  } else
+                    showSnackBar(t('Please type in emails to invite'), 'error');
+                } else showSnackBar(t('Please select a role'), 'error');
               }}
               variant="contained"
               startIcon={

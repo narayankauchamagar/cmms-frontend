@@ -70,4 +70,15 @@ export const deleteUser =
     }
   };
 
+export const inviteUsers =
+  (roleId: number, emails: string[]): AppThunk =>
+  async (dispatch) => {
+    const successResponse = await api.post<{ success: boolean }>(
+      'users/invite',
+      {
+        role: { id: roleId },
+        emails
+      }
+    );
+  };
 export default slice;

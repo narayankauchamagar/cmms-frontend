@@ -15,7 +15,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import Text from 'src/components/Text';
 import { Engineering } from '@mui/icons-material';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from '../../../store';
 import { getRoles } from '../../../slices/role';
 import { RoleCode } from '../../../models/owns/role';
@@ -28,16 +28,15 @@ const AvatarWrapperSuccess = styled(Avatar)(
 );
 
 interface Props {
-  selectedItem: string;
-  setSelectedItem: React.Dispatch<React.SetStateAction<string>>;
+  onChange: (id: number) => void;
 }
 
-function UserRoleCardList({ selectedItem, setSelectedItem }: Props) {
+function UserRoleCardList({ onChange }: Props) {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
   const dispatch = useDispatch();
   const { roles } = useSelector((state) => state.roles);
-
+  const [selectedItem, setSelectedItem] = useState<number>();
   const defaultRoles: Partial<
     Record<RoleCode, { name: string; description: string }>
   > = {
@@ -78,9 +77,10 @@ function UserRoleCardList({ selectedItem, setSelectedItem }: Props) {
   }, []);
   const isSelected = (value) => selectedItem === value;
 
-  const handleChange = (value) => {
+  const handleChange = (value: number) => {
     if (!isSelected(value)) {
       setSelectedItem(value);
+      onChange(value);
     }
   };
 
