@@ -278,9 +278,9 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
     },
     {
       label: t('Asset'),
-      value: workOrder.asset.name,
+      value: workOrder.asset?.name,
       type: 'asset',
-      id: workOrder.asset.id
+      id: workOrder.asset?.id
     },
     {
       label: t('Team'),

@@ -234,7 +234,7 @@ function WorkOrders() {
       headerName: t('Asset name'),
       description: t('Asset name'),
       width: 150,
-      valueGetter: (params) => params.row.asset.name
+      valueGetter: (params) => params.row.asset?.name
     },
     {
       field: 'address',

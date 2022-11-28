@@ -30,7 +30,7 @@ import Form from '../components/form';
 import * as Yup from 'yup';
 import { IField } from '../type';
 import RequestDetails from './RequestDetails';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { isNumeric } from '../../../utils/validators';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import PriorityWrapper from '../components/PriorityWrapper';
@@ -48,6 +48,7 @@ function Files() {
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const { requests } = useSelector((state) => state.requests);
   const { showSnackBar } = useContext(CustomSnackBarContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setTitle(t('Requests'));
@@ -69,7 +70,7 @@ function Files() {
   };
   const onCreationSuccess = () => {
     setOpenAddModal(false);
-    showSnackBar(t('The Request has been created successfully'), 'success');
+    showSnackBar(t('New Work Order successfully requested'), 'success');
   };
   const onCreationFailure = (err) =>
     showSnackBar(t("The Request couldn't be created"), 'error');
@@ -88,13 +89,17 @@ function Files() {
   const handleOpenDetails = (id: number) => {
     const foundRequest = requests.find((request) => request.id === id);
     if (foundRequest) {
-      setCurrentRequest(foundRequest);
-      window.history.replaceState(
-        null,
-        'Request details',
-        `/app/requests/${id}`
-      );
-      setOpenDrawer(true);
+      if (foundRequest.workOrder) {
+        navigate(`/app/work-orders/${foundRequest.workOrder.id}`);
+      } else {
+        setCurrentRequest(foundRequest);
+        window.history.replaceState(
+          null,
+          'Request details',
+          `/app/requests/${id}`
+        );
+        setOpenDrawer(true);
+      }
     }
   };
   const handleCloseDetails = () => {
@@ -333,6 +338,7 @@ function Files() {
         }}
       >
         <RequestDetails
+          onClose={handleCloseDetails}
           request={currentRequest}
           handleOpenUpdate={handleOpenUpdate}
           handleOpenDelete={() => setOpenDelete(true)}

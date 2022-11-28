@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { AppThunk } from 'src/store';
 import Request from '../models/owns/request';
 import api from '../utils/api';
+import WorkOrder from '../models/owns/workOrder';
 
 const basePath = 'requests';
 interface RequestState {
@@ -49,6 +50,27 @@ const slice = createSlice({
         (request) => request.id === id
       );
       state.requests.splice(requestIndex, 1);
+    },
+    approveRequest(
+      state: RequestState,
+      action: PayloadAction<{ id: number; workOrder: WorkOrder }>
+    ) {
+      const { id, workOrder } = action.payload;
+      state.requests = state.requests.map((request) => {
+        if (request.id === id) {
+          return { ...request, workOrder };
+        }
+        return request;
+      });
+    },
+    cancelRequest(state: RequestState, action: PayloadAction<{ id: number }>) {
+      const { id } = action.payload;
+      state.requests = state.requests.map((request) => {
+        if (request.id === id) {
+          return { ...request, cancelled: true };
+        }
+        return request;
+      });
     }
   }
 });
@@ -87,4 +109,20 @@ export const deleteRequest =
     }
   };
 
+export const approveRequest =
+  (id: number): AppThunk =>
+  async (dispatch) => {
+    const workOrder = await api.patch<WorkOrder>(
+      `${basePath}/${id}/approve`,
+      {}
+    );
+    dispatch(slice.actions.approveRequest({ id, workOrder }));
+    return workOrder.id;
+  };
+export const cancelRequest =
+  (id: number): AppThunk =>
+  async (dispatch) => {
+    const request = await api.patch<WorkOrder>(`${basePath}/${id}/cancel`, {});
+    dispatch(slice.actions.cancelRequest({ id }));
+  };
 export default slice;

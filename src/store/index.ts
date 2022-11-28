@@ -1,11 +1,11 @@
+import type { TypedUseSelectorHook } from 'react-redux';
 import {
   useDispatch as useReduxDispatch,
   useSelector as useReduxSelector
 } from 'react-redux';
-import type { TypedUseSelectorHook } from 'react-redux';
 import type { ThunkAction } from 'redux-thunk';
-import { configureStore } from '@reduxjs/toolkit';
 import type { Action } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 import rootReducer from './rootReducer';
 
 const store = configureStore({
@@ -18,7 +18,7 @@ export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
 export type AppThunk = ThunkAction<
-  Promise<void>,
+  Promise<void | number>,
   RootState,
   null,
   Action<string>
