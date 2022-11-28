@@ -28,6 +28,7 @@ import { EmailOutlined } from '@mui/icons-material';
 import { grey } from '@mui/material/colors';
 import { useParams } from 'react-router-dom';
 import { isNumeric } from 'src/utils/validators';
+import { useDispatch } from '../../../store';
 
 interface PropsType {
   values?: any;
@@ -41,6 +42,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
   const [currentUser, setCurrentUser] = useState<User>();
   const [detailDrawerOpen, setDetailDrawerOpen] = useState(false);
   const { peopleId } = useParams();
+  const dispatch = useDispatch();
 
   const [inviteUserRoleSelected, setInviteUserRoleSelected] =
     useState<string>('');
@@ -70,33 +72,6 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
       handleOpenDetails(Number(peopleId));
     }
   }, [users]);
-
-  const userRoleList = [
-    {
-      title: 'Administrator',
-      desc: 'Administrator has full access; including editing, adding, deleting work orders and requests'
-    },
-    {
-      title: 'Limited Administrator',
-      desc: 'Limited administrators have the same access as administrator except they are unable to view/edit settings or add/edit people and teams. They cannot delete Work Orders, Assets Locations, Meters and Purchase Orders unless they created Customers, Categories and PM triggers.'
-    },
-    {
-      title: 'Technician',
-      desc: 'Technicians can create and close work orders, assets and locations. Able to edit and delete only what they have created'
-    },
-    {
-      title: 'Limited Technician',
-      desc: 'Limited technicians can only see work orders assigned to them'
-    },
-    {
-      title: 'View Only',
-      desc: 'View only users have full view access, but cannot edit anything'
-    },
-    {
-      title: 'Requester',
-      desc: 'Requesters can only submit work requests and view their status'
-    }
-  ];
 
   // let fields: Array<IField> = [];
 
@@ -323,7 +298,6 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
             </Paper>
 
             <UserRoleCardList
-              listData={userRoleList}
               selectedItem={inviteUserRoleSelected}
               setSelectedItem={setInviteUserRoleSelected}
             />

@@ -15,7 +15,10 @@ import {
 import { useTranslation } from 'react-i18next';
 import Text from 'src/components/Text';
 import { Engineering } from '@mui/icons-material';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from '../../../store';
+import { getRoles } from '../../../slices/role';
+import { RoleCode } from '../../../models/owns/role';
 
 const AvatarWrapperSuccess = styled(Avatar)(
   ({ theme }) => `
@@ -25,19 +28,54 @@ const AvatarWrapperSuccess = styled(Avatar)(
 );
 
 interface Props {
-  listData: {
-    title: string;
-    desc?: string;
-    icon?: JSX.Element;
-  }[];
   selectedItem: string;
   setSelectedItem: React.Dispatch<React.SetStateAction<string>>;
 }
 
-function UserRoleCardList({ listData, selectedItem, setSelectedItem }: Props) {
+function UserRoleCardList({ selectedItem, setSelectedItem }: Props) {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
+  const dispatch = useDispatch();
+  const { roles } = useSelector((state) => state.roles);
 
+  const defaultRoles: Partial<
+    Record<RoleCode, { name: string; description: string }>
+  > = {
+    ADMIN: {
+      name: t('Administrator'),
+      description: t(
+        'Administrator has full access; including editing, adding, deleting work orders and requests'
+      )
+    },
+    LIMITED_ADMIN: {
+      name: 'Limited Administrator',
+      description:
+        'Limited administrators have the same access as administrator except they are unable to view/edit settings or add/edit people and teams. They cannot delete Work Orders, Assets Locations, Meters and Purchase Orders unless they created Customers, Categories and PM triggers.'
+    },
+    TECHNICIAN: {
+      name: 'Technician',
+      description:
+        'Technicians can create and close work orders, assets and locations. Able to edit and delete only what they have created'
+    },
+    LIMITED_TECHNICIAN: {
+      name: 'Limited Technician',
+      description:
+        'Limited technicians can only see work orders assigned to them'
+    },
+    VIEW_ONLY: {
+      name: 'View Only',
+      description:
+        'View only users have full view access, but cannot edit anything'
+    },
+    REQUESTER: {
+      name: 'Requester',
+      description:
+        'Requesters can only submit work requests and view their status'
+    }
+  };
+  useEffect(() => {
+    dispatch(getRoles());
+  }, []);
   const isSelected = (value) => selectedItem === value;
 
   const handleChange = (value) => {
@@ -52,16 +90,16 @@ function UserRoleCardList({ listData, selectedItem, setSelectedItem }: Props) {
       <Divider />
 
       <List disablePadding>
-        {listData.map((item, index) => (
+        {roles.map((role, index) => (
           <Box
-            key={`${item.title}-${index}`}
+            key={role.id}
             style={{ cursor: 'pointer' }}
-            onClick={() => handleChange(item.title)}
+            onClick={() => handleChange(role.id)}
           >
             <ListItem
               sx={[
                 { py: 2 },
-                isSelected(item.title) && {
+                isSelected(role.id) && {
                   border: `2px solid ${theme.colors.primary.main}`,
                   borderRadius: 0.5
                 }
@@ -69,12 +107,18 @@ function UserRoleCardList({ listData, selectedItem, setSelectedItem }: Props) {
             >
               <ListItemAvatar>
                 <AvatarWrapperSuccess>
-                  {item?.icon ? item.icon : <Engineering />}
+                  <Engineering />
                 </AvatarWrapperSuccess>
               </ListItemAvatar>
 
               <ListItemText
-                primary={<Text color="black">{t(item.title)}</Text>}
+                primary={
+                  <Text color="black">
+                    {role.code === 'USER_CREATED'
+                      ? role.name
+                      : t(defaultRoles[role.code].name)}
+                  </Text>
+                }
                 primaryTypographyProps={{
                   variant: 'body1',
                   fontWeight: 'bold',
@@ -83,14 +127,18 @@ function UserRoleCardList({ listData, selectedItem, setSelectedItem }: Props) {
                   noWrap: true
                 }}
                 secondary={
-                  item?.desc && <Text color="black">{t(item.desc)}</Text>
+                  <Text color="black">
+                    {role.code === 'USER_CREATED'
+                      ? role.description
+                      : t(defaultRoles[role.code].description)}
+                  </Text>
                 }
                 secondaryTypographyProps={{ variant: 'body2' }}
               />
 
               <Radio
-                checked={isSelected(item.title)}
-                onChange={() => handleChange(item.title)}
+                checked={isSelected(role.id)}
+                onChange={() => handleChange(role.id)}
                 name="radio-buttons"
                 color="primary"
               />

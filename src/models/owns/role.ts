@@ -17,6 +17,14 @@ export enum BasicPermission {
   ACCESS_SETTINGS = 'ACCESS_SETTINGS'
 }
 
+export type RoleCode =
+  | 'ADMIN'
+  | 'LIMITED_ADMIN'
+  | 'TECHNICIAN'
+  | 'LIMITED_TECHNICIAN'
+  | 'VIEW_ONLY'
+  | 'REQUESTER'
+  | 'USER_CREATED';
 export interface Role {
   id: number;
   name: string;
@@ -24,5 +32,6 @@ export interface Role {
   externalId?: string;
   description?: string;
   type: RoleType;
+  code: RoleCode;
   permissions: BasicPermission[];
 }

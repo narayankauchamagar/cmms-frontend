@@ -117,7 +117,7 @@ function PageHeader({ rolesNumber, formatValues }: PageHeaderProps) {
           ) => {
             setSubmitting(true);
             const formattedValues = formatValues(_values);
-            dispatch(addRole(formattedValues))
+            return dispatch(addRole(formattedValues))
               .then(onCreationSuccess)
               .catch(onCreationFailure)
               .finally(() => setSubmitting(false));
