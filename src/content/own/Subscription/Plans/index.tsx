@@ -151,6 +151,9 @@ function SubscriptionPlans() {
                         helperText={touched.card && errors.card}
                         label={t('Card')}
                         type="number"
+                        inputProps={{
+                          min: '0'
+                        }}
                         name="card"
                         onBlur={handleBlur}
                         onChange={handleChange}
@@ -193,6 +196,9 @@ function SubscriptionPlans() {
                         helperText={touched.cvv && errors.cvv}
                         label={t('CVV')}
                         type="number"
+                        inputProps={{
+                          min: '0'
+                        }}
                         name="cvv"
                         onBlur={handleBlur}
                         onChange={handleChange}

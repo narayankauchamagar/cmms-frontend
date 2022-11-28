@@ -11,6 +11,7 @@ import App from 'src/App';
 import { SidebarProvider } from 'src/contexts/SidebarContext';
 import { TitleProvider } from 'src/contexts/TitleContext';
 import * as serviceWorker from 'src/serviceWorker';
+import { CompanySettingsProvider } from 'src/contexts/CompanySettingsContext';
 import { AuthProvider } from 'src/contexts/JWTAuthContext';
 
 ReactDOM.render(
@@ -21,7 +22,9 @@ ReactDOM.render(
           <BrowserRouter>
             <ScrollTop />
             <AuthProvider>
-              <App />
+              <CompanySettingsProvider>
+                <App />
+              </CompanySettingsProvider>
             </AuthProvider>
           </BrowserRouter>
         </TitleProvider>

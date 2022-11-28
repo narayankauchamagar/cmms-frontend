@@ -685,6 +685,9 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                           sx={{ mr: 1 }}
                           value={partQuantity.quantity}
                           type="number"
+                          inputProps={{
+                            min: '0'
+                          }}
                           size="small"
                           onChange={(event) => {
                             dispatch(

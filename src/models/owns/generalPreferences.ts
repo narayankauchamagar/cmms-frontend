@@ -3,7 +3,7 @@ import Currency from './currency';
 export interface GeneralPreferences {
   id: number;
   language: string;
-  dateFormat: string;
+  dateFormat: 'MMDDYY' | 'DDMMYY';
   currency: Currency;
   businessType: string;
   timeZone: string;

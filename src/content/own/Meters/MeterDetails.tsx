@@ -11,7 +11,7 @@ import {
   Typography,
   useTheme
 } from '@mui/material';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
@@ -21,6 +21,7 @@ import Form from '../components/form';
 import { IField } from '../type';
 import { useDispatch, useSelector } from '../../../store';
 import { createReading, getReadings } from '../../../slices/reading';
+import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 
 interface MeterDetailsProps {
   meter: Meter;
@@ -32,6 +33,7 @@ export default function MeterDetails(props: MeterDetailsProps) {
   const { t }: { t: any } = useTranslation();
   const dispatch = useDispatch();
   const [currentTab, setCurrentTab] = useState<string>('details');
+  const { getFormattedDate } = useContext(CompanySettingsContext);
   const theme = useTheme();
   const { metersReadings } = useSelector((state) => state.readings);
   const currentMeterReadings = metersReadings[meter?.id] ?? [];
@@ -169,7 +171,7 @@ export default function MeterDetails(props: MeterDetailsProps) {
               <ListItem key={reading.id} divider>
                 <ListItemText
                   primary={`${reading.value} ${meter.unit}`}
-                  secondary={reading.createdAt}
+                  secondary={getFormattedDate(reading.createdAt)}
                 />
               </ListItem>
             ))}

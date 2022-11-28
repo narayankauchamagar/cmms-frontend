@@ -44,6 +44,9 @@ export default (props: PropsType) => {
           )
         }
       }
+      inputProps={{
+        min: '0'
+      }}
     />
   );
 };
