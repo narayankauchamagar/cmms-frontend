@@ -51,14 +51,6 @@ const accountRoutes = [
     )
   },
   {
-    path: 'login-basic',
-    element: <LoginBasic />
-  },
-  {
-    path: 'login-cover',
-    element: <LoginCover />
-  },
-  {
     path: 'recover-password',
     element: <RecoverPassword />
   },
@@ -69,18 +61,6 @@ const accountRoutes = [
         <RegisterCover />
       </Guest>
     )
-  },
-  {
-    path: 'register-basic',
-    element: <RegisterBasic />
-  },
-  {
-    path: 'register-cover',
-    element: <RegisterCover />
-  },
-  {
-    path: 'register-wizard',
-    element: <RegisterWizard />
   }
 ];
 

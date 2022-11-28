@@ -1,8 +1,7 @@
-import { FC, ReactNode, createContext, useEffect, useReducer } from 'react';
+import { createContext, FC, ReactNode, useEffect, useReducer } from 'react';
 import { UserResponseDTO } from 'src/models/user';
-import axios from 'src/utils/axios';
 import api, { authHeader } from 'src/utils/api';
-import { verify, JWT_SECRET } from 'src/utils/jwt';
+import { JWT_SECRET, verify } from 'src/utils/jwt';
 import PropTypes from 'prop-types';
 import {
   getCompanySettings,
@@ -36,7 +35,8 @@ interface AuthContextValue extends AuthState {
     firstName: string,
     lastName: string,
     phone: string,
-    password: string
+    password: string,
+    role: number | undefined
   ) => Promise<void>;
   getInfos: () => void;
   patchUserSettings: (values: Partial<UserSettings>) => Promise<void>;
@@ -367,17 +367,21 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     firstName: string,
     lastName: string,
     phone: string,
-    password: string
+    password: string,
+    role: number | undefined
   ): Promise<void> => {
     const response = await api.post<{ message: string; success: boolean }>(
       'auth/signup',
-      {
-        email,
-        firstName,
-        lastName,
-        phone,
-        password
-      },
+      role
+        ? {
+            email,
+            firstName,
+            lastName,
+            phone,
+            password,
+            role: { id: role }
+          }
+        : { email, firstName, lastName, phone, password },
       { headers: authHeader(true) }
     );
     const { message, success } = response;

@@ -3,28 +3,37 @@ import { Formik } from 'formik';
 import {
   Button,
   Checkbox,
-  FormHelperText,
-  TextField,
-  Typography,
-  FormControlLabel,
-  Link,
   CircularProgress,
-  Grid
+  FormControlLabel,
+  FormHelperText,
+  Grid,
+  Link,
+  TextField,
+  Typography
 } from '@mui/material';
 import useAuth from 'src/hooks/useAuth';
 import useRefMounted from 'src/hooks/useRefMounted';
 import { useTranslation } from 'react-i18next';
 import { phoneRegExp } from '../../../../utils/validators';
+import { useContext } from 'react';
+import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContext';
 
-function RegisterJWT() {
+function RegisterJWT({
+  email,
+  role
+}: {
+  email?: string | undefined;
+  role?: number | undefined;
+}) {
   const { register } = useAuth() as any;
   const isMountedRef = useRefMounted();
   const { t }: { t: any } = useTranslation();
+  const { showSnackBar } = useContext(CustomSnackBarContext);
 
   return (
     <Formik
       initialValues={{
-        email: '',
+        email,
         firstName: '',
         lastName: '',
         phone: '',
@@ -57,25 +66,25 @@ function RegisterJWT() {
         )
       })}
       onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-        try {
-          await register(
-            values.email,
-            values.firstName,
-            values.lastName,
-            values.phone,
-            values.password
-          );
-
-          if (isMountedRef.current) {
-            setStatus({ success: true });
-            setSubmitting(false);
-          }
-        } catch (err) {
-          console.error(err);
-          setStatus({ success: false });
-          setErrors({ submit: err.message });
-          setSubmitting(false);
-        }
+        setSubmitting(true);
+        register(
+          values.email,
+          values.firstName,
+          values.lastName,
+          values.phone,
+          values.password,
+          role
+        )
+          .then()
+          .catch((err) =>
+            showSnackBar(t("The registration didn't succeed"), 'error')
+          )
+          .finally(() => {
+            if (isMountedRef.current) {
+              setStatus({ success: true });
+              setSubmitting(false);
+            }
+          });
       }}
     >
       {({

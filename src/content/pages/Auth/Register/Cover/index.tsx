@@ -1,30 +1,26 @@
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import {
   Box,
   Card,
   Container,
   Divider,
-  Link,
-  ListItemText,
-  ListItem,
-  List,
-  ListItemIcon,
   IconButton,
-  Typography,
-  styled
+  Link,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  styled,
+  Typography
 } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
-import useAuth from 'src/hooks/useAuth';
-import Auth0Register from '../RegisterAuth0';
-import FirebaseAuthRegister from '../RegisterFirebaseAuth';
 import JWTRegister from '../RegisterJWT';
-import AmplifyRegister from '../RegisterAmplify';
 import { useTranslation } from 'react-i18next';
 import CheckCircleOutlineTwoToneIcon from '@mui/icons-material/CheckCircleOutlineTwoTone';
 import Scrollbar from 'src/components/Scrollbar';
 import Logo from 'src/components/LogoSign';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Navigation } from 'swiper';
+import { Navigation, Pagination } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -37,6 +33,18 @@ const icons = {
   JWT: '/static/images/logo/jwt.svg',
   Amplify: '/static/images/logo/amplify.svg'
 };
+
+const sliders = [
+  { title: 'Work Request System', description: 'dsd', image: icons.Auth0 },
+  {
+    title: 'Enterprise Asset Management',
+    description: 'dsd',
+    image: icons.Auth0
+  },
+  { title: 'Preventative Maintenance', description: 'dsd', image: icons.Auth0 },
+  { title: 'Work Orders', description: 'dsd', image: icons.Auth0 },
+  { title: 'Parts Inventory', description: 'dsd', image: icons.Auth0 }
+];
 
 const Content = styled(Box)(
   () => `
@@ -163,13 +171,12 @@ const SwiperWrapper = styled(Box)(
 );
 
 function RegisterCover() {
-  const { method } = useAuth() as any;
   const { t }: { t: any } = useTranslation();
-
+  const [searchParams, setSearchParams] = useSearchParams();
   return (
     <>
       <Helmet>
-        <title>Register - Cover</title>
+        <title>Register</title>
       </Helmet>
       <Content>
         <SidebarWrapper
@@ -195,7 +202,7 @@ function RegisterCover() {
                   px: 8
                 }}
               >
-                {t('Multiple authentication methods available')}
+                {t('The perfect tool for Maintenance teams ')}
               </TypographyPrimary>
               <SwiperWrapper>
                 <Swiper
@@ -213,126 +220,37 @@ function RegisterCover() {
                     dynamicBullets: true
                   }}
                 >
-                  <SwiperSlide>
-                    <Box textAlign="center">
-                      <CardImg>
-                        <img
-                          height={80}
-                          alt="JSON Web Token"
-                          src={icons['Auth0']}
-                        />
-                      </CardImg>
-                      <TypographyPrimary
-                        align="center"
-                        variant="h3"
-                        sx={{
-                          mb: 2
-                        }}
-                      >
-                        Auth0
-                      </TypographyPrimary>
-                      <TypographySecondary
-                        align="center"
-                        variant="subtitle2"
-                        sx={{
-                          mb: 5
-                        }}
-                      >
-                        Auth0 is an easy to implement, adaptable authentication
-                        and authorization platform.
-                      </TypographySecondary>
-                    </Box>
-                  </SwiperSlide>
-                  <SwiperSlide>
-                    <Box textAlign="center">
-                      <CardImg>
-                        <img
-                          height={80}
-                          alt="AWS Amplify"
-                          src={icons['Amplify']}
-                        />
-                      </CardImg>
-                      <TypographyPrimary
-                        align="center"
-                        variant="h3"
-                        sx={{
-                          mb: 2
-                        }}
-                      >
-                        AWS Amplify
-                      </TypographyPrimary>
-                      <TypographySecondary
-                        align="center"
-                        variant="subtitle2"
-                        sx={{
-                          mb: 5
-                        }}
-                      >
-                        Build scalable mobile and web apps fast, with endless
-                        flexibility.
-                      </TypographySecondary>
-                    </Box>
-                  </SwiperSlide>
-                  <SwiperSlide>
-                    <Box textAlign="center">
-                      <CardImg>
-                        <img
-                          height={80}
-                          alt="JSON Web Token"
-                          src={icons['JWT']}
-                        />
-                      </CardImg>
-                      <TypographyPrimary
-                        align="center"
-                        variant="h3"
-                        sx={{
-                          mb: 2
-                        }}
-                      >
-                        JSON Web Token
-                      </TypographyPrimary>
-                      <TypographySecondary
-                        align="center"
-                        variant="subtitle2"
-                        sx={{
-                          mb: 5
-                        }}
-                      >
-                        JSON Web Tokens are an open method for representing
-                        claims securely between two parties.
-                      </TypographySecondary>
-                    </Box>
-                  </SwiperSlide>
-                  <SwiperSlide>
-                    <Box textAlign="center">
-                      <CardImg>
-                        <img
-                          height={80}
-                          alt="Firebase"
-                          src={icons['FirebaseAuth']}
-                        />
-                      </CardImg>
-                      <TypographyPrimary
-                        align="center"
-                        variant="h3"
-                        sx={{
-                          mb: 2
-                        }}
-                      >
-                        Firebase
-                      </TypographyPrimary>
-                      <TypographySecondary
-                        align="center"
-                        variant="subtitle2"
-                        sx={{
-                          mb: 5
-                        }}
-                      >
-                        Firebase helps teams from startups to global enterprises
-                        build &amp; run successful apps.
-                      </TypographySecondary>
-                    </Box>
-                  </SwiperSlide>
+                  {sliders.map((slider, index) => (
+                    <SwiperSlide key={index}>
+                      <Box textAlign="center">
+                        <CardImg>
+                          <img
+                            height={80}
+                            alt="JSON Web Token"
+                            src={slider.image}
+                          />
+                        </CardImg>
+                        <TypographyPrimary
+                          align="center"
+                          variant="h3"
+                          sx={{
+                            mb: 2
+                          }}
+                        >
+                          {slider.title}
+                        </TypographyPrimary>
+                        <TypographySecondary
+                          align="center"
+                          variant="subtitle2"
+                          sx={{
+                            mb: 5
+                          }}
+                        >
+                          {slider.description}
+                        </TypographySecondary>
+                      </Box>
+                    </SwiperSlide>
+                  ))}
                 </Swiper>
               </SwiperWrapper>
 
@@ -425,10 +343,10 @@ function RegisterCover() {
                   {t('Fill in the fields below to sign up for an account.')}
                 </Typography>
               </Box>
-              {method === 'Auth0' && <Auth0Register />}
-              {method === 'FirebaseAuth' && <FirebaseAuthRegister />}
-              {method === 'JWT' && <JWTRegister />}
-              {method === 'Amplify' && <AmplifyRegister />}
+              <JWTRegister
+                email={searchParams.get('email')}
+                role={Number(searchParams.get('role'))}
+              />
               <Box mt={4}>
                 <Typography
                   component="span"
