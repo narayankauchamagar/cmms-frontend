@@ -35,6 +35,7 @@ import { UserMiniDTO } from '../../../models/user';
 import UserAvatars from '../components/UserAvatars';
 import { enumerate } from '../../../utils/displayers';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
+import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 
 function Assets() {
   const { t }: { t: any } = useTranslation();
@@ -44,6 +45,7 @@ function Assets() {
   const dispatch = useDispatch();
   const { assetsHierarchy } = useSelector((state) => state.assets);
   const apiRef = useGridApiRef();
+  const { getFormattedDate } = useContext(CompanySettingsContext);
   const { showSnackBar } = useContext(CustomSnackBarContext);
 
   useEffect(() => {
@@ -169,7 +171,8 @@ function Assets() {
       field: 'createdAt',
       headerName: t('Created At'),
       description: t('Created At'),
-      width: 150
+      width: 150,
+      valueGetter: (params) => getFormattedDate(params.row.createdAt)
     }
   ];
   const fields: Array<IField> = [

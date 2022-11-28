@@ -61,6 +61,7 @@ import LinkModal from './LinkModal';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import { deleteRelation, getRelations } from '../../../slices/relation';
 import Relation, { relationTypes } from '../../../models/owns/relation';
+import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;
@@ -71,6 +72,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const { workOrder, handleUpdate, tasks } = props;
   const theme = useTheme();
   const { showSnackBar } = useContext(CustomSnackBarContext);
+  const { getFormattedDate } = useContext(CompanySettingsContext);
   const { t }: { t: any } = useTranslation();
   const [openAddTimeModal, setOpenAddTimeModal] = useState<boolean>(false);
   const [openAddCostModal, setOpenAddCostModal] = useState<boolean>(false);
@@ -290,7 +292,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
     },
     {
       label: t('Date created'),
-      value: workOrder.createdAt
+      value: getFormattedDate(workOrder.createdAt)
     },
     {
       label: t('Created By'),
@@ -628,7 +630,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                             {additionalCost.description}
                           </Typography>
                         }
-                        secondary={additionalCost.createdAt}
+                        secondary={getFormattedDate(additionalCost.createdAt)}
                       />
                     </ListItem>
                   ))}
@@ -813,7 +815,9 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                                       {relation.workOrder.title}
                                     </Typography>
                                   }
-                                  secondary={relation.workOrder.createdAt}
+                                  secondary={getFormattedDate(
+                                    relation.workOrder.createdAt
+                                  )}
                                 />
                               </ListItem>
                             ))}
@@ -853,7 +857,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                             {file.name}
                           </Link>
                         }
-                        secondary={file.createdAt}
+                        secondary={getFormattedDate(file.createdAt)}
                       />
                     </ListItem>
                   ))}
@@ -867,7 +871,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
             {currentWorkOrderHistories.map((workOrderHistory) => (
               <ListItem
                 key={workOrderHistory.id}
-                secondaryAction={workOrderHistory.createdAt}
+                secondaryAction={getFormattedDate(workOrderHistory.createdAt)}
               >
                 <ListItemText
                   primary={`${workOrderHistory.user.firstName} ${workOrderHistory.user.lastName}`}

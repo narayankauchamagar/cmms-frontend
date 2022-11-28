@@ -33,10 +33,12 @@ import * as Yup from 'yup';
 import { isNumeric } from '../../../utils/validators';
 import { formatSelect } from '../../../utils/formatters';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
+import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 
 function PurchaseOrders() {
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
+  const { getFormattedDate } = useContext(CompanySettingsContext);
   const navigate = useNavigate();
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
@@ -186,7 +188,8 @@ function PurchaseOrders() {
       field: 'createdAt',
       headerName: t('Created On'),
       description: t('Created On'),
-      width: 150
+      width: 150,
+      valueGetter: (params) => getFormattedDate(params.row.createdAt)
     }
   ];
   const fields: Array<IField> = [

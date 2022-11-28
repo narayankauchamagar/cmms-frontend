@@ -32,6 +32,7 @@ import { formatSelectMultiple } from '../../../utils/formatters';
 import { UserMiniDTO } from '../../../models/user';
 import UserAvatars from '../components/UserAvatars';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
+import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 
 interface PropsType {
   setAction: (p: () => () => void) => void;
@@ -42,6 +43,7 @@ const Parts = ({ setAction }: PropsType) => {
   const [currentTab, setCurrentTab] = useState<string>('list');
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
+  const { getFormattedDate } = useContext(CompanySettingsContext);
   const { parts } = useSelector((state) => state.parts);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
@@ -186,7 +188,8 @@ const Parts = ({ setAction }: PropsType) => {
       field: 'createdAt',
       headerName: t('Date Created'),
       description: t('Date Created'),
-      width: 150
+      width: 150,
+      valueGetter: (params) => getFormattedDate(params.row.createdAt)
     },
     {
       field: 'openWorkOrders',
@@ -389,7 +392,7 @@ const Parts = ({ setAction }: PropsType) => {
     },
     {
       label: t('Date created'),
-      value: part.createdAt
+      value: getFormattedDate(part.createdAt)
     }
   ];
   const renderPartUpdateModal = () => (

@@ -46,12 +46,14 @@ import { useParams } from 'react-router-dom';
 import Map from '../components/Map';
 import { formatSelectMultiple } from '../../../utils/formatters';
 import { CustomSnackBarContext } from 'src/contexts/CustomSnackBarContext';
+import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 
 function Locations() {
   const { t }: { t: any } = useTranslation();
   const [currentTab, setCurrentTab] = useState<string>('list');
   const dispatch = useDispatch();
   const { showSnackBar } = useContext(CustomSnackBarContext);
+  const { getFormattedDate } = useContext(CompanySettingsContext);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const { locations } = useSelector((state) => state.locations);
   const tabs = [
@@ -156,7 +158,8 @@ function Locations() {
       field: 'createdAt',
       headerName: t('Created At'),
       description: t('Created At'),
-      width: 150
+      width: 150,
+      valueGetter: (params) => getFormattedDate(params.row.createdAt)
     },
     {
       field: 'actions',

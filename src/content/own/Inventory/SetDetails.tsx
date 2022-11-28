@@ -16,6 +16,8 @@ import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import SetType from '../../../models/owns/setType';
 import HandymanTwoToneIcon from '@mui/icons-material/HandymanTwoTone';
 import AttachMoneyTwoToneIcon from '@mui/icons-material/AttachMoneyTwoTone';
+import { useContext } from 'react';
+import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 
 interface PartDetailsProps {
   set: SetType;
@@ -26,6 +28,7 @@ export default function SetDetails(props: PartDetailsProps) {
   const { set, handleOpenUpdate, handleOpenDelete } = props;
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
+  const { getFormattedDate } = useContext(CompanySettingsContext);
 
   return (
     <Grid
@@ -44,7 +47,9 @@ export default function SetDetails(props: PartDetailsProps) {
       >
         <Box>
           <Typography variant="h2">{set?.name}</Typography>
-          <Typography variant="h6">{set?.createdAt}</Typography>
+          <Typography variant="h6">
+            {getFormattedDate(set?.createdAt)}
+          </Typography>
         </Box>
         <Box>
           <IconButton onClick={handleOpenUpdate} style={{ marginRight: 10 }}>

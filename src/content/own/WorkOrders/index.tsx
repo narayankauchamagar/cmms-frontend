@@ -48,12 +48,14 @@ import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import { useDispatch, useSelector } from '../../../store';
 import PriorityWrapper from '../components/PriorityWrapper';
 import { patchTasks } from '../../../slices/task';
+import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
   const [currentTab, setCurrentTab] = useState<string>('list');
   const { workOrders } = useSelector((state) => state.workOrders);
   const dispatch = useDispatch();
+  const { getFormattedDate } = useContext(CompanySettingsContext);
   const tabs = [
     { value: 'list', label: t('List View') },
     { value: 'map', label: t('Map View') }
@@ -298,13 +300,15 @@ function WorkOrders() {
       field: 'updatedAt',
       headerName: t('Updated At'),
       description: t('Updated At'),
-      width: 150
+      width: 150,
+      valueGetter: (params) => getFormattedDate(params.row.updatedAt)
     },
     {
       field: 'createdAt',
       headerName: t('Created At'),
       description: t('Created At'),
-      width: 150
+      width: 150,
+      valueGetter: (params) => getFormattedDate(params.row.createdAt)
     }
   ];
   const fields: Array<IField> = [

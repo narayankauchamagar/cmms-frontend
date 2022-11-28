@@ -9,11 +9,12 @@ import {
   Typography,
   useTheme
 } from '@mui/material';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import PurchaseOrder from '../../../models/owns/purchaseOrder';
+import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 
 interface PurchaseOrderDetailsProps {
   purchaseOrder: PurchaseOrder;
@@ -23,6 +24,7 @@ interface PurchaseOrderDetailsProps {
 export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
   const { purchaseOrder, handleOpenUpdate, handleDelete } = props;
   const { t }: { t: any } = useTranslation();
+  const { getFormattedDate } = useContext(CompanySettingsContext);
   const theme = useTheme();
   const [currentTab, setCurrentTab] = useState<string>('details');
   const tabs = [
@@ -85,7 +87,7 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
     },
     {
       label: t('Date created'),
-      value: purchaseOrder1.createdAt
+      value: getFormattedDate(purchaseOrder1.createdAt)
     },
     {
       label: t('Vendor'),

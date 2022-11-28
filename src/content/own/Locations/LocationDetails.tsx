@@ -18,7 +18,7 @@ import {
   useTheme
 } from '@mui/material';
 import Location from '../../../models/owns/location';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
@@ -37,6 +37,7 @@ import {
   deleteFloorPlan,
   getFloorPlans
 } from '../../../slices/floorPlan';
+import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 
 interface LocationDetailsProps {
   location: Location;
@@ -47,6 +48,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
   const { location, handleOpenUpdate, handleOpenDelete } = props;
   const { t }: { t: any } = useTranslation();
   const dispatch = useDispatch();
+  const { getFormattedDate } = useContext(CompanySettingsContext);
   const [openAddFloorPlan, setOpenAddFloorPlan] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<string>('assets');
   const { locations } = useSelector((state) => state.assets);
@@ -204,7 +206,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
                 >
                   <ListItemText
                     primary={asset.name}
-                    secondary={asset.createdAt}
+                    secondary={getFormattedDate(asset.createdAt)}
                   />
                 </ListItemButton>
               ))}
@@ -227,7 +229,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
                 >
                   <ListItemText
                     primary={workOrder.title}
-                    secondary={workOrder.createdAt}
+                    secondary={getFormattedDate(workOrder.createdAt)}
                   />
                 </ListItemButton>
               ))}

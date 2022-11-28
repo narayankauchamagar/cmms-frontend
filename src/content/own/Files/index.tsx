@@ -15,10 +15,12 @@ import {
   GridToolbar
 } from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
+import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
+  const { getFormattedDate } = useContext(CompanySettingsContext);
   const handleDelete = (id: number) => {};
   const handleRename = (id: number) => {};
   useEffect(() => {
@@ -51,7 +53,8 @@ function Files() {
       field: 'createdAt',
       headerName: t('Uploaded On'),
       description: t('Uploaded On'),
-      width: 150
+      width: 150,
+      valueGetter: (params) => getFormattedDate(params.row.createdAt)
     },
     {
       field: 'actions',

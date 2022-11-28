@@ -35,6 +35,7 @@ import {
   getMultiParts
 } from '../../../slices/multipart';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
+import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 
 interface PropsType {
   setAction: (p: () => () => void) => void;
@@ -46,6 +47,7 @@ const Sets = ({ setAction }: PropsType) => {
   const [currentTab, setCurrentTab] = useState<string>('list');
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
+  const { getFormattedDate } = useContext(CompanySettingsContext);
   const { multiParts } = useSelector((state) => state.multiParts);
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
@@ -130,7 +132,8 @@ const Sets = ({ setAction }: PropsType) => {
       field: 'createdAt',
       headerName: t('Date created'),
       description: t('Date created'),
-      width: 150
+      width: 150,
+      valueGetter: (params) => getFormattedDate(params.row.createdAt)
     }
   ];
   const fields: Array<IField> = [

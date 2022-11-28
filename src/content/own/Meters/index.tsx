@@ -34,6 +34,7 @@ import { useParams } from 'react-router-dom';
 import { isNumeric } from '../../../utils/validators';
 import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
 import { CustomSnackBarContext } from 'src/contexts/CustomSnackBarContext';
+import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 
 function Meters() {
   const { t }: { t: any } = useTranslation();
@@ -45,6 +46,7 @@ function Meters() {
   const { meterId } = useParams();
   const dispatch = useDispatch();
   const { showSnackBar } = useContext(CustomSnackBarContext);
+  const { getFormattedDate } = useContext(CompanySettingsContext);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const { meters } = useSelector((state) => state.meters);
 
@@ -157,7 +159,8 @@ function Meters() {
       field: 'createdAt',
       headerName: t('Date Created'),
       description: t('Date Created'),
-      width: 150
+      width: 150,
+      valueGetter: (params) => getFormattedDate(params.row.createdAt)
     }
   ];
   const fields: Array<IField> = [

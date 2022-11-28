@@ -14,7 +14,7 @@ import {
   Typography,
   useTheme
 } from '@mui/material';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
@@ -22,6 +22,7 @@ import Asset, { assets } from '../../../models/owns/asset';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import Part from '../../../models/owns/part';
 import { files } from 'src/models/owns/file';
+import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 
 interface PartDetailsProps {
   part: Part;
@@ -31,6 +32,7 @@ interface PartDetailsProps {
 export default function PartDetails(props: PartDetailsProps) {
   const { part, handleOpenUpdate, handleOpenDelete } = props;
   const { t }: { t: any } = useTranslation();
+  const { getFormattedDate } = useContext(CompanySettingsContext);
   const [currentTab, setCurrentTab] = useState<string>('details');
   const theme = useTheme();
   const tabs = [
@@ -259,7 +261,11 @@ export default function PartDetails(props: PartDetailsProps) {
               {assets.map((asset) => (
                 <ListItemButton key={asset.id} divider>
                   <ListItem
-                    secondaryAction={<Typography>{asset.createdAt}</Typography>}
+                    secondaryAction={
+                      <Typography>
+                        {getFormattedDate(asset.createdAt)}
+                      </Typography>
+                    }
                   >
                     <ListItemText
                       primary={asset.name}
@@ -282,7 +288,11 @@ export default function PartDetails(props: PartDetailsProps) {
               {files.map((file) => (
                 <ListItemButton key={file.id} divider>
                   <ListItem
-                    secondaryAction={<Typography>{file.createdAt}</Typography>}
+                    secondaryAction={
+                      <Typography>
+                        {getFormattedDate(file.createdAt)}
+                      </Typography>
+                    }
                   >
                     <ListItemText
                       primary={file.name}
