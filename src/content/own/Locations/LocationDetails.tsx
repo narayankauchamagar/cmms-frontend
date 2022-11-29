@@ -38,6 +38,7 @@ import {
   getFloorPlans
 } from '../../../slices/floorPlan';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
+import { getAssetUrl } from '../../../utils/urlPaths';
 
 interface LocationDetailsProps {
   location: Location;
@@ -200,9 +201,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
                 <ListItemButton
                   key={asset.id}
                   divider
-                  onClick={() =>
-                    navigate(`/app/assets/${asset.id}/work-orders`)
-                  }
+                  onClick={() => navigate(getAssetUrl(asset.id))}
                 >
                   <ListItemText
                     primary={asset.name}

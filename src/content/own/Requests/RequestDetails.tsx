@@ -5,6 +5,7 @@ import {
   Divider,
   Grid,
   IconButton,
+  Link,
   Typography,
   useTheme
 } from '@mui/material';
@@ -19,6 +20,12 @@ import { useDispatch } from '../../../store';
 import { approveRequest, cancelRequest } from '../../../slices/request';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {
+  getAssetUrl,
+  getLocationUrl,
+  getTeamUrl,
+  getUserUrl
+} from '../../../utils/urlPaths';
 
 interface RequestDetailsProps {
   request: Request;
@@ -88,6 +95,14 @@ export default function RequestDetails({
     {
       label: t('Priority'),
       value: request.priority
+    },
+    {
+      label: t('Due Date'),
+      value: request.dueDate
+    },
+    {
+      label: t('Category'),
+      value: request.category
     }
   ];
   return (
@@ -112,9 +127,11 @@ export default function RequestDetails({
           )}
         </Box>
         <Box>
-          <IconButton style={{ marginRight: 10 }} onClick={handleOpenUpdate}>
-            <EditTwoToneIcon color="primary" />
-          </IconButton>
+          {!request.cancelled && (
+            <IconButton style={{ marginRight: 10 }} onClick={handleOpenUpdate}>
+              <EditTwoToneIcon color="primary" />
+            </IconButton>
+          )}
           <IconButton onClick={handleOpenDelete}>
             <DeleteTwoToneIcon color="error" />
           </IconButton>
@@ -168,14 +185,81 @@ export default function RequestDetails({
             Request details
           </Typography>
           <Grid container spacing={2}>
-            {fieldsToRender(request).map((field) => (
-              <BasicField
-                key={field.label}
-                label={field.label}
-                value={field.value}
-                isPriority={field.label === t('Priority')}
-              />
-            ))}
+            <>
+              {fieldsToRender(request).map((field) => (
+                <BasicField
+                  key={field.label}
+                  label={field.label}
+                  value={field.value}
+                  isPriority={field.label === t('Priority')}
+                />
+              ))}
+              {request?.asset && (
+                <Grid item xs={12} lg={6}>
+                  <Typography
+                    variant="h6"
+                    sx={{ color: theme.colors.alpha.black[70] }}
+                  >
+                    {t('Asset')}
+                  </Typography>
+                  <Link variant="h6" href={getAssetUrl(request.asset.id)}>
+                    {request.asset.name}
+                  </Link>
+                </Grid>
+              )}
+              {request?.location && (
+                <Grid item xs={12} lg={6}>
+                  <Typography
+                    variant="h6"
+                    sx={{ color: theme.colors.alpha.black[70] }}
+                  >
+                    {t('Location')}
+                  </Typography>
+                  <Link variant="h6" href={getLocationUrl(request.location.id)}>
+                    {request.location.name}
+                  </Link>
+                </Grid>
+              )}
+              {request?.location && (
+                <Grid item xs={12} lg={6}>
+                  <Typography
+                    variant="h6"
+                    sx={{ color: theme.colors.alpha.black[70] }}
+                  >
+                    {t('Location')}
+                  </Typography>
+                  <Link variant="h6" href={getLocationUrl(request.location.id)}>
+                    {request.location.name}
+                  </Link>
+                </Grid>
+              )}
+              {request?.assignedTo && (
+                <Grid item xs={12} lg={6}>
+                  <Typography
+                    variant="h6"
+                    sx={{ color: theme.colors.alpha.black[70] }}
+                  >
+                    {t('Assigned To')}
+                  </Typography>
+                  <Link variant="h6" href={getUserUrl(request.assignedTo.id)}>
+                    {`${request.assignedTo.firstName} ${request.assignedTo.lastName}`}
+                  </Link>
+                </Grid>
+              )}
+              {request?.team && (
+                <Grid item xs={12} lg={6}>
+                  <Typography
+                    variant="h6"
+                    sx={{ color: theme.colors.alpha.black[70] }}
+                  >
+                    {t('Team')}
+                  </Typography>
+                  <Link variant="h6" href={getTeamUrl(request.team.id)}>
+                    {request.team.name}
+                  </Link>
+                </Grid>
+              )}
+            </>
           </Grid>
         </Box>
       </Grid>

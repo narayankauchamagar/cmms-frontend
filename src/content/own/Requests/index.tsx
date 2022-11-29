@@ -34,7 +34,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { isNumeric } from '../../../utils/validators';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import PriorityWrapper from '../components/PriorityWrapper';
-import { getPriorityLabel } from '../../../utils/formatters';
+import { formatSelect, getPriorityLabel } from '../../../utils/formatters';
 import useAuth from '../../../hooks/useAuth';
 
 function Files() {
@@ -108,6 +108,17 @@ function Files() {
   const handleCloseDetails = () => {
     window.history.replaceState(null, 'Request', `/app/requests`);
     setOpenDrawer(false);
+  };
+  const formatValues = (values) => {
+    values.primaryUser = formatSelect(values.primaryUser);
+    values.location = formatSelect(values.location);
+    values.team = formatSelect(values.team);
+    values.asset = formatSelect(values.asset);
+    values.assignedTo = formatSelect(values.assignedTo);
+    values.priority = values.priority?.value;
+    //TODO
+    delete values.category;
+    return values;
   };
   const columns: GridEnrichedColDef[] = [
     {
@@ -221,7 +232,7 @@ function Files() {
   };
   const getFieldsAndShapes = (): [Array<IField>, { [key: string]: any }] => {
     let fields = [...defaultFields];
-    let shape = defaultShape;
+    let shape = { ...defaultShape };
     const fieldsToConfigure = [
       'asset',
       'location',
@@ -297,8 +308,8 @@ function Files() {
             values={{ dueDate: null }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              values.priority = values.priority?.value;
-              return dispatch(addRequest(values))
+              const formattedValues = formatValues(values);
+              return dispatch(addRequest(formattedValues))
                 .then(onCreationSuccess)
                 .catch(onCreationFailure);
             }}
@@ -348,8 +359,8 @@ function Files() {
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              values.priority = values.priority?.value;
-              return dispatch(editRequest(currentRequest?.id, values))
+              const formattedValues = formatValues(values);
+              return dispatch(editRequest(currentRequest?.id, formattedValues))
                 .then(onEditSuccess)
                 .catch(onEditFailure);
             }}

@@ -423,8 +423,8 @@ function WorkOrders() {
     title: Yup.string().required(t('WorkOrder title is required'))
   };
   const getFieldsAndShapes = (): [Array<IField>, { [key: string]: any }] => {
-    let fields = defaultFields;
-    let shape = defaultShape;
+    let fields = [...defaultFields];
+    let shape = { ...defaultShape };
     const fieldsToConfigure = [
       'asset',
       'description',

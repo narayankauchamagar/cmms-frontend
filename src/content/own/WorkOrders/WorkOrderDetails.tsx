@@ -62,6 +62,7 @@ import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import { deleteRelation, getRelations } from '../../../slices/relation';
 import Relation, { relationTypes } from '../../../models/owns/relation';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
+import { getAssetUrl } from '../../../utils/urlPaths';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;
@@ -212,7 +213,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const getPath = (resource, id) => {
     switch (resource) {
       case 'asset':
-        return `/app/assets/${id}/work-orders`;
+        return getAssetUrl(id);
       case 'team':
         return `/app/people-teams/teams/${id}`;
       default:

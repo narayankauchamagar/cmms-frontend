@@ -36,6 +36,7 @@ import UserAvatars from '../components/UserAvatars';
 import { enumerate } from '../../../utils/displayers';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
+import { getAssetUrl } from '../../../utils/urlPaths';
 
 function Assets() {
   const { t }: { t: any } = useTranslation();
@@ -485,7 +486,7 @@ function Assets() {
                   Toolbar: GridToolbar
                 }}
                 onRowClick={(params) => {
-                  navigate(`/app/assets/${params.id}/work-orders`);
+                  navigate(getAssetUrl(params.id));
                 }}
                 initialState={{
                   columns: {
