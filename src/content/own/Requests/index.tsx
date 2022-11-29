@@ -35,6 +35,7 @@ import { isNumeric } from '../../../utils/validators';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import PriorityWrapper from '../components/PriorityWrapper';
 import { getPriorityLabel } from '../../../utils/formatters';
+import useAuth from '../../../hooks/useAuth';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
@@ -42,6 +43,8 @@ function Files() {
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
+  const { companySettings } = useAuth();
+  const { workOrderRequestConfiguration } = companySettings;
   const [currentRequest, setCurrentRequest] = useState<Request>();
   const { requestId } = useParams();
   const dispatch = useDispatch();
@@ -138,7 +141,7 @@ function Files() {
       width: 150
     }
   ];
-  const fields: Array<IField> = [
+  const defaultFields: Array<IField> = [
     {
       name: 'title',
       type: 'text',
@@ -161,6 +164,46 @@ function Files() {
       placeholder: t('Priority')
     },
     {
+      name: 'dueDate',
+      type: 'date',
+      label: t('Due Date')
+    },
+    {
+      name: 'category',
+      type: 'select',
+      label: t('Category'),
+      type2: 'category',
+      category: 'work-order-categories'
+    },
+    {
+      name: 'location',
+      type: 'select',
+      type2: 'location',
+      label: 'Location',
+      placeholder: 'Select location'
+    },
+    {
+      name: 'asset',
+      type: 'select',
+      type2: 'asset',
+      label: t('Asset'),
+      placeholder: 'Select Asset',
+      required: true
+    },
+    {
+      name: 'assignedTo',
+      type: 'select',
+      label: t('Primary Worker'),
+      type2: 'user'
+    },
+    {
+      name: 'team',
+      type: 'select',
+      type2: 'team',
+      label: 'Team',
+      placeholder: 'Select team'
+    },
+    {
       name: 'image',
       type: 'file',
       label: t('Image'),
@@ -173,8 +216,53 @@ function Files() {
       fileType: 'file'
     }
   ];
-  const shape = {
+  const defaultShape = {
     title: Yup.string().required(t('Request name is required'))
+  };
+  const getFieldsAndShapes = (): [Array<IField>, { [key: string]: any }] => {
+    let fields = [...defaultFields];
+    let shape = defaultShape;
+    const fieldsToConfigure = [
+      'asset',
+      'location',
+      'assignedTo',
+      'category',
+      'dueDate',
+      'team'
+    ];
+    fieldsToConfigure.forEach((name) => {
+      const fieldConfig =
+        workOrderRequestConfiguration.fieldConfigurations.find(
+          (fc) => fc.fieldName === name
+        );
+      const fieldIndexInFields = fields.findIndex(
+        (field) => field.name === name
+      );
+      if (fieldConfig.fieldType === 'REQUIRED') {
+        fields[fieldIndexInFields] = {
+          ...fields[fieldIndexInFields],
+          required: true
+        };
+        const requiredMessage = t('This field is required');
+        let yupSchema;
+        switch (fields[fieldIndexInFields].type) {
+          case 'text':
+            yupSchema = Yup.string().required(requiredMessage);
+            break;
+          case 'number':
+            yupSchema = Yup.number().required(requiredMessage);
+            break;
+          default:
+            yupSchema = Yup.object().required(requiredMessage).nullable();
+            break;
+        }
+        shape[name] = yupSchema;
+      } else if (fieldConfig.fieldType === 'HIDDEN') {
+        fields.splice(fieldIndexInFields, 1);
+      }
+    });
+
+    return [fields, shape];
   };
   const renderAddModal = () => (
     <Dialog
@@ -203,10 +291,10 @@ function Files() {
       >
         <Box>
           <Form
-            fields={fields}
-            validation={Yup.object().shape(shape)}
+            fields={getFieldsAndShapes()[0]}
+            validation={Yup.object().shape(getFieldsAndShapes()[1])}
             submitText={t('Add')}
-            values={{}}
+            values={{ dueDate: null }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               values.priority = values.priority?.value;
@@ -246,8 +334,8 @@ function Files() {
       >
         <Box>
           <Form
-            fields={fields}
-            validation={Yup.object().shape(shape)}
+            fields={getFieldsAndShapes()[0]}
+            validation={Yup.object().shape(getFieldsAndShapes()[1])}
             submitText={t('Save')}
             values={{
               ...currentRequest,

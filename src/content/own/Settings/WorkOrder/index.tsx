@@ -45,19 +45,6 @@ function WorkOrderSettings() {
     { label: t('Cost'), name: 'completeCost' }
   ];
 
-  const initialCreateValues = {
-    description: 'optional',
-    priority: 'optional',
-    images: 'optional'
-  };
-  const initialCompleteValues = {
-    files: 'optional',
-    tasks: 'optional',
-    time: 'optional',
-    parts: 'optional',
-    cost: 'optional'
-  };
-
   return (
     <SettingsLayout tabIndex={1}>
       <Grid item xs={12}>
@@ -79,7 +66,7 @@ function WorkOrderSettings() {
             <Box p={3}>
               {currentTab === 'create' && (
                 <FieldsConfigurationForm
-                  initialValues={initialCreateValues}
+                  initialValues={{}}
                   fields={createFields.map((field) => {
                     return { ...field, type: 'workOrder' };
                   })}
@@ -87,7 +74,7 @@ function WorkOrderSettings() {
               )}
               {currentTab === 'complete' && (
                 <FieldsConfigurationForm
-                  initialValues={initialCompleteValues}
+                  initialValues={{}}
                   fields={completeFields.map((field) => {
                     return { ...field, type: 'workOrder' };
                   })}

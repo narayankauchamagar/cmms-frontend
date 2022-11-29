@@ -358,6 +358,12 @@ export default (props: PropsType) => {
                         renderInput={(params) => (
                           <TextField
                             fullWidth
+                            error={!!formik.errors[field.name] || field.error}
+                            helperText={
+                              !!formik.errors[field.name] || field.error
+                                ? formik.errors[field.name]
+                                : ''
+                            }
                             placeholder={t('Select date...')}
                             {...params}
                           />

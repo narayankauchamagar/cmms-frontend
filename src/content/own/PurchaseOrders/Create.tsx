@@ -239,7 +239,7 @@ function CreatePurchaseOrder() {
               fields={fields}
               validation={Yup.object().shape(shape)}
               submitText={t('Submit')}
-              values={{}}
+              values={{ shippingDueDate: null, additionalInfoDate: null }}
               onChange={({ field, e }) => {}}
               onSubmit={async (values) => {
                 //TODO category

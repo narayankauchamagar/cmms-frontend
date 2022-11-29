@@ -398,8 +398,7 @@ function WorkOrders() {
       type: 'select',
       type2: 'asset',
       label: t('Asset'),
-      placeholder: 'Select Asset',
-      required: true
+      placeholder: 'Select Asset'
     },
     {
       name: 'tasks',
@@ -420,12 +419,12 @@ function WorkOrders() {
       label: t('Requires Signature')
     }
   ];
-  const defaultshape: { [key: string]: any } = {
+  const defaultShape: { [key: string]: any } = {
     title: Yup.string().required(t('WorkOrder title is required'))
   };
-  const getFieldsAndShapes = (): [Array<IField>, {}] => {
+  const getFieldsAndShapes = (): [Array<IField>, { [key: string]: any }] => {
     let fields = defaultFields;
-    let shape = defaultshape;
+    let shape = defaultShape;
     const fieldsToConfigure = [
       'asset',
       'description',
@@ -506,7 +505,7 @@ function WorkOrders() {
             fields={getFieldsAndShapes()[0]}
             validation={Yup.object().shape(getFieldsAndShapes()[1])}
             submitText={t('Add')}
-            values={{ requiredSignature: false }}
+            values={{ requiredSignature: false, dueDate: null }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               const formattedValues = formatValues(values);

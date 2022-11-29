@@ -18,14 +18,6 @@ function WorkOrderSettings() {
     { label: t('Team'), name: 'team' }
   ];
 
-  const initialValues = {
-    asset: 'optional',
-    location: 'optional',
-    worker: 'optional',
-    dueDate: 'optional',
-    category: 'optional',
-    team: 'optional'
-  };
   return (
     <SettingsLayout tabIndex={2}>
       <Grid item xs={12}>
@@ -33,7 +25,7 @@ function WorkOrderSettings() {
           <Box>
             <Box p={3}>
               <FieldsConfigurationForm
-                initialValues={initialValues}
+                initialValues={{}}
                 fields={fields.map((field) => {
                   return { ...field, type: 'request' };
                 })}

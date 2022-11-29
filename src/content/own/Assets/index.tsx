@@ -412,7 +412,7 @@ function Assets() {
             fields={fields}
             validation={Yup.object().shape(shape)}
             submitText={t('Create Asset')}
-            values={{}}
+            values={{ inServiceDate: null, warrantyExpirationDate: null }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               const formattedValues = formatAssetValues(values);
