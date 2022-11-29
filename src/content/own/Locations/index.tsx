@@ -408,25 +408,25 @@ function Locations() {
               workers: currentLocation?.workers.map((worker) => {
                 return {
                   label: `${worker.firstName} ${worker.lastName}`,
-                  value: worker.id.toString()
+                  value: worker.id
                 };
               }),
               teams: currentLocation?.teams.map((team) => {
                 return {
                   label: team.name,
-                  value: team.id.toString()
+                  value: team.id
                 };
               }),
               vendors: currentLocation?.vendors.map((vendor) => {
                 return {
                   label: vendor.companyName,
-                  value: vendor.id.toString()
+                  value: vendor.id
                 };
               }),
               customers: currentLocation?.customers.map((customer) => {
                 return {
                   label: customer.name,
-                  value: customer.id.toString()
+                  value: customer.id
                 };
               }),
               coordinates: currentLocation?.longitude

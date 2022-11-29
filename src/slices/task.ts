@@ -34,6 +34,23 @@ const slice = createSlice({
       const { tasks, workOrderId } = action.payload;
       state.workOrdersRoot2[workOrderId] = tasks;
     },
+    patchTask(
+      state: TaskState,
+      action: PayloadAction<{
+        workOrderId: number;
+        task: Task;
+      }>
+    ) {
+      const { task, workOrderId } = action.payload;
+      state.workOrdersRoot2[workOrderId] = state.workOrdersRoot2[
+        workOrderId
+      ].map((t) => {
+        if (t.id === task.id) {
+          return task;
+        }
+        return t;
+      });
+    },
     deleteTask(
       state: TaskState,
       action: PayloadAction<{
@@ -89,4 +106,20 @@ export const deleteTask =
     }
   };
 
+export const patchTask =
+  (workOrderId: number, taskId: number, task): AppThunk =>
+  async (dispatch) => {
+    const taskResponse = await api.patch<Task>(
+      `${basePath}/${taskId}`,
+      task,
+      null,
+      true
+    );
+    dispatch(
+      slice.actions.patchTask({
+        workOrderId,
+        task: taskResponse
+      })
+    );
+  };
 export default slice;

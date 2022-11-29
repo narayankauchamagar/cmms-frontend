@@ -1,5 +1,7 @@
 import {
   Box,
+  Button,
+  CircularProgress,
   Collapse,
   IconButton,
   MenuItem,
@@ -14,11 +16,13 @@ import SpeedTwoToneIcon from '@mui/icons-material/SpeedTwoTone';
 import { Task, TaskType } from '../../../../../models/owns/tasks';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 interface SingleTaskProps {
   task: Task;
   preview?: boolean;
   handleChange?: (value: string | number, id: number) => void;
+  handleSaveNotes?: (value: string, id: number) => Promise<void>;
   handleNoteChange?: (value: string, id: number) => void;
   toggleNotes?: (id: number) => void;
   notes?: Map<number, boolean>;
@@ -27,6 +31,7 @@ export default function SingleTask({
   task,
   handleChange,
   handleNoteChange,
+  handleSaveNotes,
   preview,
   toggleNotes,
   notes
@@ -34,7 +39,7 @@ export default function SingleTask({
   const theme = useTheme();
   const { t }: { t: any } = useTranslation();
   const navigate = useNavigate();
-
+  const [savingNotes, setSavingNotes] = useState<boolean>(false);
   const subtaskOptions = [
     { label: t('Open'), value: 'OPEN' },
     { label: t('In Progress'), value: 'IN_PROGRESS' },
@@ -136,7 +141,7 @@ export default function SingleTask({
           </IconButton>
         </Box>
       </Box>
-      <Collapse in={preview ? false : notes.get(task.id)}>
+      <Collapse sx={{ mt: 1 }} in={preview ? false : notes.get(task.id)}>
         <Box sx={{ p: 1, backgroundColor: 'white' }}>
           <Field
             multiple={true}
@@ -147,6 +152,20 @@ export default function SingleTask({
             label={t('Notes')}
             type={'text'}
           />
+          <Button
+            sx={{ mt: 1 }}
+            variant="contained"
+            startIcon={savingNotes ? <CircularProgress size="1rem" /> : null}
+            disabled={savingNotes}
+            onClick={() => {
+              setSavingNotes(true);
+              handleSaveNotes(task.notes, task.id).finally(() =>
+                setSavingNotes(false)
+              );
+            }}
+          >
+            {t('Save')}
+          </Button>
         </Box>
       </Collapse>
     </Box>

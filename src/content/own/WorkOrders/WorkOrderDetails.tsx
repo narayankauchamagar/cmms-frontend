@@ -476,7 +476,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
             {!!tasks.length && (
               <Box>
                 <Divider sx={{ mt: 2 }} />
-                <Tasks tasksProps={tasks} />
+                <Tasks tasksProps={tasks} workOrderId={workOrder?.id} />
               </Box>
             )}
             <Box>
