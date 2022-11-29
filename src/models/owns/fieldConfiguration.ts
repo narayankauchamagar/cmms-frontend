@@ -1,7 +1,7 @@
 export enum FieldType {
-  OPTIONAL,
-  HIDDEN,
-  REQUIRED
+  OPTIONAL = 'OPTIONAL',
+  HIDDEN = 'HIDDEN',
+  REQUIRED = 'REQUIRED'
 }
 export interface FieldConfiguration {
   id: number;

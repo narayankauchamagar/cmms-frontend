@@ -49,12 +49,15 @@ import { useDispatch, useSelector } from '../../../store';
 import PriorityWrapper from '../components/PriorityWrapper';
 import { patchTasks } from '../../../slices/task';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
+import useAuth from '../../../hooks/useAuth';
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
   const [currentTab, setCurrentTab] = useState<string>('list');
   const { workOrders } = useSelector((state) => state.workOrders);
   const dispatch = useDispatch();
+  const { companySettings } = useAuth();
+  const { workOrderConfiguration } = companySettings;
   const { getFormattedDate } = useContext(CompanySettingsContext);
   const tabs = [
     { value: 'list', label: t('List View') },
@@ -311,7 +314,7 @@ function WorkOrders() {
       valueGetter: (params) => getFormattedDate(params.row.createdAt)
     }
   ];
-  const fields: Array<IField> = [
+  const defaultFields: Array<IField> = [
     {
       name: 'title',
       type: 'text',
@@ -417,10 +420,59 @@ function WorkOrders() {
       label: t('Requires Signature')
     }
   ];
+  const defaultshape: { [key: string]: any } = {
+    title: Yup.string().required(t('WorkOrder title is required'))
+  };
+  const getFieldsAndShapes = (): [Array<IField>, {}] => {
+    let fields = defaultFields;
+    let shape = defaultshape;
+    const fieldsToConfigure = [
+      'description',
+      'priority',
+      'images',
+      'primaryUser',
+      'additionalAssigned',
+      'team',
+      'location',
+      'dueDate',
+      'category',
+      'purchaseOrder',
+      'files',
+      'signature'
+    ];
+    fieldsToConfigure.forEach((name) => {
+      const fieldConfig =
+        workOrderConfiguration.workOrderFieldConfigurations.find(
+          (woFC) => woFC.fieldName === name
+        );
+      const fieldIndexInFields = fields.findIndex(
+        (field) => field.name === name
+      );
+      if (fieldConfig.fieldType === 'REQUIRED') {
+        fields[fieldIndexInFields] = {
+          ...fields[fieldIndexInFields],
+          required: true
+        };
+        const requiredMessage = t('This field is required');
+        let yupSchema;
+        switch (fields[fieldIndexInFields].type) {
+          case 'text':
+            yupSchema = Yup.string().required(requiredMessage);
+            break;
+          case 'number':
+            yupSchema = Yup.number().required(requiredMessage);
+            break;
+          default:
+            yupSchema = Yup.object().required(requiredMessage).nullable();
+            break;
+        }
+        shape[name] = yupSchema;
+      } else if (fieldConfig.fieldType === 'HIDDEN') {
+        fields.splice(fieldIndexInFields, 1);
+      }
+    });
 
-  const shape = {
-    title: Yup.string().required(t('WorkOrder title is required')),
-    asset: Yup.object().required(t('The asset field is required')).nullable()
+    return [fields, shape];
   };
 
   const renderWorkOrderAddModal = () => (
@@ -450,8 +502,8 @@ function WorkOrders() {
       >
         <Box>
           <Form
-            fields={fields}
-            validation={Yup.object().shape(shape)}
+            fields={getFieldsAndShapes()[0]}
+            validation={Yup.object().shape(getFieldsAndShapes()[1])}
             submitText={t('Add')}
             values={{ requiredSignature: false }}
             onChange={({ field, e }) => {}}
@@ -493,8 +545,8 @@ function WorkOrders() {
       >
         <Box>
           <Form
-            fields={fields}
-            validation={Yup.object().shape(shape)}
+            fields={getFieldsAndShapes()[0]}
+            validation={Yup.object().shape(getFieldsAndShapes()[1])}
             submitText={t('Save')}
             values={{
               ...currentWorkOrder,

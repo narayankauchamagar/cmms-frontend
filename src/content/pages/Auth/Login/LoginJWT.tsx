@@ -1,34 +1,37 @@
 import * as Yup from 'yup';
 import type { FC } from 'react';
+import { useContext } from 'react';
 import { Formik } from 'formik';
 import { Link as RouterLink } from 'react-router-dom';
 
 import {
   Box,
   Button,
-  FormHelperText,
-  TextField,
   Checkbox,
-  Typography,
-  Link,
+  CircularProgress,
   FormControlLabel,
-  CircularProgress
+  FormHelperText,
+  Link,
+  TextField,
+  Typography
 } from '@mui/material';
 import useAuth from 'src/hooks/useAuth';
 import useRefMounted from 'src/hooks/useRefMounted';
 import { useTranslation } from 'react-i18next';
+import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContext';
 
 const LoginJWT: FC = () => {
   const { login } = useAuth() as any;
   const isMountedRef = useRefMounted();
   const { t }: { t: any } = useTranslation();
+  const { showSnackBar } = useContext(CustomSnackBarContext);
 
   return (
     <Formik
       initialValues={{
-        email: 'demo@example.com',
-        password: 'TokyoPass1@',
-        terms: true,
+        email: '',
+        password: '',
+        terms: false,
         submit: null
       }}
       validationSchema={Yup.object().shape({
@@ -48,21 +51,16 @@ const LoginJWT: FC = () => {
         values,
         { setErrors, setStatus, setSubmitting }
       ): Promise<void> => {
-        try {
-          await login(values.email, values.password);
-
-          if (isMountedRef.current) {
-            setStatus({ success: true });
-            setSubmitting(false);
-          }
-        } catch (err) {
-          console.error(err);
-          if (isMountedRef.current) {
+        login(values.email, values.password)
+          .catch((err) => {
+            showSnackBar(t('Wrong credentials provided'), 'error');
             setStatus({ success: false });
-            setErrors({ submit: err.message });
-            setSubmitting(false);
-          }
-        }
+          })
+          .finally(() => {
+            if (isMountedRef.current) {
+              setSubmitting(false);
+            }
+          });
       }}
     >
       {({

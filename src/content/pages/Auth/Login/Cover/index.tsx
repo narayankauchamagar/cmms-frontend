@@ -2,19 +2,14 @@ import { Link as RouterLink } from 'react-router-dom';
 import {
   Box,
   Card,
-  Link,
-  Tooltip,
-  Typography,
   Container,
-  Alert,
-  styled
+  Link,
+  styled,
+  Tooltip,
+  Typography
 } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
-import useAuth from 'src/hooks/useAuth';
-import Auth0Login from '../LoginAuth0';
-import FirebaseAuthLogin from '../LoginFirebaseAuth';
 import JWTLogin from '../LoginJWT';
-import AmplifyLogin from '../LoginAmplify';
 
 import { useTranslation } from 'react-i18next';
 import Logo from 'src/components/Logo';
@@ -89,13 +84,12 @@ const TypographyH1 = styled(Typography)(
 );
 
 function LoginCover() {
-  const { method } = useAuth() as any;
   const { t }: { t: any } = useTranslation();
 
   return (
     <>
       <Helmet>
-        <title>Login - Cover</title>
+        <title>{t('Login')}</title>
       </Helmet>
       <Content>
         <SidebarWrapper
@@ -113,7 +107,7 @@ function LoginCover() {
                     mb: 7
                   }}
                 >
-                  {t('Multiple auth methods included')}
+                  {t('A Powerful CMMS')}
                 </TypographyH1>
                 <Box
                   sx={{
@@ -239,10 +233,7 @@ function LoginCover() {
                   {t('Fill in the fields below to sign into your account.')}
                 </Typography>
               </Box>
-              {method === 'Auth0' && <Auth0Login />}
-              {method === 'FirebaseAuth' && <FirebaseAuthLogin />}
-              {method === 'JWT' && <JWTLogin />}
-              {method === 'Amplify' && <AmplifyLogin />}
+              <JWTLogin />
               <Box my={4}>
                 <Typography
                   component="span"
@@ -258,15 +249,6 @@ function LoginCover() {
                   </Link>
                 </Box>
               </Box>
-              {method !== 'Auth0' && (
-                <Tooltip
-                  title={t('Used only for the live preview demonstration !')}
-                >
-                  <Alert severity="warning">
-                    Use <b>demo@example.com</b> and password <b>TokyoPass1@</b>
-                  </Alert>
-                </Tooltip>
-              )}
             </Card>
           </Container>
         </MainContent>
