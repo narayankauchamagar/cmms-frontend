@@ -22,8 +22,9 @@ function WorkOrderSettings() {
       name: 'priority'
     },
     { label: t('Images'), name: 'images' },
+    { label: t('Asset'), name: 'asset' },
     { label: t('Primary User'), name: 'primaryUser' },
-    { label: t('Additional Workers'), name: 'additionalAssigned' },
+    { label: t('Additional Workers'), name: 'assignedTo' },
     { label: t('Team'), name: 'team' },
     { label: t('Location'), name: 'location' },
     { label: t('Due date'), name: 'dueDate' },

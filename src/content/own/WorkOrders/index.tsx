@@ -427,11 +427,12 @@ function WorkOrders() {
     let fields = defaultFields;
     let shape = defaultshape;
     const fieldsToConfigure = [
+      'asset',
       'description',
       'priority',
       'images',
       'primaryUser',
-      'additionalAssigned',
+      'assignedTo',
       'team',
       'location',
       'dueDate',
