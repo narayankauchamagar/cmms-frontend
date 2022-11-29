@@ -10,6 +10,7 @@ export default interface Location extends Audit {
   address: string;
   longitude: number;
   latitude: number;
+  parentLocation: LocationMiniDTO | null;
   vendors: VendorMiniDTO[];
   customers: CustomerMiniDTO[];
   workers: UserMiniDTO[];
@@ -19,6 +20,11 @@ export interface LocationMiniDTO {
   id: number;
   name: string;
   address: string;
+}
+
+export interface LocationRow extends Location {
+  hierarchy: number[];
+  childrenFetched?: boolean;
 }
 
 export const locations: Location[] = [
@@ -32,6 +38,7 @@ export const locations: Location[] = [
     updatedBy: 'string',
     vendors: [],
     customers: [],
+    parentLocation: null,
     workers: [],
     longitude: 40.744509157650334,
     latitude: -74.06030716227161,
@@ -47,6 +54,7 @@ export const locations: Location[] = [
     updatedBy: 'string',
     vendors: [],
     customers: [],
+    parentLocation: null,
     workers: [],
     longitude: 40.744509157650334,
     latitude: -74.06030716227161,

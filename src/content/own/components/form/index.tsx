@@ -27,7 +27,7 @@ import SelectTasksModal from './SelectTasks';
 import SelectMapCoordinates from './SelectMapCoordinates';
 import { getCustomers } from '../../../../slices/customer';
 import { getVendors } from '../../../../slices/vendor';
-import { getLocations } from 'src/slices/location';
+import { getLocationChildren, getLocations } from 'src/slices/location';
 import { getUsers } from '../../../../slices/user';
 import { getAssets } from '../../../../slices/asset';
 import { getTeams } from '../../../../slices/team';
@@ -57,7 +57,9 @@ export default (props: PropsType) => {
   const dispatch = useDispatch();
   const { customers } = useSelector((state) => state.customers);
   const { vendors } = useSelector((state) => state.vendors);
-  const { locations } = useSelector((state) => state.locations);
+  const { locations, locationsHierarchy } = useSelector(
+    (state) => state.locations
+  );
   const { categories } = useSelector((state) => state.categories);
   const { users } = useSelector((state) => state.users);
   const { assets } = useSelector((state) => state.assets);
@@ -75,6 +77,9 @@ export default (props: PropsType) => {
   };
   const fetchLocations = async () => {
     if (!locations.length) dispatch(getLocations());
+  };
+  const fetchRootLocations = async () => {
+    dispatch(getLocationChildren(0, []));
   };
   const fetchCategories = async (category: string) => {
     if (!categories[category]) dispatch(getCategories(category));
@@ -156,6 +161,15 @@ export default (props: PropsType) => {
           };
         });
         onOpen = fetchLocations;
+        break;
+      case 'parentLocation':
+        options = locationsHierarchy.map((location) => {
+          return {
+            label: location.name,
+            value: location.id.toString()
+          };
+        });
+        onOpen = fetchRootLocations;
         break;
       case 'asset':
         options = assets

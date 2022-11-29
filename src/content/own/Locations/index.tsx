@@ -21,6 +21,7 @@ import {
   addLocation,
   deleteLocation,
   editLocation,
+  getLocationChildren,
   getLocations
 } from '../../../slices/location';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -31,6 +32,7 @@ import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import CustomDataGrid from '../components/CustomDatagrid';
 import {
   GridActionsCellItem,
+  GridEventListener,
   GridRenderCellParams,
   GridRowParams,
   GridToolbar
@@ -44,9 +46,12 @@ import { vendors } from '../../../models/owns/vendor';
 import LocationDetails from './LocationDetails';
 import { useParams } from 'react-router-dom';
 import Map from '../components/Map';
-import { formatSelectMultiple } from '../../../utils/formatters';
+import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
 import { CustomSnackBarContext } from 'src/contexts/CustomSnackBarContext';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
+import { DataGridProProps, useGridApiRef } from '@mui/x-data-grid-pro';
+import { GroupingCellWithLazyLoading } from '../Assets/GroupingCellWithLazyLoading';
+import { AssetRow } from '../../../models/owns/asset';
 
 function Locations() {
   const { t }: { t: any } = useTranslation();
@@ -55,7 +60,10 @@ function Locations() {
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const { getFormattedDate } = useContext(CompanySettingsContext);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
-  const { locations } = useSelector((state) => state.locations);
+  const { locationsHierarchy, locations } = useSelector(
+    (state) => state.locations
+  );
+  const apiRef = useGridApiRef();
   const tabs = [
     { value: 'list', label: t('List View') },
     { value: 'map', label: t('Map View') }
@@ -121,7 +129,54 @@ function Locations() {
   useEffect(() => {
     setTitle(t('Locations'));
     dispatch(getLocations());
+    dispatch(getLocationChildren(0, []));
   }, []);
+
+  useEffect(() => {
+    const handleRowExpansionChange: GridEventListener<
+      'rowExpansionChange'
+    > = async (node) => {
+      const row = apiRef.current.getRow(node.id) as AssetRow | null;
+      if (!node.childrenExpanded || !row || row.childrenFetched) {
+        return;
+      }
+      apiRef.current.updateRows([
+        {
+          id: `Loading Locations-${node.id}`,
+          hierarchy: [...row.hierarchy, '']
+        }
+      ]);
+      dispatch(getLocationChildren(row.id, row.hierarchy));
+    };
+    /**
+     * By default, the grid does not toggle the expansion of rows with 0 children
+     * We need to override the `cellKeyDown` event listener to force the expansion if there are children on the server
+     */
+    const handleCellKeyDown: GridEventListener<'cellKeyDown'> = (
+      params,
+      event
+    ) => {
+      const cellParams = apiRef.current.getCellParams(params.id, params.field);
+      if (cellParams.colDef.type === 'treeDataGroup' && event.key === ' ') {
+        event.stopPropagation();
+        event.preventDefault();
+        event.defaultMuiPrevented = true;
+
+        apiRef.current.setRowChildrenExpansion(
+          params.id,
+          !params.rowNode.childrenExpanded
+        );
+      }
+    };
+
+    apiRef.current.subscribeEvent(
+      'rowExpansionChange',
+      handleRowExpansionChange
+    );
+    apiRef.current.subscribeEvent('cellKeyDown', handleCellKeyDown, {
+      isFirst: true
+    });
+  }, [apiRef]);
 
   useEffect(() => {
     if (locations?.length && locationId && isNumeric(locationId)) {
@@ -134,6 +189,7 @@ function Locations() {
     values.vendors = formatSelectMultiple(values.vendors);
     values.workers = formatSelectMultiple(values.workers);
     values.teams = formatSelectMultiple(values.teams);
+    values.parentLocation = formatSelect(values.parentLocation);
     values.longitude = values.coordinates?.lng;
     values.latitude = values.coordinates?.lat;
     return values;
@@ -205,6 +261,13 @@ function Locations() {
       required: true
     },
     {
+      name: 'parentLocation',
+      type: 'select',
+      type2: 'parentLocation',
+      label: t('Parent Location'),
+      placeholder: t('Select Location')
+    },
+    {
       name: 'workers',
       multiple: true,
       type: 'select',
@@ -248,6 +311,14 @@ function Locations() {
     }
   ];
 
+  const getEditFields = () => {
+    const fieldsClone = [...fields];
+    const parentLocationIndex = fieldsClone.findIndex(
+      (field) => field.name === 'parentLocation'
+    );
+    fieldsClone.splice(parentLocationIndex, 1);
+    return fieldsClone;
+  };
   const shape = {
     name: Yup.string().required(t('Location title is required')),
     address: Yup.string().required(t('Location address is required'))
@@ -296,6 +367,11 @@ function Locations() {
       </DialogContent>
     </Dialog>
   );
+  const groupingColDef: DataGridProProps['groupingColDef'] = {
+    headerName: 'Hierarchy',
+    renderCell: (params) => <GroupingCellWithLazyLoading {...params} />
+  };
+
   const renderLocationUpdateModal = () => (
     <Dialog
       fullWidth
@@ -323,7 +399,7 @@ function Locations() {
       >
         <Box>
           <Form
-            fields={fields}
+            fields={getEditFields()}
             validation={Yup.object().shape(shape)}
             submitText={t('Save')}
             values={{
@@ -426,8 +502,14 @@ function Locations() {
             >
               <Box sx={{ height: 500, width: '95%' }}>
                 <CustomDataGrid
+                  treeData
                   columns={columns}
-                  rows={locations}
+                  rows={locationsHierarchy}
+                  apiRef={apiRef}
+                  getTreeDataPath={(row) =>
+                    row.hierarchy.map((id) => id.toString())
+                  }
+                  groupingColDef={groupingColDef}
                   components={{
                     Toolbar: GridToolbar
                   }}

@@ -34,7 +34,8 @@ export interface IField {
     | 'asset'
     | 'priority'
     | 'task'
-    | 'category';
+    | 'category'
+    | 'parentLocation';
   category?:
     | 'purchase-order-categories'
     | 'cost-categories'
