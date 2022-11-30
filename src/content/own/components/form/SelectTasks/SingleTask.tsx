@@ -6,6 +6,8 @@ import {
   IconButton,
   MenuItem,
   Select,
+  TextField,
+  Tooltip,
   Typography,
   useTheme
 } from '@mui/material';
@@ -16,7 +18,8 @@ import SpeedTwoToneIcon from '@mui/icons-material/SpeedTwoTone';
 import { Task, TaskType } from '../../../../../models/owns/tasks';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import debounce from 'lodash.debounce';
 
 interface SingleTaskProps {
   task: Task;
@@ -40,6 +43,15 @@ export default function SingleTask({
   const { t }: { t: any } = useTranslation();
   const navigate = useNavigate();
   const [savingNotes, setSavingNotes] = useState<boolean>(false);
+
+  const changeHandler = (event) =>
+    !preview && handleChange(event.target.value, task.id);
+
+  const debouncedChangeHandler = useMemo(
+    () => debounce(changeHandler, 1500),
+    []
+  );
+
   const subtaskOptions = [
     { label: t('Open'), value: 'OPEN' },
     { label: t('In Progress'), value: 'IN_PROGRESS' },
@@ -108,11 +120,9 @@ export default function SingleTask({
             </Select>
           ) : (
             <Box sx={{ backgroundColor: 'white' }}>
-              <Field
-                onChange={(event) =>
-                  !preview && handleChange(event.target.value, task.id)
-                }
-                value={task.value}
+              <TextField
+                onChange={debouncedChangeHandler}
+                defaultValue={task.value}
                 label={t('Value')}
                 type={
                   task.taskBase.taskType === 'METER'
@@ -133,12 +143,16 @@ export default function SingleTask({
               <SpeedTwoToneIcon color="primary" />
             </IconButton>
           )}
-          <IconButton onClick={() => !preview && toggleNotes(task.id)}>
-            <NoteTwoToneIcon color="primary" />
-          </IconButton>
-          <IconButton>
-            <AttachFileTwoToneIcon color="primary" />
-          </IconButton>
+          <Tooltip arrow placement="top" title={t('Add Notes')}>
+            <IconButton onClick={() => !preview && toggleNotes(task.id)}>
+              <NoteTwoToneIcon color="primary" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip arrow placement="top" title={t('Attach Files')}>
+            <IconButton>
+              <AttachFileTwoToneIcon color="primary" />
+            </IconButton>
+          </Tooltip>
         </Box>
       </Box>
       <Collapse sx={{ mt: 1 }} in={preview ? false : notes.get(task.id)}>

@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   CircularProgress,
+  debounce,
   Divider,
   Grid,
   IconButton,
@@ -21,7 +22,7 @@ import {
   useTheme
 } from '@mui/material';
 import WorkOrder from '../../../models/owns/workOrder';
-import { ChangeEvent, useContext, useEffect, useState } from 'react';
+import { ChangeEvent, useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DoDisturbOnTwoToneIcon from '@mui/icons-material/DoDisturbOnTwoTone';
@@ -133,6 +134,21 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const isParent = (relation: Relation): boolean => {
     return relation.parent.id === workOrder.id;
   };
+  const onPartQuantityChange = (event, partQuantity) => {
+    dispatch(
+      editPartQuantity(
+        workOrder.id,
+        partQuantity.id,
+        Number(event.target.value)
+      )
+    )
+      .then(() => showSnackBar(t('Quantity changed successfully'), 'success'))
+      .catch((err) => showSnackBar(t("Quantity couldn't be changed"), 'error'));
+  };
+  const debouncedPartQuantityChange = useMemo(
+    () => debounce(onPartQuantityChange, 1500),
+    []
+  );
   const groupRelations = (
     relations: Relation[]
   ): { [key: string]: { id: number; workOrder: WorkOrder }[] } => {
@@ -686,21 +702,15 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                           label={t('Quantity')}
                           variant="outlined"
                           sx={{ mr: 1 }}
-                          value={partQuantity.quantity}
                           type="number"
                           inputProps={{
                             min: '0'
                           }}
                           size="small"
-                          onChange={(event) => {
-                            dispatch(
-                              editPartQuantity(
-                                workOrder.id,
-                                partQuantity.id,
-                                Number(event.target.value)
-                              )
-                            );
-                          }}
+                          onChange={(event) =>
+                            debouncedPartQuantityChange(event, partQuantity)
+                          }
+                          defaultValue={partQuantity.quantity}
                         />
                         <Typography variant="h6">
                           {' * '}
@@ -869,17 +879,19 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
         )}
         {currentTab == 'updates' && (
           <List>
-            {currentWorkOrderHistories.map((workOrderHistory) => (
-              <ListItem
-                key={workOrderHistory.id}
-                secondaryAction={getFormattedDate(workOrderHistory.createdAt)}
-              >
-                <ListItemText
-                  primary={`${workOrderHistory.user.firstName} ${workOrderHistory.user.lastName}`}
-                  secondary={workOrderHistory.name}
-                />
-              </ListItem>
-            ))}
+            {[...currentWorkOrderHistories]
+              .reverse()
+              .map((workOrderHistory) => (
+                <ListItem
+                  key={workOrderHistory.id}
+                  secondaryAction={getFormattedDate(workOrderHistory.createdAt)}
+                >
+                  <ListItemText
+                    primary={`${workOrderHistory.user.firstName} ${workOrderHistory.user.lastName}`}
+                    secondary={workOrderHistory.name}
+                  />
+                </ListItem>
+              ))}
           </List>
         )}
       </Grid>
