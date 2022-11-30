@@ -1,9 +1,11 @@
 import { Audit } from './audit';
 
+export type FileType = 'IMAGE' | 'OTHER';
 export default interface File extends Audit {
   name: string;
   id: string | number;
   url: string;
+  type: FileType;
 }
 
 export const files: File[] = [
@@ -14,6 +16,7 @@ export const files: File[] = [
     createdAt: 'fghb',
     createdBy: 'vvty',
     updatedAt: 'string',
-    updatedBy: 'string'
+    updatedBy: 'string',
+    type: 'OTHER'
   }
 ];

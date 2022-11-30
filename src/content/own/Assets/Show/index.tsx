@@ -109,6 +109,7 @@ const ShowAsset = ({}: PropsType) => {
     {
       name: 'image',
       type: 'file',
+      fileType: 'image',
       label: t('Image')
     },
     {

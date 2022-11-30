@@ -194,8 +194,8 @@ function Meters() {
     {
       name: 'image',
       type: 'file',
-      label: t('Image'),
-      fileType: 'image'
+      fileType: 'image',
+      label: t('Image')
     },
     {
       name: 'users',

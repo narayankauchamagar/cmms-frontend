@@ -1,7 +1,7 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 import type { AppThunk } from 'src/store';
-import File from '../models/owns/file';
+import File, { FileType } from '../models/owns/file';
 import api, { authHeader } from '../utils/api';
 
 const basePath = 'files';
@@ -54,7 +54,7 @@ export const getFiles = (): AppThunk => async (dispatch) => {
 };
 
 export const addFiles =
-  (files: any[]): AppThunk =>
+  (files: any[], fileType: FileType = 'OTHER'): AppThunk =>
   async (dispatch) => {
     let formData = new FormData();
     const companyId = localStorage.getItem('companyId');
@@ -62,6 +62,7 @@ export const addFiles =
     delete headers['Content-Type'];
     files.forEach((file) => formData.append('files', file));
     formData.append('folder', `company ${companyId}`);
+    formData.append('type', fileType);
     const filesResponse = await api.post<File[]>(
       `${basePath}/upload`,
       formData,

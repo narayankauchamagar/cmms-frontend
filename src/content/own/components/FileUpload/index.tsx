@@ -108,23 +108,10 @@ const AvatarDanger = styled(Avatar)(
 `
 );
 
-const BoxUpgrade = styled(Box)(
-  ({ theme }) => `
-    background: ${theme.colors.gradients.purple1};
-    position: relative;
-    border-radius: ${theme.general.borderRadius};
-    
-    img {
-      position: absolute;
-      top: 0;
-      right: 0;
-    }
-`
-);
-
 interface FileUploadProps {
   title: string;
   type: 'image' | 'file';
+  multiple: boolean;
   description: string;
   setFieldValue: (files: any) => void;
 }
@@ -132,11 +119,7 @@ function FileUpload(props: FileUploadProps) {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
-  const { title, description, setFieldValue, type } = props;
-  const data = {
-    percentage: 68.45
-  };
-
+  const { title, description, setFieldValue, type, multiple } = props;
   const {
     acceptedFiles,
     isDragActive,
@@ -151,7 +134,7 @@ function FileUpload(props: FileUploadProps) {
             'image/*': []
           }
         : {},
-    maxFiles: type === 'image' ? 1 : 10,
+    maxFiles: multiple ? 10 : 1,
     onDrop: (acceptedFiles) => {
       setFieldValue(acceptedFiles);
     },
@@ -231,14 +214,16 @@ function FileUpload(props: FileUploadProps) {
                 mt: 2
               }}
             >
-              {t('Drag & drop files here')}
+              {multiple
+                ? t('Drag & drop files here')
+                : t('Drag a unique file here')}
             </TypographyPrimary>
           </>
         )}
       </BoxUploadWrapper>
       {files.length > 0 && (
         <>
-          {type === 'file' && (
+          {multiple && (
             <Alert
               sx={{
                 py: 0,

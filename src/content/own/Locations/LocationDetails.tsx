@@ -86,7 +86,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
       name: 'image',
       type: 'file',
       label: 'File',
-      placeholder: t('Upload a file or image')
+      placeholder: t('Upload an image')
     }
   ];
   const floorPlanShape = {

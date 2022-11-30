@@ -302,6 +302,7 @@ const Parts = ({ setAction }: PropsType) => {
     {
       name: 'files',
       type: 'file',
+      multiple: true,
       label: t('Files')
     }
   ];

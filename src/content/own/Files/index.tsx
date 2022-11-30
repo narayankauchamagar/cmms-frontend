@@ -29,6 +29,7 @@ import { addFiles, getFiles } from '../../../slices/file';
 import { IField } from '../type';
 import Form from '../components/form';
 import * as Yup from 'yup';
+import File from '../../../models/owns/file';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
@@ -49,7 +50,8 @@ function Files() {
       name: 'files',
       type: 'file',
       label: t('Files'),
-      fileType: 'file'
+      fileType: 'file',
+      multiple: true
     }
   ];
 
@@ -191,6 +193,9 @@ function Files() {
                 components={{
                   Toolbar: GridToolbar
                 }}
+                onRowClick={(params: GridRowParams<File>) =>
+                  window.open(params.row.url, '_blank')
+                }
                 initialState={{
                   columns: {
                     columnVisibilityModel: {}
