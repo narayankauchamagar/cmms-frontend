@@ -49,7 +49,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
   const { location, handleOpenUpdate, handleOpenDelete } = props;
   const { t }: { t: any } = useTranslation();
   const dispatch = useDispatch();
-  const { getFormattedDate } = useContext(CompanySettingsContext);
+  const { getFormattedDate, uploadFiles } = useContext(CompanySettingsContext);
   const [openAddFloorPlan, setOpenAddFloorPlan] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<string>('assets');
   const { locations } = useSelector((state) => state.assets);
@@ -132,9 +132,21 @@ export default function LocationDetails(props: LocationDetailsProps) {
             values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              return dispatch(createFloorPlan(location.id, values)).then(() =>
-                setOpenAddFloorPlan(false)
-              );
+              return new Promise<void>((resolve, rej) => {
+                uploadFiles([], values.image)
+                  .then((files) => {
+                    values = {
+                      ...values,
+                      image: files.length ? { id: files[0].id } : null
+                    };
+                    dispatch(createFloorPlan(location.id, values))
+                      .then(() => setOpenAddFloorPlan(false))
+                      .finally(resolve);
+                  })
+                  .catch((err) => {
+                    rej(err);
+                  });
+              });
             }}
           />
         </Box>

@@ -1,8 +1,9 @@
 import { Audit } from './audit';
-import User, { users } from './user';
-import Asset, { AssetMiniDTO, assets } from './asset';
-import Location, { LocationMiniDTO, locations } from './location';
+import { users } from './user';
+import { AssetMiniDTO, assets } from './asset';
+import { LocationMiniDTO, locations } from './location';
 import { UserMiniDTO } from '../user';
+import File from './file';
 
 export default interface Meter extends Audit {
   name: string;
@@ -10,6 +11,7 @@ export default interface Meter extends Audit {
   unit: string;
   updateFrequency: number;
   category: string;
+  image: File | null;
   users: UserMiniDTO[];
   location?: LocationMiniDTO;
   asset: AssetMiniDTO;
@@ -26,6 +28,7 @@ export const meters: Meter[] = [
     users: users,
     location: locations[0],
     asset: assets[0],
+    image: null,
     createdAt: 'fghb',
     createdBy: 'vvty',
     updatedAt: 'string',

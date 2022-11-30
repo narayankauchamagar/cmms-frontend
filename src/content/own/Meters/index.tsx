@@ -46,7 +46,7 @@ function Meters() {
   const { meterId } = useParams();
   const dispatch = useDispatch();
   const { showSnackBar } = useContext(CustomSnackBarContext);
-  const { getFormattedDate } = useContext(CompanySettingsContext);
+  const { getFormattedDate, uploadFiles } = useContext(CompanySettingsContext);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const { meters } = useSelector((state) => state.meters);
 
@@ -259,10 +259,23 @@ function Meters() {
             values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              const formattedValues = formatValues(values);
-              return dispatch(addMeter(formattedValues))
-                .then(onCreationSuccess)
-                .catch(onCreationFailure);
+              let formattedValues = formatValues(values);
+              return new Promise<void>((resolve, rej) => {
+                uploadFiles([], values.image)
+                  .then((files) => {
+                    formattedValues = {
+                      ...formattedValues,
+                      image: files.length ? { id: files[0].id } : null
+                    };
+                    dispatch(addMeter(formattedValues))
+                      .then(onCreationSuccess)
+                      .catch(onCreationFailure)
+                      .finally(resolve);
+                  })
+                  .catch((err) => {
+                    rej(err);
+                  });
+              });
             }}
           />
         </Box>
@@ -320,10 +333,26 @@ function Meters() {
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              const formattedValues = formatValues(values);
-              return dispatch(editMeter(currentMeter.id, formattedValues))
-                .then(onEditSuccess)
-                .catch(onEditFailure);
+              let formattedValues = formatValues(values);
+              return new Promise<void>((resolve, rej) => {
+                uploadFiles([], values.image)
+                  .then((files) => {
+                    formattedValues = {
+                      ...formattedValues,
+                      image: files.length
+                        ? { id: files[0].id }
+                        : currentMeter.image
+                    };
+                    dispatch(editMeter(currentMeter.id, formattedValues))
+                      .then(onEditSuccess)
+                      .catch(onEditFailure)
+                      .finally(resolve);
+                  })
+                  .catch((err) => {
+                    rej(err);
+                    onEditFailure(err);
+                  });
+              });
             }}
           />
         </Box>
