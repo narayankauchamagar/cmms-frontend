@@ -22,6 +22,7 @@ import { editAsset, getAssetDetails } from '../../../../slices/asset';
 import { useDispatch, useSelector } from '../../../../store';
 import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContext';
 import { formatAssetValues } from '../../../../utils/formatters';
+import { CompanySettingsContext } from '../../../../contexts/CompanySettingsContext';
 
 interface PropsType {}
 
@@ -30,6 +31,7 @@ const ShowAsset = ({}: PropsType) => {
   const { assetId } = useParams();
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const { setTitle } = useContext(TitleContext);
+  const { uploadFiles } = useContext(CompanySettingsContext);
   const location = useLocation();
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const { assetInfos } = useSelector((state) => state.assets);
@@ -281,10 +283,25 @@ const ShowAsset = ({}: PropsType) => {
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              const formattedValues = formatAssetValues(values);
-              return dispatch(editAsset(Number(assetId), formattedValues))
-                .then(onEditSuccess)
-                .catch(onEditFailure);
+              let formattedValues = formatAssetValues(values);
+
+              return new Promise<void>((resolve, rej) => {
+                uploadFiles([], formattedValues.image)
+                  .then((files) => {
+                    formattedValues = {
+                      ...formattedValues,
+                      image: files.length ? { id: files[0] } : asset.image
+                    };
+                    dispatch(editAsset(Number(assetId), formattedValues))
+                      .then(onEditSuccess)
+                      .catch(onEditFailure)
+                      .finally(resolve);
+                  })
+                  .catch((err) => {
+                    onEditFailure(err);
+                    rej(err);
+                  });
+              });
             }}
           />
         </Box>

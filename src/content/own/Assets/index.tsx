@@ -41,6 +41,7 @@ import { getAssetUrl } from '../../../utils/urlPaths';
 function Assets() {
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
+  const { uploadFiles } = useContext(CompanySettingsContext);
   const navigate = useNavigate();
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const dispatch = useDispatch();
@@ -417,10 +418,24 @@ function Assets() {
             values={{ inServiceDate: null, warrantyExpirationDate: null }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              const formattedValues = formatAssetValues(values);
-              return dispatch(addAsset(formattedValues))
-                .then(onCreationSuccess)
-                .catch(onCreationFailure);
+              let formattedValues = formatAssetValues(values);
+              return new Promise<void>((resolve, rej) => {
+                uploadFiles([], formattedValues.image)
+                  .then((files) => {
+                    formattedValues = {
+                      ...formattedValues,
+                      image: files.length ? { id: files[0] } : null
+                    };
+                    dispatch(addAsset(formattedValues))
+                      .then(onCreationSuccess)
+                      .catch(onCreationFailure)
+                      .finally(resolve);
+                  })
+                  .catch((err) => {
+                    onCreationFailure(err);
+                    rej(err);
+                  });
+              });
             }}
           />
         </Box>

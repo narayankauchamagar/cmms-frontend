@@ -928,7 +928,20 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                     <ListItem
                       key={file.id}
                       secondaryAction={
-                        <IconButton edge="end" aria-label="delete">
+                        <IconButton
+                          edge="end"
+                          aria-label="delete"
+                          onClick={() => {
+                            dispatch(
+                              editWorkOrder(workOrder.id, {
+                                ...workOrder,
+                                files: workOrder.files.filter(
+                                  (f) => f.id !== file.id
+                                )
+                              })
+                            );
+                          }}
+                        >
                           <DoDisturbOnTwoToneIcon color="error" />
                         </IconButton>
                       }

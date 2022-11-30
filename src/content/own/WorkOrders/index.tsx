@@ -50,13 +50,13 @@ import PriorityWrapper from '../components/PriorityWrapper';
 import { patchTasks } from '../../../slices/task';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 import useAuth from '../../../hooks/useAuth';
-import { addFiles } from '../../../slices/file';
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
   const [currentTab, setCurrentTab] = useState<string>('list');
   const { workOrders } = useSelector((state) => state.workOrders);
   const dispatch = useDispatch();
+  const { uploadFiles } = useContext(CompanySettingsContext);
   const { companySettings } = useAuth();
   const { workOrderConfiguration } = companySettings;
   const { getFormattedDate } = useContext(CompanySettingsContext);
@@ -476,20 +476,7 @@ function WorkOrders() {
 
     return [fields, shape];
   };
-  const uploadFiles = async (values): Promise<number[]> => {
-    let files: number[] = [];
-    if (values.files?.length) {
-      await dispatch(addFiles(values.files)).then((fileIds) => {
-        if (Array.isArray(fileIds)) files = [...fileIds];
-      });
-    }
-    if (values.image) {
-      await dispatch(addFiles(values.image, 'IMAGE')).then((images) => {
-        if (Array.isArray(images)) files = [...files, ...images];
-      });
-    }
-    return files;
-  };
+
   const renderWorkOrderAddModal = () => (
     <Dialog
       fullWidth
@@ -525,7 +512,7 @@ function WorkOrders() {
             onSubmit={async (values) => {
               let formattedValues = formatValues(values);
               return new Promise<void>((resolve, rej) => {
-                uploadFiles(formattedValues)
+                uploadFiles(formattedValues.files, formattedValues.image)
                   .then((files) => {
                     formattedValues = {
                       ...formattedValues,
@@ -634,7 +621,7 @@ function WorkOrders() {
             onSubmit={async (values) => {
               let formattedValues = formatValues(values);
               return new Promise<void>((resolve, rej) => {
-                uploadFiles(formattedValues)
+                uploadFiles(formattedValues.files, formattedValues.image)
                   .then((files) => {
                     formattedValues = {
                       ...formattedValues,
