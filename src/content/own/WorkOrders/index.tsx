@@ -117,9 +117,9 @@ function WorkOrders() {
     values.assignedTo = formatSelectMultiple(values.assignedTo);
     values.customers = formatSelectMultiple(values.customers);
     values.priority = values.priority?.value;
-    values.requiredSignature =
-      Array.isArray(values.requiredSignature) &&
-      values?.requiredSignature.includes('on');
+    values.requiredSignature = Array.isArray(values.requiredSignature)
+      ? values?.requiredSignature.includes('on')
+      : values.requiredSignature;
     //TODO
     delete values.category;
     return values;

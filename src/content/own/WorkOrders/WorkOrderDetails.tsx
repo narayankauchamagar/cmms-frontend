@@ -64,6 +64,7 @@ import { deleteRelation, getRelations } from '../../../slices/relation';
 import Relation, { relationTypes } from '../../../models/owns/relation';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 import { getAssetUrl } from '../../../utils/urlPaths';
+import SignatureModal from './SignatureModal';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;
@@ -79,6 +80,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const [openAddTimeModal, setOpenAddTimeModal] = useState<boolean>(false);
   const [openAddCostModal, setOpenAddCostModal] = useState<boolean>(false);
   const [openLinkModal, setOpenLinkModal] = useState<boolean>(false);
+  const [openSignatureModal, setOpenSignatureModal] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<string>('details');
   const [changingStatus, setChangingStatus] = useState<boolean>(false);
   const { workOrders } = useSelector((state) => state.partQuantities);
@@ -115,7 +117,9 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
     handleCloseMenu();
     if (
       window.confirm(
-        t('Are you sure you want to archive ') + workOrder.title + ' ?'
+        t('Are you sure you want to archive this Work Order') +
+          workOrder.title +
+          ' ?'
       )
     ) {
       dispatch(editWorkOrder(workOrder?.id, { ...workOrder, archived: true }))
@@ -149,6 +153,17 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
     () => debounce(onPartQuantityChange, 1500),
     []
   );
+  const onCompleteWithSignature = (signatureId: number) => {
+    setChangingStatus(true);
+    return dispatch(
+      editWorkOrder(workOrder?.id, {
+        ...workOrder,
+        status: 'COMPLETE'
+        //TODO
+        //signature: { id: signatureId }
+      })
+    ).finally(() => setChangingStatus(false));
+  };
   const groupRelations = (
     relations: Relation[]
   ): { [key: string]: { id: number; workOrder: WorkOrder }[] } => {
@@ -388,13 +403,20 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                   ) : (
                     <Select
                       onChange={(event) => {
-                        setChangingStatus(true);
-                        dispatch(
-                          editWorkOrder(workOrder?.id, {
-                            ...workOrder,
-                            status: event.target.value
-                          })
-                        ).finally(() => setChangingStatus(false));
+                        if (
+                          event.target.value === 'COMPLETE' &&
+                          workOrder.requiredSignature
+                        ) {
+                          setOpenSignatureModal(true);
+                        } else {
+                          setChangingStatus(true);
+                          dispatch(
+                            editWorkOrder(workOrder?.id, {
+                              ...workOrder,
+                              status: event.target.value
+                            })
+                          ).finally(() => setChangingStatus(false));
+                        }
                       }}
                       value={workOrder.status}
                       sx={
@@ -909,6 +931,11 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
         open={openLinkModal}
         onClose={() => setOpenLinkModal(false)}
         workOrderId={workOrder.id}
+      />
+      <SignatureModal
+        open={openSignatureModal}
+        onClose={() => setOpenSignatureModal(false)}
+        onCompleteWithSignature={onCompleteWithSignature}
       />
       <Menu anchorEl={anchorEl} open={openMenu} onClose={handleCloseMenu}>
         <MenuItem
