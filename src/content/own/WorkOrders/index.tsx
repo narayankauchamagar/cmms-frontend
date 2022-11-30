@@ -536,9 +536,11 @@ function WorkOrders() {
                     dispatch(addWorkOrder(formattedValues))
                       .then(onCreationSuccess)
                       .then(() => resolve())
-                      .catch(onCreationFailure);
+                      .catch(onCreationFailure)
+                      .catch(rej);
                   })
-                  .catch(onCreationFailure);
+                  .catch(onCreationFailure)
+                  .catch(rej);
               });
             }}
           />
@@ -630,18 +632,42 @@ function WorkOrders() {
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              const formattedValues = formatValues(values);
-              return dispatch(
-                //TODO editTask
-                patchTasks(
-                  currentWorkOrder?.id,
-                  formattedValues.tasks.map((task) => task.taskBase)
-                )
-              ).then(() =>
-                dispatch(editWorkOrder(currentWorkOrder?.id, formattedValues))
-                  .then(onEditSuccess)
-                  .catch(onEditFailure)
-              );
+              let formattedValues = formatValues(values);
+              return new Promise<void>((resolve, rej) => {
+                uploadFiles(formattedValues)
+                  .then((files) => {
+                    formattedValues = {
+                      ...formattedValues,
+                      files: [
+                        ...currentWorkOrder.files,
+                        ...files.map((file) => {
+                          return { id: file };
+                        })
+                      ]
+                    };
+                    dispatch(
+                      //TODO editTask
+                      patchTasks(
+                        currentWorkOrder?.id,
+                        formattedValues.tasks.map((task) => task.taskBase)
+                      )
+                    ).then(() =>
+                      dispatch(
+                        editWorkOrder(currentWorkOrder?.id, formattedValues)
+                      )
+                        .then(onEditSuccess)
+                        .then(() => resolve())
+                        .catch((err) => {
+                          onEditFailure(err);
+                          rej();
+                        })
+                    );
+                  })
+                  .catch((err) => {
+                    onEditFailure(err);
+                    rej();
+                  });
+              });
             }}
           />
         </Box>
