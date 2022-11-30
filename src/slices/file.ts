@@ -73,6 +73,7 @@ export const addFiles =
       true
     );
     dispatch(slice.actions.addFiles({ files: filesResponse }));
+    return filesResponse.map((file) => file.id);
   };
 export const editFile =
   (id: number, file): AppThunk =>

@@ -9,7 +9,7 @@ import wait from '../../../utils/wait';
 interface SignatureProps {
   open: boolean;
   onClose: () => void;
-  onCompleteWithSignature: (id: number) => Promise<void | number>;
+  onCompleteWithSignature: (id: number) => Promise<void | number | number[]>;
 }
 export default function SignatureModal({
   open,
