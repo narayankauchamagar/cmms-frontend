@@ -424,7 +424,7 @@ function Assets() {
                   .then((files) => {
                     formattedValues = {
                       ...formattedValues,
-                      image: files.length ? { id: files[0] } : null
+                      image: files.length ? { id: files[0].id } : null
                     };
                     dispatch(addAsset(formattedValues))
                       .then(onCreationSuccess)

@@ -2,10 +2,11 @@ import { createContext, FC } from 'react';
 import useAuth from '../hooks/useAuth';
 import { addFiles } from '../slices/file';
 import { useDispatch } from '../store';
+import { FileType } from '../models/owns/file';
 
 type CompanySettingsContext = {
   getFormattedDate: (dateString: string, hideTime?: boolean) => string;
-  uploadFiles: (files, images) => Promise<number[]>;
+  uploadFiles: (files, images) => Promise<{ id: number; type: FileType }[]>;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
@@ -30,16 +31,30 @@ export const CompanySettingsProvider: FC = ({ children }) => {
     } else return day + '/' + month + '/' + year + ' ' + time;
   };
 
-  const uploadFiles = async (files, images): Promise<number[]> => {
-    let result: number[] = [];
+  const uploadFiles = async (
+    files,
+    images
+  ): Promise<{ id: number; type: FileType }[]> => {
+    let result: { id: number; type: FileType }[] = [];
     if (files?.length) {
       await dispatch(addFiles(files)).then((fileIds) => {
-        if (Array.isArray(fileIds)) result = [...fileIds];
+        if (Array.isArray(fileIds))
+          result = [
+            ...fileIds.map((id) => {
+              return { id, type: 'OTHER' as const };
+            })
+          ];
       });
     }
     if (images?.length) {
       await dispatch(addFiles(images, 'IMAGE')).then((images) => {
-        if (Array.isArray(images)) result = [...result, ...images];
+        if (Array.isArray(images))
+          result = [
+            ...result,
+            ...images.map((imageId) => {
+              return { id: imageId, type: 'IMAGE' as const };
+            })
+          ];
       });
     }
     return result;

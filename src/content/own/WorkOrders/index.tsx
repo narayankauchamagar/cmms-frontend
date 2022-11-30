@@ -517,7 +517,7 @@ function WorkOrders() {
                     formattedValues = {
                       ...formattedValues,
                       files: files.map((file) => {
-                        return { id: file };
+                        return { id: file.id };
                       })
                     };
                     dispatch(addWorkOrder(formattedValues))
@@ -628,7 +628,7 @@ function WorkOrders() {
                       files: [
                         ...currentWorkOrder.files,
                         ...files.map((file) => {
-                          return { id: file };
+                          return { id: file.id };
                         })
                       ]
                     };

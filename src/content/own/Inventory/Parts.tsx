@@ -43,7 +43,7 @@ const Parts = ({ setAction }: PropsType) => {
   const [currentTab, setCurrentTab] = useState<string>('list');
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
-  const { getFormattedDate } = useContext(CompanySettingsContext);
+  const { getFormattedDate, uploadFiles } = useContext(CompanySettingsContext);
   const { parts } = useSelector((state) => state.parts);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
@@ -342,10 +342,31 @@ const Parts = ({ setAction }: PropsType) => {
             values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              const formattedValues = formatValues(values);
-              return dispatch(addPart(formattedValues))
-                .then(onCreationSuccess)
-                .catch(onCreationFailure);
+              let formattedValues = formatValues(values);
+              return new Promise<void>((resolve, rej) => {
+                uploadFiles(formattedValues.files, formattedValues.image)
+                  .then((files) => {
+                    formattedValues = {
+                      ...formattedValues,
+                      image: files.find((file) => file.type === 'IMAGE')
+                        ? { id: files.find((file) => file.type === 'IMAGE').id }
+                        : null,
+                      files: files
+                        .filter((file) => file.type === 'OTHER')
+                        .map((file) => {
+                          return { id: file.id };
+                        })
+                    };
+                    dispatch(addPart(formattedValues))
+                      .then(onCreationSuccess)
+                      .catch(onCreationFailure)
+                      .finally(resolve);
+                  })
+                  .catch((err) => {
+                    onCreationFailure(err);
+                    rej(err);
+                  });
+              });
             }}
           />
         </Box>
@@ -455,10 +476,34 @@ const Parts = ({ setAction }: PropsType) => {
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              const formattedValues = formatValues(values);
-              return dispatch(editPart(currentPart.id, formattedValues))
-                .then(onEditSuccess)
-                .catch(onEditFailure);
+              let formattedValues = formatValues(values);
+              return new Promise<void>((resolve, rej) => {
+                uploadFiles(formattedValues.files, formattedValues.image)
+                  .then((files) => {
+                    formattedValues = {
+                      ...formattedValues,
+                      image: files.find((file) => file.type === 'IMAGE')
+                        ? { id: files.find((file) => file.type === 'IMAGE').id }
+                        : currentPart.image,
+                      files: [
+                        ...currentPart.files,
+                        ...files
+                          .filter((file) => file.type === 'OTHER')
+                          .map((file) => {
+                            return { id: file.id };
+                          })
+                      ]
+                    };
+                    dispatch(editPart(currentPart.id, formattedValues))
+                      .then(onEditSuccess)
+                      .catch(onEditFailure)
+                      .finally(resolve);
+                  })
+                  .catch((err) => {
+                    onEditFailure(err);
+                    rej(err);
+                  });
+              });
             }}
           />
         </Box>

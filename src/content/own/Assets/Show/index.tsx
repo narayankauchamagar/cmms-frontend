@@ -290,7 +290,7 @@ const ShowAsset = ({}: PropsType) => {
                   .then((files) => {
                     formattedValues = {
                       ...formattedValues,
-                      image: files.length ? { id: files[0] } : asset.image
+                      image: files.length ? { id: files[0].id } : asset.image
                     };
                     dispatch(editAsset(Number(assetId), formattedValues))
                       .then(onEditSuccess)

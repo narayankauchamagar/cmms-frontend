@@ -3,8 +3,10 @@ import { UserMiniDTO } from '../user';
 import { VendorMiniDTO } from './vendor';
 import { CustomerMiniDTO } from './customer';
 import { TeamMiniDTO } from './team';
+import File from './file';
 
 export default interface Part extends Audit {
+  files: File[];
   id: number;
   name: string;
   cost: number;
@@ -14,6 +16,7 @@ export default interface Part extends Audit {
   area: string;
   category: string;
   nonStock: boolean;
+  image: File | null;
   description: string;
   assignedTo: UserMiniDTO[];
   vendors: VendorMiniDTO[];
@@ -35,11 +38,13 @@ export const parts: Part[] = [
     cost: 52,
     quantity: 9,
     barcode: 'dfsad',
+    files: [],
     area: 'fafcax',
     nonStock: false,
     category: 'facacaa ',
     description: 'string',
     assignedTo: [],
+    image: null,
     minQuantity: 4,
     vendors: [],
     customers: [],
@@ -60,6 +65,8 @@ export const parts: Part[] = [
     nonStock: true,
     area: 'fafcax',
     category: 'facacaa ',
+    files: [],
+    image: null,
     description: 'string',
     assignedTo: [],
     vendors: [],
