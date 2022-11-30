@@ -206,9 +206,8 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
     return dispatch(
       editWorkOrder(workOrder?.id, {
         ...workOrder,
-        status: 'COMPLETE'
-        //TODO
-        //signature: { id: signatureId }
+        status: 'COMPLETE',
+        signature: { id: signatureId }
       })
     ).finally(() => setChangingStatus(false));
   };

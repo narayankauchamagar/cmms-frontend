@@ -4,7 +4,8 @@ import Form from '../components/form';
 import * as Yup from 'yup';
 import { IField } from '../type';
 import { useDispatch } from '../../../store';
-import wait from '../../../utils/wait';
+import { useContext } from 'react';
+import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 
 interface SignatureProps {
   open: boolean;
@@ -18,6 +19,7 @@ export default function SignatureModal({
 }: SignatureProps) {
   const { t }: { t: any } = useTranslation();
   const dispatch = useDispatch();
+  const { uploadFiles } = useContext(CompanySettingsContext);
   const fields: Array<IField> = [
     {
       name: 'signature',
@@ -27,7 +29,7 @@ export default function SignatureModal({
     }
   ];
   const shape = {
-    //signature: Yup.object().required(t('Image is required'))
+    signature: Yup.array().required(t('Image is required'))
   };
   return (
     <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
@@ -53,10 +55,17 @@ export default function SignatureModal({
           values={{}}
           onChange={({ field, e }) => {}}
           onSubmit={async (values) => {
-            const formattedValues = { ...values };
-            return wait(2000).then(() =>
-              onCompleteWithSignature(12).then(onClose)
-            );
+            return new Promise<void>((resolve, rej) => {
+              uploadFiles([], values.signature)
+                .then((files) => {
+                  onCompleteWithSignature(files[0].id)
+                    .then(onClose)
+                    .finally(resolve);
+                })
+                .catch((err) => {
+                  rej(err);
+                });
+            });
           }}
         />
       </DialogContent>

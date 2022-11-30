@@ -36,6 +36,7 @@ import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import PriorityWrapper from '../components/PriorityWrapper';
 import { formatSelect, getPriorityLabel } from '../../../utils/formatters';
 import useAuth from '../../../hooks/useAuth';
+import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
@@ -46,6 +47,7 @@ function Files() {
   const { companySettings } = useAuth();
   const { workOrderRequestConfiguration } = companySettings;
   const [currentRequest, setCurrentRequest] = useState<Request>();
+  const { uploadFiles } = useContext(CompanySettingsContext);
   const { requestId } = useParams();
   const dispatch = useDispatch();
   const [openDelete, setOpenDelete] = useState<boolean>(false);
@@ -309,10 +311,31 @@ function Files() {
             values={{ dueDate: null }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              const formattedValues = formatValues(values);
-              return dispatch(addRequest(formattedValues))
-                .then(onCreationSuccess)
-                .catch(onCreationFailure);
+              let formattedValues = formatValues(values);
+              return new Promise<void>((resolve, rej) => {
+                uploadFiles(formattedValues.files, formattedValues.image)
+                  .then((files) => {
+                    formattedValues = {
+                      ...formattedValues,
+                      image: files.find((file) => file.type === 'IMAGE')
+                        ? { id: files.find((file) => file.type === 'IMAGE').id }
+                        : null,
+                      files: files
+                        .filter((file) => file.type === 'OTHER')
+                        .map((file) => {
+                          return { id: file.id };
+                        })
+                    };
+                    dispatch(addRequest(formattedValues))
+                      .then(onCreationSuccess)
+                      .catch(onCreationFailure)
+                      .finally(resolve);
+                  })
+                  .catch((err) => {
+                    onCreationFailure(err);
+                    rej(err);
+                  });
+              });
             }}
           />
         </Box>
@@ -360,10 +383,34 @@ function Files() {
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              const formattedValues = formatValues(values);
-              return dispatch(editRequest(currentRequest?.id, formattedValues))
-                .then(onEditSuccess)
-                .catch(onEditFailure);
+              let formattedValues = formatValues(values);
+              return new Promise<void>((resolve, rej) => {
+                uploadFiles(formattedValues.files, formattedValues.image)
+                  .then((files) => {
+                    formattedValues = {
+                      ...formattedValues,
+                      image: files.find((file) => file.type === 'IMAGE')
+                        ? { id: files.find((file) => file.type === 'IMAGE').id }
+                        : currentRequest.image,
+                      files: [
+                        ...currentRequest.files,
+                        ...files
+                          .filter((file) => file.type === 'OTHER')
+                          .map((file) => {
+                            return { id: file.id };
+                          })
+                      ]
+                    };
+                    dispatch(editRequest(currentRequest?.id, formattedValues))
+                      .then(onEditSuccess)
+                      .catch(onEditFailure)
+                      .finally(resolve);
+                  })
+                  .catch((err) => {
+                    onEditFailure(err);
+                    rej(err);
+                  });
+              });
             }}
           />
         </Box>
