@@ -65,6 +65,7 @@ import Relation, { relationTypes } from '../../../models/owns/relation';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 import { getAssetUrl } from '../../../utils/urlPaths';
 import SignatureModal from './SignatureModal';
+import useAuth from '../../../hooks/useAuth';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;
@@ -102,6 +103,8 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);
+  const { companySettings } = useAuth();
+  const { workOrderConfiguration } = companySettings;
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -134,7 +137,52 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
     dispatch(getTasks(workOrder.id));
     dispatch(getRelations(workOrder.id));
   }, []);
+  const canComplete = (): boolean => {
+    let error;
+    const fieldsToTest = [
+      {
+        name: 'completeFiles',
+        condition: !workOrder.files.length,
+        message: 'Files are required on Work Order Completion'
+      },
+      {
+        name: 'completeTasks',
+        condition: tasks.some((task) => !task.value),
+        message: 'Tasks must be completed'
+      },
+      {
+        name: 'completeTime',
+        condition: additionalTimes
+          .filter((additionalTime) => additionalTime.primaryTime)
+          .some((additionalTime) => !additionalTime.duration),
+        message: 'You must log time'
+      },
+      {
+        name: 'completeParts',
+        condition: !partQuantities.length,
+        message: 'No Part has been used in this Work Order'
+      },
+      {
+        name: 'completeCost',
+        condition: !additionalCosts.length,
+        message: 'No Cost information provided in this Work Order'
+      }
+    ];
+    fieldsToTest.every((field) => {
+      const fieldConfig =
+        workOrderConfiguration.workOrderFieldConfigurations.find(
+          (woFC) => woFC.fieldName === field.name
+        );
+      if (fieldConfig.fieldType === 'REQUIRED' && field.condition) {
+        showSnackBar(t(field.message), 'error');
+        error = true;
+        return false;
+      }
+      return true;
+    });
 
+    return !error;
+  };
   const isParent = (relation: Relation): boolean => {
     return relation.parent.id === workOrder.id;
   };
@@ -403,20 +451,21 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                   ) : (
                     <Select
                       onChange={(event) => {
-                        if (
-                          event.target.value === 'COMPLETE' &&
-                          workOrder.requiredSignature
-                        ) {
-                          setOpenSignatureModal(true);
-                        } else {
-                          setChangingStatus(true);
-                          dispatch(
-                            editWorkOrder(workOrder?.id, {
-                              ...workOrder,
-                              status: event.target.value
-                            })
-                          ).finally(() => setChangingStatus(false));
+                        if (event.target.value === 'COMPLETE') {
+                          if (canComplete()) {
+                            if (workOrder.requiredSignature) {
+                              setOpenSignatureModal(true);
+                              return;
+                            }
+                          } else return;
                         }
+                        setChangingStatus(true);
+                        dispatch(
+                          editWorkOrder(workOrder?.id, {
+                            ...workOrder,
+                            status: event.target.value
+                          })
+                        ).finally(() => setChangingStatus(false));
                       }}
                       value={workOrder.status}
                       sx={
