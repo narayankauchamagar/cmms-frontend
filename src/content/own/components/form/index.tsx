@@ -354,9 +354,9 @@ export default (props: PropsType) => {
                             ? t('Drag an image here')
                             : t('Drag files here')
                         }
-                        setFieldValue={(files) =>
-                          formik.setFieldValue(field.name, files)
-                        }
+                        setFieldValue={(files) => {
+                          formik.setFieldValue(field.name, files);
+                        }}
                       />
                     </Box>
                   ) : field.type === 'date' ? (

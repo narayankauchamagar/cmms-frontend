@@ -1,8 +1,16 @@
 import { Helmet } from 'react-helmet-async';
-import { Box, Button, Card, Grid } from '@mui/material';
+import {
+  Box,
+  Button,
+  Card,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  Typography
+} from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { files } from '../../../models/owns/file';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
@@ -16,16 +24,34 @@ import {
 } from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
+import { useDispatch, useSelector } from '../../../store';
+import { addFiles, getFiles } from '../../../slices/file';
+import { IField } from '../type';
+import Form from '../components/form';
+import * as Yup from 'yup';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
   const { getFormattedDate } = useContext(CompanySettingsContext);
+  const { files } = useSelector((state) => state.files);
+  const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const handleDelete = (id: number) => {};
   const handleRename = (id: number) => {};
+  const dispatch = useDispatch();
   useEffect(() => {
     setTitle(t('Files'));
+    dispatch(getFiles());
   }, []);
+
+  const fields: Array<IField> = [
+    {
+      name: 'files',
+      type: 'file',
+      label: t('Files'),
+      fileType: 'file'
+    }
+  ];
 
   const columns: GridEnrichedColDef[] = [
     {
@@ -77,7 +103,48 @@ function Files() {
       ]
     }
   ];
-
+  const shape = {
+    files: Yup.array().required(t('Please upload at least a file'))
+  };
+  const renderAddModal = () => {
+    return (
+      <Dialog
+        fullWidth
+        maxWidth="sm"
+        open={openAddModal}
+        onClose={() => setOpenAddModal(false)}
+      >
+        <DialogTitle
+          sx={{
+            p: 3
+          }}
+        >
+          <Typography variant="h4" gutterBottom>
+            {t('Add Files')}
+          </Typography>
+        </DialogTitle>
+        <DialogContent
+          dividers
+          sx={{
+            p: 3
+          }}
+        >
+          <Form
+            fields={fields}
+            validation={Yup.object().shape(shape)}
+            submitText={t('Add')}
+            values={{}}
+            onChange={({ field, e }) => {}}
+            onSubmit={async (values) => {
+              return dispatch(addFiles(values.files)).then(() =>
+                setOpenAddModal(false)
+              );
+            }}
+          />
+        </DialogContent>
+      </Dialog>
+    );
+  };
   return (
     <>
       <Helmet>
@@ -100,6 +167,7 @@ function Files() {
         >
           <Button
             startIcon={<AddTwoToneIcon />}
+            onClick={() => setOpenAddModal(true)}
             sx={{ mx: 6, my: 1 }}
             variant="contained"
           >
@@ -133,6 +201,7 @@ function Files() {
           </Card>
         </Grid>
       </Grid>
+      {renderAddModal()}
     </>
   );
 }

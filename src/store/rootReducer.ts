@@ -26,6 +26,7 @@ import { reducer as currenciesReducer } from 'src/slices/currency';
 import { reducer as workOrderHistoriesReducer } from 'src/slices/workOrderHistory';
 import { reducer as relationReducer } from 'src/slices/relation';
 import { reducer as readingReducer } from 'src/slices/reading';
+import { reducer as fileReducer } from 'src/slices/file';
 
 const rootReducer = combineReducers({
   calendar: calendarReducer,
@@ -54,7 +55,8 @@ const rootReducer = combineReducers({
   currencies: currenciesReducer,
   workOrderHistories: workOrderHistoriesReducer,
   relations: relationReducer,
-  readings: readingReducer
+  readings: readingReducer,
+  files: fileReducer
 });
 
 export default rootReducer;

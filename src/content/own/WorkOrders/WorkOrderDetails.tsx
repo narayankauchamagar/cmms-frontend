@@ -104,7 +104,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);
   const { companySettings } = useAuth();
-  const { workOrderConfiguration } = companySettings;
+  const { workOrderConfiguration, generalPreferences } = companySettings;
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -694,7 +694,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                           }}
                         >
                           <Typography variant="h6">
-                            {additionalCost.cost} $
+                            {`${additionalCost.cost} ${generalPreferences.currency.code}`}
                           </Typography>
                           <IconButton
                             sx={{ ml: 1 }}
@@ -732,7 +732,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                               : acc,
                           0
                         )}{' '}
-                        $
+                        {generalPreferences.currency.code}
                       </Typography>
                     }
                   >
@@ -785,7 +785,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                         />
                         <Typography variant="h6">
                           {' * '}
-                          {partQuantity.part.cost} $
+                          {`${partQuantity.part.cost} ${generalPreferences.currency.code}`}
                         </Typography>
                       </Box>
                     }
@@ -814,7 +814,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                           acc + partQuantity.part.cost * partQuantity.quantity,
                         0
                       )}{' '}
-                      $
+                      {generalPreferences.currency.code}
                     </Typography>
                   }
                 >
