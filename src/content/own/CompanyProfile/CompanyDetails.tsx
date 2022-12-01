@@ -17,17 +17,18 @@ import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import Text from 'src/components/Text';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import wait from '../../../utils/wait';
 import { useState } from 'react';
 import { phoneRegExp, websiteRegExp } from '../../../utils/validators';
 import CustomDialog from '../components/CustomDialog';
 import { Company } from '../../../models/owns/company';
+import useAuth from '../../../hooks/useAuth';
 
 interface CompanyDetailsProps {
   company: Company;
 }
 function CompanyDetails(props: CompanyDetailsProps) {
   const { company } = props;
+  const { patchCompany } = useAuth();
   const { t }: { t: any } = useTranslation();
   const [openEditModal, setOpenEditModal] = useState<boolean>(false);
   const handleOpenEditModal = () => setOpenEditModal(true);
@@ -104,23 +105,16 @@ function CompanyDetails(props: CompanyDetailsProps) {
             phoneRegExp,
             t('The phone number is invalid')
           ),
-          website: Yup.string().matches(websiteRegExp)
+          website: Yup.string().matches(websiteRegExp, t('Invalid website'))
         })}
         onSubmit={async (
           _values,
           { resetForm, setErrors, setStatus, setSubmitting }
         ) => {
-          console.log(_values);
-          try {
-            await wait(1000);
-            resetForm();
-            setStatus({ success: true });
-            setSubmitting(false);
-          } catch (err) {
-            console.error(err);
-            setStatus({ success: false });
-            setSubmitting(false);
-          }
+          setSubmitting(true);
+          return patchCompany(_values)
+            .then(handleCloseEditModal)
+            .finally(() => setSubmitting(false));
         }}
       >
         {({

@@ -43,6 +43,7 @@ interface AuthContextValue extends AuthState {
   getInfos: () => void;
   patchUserSettings: (values: Partial<UserSettings>) => Promise<void>;
   patchUser: (values: Partial<OwnUser>) => Promise<void>;
+  patchCompany: (values: Partial<Company>) => Promise<void>;
   updatePassword: (values: {
     oldPassword: string;
     newPassword: string;
@@ -107,6 +108,12 @@ type PatchUserAction = {
     user: UserResponseDTO;
   };
 };
+type PatchCompanyAction = {
+  type: 'PATCH_COMPANY';
+  payload: {
+    company: Company;
+  };
+};
 type FetchUserSettingsAction = {
   type: 'GET_USER_SETTINGS';
   payload: {
@@ -149,7 +156,8 @@ type Action =
   | FetchCompanySettingsAction
   | PatchGeneralPreferencesAction
   | PatchFieldConfigurationAction
-  | FetchCompanyAction;
+  | FetchCompanyAction
+  | PatchCompanyAction;
 
 const initialAuthState: AuthState = {
   isAuthenticated: false,
@@ -231,6 +239,13 @@ const handlers: Record<
     return {
       ...state,
       user
+    };
+  },
+  PATCH_COMPANY: (state: AuthState, action: PatchCompanyAction): AuthState => {
+    const { company } = action.payload;
+    return {
+      ...state,
+      company
     };
   },
   GET_USER_SETTINGS: (
@@ -315,6 +330,7 @@ const AuthContext = createContext<AuthContextValue>({
   register: () => Promise.resolve(),
   getInfos: () => Promise.resolve(),
   patchUserSettings: () => Promise.resolve(),
+  patchCompany: () => Promise.resolve(),
   patchUser: () => Promise.resolve(),
   fetchUserSettings: () => Promise.resolve(),
   fetchCompany: () => Promise.resolve(),
@@ -451,6 +467,18 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
       }
     });
   };
+  const patchCompany = async (values: Partial<Company>): Promise<void> => {
+    const company = await api.patch<Company>(
+      `companies/${state.company.id}`,
+      values
+    );
+    dispatch({
+      type: 'PATCH_COMPANY',
+      payload: {
+        company
+      }
+    });
+  };
   const patchUser = async (values: Partial<OwnUser>): Promise<void> => {
     const user = await api.patch<UserResponseDTO>(
       `users/${state.user.id}`,
@@ -563,6 +591,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         register,
         getInfos,
         patchUser,
+        patchCompany,
         updatePassword,
         patchUserSettings,
         fetchUserSettings,
