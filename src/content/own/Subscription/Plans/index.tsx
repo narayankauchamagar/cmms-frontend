@@ -29,6 +29,8 @@ import CustomDialog from '../../components/CustomDialog';
 import { Field, Formik } from 'formik';
 import valid from 'card-validator';
 import { TitleContext } from '../../../../contexts/TitleContext';
+import { useDispatch, useSelector } from '../../../../store';
+import { getSubscriptionPlans } from '../../../../slices/subscriptionPlan';
 
 function SubscriptionPlans() {
   const { t }: { t: any } = useTranslation();
@@ -40,24 +42,27 @@ function SubscriptionPlans() {
   const handleOpenCheckoutModal = () => setOpenCheckout(true);
   const [period, setPeriod] = useState<string>('monthly');
   const [selectedPlan, setSelectedPlan] = useState<string>('starter');
+  const { subscriptionPlans } = useSelector((state) => state.subscriptionPlans);
   const { setTitle } = useContext(TitleContext);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setTitle(t('Plans'));
+    dispatch(getSubscriptionPlans());
   }, []);
   const periods = [
     { name: 'Monthly', value: 'monthly' },
     { name: 'Annually', value: 'annually' }
   ];
-  const plans = [
-    { name: 'Starter', value: 'starter', monthly: 10 },
-    { name: 'Professional', value: 'professional', monthly: 20 },
-    { name: 'Business', value: 'business', monthly: 40 }
-  ];
   const getCost = () => {
-    const monthlyCost =
-      plans.find((plan) => plan.value == selectedPlan).monthly * usersCount;
-    return period == 'monthly' ? monthlyCost : monthlyCost * 12;
+    const selectedPlanData = subscriptionPlans.find(
+      (plan) => plan.code == selectedPlan
+    );
+    return selectedPlanData
+      ? selectedPlanData[
+          period == 'monthly' ? 'monthlyCostPerUser' : 'yearlyCostPerUser'
+        ] * usersCount
+      : 0;
   };
   const renderCheckoutModal = () => (
     <CustomDialog
@@ -233,8 +238,9 @@ function SubscriptionPlans() {
                       </Typography>
                       <Typography variant="h6">
                         {
-                          plans.find((plan) => plan.value == selectedPlan)
-                            .monthly
+                          subscriptionPlans.find(
+                            (plan) => plan.code == selectedPlan
+                          ).monthlyCostPerUser
                         }{' '}
                         $ per month
                       </Typography>
@@ -420,33 +426,33 @@ function SubscriptionPlans() {
                   name="plans"
                 >
                   <Grid container spacing={1}>
-                    {plans.map((item) => (
-                      <Grid item xs={12} md={4} key={item.value}>
+                    {subscriptionPlans.map((plan) => (
+                      <Grid item xs={12} md={4} key={plan.id}>
                         <FormControlLabel
                           sx={{
                             border: 2,
                             borderColor:
-                              item.value === selectedPlan
+                              plan.code === selectedPlan
                                 ? theme.colors.primary.main
                                 : theme.colors.alpha.black[30],
                             p: 2,
                             backgroundColor:
-                              item.value === selectedPlan
+                              plan.code === selectedPlan
                                 ? theme.colors.primary.lighter
                                 : null
                           }}
-                          value={item.value}
+                          value={plan.code}
                           control={<Radio />}
                           label={
                             <Box>
                               <Typography variant="h6" fontWeight="bold">
-                                {item.name}
+                                {plan.name}
                               </Typography>
                               <Typography variant="subtitle1">
                                 <b>
                                   {period == 'monthly'
-                                    ? item.monthly
-                                    : item.monthly * 12}{' '}
+                                    ? plan.monthlyCostPerUser
+                                    : plan.yearlyCostPerUser}{' '}
                                   USD
                                 </b>{' '}
                                 {period == 'monthly'
@@ -465,7 +471,7 @@ function SubscriptionPlans() {
                 <Typography variant="h4" gutterBottom>
                   Features
                 </Typography>
-                <PlanFeatures plan={selectedPlan} />
+                <PlanFeatures plan={selectedPlan.toLowerCase()} />
               </Box>
               <Box
                 sx={{

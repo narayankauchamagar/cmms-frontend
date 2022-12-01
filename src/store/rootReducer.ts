@@ -27,6 +27,7 @@ import { reducer as workOrderHistoriesReducer } from 'src/slices/workOrderHistor
 import { reducer as relationReducer } from 'src/slices/relation';
 import { reducer as readingReducer } from 'src/slices/reading';
 import { reducer as fileReducer } from 'src/slices/file';
+import { reducer as subscriptionPlanReducer } from 'src/slices/subscriptionPlan';
 
 const rootReducer = combineReducers({
   calendar: calendarReducer,
@@ -56,7 +57,8 @@ const rootReducer = combineReducers({
   workOrderHistories: workOrderHistoriesReducer,
   relations: relationReducer,
   readings: readingReducer,
-  files: fileReducer
+  files: fileReducer,
+  subscriptionPlans: subscriptionPlanReducer
 });
 
 export default rootReducer;

@@ -1,5 +1,7 @@
 export interface SubscriptionPlan {
-  id: string;
+  id: number;
   name: string;
-  users: number;
+  monthlyCostPerUser: number;
+  yearlyCostPerUser: number;
+  code: string;
 }
