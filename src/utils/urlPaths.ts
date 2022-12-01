@@ -12,3 +12,19 @@ export const getUserUrl = (id) => {
 export const getTeamUrl = (id) => {
   return `/app/people-teams/teams${id}`;
 };
+
+export const getRequestUrl = (id) => {
+  return `/app/requests/${id}`;
+};
+
+export const getWorkOrderUrl = (id) => {
+  return `/app/work-orders/${id}`;
+};
+
+export const getPartUrl = (id) => {
+  return `/app/inventory/parts/${id}`;
+};
+
+export const getMeterUrl = (id) => {
+  return `/app/meters/${id}`;
+};

@@ -1,46 +1,44 @@
-import { ChangeEvent, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 
 import {
   alpha,
-  Avatar,
   Badge,
   Box,
-  Button,
   Divider,
   IconButton,
-  Tab,
-  Tabs,
-  CardMedia,
-  CardActionArea,
-  AvatarGroup,
-  Card,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
   Popover,
-  useTheme,
   styled,
   Tooltip,
-  Typography
+  Typography,
+  useTheme
 } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Scrollbar from 'src/components/Scrollbar';
-import ArrowForwardTwoToneIcon from '@mui/icons-material/ArrowForwardTwoTone';
-import Timeline from '@mui/lab/Timeline';
-import TimelineItem from '@mui/lab/TimelineItem';
-import TimelineSeparator from '@mui/lab/TimelineSeparator';
-import TimelineConnector from '@mui/lab/TimelineConnector';
-import TimelineContent from '@mui/lab/TimelineContent';
-import TimelineDot from '@mui/lab/TimelineDot';
+import NotificationsNoneTwoToneIcon from '@mui/icons-material/NotificationsNoneTwoTone';
 import Text from 'src/components/Text';
 
 import NotificationsActiveTwoToneIcon from '@mui/icons-material/NotificationsActiveTwoTone';
-import Link from '@mui/material/Link';
 import { useTranslation } from 'react-i18next';
-import AccessTimeTwoToneIcon from '@mui/icons-material/AccessTimeTwoTone';
-import BusinessCenterTwoToneIcon from '@mui/icons-material/BusinessCenterTwoTone';
-import AssignmentIndTwoToneIcon from '@mui/icons-material/AssignmentIndTwoTone';
-import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
-
-import Chart from 'react-apexcharts';
-import type { ApexOptions } from 'apexcharts';
+import { useDispatch, useSelector } from '../../../../../store';
+import {
+  editNotification,
+  getNotifications
+} from '../../../../../slices/notification';
+import Notification from '../../../../../models/owns/notification';
+import {
+  getAssetUrl,
+  getLocationUrl,
+  getMeterUrl,
+  getPartUrl,
+  getRequestUrl,
+  getTeamUrl,
+  getWorkOrderUrl
+} from '../../../../../utils/urlPaths';
+import { CompanySettingsContext } from '../../../../../contexts/CompanySettingsContext';
 
 const BoxComposed = styled(Box)(
   () => `
@@ -90,63 +88,6 @@ const BoxComposedBg = styled(Box)(
 `
 );
 
-const TabsWrapper = styled(Tabs)(
-  ({ theme }) => `
-      overflow: visible !important;
-
-      .MuiTabs-scroller {
-          overflow: visible !important;
-      }
-
-      .MuiButtonBase-root {
-          text-transform: uppercase;
-          font-size: ${theme.typography.pxToRem(12)};
-
-          &:last-child {
-            margin-right: 0;
-          }
-      }
-  `
-);
-
-const AvatarSuccess = styled(Avatar)(
-  ({ theme }) => `
-      background-color: ${theme.colors.success.lighter};
-      color: ${theme.colors.success.main};
-      width: ${theme.spacing(10)};
-      height: ${theme.spacing(10)};
-      margin: 0 auto ${theme.spacing(2)};
-
-      .MuiSvgIcon-root {
-        font-size: ${theme.typography.pxToRem(42)};
-      }
-`
-);
-
-const LabelPrimary = styled(Box)(
-  ({ theme }) => `
-    font-weight: bold;
-    border-radius: ${theme.general.borderRadiusSm};
-    background: ${theme.colors.primary.main};
-    text-transform: uppercase;
-    font-size: ${theme.typography.pxToRem(10)};
-    padding: ${theme.spacing(0.5, 1.5)};
-    color: ${theme.palette.primary.contrastText};
-`
-);
-
-const DividerVertialPrimary = styled(Box)(
-  ({ theme }) => `
-  height: 60%;
-  width: 6px;
-  left: -3px;
-  border-radius: 50px;
-  position: absolute;
-  top: 20%;
-  background: ${theme.colors.primary.main};
-`
-);
-
 const IconButtonWrapper = styled(IconButton)(
   ({ theme }) => `
   width: ${theme.spacing(4)};
@@ -160,18 +101,14 @@ function HeaderNotifications() {
   const [isOpen, setOpen] = useState<boolean>(false);
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { notifications } = useSelector((state) => state.notifications);
+  const { getFormattedDate } = useContext(CompanySettingsContext);
 
-  const [currentTab, setCurrentTab] = useState<string>('timeline');
-
-  const tabs = [
-    { value: 'timeline', label: t('Timeline') },
-    { value: 'tasks', label: t('Tasks') },
-    { value: 'reports', label: t('Reports') }
-  ];
-
-  const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
-    setCurrentTab(value);
-  };
+  useEffect(() => {
+    dispatch(getNotifications());
+  }, []);
 
   const handleOpen = (): void => {
     setOpen(true);
@@ -180,81 +117,53 @@ function HeaderNotifications() {
   const handleClose = (): void => {
     setOpen(false);
   };
-
-  const chartOptions: ApexOptions = {
-    chart: {
-      background: 'transparent',
-      toolbar: {
-        show: false
-      },
-      zoom: {
-        enabled: false
-      },
-      sparkline: {
-        enabled: true
-      },
-      stacked: true
-    },
-    dataLabels: {
-      enabled: true
-    },
-    plotOptions: {
-      bar: {
-        borderRadius: 8,
-        horizontal: false,
-        columnWidth: '65%'
-      }
-    },
-    stroke: {
-      show: false,
-      width: 0,
-      colors: ['transparent']
-    },
-    theme: {
-      mode: theme.palette.mode === 'dark' ? 'light' : 'dark'
-    },
-    colors: [theme.colors.secondary.light, theme.colors.secondary.dark],
-    fill: {
-      opacity: 1
-    },
-    labels: [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday',
-      'Last week',
-      'Last month',
-      'Last year',
-      'Last quarter'
-    ],
-    legend: {
-      show: false
-    },
-    tooltip: {
-      fixed: {
-        enabled: true
-      },
-      x: {
-        show: true
-      },
-      marker: {
-        show: true
-      }
+  const onReadNotification = (notification: Notification) => {
+    let url;
+    const id = notification.id;
+    switch (notification.notificationType) {
+      case 'INFO':
+        break;
+      case 'ASSET':
+        url = getAssetUrl(id);
+        break;
+      case 'REQUEST':
+        url = getRequestUrl(id);
+        break;
+      case 'WORK_ORDER':
+        url = getWorkOrderUrl(id);
+        break;
+      case 'PREVENTIVE_MAINTENANCE':
+        // url = getAssetUrl(id);
+        break;
+      case 'PART':
+        url = getPartUrl(id);
+        break;
+      case 'METER':
+        url = getMeterUrl(id);
+        break;
+      case 'LOCATION':
+        url = getLocationUrl(id);
+        break;
+      case 'TEAM':
+        url = getTeamUrl(id);
+        break;
+      default:
+        break;
     }
+    if (notification.seen) {
+      if (url) {
+        navigate(url);
+        handleClose();
+      }
+    } else
+      dispatch(editNotification(notification.id, { seen: true }))
+        .then(() => {
+          if (url) {
+            navigate(url);
+          }
+        })
+        .finally(handleClose);
   };
-  const chartData = [
-    {
-      name: 'Net Profit',
-      data: [2.3, 3.1, 4.0, 3.8, 5.1, 3.6, 4.0, 3.8, 5.1, 3.6]
-    },
-    {
-      name: 'Net Loss',
-      data: [2.1, 2.1, 3.0, 2.8, 4.0, 3.8, 5.1, 3.6, 4.1, 2.6, 1.2]
-    }
-  ];
 
   return (
     <>
@@ -265,13 +174,17 @@ function HeaderNotifications() {
             vertical: 'top',
             horizontal: 'right'
           }}
-          sx={{
-            '.MuiBadge-badge': {
-              background: theme.colors.success.main,
-              animation: 'pulse 1s infinite',
-              transition: `${theme.transitions.create(['all'])}`
-            }
-          }}
+          sx={
+            notifications.filter((notification) => !notification.seen).length
+              ? {
+                  '.MuiBadge-badge': {
+                    background: theme.colors.success.main,
+                    animation: 'pulse 1s infinite',
+                    transition: `${theme.transitions.create(['all'])}`
+                  }
+                }
+              : {}
+          }
         >
           <IconButtonWrapper
             sx={{
@@ -339,420 +252,47 @@ function HeaderNotifications() {
               <Typography textAlign="center" variant="subtitle2">
                 You have{' '}
                 <Text color="success">
-                  <b>483</b>
+                  <b>
+                    {
+                      notifications.filter((notification) => !notification.seen)
+                        .length
+                    }
+                  </b>
                 </Text>{' '}
                 new messages
               </Typography>
             </BoxComposedContent>
           </BoxComposed>
-          <TabsWrapper
-            centered
-            onChange={handleTabsChange}
-            value={currentTab}
-            variant="fullWidth"
-            textColor="primary"
-            indicatorColor="primary"
-          >
-            {tabs.map((tab) => (
-              <Tab key={tab.value} label={tab.label} value={tab.value} />
-            ))}
-          </TabsWrapper>
         </Box>
         <Divider />
-        {currentTab === 'timeline' && (
+        {!!notifications.length && (
           <Box
             sx={{
               height: 220
             }}
           >
             <Scrollbar>
-              <Timeline
-                sx={{
-                  px: 2,
-                  py: 1,
-                  m: 2
-                }}
-              >
-                <TimelineItem
-                  sx={{
-                    p: 0
-                  }}
-                >
-                  <TimelineSeparator
-                    sx={{
-                      position: 'relative'
-                    }}
+              <List>
+                {[...notifications].reverse().map((notification) => (
+                  <ListItemButton
+                    selected={!notification.seen}
+                    key={notification.id}
+                    onClick={() => onReadNotification(notification)}
                   >
-                    <TimelineDot
-                      sx={{
-                        marginTop: 0,
-                        left: `-${theme.spacing(2.1)} !important`,
-                        top: `-${theme.spacing(0.5)}`
-                      }}
-                      color="success"
-                    >
-                      <BusinessCenterTwoToneIcon />
-                    </TimelineDot>
-                    <TimelineConnector />
-                  </TimelineSeparator>
-                  <TimelineContent
-                    sx={{
-                      pl: 3,
-                      pb: 4
-                    }}
-                  >
-                    <Typography variant="h5" gutterBottom>
-                      Java exam day
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Bill Clinton's presidential scandal makes it online.
-                    </Typography>
-                    <Box display="flex" mt={1} alignItems="flex-start">
-                      <AvatarGroup max={4}>
-                        <Tooltip arrow title="Remy Sharp">
-                          <Avatar
-                            component={RouterLink}
-                            sx={{
-                              width: 32,
-                              height: 32
-                            }}
-                            to="#"
-                            alt="Remy Sharp"
-                            src="/static/images/avatars/1.jpg"
-                          />
-                        </Tooltip>
-                        <Tooltip arrow title="Travis Howard">
-                          <Avatar
-                            component={RouterLink}
-                            sx={{
-                              width: 32,
-                              height: 32
-                            }}
-                            to="#"
-                            alt="Travis Howard"
-                            src="/static/images/avatars/2.jpg"
-                          />
-                        </Tooltip>
-                        <Tooltip arrow title="Cindy Baker">
-                          <Avatar
-                            component={RouterLink}
-                            sx={{
-                              width: 32,
-                              height: 32
-                            }}
-                            to="#"
-                            alt="Cindy Baker"
-                            src="/static/images/avatars/3.jpg"
-                          />
-                        </Tooltip>
-                        <Tooltip arrow title="Cindy Baker">
-                          <Avatar
-                            component={RouterLink}
-                            sx={{
-                              width: 32,
-                              height: 32
-                            }}
-                            to="#"
-                            alt="Cindy Baker"
-                            src="/static/images/avatars/4.jpg"
-                          />
-                        </Tooltip>
-                        <Tooltip arrow title="Agnes Walker">
-                          <Avatar
-                            component={RouterLink}
-                            sx={{
-                              width: 32,
-                              height: 32
-                            }}
-                            to="#"
-                            alt="Agnes Walker"
-                            src="/static/images/avatars/5.jpg"
-                          />
-                        </Tooltip>
-                      </AvatarGroup>
-                    </Box>
-                  </TimelineContent>
-                </TimelineItem>
-                <TimelineItem
-                  sx={{
-                    p: 0
-                  }}
-                >
-                  <TimelineSeparator
-                    sx={{
-                      position: 'relative'
-                    }}
-                  >
-                    <TimelineDot
-                      sx={{
-                        marginTop: 0,
-                        left: `-${theme.spacing(2.1)} !important`,
-                        top: `-${theme.spacing(0.5)}`
-                      }}
-                      color="primary"
-                    >
-                      <AssignmentIndTwoToneIcon />
-                    </TimelineDot>
-                    <TimelineConnector />
-                  </TimelineSeparator>
-                  <TimelineContent
-                    sx={{
-                      pl: 3,
-                      pb: 4
-                    }}
-                  >
-                    <Typography variant="h5" gutterBottom>
-                      Business investor meeting
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Mosaic, the first graphical browser, is introduced to the
-                      average consumer.
-                    </Typography>
-                    <Box display="flex" mt={2} alignItems="flex-start">
-                      <Card
-                        sx={{
-                          mr: 2
-                        }}
-                      >
-                        <CardActionArea>
-                          <CardMedia
-                            component="img"
-                            height="64"
-                            image="/static/images/placeholders/fitness/1.jpg"
-                            alt="..."
-                          />
-                        </CardActionArea>
-                      </Card>
-                      <Card
-                        sx={{
-                          mr: 2
-                        }}
-                      >
-                        <CardActionArea>
-                          <CardMedia
-                            component="img"
-                            height="64"
-                            image="/static/images/placeholders/fitness/2.jpg"
-                            alt="..."
-                          />
-                        </CardActionArea>
-                      </Card>
-                      <Card
-                        sx={{
-                          mr: 2
-                        }}
-                      >
-                        <CardActionArea>
-                          <CardMedia
-                            component="img"
-                            height="64"
-                            image="/static/images/placeholders/fitness/3.jpg"
-                            alt="..."
-                          />
-                        </CardActionArea>
-                      </Card>
-                    </Box>
-                  </TimelineContent>
-                </TimelineItem>
-                <TimelineItem
-                  sx={{
-                    p: 0
-                  }}
-                >
-                  <TimelineSeparator
-                    sx={{
-                      position: 'relative'
-                    }}
-                  >
-                    <TimelineDot
-                      sx={{
-                        marginTop: 0,
-                        top: theme.spacing(1.2)
-                      }}
-                      variant="outlined"
-                      color="error"
+                    <ListItemIcon>
+                      <NotificationsNoneTwoToneIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={notification.message}
+                      secondary={getFormattedDate(notification.createdAt)}
                     />
-                    <TimelineConnector />
-                  </TimelineSeparator>
-                  <TimelineContent
-                    sx={{
-                      pl: 3,
-                      pb: 4
-                    }}
-                  >
-                    <Typography variant="h5" gutterBottom>
-                      Learning round table gathering
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      First ever iPod launches.
-                    </Typography>
-                    <Box display="flex" mt={1} alignItems="flex-start">
-                      <Button size="small" variant="contained">
-                        {t('Submit report')}
-                      </Button>
-                    </Box>
-                  </TimelineContent>
-                </TimelineItem>
-              </Timeline>
+                  </ListItemButton>
+                ))}
+              </List>
             </Scrollbar>
-          </Box>
-        )}
-        {currentTab === 'tasks' && (
-          <Box
-            sx={{
-              height: 220
-            }}
-          >
-            <Scrollbar>
-              <Box p={3}>
-                <Typography
-                  sx={{
-                    pb: 1
-                  }}
-                  component="div"
-                  variant="caption"
-                  fontWeight="bold"
-                >
-                  {t('Tasks for today')}
-                </Typography>
-                <Card
-                  sx={{
-                    overflow: 'visible',
-                    position: 'relative',
-                    p: 2
-                  }}
-                  variant="outlined"
-                >
-                  <DividerVertialPrimary />
-                  <Link
-                    color="text.primary"
-                    component="a"
-                    variant="h4"
-                    fontWeight="normal"
-                    href="#"
-                  >
-                    Presentation site design
-                  </Link>
-                  <Box mt={1.5} display="flex" alignItems="center">
-                    <LabelPrimary>{t('On hold')}</LabelPrimary>
-                    <Text flex color="error">
-                      <AccessTimeTwoToneIcon
-                        sx={{
-                          ml: 1,
-                          mr: 0.5
-                        }}
-                        fontSize="small"
-                      />
-                      2:35 pm
-                    </Text>
-                  </Box>
-                </Card>
-                <Typography
-                  sx={{
-                    pt: 3,
-                    pb: 2
-                  }}
-                  component="div"
-                  variant="caption"
-                  fontWeight="bold"
-                >
-                  {t("Tomorrow's schedule")}
-                </Typography>
-                <Box
-                  sx={{
-                    textAlign: 'center'
-                  }}
-                >
-                  <AvatarSuccess>
-                    <CheckTwoToneIcon />
-                  </AvatarSuccess>
-                  <Typography gutterBottom variant="h4">
-                    {t('Nothing to report')}
-                  </Typography>
-                  <Typography variant="subtitle2">
-                    {t("You don't have any other pending tasks in progress")}!
-                  </Typography>
-                </Box>
-              </Box>
-            </Scrollbar>
-          </Box>
-        )}
-        {currentTab === 'reports' && (
-          <Box
-            sx={{
-              height: 220
-            }}
-          >
-            <Box p={3}>
-              <Box
-                sx={{
-                  textAlign: 'center'
-                }}
-              >
-                <Typography gutterBottom variant="h4">
-                  {t('Total Sales')}
-                </Typography>
-                <Typography variant="subtitle2">
-                  {t('Total sales performance for last week')}
-                </Typography>
-              </Box>
-              <Chart
-                options={chartOptions}
-                series={chartData}
-                type="bar"
-                height={146}
-              />
-            </Box>
           </Box>
         )}
         <Divider />
-        <Box
-          p={2}
-          sx={{
-            textAlign: 'center'
-          }}
-        >
-          <Button
-            sx={{
-              px: 2,
-              py: 0.5,
-              fontWeight: 'normal',
-              borderRadius: 10,
-              background: 'transparent',
-              color: `${theme.colors.primary.main}`,
-              border: `${theme.colors.primary.main} solid 2px`,
-              transition: `${theme.transitions.create(['all'])}`,
-
-              '.MuiSvgIcon-root': {
-                color: `${theme.colors.primary.main}`,
-                transition: `${theme.transitions.create(['color'])}`
-              },
-
-              '&:hover': {
-                px: 3,
-                background: `${theme.colors.primary.main}`,
-                color: `${theme.palette.getContrastText(
-                  theme.colors.primary.dark
-                )}`,
-                boxShadow: `${theme.colors.shadows.primary}`,
-
-                '.MuiSvgIcon-root': {
-                  color: `${theme.palette.getContrastText(
-                    theme.colors.primary.dark
-                  )}`
-                }
-              },
-              '&:active': {
-                boxShadow: 'none'
-              }
-            }}
-            variant="contained"
-            endIcon={<ArrowForwardTwoToneIcon />}
-            color="primary"
-          >
-            {t('View all')}
-          </Button>
-        </Box>
       </Popover>
     </>
   );

@@ -25,7 +25,11 @@ export const CompanySettingsProvider: FC = ({ children }) => {
     const month = ('0' + (date.getMonth() + 1).toString()).substr(-2);
     const day = ('0' + date.getDate().toString()).substr(-2);
     const year = date.getFullYear().toString().substr(2);
-    const time = hideTime ? '' : date.getHours() + ':' + date.getMinutes();
+    const time = hideTime
+      ? ''
+      : date.getHours() +
+        ':' +
+        (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes());
     if (generalPreferences.dateFormat === 'MMDDYY') {
       return month + '/' + day + '/' + year + ' ' + time;
     } else return day + '/' + month + '/' + year + ' ' + time;
