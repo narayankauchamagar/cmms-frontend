@@ -8,6 +8,6 @@ export interface Company {
   address: string;
   website: string;
   phone: string;
-  subscription: { subscriptionPlan: SubscriptionPlan };
+  subscription: { usersCount: number; subscriptionPlan: SubscriptionPlan };
   companySettings: CompanySettings;
 }

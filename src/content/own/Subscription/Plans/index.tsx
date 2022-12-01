@@ -31,17 +31,19 @@ import valid from 'card-validator';
 import { TitleContext } from '../../../../contexts/TitleContext';
 import { useDispatch, useSelector } from '../../../../store';
 import { getSubscriptionPlans } from '../../../../slices/subscriptionPlan';
+import useAuth from '../../../../hooks/useAuth';
 
 function SubscriptionPlans() {
   const { t }: { t: any } = useTranslation();
-  const plan = { id: 'dsds4', name: 'Starter', users: 2, code: 'starter' };
+  const { company } = useAuth();
+  const subscription = company.subscription;
   const theme = useTheme();
   const [usersCount, setUsersCount] = useState<number>(3);
   const [openCheckout, setOpenCheckout] = useState<boolean>(false);
   const handleCloseCheckoutModal = () => setOpenCheckout(false);
   const handleOpenCheckoutModal = () => setOpenCheckout(true);
   const [period, setPeriod] = useState<string>('monthly');
-  const [selectedPlan, setSelectedPlan] = useState<string>('starter');
+  const [selectedPlan, setSelectedPlan] = useState<string>('STARTER');
   const { subscriptionPlans } = useSelector((state) => state.subscriptionPlans);
   const { setTitle } = useContext(TitleContext);
   const dispatch = useDispatch();
@@ -64,6 +66,30 @@ function SubscriptionPlans() {
         ] * usersCount
       : 0;
   };
+  const monthOptions = [
+    '01',
+    '02',
+    '03',
+    '04',
+    '05',
+    '06',
+    '07',
+    '08',
+    '09',
+    '10',
+    '11',
+    '12'
+  ];
+
+  const getYearOptions = (): number[] => {
+    const currentYear = new Date().getFullYear();
+    let yearOptions = [];
+    for (let i = 0; i < 10; i++) {
+      yearOptions.push(currentYear + i);
+    }
+    return yearOptions;
+  };
+
   const renderCheckoutModal = () => (
     <CustomDialog
       onClose={handleCloseCheckoutModal}
@@ -177,7 +203,11 @@ function SubscriptionPlans() {
                         onChange={handleChange}
                         value={values.expirationMonth}
                       >
-                        <MenuItem value="01">01</MenuItem>
+                        {monthOptions.map((option, index) => (
+                          <MenuItem key={index} value={option}>
+                            {option}
+                          </MenuItem>
+                        ))}
                       </Field>
                     </Grid>
                     <Grid item xs={12} lg={6}>
@@ -191,7 +221,11 @@ function SubscriptionPlans() {
                         onChange={handleChange}
                         value={values.expirationYear}
                       >
-                        <MenuItem value="2022">2022</MenuItem>
+                        {getYearOptions().map((option, index) => (
+                          <MenuItem key={index} value={option}>
+                            {option}
+                          </MenuItem>
+                        ))}
                       </Field>
                     </Grid>
                     <Grid item xs={12}>
@@ -310,12 +344,14 @@ function SubscriptionPlans() {
               <Typography variant="h6" fontWeight="bold">
                 {t('Current Plan')}
               </Typography>
-              <Typography variant="h6">{plan.name}</Typography>
+              <Typography variant="h6">
+                {subscription.subscriptionPlan.name}
+              </Typography>
             </Stack>
             <Stack direction="row" spacing={1}>
               <PersonTwoToneIcon />
               <Typography variant="h6">
-                {plan.users} {t(`Users`)}
+                {subscription.usersCount} {t(`Users`)}
               </Typography>
             </Stack>
           </Card>
@@ -489,6 +525,7 @@ function SubscriptionPlans() {
                   onClick={handleOpenCheckoutModal}
                   size="large"
                   variant="contained"
+                  disabled={!selectedPlan}
                 >
                   {t('Proceed to Payment')}
                 </Button>
