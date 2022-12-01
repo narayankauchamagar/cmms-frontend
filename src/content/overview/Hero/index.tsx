@@ -3,8 +3,8 @@ import {
   Button,
   Container,
   Grid,
-  Typography,
-  styled
+  styled,
+  Typography
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
@@ -131,14 +131,13 @@ function Hero() {
         container
       >
         <Grid item md={6} pr={{ xs: 0, md: 3 }}>
-          <LabelWrapper color="success">{t('Version') + ' 3.1'}</LabelWrapper>
           <TypographyH1
             sx={{
               mb: 2
             }}
             variant="h1"
           >
-            {t('Tokyo White React Typescript Admin Dashboard')}
+            {t('Built to Make Managing Maintenance Easier')}
           </TypographyH1>
           <TypographyH2
             sx={{
@@ -150,7 +149,7 @@ function Hero() {
             fontWeight="normal"
           >
             {t(
-              'High performance React template built with lots of powerful MUI (Material-UI) components across multiple product niches for fast & perfect apps development processes'
+              "When whiteboards and sticky notes are chaos, and you need a CMMS software that's easy enough for your team to actually use - try Grash"
             )}
           </TypographyH2>
           <Button
@@ -159,7 +158,7 @@ function Hero() {
             size="large"
             variant="contained"
           >
-            {t('Browse Live Preview')}
+            {t('Try Grash')}
           </Button>
           <Button
             sx={{
@@ -172,47 +171,13 @@ function Hero() {
           >
             {t('Key Features')}
           </Button>
-          <ListItemWrapper
-            sx={{
-              mt: 5,
-              mb: 2
-            }}
-          >
-            <MuiAvatar>
-              <img
-                src="/static/images/logo/material-ui.svg"
-                alt="MUI (Material-UI)"
-              />
-            </MuiAvatar>
-            <Typography variant="h6">
-              <b>Powered by MUI (Material-UI)</b>
-              <Typography component="span" variant="subtitle2">
-                {' '}
-                - A simple and customizable component library to build faster,
-                beautiful, and accessible React apps.
-              </Typography>
-            </Typography>
-          </ListItemWrapper>
-          <ListItemWrapper>
-            <TsAvatar>
-              <img src="/static/images/logo/typescript.svg" alt="Typescript" />
-            </TsAvatar>
-            <Typography variant="h6">
-              <b>Built with Typescript</b>
-              <Typography component="span" variant="subtitle2">
-                {' '}
-                - Tokyo features a modern technology stack and is built with
-                React + Typescript.
-              </Typography>
-            </Typography>
-          </ListItemWrapper>
         </Grid>
         <Grid item md={6}>
           <BoxContent>
             <RouterLink to="/extended-sidebar/dashboards">
               <ImgWrapper>
                 <img
-                  alt="Tokyo"
+                  alt="Grash"
                   src="/static/images/overview/hero-screenshot.png"
                 />
               </ImgWrapper>

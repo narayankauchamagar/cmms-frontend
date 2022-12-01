@@ -1,10 +1,9 @@
 import {
   Box,
-  Tooltip,
-  Badge,
-  TooltipProps,
-  tooltipClasses,
   styled,
+  Tooltip,
+  tooltipClasses,
+  TooltipProps,
   useTheme
 } from '@mui/material';
 import { Link } from 'react-router-dom';
@@ -100,29 +99,15 @@ function Logo() {
   const theme = useTheme();
 
   return (
-    <TooltipWrapper
-      title={t('Tokyo White React Typescript Admin Dashboard')}
-      arrow
-    >
+    <TooltipWrapper title="Grash" arrow>
       <LogoWrapper to="/overview">
-        <Badge
-          sx={{
-            '.MuiBadge-badge': {
-              fontSize: theme.typography.pxToRem(11),
-              right: -2,
-              top: 8
-            }
-          }}
-          overlap="circular"
-          color="success"
-          badgeContent="3.1"
-        >
-          <LogoSignWrapper>
-            <LogoSign>
-              <LogoSignInner />
-            </LogoSign>
-          </LogoSignWrapper>
-        </Badge>
+        <LogoSignWrapper>
+          <img
+            src={'/static/images/logo/logo.png'}
+            width="104px"
+            height="26px"
+          />
+        </LogoSignWrapper>
       </LogoWrapper>
     </TooltipWrapper>
   );

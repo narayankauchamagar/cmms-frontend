@@ -1,4 +1,4 @@
-import { Box, Card, Container, Button, styled } from '@mui/material';
+import { Box, Button, Card, Container, styled } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
@@ -6,7 +6,6 @@ import Logo from 'src/components/LogoSign';
 import Hero from './Hero';
 import Highlights from './Highlights';
 import LanguageSwitcher from 'src/layouts/BoxedSidebarLayout/Header/Buttons/LanguageSwitcher';
-import Footer from 'src/components/Footer';
 
 const HeaderWrapper = styled(Card)(
   ({ theme }) => `
@@ -56,7 +55,7 @@ function Overview() {
                     ml: 2
                   }}
                 >
-                  {t('Live Preview')}
+                  {t('Log In')}
                 </Button>
               </Box>
             </Box>
@@ -65,7 +64,6 @@ function Overview() {
       </HeaderWrapper>
       <Hero />
       <Highlights />
-      <Footer />
     </OverviewWrapper>
   );
 }
