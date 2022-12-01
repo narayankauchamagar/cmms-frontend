@@ -18,20 +18,26 @@ import LockTwoToneIcon from '@mui/icons-material/LockTwoTone';
 import Text from 'src/components/Text';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import wait from '../../../utils/wait';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { phoneRegExp } from '../../../utils/validators';
 import CustomDialog from '../components/CustomDialog';
 import useAuth from '../../../hooks/useAuth';
+import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 
 function ProfileDetails() {
   const { t }: { t: any } = useTranslation();
-  const { user, userSettings, fetchUserSettings, patchUserSettings } =
-    useAuth();
+  const {
+    user,
+    userSettings,
+    fetchUserSettings,
+    patchUserSettings,
+    patchUser,
+    updatePassword
+  } = useAuth();
   const [openEditModal, setOpenEditModal] = useState<boolean>(false);
   const handleOpenEditModal = () => setOpenEditModal(true);
   const handleCloseEditModal = () => setOpenEditModal(false);
-
+  const { showSnackBar } = useContext(CustomSnackBarContext);
   const [openPasswordModal, setOpenPasswordModal] = useState<boolean>(false);
   const handleOpenPasswordModal = () => setOpenPasswordModal(true);
   const handleClosePasswordModal = () => setOpenPasswordModal(false);
@@ -132,23 +138,16 @@ function ProfileDetails() {
           jobTitle: Yup.string()
             .max(100)
             .required(t('The Job title field is required'))
+            .nullable()
         })}
         onSubmit={async (
           _values,
           { resetForm, setErrors, setStatus, setSubmitting }
         ) => {
-          console.log(_values);
-          try {
-            await wait(1000);
-            resetForm();
-            setStatus({ success: true });
-            setSubmitting(false);
-          } catch (err) {
-            console.error(err);
-            setStatus({ success: false });
-            setErrors({ firstName: err.message });
-            setSubmitting(false);
-          }
+          setSubmitting(true);
+          return patchUser(_values)
+            .then(handleCloseEditModal)
+            .finally(() => setSubmitting(false));
         }}
       >
         {({
@@ -259,12 +258,12 @@ function ProfileDetails() {
     >
       <Formik
         initialValues={{
-          currentPassword: '',
+          oldPassword: '',
           newPassword: '',
           confirmPassword: ''
         }}
         validationSchema={Yup.object().shape({
-          currentPassword: Yup.string()
+          oldPassword: Yup.string()
             .required(t('Please provide the current password.'))
             .min(8, t('Password is too short - should be 8 chars minimum.')),
           newPassword: Yup.string()
@@ -279,17 +278,14 @@ function ProfileDetails() {
           _values,
           { resetForm, setErrors, setStatus, setSubmitting }
         ) => {
-          console.log(_values);
-          try {
-            await wait(1000);
-            resetForm();
-            setStatus({ success: true });
-            setSubmitting(false);
-          } catch (err) {
-            console.error(err);
-            setStatus({ success: false });
-            setSubmitting(false);
-          }
+          setSubmitting(true);
+          return updatePassword(_values)
+            .then(() => {
+              handleClosePasswordModal();
+              showSnackBar(t('Password changed successfully'), 'success');
+            })
+            .catch((err) => showSnackBar(t('Wrong password provided'), 'error'))
+            .finally(() => setSubmitting(false));
         }}
       >
         {({
@@ -314,18 +310,16 @@ function ProfileDetails() {
                     <Grid item xs={12}>
                       <TextField
                         error={Boolean(
-                          touched.currentPassword && errors.currentPassword
+                          touched.oldPassword && errors.oldPassword
                         )}
                         fullWidth
-                        helperText={
-                          touched.currentPassword && errors.currentPassword
-                        }
+                        helperText={touched.oldPassword && errors.oldPassword}
                         label={t('Current password')}
                         type="password"
-                        name="currentPassword"
+                        name="oldPassword"
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        value={values.currentPassword}
+                        value={values.oldPassword}
                         variant="outlined"
                       />
                     </Grid>

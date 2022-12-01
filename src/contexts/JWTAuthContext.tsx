@@ -1,5 +1,5 @@
 import { createContext, FC, ReactNode, useEffect, useReducer } from 'react';
-import { UserResponseDTO } from 'src/models/user';
+import { OwnUser, UserResponseDTO } from 'src/models/user';
 import api, { authHeader } from 'src/utils/api';
 import { JWT_SECRET, verify } from 'src/utils/jwt';
 import PropTypes from 'prop-types';
@@ -40,6 +40,11 @@ interface AuthContextValue extends AuthState {
   ) => Promise<void>;
   getInfos: () => void;
   patchUserSettings: (values: Partial<UserSettings>) => Promise<void>;
+  patchUser: (values: Partial<OwnUser>) => Promise<void>;
+  updatePassword: (values: {
+    oldPassword: string;
+    newPassword: string;
+  }) => Promise<boolean>;
   fetchUserSettings: () => Promise<void>;
   fetchCompanySettings: () => Promise<void>;
   patchGeneralPreferences: (
@@ -90,6 +95,12 @@ type PatchUserSettingsAction = {
     userSettings: UserSettings;
   };
 };
+type PatchUserAction = {
+  type: 'PATCH_USER';
+  payload: {
+    user: UserResponseDTO;
+  };
+};
 type FetchUserSettingsAction = {
   type: 'GET_USER_SETTINGS';
   payload: {
@@ -121,6 +132,7 @@ type Action =
   | LogoutAction
   | RegisterAction
   | PatchUserSettingsAction
+  | PatchUserAction
   | FetchUserSettingsAction
   | FetchCompanySettingsAction
   | PatchGeneralPreferencesAction
@@ -195,6 +207,13 @@ const handlers: Record<
     return {
       ...state,
       userSettings
+    };
+  },
+  PATCH_USER: (state: AuthState, action: PatchUserAction): AuthState => {
+    const { user } = action.payload;
+    return {
+      ...state,
+      user
     };
   },
   GET_USER_SETTINGS: (
@@ -272,7 +291,9 @@ const AuthContext = createContext<AuthContextValue>({
   register: () => Promise.resolve(),
   getInfos: () => Promise.resolve(),
   patchUserSettings: () => Promise.resolve(),
+  patchUser: () => Promise.resolve(),
   fetchUserSettings: () => Promise.resolve(),
+  updatePassword: () => Promise.resolve(false),
   fetchCompanySettings: () => Promise.resolve(),
   patchGeneralPreferences: () => Promise.resolve(),
   patchFieldConfiguration: () => Promise.resolve()
@@ -411,7 +432,29 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
       }
     });
   };
-
+  const patchUser = async (values: Partial<OwnUser>): Promise<void> => {
+    const user = await api.patch<UserResponseDTO>(
+      `users/${state.user.id}`,
+      values
+    );
+    dispatch({
+      type: 'PATCH_USER',
+      payload: {
+        user
+      }
+    });
+  };
+  const updatePassword = async (values: {
+    oldPassword: string;
+    newPassword: string;
+  }): Promise<boolean> => {
+    const response = await api.post<{ success: boolean }>(
+      `auth/updatepwd`,
+      values
+    );
+    const { success } = response;
+    return success;
+  };
   const fetchUserSettings = async (): Promise<void> => {
     const userSettings = await getUserSettings(state.user.userSettingsId);
     dispatch({
@@ -491,6 +534,8 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         logout,
         register,
         getInfos,
+        patchUser,
+        updatePassword,
         patchUserSettings,
         fetchUserSettings,
         fetchCompanySettings,
