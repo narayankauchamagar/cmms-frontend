@@ -4,17 +4,7 @@ import { useContext } from 'react';
 import { Formik } from 'formik';
 import { Link as RouterLink } from 'react-router-dom';
 
-import {
-  Box,
-  Button,
-  Checkbox,
-  CircularProgress,
-  FormControlLabel,
-  FormHelperText,
-  Link,
-  TextField,
-  Typography
-} from '@mui/material';
+import { Box, Button, CircularProgress, Link, TextField } from '@mui/material';
 import useAuth from 'src/hooks/useAuth';
 import useRefMounted from 'src/hooks/useRefMounted';
 import { useTranslation } from 'react-i18next';
@@ -31,7 +21,6 @@ const LoginJWT: FC = () => {
       initialValues={{
         email: '',
         password: '',
-        terms: false,
         submit: null
       }}
       validationSchema={Yup.object().shape({
@@ -41,17 +30,14 @@ const LoginJWT: FC = () => {
           .required(t('The email field is required')),
         password: Yup.string()
           .max(255)
-          .required(t('The password field is required')),
-        terms: Yup.boolean().oneOf(
-          [true],
-          t('You must agree to our terms and conditions')
-        )
+          .required(t('The password field is required'))
       })}
       onSubmit={async (
         values,
         { setErrors, setStatus, setSubmitting }
       ): Promise<void> => {
-        login(values.email, values.password)
+        setSubmitting(true);
+        return login(values.email, values.password)
           .catch((err) => {
             showSnackBar(t('Wrong credentials provided'), 'error');
             setStatus({ success: false });
@@ -105,37 +91,10 @@ const LoginJWT: FC = () => {
             display={{ xs: 'block', md: 'flex' }}
             justifyContent="space-between"
           >
-            <Box display={{ xs: 'block', md: 'flex' }}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={values.terms}
-                    name="terms"
-                    color="primary"
-                    onChange={handleChange}
-                  />
-                }
-                label={
-                  <>
-                    <Typography variant="body2">
-                      {t('I accept the')}{' '}
-                      <Link component="a" href="#">
-                        {t('terms and conditions')}
-                      </Link>
-                      .
-                    </Typography>
-                  </>
-                }
-              />
-            </Box>
             <Link component={RouterLink} to="/account/recover-password">
               <b>{t('Lost password?')}</b>
             </Link>
           </Box>
-
-          {Boolean(touched.terms && errors.terms) && (
-            <FormHelperText error>{errors.terms}</FormHelperText>
-          )}
 
           <Button
             sx={{

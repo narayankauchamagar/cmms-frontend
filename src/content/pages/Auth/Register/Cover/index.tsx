@@ -18,7 +18,6 @@ import JWTRegister from '../RegisterJWT';
 import { useTranslation } from 'react-i18next';
 import CheckCircleOutlineTwoToneIcon from '@mui/icons-material/CheckCircleOutlineTwoTone';
 import Scrollbar from 'src/components/Scrollbar';
-import Logo from 'src/components/LogoSign';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper';
 import 'swiper/css';
@@ -35,15 +34,32 @@ const icons = {
 };
 
 const sliders = [
-  { title: 'Work Request System', description: 'dsd', image: icons.Auth0 },
   {
-    title: 'Enterprise Asset Management',
-    description: 'dsd',
+    title: 'Work Request System',
+    description: 'Never lose Work again',
     image: icons.Auth0
   },
-  { title: 'Preventative Maintenance', description: 'dsd', image: icons.Auth0 },
-  { title: 'Work Orders', description: 'dsd', image: icons.Auth0 },
-  { title: 'Parts Inventory', description: 'dsd', image: icons.Auth0 }
+  {
+    title: 'Enterprise Asset Management',
+    description: 'Know your assets',
+    image: icons.Auth0
+  },
+  {
+    title: 'Preventative Maintenance',
+    description:
+      'Stop wasting precious hours manually distributing PM checklists and following up with your team to make sure the work is done',
+    image: icons.Auth0
+  },
+  {
+    title: 'Work Orders',
+    description: 'View and Manage all of your Tasks ',
+    image: icons.Auth0
+  },
+  {
+    title: 'Parts Inventory',
+    description: 'Know when your parts will run out',
+    image: icons.Auth0
+  }
 ];
 
 const Content = styled(Box)(
@@ -267,7 +283,7 @@ function RegisterCover() {
                     mb: 3
                   }}
                 >
-                  {t('Start your free trial today')}
+                  {t('Start your Free trial today')}
                 </TypographyPrimary>
 
                 <List
@@ -282,7 +298,7 @@ function RegisterCover() {
                     </ListItemIconWrapper>
                     <ListItemTextWrapper
                       primaryTypographyProps={{ variant: 'h6' }}
-                      primary={t('premium features included')}
+                      primary={t('Premium features included')}
                     />
                   </ListItem>
                   <ListItem disableGutters>
@@ -294,28 +310,12 @@ function RegisterCover() {
                       primary={t('no credit card required')}
                     />
                   </ListItem>
-                  <ListItem disableGutters>
-                    <ListItemIconWrapper>
-                      <CheckCircleOutlineTwoToneIcon />
-                    </ListItemIconWrapper>
-                    <ListItemTextWrapper
-                      primaryTypographyProps={{ variant: 'h6' }}
-                      primary={t('modern development solutions')}
-                    />
-                  </ListItem>
                 </List>
               </Box>
             </SidebarContent>
           </Scrollbar>
         </SidebarWrapper>
         <MainContent>
-          <LogoWrapper
-            sx={{
-              display: { xs: 'none', sm: 'inline-block' }
-            }}
-          >
-            <Logo />
-          </LogoWrapper>
           <Container maxWidth="sm">
             <Card
               sx={{
