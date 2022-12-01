@@ -2,43 +2,23 @@ import { useTranslation } from 'react-i18next';
 import { SetStateAction, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
-  Box,
-  Grid,
-  Container,
-  Card,
   Avatar,
+  Box,
+  Button,
+  Card,
+  Container,
+  Grid,
+  List,
   ListItem,
   ListItemText,
-  List,
-  ListItemAvatar,
-  Typography,
-  Divider,
-  Button,
-  Tabs,
+  styled,
   Tab,
+  Tabs,
   Tooltip,
-  styled
+  Typography
 } from '@mui/material';
-
-import Text from 'src/components/Text';
-import LaunchTwoToneIcon from '@mui/icons-material/LaunchTwoTone';
 import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
-import { DE } from 'country-flag-icons/react/3x2';
-import { US } from 'country-flag-icons/react/3x2';
-import { ES } from 'country-flag-icons/react/3x2';
-import { FR } from 'country-flag-icons/react/3x2';
-import { CN } from 'country-flag-icons/react/3x2';
-import { AE } from 'country-flag-icons/react/3x2';
-import ActiveReferrals from 'src/content/dashboards/Analytics/ActiveReferrals';
-import MonthlyGoalsTarget from 'src/content/dashboards/Fitness/MonthlyGoalsTarget';
-import Transfers from 'src/content/dashboards/Banking/Transfers';
-import RecentTransactions from 'src/content/dashboards/Commerce/RecentTransactions';
-import Thermostat from 'src/content/dashboards/Automation/Thermostat';
-import AccountSecurity from 'src/content/dashboards/Crypto/AccountSecurity';
-import AppointmentsAlt from 'src/content/dashboards/Healthcare/AppointmentsAlt';
-import UnresolvedTickets from 'src/content/dashboards/Helpdesk/UnresolvedTickets';
-import ResourcesAlarm from 'src/content/dashboards/Monitoring/ResourcesAlarm';
-import Performance from 'src/content/dashboards/Tasks/Performance';
+import { AE, CN, DE, ES, FR, US } from 'country-flag-icons/react/3x2';
 
 const AvatarSuccess = styled(Avatar)(
   ({ theme }) => `
@@ -185,8 +165,10 @@ const TabsContainerWrapper = styled(Box)(
   ({ theme }) => `
 
   .MuiTabs-root {
-    height: 54px;
-    min-height: 54px;
+    height: 40px;
+    width: 80%;
+    min-height: 40px;
+    align-self: center;
 
     .MuiTabs-flexContainer {
       justify-content: center;
@@ -194,8 +176,8 @@ const TabsContainerWrapper = styled(Box)(
   }
 
   .MuiTabs-indicator {
-    min-height: 54px;
-    height: 54px;
+    min-height: 40px;
+    height: 40px;
     box-shadow: none;
     border-radius: 50px;
     border: 0;
@@ -205,12 +187,12 @@ const TabsContainerWrapper = styled(Box)(
   .MuiTab-root {
     &.MuiButtonBase-root {
         position: relative;
-        height: 54px;
-        min-height: 54px;
-        border-radius: 50px;
+        height: 40px;
+        min-height: 40px;
+        border-radius: 20px;
         font-size: ${theme.typography.pxToRem(16)};
         color: ${theme.colors.primary.main};
-        padding: 0 ${theme.spacing(4)};
+        padding: 0 ${theme.spacing(1.5)};
 
         .MuiTouchRipple-root {
           opacity: 0;
@@ -343,14 +325,200 @@ const icons = {
 function Highlights() {
   const { t }: { t: any } = useTranslation();
 
-  const [currentTab, setCurrentTab] = useState('performance');
+  const [currentTab, setCurrentTab] = useState('work-orders');
 
   const tabs = [
-    { value: 'performance', label: t('Performance') },
-    { value: 'auth_services', label: t('Auth Services') },
-    { value: 'rtl_languages', label: t('RTL & Languages') }
+    { value: 'work-orders', label: t('Work Orders') },
+    { value: 'request', label: t('Work Request System') },
+    { value: 'mobile', label: t('Mobile App') },
+    { value: 'asset', label: t('Asset Management') },
+    { value: 'preventative', label: t('Preventative Maintenance') },
+    { value: 'part', label: t('Parts Inventory') },
+    { value: 'dashboard', label: t('Custom Dashboards') }
+    // { value: 'auth', label: t('Custom Dashboards') },
+    // { value: 'rtl', label: t('Custom Dashboards') }
   ];
 
+  const featuresConfiguration = {
+    'work-orders': {
+      title: 'Manage your Work Orders like a Boss',
+      descriptions: [
+        'Sick of the reams of paperwork and lost Work Orders? All of those lost items directly affect the bottom line and your reputation.',
+        'With Grash you can easily and quickly organize all of your Work Orders, PMs and other Tasks throughout your team in a centralized database that can be accessed anywhere on any device.'
+      ],
+      checks: [
+        'View all of your Tasks including WOs, PMs, and Work Requests',
+        'Set Task priority so the right work gets done first.',
+        'View a calendar of current and upcoming Tasks.',
+        'View work assignments with critical information such as Asset information, due date, priority and more.',
+        'View critical KPIs such as actual completed work, time spent and planned vs unplanned work.'
+      ],
+      image: '/static/images/overview/performance.png'
+    },
+    request: {
+      title: 'A streamlined mobile work request system',
+      descriptions: [
+        'Sick of using the old phone and email system that result in LOST tickets, constant daily interruptions, and duplicated work?',
+        'Grash’s maintenance management solution allows anyone you authorize to submit a problem to your maintenance department by simply scanning a QR code (bar code) or visiting a URL and typing in their request through their mobile devices.'
+      ],
+      checks: [
+        'Never lose Work again.',
+        'Reduce time spent handling Work Requests by up to 34%.',
+        'Reduce time communicating with Requesters by up to 41% (calls, emails, texts).'
+      ],
+      image: '/static/images/overview/performance.png'
+    },
+    mobile: {
+      title: 'A mobile CMMS app that empowers your maintenance team',
+      descriptions: [
+        'Through the use of our Android and IOS mobile apps, our clients experience better organization, communication, accountability and productivity by up to 30% throughout their entire maintenance team.',
+        'From their handheld device anyone on your maintenance team can:'
+      ],
+      checks: [
+        'View their assigned Work Orders and PMs.',
+        'Log their Work Orders within under 60 seconds',
+        'Receive instant communications via push and email notifications.',
+        'Start new Work Orders while out in the field.',
+        'Respond to and log problems while actually working on the problem.',
+        'Lookup critical asset information while diagnosing a problem.'
+      ],
+      image: '/static/images/overview/performance.png'
+    },
+    asset: {
+      title: 'Enterprise Asset Management',
+      descriptions: [
+        'Frustrated with trying to organize the chaotic mess of company’s equipment, wondering if the equipment has been properly taken care of, not knowing what they cost to maintain and all the other headaches that come with managing assets?',
+        'Grash CMMS’s Enterprise Asset Management module can be used for anywhere between 10 to 1,000,000 Assets, allowing you to track exactly what you want, the way you want to, in an easy-to-use and searchable tree structure.'
+      ],
+      checks: [
+        'Know the health of your assets at every point of time and what they are costing you',
+        'View complete and detailed Maintenance Logs.',
+        'Track only what you want with unlimited custom fields',
+        'Organize your assets in a clear parent-to-child hierarchy',
+        'Find information quickly and easily with QR Codes (bar codes)',
+        'Receive real-time asset data with sensor connectivity.'
+      ],
+      image: '/static/images/overview/performance.png'
+    },
+    preventative: {
+      title: 'An Effective Preventative Maintenance Program',
+      descriptions: [
+        'Stop wasting precious hours manually distributing PM checklists and following up with your team to make sure the work is done.',
+        'Grash allows you to easily automate PM scheduling so the right work is automatically delivered at the right time to the right technician for the right Asset.'
+      ],
+      checks: [
+        'Automate PM scheduling to be daily, weekly, monthly, yearly, or based on events or meter readings.',
+        'Automatic push and email notifications when a PM is created or due.',
+        'Our easy-to-use Calendar allows you to view all open work and upcoming PM schedules.',
+        'Drag and drop to change due date.',
+        'Upon PM completion, the work is automatically logged in the asset’s maintenance log.',
+        'Requires little to no training to use'
+      ],
+      image: '/static/images/overview/performance.png'
+    },
+    part: {
+      title: 'Get Control of your Spare Parts Inventory',
+      descriptions: [
+        'Not sure what parts you have in stock or where they are being used? Don’t know when your parts will run out or if your technicians will have the necessary parts to do their jobs?',
+        'We designed Grash’s parts management to solve those problems and more:'
+      ],
+      checks: [
+        'Get instant push and email notifications when a part’s quantity is low. Keep the right number of parts in stock by receiving instant and automatic push/email notifications when the quantity of a part is below a custom set threshold.',
+        'Technicians instantly know if the part is in stock from inside of a Work Order. If the part is not in stock easily check other locations to see if it is available.',
+        'Automatic parts usage tracking. As Work Orders or PMs use parts, the inventory will be automatically updated to reflect the parts used.',
+        'Know part usage. View Parts Log to see where the part is being used and by whom',
+        'Eliminate unused parts. Know when a part has gone stale.',
+        'Real Time Reporting. Know what parts are used where and how much they are costing you.',
+        'Optimize stock levels. Instantly view forecasting for a part to see how many parts may be used within the next year.',
+        'Barcode lookup. Make your inventory easy to track and access with custom QR codes.'
+      ],
+      image: '/static/images/overview/performance.png'
+    },
+    dashboard: {
+      title: 'Get Control of your Spare Parts Inventory',
+      descriptions: [
+        'Let’s face it, the first step to improving your operations is to know the good, the bad and the ugly.',
+        'With Grash’s Custom Dashboards you can finally start to understand that nefarious “black hole of maintenance” and begin putting data-backed plans into action, resulting in reduced labor costs, decreased downtime and more.',
+        'With Grash’s Custom Dashboards you’ll get to …s'
+      ],
+      checks: [
+        'Know where your money is being spent and why',
+        'Know which asset is costing the most and why',
+        'Create your own custom KPIs.',
+        'View reports that are automatically generated and updated based on your metric',
+        'View reports that are easily shared via Excel sheets, PDFs or within Grash',
+        'And so much more ...'
+      ],
+      image: '/static/images/overview/performance.png'
+    }
+  };
+  const CheckItem = ({ description }: { description: string }) => {
+    return (
+      <ListItem>
+        <AvatarSuccess
+          sx={{
+            mr: 2
+          }}
+        >
+          <CheckTwoToneIcon />
+        </AvatarSuccess>
+        <ListItemText primary={t(description)} />
+      </ListItem>
+    );
+  };
+
+  const Feature = ({
+    title,
+    descriptions,
+    checks,
+    image
+  }: {
+    title: string;
+    descriptions: string[];
+    checks: string[];
+    image: string;
+  }) => {
+    return (
+      <Grid
+        sx={{
+          mt: 8
+        }}
+        container
+        spacing={4}
+      >
+        <Grid item xs={12} md={6}>
+          <Typography sx={{ mb: 1 }} variant="h2">
+            {t(title)}.
+          </Typography>
+          {descriptions.map((description, index) => (
+            <Box key={index}>
+              <Typography variant="subtitle2">{t(description)}</Typography>
+              <br />
+            </Box>
+          ))}
+          <List
+            disablePadding
+            sx={{
+              mt: 2
+            }}
+          >
+            {checks.map((desc, index) => (
+              <CheckItem key={index} description={desc} />
+            ))}
+          </List>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <BlowWrapper>
+            <Blob1 />
+            <Blob2 />
+            <CardImageWrapper>
+              <img src={image} alt="Grash" />
+            </CardImageWrapper>
+          </BlowWrapper>
+        </Grid>
+      </Grid>
+    );
+  };
   const handleTabsChange = (_event: any, value: SetStateAction<string>) => {
     setCurrentTab(value);
   };
@@ -389,7 +557,7 @@ function Highlights() {
                   mt: { lg: 10 }
                 }}
               >
-                7
+                What
               </TypographyFeature>
               <TypographyHeading
                 className="typo-heading"
@@ -398,7 +566,7 @@ function Highlights() {
                 }}
                 variant="h3"
               >
-                Layout Blueprints
+                You'll have
               </TypographyHeading>
               <TypographySubHeading
                 className="typo-subheading"
@@ -410,7 +578,7 @@ function Highlights() {
                 fontWeight="normal"
               >
                 {t(
-                  "Version 3.1 represents our biggest Tokyo update. We've added a brand new layout with 100% reworked and improved components. Check out the live preview to see them in action."
+                  'Build efficient, reliable workflows that put you in control of maintenance. Generate, assign, and track work orders. Control inventory. And get reliable automated reports that improve visibility and create accountability.'
                 )}
               </TypographySubHeading>
             </Grid>
@@ -444,64 +612,12 @@ function Highlights() {
               <LayoutImgButton
                 target="_blank"
                 rel="noopener"
-                to="/accent-sidebar/dashboards"
+                to="/extended-sidebar/dashboards"
               >
-                <Typography variant="h4">{t('Accent Sidebar')}</Typography>
+                <Typography variant="h4">{t('Extended Sidebar')}</Typography>
                 <img
-                  src="/static/images/overview/accent_sidebar.png"
-                  alt="Accent Sidebar"
-                />
-              </LayoutImgButton>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <LayoutImgButton
-                target="_blank"
-                rel="noopener"
-                to="/boxed-sidebar/dashboards"
-              >
-                <Typography variant="h4">{t('Boxed Sidebar')}</Typography>
-                <img
-                  src="/static/images/overview/boxed_sidebar.png"
-                  alt="Boxed Sidebar"
-                />
-              </LayoutImgButton>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <LayoutImgButton
-                target="_blank"
-                rel="noopener"
-                to="/collapsed-sidebar/dashboards"
-              >
-                <Typography variant="h4">{t('Collapsed Sidebar')}</Typography>
-                <img
-                  src="/static/images/overview/collapsed_sidebar.png"
-                  alt="Collapsed Sidebar"
-                />
-              </LayoutImgButton>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <LayoutImgButton
-                target="_blank"
-                rel="noopener"
-                to="/top-navigation/dashboards"
-              >
-                <Typography variant="h4">{t('Top Navigation')}</Typography>
-                <img
-                  src="/static/images/overview/top_navigation.png"
-                  alt="Top Navigation"
-                />
-              </LayoutImgButton>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <LayoutImgButton
-                target="_blank"
-                rel="noopener"
-                to="/bottom-navigation/dashboards"
-              >
-                <Typography variant="h4">{t('Bottom Navigation')}</Typography>
-                <img
-                  src="/static/images/overview/bottom_navigation.png"
-                  alt="Bottom Navigation"
+                  src="/static/images/overview/extended_sidebar.png"
+                  alt="Extended Sidebar"
                 />
               </LayoutImgButton>
             </Grid>
@@ -533,232 +649,16 @@ function Highlights() {
           container
         >
           <Grid item xs={12} md={6}>
-            <Box
-              sx={{
-                top: { xs: -50, md: 0 },
-                left: { xs: -150, md: -45 },
-                minHeight: { xs: 530, md: 1130 },
-                transform: { xs: 'scale(.5)', md: 'none' },
-                position: 'relative'
-              }}
-            >
-              <Button
-                size="large"
-                component={RouterLink}
-                to="/extended-sidebar/dashboards/banking"
-                variant="contained"
-                sx={{
-                  position: 'absolute',
-                  display: { xs: 'none', lg: 'block' },
-                  right: { xs: 0, md: -80, lg: 50 },
-                  bottom: 150
-                }}
-              >
-                View more components
-              </Button>
-              <Box
-                sx={{
-                  position: 'absolute',
-                  width: 500,
-                  top: -50,
-                  left: -30,
-                  transform:
-                    'translate(0px, 120px) perspective(5200px) rotate(90deg) rotateY(-45deg) rotateZ(-45deg)',
-                  transformStyle: 'preserve-3d'
-                }}
-              >
-                <Box
-                  sx={{
-                    animation: '2.1s 2.1s infinite alternate ease-in-out float'
-                  }}
-                >
-                  <ResourcesAlarm />
-                </Box>
-              </Box>
-              <Box
-                sx={{
-                  position: 'absolute',
-                  width: 300,
-                  top: -180,
-                  left: 210,
-                  transform:
-                    'translate(0px, 120px) perspective(5200px) rotate(90deg) rotateY(-45deg) rotateZ(-45deg)',
-                  transformStyle: 'preserve-3d'
-                }}
-              >
-                <Box
-                  sx={{
-                    animation: '2.8s 1.2s infinite alternate ease-in-out float'
-                  }}
-                >
-                  <ActiveReferrals />
-                </Box>
-              </Box>
-              <Box
-                sx={{
-                  position: 'absolute',
-                  width: 330,
-                  top: 635,
-                  left: 970,
-                  transform:
-                    'translate(0px, 20px) perspective(5200px) rotate(90deg) rotateY(-45deg) rotateZ(-45deg)',
-                  transformStyle: 'preserve-3d'
-                }}
-              >
-                <Box
-                  sx={{
-                    animation: '2.1s 1.5s infinite alternate ease-in-out float'
-                  }}
-                >
-                  <UnresolvedTickets />
-                </Box>
-              </Box>
-              <Box
-                sx={{
-                  position: 'absolute',
-                  width: 280,
-                  top: 350,
-                  left: -65,
-                  transform:
-                    'translate(0px, 20px) perspective(5200px) rotate(90deg) rotateY(-45deg) rotateZ(-45deg)',
-                  transformStyle: 'preserve-3d'
-                }}
-              >
-                <Box
-                  sx={{
-                    animation: '3.5s 2.4s infinite alternate ease-in-out float'
-                  }}
-                >
-                  <Transfers />
-                </Box>
-              </Box>
-              <Box
-                sx={{
-                  position: 'absolute',
-                  width: 420,
-                  top: 290,
-                  left: 116,
-                  transform:
-                    'translate(0px, 20px) perspective(5200px) rotate(90deg) rotateY(-45deg) rotateZ(-45deg)',
-                  transformStyle: 'preserve-3d'
-                }}
-              >
-                <Box
-                  sx={{
-                    animation: '1.5s 1s infinite alternate ease-in-out float'
-                  }}
-                >
-                  <Thermostat />
-                </Box>
-              </Box>
-              <Box
-                sx={{
-                  position: 'absolute',
-                  width: 500,
-                  top: 210,
-                  left: 930,
-                  transform:
-                    'translate(0px, 20px) perspective(5200px) rotate(90deg) rotateY(-45deg) rotateZ(-45deg)',
-                  transformStyle: 'preserve-3d'
-                }}
-              >
-                <Box
-                  sx={{
-                    animation: '2.5s 3s infinite alternate ease-in-out float'
-                  }}
-                >
-                  <RecentTransactions />
-                </Box>
-              </Box>
-              <Box
-                sx={{
-                  position: 'absolute',
-                  width: 400,
-                  top: 480,
-                  left: 700,
-                  transform:
-                    'translate(0px, 20px) perspective(5200px) rotate(90deg) rotateY(-45deg) rotateZ(-45deg)',
-                  transformStyle: 'preserve-3d'
-                }}
-              >
-                <Box
-                  sx={{
-                    animation: '2.5s 3s infinite alternate ease-in-out float'
-                  }}
-                >
-                  <AppointmentsAlt />
-                </Box>
-              </Box>
-              <Box
-                sx={{
-                  position: 'absolute',
-                  width: 400,
-                  top: 545,
-                  left: 515,
-                  transform:
-                    'translate(0px, 20px) perspective(5200px) rotate(90deg) rotateY(-45deg) rotateZ(-45deg)',
-                  transformStyle: 'preserve-3d'
-                }}
-              >
-                <Box
-                  sx={{
-                    animation: '3s infinite alternate ease-in-out float'
-                  }}
-                >
-                  <MonthlyGoalsTarget />
-                </Box>
-              </Box>
-              <Box
-                sx={{
-                  position: 'absolute',
-                  width: 330,
-                  top: 213,
-                  left: 477,
-                  transform:
-                    'translate(0px, 20px) perspective(5200px) rotate(90deg) rotateY(-45deg) rotateZ(-45deg)',
-                  transformStyle: 'preserve-3d'
-                }}
-              >
-                <Box
-                  sx={{
-                    animation: '2s 2s infinite alternate ease-in-out float'
-                  }}
-                >
-                  <AccountSecurity />
-                </Box>
-              </Box>
-              <Box
-                sx={{
-                  position: 'absolute',
-                  width: 330,
-                  top: 400,
-                  left: -315,
-                  transform:
-                    'translate(0px, 20px) perspective(5200px) rotate(90deg) rotateY(-45deg) rotateZ(-45deg)',
-                  transformStyle: 'preserve-3d'
-                }}
-              >
-                <Box
-                  sx={{
-                    animation: '2s 2s infinite alternate ease-in-out float'
-                  }}
-                >
-                  <Performance />
-                </Box>
-              </Box>
-            </Box>
-          </Grid>
-          <Grid item xs={12} md={6}>
             <Box>
-              <TypographyFeature>500+</TypographyFeature>
               <TypographyHeading
                 sx={{
                   mb: 1
                 }}
                 variant="h3"
               >
-                {t('Multi-Purpose Components')}
+                {t('Work')}
               </TypographyHeading>
+              <TypographyFeature>{t('Smarter')}</TypographyFeature>
               <TypographySubHeading
                 sx={{
                   lineHeight: 1.5,
@@ -769,786 +669,10 @@ function Highlights() {
                 fontWeight="normal"
               >
                 {t(
-                  'With Tokyo you can build apps for any purpose, from commerce to health or learning. We’ve got you covered!'
+                  'Grash makes it incredibly easy for technicians to work efficiently by giving them access to the tools and data they need to get work done — all from the palm of their hand.'
                 )}
               </TypographySubHeading>
             </Box>
-          </Grid>
-        </Grid>
-        <Grid
-          spacing={6}
-          sx={{
-            mt: 4,
-            justifyContent: { lg: 'center' }
-          }}
-          container
-        >
-          <Grid item md={4}>
-            <Box>
-              <TypographyFeature>17</TypographyFeature>
-              <TypographyHeading
-                sx={{
-                  mb: 1
-                }}
-                variant="h3"
-              >
-                {t('Dashboard Pages')}
-              </TypographyHeading>
-              <TypographySubHeading
-                sx={{
-                  maxWidth: 500,
-                  lineHeight: 1.5,
-                  mb: 3
-                }}
-                variant="h4"
-                color="text.secondary"
-                fontWeight="normal"
-              >
-                {t(
-                  'Tokyo comes integrated with 13 dashboards split across multiple popular product niches'
-                )}
-                :
-              </TypographySubHeading>
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <Button
-                    fullWidth
-                    target="_blank"
-                    rel="noopener"
-                    startIcon={<LaunchTwoToneIcon />}
-                    component={RouterLink}
-                    to="/extended-sidebar/dashboards/reports"
-                    variant="outlined"
-                  >
-                    {t('Reports')}
-                  </Button>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Button
-                    fullWidth
-                    target="_blank"
-                    rel="noopener"
-                    startIcon={<LaunchTwoToneIcon />}
-                    component={RouterLink}
-                    to="/extended-sidebar/dashboards/expenses"
-                    variant="outlined"
-                  >
-                    {t('Expenses')}
-                  </Button>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Button
-                    fullWidth
-                    target="_blank"
-                    rel="noopener"
-                    startIcon={<LaunchTwoToneIcon />}
-                    component={RouterLink}
-                    to="/extended-sidebar/dashboards/products"
-                    variant="outlined"
-                  >
-                    {t('Products')}
-                  </Button>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Button
-                    fullWidth
-                    target="_blank"
-                    rel="noopener"
-                    startIcon={<LaunchTwoToneIcon />}
-                    component={RouterLink}
-                    to="/extended-sidebar/dashboards/statistics"
-                    variant="outlined"
-                  >
-                    {t('Statistics')}
-                  </Button>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Button
-                    fullWidth
-                    target="_blank"
-                    rel="noopener"
-                    startIcon={<LaunchTwoToneIcon />}
-                    component={RouterLink}
-                    to="/extended-sidebar/dashboards/automation"
-                    variant="outlined"
-                  >
-                    {t('Automation')}
-                  </Button>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Button
-                    fullWidth
-                    target="_blank"
-                    rel="noopener"
-                    startIcon={<LaunchTwoToneIcon />}
-                    component={RouterLink}
-                    to="/extended-sidebar/dashboards/analytics"
-                    variant="outlined"
-                  >
-                    {t('Analytics')}
-                  </Button>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Button
-                    fullWidth
-                    target="_blank"
-                    rel="noopener"
-                    startIcon={<LaunchTwoToneIcon />}
-                    component={RouterLink}
-                    to="/extended-sidebar/dashboards/banking"
-                    variant="outlined"
-                  >
-                    {t('Banking')}
-                  </Button>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Button
-                    fullWidth
-                    target="_blank"
-                    rel="noopener"
-                    startIcon={<LaunchTwoToneIcon />}
-                    component={RouterLink}
-                    to="/extended-sidebar/dashboards/commerce"
-                    variant="outlined"
-                  >
-                    {t('Commerce')}
-                  </Button>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Button
-                    fullWidth
-                    target="_blank"
-                    rel="noopener"
-                    startIcon={<LaunchTwoToneIcon />}
-                    component={RouterLink}
-                    to="/extended-sidebar/dashboards/crypto"
-                    variant="outlined"
-                  >
-                    {t('Crypto')}
-                  </Button>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Button
-                    fullWidth
-                    target="_blank"
-                    rel="noopener"
-                    startIcon={<LaunchTwoToneIcon />}
-                    component={RouterLink}
-                    to="/extended-sidebar/dashboards/finance"
-                    variant="outlined"
-                  >
-                    {t('Finance')}
-                  </Button>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Button
-                    fullWidth
-                    target="_blank"
-                    rel="noopener"
-                    startIcon={<LaunchTwoToneIcon />}
-                    component={RouterLink}
-                    to="/extended-sidebar/dashboards/fitness"
-                    variant="outlined"
-                  >
-                    {t('Fitness')}
-                  </Button>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Button
-                    fullWidth
-                    target="_blank"
-                    rel="noopener"
-                    startIcon={<LaunchTwoToneIcon />}
-                    component={RouterLink}
-                    to="/extended-sidebar/dashboards/healthcare/doctor"
-                    variant="outlined"
-                  >
-                    {t('Doctor')}
-                  </Button>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Button
-                    fullWidth
-                    target="_blank"
-                    rel="noopener"
-                    startIcon={<LaunchTwoToneIcon />}
-                    component={RouterLink}
-                    to="/extended-sidebar/dashboards/healthcare/hospital"
-                    variant="outlined"
-                  >
-                    {t('Hospital')}
-                  </Button>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Button
-                    fullWidth
-                    target="_blank"
-                    rel="noopener"
-                    startIcon={<LaunchTwoToneIcon />}
-                    component={RouterLink}
-                    to="/extended-sidebar/dashboards/helpdesk"
-                    variant="outlined"
-                  >
-                    {t('Helpdesk')}
-                  </Button>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Button
-                    fullWidth
-                    target="_blank"
-                    rel="noopener"
-                    startIcon={<LaunchTwoToneIcon />}
-                    component={RouterLink}
-                    to="/extended-sidebar/dashboards/learning"
-                    variant="outlined"
-                  >
-                    {t('Learning')}
-                  </Button>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Button
-                    fullWidth
-                    target="_blank"
-                    rel="noopener"
-                    startIcon={<LaunchTwoToneIcon />}
-                    component={RouterLink}
-                    to="/extended-sidebar/dashboards/monitoring"
-                    variant="outlined"
-                  >
-                    {t('Monitoring')}
-                  </Button>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Button
-                    fullWidth
-                    target="_blank"
-                    rel="noopener"
-                    startIcon={<LaunchTwoToneIcon />}
-                    component={RouterLink}
-                    to="/extended-sidebar/dashboards/tasks"
-                    variant="outlined"
-                  >
-                    {t('Tasks')}
-                  </Button>
-                </Grid>
-              </Grid>
-            </Box>
-          </Grid>
-          <Grid item md={8}>
-            <Box
-              sx={{
-                position: 'relative'
-              }}
-            >
-              <TypographyFeature>6</TypographyFeature>
-              <TypographyHeading
-                sx={{
-                  mb: 1
-                }}
-                variant="h3"
-              >
-                {t('Applications')}
-              </TypographyHeading>
-              <TypographySubHeading
-                sx={{
-                  maxWidth: 500,
-                  lineHeight: 1.5,
-                  pr: 8
-                }}
-                variant="h4"
-                color="text.secondary"
-                fontWeight="normal"
-              >
-                {t(
-                  'Use these as standalone apps or included in a bigger project. You choose!'
-                )}
-              </TypographySubHeading>
-              <Typography
-                variant="subtitle1"
-                sx={{
-                  py: 2
-                }}
-                component="p"
-              >
-                <Text color="warning">
-                  <b>
-                    {t(
-                      'Includes redux state management, working forms with validation, working filtering and more'
-                    )}
-                  </b>
-                </Text>
-              </Typography>
-              <Grid container spacing={4}>
-                <Grid item xs={12} lg={6}>
-                  <Card
-                    sx={{
-                      mt: 2
-                    }}
-                  >
-                    <List disablePadding>
-                      <ListItem
-                        sx={{
-                          py: 2
-                        }}
-                      >
-                        <ListItemAvatar>
-                          <AvatarWrapperSuccess>
-                            <CheckTwoToneIcon />
-                          </AvatarWrapperSuccess>
-                        </ListItemAvatar>
-                        <ListItemText
-                          primary={t('Jobs Platform')}
-                          primaryTypographyProps={{
-                            variant: 'h4',
-                            color: 'textPrimary',
-                            gutterBottom: true
-                          }}
-                          secondary={t('API calls examples included')}
-                          secondaryTypographyProps={{
-                            variant: 'subtitle2',
-                            noWrap: true
-                          }}
-                        />
-                        <Button
-                          size="small"
-                          target="_blank"
-                          rel="noopener"
-                          startIcon={<LaunchTwoToneIcon />}
-                          component={RouterLink}
-                          to="/extended-sidebar/applications/jobs-platform"
-                        >
-                          {t('View')}
-                        </Button>
-                      </ListItem>
-                      <Divider />
-                      <ListItem
-                        sx={{
-                          py: 2
-                        }}
-                      >
-                        <ListItemAvatar>
-                          <AvatarWrapperSuccess>
-                            <CheckTwoToneIcon />
-                          </AvatarWrapperSuccess>
-                        </ListItemAvatar>
-                        <ListItemText
-                          primary={t('Projects Board')}
-                          primaryTypographyProps={{
-                            variant: 'h4',
-                            color: 'textPrimary',
-                            gutterBottom: true
-                          }}
-                          secondary={t(
-                            'editable fields, drag & drop functionality'
-                          )}
-                          secondaryTypographyProps={{
-                            variant: 'subtitle2',
-                            noWrap: true
-                          }}
-                        />
-                        <Button
-                          size="small"
-                          target="_blank"
-                          rel="noopener"
-                          startIcon={<LaunchTwoToneIcon />}
-                          component={RouterLink}
-                          to="/extended-sidebar/applications/projects-board"
-                        >
-                          {t('View')}
-                        </Button>
-                      </ListItem>
-                      <Divider />
-                      <ListItem
-                        sx={{
-                          py: 2
-                        }}
-                      >
-                        <ListItemAvatar>
-                          <AvatarWrapperSuccess>
-                            <CheckTwoToneIcon />
-                          </AvatarWrapperSuccess>
-                        </ListItemAvatar>
-                        <ListItemText
-                          primary={t('Mailbox')}
-                          primaryTypographyProps={{
-                            variant: 'h4',
-                            color: 'textPrimary',
-                            gutterBottom: true
-                          }}
-                          secondary={t('redux, tags & filtering')}
-                          secondaryTypographyProps={{
-                            variant: 'subtitle2',
-                            noWrap: true
-                          }}
-                        />
-                        <Button
-                          size="small"
-                          target="_blank"
-                          rel="noopener"
-                          startIcon={<LaunchTwoToneIcon />}
-                          component={RouterLink}
-                          to="/extended-sidebar/applications/mailbox"
-                        >
-                          {t('View')}
-                        </Button>
-                      </ListItem>
-                    </List>
-                  </Card>
-                </Grid>
-                <Grid item xs={12} lg={6}>
-                  <Card
-                    sx={{
-                      mt: 2
-                    }}
-                  >
-                    <List disablePadding>
-                      <ListItem
-                        sx={{
-                          py: 2
-                        }}
-                      >
-                        <ListItemAvatar>
-                          <AvatarWrapperSuccess>
-                            <CheckTwoToneIcon />
-                          </AvatarWrapperSuccess>
-                        </ListItemAvatar>
-                        <ListItemText
-                          primary={t('File Manager')}
-                          primaryTypographyProps={{
-                            variant: 'h4',
-                            color: 'textPrimary',
-                            gutterBottom: true
-                          }}
-                          secondary={t('file details drawer sidebar')}
-                          secondaryTypographyProps={{
-                            variant: 'subtitle2',
-                            noWrap: true
-                          }}
-                        />
-                        <Button
-                          size="small"
-                          target="_blank"
-                          rel="noopener"
-                          startIcon={<LaunchTwoToneIcon />}
-                          component={RouterLink}
-                          to="/extended-sidebar/applications/file-manager"
-                        >
-                          {t('View')}
-                        </Button>
-                      </ListItem>
-                      <Divider />
-                      <ListItem
-                        sx={{
-                          py: 2
-                        }}
-                      >
-                        <ListItemAvatar>
-                          <AvatarWrapperSuccess>
-                            <CheckTwoToneIcon />
-                          </AvatarWrapperSuccess>
-                        </ListItemAvatar>
-                        <ListItemText
-                          primary={t('Messenger')}
-                          primaryTypographyProps={{
-                            variant: 'h4',
-                            color: 'textPrimary',
-                            gutterBottom: true
-                          }}
-                          secondary={t('beautiful functional design')}
-                          secondaryTypographyProps={{
-                            variant: 'subtitle2',
-                            noWrap: true
-                          }}
-                        />
-                        <Button
-                          size="small"
-                          target="_blank"
-                          rel="noopener"
-                          startIcon={<LaunchTwoToneIcon />}
-                          component={RouterLink}
-                          to="/extended-sidebar/applications/messenger"
-                        >
-                          {t('View')}
-                        </Button>
-                      </ListItem>
-                      <Divider />
-                      <ListItem
-                        sx={{
-                          py: 2
-                        }}
-                      >
-                        <ListItemAvatar>
-                          <AvatarWrapperSuccess>
-                            <CheckTwoToneIcon />
-                          </AvatarWrapperSuccess>
-                        </ListItemAvatar>
-                        <ListItemText
-                          primary={t('Calendar')}
-                          primaryTypographyProps={{
-                            variant: 'h4',
-                            color: 'textPrimary',
-                            gutterBottom: true
-                          }}
-                          secondary={t('working redux state management')}
-                          secondaryTypographyProps={{
-                            variant: 'subtitle2',
-                            noWrap: true
-                          }}
-                        />
-                        <Button
-                          size="small"
-                          target="_blank"
-                          rel="noopener"
-                          startIcon={<LaunchTwoToneIcon />}
-                          component={RouterLink}
-                          to="/extended-sidebar/applications/calendar"
-                        >
-                          {t('View')}
-                        </Button>
-                      </ListItem>
-                    </List>
-                  </Card>
-                </Grid>
-              </Grid>
-            </Box>
-          </Grid>
-        </Grid>
-        <Grid
-          container
-          direction={{ xs: 'column-reverse', md: 'row' }}
-          sx={{
-            mt: 12,
-            mb: 12
-          }}
-          spacing={4}
-        >
-          <Grid item md={6} lg={7}>
-            <Box
-              sx={{
-                transform: { xs: 'scale(.9)', md: 'scale(.85)', lg: 'none' },
-                left: { xs: '50px', md: '-180px', lg: '-45px' },
-                minHeight: 600,
-                position: 'relative'
-              }}
-            >
-              <Box
-                sx={{
-                  position: 'absolute',
-                  top: -150,
-                  left: -50,
-                  transform:
-                    'translate(0px, 120px) perspective(5200px) rotate(87deg) rotateY(330deg) rotateZ(285deg)',
-                  transformStyle: 'preserve-3d'
-                }}
-              >
-                <Box
-                  sx={{
-                    animation: '2.1s 2.1s infinite alternate ease-in-out float'
-                  }}
-                >
-                  <Card
-                    sx={{
-                      padding: '15px',
-                      background: '#f2f5f9'
-                    }}
-                  >
-                    <img
-                      src="/static/images/overview/management_screen_1.png"
-                      alt="Management Section 1"
-                    />
-                  </Card>
-                </Box>
-              </Box>
-              <Box
-                sx={{
-                  position: 'absolute',
-                  top: 30,
-                  left: 180,
-                  transform:
-                    'translate(0px, 120px) perspective(5200px) rotate(87deg) rotateY(330deg) rotateZ(285deg)',
-                  transformStyle: 'preserve-3d'
-                }}
-              >
-                <Box
-                  sx={{
-                    animation: '1.5s 1s infinite alternate ease-in-out float'
-                  }}
-                >
-                  <Card
-                    sx={{
-                      padding: '15px',
-                      background: '#f2f5f9'
-                    }}
-                  >
-                    <img
-                      src="/static/images/overview/management_screen_3.png"
-                      alt="Management Section 3"
-                    />
-                  </Card>
-                </Box>
-              </Box>
-              <Box
-                sx={{
-                  position: 'absolute',
-                  top: 120,
-                  left: -60,
-                  transform:
-                    'translate(0px, 120px) perspective(5200px) rotate(87deg) rotateY(330deg) rotateZ(285deg)',
-                  transformStyle: 'preserve-3d'
-                }}
-              >
-                <Box
-                  sx={{
-                    animation: '2.8s 1.2s infinite alternate ease-in-out float'
-                  }}
-                >
-                  <Card
-                    sx={{
-                      padding: '15px',
-                      background: '#f2f5f9'
-                    }}
-                  >
-                    <img
-                      src="/static/images/overview/management_screen_2.png"
-                      alt="Management Section 2"
-                    />
-                  </Card>
-                </Box>
-              </Box>
-            </Box>
-          </Grid>
-          <Grid item md={6} lg={5}>
-            <TypographyFeature>7</TypographyFeature>
-            <TypographyHeading
-              sx={{
-                mb: 1
-              }}
-              variant="h3"
-            >
-              Pre-Built <br />
-              Management Sections
-            </TypographyHeading>
-            <TypographySubHeading
-              sx={{
-                maxWidth: 500,
-                lineHeight: 1.5,
-                pr: 8,
-                mb: 4
-              }}
-              variant="h4"
-              color="text.secondary"
-              fontWeight="normal"
-            >
-              {t(
-                'Integrated forms with validation, API calls examples, working filters and search functionality!'
-              )}
-            </TypographySubHeading>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <Button
-                  fullWidth
-                  target="_blank"
-                  rel="noopener"
-                  startIcon={<LaunchTwoToneIcon />}
-                  component={RouterLink}
-                  to="/extended-sidebar/management/users"
-                  variant="outlined"
-                >
-                  {t('Users')}
-                </Button>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Button
-                  fullWidth
-                  target="_blank"
-                  rel="noopener"
-                  startIcon={<LaunchTwoToneIcon />}
-                  component={RouterLink}
-                  to="/extended-sidebar/management/users/single/2"
-                  variant="outlined"
-                >
-                  {t('Profile')}
-                </Button>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Button
-                  fullWidth
-                  target="_blank"
-                  rel="noopener"
-                  startIcon={<LaunchTwoToneIcon />}
-                  component={RouterLink}
-                  to="/extended-sidebar/management/projects/list"
-                  variant="outlined"
-                >
-                  {t('Projects')}
-                </Button>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Button
-                  fullWidth
-                  target="_blank"
-                  rel="noopener"
-                  startIcon={<LaunchTwoToneIcon />}
-                  component={RouterLink}
-                  to="/extended-sidebar/management/commerce/products/single/1"
-                  variant="outlined"
-                >
-                  {t('View Product')}
-                </Button>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Button
-                  fullWidth
-                  target="_blank"
-                  rel="noopener"
-                  startIcon={<LaunchTwoToneIcon />}
-                  component={RouterLink}
-                  to="/extended-sidebar/management/commerce/products/create"
-                  variant="outlined"
-                >
-                  {t('Create Product')}
-                </Button>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Button
-                  fullWidth
-                  target="_blank"
-                  rel="noopener"
-                  startIcon={<LaunchTwoToneIcon />}
-                  component={RouterLink}
-                  to="/extended-sidebar/management/commerce/shop"
-                  variant="outlined"
-                >
-                  {t('Shop')}
-                </Button>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Button
-                  fullWidth
-                  target="_blank"
-                  rel="noopener"
-                  startIcon={<LaunchTwoToneIcon />}
-                  component={RouterLink}
-                  to="/extended-sidebar/management/invoices/list"
-                  variant="outlined"
-                >
-                  {t('Invoices')}
-                </Button>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Button
-                  fullWidth
-                  target="_blank"
-                  rel="noopener"
-                  startIcon={<LaunchTwoToneIcon />}
-                  component={RouterLink}
-                  to="/extended-sidebar/management/invoices/single/1"
-                  variant="outlined"
-                >
-                  {t('Single Invoice')}
-                </Button>
-              </Grid>
-            </Grid>
           </Grid>
         </Grid>
         <TypographyH1Primary
@@ -1574,16 +698,16 @@ function Highlights() {
             fontWeight="normal"
           >
             {t(
-              'Some of the features that make Tokyo one of the best admin templates available today'
+              'Some of the features that make Grash one of the best CMMS availables today'
             )}
           </TypographyH2>
         </Container>
-
-        <TabsContainerWrapper>
+        <TabsContainerWrapper sx={{ justifyContent: 'flex-start' }}>
           <Tabs
             onChange={handleTabsChange}
             value={currentTab}
             variant="scrollable"
+            scrollButtons={false}
             textColor="primary"
             indicatorColor="primary"
           >
@@ -1592,103 +716,21 @@ function Highlights() {
             ))}
           </Tabs>
         </TabsContainerWrapper>
-        {currentTab === 'performance' && (
-          <Grid
-            sx={{
-              mt: 8
-            }}
-            container
-            spacing={4}
-          >
-            <Grid item xs={12} md={6}>
-              <Typography sx={{ mb: 1 }} variant="h2">
-                {t('Beautiful design is little without performance')}.
-              </Typography>
-              <Typography variant="subtitle2">
-                {t(
-                  "We've built Tokyo using modern industry standards all packed under MUI (Material-UI) components"
-                )}
-                .
-              </Typography>
-              <List
-                disablePadding
-                sx={{
-                  mt: 2
-                }}
-              >
-                <ListItem>
-                  <AvatarSuccess
-                    sx={{
-                      mr: 2
-                    }}
-                  >
-                    <CheckTwoToneIcon />
-                  </AvatarSuccess>
-                  <ListItemText
-                    primary={t(
-                      '96+ Google Lighthouse performance score across all app pages.'
-                    )}
-                  />
-                </ListItem>
-                <ListItem>
-                  <AvatarSuccess
-                    sx={{
-                      mr: 2
-                    }}
-                  >
-                    <CheckTwoToneIcon />
-                  </AvatarSuccess>
-                  <ListItemText
-                    primary={t(
-                      'Perfectly responsive. Go ahead, browse the live preview and resize any page.'
-                    )}
-                  />
-                </ListItem>
-                <ListItem>
-                  <AvatarSuccess
-                    sx={{
-                      mr: 2
-                    }}
-                  >
-                    <CheckTwoToneIcon />
-                  </AvatarSuccess>
-                  <ListItemText
-                    primary={t(
-                      'Progressive Web App Optimized. You can view Tokyo offline on any screen size.'
-                    )}
-                  />
-                </ListItem>
-                <ListItem>
-                  <AvatarSuccess
-                    sx={{
-                      mr: 2
-                    }}
-                  >
-                    <CheckTwoToneIcon />
-                  </AvatarSuccess>
-                  <ListItemText
-                    primary={t(
-                      'Google Lighthouse Best Practices and SEO scrores over 95 for all pages.'
-                    )}
-                  />
-                </ListItem>
-              </List>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <BlowWrapper>
-                <Blob1 />
-                <Blob2 />
-                <CardImageWrapper>
-                  <img
-                    src="/static/images/overview/performance.png"
-                    alt="Tokyo Performance"
-                  />
-                </CardImageWrapper>
-              </BlowWrapper>
-            </Grid>
-          </Grid>
-        )}
-        {currentTab === 'auth_services' && (
+        {Object.entries(featuresConfiguration).map(([feature, config]) => {
+          return (
+            <>
+              {currentTab === feature && (
+                <Feature
+                  title={config.title}
+                  descriptions={config.descriptions}
+                  checks={config.checks}
+                  image={config.image}
+                />
+              )}
+            </>
+          );
+        })}
+        {currentTab === 'auth' && (
           <>
             <Typography
               textAlign="center"
@@ -1854,7 +896,7 @@ function Highlights() {
             </Grid>
           </>
         )}
-        {currentTab === 'rtl_languages' && (
+        {currentTab === 'rtl' && (
           <BoxRtl
             sx={{
               pt: 10
@@ -1948,7 +990,9 @@ function Highlights() {
           }}
           variant="h1"
         >
-          {t('Design Source Files')}
+          {t(
+            'Leading the Way to a Better Future for Maintenance and Reliability'
+          )}
         </TypographyH1Primary>
         <Container
           sx={{
@@ -1957,149 +1001,15 @@ function Highlights() {
           }}
           maxWidth="sm"
         >
-          <TypographyH2
-            sx={{
-              pb: 4,
-              lineHeight: 1.5
-            }}
-            textAlign="center"
-            variant="h4"
-            color="text.secondary"
-            fontWeight="normal"
-          >
-            {t(
-              'Start working on your project directly from one of the included starter kits or use the Figma/Sketch files to create a prototype first'
-            )}
-          </TypographyH2>
-          <TypographyH2
-            sx={{
-              pb: 4,
-              lineHeight: 1.5
-            }}
-            textAlign="center"
-            variant="h4"
-            color="text.secondary"
-            fontWeight="normal"
-          >
-            <Text color="error">
-              {t('Only available with certain pricing plans!')}
-            </Text>
-          </TypographyH2>
-
           <Button
-            component="a"
-            target="_blank"
+            component={RouterLink}
             size="large"
-            href="https://www.figma.com/file/XVw1wWOvmpn3UljELShZi3/Tokyo-Admin-Dashboard"
-            rel="noopener"
-            variant="outlined"
+            to="/extended-sidebar/dashboards"
+            variant="contained"
           >
-            {t('View Figma Preview')}
+            {t('Start a Free trial')}
           </Button>
         </Container>
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={6}>
-            <Card
-              sx={{
-                overflow: 'visible'
-              }}
-            >
-              <AvatarSuccess
-                sx={{
-                  width: 60,
-                  height: 60,
-                  mx: 'auto',
-                  position: 'relative',
-                  top: -28
-                }}
-              >
-                <CheckTwoToneIcon />
-              </AvatarSuccess>
-              <Box
-                px={4}
-                pb={4}
-                display={{ xs: 'block', md: 'flex' }}
-                alignItems="flex-start"
-              >
-                <img
-                  src="/static/images/overview/figma.svg"
-                  style={{ width: 60 }}
-                  alt="Figma Design Files"
-                />
-                <Box
-                  sx={{
-                    pl: { xs: 0, md: 3 }
-                  }}
-                >
-                  <Typography variant="h3">
-                    Figma {t('Design Files')}
-                  </Typography>
-                  <Typography
-                    sx={{
-                      pt: 1
-                    }}
-                    variant="subtitle2"
-                  >
-                    {t(
-                      'Complete with reusable components, all pages and sections are available in the Figma ecosystem.'
-                    )}
-                  </Typography>
-                </Box>
-              </Box>
-            </Card>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <Card
-              sx={{
-                mt: { xs: 5, md: 0 },
-                overflow: 'visible'
-              }}
-            >
-              <AvatarSuccess
-                sx={{
-                  width: 60,
-                  height: 60,
-                  mx: 'auto',
-                  position: 'relative',
-                  top: -28
-                }}
-              >
-                <CheckTwoToneIcon />
-              </AvatarSuccess>
-              <Box
-                px={4}
-                pb={4}
-                display={{ xs: 'block', md: 'flex' }}
-                alignItems="flex-start"
-              >
-                <img
-                  src="/static/images/overview/sketch.svg"
-                  style={{ width: 60 }}
-                  alt="Sketch Design Files"
-                />
-                <Box
-                  sx={{
-                    pl: { xs: 0, md: 3 }
-                  }}
-                >
-                  <Typography variant="h3">
-                    Sketch {t('Design Files')}
-                  </Typography>
-                  <Typography
-                    sx={{
-                      pt: 1
-                    }}
-                    variant="subtitle2"
-                  >
-                    {t(
-                      'Besid Figma files, Tokyo also has included Sketch design files for certain pricing plans.'
-                    )}
-                  </Typography>
-                </Box>
-              </Box>
-            </Card>
-          </Grid>
-        </Grid>
       </Container>
     </BoxHighlights>
   );

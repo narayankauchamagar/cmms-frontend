@@ -119,7 +119,7 @@ function HeaderNotifications() {
   };
   const onReadNotification = (notification: Notification) => {
     let url;
-    const id = notification.id;
+    const id = notification.resourceId;
     switch (notification.notificationType) {
       case 'INFO':
         break;

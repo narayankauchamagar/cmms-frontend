@@ -78,6 +78,8 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const { getFormattedDate } = useContext(CompanySettingsContext);
   const { t }: { t: any } = useTranslation();
+  const { user } = useAuth();
+
   const [openAddTimeModal, setOpenAddTimeModal] = useState<boolean>(false);
   const [openAddCostModal, setOpenAddCostModal] = useState<boolean>(false);
   const [openLinkModal, setOpenLinkModal] = useState<boolean>(false);
@@ -95,7 +97,8 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const currentWorkOrderRelations = workOrdersRelations[workOrder.id] ?? [];
   const additionalTimes = workOrdersRoot[workOrder.id] ?? [];
   const primaryTime = additionalTimes.find(
-    (additionalTime) => additionalTime.primaryTime
+    (additionalTime) =>
+      additionalTime.primaryTime && additionalTime.assignedTo.id === user.id
   );
   const runningTimer = primaryTime?.status === 'RUNNING';
   const { workOrdersRoot1 } = useSelector((state) => state.additionalCosts);
@@ -639,13 +642,17 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                     secondaryAction={
                       <Box>
                         <Typography variant="h6" fontWeight="bold">
-                          {additionalTimes.reduce(
-                            (acc, additionalTime) =>
-                              additionalTime.includeToTotalTime
-                                ? acc + getAdditionalTimeCost(additionalTime)
-                                : acc,
-                            0
-                          )}{' '}
+                          {additionalTimes
+                            .filter(
+                              (additionalTime) => !additionalTime.primaryTime
+                            )
+                            .reduce(
+                              (acc, additionalTime) =>
+                                additionalTime.includeToTotalTime
+                                  ? acc + getAdditionalTimeCost(additionalTime)
+                                  : acc,
+                              0
+                            )}{' '}
                           $
                         </Typography>
                       </Box>

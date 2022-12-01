@@ -50,12 +50,22 @@ function Overview() {
                 <Button
                   component={RouterLink}
                   to="/extended-sidebar/dashboards"
-                  variant="contained"
+                  variant="outlined"
                   sx={{
                     ml: 2
                   }}
                 >
                   {t('Log In')}
+                </Button>
+                <Button
+                  component={RouterLink}
+                  to="/account/register"
+                  variant="contained"
+                  sx={{
+                    ml: 2
+                  }}
+                >
+                  {t('Start a Free Trial')}
                 </Button>
               </Box>
             </Box>
