@@ -23,6 +23,7 @@ export interface OwnUser {
   id: number;
   email: string;
   phone: string;
+  jobTitle: string;
   role: { name: string };
   companyId: number;
 }

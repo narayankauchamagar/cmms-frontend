@@ -26,7 +26,8 @@ import useAuth from '../../../hooks/useAuth';
 
 function ProfileDetails() {
   const { t }: { t: any } = useTranslation();
-  const { user, userSettings, fetchUserSettings } = useAuth();
+  const { user, userSettings, fetchUserSettings, patchUserSettings } =
+    useAuth();
   const [openEditModal, setOpenEditModal] = useState<boolean>(false);
   const handleOpenEditModal = () => setOpenEditModal(true);
   const handleCloseEditModal = () => setOpenEditModal(false);
@@ -43,22 +44,22 @@ function ProfileDetails() {
     firstName: { value: user.firstName, title: t('First Name') },
     lastName: { value: user.lastName, title: t('Last Name') },
     phone: { value: user.phone, title: t('Phone') },
-    jobTitle: { value: user.role.name, title: t('Job Title') },
+    jobTitle: { value: user.jobTitle, title: t('Job Title') },
     settings: {
-      isNotified: {
+      emailNotified: {
         value: userSettings?.emailNotified,
         title: t('Email notifications')
       },
-      emailForWorkOrders: {
+      emailUpdatesForWorkOrders: {
         value: userSettings?.emailUpdatesForWorkOrders,
         title: t('Email Updates for Work Orders and Messages')
       },
-      emailForRequest: {
+      emailUpdatesForRequests: {
         value: userSettings?.emailUpdatesForRequests,
         title: t('Email Updates for Requested Work Orders')
       },
       // dailyEmailSummary: { value: userSettings?., title: t('Daily Summary Emails') },
-      purchaseOrderEmail: {
+      emailUpdatesForPurchaseOrders: {
         value: userSettings?.emailUpdatesForPurchaseOrders,
         title: t('Purchase Order Emails')
       }
@@ -75,13 +76,13 @@ function ProfileDetails() {
         </Grid>
         <Grid item xs={12} sm={8} md={9}>
           <Text color="black">
-            <b>{value}</b>
+            <b>{value ?? t('N/A')}</b>
           </Text>
         </Grid>
       </>
     );
   };
-  const renderKeyAndSwitch = (key: string, value: boolean) => {
+  const renderKeyAndSwitch = (key: string, value: boolean, setting: string) => {
     return (
       <>
         <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
@@ -90,7 +91,15 @@ function ProfileDetails() {
           </Box>
         </Grid>
         <Grid item xs={12} sm={8} md={9}>
-          <Switch defaultChecked={value} />
+          <Switch
+            checked={value}
+            onChange={(event) => {
+              patchUserSettings({
+                ...userSettings,
+                [setting]: event.target.value === 'on'
+              });
+            }}
+          />
         </Grid>
       </>
     );
@@ -467,7 +476,8 @@ function ProfileDetails() {
                 {Object.keys(userConfig.settings).map((key) =>
                   renderKeyAndSwitch(
                     userConfig.settings[key].title,
-                    userConfig.settings[key].value
+                    userConfig.settings[key].value,
+                    key
                   )
                 )}
               </Grid>
