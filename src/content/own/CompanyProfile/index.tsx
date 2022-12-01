@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 
 import { Helmet } from 'react-helmet-async';
 
@@ -9,18 +9,11 @@ import { Company } from '../../../models/owns/company';
 import CompanyPlan from './CompanyPlan';
 import { TitleContext } from '../../../contexts/TitleContext';
 import { useTranslation } from 'react-i18next';
+import useAuth from '../../../hooks/useAuth';
 
 function CompanyProfile() {
   const { t }: { t: any } = useTranslation();
-  const [company, setCompany] = useState<Company | null>({
-    name: 'Maxtron',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png',
-    id: 'dsds',
-    address: 'address',
-    phone: '425785752',
-    website: 'www.google.com',
-    plan: { id: 'dsds4', name: 'Starter', users: 2 }
-  });
+  const { company } = useAuth();
   const { setTitle } = useContext(TitleContext);
 
   useEffect(() => {
@@ -56,7 +49,7 @@ function CompanyProfile() {
             <CompanyDetails company={company} />
           </Grid>
           <Grid item xs={12}>
-            <CompanyPlan plan={company.plan} />
+            <CompanyPlan plan={company.subscription.subscriptionPlan} />
           </Grid>
         </Grid>
       </Box>

@@ -3,18 +3,18 @@ import useAuth from 'src/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 
 import {
+  alpha,
   Avatar,
   Box,
   Button,
   Divider,
-  MenuList,
-  alpha,
   IconButton,
-  MenuItem,
   ListItemText,
+  MenuItem,
+  MenuList,
   Popover,
-  Typography,
   styled,
+  Typography,
   useTheme
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -237,7 +237,7 @@ function HeaderUserbox() {
           <UserBoxText>
             <UserBoxLabel variant="body1">{user.firstName}</UserBoxLabel>
             <UserBoxDescription variant="body2">
-              {user.role.name}
+              {user.jobTitle ?? user.role.name}
             </UserBoxDescription>
           </UserBoxText>
         </MenuUserBox>

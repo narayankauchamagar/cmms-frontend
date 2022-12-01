@@ -60,9 +60,11 @@ function CompanyDetails(props: CompanyDetailsProps) {
           {isLink ? (
             <Link
               href={
-                value.startsWith('https://') || value.startsWith('http://')
-                  ? value
-                  : `https://${value}`
+                value
+                  ? value.startsWith('https://') || value.startsWith('http://')
+                    ? value
+                    : `https://${value}`
+                  : null
               }
               target="_blank"
               rel="noreferrer"

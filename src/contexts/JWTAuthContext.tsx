@@ -16,11 +16,13 @@ import {
   FieldConfiguration,
   FieldType
 } from '../models/owns/fieldConfiguration';
+import { Company } from '../models/owns/company';
 
 interface AuthState {
   isInitialized: boolean;
   isAuthenticated: boolean;
   user: UserResponseDTO | null;
+  company: Company | null;
   userSettings: UserSettings | null;
   companySettings: CompanySettings | null;
 }
@@ -47,6 +49,7 @@ interface AuthContextValue extends AuthState {
   }) => Promise<boolean>;
   fetchUserSettings: () => Promise<void>;
   fetchCompanySettings: () => Promise<void>;
+  fetchCompany: () => Promise<void>;
   patchGeneralPreferences: (
     values: Partial<GeneralPreferences>
   ) => Promise<void>;
@@ -67,6 +70,7 @@ type InitializeAction = {
     isAuthenticated: boolean;
     user: UserResponseDTO | null;
     companySettings: CompanySettings | null;
+    company: Company | null;
   };
 };
 
@@ -75,6 +79,7 @@ type LoginAction = {
   payload: {
     user: UserResponseDTO;
     companySettings: CompanySettings;
+    company: Company;
   };
 };
 
@@ -87,6 +92,7 @@ type RegisterAction = {
   payload: {
     user: UserResponseDTO;
     companySettings: CompanySettings;
+    company: Company;
   };
 };
 type PatchUserSettingsAction = {
@@ -113,6 +119,12 @@ type FetchCompanySettingsAction = {
     companySettings: CompanySettings;
   };
 };
+type FetchCompanyAction = {
+  type: 'GET_COMPANY';
+  payload: {
+    company: Company;
+  };
+};
 type PatchGeneralPreferencesAction = {
   type: 'PATCH_GENERAL_PREFERENCES';
   payload: {
@@ -136,12 +148,14 @@ type Action =
   | FetchUserSettingsAction
   | FetchCompanySettingsAction
   | PatchGeneralPreferencesAction
-  | PatchFieldConfigurationAction;
+  | PatchFieldConfigurationAction
+  | FetchCompanyAction;
 
 const initialAuthState: AuthState = {
   isAuthenticated: false,
   isInitialized: false,
   user: null,
+  company: null,
   userSettings: null,
   companySettings: null
 };
@@ -164,24 +178,26 @@ const handlers: Record<
   (state: AuthState, action: Action) => AuthState
 > = {
   INITIALIZE: (state: AuthState, action: InitializeAction): AuthState => {
-    const { isAuthenticated, user, companySettings } = action.payload;
+    const { isAuthenticated, user, companySettings, company } = action.payload;
 
     return {
       ...state,
       isAuthenticated,
       isInitialized: true,
       user,
-      companySettings
+      companySettings,
+      company
     };
   },
   LOGIN: (state: AuthState, action: LoginAction): AuthState => {
-    const { user, companySettings } = action.payload;
+    const { user, companySettings, company } = action.payload;
 
     return {
       ...state,
       isAuthenticated: true,
       user,
-      companySettings
+      companySettings,
+      company
     };
   },
   LOGOUT: (state: AuthState): AuthState => ({
@@ -190,13 +206,14 @@ const handlers: Record<
     user: null
   }),
   REGISTER: (state: AuthState, action: RegisterAction): AuthState => {
-    const { user, companySettings } = action.payload;
+    const { user, companySettings, company } = action.payload;
 
     return {
       ...state,
       isAuthenticated: true,
       user,
-      companySettings
+      companySettings,
+      company
     };
   },
   PATCH_USER_SETTINGS: (
@@ -234,6 +251,13 @@ const handlers: Record<
     return {
       ...state,
       companySettings
+    };
+  },
+  GET_COMPANY: (state: AuthState, action: FetchCompanyAction): AuthState => {
+    const { company } = action.payload;
+    return {
+      ...state,
+      company
     };
   },
   PATCH_GENERAL_PREFERENCES: (
@@ -293,6 +317,7 @@ const AuthContext = createContext<AuthContextValue>({
   patchUserSettings: () => Promise.resolve(),
   patchUser: () => Promise.resolve(),
   fetchUserSettings: () => Promise.resolve(),
+  fetchCompany: () => Promise.resolve(),
   updatePassword: () => Promise.resolve(false),
   fetchCompanySettings: () => Promise.resolve(),
   patchGeneralPreferences: () => Promise.resolve(),
@@ -310,12 +335,10 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     setCompanyId(user.companyId);
     return user;
   };
-  const setupUser = async (user: UserResponseDTO) => {
-    const companySettings = await getCompanySettings(user.companySettingsId);
+  const setupUser = async (companySettings: CompanySettings) => {
     switchLanguage({
       lng: companySettings.generalPreferences.language.toLowerCase()
     });
-    return companySettings;
   };
   const getInfos = async (): Promise<void> => {
     try {
@@ -324,13 +347,14 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
       if (accessToken && verify(accessToken, JWT_SECRET)) {
         setSession(accessToken);
         const user = await updateUserInfos();
-        const companySettings = await setupUser(user);
+        const company = await api.get<Company>(`companies/${user.companyId}`);
         dispatch({
           type: 'INITIALIZE',
           payload: {
             isAuthenticated: true,
             user,
-            companySettings
+            companySettings: company.companySettings,
+            company
           }
         });
       } else {
@@ -339,7 +363,8 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
           payload: {
             isAuthenticated: false,
             user: null,
-            companySettings: null
+            companySettings: null,
+            company: null
           }
         });
       }
@@ -350,7 +375,8 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         payload: {
           isAuthenticated: false,
           user: null,
-          companySettings: null
+          companySettings: null,
+          company: null
         }
       });
     }
@@ -368,12 +394,14 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     const { accessToken } = response;
     setSession(accessToken);
     const user = await updateUserInfos();
-    const companySettings = await setupUser(user);
+    const company = await api.get<Company>(`companies/${user.companyId}`);
+    await setupUser(company.companySettings);
     dispatch({
       type: 'LOGIN',
       payload: {
         user,
-        companySettings
+        companySettings: company.companySettings,
+        company
       }
     });
   };
@@ -383,37 +411,28 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     dispatch({ type: 'LOGOUT' });
   };
 
-  const register = async (
-    email: string,
-    firstName: string,
-    lastName: string,
-    phone: string,
-    password: string,
-    role: number | undefined
-  ): Promise<void> => {
+  const register = async (values): Promise<void> => {
     const response = await api.post<{ message: string; success: boolean }>(
       'auth/signup',
-      role
+      values.role
         ? {
-            email,
-            firstName,
-            lastName,
-            phone,
-            password,
-            role: { id: role }
+            ...values,
+            role: { id: values.role }
           }
-        : { email, firstName, lastName, phone, password },
+        : values,
       { headers: authHeader(true) }
     );
     const { message, success } = response;
     setSession(message);
     const user = await updateUserInfos();
-    const companySettings = await setupUser(user);
+    const company = await api.get<Company>(`companies/${user.companyId}`);
+    await setupUser(company.companySettings);
     dispatch({
       type: 'REGISTER',
       payload: {
         user,
-        companySettings
+        companySettings: company.companySettings,
+        company
       }
     });
   };
@@ -473,6 +492,15 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
       type: 'GET_COMPANY_SETTINGS',
       payload: {
         companySettings
+      }
+    });
+  };
+  const fetchCompany = async (): Promise<void> => {
+    const company = await api.get<Company>(state.user.companyId);
+    dispatch({
+      type: 'GET_COMPANY',
+      payload: {
+        company
       }
     });
   };
@@ -539,6 +567,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         patchUserSettings,
         fetchUserSettings,
         fetchCompanySettings,
+        fetchCompany,
         patchGeneralPreferences,
         patchFieldConfiguration
       }}

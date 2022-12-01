@@ -1,4 +1,5 @@
 import { SubscriptionPlan } from './subscriptionPlan';
+import CompanySettings from './companySettings';
 
 export interface Company {
   id: string;
@@ -7,5 +8,6 @@ export interface Company {
   address: string;
   website: string;
   phone: string;
-  plan: SubscriptionPlan;
+  subscription: { subscriptionPlan: SubscriptionPlan };
+  companySettings: CompanySettings;
 }

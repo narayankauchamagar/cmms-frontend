@@ -30,51 +30,67 @@ function RegisterJWT({
   const { t }: { t: any } = useTranslation();
   const { showSnackBar } = useContext(CustomSnackBarContext);
 
+  const getFieldsAndShapes = (): [
+    { [key: string]: any },
+    { [key: string]: any }
+  ] => {
+    let fields = {
+      email,
+      firstName: '',
+      lastName: '',
+      phone: '',
+      password: '',
+      companyName: '',
+      employeesCount: 5,
+      terms: false,
+      submit: null
+    };
+    let shape = {
+      email: Yup.string()
+        .email(t('The email provided should be a valid email address'))
+        .max(255)
+        .required(t('The email field is required')),
+      firstName: Yup.string()
+        .max(255)
+        .required(t('The first name field is required')),
+      lastName: Yup.string()
+        .max(255)
+        .required(t('The last name field is required')),
+      companyName: Yup.string()
+        .max(255)
+        .required(t('The company name field is required')),
+      employeesCount: Yup.number()
+        .min(0)
+        .required(t('Please provide the number of employees')),
+      phone: Yup.string().matches(
+        phoneRegExp,
+        t('The phone number is invalid')
+      ),
+      password: Yup.string()
+        .min(8)
+        .max(255)
+        .required(t('The password field is required')),
+      terms: Yup.boolean().oneOf(
+        [true],
+        t('You must agree to our terms and conditions')
+      )
+    };
+    if (role) {
+      const keysToDelete = ['companyName', 'employeesCount'];
+      keysToDelete.forEach((key) => {
+        delete fields[key];
+        delete shape[key];
+      });
+    }
+    return [fields, shape];
+  };
   return (
     <Formik
-      initialValues={{
-        email,
-        firstName: '',
-        lastName: '',
-        phone: '',
-        password: '',
-        terms: false,
-        submit: null
-      }}
-      validationSchema={Yup.object().shape({
-        email: Yup.string()
-          .email(t('The email provided should be a valid email address'))
-          .max(255)
-          .required(t('The email field is required')),
-        firstName: Yup.string()
-          .max(255)
-          .required(t('The first name field is required')),
-        lastName: Yup.string()
-          .max(255)
-          .required(t('The last name field is required')),
-        phone: Yup.string().matches(
-          phoneRegExp,
-          t('The phone number is invalid')
-        ),
-        password: Yup.string()
-          .min(8)
-          .max(255)
-          .required(t('The password field is required')),
-        terms: Yup.boolean().oneOf(
-          [true],
-          t('You must agree to our terms and conditions')
-        )
-      })}
+      initialValues={getFieldsAndShapes()[0]}
+      validationSchema={Yup.object().shape(getFieldsAndShapes()[1])}
       onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
         setSubmitting(true);
-        register(
-          values.email,
-          values.firstName,
-          values.lastName,
-          values.phone,
-          values.password,
-          role
-        )
+        return register(values)
           .then()
           .catch((err) =>
             showSnackBar(t("The registration didn't succeed"), 'error')
@@ -165,6 +181,41 @@ function RegisterJWT({
             value={values.password}
             variant="outlined"
           />
+          {!role && (
+            <>
+              <Grid item xs={12} lg={6}>
+                <TextField
+                  error={Boolean(touched.companyName && errors.companyName)}
+                  fullWidth
+                  margin="normal"
+                  helperText={touched.companyName && errors.companyName}
+                  label={t('Company Name')}
+                  name="companyName"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.companyName}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12} lg={6}>
+                <TextField
+                  error={Boolean(
+                    touched.employeesCount && errors.employeesCount
+                  )}
+                  fullWidth
+                  margin="normal"
+                  type="number"
+                  helperText={touched.employeesCount && errors.employeesCount}
+                  label={t('Number of Employees')}
+                  name="employeesCount"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.employeesCount}
+                  variant="outlined"
+                />
+              </Grid>
+            </>
+          )}
           <FormControlLabel
             control={
               <Checkbox
