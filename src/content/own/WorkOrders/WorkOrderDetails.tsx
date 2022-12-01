@@ -63,7 +63,7 @@ import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import { deleteRelation, getRelations } from '../../../slices/relation';
 import Relation, { relationTypes } from '../../../models/owns/relation';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
-import { getAssetUrl } from '../../../utils/urlPaths';
+import { getAssetUrl, getUserUrl } from '../../../utils/urlPaths';
 import SignatureModal from './SignatureModal';
 import useAuth from '../../../hooks/useAuth';
 
@@ -88,6 +88,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const [changingStatus, setChangingStatus] = useState<boolean>(false);
   const { workOrders } = useSelector((state) => state.partQuantities);
   const partQuantities = workOrders[workOrder.id] ?? [];
+  const [controllingTime, setControllingTime] = useState<boolean>(false);
   const { workOrdersRoot } = useSelector((state) => state.additionalTimes);
   const { workOrderHistories } = useSelector(
     (state) => state.workOrderHistories
@@ -498,10 +499,20 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                 </Box>
                 <Box>
                   <Button
-                    startIcon={<TimerTwoToneIcon />}
-                    onClick={() =>
-                      dispatch(controlTimer(!runningTimer, workOrder.id))
+                    startIcon={
+                      controllingTime ? (
+                        <CircularProgress size="1rem" />
+                      ) : (
+                        <TimerTwoToneIcon />
+                      )
                     }
+                    disabled={controllingTime}
+                    onClick={() => {
+                      setControllingTime(true);
+                      dispatch(
+                        controlTimer(!runningTimer, workOrder.id)
+                      ).finally(() => setControllingTime(false));
+                    }}
                     variant={runningTimer ? 'contained' : 'outlined'}
                   >
                     {runningTimer
@@ -532,7 +543,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                   {workOrder.assignedTo.map((user, index) => (
                     <Box key={user.id}>
                       <Link
-                        href={`/app/people-teams/users/${user.id}`}
+                        href={getUserUrl(user.id)}
                         variant="h6"
                         fontWeight="bold"
                       >{`${user.firstName} ${user.lastName}`}</Link>
@@ -624,7 +635,9 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                             <>
                               {additionalTime.assignedTo ? (
                                 <Link
-                                  href={`/app/people-teams/users/${additionalTime.assignedTo.id}`}
+                                  href={getUserUrl(
+                                    additionalTime.assignedTo.id
+                                  )}
                                   variant="h6"
                                 >
                                   {`${additionalTime.assignedTo.firstName} ${additionalTime.assignedTo.lastName}`}

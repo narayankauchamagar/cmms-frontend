@@ -323,8 +323,7 @@ function Assets() {
     }
   ];
   const shape = {
-    name: Yup.string().required(t('Asset name is required')),
-    location: Yup.object().required(t('Asset location is required')).nullable()
+    name: Yup.string().required(t('Asset name is required'))
   };
 
   useEffect(() => {
