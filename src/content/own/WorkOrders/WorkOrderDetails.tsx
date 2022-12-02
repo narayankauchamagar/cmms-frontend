@@ -951,14 +951,22 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                           edge="end"
                           aria-label="delete"
                           onClick={() => {
-                            dispatch(
-                              editWorkOrder(workOrder.id, {
-                                ...workOrder,
-                                files: workOrder.files.filter(
-                                  (f) => f.id !== file.id
+                            if (
+                              window.confirm(
+                                t(
+                                  'Are you sure you want to remove this file from this asset ?'
                                 )
-                              })
-                            );
+                              )
+                            ) {
+                              dispatch(
+                                editWorkOrder(workOrder.id, {
+                                  ...workOrder,
+                                  files: workOrder.files.filter(
+                                    (f) => f.id !== file.id
+                                  )
+                                })
+                              );
+                            }
                           }}
                         >
                           <DoDisturbOnTwoToneIcon color="error" />

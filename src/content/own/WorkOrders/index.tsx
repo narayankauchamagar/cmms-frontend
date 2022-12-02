@@ -31,7 +31,6 @@ import { UserMiniDTO } from '../../../models/user';
 import Team from '../../../models/owns/team';
 import WorkOrderDetails from './WorkOrderDetails';
 import { useParams } from 'react-router-dom';
-import { enumerate } from '../../../utils/displayers';
 import Location from '../../../models/owns/location';
 import Asset from '../../../models/owns/asset';
 import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
@@ -262,8 +261,7 @@ function WorkOrders() {
       headerName: t('Files'),
       description: t('Files'),
       width: 150,
-      valueGetter: (params) =>
-        enumerate(params.row.files.map((file) => file.name))
+      valueGetter: (params) => params.row.files.length
     },
     {
       field: 'tasks',
