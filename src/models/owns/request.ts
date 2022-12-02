@@ -1,27 +1,16 @@
-import { AssetMiniDTO, assets } from './asset';
-import { Audit } from './audit';
-import File, { files } from './file';
+import { assets } from './asset';
+import { files } from './file';
 import WorkOrder, { workOrders } from './workOrder';
-import { LocationMiniDTO, locations } from './location';
+import { locations } from './location';
 import { users } from './user';
-import { UserMiniDTO } from '../user';
-import Team, { teams } from './team';
+import { teams } from './team';
+import { WorkOrderBase } from './workOrderBase';
+import { categories } from './category';
+import { customers } from './customer';
 
-export default interface Request extends Audit {
-  title: string;
-  id: number;
-  description: string;
-  workOrder: WorkOrder;
+export default interface Request extends WorkOrderBase {
   cancelled: boolean;
-  priority: string;
-  image: File;
-  asset: AssetMiniDTO;
-  location: LocationMiniDTO;
-  primaryUser: UserMiniDTO;
-  dueDate: string;
-  category: string;
-  team: Team;
-  files: File[];
+  workOrder: WorkOrder;
 }
 
 export const requests: Request[] = [
@@ -36,8 +25,10 @@ export const requests: Request[] = [
     location: locations[0],
     primaryUser: users[0],
     dueDate: 'dsds',
-    category: 'fdfs',
+    category: categories[0],
     team: teams[0],
+    assignedTo: [],
+    customers: customers,
     description: 'jvjhbh',
     priority: 'HIGH',
     createdAt: 'fghb',

@@ -198,6 +198,13 @@ function Meters() {
       label: t('Image')
     },
     {
+      name: 'asset',
+      type: 'select',
+      type2: 'asset',
+      label: t('Asset'),
+      required: true
+    },
+    {
       name: 'users',
       type: 'select',
       type2: 'user',
@@ -209,13 +216,6 @@ function Meters() {
       type: 'select',
       type2: 'location',
       label: t('Location')
-    },
-    {
-      name: 'asset',
-      type: 'select',
-      type2: 'asset',
-      label: t('Asset'),
-      required: true
     }
   ];
   const shape = {

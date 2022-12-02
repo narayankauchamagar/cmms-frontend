@@ -34,11 +34,7 @@ import { useParams } from 'react-router-dom';
 import { enumerate } from '../../../utils/displayers';
 import Location from '../../../models/owns/location';
 import Asset from '../../../models/owns/asset';
-import {
-  formatSelect,
-  formatSelectMultiple,
-  getPriorityLabel
-} from '../../../utils/formatters';
+import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
 import {
   addWorkOrder,
   editWorkOrder,
@@ -50,6 +46,7 @@ import PriorityWrapper from '../components/PriorityWrapper';
 import { patchTasks } from '../../../slices/task';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 import useAuth from '../../../hooks/useAuth';
+import { getWOBaseValues } from '../../../utils/fields';
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
@@ -567,55 +564,8 @@ function WorkOrders() {
             submitText={t('Save')}
             values={{
               ...currentWorkOrder,
-              priority: currentWorkOrder?.priority
-                ? {
-                    label: getPriorityLabel(currentWorkOrder?.priority, t),
-                    value: currentWorkOrder?.priority
-                  }
-                : null,
-              category: currentWorkOrder?.category
-                ? {
-                    label: currentWorkOrder?.category?.name,
-                    value: currentWorkOrder?.category?.id
-                  }
-                : null,
               tasks: tasks,
-              primaryUser: currentWorkOrder?.primaryUser
-                ? {
-                    label: `${currentWorkOrder.primaryUser.firstName} ${currentWorkOrder.primaryUser.lastName}`,
-                    value: currentWorkOrder.primaryUser.id.toString()
-                  }
-                : null,
-              assignedTo: currentWorkOrder?.assignedTo.map((worker) => {
-                return {
-                  label: `${worker.firstName} ${worker.lastName}`,
-                  value: worker.id.toString()
-                };
-              }),
-              customers: currentWorkOrder?.customers.map((customer) => {
-                return {
-                  label: customer.name,
-                  value: customer.id.toString()
-                };
-              }),
-              team: currentWorkOrder?.team
-                ? {
-                    label: currentWorkOrder.team?.name,
-                    value: currentWorkOrder.team?.id.toString()
-                  }
-                : null,
-              location: currentWorkOrder?.location
-                ? {
-                    label: currentWorkOrder.location.name,
-                    value: currentWorkOrder.location.id.toString()
-                  }
-                : null,
-              asset: currentWorkOrder?.asset
-                ? {
-                    label: currentWorkOrder.asset?.name,
-                    value: currentWorkOrder.asset?.id.toString()
-                  }
-                : null
+              ...getWOBaseValues(t, currentWorkOrder)
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {

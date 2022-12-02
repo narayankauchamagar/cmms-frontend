@@ -1,17 +1,19 @@
 import {
   Box,
+  Button,
   Divider,
   Grid,
   IconButton,
   List,
   ListItem,
   ListItemText,
+  Stack,
   Tab,
   Tabs,
   Typography,
   useTheme
 } from '@mui/material';
-import { ChangeEvent, useContext, useState } from 'react';
+import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
@@ -22,6 +24,14 @@ import { IField } from '../type';
 import { useDispatch, useSelector } from '../../../store';
 import { createReading, getReadings } from '../../../slices/reading';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
+import {
+  deleteWorkOrderMeterTrigger,
+  getWorkOrderMeterTriggers
+} from '../../../slices/workOrderMeterTrigger';
+import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
+import AddTriggerModal from './AddTriggerModal';
+import EditTriggerModal from './EditTriggerModal';
+import WorkOrderMeterTrigger from '../../../models/owns/workOrderMeterTrigger';
 
 interface MeterDetailsProps {
   meter: Meter;
@@ -36,11 +46,25 @@ export default function MeterDetails(props: MeterDetailsProps) {
   const { getFormattedDate } = useContext(CompanySettingsContext);
   const theme = useTheme();
   const { metersReadings } = useSelector((state) => state.readings);
+  const { metersTriggers } = useSelector(
+    (state) => state.workOrderMeterTriggers
+  );
+  const [openAddTriggerModal, setOpenAddTriggerModal] =
+    useState<boolean>(false);
+  const [openEditTriggerModal, setOpenEditTriggerModal] =
+    useState<boolean>(false);
+  const [currentWorkOrderMeterTrigger, setCurrentWorkOrderMeterTrigger] =
+    useState<WorkOrderMeterTrigger>();
+  const currentMeterTriggers = metersTriggers[meter?.id] ?? [];
   const currentMeterReadings = metersReadings[meter?.id] ?? [];
   const tabs = [
     { value: 'details', label: t('Details') },
     { value: 'history', label: t('History') }
   ];
+
+  useEffect(() => {
+    dispatch(getWorkOrderMeterTriggers(meter.id));
+  }, [meter.id]);
 
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
@@ -163,6 +187,65 @@ export default function MeterDetails(props: MeterDetailsProps) {
                 />
               ))}
             </Grid>
+            <Typography sx={{ mt: 2, mb: 1 }} variant="h4">
+              {t('Work Order Triggers')}
+            </Typography>
+            <Grid container spacing={1}>
+              <Grid item xs={12} lg={12}>
+                <List>
+                  {currentMeterTriggers.map((trigger) => (
+                    <ListItem
+                      key={trigger.id}
+                      secondaryAction={
+                        <Stack spacing={1} direction="row">
+                          <IconButton
+                            onClick={() => {
+                              setCurrentWorkOrderMeterTrigger(
+                                currentMeterTriggers.find(
+                                  (t) => t.id === trigger.id
+                                )
+                              );
+                              setOpenEditTriggerModal(true);
+                            }}
+                          >
+                            <EditTwoToneIcon />
+                          </IconButton>
+                          <IconButton
+                            onClick={() => {
+                              dispatch(
+                                deleteWorkOrderMeterTrigger(
+                                  meter.id,
+                                  trigger.id
+                                )
+                              );
+                            }}
+                          >
+                            <DeleteTwoToneIcon color="error" />
+                          </IconButton>
+                        </Stack>
+                      }
+                    >
+                      <ListItemText
+                        primary={trigger.name}
+                        secondary={`${
+                          trigger.triggerCondition === 'MORE_THAN'
+                            ? t('Greater than')
+                            : t('Less than')
+                        } ${trigger.value} ${meter.unit}`}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+                <Button
+                  startIcon={<AddTwoToneIcon />}
+                  sx={{ my: 1 }}
+                  variant="outlined"
+                  onClick={() => setOpenAddTriggerModal(true)}
+                >
+                  {t('Add Trigger')}
+                </Button>
+              </Grid>
+            </Grid>
           </Box>
         )}
         {currentTab === 'history' && (
@@ -178,6 +261,17 @@ export default function MeterDetails(props: MeterDetailsProps) {
           </List>
         )}
       </Grid>
+      <AddTriggerModal
+        open={openAddTriggerModal}
+        onClose={() => setOpenAddTriggerModal(false)}
+        meter={meter}
+      />
+      <EditTriggerModal
+        open={openEditTriggerModal}
+        onClose={() => setOpenEditTriggerModal(false)}
+        meter={meter}
+        workOrderMeterTrigger={currentWorkOrderMeterTrigger}
+      />
     </Grid>
   );
 }

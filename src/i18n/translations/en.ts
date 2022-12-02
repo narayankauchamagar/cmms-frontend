@@ -5,7 +5,9 @@ const enJSON = {
   SPLIT_TO: 'Split to',
   SPLIT_FROM: 'Split from',
   BLOCKED_BY: 'Blocked by',
-  BLOCKS: 'Blocks'
+  BLOCKS: 'Blocks',
+  MORE_THAN: 'Greater than',
+  LESS_THAN: 'Less than'
 };
 
 export default enJSON;

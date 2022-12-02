@@ -41,6 +41,7 @@ import {
 } from '../../../utils/formatters';
 import useAuth from '../../../hooks/useAuth';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
+import { getWOBaseFields } from '../../../utils/fields';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
@@ -158,82 +159,7 @@ function Files() {
       width: 150
     }
   ];
-  const defaultFields: Array<IField> = [
-    {
-      name: 'title',
-      type: 'text',
-      label: t('Title'),
-      placeholder: t('Enter Request Title'),
-      required: true
-    },
-    {
-      name: 'description',
-      type: 'text',
-      label: t('Description'),
-      placeholder: t('Description'),
-      multiple: true
-    },
-    {
-      name: 'priority',
-      type: 'select',
-      type2: 'priority',
-      label: t('Priority'),
-      placeholder: t('Priority')
-    },
-    {
-      name: 'dueDate',
-      type: 'date',
-      label: t('Due Date')
-    },
-    {
-      name: 'category',
-      type: 'select',
-      label: t('Category'),
-      type2: 'category',
-      category: 'work-order-categories'
-    },
-    {
-      name: 'location',
-      type: 'select',
-      type2: 'location',
-      label: 'Location',
-      placeholder: 'Select location'
-    },
-    {
-      name: 'asset',
-      type: 'select',
-      type2: 'asset',
-      label: t('Asset'),
-      placeholder: 'Select Asset',
-      required: true
-    },
-    {
-      name: 'primaryUser',
-      type: 'select',
-      label: t('Primary Worker'),
-      type2: 'user'
-    },
-    {
-      name: 'team',
-      type: 'select',
-      type2: 'team',
-      label: 'Team',
-      placeholder: 'Select team'
-    },
-    {
-      name: 'image',
-      type: 'file',
-      fileType: 'image',
-      label: t('Image')
-    },
-    {
-      name: 'files',
-      type: 'file',
-      multiple: true,
-      label: t('Files'),
-      fileType: 'file'
-    }
-  ];
+  const defaultFields: Array<IField> = [...getWOBaseFields(t)];
   const defaultShape = {
     title: Yup.string().required(t('Request name is required'))
   };
