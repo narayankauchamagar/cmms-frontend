@@ -1,5 +1,3 @@
-export type RoleType = 'paid' | 'free';
-
 export enum BasicPermission {
   CREATE_EDIT_PEOPLE_AND_TEAMS = 'CREATE_EDIT_PEOPLE_AND_TEAMS',
   CREATE_EDIT_CATEGORIES = 'CREATE_EDIT_CATEGORIES',
@@ -17,6 +15,21 @@ export enum BasicPermission {
   ACCESS_SETTINGS = 'ACCESS_SETTINGS'
 }
 
+export enum PermissionEntity {
+  PEOPLE_AND_TEAMS = 'PEOPLE_AND_TEAMS',
+  CATEGORIES = 'CATEGORIES',
+  WORK_ORDERS = 'WORK_ORDERS',
+  PREVENTIVE_MAINTENANCES = 'PREVENTIVE_MAINTENANCES',
+  ASSETS = 'ASSETS',
+  PARTS_AND_MULTIPARTS = 'PARTS_AND_MULTIPARTS',
+  PURCHASE_ORDERS = 'PURCHASE_ORDERS',
+  METERS = 'METERS',
+  VENDORS_AND_CUSTOMERS = 'VENDORS_AND_CUSTOMERS',
+  FILES = 'FILES',
+  LOCATIONS = 'LOCATIONS',
+  SETTINGS = 'SETTINGS',
+  REQUESTS = 'REQUESTS'
+}
 export type RoleCode =
   | 'ADMIN'
   | 'LIMITED_ADMIN'
@@ -31,7 +44,11 @@ export interface Role {
   users: number;
   externalId?: string;
   description?: string;
-  type: RoleType;
+  paid: boolean;
   code: RoleCode;
-  permissions: BasicPermission[];
+  createPermissions: PermissionEntity[];
+  viewPermissions: PermissionEntity[];
+  viewOtherPermissions: PermissionEntity[];
+  editOtherPermissions: PermissionEntity[];
+  deleteOtherPermissions: PermissionEntity[];
 }

@@ -145,15 +145,15 @@ function Roles() {
     }
   };
   const handleOpenDelete = (id: number) => {
-    changeCurrentLocation(id);
+    changeCurrentRole(id);
     setOpenDelete(true);
   };
-  const changeCurrentLocation = (id: number) => {
+  const changeCurrentRole = (id: number) => {
     const foundRole = roles.find((role) => role.id === id);
     setCurrentRole(foundRole);
   };
   const handleOpenUpdate = (id: number) => {
-    changeCurrentLocation(id);
+    changeCurrentRole(id);
     setOpenUpdateModal(true);
   };
   const closeConfirmDelete = () => setOpenDelete(false);
@@ -248,25 +248,22 @@ function Roles() {
       width: 150
     },
     {
-      field: 'type',
+      field: 'paid',
       headerName: t('Type'),
       description: t('Type'),
       width: 150,
       renderCell: (params: GridRenderCellParams<string>) => (
         <LabelWrapper
           sx={{
-            background:
-              params.value === 'free'
-                ? `${theme.colors.info.main}`
-                : `${theme.colors.success.main}`,
+            background: params.value
+              ? `${theme.colors.info.main}`
+              : `${theme.colors.success.main}`,
             color: `${theme.palette.getContrastText(
-              params.value === 'free'
-                ? theme.colors.info.dark
-                : theme.colors.success.dark
+              params.value ? theme.colors.info.dark : theme.colors.success.dark
             )}`
           }}
         >
-          {t(params.value)}
+          {params.value ? t('Paid') : t('Free')}
         </LabelWrapper>
       )
     },

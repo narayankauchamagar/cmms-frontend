@@ -11,7 +11,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import { BasicPermission, Role } from '../../../../models/owns/role';
+import { PermissionEntity, Role } from '../../../../models/owns/role';
 
 interface RoleDetailsProps {
   role: Role;
@@ -23,64 +23,86 @@ export default function RoleDetails(props: RoleDetailsProps) {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
   const allPermissions: {
-    [key: string]: { permission: BasicPermission; label: string }[];
+    [key: string]: {
+      label: string;
+      condition: (role: Role) => boolean;
+    }[];
   } = {
     create: [
       {
-        permission: BasicPermission.CREATE_EDIT_CATEGORIES,
-        label: t('Categories')
+        label: t('Categories'),
+        condition: (role: Role) =>
+          role.createPermissions.includes(PermissionEntity.CATEGORIES)
       },
       {
-        permission: BasicPermission.CREATE_EDIT_PEOPLE_AND_TEAMS,
-        label: t('People And Teams')
+        label: t('People And Teams'),
+        condition: (role: Role) =>
+          role.createPermissions.includes(PermissionEntity.PEOPLE_AND_TEAMS)
       }
     ],
     delete: [
       {
-        permission: BasicPermission.DELETE_PEOPLE_AND_TEAMS,
-        label: t('People And Teams')
+        label: t('People And Teams'),
+        condition: (role: Role) =>
+          role.deleteOtherPermissions.includes(
+            PermissionEntity.PEOPLE_AND_TEAMS
+          )
       },
       {
-        permission: BasicPermission.DELETE_FILES,
-        label: t('Files')
+        label: t('Files'),
+        condition: (role: Role) =>
+          role.deleteOtherPermissions.includes(PermissionEntity.FILES)
       },
       {
-        permission: BasicPermission.DELETE_CATEGORIES,
-        label: t('Categories')
+        label: t('Categories'),
+        condition: (role: Role) =>
+          role.deleteOtherPermissions.includes(PermissionEntity.CATEGORIES)
       },
       {
-        permission: BasicPermission.DELETE_METERS,
-        label: t('Meters')
+        label: t('Meters'),
+        condition: (role: Role) =>
+          role.deleteOtherPermissions.includes(PermissionEntity.METERS)
       },
       {
-        permission: BasicPermission.DELETE_LOCATIONS,
-        label: t('Locations')
+        label: t('Locations'),
+        condition: (role: Role) =>
+          role.deleteOtherPermissions.includes(PermissionEntity.LOCATIONS)
       },
       {
-        permission: BasicPermission.DELETE_ASSETS,
-        label: t('Assets')
+        label: t('Assets'),
+        condition: (role: Role) =>
+          role.deleteOtherPermissions.includes(PermissionEntity.ASSETS)
       },
       {
-        permission: BasicPermission.DELETE_PURCHASE_ORDERS,
-        label: t('Purchase Orders')
+        label: t('Purchase Orders'),
+        condition: (role: Role) =>
+          role.deleteOtherPermissions.includes(PermissionEntity.PURCHASE_ORDERS)
       },
       {
-        permission: BasicPermission.DELETE_VENDORS_AND_CUSTOMERS,
-        label: t('Vendors & Customers')
+        label: t('Vendors & Customers'),
+        condition: (role: Role) =>
+          role.deleteOtherPermissions.includes(
+            PermissionEntity.VENDORS_AND_CUSTOMERS
+          )
       },
       {
-        permission: BasicPermission.DELETE_PARTS_AND_MULTI_PARTS,
-        label: t('Parts & Sets of Parts')
+        label: t('Parts & Sets of Parts'),
+        condition: (role: Role) =>
+          role.deleteOtherPermissions.includes(
+            PermissionEntity.PARTS_AND_MULTIPARTS
+          )
       },
       {
-        permission: BasicPermission.DELETE_WORK_ORDERS,
-        label: t('Work Orders')
+        label: t('Work Orders'),
+        condition: (role: Role) =>
+          role.deleteOtherPermissions.includes(PermissionEntity.WORK_ORDERS)
       }
     ],
     access: [
       {
-        permission: BasicPermission.ACCESS_SETTINGS,
-        label: t('Settings')
+        label: t('Settings'),
+        condition: (role: Role) =>
+          role.viewPermissions.includes(PermissionEntity.SETTINGS)
       }
     ]
   };
@@ -98,15 +120,11 @@ export default function RoleDetails(props: RoleDetailsProps) {
           {title}
         </Typography>
       </Grid>
-      {allPermissions[name].map((permission, index) => (
+      {allPermissions[name].map(({ label, condition }, index) => (
         <Grid item key={index} xs={12} lg={12}>
           <FormControlLabel
-            control={
-              <Checkbox
-                checked={role.permissions.includes(permission.permission)}
-              />
-            }
-            label={permission.label}
+            control={<Checkbox checked={condition(role)} />}
+            label={label}
           />
         </Grid>
       ))}

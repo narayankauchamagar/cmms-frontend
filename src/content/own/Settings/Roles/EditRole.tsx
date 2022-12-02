@@ -16,9 +16,9 @@ import {
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { editRole } from '../../../../slices/role';
-import { BasicPermission, Role } from '../../../../models/owns/role';
+import { PermissionEntity, Role } from '../../../../models/owns/role';
 import { useTranslation } from 'react-i18next';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContext';
 import { useDispatch } from '../../../../store';
 
@@ -39,6 +39,10 @@ function EditRole({ role, open, onClose, formatValues }: EditRoleProps) {
   const onEditFailure = (err) =>
     showSnackBar(t("The Role couldn't be edited"), 'error');
 
+  useEffect(() => {
+    console.log(role);
+  }, [role]);
+
   return (
     <Dialog fullWidth maxWidth="md" open={open} onClose={onClose}>
       <DialogTitle
@@ -56,45 +60,48 @@ function EditRole({ role, open, onClose, formatValues }: EditRoleProps) {
       <Formik
         initialValues={{
           ...role,
-          createPeopleTeams: role?.permissions.includes(
-            BasicPermission.CREATE_EDIT_PEOPLE_AND_TEAMS
+          createPeopleTeams: role?.createPermissions.includes(
+            PermissionEntity.PEOPLE_AND_TEAMS
           ),
-          createCategories: role?.permissions.includes(
-            BasicPermission.CREATE_EDIT_CATEGORIES
+          createCategories: role?.createPermissions.includes(
+            PermissionEntity.CATEGORIES
           ),
-          deleteWorkOrders: role?.permissions.includes(
-            BasicPermission.DELETE_WORK_ORDERS
+          deleteWorkOrders: role?.deleteOtherPermissions.includes(
+            PermissionEntity.WORK_ORDERS
           ),
-          deletePreventiveMaintenanceTrigger: role?.permissions.includes(
-            BasicPermission.DELETE_PREVENTIVE_MAINTENANCE_TRIGGERS
+          deletePreventiveMaintenanceTrigger:
+            role?.deleteOtherPermissions.includes(
+              PermissionEntity.PREVENTIVE_MAINTENANCES
+            ),
+          deleteLocations: role?.deleteOtherPermissions.includes(
+            PermissionEntity.LOCATIONS
           ),
-          deleteLocations: role?.permissions.includes(
-            BasicPermission.DELETE_LOCATIONS
+          deleteAssets: role?.deleteOtherPermissions.includes(
+            PermissionEntity.ASSETS
           ),
-          deleteAssets: role?.permissions.includes(
-            BasicPermission.DELETE_ASSETS
+          deletePartsAndSets: role?.deleteOtherPermissions.includes(
+            PermissionEntity.PARTS_AND_MULTIPARTS
           ),
-          deletePartsAndSets: role?.permissions.includes(
-            BasicPermission.DELETE_PARTS_AND_MULTI_PARTS
+          deletePurchaseOrders: role?.deleteOtherPermissions.includes(
+            PermissionEntity.PURCHASE_ORDERS
           ),
-          deletePurchaseOrders: role?.permissions.includes(
-            BasicPermission.DELETE_PURCHASE_ORDERS
+          deleteMeters: role?.deleteOtherPermissions.includes(
+            PermissionEntity.METERS
           ),
-          deleteMeters: role?.permissions.includes(
-            BasicPermission.DELETE_METERS
+          deleteVendorsCustomers: role?.deleteOtherPermissions.includes(
+            PermissionEntity.VENDORS_AND_CUSTOMERS
           ),
-          deleteVendorsCustomers: role?.permissions.includes(
-            BasicPermission.DELETE_VENDORS_AND_CUSTOMERS
+          deleteCategories: role?.deleteOtherPermissions.includes(
+            PermissionEntity.CATEGORIES
           ),
-          deleteCategories: role?.permissions.includes(
-            BasicPermission.DELETE_CATEGORIES
+          deleteFiles: role?.deleteOtherPermissions.includes(
+            PermissionEntity.FILES
           ),
-          deleteFiles: role?.permissions.includes(BasicPermission.DELETE_FILES),
-          deletePeopleTeams: role?.permissions.includes(
-            BasicPermission.DELETE_PEOPLE_AND_TEAMS
+          deletePeopleTeams: role?.deleteOtherPermissions.includes(
+            PermissionEntity.PEOPLE_AND_TEAMS
           ),
-          accessSettings: role?.permissions.includes(
-            BasicPermission.ACCESS_SETTINGS
+          accessSettings: role?.viewPermissions.includes(
+            PermissionEntity.SETTINGS
           ),
           submit: null
         }}
