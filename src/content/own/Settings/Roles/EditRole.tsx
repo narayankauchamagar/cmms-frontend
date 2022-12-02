@@ -18,13 +18,13 @@ import * as Yup from 'yup';
 import { editRole } from '../../../../slices/role';
 import { PermissionEntity, Role } from '../../../../models/owns/role';
 import { useTranslation } from 'react-i18next';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContext';
 import { useDispatch } from '../../../../store';
 
 interface EditRoleProps {
   role: Role;
-  formatValues: (values) => any;
+  formatValues: (values, defaultPermissions: boolean) => any;
   open: boolean;
   onClose: () => void;
 }
@@ -38,10 +38,6 @@ function EditRole({ role, open, onClose, formatValues }: EditRoleProps) {
   };
   const onEditFailure = (err) =>
     showSnackBar(t("The Role couldn't be edited"), 'error');
-
-  useEffect(() => {
-    console.log(role);
-  }, [role]);
 
   return (
     <Dialog fullWidth maxWidth="md" open={open} onClose={onClose}>
@@ -114,7 +110,7 @@ function EditRole({ role, open, onClose, formatValues }: EditRoleProps) {
           _values,
           { resetForm, setErrors, setStatus, setSubmitting }
         ) => {
-          const formattedValues = formatValues(_values);
+          const formattedValues = formatValues({ ...role, ..._values }, false);
           setSubmitting(true);
           return dispatch(editRole(role.id, formattedValues))
             .then(onEditSuccess)

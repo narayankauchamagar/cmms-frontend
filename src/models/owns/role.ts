@@ -30,6 +30,12 @@ export enum PermissionEntity {
   SETTINGS = 'SETTINGS',
   REQUESTS = 'REQUESTS'
 }
+export type PermissionRoot =
+  | 'createPermissions'
+  | 'viewPermissions'
+  | 'viewOtherPermissions'
+  | 'editOtherPermissions'
+  | 'deleteOtherPermissions';
 export type RoleCode =
   | 'ADMIN'
   | 'LIMITED_ADMIN'

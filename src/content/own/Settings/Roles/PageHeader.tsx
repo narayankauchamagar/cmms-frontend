@@ -30,7 +30,7 @@ import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContex
 
 interface PageHeaderProps {
   rolesNumber: number;
-  formatValues: (values) => any;
+  formatValues: (values, defaultPermissions: boolean) => any;
 }
 
 function PageHeader({ rolesNumber, formatValues }: PageHeaderProps) {
@@ -116,7 +116,7 @@ function PageHeader({ rolesNumber, formatValues }: PageHeaderProps) {
             { resetForm, setErrors, setStatus, setSubmitting }
           ) => {
             setSubmitting(true);
-            const formattedValues = formatValues(_values);
+            const formattedValues = formatValues(_values, true);
             return dispatch(addRole(formattedValues))
               .then(onCreationSuccess)
               .catch(onCreationFailure)

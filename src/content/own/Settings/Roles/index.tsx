@@ -17,7 +17,11 @@ import { useDispatch, useSelector } from '../../../../store';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import PageHeader from './PageHeader';
 import { useTranslation } from 'react-i18next';
-import { BasicPermission, Role } from '../../../../models/owns/role';
+import {
+  PermissionEntity,
+  PermissionRoot,
+  Role
+} from '../../../../models/owns/role';
 import CloseIcon from '@mui/icons-material/Close';
 import {
   forwardRef,
@@ -41,6 +45,7 @@ import RoleDetails from './RoleDetails';
 import EditRole from './EditRole';
 import useAuth from '../../../../hooks/useAuth';
 import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContext';
+import { defaultPermissions } from '../../../../utils/roles';
 
 const DialogWrapper = styled(Dialog)(
   () => `
@@ -99,35 +104,168 @@ function Roles() {
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const dispatch = useDispatch();
   const { roles } = useSelector((state) => state.roles);
-  const permissionsMapping = new Map<string, BasicPermission>([
-    ['createPeopleTeams', BasicPermission.CREATE_EDIT_PEOPLE_AND_TEAMS],
-    ['createCategories', BasicPermission.CREATE_EDIT_CATEGORIES],
-    ['deleteWorkOrders', BasicPermission.DELETE_WORK_ORDERS],
+  const permissionsMapping = new Map<
+    string,
+    {
+      permissionsRoot: PermissionRoot;
+      permissions: PermissionEntity[];
+    }[]
+  >([
+    [
+      'createPeopleTeams',
+      [
+        {
+          permissionsRoot: 'createPermissions',
+          permissions: [PermissionEntity.PEOPLE_AND_TEAMS]
+        },
+        {
+          permissionsRoot: 'editOtherPermissions',
+          permissions: [PermissionEntity.PEOPLE_AND_TEAMS]
+        }
+      ]
+    ],
+    [
+      'createCategories',
+      [
+        {
+          permissionsRoot: 'createPermissions',
+          permissions: [PermissionEntity.CATEGORIES]
+        },
+        {
+          permissionsRoot: 'editOtherPermissions',
+          permissions: [PermissionEntity.CATEGORIES]
+        }
+      ]
+    ],
+    [
+      'deleteWorkOrders',
+      [
+        {
+          permissionsRoot: 'deleteOtherPermissions',
+          permissions: [PermissionEntity.WORK_ORDERS]
+        }
+      ]
+    ],
     [
       'deletePreventiveMaintenanceTrigger',
-      BasicPermission.DELETE_PREVENTIVE_MAINTENANCE_TRIGGERS
+      [
+        {
+          permissionsRoot: 'deleteOtherPermissions',
+          permissions: [PermissionEntity.PREVENTIVE_MAINTENANCES]
+        }
+      ]
     ],
-    ['deleteLocations', BasicPermission.DELETE_LOCATIONS],
-    ['deleteAssets', BasicPermission.DELETE_ASSETS],
-    ['deletePartsAndSets', BasicPermission.DELETE_PARTS_AND_MULTI_PARTS],
-    ['deletePurchaseOrders', BasicPermission.DELETE_PURCHASE_ORDERS],
-    ['deleteMeters', BasicPermission.DELETE_METERS],
-    ['deleteVendorsCustomers', BasicPermission.DELETE_VENDORS_AND_CUSTOMERS],
-    ['deleteCategories', BasicPermission.DELETE_CATEGORIES],
-    ['deleteFiles', BasicPermission.DELETE_FILES],
-    ['deletePeopleTeams', BasicPermission.DELETE_PEOPLE_AND_TEAMS],
-    ['accessSettings', BasicPermission.ACCESS_SETTINGS]
+    [
+      'deleteLocations',
+      [
+        {
+          permissionsRoot: 'deleteOtherPermissions',
+          permissions: [PermissionEntity.LOCATIONS]
+        }
+      ]
+    ],
+    [
+      'deleteAssets',
+      [
+        {
+          permissionsRoot: 'deleteOtherPermissions',
+          permissions: [PermissionEntity.ASSETS]
+        }
+      ]
+    ],
+    [
+      'deletePartsAndSets',
+      [
+        {
+          permissionsRoot: 'deleteOtherPermissions',
+          permissions: [PermissionEntity.PARTS_AND_MULTIPARTS]
+        }
+      ]
+    ],
+    [
+      'deletePurchaseOrders',
+      [
+        {
+          permissionsRoot: 'deleteOtherPermissions',
+          permissions: [PermissionEntity.PURCHASE_ORDERS]
+        }
+      ]
+    ],
+    [
+      'deleteMeters',
+      [
+        {
+          permissionsRoot: 'deleteOtherPermissions',
+          permissions: [PermissionEntity.METERS]
+        }
+      ]
+    ],
+    [
+      'deleteVendorsCustomers',
+      [
+        {
+          permissionsRoot: 'deleteOtherPermissions',
+          permissions: [PermissionEntity.VENDORS_AND_CUSTOMERS]
+        }
+      ]
+    ],
+    [
+      'deleteCategories',
+      [
+        {
+          permissionsRoot: 'deleteOtherPermissions',
+          permissions: [PermissionEntity.CATEGORIES]
+        }
+      ]
+    ],
+    [
+      'deleteFiles',
+      [
+        {
+          permissionsRoot: 'deleteOtherPermissions',
+          permissions: [PermissionEntity.FILES]
+        }
+      ]
+    ],
+    [
+      'deletePeopleTeams',
+      [
+        {
+          permissionsRoot: 'deleteOtherPermissions',
+          permissions: [PermissionEntity.PEOPLE_AND_TEAMS]
+        }
+      ]
+    ],
+    [
+      'accessSettings',
+      [
+        {
+          permissionsRoot: 'viewPermissions',
+          permissions: [PermissionEntity.SETTINGS]
+        }
+      ]
+    ]
   ]);
 
-  const formatValues = (values) => {
+  const formatValues = (values, useDefaultPermissions: boolean) => {
     values.companySettings = { id: companySettings.id };
     values.roleType = 'ROLE_CLIENT';
-    values.permissions = [];
-    permissionsMapping.forEach((permission, name) => {
-      if ((values[name] && values[name][0] === 'on') || values[name]) {
-        delete values[name];
-        values.permissions.push(permission);
-      }
+    values = useDefaultPermissions
+      ? { ...values, ...defaultPermissions }
+      : values;
+    permissionsMapping.forEach((configs, name) => {
+      configs.forEach((config) => {
+        if ((values[name] && values[name][0] === 'on') || values[name]) {
+          console.log(name, config);
+          values[config.permissionsRoot] = values[
+            config.permissionsRoot
+          ].concat(config.permissions);
+        } else if (!values[name] || values[name][0] === 'off') {
+          values[config.permissionsRoot] = values[
+            config.permissionsRoot
+          ].filter((permission) => !config.permissions.includes(permission));
+        }
+      });
     });
     return values;
   };
