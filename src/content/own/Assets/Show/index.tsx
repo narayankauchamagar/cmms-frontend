@@ -197,8 +197,7 @@ const ShowAsset = ({}: PropsType) => {
     }
   ];
   const shape = {
-    name: Yup.string().required(t('Asset name is required')),
-    location: Yup.object().required(t('Asset location is required')).nullable()
+    name: Yup.string().required(t('Asset name is required'))
   };
   const onEditSuccess = () => {
     setOpenUpdateModal(false);
@@ -239,10 +238,12 @@ const ShowAsset = ({}: PropsType) => {
             submitText={t('Save')}
             values={{
               ...asset,
-              location: {
-                label: asset?.location.name,
-                value: asset?.location.id
-              },
+              location: asset?.location
+                ? {
+                    label: asset?.location.name,
+                    value: asset?.location.id
+                  }
+                : null,
               primaryUser: asset?.primaryUser
                 ? {
                     label: `${asset?.primaryUser.firstName} ${asset?.primaryUser.lastName}`,

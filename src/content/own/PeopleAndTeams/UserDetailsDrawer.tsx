@@ -13,9 +13,9 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import Scrollbar from 'src/components/Scrollbar';
-import User from '../../../models/owns/user';
 import Chart from 'react-apexcharts';
 import type { ApexOptions } from 'apexcharts';
+import { OwnUser } from '../../../models/user';
 
 const AvatarPrimary = styled(Avatar)(
   ({ theme }) => `
@@ -37,7 +37,7 @@ const TabsContainerWrapper = styled(CardContent)(
 );
 
 interface PropsType {
-  user: User;
+  user: OwnUser;
 }
 
 function UserDetailsDrawer({ user }: PropsType) {
@@ -55,7 +55,7 @@ function UserDetailsDrawer({ user }: PropsType) {
     setCurrentTab(value);
   };
   const fieldsToRender = (
-    user: User
+    user: OwnUser
   ): { label: string; value: string | number }[] => [
     {
       label: t('ID'),
@@ -82,20 +82,12 @@ function UserDetailsDrawer({ user }: PropsType) {
       value: user.jobTitle
     },
     {
-      label: t('Company Name'),
-      value: user.companyName
-    },
-    {
-      label: t('Account Type'),
-      value: user.lastName
-    },
-    {
-      label: t('Last Visit'),
-      value: user.lastVisit
+      label: t('Role'),
+      value: user.role.name
     },
     {
       label: t('Hourly Rate'),
-      value: user.hourlyRate
+      value: user.rate
     }
   ];
 
@@ -222,17 +214,19 @@ function UserDetailsDrawer({ user }: PropsType) {
 
         {currentTab === 'overview' && (
           <>
-            {fieldsToRender(user).map(({ label, value }) => (
-              <>
-                <Box mt={1} px={3}>
-                  <Typography component="span" variant="subtitle2">
-                    {label}
-                  </Typography>
-                  <Typography variant="h5">{value}</Typography>
-                </Box>
-                <Divider sx={{ my: 1 }} />
-              </>
-            ))}
+            {fieldsToRender(user).map(({ label, value }) =>
+              value ? (
+                <>
+                  <Box mt={1} px={3}>
+                    <Typography component="span" variant="subtitle2">
+                      {label}
+                    </Typography>
+                    <Typography variant="h5">{value}</Typography>
+                  </Box>
+                  <Divider sx={{ my: 1 }} />
+                </>
+              ) : null
+            )}
           </>
         )}
 

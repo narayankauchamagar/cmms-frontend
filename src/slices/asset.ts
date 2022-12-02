@@ -37,12 +37,7 @@ const slice = createSlice({
     },
     editAsset(state: AssetState, action: PayloadAction<{ asset: AssetDTO }>) {
       const { asset } = action.payload;
-      state.assets = state.assets.map((asset1) => {
-        if (asset1.id === asset.id) {
-          return asset;
-        }
-        return asset1;
-      });
+      state.assetInfos[asset.id].asset = asset;
     },
     deleteAsset(state: AssetState, action: PayloadAction<{ id: number }>) {
       const { id } = action.payload;

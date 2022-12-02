@@ -10,6 +10,8 @@ import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import { useNavigate } from 'react-router-dom';
 import { AssetDTO } from '../../../../models/owns/asset';
+import { useDispatch } from '../../../../store';
+import { editAsset } from '../../../../slices/asset';
 
 interface PropsType {
   asset: AssetDTO;
@@ -17,7 +19,22 @@ interface PropsType {
 
 const AssetParts = ({ asset }: PropsType) => {
   const { t }: { t: any } = useTranslation();
-  const handleDelete = (id: number) => {};
+  const dispatch = useDispatch();
+
+  const handleDelete = (id: number) => {
+    if (
+      window.confirm(
+        t('Are you sure you want to remove this Part from this asset?')
+      )
+    ) {
+      dispatch(
+        editAsset(asset.id, {
+          ...asset,
+          parts: asset.parts.filter((part) => part.id !== id)
+        })
+      );
+    }
+  };
   const navigate = useNavigate();
   const columns: GridEnrichedColDef[] = [
     {

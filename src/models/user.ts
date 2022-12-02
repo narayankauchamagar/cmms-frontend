@@ -22,6 +22,7 @@ export interface OwnUser {
   username: string;
   id: number;
   email: string;
+  rate: number;
   phone: string;
   jobTitle: string;
   role: { name: string };

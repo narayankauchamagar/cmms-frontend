@@ -167,6 +167,7 @@ export default function SelectParts({ onChange, selected }: SelectPartsProps) {
           </Button>
           <Button
             variant="contained"
+            disabled={!selectedParts.length}
             onClick={() => {
               onChange(selectedParts);
               setOpenModal(false);

@@ -427,6 +427,9 @@ function Assets() {
                     };
                     dispatch(addAsset(formattedValues))
                       .then(onCreationSuccess)
+                      .then(() => {
+                        dispatch(getAssetChildren(0, []));
+                      })
                       .catch(onCreationFailure)
                       .finally(resolve);
                   })

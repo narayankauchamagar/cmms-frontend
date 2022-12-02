@@ -23,15 +23,16 @@ import {
 } from '@mui/x-data-grid';
 import { useContext, useEffect, useState } from 'react';
 import UserDetailsDrawer from './UserDetailsDrawer';
-import User, { users } from '../../../models/owns/user';
+import User from '../../../models/owns/user';
 import UserRoleCardList from './UserRoleCardList';
 import { EmailOutlined } from '@mui/icons-material';
 import { grey } from '@mui/material/colors';
 import { useParams } from 'react-router-dom';
 import { emailRegExp, isNumeric } from 'src/utils/validators';
-import { useDispatch } from '../../../store';
+import { useDispatch, useSelector } from '../../../store';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
-import { inviteUsers } from '../../../slices/user';
+import { getUsers, inviteUsers } from '../../../slices/user';
+import { OwnUser } from '../../../models/user';
 
 interface PropsType {
   values?: any;
@@ -42,9 +43,10 @@ interface PropsType {
 const People = ({ openModal, handleCloseModal }: PropsType) => {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
-  const [currentUser, setCurrentUser] = useState<User>();
+  const [currentUser, setCurrentUser] = useState<OwnUser>();
   const [detailDrawerOpen, setDetailDrawerOpen] = useState(false);
   const { peopleId } = useParams();
+  const { users } = useSelector((state) => state.users);
   const dispatch = useDispatch();
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const [emails, setEmails] = useState<string[]>([]);
@@ -77,6 +79,10 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
     }
   }, [users]);
 
+  useEffect(() => {
+    dispatch(getUsers());
+  }, []);
+
   // let fields: Array<IField> = [];
 
   // const shape = {};
@@ -107,22 +113,13 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
       width: 150
     },
     {
-      field: 'companyName',
-      headerName: t('Company Name'),
-      width: 150
+      field: 'role',
+      headerName: t('Role'),
+      width: 150,
+      valueGetter: (params) => params.value.name
     },
     {
-      field: 'accountType',
-      headerName: t('Account Type'),
-      width: 150
-    },
-    {
-      field: 'lastVisit',
-      headerName: t('Last Visit'),
-      width: 150
-    },
-    {
-      field: 'hourlyRate',
+      field: 'rate',
       headerName: t('Hourly Rate'),
       width: 150
     }

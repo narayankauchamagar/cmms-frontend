@@ -222,7 +222,13 @@ export default (props: PropsType) => {
             <SelectParts
               selected={values?.map(({ label, value }) => Number(value)) ?? []}
               onChange={(newParts) => {
-                handleChange(formik, field.name, newParts);
+                handleChange(
+                  formik,
+                  field.name,
+                  newParts.map((part) => {
+                    return { label: part.name, value: part.id };
+                  })
+                );
               }}
             />
           </>
