@@ -34,7 +34,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { isNumeric } from '../../../utils/validators';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import PriorityWrapper from '../components/PriorityWrapper';
-import { formatSelect, getPriorityLabel } from '../../../utils/formatters';
+import {
+  formatSelect,
+  formatSelectMultiple,
+  getPriorityLabel
+} from '../../../utils/formatters';
 import useAuth from '../../../hooks/useAuth';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 
@@ -116,7 +120,7 @@ function Files() {
     values.location = formatSelect(values.location);
     values.team = formatSelect(values.team);
     values.asset = formatSelect(values.asset);
-    values.assignedTo = formatSelect(values.assignedTo);
+    values.assignedTo = formatSelectMultiple(values.assignedTo);
     values.priority = values.priority?.value;
     //TODO
     delete values.category;
@@ -204,7 +208,7 @@ function Files() {
       required: true
     },
     {
-      name: 'assignedTo',
+      name: 'primaryUser',
       type: 'select',
       label: t('Primary Worker'),
       type2: 'user'
@@ -239,7 +243,7 @@ function Files() {
     const fieldsToConfigure = [
       'asset',
       'location',
-      'assignedTo',
+      'primaryUser',
       'category',
       'dueDate',
       'team'

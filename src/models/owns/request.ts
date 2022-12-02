@@ -17,7 +17,7 @@ export default interface Request extends Audit {
   image: File;
   asset: AssetMiniDTO;
   location: LocationMiniDTO;
-  assignedTo: UserMiniDTO;
+  primaryUser: UserMiniDTO;
   dueDate: string;
   category: string;
   team: Team;
@@ -34,7 +34,7 @@ export const requests: Request[] = [
     files: [],
     asset: assets[0],
     location: locations[0],
-    assignedTo: users[0],
+    primaryUser: users[0],
     dueDate: 'dsds',
     category: 'fdfs',
     team: teams[0],

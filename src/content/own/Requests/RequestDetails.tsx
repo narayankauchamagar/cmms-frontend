@@ -233,7 +233,7 @@ export default function RequestDetails({
                   </Link>
                 </Grid>
               )}
-              {request?.assignedTo && (
+              {request?.primaryUser && (
                 <Grid item xs={12} lg={6}>
                   <Typography
                     variant="h6"
@@ -241,8 +241,8 @@ export default function RequestDetails({
                   >
                     {t('Assigned To')}
                   </Typography>
-                  <Link variant="h6" href={getUserUrl(request.assignedTo.id)}>
-                    {`${request.assignedTo.firstName} ${request.assignedTo.lastName}`}
+                  <Link variant="h6" href={getUserUrl(request.primaryUser.id)}>
+                    {`${request.primaryUser.firstName} ${request.primaryUser.lastName}`}
                   </Link>
                 </Grid>
               )}
