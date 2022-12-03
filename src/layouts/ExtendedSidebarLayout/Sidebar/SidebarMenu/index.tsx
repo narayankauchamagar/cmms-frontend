@@ -1,8 +1,9 @@
-import { ListSubheader, alpha, Box, List, styled } from '@mui/material';
-import { useLocation, matchPath } from 'react-router-dom';
+import { alpha, Box, List, ListSubheader, styled } from '@mui/material';
+import { matchPath, useLocation } from 'react-router-dom';
 import SidebarMenuItem from './item';
 import menuItems, { MenuItem } from './items';
 import { useTranslation } from 'react-i18next';
+import useAuth from '../../../../hooks/useAuth';
 
 const MenuWrapper = styled(Box)(
   ({ theme }) => `
@@ -228,26 +229,35 @@ const reduceChildRoutes = ({
 function SidebarMenu() {
   const location = useLocation();
   const { t }: { t: any } = useTranslation();
+  const { hasViewPermission } = useAuth();
 
   return (
     <>
-      {menuItems.map((section) => (
-        <MenuWrapper key={section.heading}>
-          <List
-            component="div"
-            subheader={
-              <ListSubheader component="div" disableSticky>
-                {t(section.heading)}
-              </ListSubheader>
-            }
-          >
-            {renderSidebarMenuItems({
-              items: section.items,
-              path: location.pathname
-            })}
-          </List>
-        </MenuWrapper>
-      ))}
+      {menuItems
+        .map((section) => {
+          const sectionClone = { ...section };
+          sectionClone.items = sectionClone.items.filter((item) =>
+            item.permission ? hasViewPermission(item.permission) : true
+          );
+          return sectionClone;
+        })
+        .map((section) => (
+          <MenuWrapper key={section.heading}>
+            <List
+              component="div"
+              subheader={
+                <ListSubheader component="div" disableSticky>
+                  {t(section.heading)}
+                </ListSubheader>
+              }
+            >
+              {renderSidebarMenuItems({
+                items: section.items,
+                path: location.pathname
+              })}
+            </List>
+          </MenuWrapper>
+        ))}
     </>
   );
 }

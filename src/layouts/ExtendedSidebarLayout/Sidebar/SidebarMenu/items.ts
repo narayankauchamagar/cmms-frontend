@@ -22,12 +22,14 @@ import HandymanTwoToneIcon from '@mui/icons-material/HandymanTwoTone';
 import SpeedTwoToneIcon from '@mui/icons-material/SpeedTwoTone';
 import MoveToInboxTwoToneIcon from '@mui/icons-material/MoveToInboxTwoTone';
 import AssignmentTwoToneIcon from '@mui/icons-material/AssignmentTwoTone';
+import { PermissionEntity } from '../../../../models/owns/role';
 
 export interface MenuItem {
   link?: string;
   icon?: ReactNode;
   badge?: string;
   badgeTooltip?: string;
+  permission?: PermissionEntity;
 
   items?: MenuItem[];
   name: string;
@@ -36,6 +38,7 @@ export interface MenuItem {
 export interface MenuItems {
   items: MenuItem[];
   heading: string;
+  hidden?: PermissionEntity;
 }
 
 const menuItems: MenuItems[] = [
@@ -45,62 +48,74 @@ const menuItems: MenuItems[] = [
       {
         name: 'Work Orders',
         link: '/app/work-orders',
-        icon: AssignmentTwoToneIcon
+        icon: AssignmentTwoToneIcon,
+        permission: PermissionEntity.WORK_ORDERS
       },
       {
         name: 'Assets',
         link: '/app/assets',
-        icon: Inventory2TwoToneIcon
+        icon: Inventory2TwoToneIcon,
+        permission: PermissionEntity.ASSETS
       },
       {
         name: 'Files',
         link: '/app/files',
-        icon: AttachFileTwoToneIcon
+        icon: AttachFileTwoToneIcon,
+        permission: PermissionEntity.FILES
       },
       {
         name: 'Purchase Orders',
         link: '/app/purchase-orders',
-        icon: ReceiptTwoToneIcon
+        icon: ReceiptTwoToneIcon,
+        permission: PermissionEntity.PURCHASE_ORDERS
       },
       {
         name: 'Meters',
         link: '/app/meters',
-        icon: SpeedTwoToneIcon
+        icon: SpeedTwoToneIcon,
+        permission: PermissionEntity.METERS
       },
       {
         name: 'Requests',
         link: '/app/requests',
-        icon: MoveToInboxTwoToneIcon
+        icon: MoveToInboxTwoToneIcon,
+        permission: PermissionEntity.REQUESTS
       },
       {
         name: 'Locations',
         link: '/app/locations',
-        icon: LocationOnTwoToneIcon
+        icon: LocationOnTwoToneIcon,
+        permission: PermissionEntity.LOCATIONS
       },
       {
         name: 'Parts/Inventory',
         link: '/app/inventory/parts',
-        icon: HandymanTwoToneIcon
+        icon: HandymanTwoToneIcon,
+        permission: PermissionEntity.PARTS_AND_MULTIPARTS
       },
       {
         name: 'Categories',
         link: '/app/categories',
-        icon: CategoryTwoToneIcon
+        icon: CategoryTwoToneIcon,
+        permission: PermissionEntity.CATEGORIES
       },
       {
         name: 'Settings',
         link: '/app/settings',
-        icon: SettingsTwoToneIcon
+        icon: SettingsTwoToneIcon,
+        permission: PermissionEntity.SETTINGS
       },
       {
         name: 'Vendors & Customers',
         link: '/app/vendors-customers/vendors',
-        icon: GroupsTwoTone
+        icon: GroupsTwoTone,
+        permission: PermissionEntity.VENDORS_AND_CUSTOMERS
       },
       {
         name: 'People & Teams',
         link: '/app/people-teams',
-        icon: People
+        icon: People,
+        permission: PermissionEntity.PEOPLE_AND_TEAMS
       }
     ]
   },

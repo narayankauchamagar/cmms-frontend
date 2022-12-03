@@ -433,12 +433,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
   const register = async (values): Promise<void> => {
     const response = await api.post<{ message: string; success: boolean }>(
       'auth/signup',
-      values.role
-        ? {
-            ...values,
-            role: { id: values.role }
-          }
-        : values,
+      values,
       { headers: authHeader(true) }
     );
     const { message, success } = response;

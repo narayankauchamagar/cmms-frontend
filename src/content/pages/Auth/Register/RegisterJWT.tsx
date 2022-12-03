@@ -90,7 +90,7 @@ function RegisterJWT({
       validationSchema={Yup.object().shape(getFieldsAndShapes()[1])}
       onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
         setSubmitting(true);
-        return register(values)
+        return register(role ? { ...values, role: { id: role } } : values)
           .then()
           .catch((err) =>
             showSnackBar(t("The registration didn't succeed"), 'error')

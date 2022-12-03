@@ -292,6 +292,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
                         handleCloseModal();
                         setEmails([]);
                         setCurrentEmail('');
+                        showSnackBar(t('Users have been invited'), 'success');
                       })
                       .finally(() => setIsInviteSubmitting(false));
                   } else
