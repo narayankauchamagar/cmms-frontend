@@ -34,6 +34,9 @@ import { isNumeric } from '../../../utils/validators';
 import { formatSelect } from '../../../utils/formatters';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
+import useAuth from '../../../hooks/useAuth';
+import { PermissionEntity } from '../../../models/owns/role';
+import PermissionErrorMessage from '../components/PermissionErrorMessage';
 
 function PurchaseOrders() {
   const { t }: { t: any } = useTranslation();
@@ -43,6 +46,7 @@ function PurchaseOrders() {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const { purchaseOrderId } = useParams();
+  const { hasViewPermission } = useAuth();
   const dispatch = useDispatch();
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const { purchaseOrders } = useSelector((state) => state.purchaseOrders);
@@ -69,7 +73,8 @@ function PurchaseOrders() {
   };
   useEffect(() => {
     setTitle(t('Purchase Orders'));
-    dispatch(getPurchaseOrders());
+    if (hasViewPermission(PermissionEntity.PURCHASE_ORDERS))
+      dispatch(getPurchaseOrders());
   }, []);
 
   useEffect(() => {
@@ -398,90 +403,99 @@ function PurchaseOrders() {
       </DialogContent>
     </Dialog>
   );
-  return (
-    <>
-      <Helmet>
-        <title>{t('Purchase Orders')}</title>
-      </Helmet>
-      <Grid
-        container
-        justifyContent="center"
-        alignItems="stretch"
-        spacing={1}
-        paddingX={4}
-      >
+  if (hasViewPermission(PermissionEntity.PURCHASE_ORDERS))
+    return (
+      <>
+        <Helmet>
+          <title>{t('Purchase Orders')}</title>
+        </Helmet>
         <Grid
-          item
-          xs={12}
-          display="flex"
-          flexDirection="row"
-          justifyContent="right"
-          alignItems="center"
+          container
+          justifyContent="center"
+          alignItems="stretch"
+          spacing={1}
+          paddingX={4}
         >
-          <Button
-            onClick={() => navigate('/app/purchase-orders/create')}
-            startIcon={<AddTwoToneIcon />}
-            sx={{ mx: 6, my: 1 }}
-            variant="contained"
+          <Grid
+            item
+            xs={12}
+            display="flex"
+            flexDirection="row"
+            justifyContent="right"
+            alignItems="center"
           >
-            Purchase Order
-          </Button>
+            <Button
+              onClick={() => navigate('/app/purchase-orders/create')}
+              startIcon={<AddTwoToneIcon />}
+              sx={{ mx: 6, my: 1 }}
+              variant="contained"
+            >
+              Purchase Order
+            </Button>
+          </Grid>
+          <Grid item xs={12}>
+            <Card
+              sx={{
+                p: 2,
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+              }}
+            >
+              <Box sx={{ height: 500, width: '95%' }}>
+                <CustomDataGrid
+                  columns={columns}
+                  rows={purchaseOrders}
+                  components={{
+                    Toolbar: GridToolbar
+                  }}
+                  onRowClick={(params) => handleOpenDetails(Number(params.id))}
+                  initialState={{
+                    columns: {
+                      columnVisibilityModel: {}
+                    }
+                  }}
+                />
+              </Box>
+            </Card>
+          </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <Card
-            sx={{
-              p: 2,
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between'
-            }}
-          >
-            <Box sx={{ height: 500, width: '95%' }}>
-              <CustomDataGrid
-                columns={columns}
-                rows={purchaseOrders}
-                components={{
-                  Toolbar: GridToolbar
-                }}
-                onRowClick={(params) => handleOpenDetails(Number(params.id))}
-                initialState={{
-                  columns: {
-                    columnVisibilityModel: {}
-                  }
-                }}
-              />
-            </Box>
-          </Card>
-        </Grid>
-      </Grid>
-      <Drawer
-        anchor="right"
-        open={openDrawer}
-        onClose={handleCloseDetails}
-        PaperProps={{
-          sx: { width: '50%' }
-        }}
-      >
-        <PurchaseOrderDetails
-          purchaseOrder={currentPurchaseOrder}
-          handleOpenUpdate={handleOpenUpdate}
-          handleDelete={() => setOpenDelete(true)}
+        <Drawer
+          anchor="right"
+          open={openDrawer}
+          onClose={handleCloseDetails}
+          PaperProps={{
+            sx: { width: '50%' }
+          }}
+        >
+          <PurchaseOrderDetails
+            purchaseOrder={currentPurchaseOrder}
+            handleOpenUpdate={handleOpenUpdate}
+            handleDelete={() => setOpenDelete(true)}
+          />
+        </Drawer>
+        {renderUpdateModal()}
+        <ConfirmDialog
+          open={openDelete}
+          onCancel={() => {
+            setOpenDelete(false);
+            setOpenDrawer(true);
+          }}
+          onConfirm={() => handleDelete(currentPurchaseOrder?.id)}
+          confirmText={t('Delete')}
+          question={t('Are you sure you want to delete this Purchase Order?')}
         />
-      </Drawer>
-      {renderUpdateModal()}
-      <ConfirmDialog
-        open={openDelete}
-        onCancel={() => {
-          setOpenDelete(false);
-          setOpenDrawer(true);
-        }}
-        onConfirm={() => handleDelete(currentPurchaseOrder?.id)}
-        confirmText={t('Delete')}
-        question={t('Are you sure you want to delete this Purchase Order?')}
+      </>
+    );
+  else
+    return (
+      <PermissionErrorMessage
+        message={
+          "You don't have access to Purchase Orders. Please contact your administrator if you should have access"
+        }
       />
-    </>
-  );
+    );
 }
 
 export default PurchaseOrders;

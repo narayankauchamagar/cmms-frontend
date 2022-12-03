@@ -52,6 +52,9 @@ import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext
 import { DataGridProProps, useGridApiRef } from '@mui/x-data-grid-pro';
 import { GroupingCellWithLazyLoading } from '../Assets/GroupingCellWithLazyLoading';
 import { AssetRow } from '../../../models/owns/asset';
+import useAuth from '../../../hooks/useAuth';
+import { PermissionEntity } from '../../../models/owns/role';
+import PermissionErrorMessage from '../components/PermissionErrorMessage';
 
 function Locations() {
   const { t }: { t: any } = useTranslation();
@@ -76,6 +79,7 @@ function Locations() {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const { setTitle } = useContext(TitleContext);
   const { locationId } = useParams();
+  const { hasViewPermission } = useAuth();
   const [currentLocation, setCurrentLocation] = useState<Location>();
   const handleOpenUpdate = () => {
     setOpenUpdateModal(true);
@@ -128,8 +132,10 @@ function Locations() {
   };
   useEffect(() => {
     setTitle(t('Locations'));
-    dispatch(getLocations());
-    dispatch(getLocationChildren(0, []));
+    if (hasViewPermission(PermissionEntity.LOCATIONS)) {
+      dispatch(getLocations());
+      dispatch(getLocationChildren(0, []));
+    }
   }, []);
 
   useEffect(() => {
@@ -453,137 +459,148 @@ function Locations() {
       </DialogContent>
     </Dialog>
   );
-  return (
-    <>
-      <Helmet>
-        <title>{t('Locations')}</title>
-      </Helmet>
-      <Grid
-        container
-        justifyContent="center"
-        alignItems="stretch"
-        spacing={1}
-        paddingX={4}
-      >
+  if (hasViewPermission(PermissionEntity.LOCATIONS))
+    return (
+      <>
+        <Helmet>
+          <title>{t('Locations')}</title>
+        </Helmet>
         <Grid
-          item
-          xs={12}
-          display="flex"
-          flexDirection="row"
-          justifyContent="space-between"
-          alignItems="center"
+          container
+          justifyContent="center"
+          alignItems="stretch"
+          spacing={1}
+          paddingX={4}
         >
-          <Tabs
-            onChange={handleTabsChange}
-            value={currentTab}
-            variant="scrollable"
-            scrollButtons="auto"
-            textColor="primary"
-            indicatorColor="primary"
+          <Grid
+            item
+            xs={12}
+            display="flex"
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="center"
           >
-            {tabs.map((tab) => (
-              <Tab key={tab.value} label={tab.label} value={tab.value} />
-            ))}
-          </Tabs>
-          <Button
-            onClick={() => setOpenAddModal(true)}
-            startIcon={<AddTwoToneIcon />}
-            sx={{ mx: 6, my: 1 }}
-            variant="contained"
-          >
-            Location
-          </Button>
-        </Grid>
-        {currentTab === 'list' && (
-          <Grid item xs={12}>
-            <Card
-              sx={{
-                p: 2,
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
+            <Tabs
+              onChange={handleTabsChange}
+              value={currentTab}
+              variant="scrollable"
+              scrollButtons="auto"
+              textColor="primary"
+              indicatorColor="primary"
             >
-              <Box sx={{ height: 500, width: '95%' }}>
-                <CustomDataGrid
-                  treeData
-                  columns={columns}
-                  rows={locationsHierarchy}
-                  apiRef={apiRef}
-                  getTreeDataPath={(row) =>
-                    row.hierarchy.map((id) => id.toString())
-                  }
-                  groupingColDef={groupingColDef}
-                  components={{
-                    Toolbar: GridToolbar
-                  }}
-                  onRowClick={(params) => handleOpenDetails(Number(params.id))}
-                  initialState={{
-                    columns: {
-                      columnVisibilityModel: {}
+              {tabs.map((tab) => (
+                <Tab key={tab.value} label={tab.label} value={tab.value} />
+              ))}
+            </Tabs>
+            <Button
+              onClick={() => setOpenAddModal(true)}
+              startIcon={<AddTwoToneIcon />}
+              sx={{ mx: 6, my: 1 }}
+              variant="contained"
+            >
+              Location
+            </Button>
+          </Grid>
+          {currentTab === 'list' && (
+            <Grid item xs={12}>
+              <Card
+                sx={{
+                  p: 2,
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}
+              >
+                <Box sx={{ height: 500, width: '95%' }}>
+                  <CustomDataGrid
+                    treeData
+                    columns={columns}
+                    rows={locationsHierarchy}
+                    apiRef={apiRef}
+                    getTreeDataPath={(row) =>
+                      row.hierarchy.map((id) => id.toString())
                     }
-                  }}
+                    groupingColDef={groupingColDef}
+                    components={{
+                      Toolbar: GridToolbar
+                    }}
+                    onRowClick={(params) =>
+                      handleOpenDetails(Number(params.id))
+                    }
+                    initialState={{
+                      columns: {
+                        columnVisibilityModel: {}
+                      }
+                    }}
+                  />
+                </Box>
+              </Card>
+            </Grid>
+          )}
+          {currentTab === 'map' && (
+            <Grid item xs={12}>
+              <Card
+                sx={{
+                  p: 2,
+                  justifyContent: 'center'
+                }}
+              >
+                <Map
+                  dimensions={{ width: 1000, height: 500 }}
+                  locations={locations
+                    .filter((location) => location.longitude)
+                    .map(({ name, longitude, latitude, address, id }) => {
+                      return {
+                        title: name,
+                        coordinates: {
+                          lng: longitude,
+                          lat: latitude
+                        },
+                        address,
+                        id
+                      };
+                    })}
                 />
-              </Box>
-            </Card>
-          </Grid>
-        )}
-        {currentTab === 'map' && (
-          <Grid item xs={12}>
-            <Card
-              sx={{
-                p: 2,
-                justifyContent: 'center'
-              }}
-            >
-              <Map
-                dimensions={{ width: 1000, height: 500 }}
-                locations={locations
-                  .filter((location) => location.longitude)
-                  .map(({ name, longitude, latitude, address, id }) => {
-                    return {
-                      title: name,
-                      coordinates: {
-                        lng: longitude,
-                        lat: latitude
-                      },
-                      address,
-                      id
-                    };
-                  })}
-              />
-            </Card>
-          </Grid>
-        )}
-      </Grid>
-      {renderLocationAddModal()}
-      {renderLocationUpdateModal()}
-      <Drawer
-        anchor="right"
-        open={openDrawer}
-        onClose={handleCloseDetails}
-        PaperProps={{
-          sx: { width: '50%' }
-        }}
-      >
-        <LocationDetails
-          location={currentLocation}
-          handleOpenUpdate={handleOpenUpdate}
-          handleOpenDelete={onOpenDeleteDialog}
+              </Card>
+            </Grid>
+          )}
+        </Grid>
+        {renderLocationAddModal()}
+        {renderLocationUpdateModal()}
+        <Drawer
+          anchor="right"
+          open={openDrawer}
+          onClose={handleCloseDetails}
+          PaperProps={{
+            sx: { width: '50%' }
+          }}
+        >
+          <LocationDetails
+            location={currentLocation}
+            handleOpenUpdate={handleOpenUpdate}
+            handleOpenDelete={onOpenDeleteDialog}
+          />
+        </Drawer>
+        <ConfirmDialog
+          open={openDelete}
+          onCancel={() => {
+            setOpenDelete(false);
+          }}
+          onConfirm={() => handleDelete(currentLocation?.id)}
+          confirmText={t('Delete')}
+          question={t('Are you sure you want to delete this Location?')}
         />
-      </Drawer>
-      <ConfirmDialog
-        open={openDelete}
-        onCancel={() => {
-          setOpenDelete(false);
-        }}
-        onConfirm={() => handleDelete(currentLocation?.id)}
-        confirmText={t('Delete')}
-        question={t('Are you sure you want to delete this Location?')}
+      </>
+    );
+  else
+    return (
+      <PermissionErrorMessage
+        message={
+          "You don't have access to Locations. Please contact your administrator if you should have access"
+        }
       />
-    </>
-  );
+    );
 }
 
 export default Locations;

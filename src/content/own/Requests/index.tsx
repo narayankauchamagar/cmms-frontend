@@ -42,6 +42,8 @@ import {
 import useAuth from '../../../hooks/useAuth';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 import { getWOBaseFields } from '../../../utils/fields';
+import { PermissionEntity } from '../../../models/owns/role';
+import PermissionErrorMessage from '../components/PermissionErrorMessage';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
@@ -49,7 +51,7 @@ function Files() {
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
-  const { companySettings } = useAuth();
+  const { companySettings, hasViewPermission } = useAuth();
   const { workOrderRequestConfiguration } = companySettings;
   const [currentRequest, setCurrentRequest] = useState<Request>();
   const { uploadFiles } = useContext(CompanySettingsContext);
@@ -62,7 +64,7 @@ function Files() {
 
   useEffect(() => {
     setTitle(t('Requests'));
-    dispatch(getRequests());
+    if (hasViewPermission(PermissionEntity.REQUESTS)) dispatch(getRequests());
   }, []);
   useEffect(() => {
     if (requests?.length && requestId && isNumeric(requestId)) {
@@ -347,92 +349,101 @@ function Files() {
       </DialogContent>
     </Dialog>
   );
-  return (
-    <>
-      <Helmet>
-        <title>{t('Requests')}</title>
-      </Helmet>
-      {renderAddModal()}
-      {renderUpdateModal()}
-      <Grid
-        container
-        justifyContent="center"
-        alignItems="stretch"
-        spacing={1}
-        paddingX={4}
-      >
+  if (hasViewPermission(PermissionEntity.REQUESTS))
+    return (
+      <>
+        <Helmet>
+          <title>{t('Requests')}</title>
+        </Helmet>
+        {renderAddModal()}
+        {renderUpdateModal()}
         <Grid
-          item
-          xs={12}
-          display="flex"
-          flexDirection="row"
-          justifyContent="right"
-          alignItems="center"
+          container
+          justifyContent="center"
+          alignItems="stretch"
+          spacing={1}
+          paddingX={4}
         >
-          <Button
-            startIcon={<AddTwoToneIcon />}
-            sx={{ mx: 6, my: 1 }}
-            variant="contained"
-            onClick={() => setOpenAddModal(true)}
+          <Grid
+            item
+            xs={12}
+            display="flex"
+            flexDirection="row"
+            justifyContent="right"
+            alignItems="center"
           >
-            Request
-          </Button>
+            <Button
+              startIcon={<AddTwoToneIcon />}
+              sx={{ mx: 6, my: 1 }}
+              variant="contained"
+              onClick={() => setOpenAddModal(true)}
+            >
+              Request
+            </Button>
+          </Grid>
+          <Grid item xs={12}>
+            <Card
+              sx={{
+                p: 2,
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+              }}
+            >
+              <Box sx={{ height: 500, width: '95%' }}>
+                <CustomDataGrid
+                  columns={columns}
+                  rows={requests}
+                  onRowClick={({ id }) => handleOpenDetails(Number(id))}
+                  components={{
+                    Toolbar: GridToolbar
+                  }}
+                  initialState={{
+                    columns: {
+                      columnVisibilityModel: {}
+                    }
+                  }}
+                />
+              </Box>
+            </Card>
+          </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <Card
-            sx={{
-              p: 2,
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between'
-            }}
-          >
-            <Box sx={{ height: 500, width: '95%' }}>
-              <CustomDataGrid
-                columns={columns}
-                rows={requests}
-                onRowClick={({ id }) => handleOpenDetails(Number(id))}
-                components={{
-                  Toolbar: GridToolbar
-                }}
-                initialState={{
-                  columns: {
-                    columnVisibilityModel: {}
-                  }
-                }}
-              />
-            </Box>
-          </Card>
-        </Grid>
-      </Grid>
-      <Drawer
-        anchor="right"
-        open={openDrawer}
-        onClose={handleCloseDetails}
-        PaperProps={{
-          sx: { width: '50%' }
-        }}
-      >
-        <RequestDetails
+        <Drawer
+          anchor="right"
+          open={openDrawer}
           onClose={handleCloseDetails}
-          request={currentRequest}
-          handleOpenUpdate={handleOpenUpdate}
-          handleOpenDelete={() => setOpenDelete(true)}
+          PaperProps={{
+            sx: { width: '50%' }
+          }}
+        >
+          <RequestDetails
+            onClose={handleCloseDetails}
+            request={currentRequest}
+            handleOpenUpdate={handleOpenUpdate}
+            handleOpenDelete={() => setOpenDelete(true)}
+          />
+        </Drawer>
+        <ConfirmDialog
+          open={openDelete}
+          onCancel={() => {
+            setOpenDelete(false);
+            setOpenDrawer(true);
+          }}
+          onConfirm={() => handleDelete(currentRequest?.id)}
+          confirmText={t('Delete')}
+          question={t('Are you sure you want to delete this Request?')}
         />
-      </Drawer>
-      <ConfirmDialog
-        open={openDelete}
-        onCancel={() => {
-          setOpenDelete(false);
-          setOpenDrawer(true);
-        }}
-        onConfirm={() => handleDelete(currentRequest?.id)}
-        confirmText={t('Delete')}
-        question={t('Are you sure you want to delete this Request?')}
+      </>
+    );
+  else
+    return (
+      <PermissionErrorMessage
+        message={
+          "You don't have access to Requests. Please contact your administrator if you should have access"
+        }
       />
-    </>
-  );
+    );
 }
 
 export default Files;

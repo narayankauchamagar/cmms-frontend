@@ -5,6 +5,9 @@ import { TitleContext } from '../../../contexts/TitleContext';
 import { useLocation, useParams } from 'react-router-dom';
 import Parts from './Parts';
 import Sets from './Sets';
+import PermissionErrorMessage from '../components/PermissionErrorMessage';
+import useAuth from '../../../hooks/useAuth';
+import { PermissionEntity } from '../../../models/owns/role';
 
 interface PropsType {}
 
@@ -14,6 +17,7 @@ const VendorsAndCustomers = ({}: PropsType) => {
   const { setTitle } = useContext(TitleContext);
   const location = useLocation();
   const { partId, setId } = useParams();
+  const { hasViewPermission } = useAuth();
 
   useEffect(() => {
     setTitle('Parts & Inventory');
@@ -30,19 +34,28 @@ const VendorsAndCustomers = ({}: PropsType) => {
     (tab) => tab.value === arr[arr.length - minus]
   );
 
-  return (
-    <MultipleTabsLayout
-      basePath={`/app/inventory`}
-      tabs={tabs}
-      tabIndex={tabIndex}
-      title={`Inventory`}
-      action={action}
-      actionTitle={tabs[tabIndex].label}
-    >
-      {tabIndex === 0 && <Parts setAction={setAction} />}
-      {tabIndex === 1 && <Sets setAction={setAction} />}
-    </MultipleTabsLayout>
-  );
+  if (hasViewPermission(PermissionEntity.PARTS_AND_MULTIPARTS))
+    return (
+      <MultipleTabsLayout
+        basePath={`/app/inventory`}
+        tabs={tabs}
+        tabIndex={tabIndex}
+        title={`Inventory`}
+        action={action}
+        actionTitle={tabs[tabIndex].label}
+      >
+        {tabIndex === 0 && <Parts setAction={setAction} />}
+        {tabIndex === 1 && <Sets setAction={setAction} />}
+      </MultipleTabsLayout>
+    );
+  else
+    return (
+      <PermissionErrorMessage
+        message={
+          "You don't have access to The Inventory. Please contact your administrator if you should have access"
+        }
+      />
+    );
 };
 
 export default VendorsAndCustomers;

@@ -5,6 +5,9 @@ import { TitleContext } from '../../../contexts/TitleContext';
 import { useLocation } from 'react-router-dom';
 import People from './People';
 import Teams from './Teams';
+import useAuth from '../../../hooks/useAuth';
+import { PermissionEntity } from '../../../models/owns/role';
+import PermissionErrorMessage from '../components/PermissionErrorMessage';
 
 interface PropsType {}
 
@@ -14,6 +17,7 @@ const PeopleAndTeams = ({}: PropsType) => {
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const { setTitle } = useContext(TitleContext);
   const location = useLocation();
+  const { hasViewPermission } = useAuth();
 
   const handleOpenAddModal = () => setOpenAddModal(true);
   const handleCloseAddModal = () => setOpenAddModal(false);
@@ -30,28 +34,37 @@ const PeopleAndTeams = ({}: PropsType) => {
     { value: 'teams', label: t('Teams') }
   ];
 
-  return (
-    <MultipleTabsLayout
-      basePath="/app/people-teams"
-      tabs={tabs}
-      tabIndex={tabIndex}
-      title={'People & Teams'}
-      action={handleOpenAddModal}
-      actionTitle={t(`${tabs[tabIndex].label}`)}
-    >
-      {tabIndex === 0 ? (
-        <People
-          openModal={openAddModal}
-          handleCloseModal={handleCloseAddModal}
-        />
-      ) : (
-        <Teams
-          openModal={openAddModal}
-          handleCloseModal={handleCloseAddModal}
-        />
-      )}
-    </MultipleTabsLayout>
-  );
+  if (hasViewPermission(PermissionEntity.PEOPLE_AND_TEAMS))
+    return (
+      <MultipleTabsLayout
+        basePath="/app/people-teams"
+        tabs={tabs}
+        tabIndex={tabIndex}
+        title={'People & Teams'}
+        action={handleOpenAddModal}
+        actionTitle={t(`${tabs[tabIndex].label}`)}
+      >
+        {tabIndex === 0 ? (
+          <People
+            openModal={openAddModal}
+            handleCloseModal={handleCloseAddModal}
+          />
+        ) : (
+          <Teams
+            openModal={openAddModal}
+            handleCloseModal={handleCloseAddModal}
+          />
+        )}
+      </MultipleTabsLayout>
+    );
+  else
+    return (
+      <PermissionErrorMessage
+        message={
+          "You don't have access to People And Teams. Please contact your administrator if you should have access"
+        }
+      />
+    );
 };
 
 export default PeopleAndTeams;

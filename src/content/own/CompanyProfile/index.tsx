@@ -13,7 +13,7 @@ import useAuth from '../../../hooks/useAuth';
 
 function CompanyProfile() {
   const { t }: { t: any } = useTranslation();
-  const { company } = useAuth();
+  const { company, user } = useAuth();
   const { setTitle } = useContext(TitleContext);
 
   useEffect(() => {
@@ -48,9 +48,11 @@ function CompanyProfile() {
           <Grid item xs={12}>
             <CompanyDetails company={company} />
           </Grid>
-          <Grid item xs={12}>
-            <CompanyPlan plan={company.subscription.subscriptionPlan} />
-          </Grid>
+          {user.ownsCompany && (
+            <Grid item xs={12}>
+              <CompanyPlan plan={company.subscription.subscriptionPlan} />
+            </Grid>
+          )}
         </Grid>
       </Box>
     </>

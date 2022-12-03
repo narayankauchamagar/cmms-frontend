@@ -46,6 +46,8 @@ import { patchTasks } from '../../../slices/task';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 import useAuth from '../../../hooks/useAuth';
 import { getWOBaseValues } from '../../../utils/fields';
+import { PermissionEntity } from '../../../models/owns/role';
+import PermissionErrorMessage from '../components/PermissionErrorMessage';
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
@@ -70,6 +72,7 @@ function WorkOrders() {
   const { setTitle } = useContext(TitleContext);
   const { workOrderId } = useParams();
   const { showSnackBar } = useContext(CustomSnackBarContext);
+  const { hasViewPermission } = useAuth();
   const [currentWorkOrder, setCurrentWorkOrder] = useState<WorkOrder>();
   const { workOrdersRoot2 } = useSelector((state) => state.tasks);
   const tasks = workOrdersRoot2[currentWorkOrder?.id] ?? [];
@@ -97,7 +100,8 @@ function WorkOrders() {
   };
   useEffect(() => {
     setTitle(t('Work Orders'));
-    dispatch(getWorkOrders());
+    if (hasViewPermission(PermissionEntity.WORK_ORDERS))
+      dispatch(getWorkOrders());
   }, []);
 
   useEffect(() => {
@@ -609,93 +613,102 @@ function WorkOrders() {
       </DialogContent>
     </Dialog>
   );
-  return (
-    <>
-      <Helmet>
-        <title>{t('Work Orders')}</title>
-      </Helmet>
-      <Grid
-        container
-        justifyContent="center"
-        alignItems="stretch"
-        spacing={1}
-        paddingX={4}
-      >
+  if (hasViewPermission(PermissionEntity.WORK_ORDERS))
+    return (
+      <>
+        <Helmet>
+          <title>{t('Work Orders')}</title>
+        </Helmet>
         <Grid
-          item
-          xs={12}
-          display="flex"
-          flexDirection="row"
-          justifyContent="space-between"
-          alignItems="center"
+          container
+          justifyContent="center"
+          alignItems="stretch"
+          spacing={1}
+          paddingX={4}
         >
-          <Tabs
-            onChange={handleTabsChange}
-            value={currentTab}
-            variant="scrollable"
-            scrollButtons="auto"
-            textColor="primary"
-            indicatorColor="primary"
+          <Grid
+            item
+            xs={12}
+            display="flex"
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="center"
           >
-            {tabs.map((tab) => (
-              <Tab key={tab.value} label={tab.label} value={tab.value} />
-            ))}
-          </Tabs>
-          <Button
-            onClick={() => setOpenAddModal(true)}
-            startIcon={<AddTwoToneIcon />}
-            sx={{ mx: 6, my: 1 }}
-            variant="contained"
-          >
-            Work Order
-          </Button>
+            <Tabs
+              onChange={handleTabsChange}
+              value={currentTab}
+              variant="scrollable"
+              scrollButtons="auto"
+              textColor="primary"
+              indicatorColor="primary"
+            >
+              {tabs.map((tab) => (
+                <Tab key={tab.value} label={tab.label} value={tab.value} />
+              ))}
+            </Tabs>
+            <Button
+              onClick={() => setOpenAddModal(true)}
+              startIcon={<AddTwoToneIcon />}
+              sx={{ mx: 6, my: 1 }}
+              variant="contained"
+            >
+              Work Order
+            </Button>
+          </Grid>
+          <Grid item xs={12}>
+            <Card
+              sx={{
+                p: 2,
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+              }}
+            >
+              <Box sx={{ height: 500, width: '95%' }}>
+                <CustomDataGrid
+                  columns={columns}
+                  rows={workOrders}
+                  components={{
+                    Toolbar: GridToolbar
+                  }}
+                  onRowClick={(params) => handleOpenDetails(Number(params.id))}
+                  initialState={{
+                    columns: {
+                      columnVisibilityModel: {}
+                    }
+                  }}
+                />
+              </Box>
+            </Card>
+          </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <Card
-            sx={{
-              p: 2,
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between'
-            }}
-          >
-            <Box sx={{ height: 500, width: '95%' }}>
-              <CustomDataGrid
-                columns={columns}
-                rows={workOrders}
-                components={{
-                  Toolbar: GridToolbar
-                }}
-                onRowClick={(params) => handleOpenDetails(Number(params.id))}
-                initialState={{
-                  columns: {
-                    columnVisibilityModel: {}
-                  }
-                }}
-              />
-            </Box>
-          </Card>
-        </Grid>
-      </Grid>
-      {renderWorkOrderAddModal()}
-      {renderWorkOrderUpdateModal()}
-      <Drawer
-        anchor="right"
-        open={openDrawer}
-        onClose={handleCloseDetails}
-        PaperProps={{
-          sx: { width: '50%' }
-        }}
-      >
-        <WorkOrderDetails
-          workOrder={currentWorkOrder}
-          handleUpdate={handleOpenUpdate}
-          tasks={tasks}
-        />
-      </Drawer>
-    </>
-  );
+        {renderWorkOrderAddModal()}
+        {renderWorkOrderUpdateModal()}
+        <Drawer
+          anchor="right"
+          open={openDrawer}
+          onClose={handleCloseDetails}
+          PaperProps={{
+            sx: { width: '50%' }
+          }}
+        >
+          <WorkOrderDetails
+            workOrder={currentWorkOrder}
+            handleUpdate={handleOpenUpdate}
+            tasks={tasks}
+          />
+        </Drawer>
+      </>
+    );
+  else
+    return (
+      <PermissionErrorMessage
+        message={
+          "You don't have access to Work Orders. Please contact your administrator if you should have access"
+        }
+      />
+    );
 }
 
 export default WorkOrders;

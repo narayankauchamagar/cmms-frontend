@@ -26,6 +26,7 @@ export interface OwnUser {
   email: string;
   rate: number;
   phone: string;
+  ownsCompany: boolean;
   jobTitle: string;
   role: Role;
   companyId: number;
