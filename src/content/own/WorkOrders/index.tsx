@@ -72,7 +72,7 @@ function WorkOrders() {
   const { setTitle } = useContext(TitleContext);
   const { workOrderId } = useParams();
   const { showSnackBar } = useContext(CustomSnackBarContext);
-  const { hasViewPermission } = useAuth();
+  const { hasViewPermission, hasCreatePermission } = useAuth();
   const [currentWorkOrder, setCurrentWorkOrder] = useState<WorkOrder>();
   const { workOrdersRoot2 } = useSelector((state) => state.tasks);
   const tasks = workOrdersRoot2[currentWorkOrder?.id] ?? [];
@@ -646,14 +646,16 @@ function WorkOrders() {
                 <Tab key={tab.value} label={tab.label} value={tab.value} />
               ))}
             </Tabs>
-            <Button
-              onClick={() => setOpenAddModal(true)}
-              startIcon={<AddTwoToneIcon />}
-              sx={{ mx: 6, my: 1 }}
-              variant="contained"
-            >
-              Work Order
-            </Button>
+            {hasCreatePermission(PermissionEntity.WORK_ORDERS) && (
+              <Button
+                onClick={() => setOpenAddModal(true)}
+                startIcon={<AddTwoToneIcon />}
+                sx={{ mx: 6, my: 1 }}
+                variant="contained"
+              >
+                Work Order
+              </Button>
+            )}
           </Grid>
           <Grid item xs={12}>
             <Card

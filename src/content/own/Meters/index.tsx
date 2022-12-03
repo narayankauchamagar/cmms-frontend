@@ -47,7 +47,7 @@ function Meters() {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [currentMeter, setCurrentMeter] = useState<Meter>();
   const { meterId } = useParams();
-  const { hasViewPermission } = useAuth();
+  const { hasViewPermission, hasCreatePermission } = useAuth();
   const dispatch = useDispatch();
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const { getFormattedDate, uploadFiles } = useContext(CompanySettingsContext);
@@ -378,23 +378,25 @@ function Meters() {
           spacing={1}
           paddingX={4}
         >
-          <Grid
-            item
-            xs={12}
-            display="flex"
-            flexDirection="row"
-            justifyContent="right"
-            alignItems="center"
-          >
-            <Button
-              startIcon={<AddTwoToneIcon />}
-              sx={{ mx: 6, my: 1 }}
-              variant="contained"
-              onClick={() => setOpenAddModal(true)}
+          {hasCreatePermission(PermissionEntity.METERS) && (
+            <Grid
+              item
+              xs={12}
+              display="flex"
+              flexDirection="row"
+              justifyContent="right"
+              alignItems="center"
             >
-              Meter
-            </Button>
-          </Grid>
+              <Button
+                startIcon={<AddTwoToneIcon />}
+                sx={{ mx: 6, my: 1 }}
+                variant="contained"
+                onClick={() => setOpenAddModal(true)}
+              >
+                Meter
+              </Button>
+            </Grid>
+          )}
           <Grid item xs={12}>
             <Card
               sx={{

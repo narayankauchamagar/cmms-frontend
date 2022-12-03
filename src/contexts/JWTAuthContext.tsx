@@ -62,6 +62,7 @@ interface AuthContextValue extends AuthState {
     fieldConfigurationsType: FieldConfigurationsType
   ) => Promise<void>;
   hasViewPermission: (permission: PermissionEntity) => boolean;
+  hasCreatePermission: (permission: PermissionEntity) => boolean;
   hasEditPermission: <Entity extends Audit>(
     permission: PermissionEntity,
     entity: Entity
@@ -346,6 +347,7 @@ const AuthContext = createContext<AuthContextValue>({
   patchGeneralPreferences: () => Promise.resolve(),
   patchFieldConfiguration: () => Promise.resolve(),
   hasViewPermission: () => false,
+  hasCreatePermission: () => false,
   hasEditPermission: () => false
 });
 
@@ -584,6 +586,9 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
   const hasViewPermission = (permissionEntity: PermissionEntity) => {
     return state.user.role.viewPermissions.includes(permissionEntity);
   };
+  const hasCreatePermission = (permissionEntity: PermissionEntity) => {
+    return state.user.role.viewPermissions.includes(permissionEntity);
+  };
   const hasEditPermission = <Entity extends Audit>(
     permissionEntity: PermissionEntity,
     entity: Entity
@@ -617,7 +622,8 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         patchGeneralPreferences,
         patchFieldConfiguration,
         hasViewPermission,
-        hasEditPermission
+        hasEditPermission,
+        hasCreatePermission
       }}
     >
       {children}

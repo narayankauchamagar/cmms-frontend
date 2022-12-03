@@ -16,7 +16,7 @@ const VendorsAndCustomers = ({}: PropsType) => {
 
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const { setTitle } = useContext(TitleContext);
-  const { hasViewPermission } = useAuth();
+  const { hasViewPermission, hasCreatePermission } = useAuth();
   const location = useLocation();
 
   const handleOpenAddModal = () => setOpenAddModal(true);
@@ -44,7 +44,11 @@ const VendorsAndCustomers = ({}: PropsType) => {
         tabs={tabs}
         tabIndex={tabIndex}
         title={`Vendors & Customers`}
-        action={handleOpenAddModal}
+        action={
+          hasCreatePermission(PermissionEntity.VENDORS_AND_CUSTOMERS)
+            ? handleOpenAddModal
+            : null
+        }
         actionTitle={t(`${tabs[tabIndex].label}`)}
       >
         {tabIndex === 0 ? (

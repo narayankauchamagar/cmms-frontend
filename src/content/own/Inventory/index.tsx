@@ -17,7 +17,7 @@ const VendorsAndCustomers = ({}: PropsType) => {
   const { setTitle } = useContext(TitleContext);
   const location = useLocation();
   const { partId, setId } = useParams();
-  const { hasViewPermission } = useAuth();
+  const { hasViewPermission, hasCreatePermission } = useAuth();
 
   useEffect(() => {
     setTitle('Parts & Inventory');
@@ -41,7 +41,11 @@ const VendorsAndCustomers = ({}: PropsType) => {
         tabs={tabs}
         tabIndex={tabIndex}
         title={`Inventory`}
-        action={action}
+        action={
+          hasCreatePermission(PermissionEntity.PARTS_AND_MULTIPARTS)
+            ? action
+            : null
+        }
         actionTitle={tabs[tabIndex].label}
       >
         {tabIndex === 0 && <Parts setAction={setAction} />}

@@ -46,7 +46,7 @@ function Assets() {
   const { setTitle } = useContext(TitleContext);
   const { uploadFiles } = useContext(CompanySettingsContext);
   const navigate = useNavigate();
-  const { hasViewPermission } = useAuth();
+  const { hasViewPermission, hasCreatePermission } = useAuth();
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const dispatch = useDispatch();
   const { assetsHierarchy } = useSelector((state) => state.assets);
@@ -474,23 +474,25 @@ function Assets() {
           spacing={1}
           paddingX={4}
         >
-          <Grid
-            item
-            xs={12}
-            display="flex"
-            flexDirection="row"
-            justifyContent="right"
-            alignItems="center"
-          >
-            <Button
-              onClick={() => setOpenAddModal(true)}
-              startIcon={<AddTwoToneIcon />}
-              sx={{ mx: 6, my: 1 }}
-              variant="contained"
+          {hasCreatePermission(PermissionEntity.ASSETS) && (
+            <Grid
+              item
+              xs={12}
+              display="flex"
+              flexDirection="row"
+              justifyContent="right"
+              alignItems="center"
             >
-              Asset
-            </Button>
-          </Grid>
+              <Button
+                onClick={() => setOpenAddModal(true)}
+                startIcon={<AddTwoToneIcon />}
+                sx={{ mx: 6, my: 1 }}
+                variant="contained"
+              >
+                Asset
+              </Button>
+            </Grid>
+          )}
           <Grid item xs={12}>
             <Card
               sx={{

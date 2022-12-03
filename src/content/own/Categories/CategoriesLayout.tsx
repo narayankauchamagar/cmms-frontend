@@ -79,7 +79,8 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
   const { categories } = useSelector((state) => state.categories);
   const { setTitle } = useContext(TitleContext);
   const dispatch = useDispatch();
-  const { user, hasViewPermission, hasEditPermission } = useAuth();
+  const { user, hasViewPermission, hasEditPermission, hasCreatePermission } =
+    useAuth();
   const { companySettingsId } = user;
   const [currentCategory, setCurrentCategory] = useState<Category>();
   const { showSnackBar } = useContext(CustomSnackBarContext);
@@ -328,7 +329,11 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
         tabs={tabs}
         tabIndex={tabIndex}
         title={`${tabs[tabIndex].label} Categories`}
-        action={handleOpenAdd}
+        action={
+          hasCreatePermission(PermissionEntity.CATEGORIES)
+            ? handleOpenAdd
+            : null
+        }
         actionTitle={t('Categories')}
       >
         {renderModal()}

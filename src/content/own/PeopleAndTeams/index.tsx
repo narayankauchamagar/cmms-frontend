@@ -17,7 +17,7 @@ const PeopleAndTeams = ({}: PropsType) => {
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const { setTitle } = useContext(TitleContext);
   const location = useLocation();
-  const { hasViewPermission } = useAuth();
+  const { hasViewPermission, hasCreatePermission } = useAuth();
 
   const handleOpenAddModal = () => setOpenAddModal(true);
   const handleCloseAddModal = () => setOpenAddModal(false);
@@ -41,7 +41,11 @@ const PeopleAndTeams = ({}: PropsType) => {
         tabs={tabs}
         tabIndex={tabIndex}
         title={'People & Teams'}
-        action={handleOpenAddModal}
+        action={
+          hasCreatePermission(PermissionEntity.PEOPLE_AND_TEAMS)
+            ? handleOpenAddModal
+            : null
+        }
         actionTitle={t(`${tabs[tabIndex].label}`)}
       >
         {tabIndex === 0 ? (

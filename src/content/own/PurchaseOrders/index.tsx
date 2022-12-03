@@ -46,7 +46,7 @@ function PurchaseOrders() {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const { purchaseOrderId } = useParams();
-  const { hasViewPermission } = useAuth();
+  const { hasViewPermission, hasCreatePermission } = useAuth();
   const dispatch = useDispatch();
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const { purchaseOrders } = useSelector((state) => state.purchaseOrders);
@@ -416,23 +416,25 @@ function PurchaseOrders() {
           spacing={1}
           paddingX={4}
         >
-          <Grid
-            item
-            xs={12}
-            display="flex"
-            flexDirection="row"
-            justifyContent="right"
-            alignItems="center"
-          >
-            <Button
-              onClick={() => navigate('/app/purchase-orders/create')}
-              startIcon={<AddTwoToneIcon />}
-              sx={{ mx: 6, my: 1 }}
-              variant="contained"
+          {hasCreatePermission(PermissionEntity.PURCHASE_ORDERS) && (
+            <Grid
+              item
+              xs={12}
+              display="flex"
+              flexDirection="row"
+              justifyContent="right"
+              alignItems="center"
             >
-              Purchase Order
-            </Button>
-          </Grid>
+              <Button
+                onClick={() => navigate('/app/purchase-orders/create')}
+                startIcon={<AddTwoToneIcon />}
+                sx={{ mx: 6, my: 1 }}
+                variant="contained"
+              >
+                Purchase Order
+              </Button>
+            </Grid>
+          )}
           <Grid item xs={12}>
             <Card
               sx={{

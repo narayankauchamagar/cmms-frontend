@@ -12,6 +12,8 @@ import { useNavigate } from 'react-router-dom';
 import { AssetDTO } from '../../../../models/owns/asset';
 import { useDispatch } from '../../../../store';
 import { editAsset } from '../../../../slices/asset';
+import useAuth from '../../../../hooks/useAuth';
+import { PermissionEntity } from '../../../../models/owns/role';
 
 interface PropsType {
   asset: AssetDTO;
@@ -20,6 +22,7 @@ interface PropsType {
 const AssetParts = ({ asset }: PropsType) => {
   const { t }: { t: any } = useTranslation();
   const dispatch = useDispatch();
+  const { hasEditPermission } = useAuth();
 
   const handleDelete = (id: number) => {
     if (
@@ -60,14 +63,18 @@ const AssetParts = ({ asset }: PropsType) => {
       type: 'actions',
       headerName: t('Actions'),
       description: t('Actions'),
-      getActions: (params: GridRowParams) => [
-        <GridActionsCellItem
-          key="delete"
-          icon={<DeleteTwoToneIcon fontSize="small" color="error" />}
-          onClick={() => handleDelete(Number(params.id))}
-          label="Remove part"
-        />
-      ]
+      getActions: (params: GridRowParams) => {
+        let actions = [
+          <GridActionsCellItem
+            key="delete"
+            icon={<DeleteTwoToneIcon fontSize="small" color="error" />}
+            onClick={() => handleDelete(Number(params.id))}
+            label="Remove part"
+          />
+        ];
+        if (!hasEditPermission(PermissionEntity.ASSETS, asset)) actions.shift();
+        return actions;
+      }
     }
   ];
   return (

@@ -51,7 +51,7 @@ function Files() {
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
-  const { companySettings, hasViewPermission } = useAuth();
+  const { companySettings, hasViewPermission, hasCreatePermission } = useAuth();
   const { workOrderRequestConfiguration } = companySettings;
   const [currentRequest, setCurrentRequest] = useState<Request>();
   const { uploadFiles } = useContext(CompanySettingsContext);
@@ -364,23 +364,25 @@ function Files() {
           spacing={1}
           paddingX={4}
         >
-          <Grid
-            item
-            xs={12}
-            display="flex"
-            flexDirection="row"
-            justifyContent="right"
-            alignItems="center"
-          >
-            <Button
-              startIcon={<AddTwoToneIcon />}
-              sx={{ mx: 6, my: 1 }}
-              variant="contained"
-              onClick={() => setOpenAddModal(true)}
+          {hasCreatePermission(PermissionEntity.REQUESTS) && (
+            <Grid
+              item
+              xs={12}
+              display="flex"
+              flexDirection="row"
+              justifyContent="right"
+              alignItems="center"
             >
-              Request
-            </Button>
-          </Grid>
+              <Button
+                startIcon={<AddTwoToneIcon />}
+                sx={{ mx: 6, my: 1 }}
+                variant="contained"
+                onClick={() => setOpenAddModal(true)}
+              >
+                Request
+              </Button>
+            </Grid>
+          )}
           <Grid item xs={12}>
             <Card
               sx={{

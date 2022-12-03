@@ -79,7 +79,8 @@ function Locations() {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const { setTitle } = useContext(TitleContext);
   const { locationId } = useParams();
-  const { hasViewPermission, hasEditPermission } = useAuth();
+  const { hasViewPermission, hasEditPermission, hasCreatePermission } =
+    useAuth();
   const [currentLocation, setCurrentLocation] = useState<Location>();
   const handleOpenUpdate = () => {
     setOpenUpdateModal(true);
@@ -499,14 +500,16 @@ function Locations() {
                 <Tab key={tab.value} label={tab.label} value={tab.value} />
               ))}
             </Tabs>
-            <Button
-              onClick={() => setOpenAddModal(true)}
-              startIcon={<AddTwoToneIcon />}
-              sx={{ mx: 6, my: 1 }}
-              variant="contained"
-            >
-              Location
-            </Button>
+            {hasCreatePermission(PermissionEntity.LOCATIONS) && (
+              <Button
+                onClick={() => setOpenAddModal(true)}
+                startIcon={<AddTwoToneIcon />}
+                sx={{ mx: 6, my: 1 }}
+                variant="contained"
+              >
+                Location
+              </Button>
+            )}
           </Grid>
           {currentTab === 'list' && (
             <Grid item xs={12}>

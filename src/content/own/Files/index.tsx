@@ -42,7 +42,8 @@ function Files() {
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const handleDelete = (id: number) => {};
   const handleRename = (id: number) => {};
-  const { hasViewPermission, hasEditPermission } = useAuth();
+  const { hasViewPermission, hasEditPermission, hasCreatePermission } =
+    useAuth();
   const dispatch = useDispatch();
   useEffect(() => {
     setTitle(t('Files'));
@@ -170,23 +171,25 @@ function Files() {
           spacing={1}
           paddingX={4}
         >
-          <Grid
-            item
-            xs={12}
-            display="flex"
-            flexDirection="row"
-            justifyContent="right"
-            alignItems="center"
-          >
-            <Button
-              startIcon={<AddTwoToneIcon />}
-              onClick={() => setOpenAddModal(true)}
-              sx={{ mx: 6, my: 1 }}
-              variant="contained"
+          {hasCreatePermission(PermissionEntity.FILES) && (
+            <Grid
+              item
+              xs={12}
+              display="flex"
+              flexDirection="row"
+              justifyContent="right"
+              alignItems="center"
             >
-              File
-            </Button>
-          </Grid>
+              <Button
+                startIcon={<AddTwoToneIcon />}
+                onClick={() => setOpenAddModal(true)}
+                sx={{ mx: 6, my: 1 }}
+                variant="contained"
+              >
+                File
+              </Button>
+            </Grid>
+          )}
           <Grid item xs={12}>
             <Card
               sx={{
