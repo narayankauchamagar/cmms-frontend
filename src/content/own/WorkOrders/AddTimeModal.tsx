@@ -6,6 +6,9 @@ import { IField } from '../type';
 import { formatSelect } from '../../../utils/formatters';
 import { useDispatch } from '../../../store';
 import { createAdditionalTime } from '../../../slices/additionalTime';
+import useAuth from '../../../hooks/useAuth';
+import FeatureErrorMessage from '../components/FeatureErrorMessage';
+import { PlanFeature } from '../../../models/owns/subscriptionPlan';
 
 interface AddTimeProps {
   open: boolean;
@@ -19,6 +22,7 @@ export default function AddTimeModal({
 }: AddTimeProps) {
   const { t }: { t: any } = useTranslation();
   const dispatch = useDispatch();
+  const { hasFeature } = useAuth();
   const fields: Array<IField> = [
     {
       name: 'assignedTo',
@@ -97,25 +101,29 @@ export default function AddTimeModal({
           p: 3
         }}
       >
-        <Form
-          fields={fields}
-          validation={Yup.object().shape(shape)}
-          submitText={t('Add')}
-          values={{ includeToTotalTime: true }}
-          onChange={({ field, e }) => {}}
-          onSubmit={async (values) => {
-            const formattedValues = { ...values };
-            formattedValues.assignedTo = formatSelect(
-              formattedValues.assignedTo
-            );
-            formattedValues.timeCategory = formatSelect(
-              formattedValues.timeCategory
-            );
-            return dispatch(
-              createAdditionalTime(workOrderId, formattedValues)
-            ).finally(() => onClose());
-          }}
-        />
+        {hasFeature(PlanFeature.ADDITIONAL_TIME) ? (
+          <Form
+            fields={fields}
+            validation={Yup.object().shape(shape)}
+            submitText={t('Add')}
+            values={{ includeToTotalTime: true }}
+            onChange={({ field, e }) => {}}
+            onSubmit={async (values) => {
+              const formattedValues = { ...values };
+              formattedValues.assignedTo = formatSelect(
+                formattedValues.assignedTo
+              );
+              formattedValues.timeCategory = formatSelect(
+                formattedValues.timeCategory
+              );
+              return dispatch(
+                createAdditionalTime(workOrderId, formattedValues)
+              ).finally(() => onClose());
+            }}
+          />
+        ) : (
+          <FeatureErrorMessage message="Upgrade to add Itemized time tracking to your Work Orders. " />
+        )}
       </DialogContent>
     </Dialog>
   );

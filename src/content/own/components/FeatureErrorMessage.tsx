@@ -22,7 +22,7 @@ export default function FeatureErrorMessage({ message }: { message: string }) {
         {user.ownsCompany && (
           <Button
             component={RouterLink}
-            to={'/app/account/company-profile'}
+            to={'/app/subscription/plans'}
             variant="contained"
             size="large"
           >

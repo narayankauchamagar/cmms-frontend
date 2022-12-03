@@ -16,12 +16,15 @@ import {
   FormControlLabel,
   Grid,
   TextField,
+  Tooltip,
   Typography
 } from '@mui/material';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { useDispatch } from '../../../../store';
 import { addRole } from '../../../../slices/role';
 import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContext';
+import useAuth from '../../../../hooks/useAuth';
+import { PlanFeature } from '../../../../models/owns/subscriptionPlan';
 
 // const roles = [
 //   { label: 'Free', value: 'free' },
@@ -35,6 +38,7 @@ interface PageHeaderProps {
 
 function PageHeader({ rolesNumber, formatValues }: PageHeaderProps) {
   const { t }: { t: any } = useTranslation();
+  const { hasFeature } = useAuth();
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const { showSnackBar } = useContext(CustomSnackBarContext);
@@ -66,16 +70,27 @@ function PageHeader({ rolesNumber, formatValues }: PageHeaderProps) {
         </Grid>
 
         <Grid item>
-          <Button
-            sx={{
-              mt: { xs: 2, sm: 0 }
-            }}
-            onClick={handleCreateRoleOpen}
-            variant="contained"
-            startIcon={<AddTwoToneIcon fontSize="small" />}
+          <Tooltip
+            title={
+              hasFeature(PlanFeature.ROLE)
+                ? t('Create Role')
+                : t('Upgrade to create role')
+            }
           >
-            {t('Create role')}
-          </Button>
+            <span>
+              <Button
+                sx={{
+                  mt: { xs: 2, sm: 0 }
+                }}
+                disabled={!hasFeature(PlanFeature.ROLE)}
+                onClick={handleCreateRoleOpen}
+                variant="contained"
+                startIcon={<AddTwoToneIcon fontSize="small" />}
+              >
+                {t('Create role')}
+              </Button>
+            </span>
+          </Tooltip>
         </Grid>
       </Grid>
 

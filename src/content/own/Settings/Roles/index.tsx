@@ -46,6 +46,7 @@ import EditRole from './EditRole';
 import useAuth from '../../../../hooks/useAuth';
 import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContext';
 import { defaultPermissions } from '../../../../utils/roles';
+import { PlanFeature } from '../../../../models/owns/subscriptionPlan';
 
 const DialogWrapper = styled(Dialog)(
   () => `
@@ -104,6 +105,7 @@ function Roles() {
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const dispatch = useDispatch();
   const { roles } = useSelector((state) => state.roles);
+  const { hasFeature } = useAuth();
 
   useEffect(() => {
     if (currentRole) {
@@ -416,20 +418,36 @@ function Roles() {
       type: 'actions',
       headerName: t('Actions'),
       description: t('Actions'),
-      getActions: (params: GridRowParams) => [
-        <GridActionsCellItem
-          key="edit"
-          icon={<EditTwoToneIcon fontSize="small" color="primary" />}
-          onClick={() => handleOpenUpdate(Number(params.id))}
-          label="Edit"
-        />,
-        <GridActionsCellItem
-          key="delete"
-          icon={<DeleteTwoToneIcon fontSize="small" color="error" />}
-          onClick={() => handleOpenDelete(Number(params.id))}
-          label="Delete"
-        />
-      ]
+      getActions: (params: GridRowParams<Role>) => {
+        let actions = [
+          <GridActionsCellItem
+            key="edit"
+            disabled={!hasFeature(PlanFeature.ROLE)}
+            icon={
+              <EditTwoToneIcon
+                fontSize="small"
+                color={hasFeature(PlanFeature.ROLE) ? 'primary' : 'disabled'}
+              />
+            }
+            onClick={() => handleOpenUpdate(Number(params.id))}
+            label="Edit"
+          />,
+          <GridActionsCellItem
+            key="delete"
+            disabled={!hasFeature(PlanFeature.ROLE)}
+            icon={
+              <DeleteTwoToneIcon
+                fontSize="small"
+                color={hasFeature(PlanFeature.ROLE) ? 'error' : 'disabled'}
+              />
+            }
+            onClick={() => handleOpenDelete(Number(params.id))}
+            label="Delete"
+          />
+        ];
+        if (params.row.code !== 'USER_CREATED') actions = [];
+        return actions;
+      }
     }
   ];
 

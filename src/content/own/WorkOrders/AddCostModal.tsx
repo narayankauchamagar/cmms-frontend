@@ -6,6 +6,9 @@ import { IField } from '../type';
 import { formatSelect } from '../../../utils/formatters';
 import { useDispatch } from '../../../store';
 import { createAdditionalCost } from '../../../slices/additionalCost';
+import useAuth from '../../../hooks/useAuth';
+import FeatureErrorMessage from '../components/FeatureErrorMessage';
+import { PlanFeature } from '../../../models/owns/subscriptionPlan';
 
 interface AddCostProps {
   open: boolean;
@@ -19,6 +22,7 @@ export default function AddCostModal({
 }: AddCostProps) {
   const { t }: { t: any } = useTranslation();
   const dispatch = useDispatch();
+  const { hasFeature } = useAuth();
   const fields: Array<IField> = [
     {
       name: 'description',
@@ -86,23 +90,27 @@ export default function AddCostModal({
           p: 3
         }}
       >
-        <Form
-          fields={fields}
-          validation={Yup.object().shape(shape)}
-          submitText={t('Add')}
-          values={{ includeToTotalCost: true }}
-          onChange={({ field, e }) => {}}
-          onSubmit={async (values) => {
-            const formattedValues = { ...values };
-            formattedValues.assignedTo = formatSelect(
-              formattedValues.assignedTo
-            );
-            formattedValues.category = formatSelect(formattedValues.category);
-            return dispatch(
-              createAdditionalCost(workOrderId, formattedValues)
-            ).finally(() => onClose());
-          }}
-        />
+        {hasFeature(PlanFeature.ADDITIONAL_COST) ? (
+          <Form
+            fields={fields}
+            validation={Yup.object().shape(shape)}
+            submitText={t('Add')}
+            values={{ includeToTotalCost: true }}
+            onChange={({ field, e }) => {}}
+            onSubmit={async (values) => {
+              const formattedValues = { ...values };
+              formattedValues.assignedTo = formatSelect(
+                formattedValues.assignedTo
+              );
+              formattedValues.category = formatSelect(formattedValues.category);
+              return dispatch(
+                createAdditionalCost(workOrderId, formattedValues)
+              ).finally(() => onClose());
+            }}
+          />
+        ) : (
+          <FeatureErrorMessage message="Upgrade to add Itemized cost tracking to your Work Orders. " />
+        )}
       </DialogContent>
     </Dialog>
   );

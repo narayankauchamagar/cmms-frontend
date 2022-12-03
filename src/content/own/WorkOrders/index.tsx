@@ -424,7 +424,7 @@ function WorkOrders() {
     title: Yup.string().required(t('WorkOrder title is required'))
   };
   const getFieldsAndShapes = (): [Array<IField>, { [key: string]: any }] => {
-    let fields = [...defaultFields];
+    let fields = [...getFilteredFields(defaultFields)];
     let shape = { ...defaultShape };
     const fieldsToConfigure = [
       'asset',
@@ -449,27 +449,29 @@ function WorkOrders() {
       const fieldIndexInFields = fields.findIndex(
         (field) => field.name === name
       );
-      if (fieldConfig.fieldType === 'REQUIRED') {
-        fields[fieldIndexInFields] = {
-          ...fields[fieldIndexInFields],
-          required: true
-        };
-        const requiredMessage = t('This field is required');
-        let yupSchema;
-        switch (fields[fieldIndexInFields].type) {
-          case 'text':
-            yupSchema = Yup.string().required(requiredMessage);
-            break;
-          case 'number':
-            yupSchema = Yup.number().required(requiredMessage);
-            break;
-          default:
-            yupSchema = Yup.object().required(requiredMessage).nullable();
-            break;
+      if (fieldIndexInFields !== -1) {
+        if (fieldConfig.fieldType === 'REQUIRED') {
+          fields[fieldIndexInFields] = {
+            ...fields[fieldIndexInFields],
+            required: true
+          };
+          const requiredMessage = t('This field is required');
+          let yupSchema;
+          switch (fields[fieldIndexInFields].type) {
+            case 'text':
+              yupSchema = Yup.string().required(requiredMessage);
+              break;
+            case 'number':
+              yupSchema = Yup.number().required(requiredMessage);
+              break;
+            default:
+              yupSchema = Yup.object().required(requiredMessage).nullable();
+              break;
+          }
+          shape[name] = yupSchema;
+        } else if (fieldConfig.fieldType === 'HIDDEN') {
+          fields.splice(fieldIndexInFields, 1);
         }
-        shape[name] = yupSchema;
-      } else if (fieldConfig.fieldType === 'HIDDEN') {
-        fields.splice(fieldIndexInFields, 1);
       }
     });
 
@@ -503,7 +505,7 @@ function WorkOrders() {
       >
         <Box>
           <Form
-            fields={getFilteredFields(getFieldsAndShapes()[0])}
+            fields={getFieldsAndShapes()[0]}
             validation={Yup.object().shape(getFieldsAndShapes()[1])}
             submitText={t('Add')}
             values={{ requiredSignature: false, dueDate: null }}

@@ -5,6 +5,7 @@ import {
   FormControlLabel,
   Grid,
   IconButton,
+  Tooltip,
   Typography,
   useTheme
 } from '@mui/material';
@@ -12,6 +13,8 @@ import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import { PermissionEntity, Role } from '../../../../models/owns/role';
+import useAuth from '../../../../hooks/useAuth';
+import { PlanFeature } from '../../../../models/owns/subscriptionPlan';
 
 interface RoleDetailsProps {
   role: Role;
@@ -20,6 +23,7 @@ interface RoleDetailsProps {
 }
 export default function RoleDetails(props: RoleDetailsProps) {
   const { role, handleOpenUpdate, handleOpenDelete } = props;
+  const { hasFeature } = useAuth();
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
   const allPermissions: {
@@ -156,14 +160,49 @@ export default function RoleDetails(props: RoleDetailsProps) {
           <Typography variant="h2">{role?.name}</Typography>
           <Typography variant="subtitle1">{role?.description}</Typography>
         </Box>
-        <Box>
-          <IconButton style={{ marginRight: 10 }} onClick={handleOpenUpdate}>
-            <EditTwoToneIcon color="primary" />
-          </IconButton>
-          <IconButton onClick={handleOpenDelete}>
-            <DeleteTwoToneIcon color="error" />
-          </IconButton>
-        </Box>
+        {role.code === 'USER_CREATED' && (
+          <Box>
+            <Tooltip
+              title={
+                hasFeature(PlanFeature.ROLE)
+                  ? t('Edit Role')
+                  : t('Upgrade to edit role')
+              }
+            >
+              <span>
+                <IconButton
+                  disabled={!hasFeature(PlanFeature.ROLE)}
+                  style={{ marginRight: 10 }}
+                  onClick={handleOpenUpdate}
+                >
+                  <EditTwoToneIcon
+                    color={
+                      hasFeature(PlanFeature.ROLE) ? 'primary' : 'disabled'
+                    }
+                  />
+                </IconButton>
+              </span>
+            </Tooltip>
+            <Tooltip
+              title={
+                hasFeature(PlanFeature.ROLE)
+                  ? t('Delete Role')
+                  : t('Upgrade to delete role')
+              }
+            >
+              <span>
+                <IconButton
+                  disabled={!hasFeature(PlanFeature.ROLE)}
+                  onClick={handleOpenDelete}
+                >
+                  <DeleteTwoToneIcon
+                    color={hasFeature(PlanFeature.ROLE) ? 'error' : 'disabled'}
+                  />
+                </IconButton>
+              </span>
+            </Tooltip>
+          </Box>
+        )}
       </Grid>
       <Divider />
 

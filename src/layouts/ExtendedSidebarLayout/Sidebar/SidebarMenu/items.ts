@@ -102,8 +102,7 @@ const menuItems: MenuItems[] = [
         name: 'Categories',
         link: '/app/categories',
         icon: CategoryTwoToneIcon,
-        permission: PermissionEntity.CATEGORIES,
-        planFeature: PlanFeature.CATEGORIES
+        permission: PermissionEntity.CATEGORIES
       },
       {
         name: 'Settings',
