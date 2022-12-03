@@ -57,7 +57,8 @@ export default function LocationDetails(props: LocationDetailsProps) {
   const { locations } = useSelector((state) => state.assets);
   const { locations1 } = useSelector((state) => state.workOrders);
   const { locationRoot } = useSelector((state) => state.floorPlans);
-  const { hasEditPermission, hasDeletePermission } = useAuth();
+  const { hasEditPermission, hasDeletePermission, getFilteredFields } =
+    useAuth();
   const locationAssets = locations[location.id] ?? [];
   const locationWorkOrders = locations1[location.id] ?? [];
   const floorPlans = locationRoot[location.id] ?? [];
@@ -129,7 +130,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
       >
         <Box>
           <Form
-            fields={fields}
+            fields={getFilteredFields(fields)}
             validation={Yup.object().shape(floorPlanShape)}
             submitText={t('Add Floor Plan')}
             values={{}}

@@ -33,6 +33,7 @@ import { UserMiniDTO } from '../../../models/user';
 import UserAvatars from '../components/UserAvatars';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
+import useAuth from '../../../hooks/useAuth';
 
 interface PropsType {
   setAction: (p: () => () => void) => void;
@@ -48,6 +49,7 @@ const Parts = ({ setAction }: PropsType) => {
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [currentPart, setCurrentPart] = useState<Part>();
+  const { getFilteredFields } = useAuth();
   const { partId } = useParams();
   const dispatch = useDispatch();
   const { showSnackBar } = useContext(CustomSnackBarContext);
@@ -336,7 +338,7 @@ const Parts = ({ setAction }: PropsType) => {
       >
         <Box>
           <Form
-            fields={fields}
+            fields={getFilteredFields(fields)}
             validation={Yup.object().shape(shape)}
             submitText={t('Create Part')}
             values={{}}
@@ -444,7 +446,7 @@ const Parts = ({ setAction }: PropsType) => {
       >
         <Box>
           <Form
-            fields={fields}
+            fields={getFilteredFields(fields)}
             validation={Yup.object().shape(shape)}
             submitText={t('Save')}
             values={{

@@ -21,6 +21,7 @@ import { PermissionEntity } from 'src/models/owns/role';
 import { Audit } from 'src/models/owns/audit';
 import OwnSubscription from '../models/owns/ownSubscription';
 import { PlanFeature } from '../models/owns/subscriptionPlan';
+import { IField } from '../content/own/type';
 
 interface AuthState {
   isInitialized: boolean;
@@ -75,6 +76,7 @@ interface AuthContextValue extends AuthState {
     permission: PermissionEntity,
     entity: Entity
   ) => boolean;
+  getFilteredFields: (fields: Array<IField>) => Array<IField>;
 }
 
 interface AuthProviderProps {
@@ -373,6 +375,7 @@ const AuthContext = createContext<AuthContextValue>({
   patchGeneralPreferences: () => Promise.resolve(),
   patchFieldConfiguration: () => Promise.resolve(),
   hasViewPermission: () => false,
+  getFilteredFields: () => [],
   hasFeature: () => false,
   hasCreatePermission: () => false,
   hasEditPermission: () => false,
@@ -656,6 +659,13 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
       feature
     );
   };
+  const getFilteredFields = (defaultFields: Array<IField>): IField[] => {
+    let fields = [...defaultFields];
+    if (!hasFeature(PlanFeature.FILE)) {
+      fields = fields.filter((field) => field.type !== 'file');
+    }
+    return fields;
+  };
   useEffect(() => {
     getInfos();
   }, []);
@@ -681,6 +691,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         patchFieldConfiguration,
         hasViewPermission,
         hasFeature,
+        getFilteredFields,
         hasEditPermission,
         hasDeletePermission,
         hasCreatePermission

@@ -39,8 +39,12 @@ const ShowAsset = ({}: PropsType) => {
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const { assetInfos } = useSelector((state) => state.assets);
   const asset: AssetDTO = assetInfos[assetId]?.asset;
-  const { hasViewPermission, hasEditPermission, hasDeletePermission } =
-    useAuth();
+  const {
+    hasViewPermission,
+    hasEditPermission,
+    hasDeletePermission,
+    getFilteredFields
+  } = useAuth();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -63,7 +67,7 @@ const ShowAsset = ({}: PropsType) => {
   ];
   const tabIndex = tabs.findIndex((tab) => tab.value === arr[arr.length - 1]);
 
-  const fields: Array<IField> = [
+  const defaultFields: Array<IField> = [
     {
       name: 'assetInfo',
       type: 'titleGroupField',
@@ -201,6 +205,7 @@ const ShowAsset = ({}: PropsType) => {
       excluded: Number(assetId)
     }
   ];
+
   const shape = {
     name: Yup.string().required(t('Asset name is required'))
   };
@@ -238,7 +243,7 @@ const ShowAsset = ({}: PropsType) => {
       >
         <Box>
           <Form
-            fields={fields}
+            fields={getFilteredFields(defaultFields)}
             validation={Yup.object().shape(shape)}
             submitText={t('Save')}
             values={{

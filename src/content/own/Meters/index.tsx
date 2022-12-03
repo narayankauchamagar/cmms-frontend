@@ -47,7 +47,8 @@ function Meters() {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [currentMeter, setCurrentMeter] = useState<Meter>();
   const { meterId } = useParams();
-  const { hasViewPermission, hasCreatePermission } = useAuth();
+  const { hasViewPermission, hasCreatePermission, getFilteredFields } =
+    useAuth();
   const dispatch = useDispatch();
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const { getFormattedDate, uploadFiles } = useContext(CompanySettingsContext);
@@ -257,7 +258,7 @@ function Meters() {
       >
         <Box>
           <Form
-            fields={fields}
+            fields={getFilteredFields(fields)}
             validation={Yup.object().shape(shape)}
             submitText={t('Add')}
             values={{}}

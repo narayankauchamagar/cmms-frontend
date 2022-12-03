@@ -55,7 +55,7 @@ function WorkOrders() {
   const { workOrders } = useSelector((state) => state.workOrders);
   const dispatch = useDispatch();
   const { uploadFiles } = useContext(CompanySettingsContext);
-  const { companySettings } = useAuth();
+  const { companySettings, getFilteredFields } = useAuth();
   const { workOrderConfiguration } = companySettings;
   const { getFormattedDate } = useContext(CompanySettingsContext);
   const tabs = [
@@ -503,7 +503,7 @@ function WorkOrders() {
       >
         <Box>
           <Form
-            fields={getFieldsAndShapes()[0]}
+            fields={getFilteredFields(getFieldsAndShapes()[0])}
             validation={Yup.object().shape(getFieldsAndShapes()[1])}
             submitText={t('Add')}
             values={{ requiredSignature: false, dueDate: null }}
@@ -561,7 +561,7 @@ function WorkOrders() {
       >
         <Box>
           <Form
-            fields={getFieldsAndShapes()[0]}
+            fields={getFilteredFields(getFieldsAndShapes()[0])}
             validation={Yup.object().shape(getFieldsAndShapes()[1])}
             submitText={t('Save')}
             values={{

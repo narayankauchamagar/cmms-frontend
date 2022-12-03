@@ -46,7 +46,8 @@ function Assets() {
   const { setTitle } = useContext(TitleContext);
   const { uploadFiles } = useContext(CompanySettingsContext);
   const navigate = useNavigate();
-  const { hasViewPermission, hasCreatePermission } = useAuth();
+  const { hasViewPermission, hasCreatePermission, getFilteredFields } =
+    useAuth();
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const dispatch = useDispatch();
   const { assetsHierarchy } = useSelector((state) => state.assets);
@@ -182,7 +183,7 @@ function Assets() {
       valueGetter: (params) => getFormattedDate(params.row.createdAt)
     }
   ];
-  const fields: Array<IField> = [
+  const defaultFields: Array<IField> = [
     {
       name: 'assetInfo',
       type: 'titleGroupField',
@@ -421,7 +422,7 @@ function Assets() {
       >
         <Box>
           <Form
-            fields={fields}
+            fields={getFilteredFields(defaultFields)}
             validation={Yup.object().shape(shape)}
             submitText={t('Create Asset')}
             values={{ inServiceDate: null, warrantyExpirationDate: null }}

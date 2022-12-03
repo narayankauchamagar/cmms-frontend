@@ -33,6 +33,8 @@ import File from '../../../models/owns/file';
 import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
 import PermissionErrorMessage from '../components/PermissionErrorMessage';
+import { PlanFeature } from '../../../models/owns/subscriptionPlan';
+import FeatureErrorMessage from '../components/FeatureErrorMessage';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
@@ -46,7 +48,8 @@ function Files() {
     hasViewPermission,
     hasEditPermission,
     hasCreatePermission,
-    hasDeletePermission
+    hasDeletePermission,
+    hasFeature
   } = useAuth();
   const dispatch = useDispatch();
   useEffect(() => {
@@ -165,76 +168,85 @@ function Files() {
       </Dialog>
     );
   };
-  if (hasViewPermission(PermissionEntity.FILES))
-    return (
-      <>
-        <Helmet>
-          <title>{t('Files')}</title>
-        </Helmet>
-        <Grid
-          container
-          justifyContent="center"
-          alignItems="stretch"
-          spacing={1}
-          paddingX={4}
-        >
-          {hasCreatePermission(PermissionEntity.FILES) && (
-            <Grid
-              item
-              xs={12}
-              display="flex"
-              flexDirection="row"
-              justifyContent="right"
-              alignItems="center"
-            >
-              <Button
-                startIcon={<AddTwoToneIcon />}
-                onClick={() => setOpenAddModal(true)}
-                sx={{ mx: 6, my: 1 }}
-                variant="contained"
+  if (hasFeature(PlanFeature.FILE)) {
+    if (hasViewPermission(PermissionEntity.FILES))
+      return (
+        <>
+          <Helmet>
+            <title>{t('Files')}</title>
+          </Helmet>
+          <Grid
+            container
+            justifyContent="center"
+            alignItems="stretch"
+            spacing={1}
+            paddingX={4}
+          >
+            {hasCreatePermission(PermissionEntity.FILES) && (
+              <Grid
+                item
+                xs={12}
+                display="flex"
+                flexDirection="row"
+                justifyContent="right"
+                alignItems="center"
               >
-                File
-              </Button>
-            </Grid>
-          )}
-          <Grid item xs={12}>
-            <Card
-              sx={{
-                p: 2,
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
-            >
-              <Box sx={{ height: 500, width: '95%' }}>
-                <CustomDataGrid
-                  columns={columns}
-                  rows={files}
-                  components={{
-                    Toolbar: GridToolbar
-                  }}
-                  onRowClick={(params: GridRowParams<File>) =>
-                    window.open(params.row.url, '_blank')
-                  }
-                  initialState={{
-                    columns: {
-                      columnVisibilityModel: {}
+                <Button
+                  startIcon={<AddTwoToneIcon />}
+                  onClick={() => setOpenAddModal(true)}
+                  sx={{ mx: 6, my: 1 }}
+                  variant="contained"
+                >
+                  File
+                </Button>
+              </Grid>
+            )}
+            <Grid item xs={12}>
+              <Card
+                sx={{
+                  p: 2,
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}
+              >
+                <Box sx={{ height: 500, width: '95%' }}>
+                  <CustomDataGrid
+                    columns={columns}
+                    rows={files}
+                    components={{
+                      Toolbar: GridToolbar
+                    }}
+                    onRowClick={(params: GridRowParams<File>) =>
+                      window.open(params.row.url, '_blank')
                     }
-                  }}
-                />
-              </Box>
-            </Card>
+                    initialState={{
+                      columns: {
+                        columnVisibilityModel: {}
+                      }
+                    }}
+                  />
+                </Box>
+              </Card>
+            </Grid>
           </Grid>
-        </Grid>
-        {renderAddModal()}
-      </>
-    );
-  else
+          {renderAddModal()}
+        </>
+      );
+    else
+      return (
+        <PermissionErrorMessage
+          message={
+            "You don't have access to Files. Please contact your administrator if you should have access"
+          }
+        />
+      );
+  } else
     return (
-      <PermissionErrorMessage
+      <FeatureErrorMessage
         message={
-          "You don't have access to Files. Please contact your administrator if you should have access"
+          'Upgrade to use files in your Assets, Work Orders, Locations etc...'
         }
       />
     );
