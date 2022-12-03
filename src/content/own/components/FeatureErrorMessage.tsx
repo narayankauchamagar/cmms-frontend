@@ -1,4 +1,4 @@
-import { Button, Card, Typography } from '@mui/material';
+import { Button, Card, Stack, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import useAuth from '../../../hooks/useAuth';
 import { Link as RouterLink } from 'react-router-dom';
@@ -17,16 +17,19 @@ export default function FeatureErrorMessage({ message }: { message: string }) {
         alignItems: 'center'
       }}
     >
-      <Typography variant="h4">{t(message)}</Typography>
-
-      <Button
-        component={RouterLink}
-        to={'/app/account/company-profile'}
-        variant="contained"
-        size="large"
-      >
-        {t('Upgrade Now')}
-      </Button>
+      <Stack spacing={4}>
+        <Typography variant="h4">{t(message)}</Typography>
+        {user.ownsCompany && (
+          <Button
+            component={RouterLink}
+            to={'/app/account/company-profile'}
+            variant="contained"
+            size="large"
+          >
+            {t('Upgrade Now')}
+          </Button>
+        )}
+      </Stack>
     </Card>
   );
 }

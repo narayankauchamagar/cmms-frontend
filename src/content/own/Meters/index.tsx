@@ -38,6 +38,8 @@ import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext
 import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
 import PermissionErrorMessage from '../components/PermissionErrorMessage';
+import FeatureErrorMessage from '../components/FeatureErrorMessage';
+import { PlanFeature } from '../../../models/owns/subscriptionPlan';
 
 function Meters() {
   const { t }: { t: any } = useTranslation();
@@ -47,8 +49,12 @@ function Meters() {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [currentMeter, setCurrentMeter] = useState<Meter>();
   const { meterId } = useParams();
-  const { hasViewPermission, hasCreatePermission, getFilteredFields } =
-    useAuth();
+  const {
+    hasViewPermission,
+    hasCreatePermission,
+    getFilteredFields,
+    hasFeature
+  } = useAuth();
   const dispatch = useDispatch();
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const { getFormattedDate, uploadFiles } = useContext(CompanySettingsContext);
@@ -364,102 +370,104 @@ function Meters() {
       </DialogContent>
     </Dialog>
   );
-  if (hasViewPermission(PermissionEntity.METERS))
-    return (
-      <>
-        <Helmet>
-          <title>{t('Meters')}</title>
-        </Helmet>
-        {renderAddModal()}
-        {renderUpdateModal()}
-        <Grid
-          container
-          justifyContent="center"
-          alignItems="stretch"
-          spacing={1}
-          paddingX={4}
-        >
-          {hasCreatePermission(PermissionEntity.METERS) && (
-            <Grid
-              item
-              xs={12}
-              display="flex"
-              flexDirection="row"
-              justifyContent="right"
-              alignItems="center"
-            >
-              <Button
-                startIcon={<AddTwoToneIcon />}
-                sx={{ mx: 6, my: 1 }}
-                variant="contained"
-                onClick={() => setOpenAddModal(true)}
+  if (hasFeature(PlanFeature.METER)) {
+    if (hasViewPermission(PermissionEntity.METERS))
+      return (
+        <>
+          <Helmet>
+            <title>{t('Meters')}</title>
+          </Helmet>
+          {renderAddModal()}
+          {renderUpdateModal()}
+          <Grid
+            container
+            justifyContent="center"
+            alignItems="stretch"
+            spacing={1}
+            paddingX={4}
+          >
+            {hasCreatePermission(PermissionEntity.METERS) && (
+              <Grid
+                item
+                xs={12}
+                display="flex"
+                flexDirection="row"
+                justifyContent="right"
+                alignItems="center"
               >
-                Meter
-              </Button>
+                <Button
+                  startIcon={<AddTwoToneIcon />}
+                  sx={{ mx: 6, my: 1 }}
+                  variant="contained"
+                  onClick={() => setOpenAddModal(true)}
+                >
+                  Meter
+                </Button>
+              </Grid>
+            )}
+            <Grid item xs={12}>
+              <Card
+                sx={{
+                  p: 2,
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}
+              >
+                <Box sx={{ height: 500, width: '95%' }}>
+                  <CustomDataGrid
+                    columns={columns}
+                    rows={meters}
+                    onRowClick={({ id }) => handleOpenDetails(Number(id))}
+                    components={{
+                      Toolbar: GridToolbar
+                    }}
+                    initialState={{
+                      columns: {
+                        columnVisibilityModel: {}
+                      }
+                    }}
+                  />
+                </Box>
+              </Card>
             </Grid>
-          )}
-          <Grid item xs={12}>
-            <Card
-              sx={{
-                p: 2,
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
-            >
-              <Box sx={{ height: 500, width: '95%' }}>
-                <CustomDataGrid
-                  columns={columns}
-                  rows={meters}
-                  onRowClick={({ id }) => handleOpenDetails(Number(id))}
-                  components={{
-                    Toolbar: GridToolbar
-                  }}
-                  initialState={{
-                    columns: {
-                      columnVisibilityModel: {}
-                    }
-                  }}
-                />
-              </Box>
-            </Card>
           </Grid>
-        </Grid>
-        <Drawer
-          anchor="right"
-          open={openDrawer}
-          onClose={handleCloseDetails}
-          PaperProps={{
-            sx: { width: '50%' }
-          }}
-        >
-          <MeterDetails
-            meter={currentMeter}
-            handleOpenUpdate={handleOpenUpdate}
-            handleOpenDelete={() => setOpenDelete(true)}
+          <Drawer
+            anchor="right"
+            open={openDrawer}
+            onClose={handleCloseDetails}
+            PaperProps={{
+              sx: { width: '50%' }
+            }}
+          >
+            <MeterDetails
+              meter={currentMeter}
+              handleOpenUpdate={handleOpenUpdate}
+              handleOpenDelete={() => setOpenDelete(true)}
+            />
+          </Drawer>
+          <ConfirmDialog
+            open={openDelete}
+            onCancel={() => {
+              setOpenDelete(false);
+              setOpenDrawer(true);
+            }}
+            onConfirm={() => handleDelete(currentMeter?.id)}
+            confirmText={t('Delete')}
+            question={t('Are you sure you want to delete this Meter?')}
           />
-        </Drawer>
-        <ConfirmDialog
-          open={openDelete}
-          onCancel={() => {
-            setOpenDelete(false);
-            setOpenDrawer(true);
-          }}
-          onConfirm={() => handleDelete(currentMeter?.id)}
-          confirmText={t('Delete')}
-          question={t('Are you sure you want to delete this Meter?')}
+        </>
+      );
+    else
+      return (
+        <PermissionErrorMessage
+          message={
+            "You don't have access to Meters. Please contact your administrator if you should have access"
+          }
         />
-      </>
-    );
-  else
-    return (
-      <PermissionErrorMessage
-        message={
-          "You don't have access to Meters. Please contact your administrator if you should have access"
-        }
-      />
-    );
+      );
+  } else return <FeatureErrorMessage message={'Upgrade to create Meters'} />;
 }
 
 export default Meters;

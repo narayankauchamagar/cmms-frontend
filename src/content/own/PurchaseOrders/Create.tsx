@@ -16,13 +16,15 @@ import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import PermissionErrorMessage from '../components/PermissionErrorMessage';
 import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
+import FeatureErrorMessage from '../components/FeatureErrorMessage';
+import { PlanFeature } from '../../../models/owns/subscriptionPlan';
 
 function CreatePurchaseOrder() {
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { hasCreatePermission } = useAuth();
+  const { hasCreatePermission, hasFeature } = useAuth();
   const { showSnackBar } = useContext(CustomSnackBarContext);
   useEffect(() => {
     setTitle(t('New Purchase Order'));
@@ -201,72 +203,77 @@ function CreatePurchaseOrder() {
       t('The phone number is invalid')
     )
   };
-  if (hasCreatePermission(PermissionEntity.PURCHASE_ORDERS))
-    return (
-      <>
-        <Helmet>
-          <title>{t('Purchase Orders')}</title>
-        </Helmet>
-        <Grid
-          container
-          justifyContent="center"
-          alignItems="stretch"
-          spacing={1}
-          paddingX={4}
-        >
+  if (hasFeature(PlanFeature.PURCHASE_ORDER)) {
+    if (hasCreatePermission(PermissionEntity.PURCHASE_ORDERS))
+      return (
+        <>
+          <Helmet>
+            <title>{t('Purchase Orders')}</title>
+          </Helmet>
           <Grid
-            item
-            xs={12}
-            display="flex"
-            flexDirection="row"
-            justifyContent="right"
-            alignItems="center"
+            container
+            justifyContent="center"
+            alignItems="stretch"
+            spacing={1}
+            paddingX={4}
           >
-            <Button
-              startIcon={<AddTwoToneIcon />}
-              sx={{ mx: 6, my: 1 }}
-              variant="contained"
+            <Grid
+              item
+              xs={12}
+              display="flex"
+              flexDirection="row"
+              justifyContent="right"
+              alignItems="center"
             >
-              Submit and Approve
-            </Button>
-          </Grid>
-          <Grid item xs={12}>
-            <Card
-              sx={{
-                p: 2,
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
-            >
-              <Form
-                fields={fields}
-                validation={Yup.object().shape(shape)}
-                submitText={t('Submit')}
-                values={{ shippingDueDate: null, additionalInfoDate: null }}
-                onChange={({ field, e }) => {}}
-                onSubmit={async (values) => {
-                  //TODO category
-                  delete values.category;
-                  values.vendor = formatSelect(values.vendor);
-                  return dispatch(addPurchaseOrder(values))
-                    .then(onCreationSuccess)
-                    .catch(onCreationFailure);
+              <Button
+                startIcon={<AddTwoToneIcon />}
+                sx={{ mx: 6, my: 1 }}
+                variant="contained"
+              >
+                Submit and Approve
+              </Button>
+            </Grid>
+            <Grid item xs={12}>
+              <Card
+                sx={{
+                  p: 2,
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
                 }}
-              />
-            </Card>
+              >
+                <Form
+                  fields={fields}
+                  validation={Yup.object().shape(shape)}
+                  submitText={t('Submit')}
+                  values={{ shippingDueDate: null, additionalInfoDate: null }}
+                  onChange={({ field, e }) => {}}
+                  onSubmit={async (values) => {
+                    //TODO category
+                    delete values.category;
+                    values.vendor = formatSelect(values.vendor);
+                    return dispatch(addPurchaseOrder(values))
+                      .then(onCreationSuccess)
+                      .catch(onCreationFailure);
+                  }}
+                />
+              </Card>
+            </Grid>
           </Grid>
-        </Grid>
-      </>
-    );
-  else
+        </>
+      );
+    else
+      return (
+        <PermissionErrorMessage
+          message={
+            "You can't create a Purchase Order. Please contact your administrator if you should have access"
+          }
+        />
+      );
+  } else
     return (
-      <PermissionErrorMessage
-        message={
-          "You can't create a Purchase Order. Please contact your administrator if you should have access"
-        }
-      />
+      <FeatureErrorMessage message={'Upgrade to create Purchase Orders'} />
     );
 }
 
