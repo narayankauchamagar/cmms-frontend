@@ -23,6 +23,7 @@ import SpeedTwoToneIcon from '@mui/icons-material/SpeedTwoTone';
 import MoveToInboxTwoToneIcon from '@mui/icons-material/MoveToInboxTwoTone';
 import AssignmentTwoToneIcon from '@mui/icons-material/AssignmentTwoTone';
 import { PermissionEntity } from '../../../../models/owns/role';
+import { PlanFeature } from '../../../../models/owns/subscriptionPlan';
 
 export interface MenuItem {
   link?: string;
@@ -30,6 +31,7 @@ export interface MenuItem {
   badge?: string;
   badgeTooltip?: string;
   permission?: PermissionEntity;
+  planFeature?: PlanFeature;
 
   items?: MenuItem[];
   name: string;
@@ -61,19 +63,22 @@ const menuItems: MenuItems[] = [
         name: 'Files',
         link: '/app/files',
         icon: AttachFileTwoToneIcon,
-        permission: PermissionEntity.FILES
+        permission: PermissionEntity.FILES,
+        planFeature: PlanFeature.FILE
       },
       {
         name: 'Purchase Orders',
         link: '/app/purchase-orders',
         icon: ReceiptTwoToneIcon,
-        permission: PermissionEntity.PURCHASE_ORDERS
+        permission: PermissionEntity.PURCHASE_ORDERS,
+        planFeature: PlanFeature.PURCHASE_ORDER
       },
       {
         name: 'Meters',
         link: '/app/meters',
         icon: SpeedTwoToneIcon,
-        permission: PermissionEntity.METERS
+        permission: PermissionEntity.METERS,
+        planFeature: PlanFeature.METER
       },
       {
         name: 'Requests',
@@ -97,7 +102,8 @@ const menuItems: MenuItems[] = [
         name: 'Categories',
         link: '/app/categories',
         icon: CategoryTwoToneIcon,
-        permission: PermissionEntity.CATEGORIES
+        permission: PermissionEntity.CATEGORIES,
+        planFeature: PlanFeature.CATEGORIES
       },
       {
         name: 'Settings',

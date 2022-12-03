@@ -24,7 +24,6 @@ import { useTranslation } from 'react-i18next';
 import { useContext, useEffect, useState } from 'react';
 import PlanFeatures from './PlanFeatures';
 import * as Yup from 'yup';
-import wait from '../../../../utils/wait';
 import CustomDialog from '../../components/CustomDialog';
 import { Field, Formik } from 'formik';
 import valid from 'card-validator';
@@ -33,10 +32,12 @@ import { useDispatch, useSelector } from '../../../../store';
 import { getSubscriptionPlans } from '../../../../slices/subscriptionPlan';
 import useAuth from '../../../../hooks/useAuth';
 import PermissionErrorMessage from '../../components/PermissionErrorMessage';
+import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContext';
+import { SubscriptionPlan } from '../../../../models/owns/subscriptionPlan';
 
 function SubscriptionPlans() {
   const { t }: { t: any } = useTranslation();
-  const { company, user } = useAuth();
+  const { company, user, patchSubscription } = useAuth();
   const subscription = company.subscription;
   const theme = useTheme();
   const [usersCount, setUsersCount] = useState<number>(3);
@@ -45,8 +46,11 @@ function SubscriptionPlans() {
   const handleOpenCheckoutModal = () => setOpenCheckout(true);
   const [period, setPeriod] = useState<string>('monthly');
   const [selectedPlan, setSelectedPlan] = useState<string>('STARTER');
+  const [selectedPlanObject, setSelectedPlanObject] =
+    useState<SubscriptionPlan>();
   const { subscriptionPlans } = useSelector((state) => state.subscriptionPlans);
   const { setTitle } = useContext(TitleContext);
+  const { showSnackBar } = useContext(CustomSnackBarContext);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -57,6 +61,13 @@ function SubscriptionPlans() {
     { name: 'Monthly', value: 'monthly' },
     { name: 'Annually', value: 'annually' }
   ];
+
+  useEffect(() => {
+    setSelectedPlanObject(
+      subscriptionPlans.find((plan) => plan.code == selectedPlan)
+    );
+  }, [selectedPlan, subscriptionPlans]);
+
   const getCost = () => {
     const selectedPlanData = subscriptionPlans.find(
       (plan) => plan.code == selectedPlan
@@ -90,7 +101,16 @@ function SubscriptionPlans() {
     }
     return yearOptions;
   };
-
+  const onSubcriptionPatchSuccess = () => {
+    showSnackBar(
+      t('The Subscription has been changed successfully'),
+      'success'
+    );
+    handleCloseCheckoutModal();
+  };
+  const onSubcriptionPatchFailure = () => {
+    showSnackBar(t("The Subscription couldn't be changed"), 'error');
+  };
   const renderCheckoutModal = () => (
     <CustomDialog
       onClose={handleCloseCheckoutModal}
@@ -144,17 +164,16 @@ function SubscriptionPlans() {
           _values,
           { resetForm, setErrors, setStatus, setSubmitting }
         ) => {
-          console.log(_values);
-          try {
-            await wait(1000);
-            resetForm();
-            setStatus({ success: true });
-            setSubmitting(false);
-          } catch (err) {
-            console.error(err);
-            setStatus({ success: false });
-            setSubmitting(false);
-          }
+          // console.log(_values);
+          setSubmitting(true);
+          return patchSubscription({
+            usersCount,
+            monthly: period === 'monthly',
+            subscriptionPlan: selectedPlanObject
+          })
+            .then(onSubcriptionPatchSuccess)
+            .catch(onSubcriptionPatchFailure)
+            .finally(() => setSubmitting(false));
         }}
       >
         {({
@@ -272,12 +291,7 @@ function SubscriptionPlans() {
                         {t('Cost per seat')}
                       </Typography>
                       <Typography variant="h6">
-                        {
-                          subscriptionPlans.find(
-                            (plan) => plan.code == selectedPlan
-                          ).monthlyCostPerUser
-                        }{' '}
-                        $ per month
+                        {selectedPlanObject.monthlyCostPerUser} $ per month
                       </Typography>
                     </Grid>
                     <Grid item xs={12} lg={12}>

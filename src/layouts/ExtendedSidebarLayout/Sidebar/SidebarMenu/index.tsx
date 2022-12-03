@@ -229,16 +229,23 @@ const reduceChildRoutes = ({
 function SidebarMenu() {
   const location = useLocation();
   const { t }: { t: any } = useTranslation();
-  const { hasViewPermission } = useAuth();
+  const { hasViewPermission, hasFeature } = useAuth();
 
   return (
     <>
       {menuItems
         .map((section) => {
           const sectionClone = { ...section };
-          sectionClone.items = sectionClone.items.filter((item) =>
-            item.permission ? hasViewPermission(item.permission) : true
-          );
+          sectionClone.items = sectionClone.items.filter((item) => {
+            const hasPermission = item.permission
+              ? hasViewPermission(item.permission)
+              : true;
+            const featured = item.planFeature
+              ? hasFeature(item.planFeature)
+              : true;
+
+            return hasPermission && featured;
+          });
           return sectionClone;
         })
         .map((section) => (

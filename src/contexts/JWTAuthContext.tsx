@@ -19,6 +19,8 @@ import {
 import { Company } from '../models/owns/company';
 import { PermissionEntity } from 'src/models/owns/role';
 import { Audit } from 'src/models/owns/audit';
+import OwnSubscription from '../models/owns/ownSubscription';
+import { PlanFeature } from '../models/owns/subscriptionPlan';
 
 interface AuthState {
   isInitialized: boolean;
@@ -45,6 +47,7 @@ interface AuthContextValue extends AuthState {
   getInfos: () => void;
   patchUserSettings: (values: Partial<UserSettings>) => Promise<void>;
   patchUser: (values: Partial<OwnUser>) => Promise<void>;
+  patchSubscription: (values: Partial<OwnSubscription>) => Promise<void>;
   patchCompany: (values: Partial<Company>) => Promise<void>;
   updatePassword: (values: {
     oldPassword: string;
@@ -62,6 +65,7 @@ interface AuthContextValue extends AuthState {
     fieldConfigurationsType: FieldConfigurationsType
   ) => Promise<void>;
   hasViewPermission: (permission: PermissionEntity) => boolean;
+  hasFeature: (feature: PlanFeature) => boolean;
   hasCreatePermission: (permission: PermissionEntity) => boolean;
   hasEditPermission: <Entity extends Audit>(
     permission: PermissionEntity,
@@ -120,6 +124,12 @@ type PatchUserAction = {
     user: UserResponseDTO;
   };
 };
+type PatchSubscriptionAction = {
+  type: 'PATCH_SUBSCRIPTION';
+  payload: {
+    subscription: OwnSubscription;
+  };
+};
 type PatchCompanyAction = {
   type: 'PATCH_COMPANY';
   payload: {
@@ -169,7 +179,8 @@ type Action =
   | PatchGeneralPreferencesAction
   | PatchFieldConfigurationAction
   | FetchCompanyAction
-  | PatchCompanyAction;
+  | PatchCompanyAction
+  | PatchSubscriptionAction;
 
 const initialAuthState: AuthState = {
   isAuthenticated: false,
@@ -251,6 +262,16 @@ const handlers: Record<
     return {
       ...state,
       user
+    };
+  },
+  PATCH_SUBSCRIPTION: (
+    state: AuthState,
+    action: PatchSubscriptionAction
+  ): AuthState => {
+    const { subscription } = action.payload;
+    return {
+      ...state,
+      company: { ...state.company, subscription }
     };
   },
   PATCH_COMPANY: (state: AuthState, action: PatchCompanyAction): AuthState => {
@@ -344,6 +365,7 @@ const AuthContext = createContext<AuthContextValue>({
   patchUserSettings: () => Promise.resolve(),
   patchCompany: () => Promise.resolve(),
   patchUser: () => Promise.resolve(),
+  patchSubscription: () => Promise.resolve(),
   fetchUserSettings: () => Promise.resolve(),
   fetchCompany: () => Promise.resolve(),
   updatePassword: () => Promise.resolve(false),
@@ -351,6 +373,7 @@ const AuthContext = createContext<AuthContextValue>({
   patchGeneralPreferences: () => Promise.resolve(),
   patchFieldConfiguration: () => Promise.resolve(),
   hasViewPermission: () => false,
+  hasFeature: () => false,
   hasCreatePermission: () => false,
   hasEditPermission: () => false,
   hasDeletePermission: () => false
@@ -502,6 +525,20 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
       }
     });
   };
+  const patchSubscription = async (
+    values: Partial<OwnSubscription>
+  ): Promise<void> => {
+    const subscription = await api.patch<OwnSubscription>(
+      `subscriptions/${state.company.subscription.id}`,
+      values
+    );
+    dispatch({
+      type: 'PATCH_SUBSCRIPTION',
+      payload: {
+        subscription
+      }
+    });
+  };
   const updatePassword = async (values: {
     oldPassword: string;
     newPassword: string;
@@ -614,6 +651,11 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
       state.user.role.deleteOtherPermissions.includes(permissionEntity)
     );
   };
+  const hasFeature = (feature: PlanFeature) => {
+    return state.company.subscription.subscriptionPlan.features.includes(
+      feature
+    );
+  };
   useEffect(() => {
     getInfos();
   }, []);
@@ -628,6 +670,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         register,
         getInfos,
         patchUser,
+        patchSubscription,
         patchCompany,
         updatePassword,
         patchUserSettings,
@@ -637,6 +680,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         patchGeneralPreferences,
         patchFieldConfiguration,
         hasViewPermission,
+        hasFeature,
         hasEditPermission,
         hasDeletePermission,
         hasCreatePermission

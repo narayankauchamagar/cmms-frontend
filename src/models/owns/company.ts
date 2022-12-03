@@ -1,5 +1,5 @@
-import { SubscriptionPlan } from './subscriptionPlan';
 import CompanySettings from './companySettings';
+import OwnSubscription from './ownSubscription';
 
 export interface Company {
   id: string;
@@ -8,6 +8,6 @@ export interface Company {
   address: string;
   website: string;
   phone: string;
-  subscription: { usersCount: number; subscriptionPlan: SubscriptionPlan };
+  subscription: OwnSubscription;
   companySettings: CompanySettings;
 }
