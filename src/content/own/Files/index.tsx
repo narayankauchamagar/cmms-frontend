@@ -42,7 +42,7 @@ function Files() {
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const handleDelete = (id: number) => {};
   const handleRename = (id: number) => {};
-  const { hasViewPermission } = useAuth();
+  const { hasViewPermission, hasEditPermission } = useAuth();
   const dispatch = useDispatch();
   useEffect(() => {
     setTitle(t('Files'));
@@ -93,20 +93,26 @@ function Files() {
       type: 'actions',
       headerName: t('Actions'),
       description: t('Actions'),
-      getActions: (params: GridRowParams) => [
-        <GridActionsCellItem
-          key="rename"
-          icon={<EditTwoToneIcon fontSize="small" color="primary" />}
-          onClick={() => handleRename(Number(params.id))}
-          label="Rename"
-        />,
-        <GridActionsCellItem
-          key="delete"
-          icon={<DeleteTwoToneIcon fontSize="small" color="error" />}
-          onClick={() => handleDelete(Number(params.id))}
-          label="Delete"
-        />
-      ]
+      getActions: (params: GridRowParams<File>) => {
+        let actions = [
+          <GridActionsCellItem
+            key="rename"
+            icon={<EditTwoToneIcon fontSize="small" color="primary" />}
+            onClick={() => handleRename(Number(params.id))}
+            label="Rename"
+          />,
+          <GridActionsCellItem
+            key="delete"
+            icon={<DeleteTwoToneIcon fontSize="small" color="error" />}
+            onClick={() => handleDelete(Number(params.id))}
+            label="Delete"
+          />
+        ];
+        if (!hasEditPermission(PermissionEntity.FILES, params.row)) {
+          actions.shift();
+        }
+        return actions;
+      }
     }
   ];
   const shape = {

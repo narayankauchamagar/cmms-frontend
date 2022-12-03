@@ -1,4 +1,6 @@
-export interface Customer {
+import { Audit } from './audit';
+
+export interface Customer extends Audit {
   id: number;
   name: string;
   address: string;
@@ -31,7 +33,11 @@ export const customers: Customer[] = [
     billingAddress: 'Add 1',
     billingAddress2: '-',
     billingName: 'Add 3',
-    billingCurrency: 'MAD, dirham'
+    billingCurrency: 'MAD, dirham',
+    createdBy: 1,
+    updatedBy: 4,
+    createdAt: 'sd',
+    updatedAt: 'sdd'
   },
   {
     id: 2,
@@ -46,6 +52,10 @@ export const customers: Customer[] = [
     billingAddress: 'Add 1',
     billingAddress2: '-',
     billingName: '-',
-    billingCurrency: 'Euro'
+    billingCurrency: 'Euro',
+    createdBy: 1,
+    updatedBy: 4,
+    createdAt: 'sd',
+    updatedAt: 'sdd'
   }
 ];

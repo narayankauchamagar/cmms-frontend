@@ -39,6 +39,8 @@ import {
 } from '../../../slices/floorPlan';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 import { getAssetUrl } from '../../../utils/urlPaths';
+import useAuth from '../../../hooks/useAuth';
+import { PermissionEntity } from '../../../models/owns/role';
 
 interface LocationDetailsProps {
   location: Location;
@@ -55,6 +57,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
   const { locations } = useSelector((state) => state.assets);
   const { locations1 } = useSelector((state) => state.workOrders);
   const { locationRoot } = useSelector((state) => state.floorPlans);
+  const { hasEditPermission } = useAuth();
   const locationAssets = locations[location.id] ?? [];
   const locationWorkOrders = locations1[location.id] ?? [];
   const floorPlans = locationRoot[location.id] ?? [];
@@ -177,9 +180,11 @@ export default function LocationDetails(props: LocationDetailsProps) {
           <Typography variant="h6">{location?.address}</Typography>
         </Box>
         <Box>
-          <IconButton onClick={handleOpenUpdate} style={{ marginRight: 10 }}>
-            <EditTwoToneIcon color="primary" />
-          </IconButton>
+          {hasEditPermission(PermissionEntity.LOCATIONS, location) && (
+            <IconButton onClick={handleOpenUpdate} style={{ marginRight: 10 }}>
+              <EditTwoToneIcon color="primary" />
+            </IconButton>
+          )}
           <IconButton onClick={handleOpenDelete}>
             <DeleteTwoToneIcon color="error" />
           </IconButton>

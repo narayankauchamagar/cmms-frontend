@@ -23,6 +23,8 @@ import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import Part from '../../../models/owns/part';
 import { files } from 'src/models/owns/file';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
+import { PermissionEntity } from '../../../models/owns/role';
+import useAuth from '../../../hooks/useAuth';
 
 interface PartDetailsProps {
   part: Part;
@@ -31,6 +33,7 @@ interface PartDetailsProps {
 }
 export default function PartDetails(props: PartDetailsProps) {
   const { part, handleOpenUpdate, handleOpenDelete } = props;
+  const { hasEditPermission } = useAuth();
   const { t }: { t: any } = useTranslation();
   const { getFormattedDate } = useContext(CompanySettingsContext);
   const [currentTab, setCurrentTab] = useState<string>('details');
@@ -119,9 +122,11 @@ export default function PartDetails(props: PartDetailsProps) {
           <Typography variant="h6">{part?.description}</Typography>
         </Box>
         <Box>
-          <IconButton onClick={handleOpenUpdate} style={{ marginRight: 10 }}>
-            <EditTwoToneIcon color="primary" />
-          </IconButton>
+          {hasEditPermission(PermissionEntity.PARTS_AND_MULTIPARTS, part) && (
+            <IconButton onClick={handleOpenUpdate} style={{ marginRight: 10 }}>
+              <EditTwoToneIcon color="primary" />
+            </IconButton>
+          )}
           <IconButton onClick={handleOpenDelete}>
             <DeleteTwoToneIcon style={{ cursor: 'pointer' }} color="error" />
           </IconButton>

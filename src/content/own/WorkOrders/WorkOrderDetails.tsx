@@ -66,6 +66,7 @@ import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext
 import { getAssetUrl, getUserUrl } from '../../../utils/urlPaths';
 import SignatureModal from './SignatureModal';
 import useAuth from '../../../hooks/useAuth';
+import { PermissionEntity } from '../../../models/owns/role';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;
@@ -78,7 +79,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const { getFormattedDate } = useContext(CompanySettingsContext);
   const { t }: { t: any } = useTranslation();
-  const { user } = useAuth();
+  const { user, hasEditPermission } = useAuth();
 
   const [openAddTimeModal, setOpenAddTimeModal] = useState<boolean>(false);
   const [openAddCostModal, setOpenAddCostModal] = useState<boolean>(false);
@@ -410,12 +411,14 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
           <IconButton style={{ marginRight: 10 }} onClick={handleOpenMenu}>
             <MoreVertTwoToneIcon />
           </IconButton>
-          <IconButton
-            onClick={() => handleUpdate(workOrder.id)}
-            style={{ marginRight: 10 }}
-          >
-            <EditTwoToneIcon color="primary" />
-          </IconButton>
+          {hasEditPermission(PermissionEntity.WORK_ORDERS, workOrder) && (
+            <IconButton
+              onClick={() => handleUpdate(workOrder.id)}
+              style={{ marginRight: 10 }}
+            >
+              <EditTwoToneIcon color="primary" />
+            </IconButton>
+          )}
           <IconButton>
             <DeleteTwoToneIcon color="error" />
           </IconButton>

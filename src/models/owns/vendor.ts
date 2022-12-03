@@ -1,4 +1,6 @@
-export interface Vendor {
+import { Audit } from './audit';
+
+export interface Vendor extends Audit {
   id: number;
   companyName: string;
   address: string;
@@ -26,6 +28,10 @@ export const vendors: Vendor[] = [
     email: 'string',
     vendorType: 'string',
     description: 'string',
-    rate: 2
+    rate: 2,
+    createdBy: 1,
+    updatedBy: 4,
+    createdAt: 'sd',
+    updatedAt: 'sdd'
   }
 ];

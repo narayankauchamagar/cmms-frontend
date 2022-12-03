@@ -35,6 +35,8 @@ import {
 import { Close } from '@mui/icons-material';
 import { Vendor } from '../../../models/owns/vendor';
 import { useParams } from 'react-router-dom';
+import useAuth from '../../../hooks/useAuth';
+import { PermissionEntity } from '../../../models/owns/role';
 
 interface PropsType {
   values?: any;
@@ -53,6 +55,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
   const [currentVendor, setCurrentVendor] = useState<Vendor>();
   const [viewOrUpdate, setViewOrUpdate] = useState<'view' | 'update'>('view');
   const { showSnackBar } = useContext(CustomSnackBarContext);
+  const { hasEditPermission } = useAuth();
 
   useEffect(() => {
     dispatch(getVendors());
@@ -329,14 +332,19 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
       >
         <Box sx={{ display: 'flex', flexDirection: 'row' }}>
           {viewOrUpdate === 'view' ? (
-            <Typography
-              onClick={() => setViewOrUpdate('update')}
-              style={{ cursor: 'pointer' }}
-              variant="subtitle1"
-              mr={2}
-            >
-              {t('Edit')}
-            </Typography>
+            hasEditPermission(
+              PermissionEntity.VENDORS_AND_CUSTOMERS,
+              currentVendor
+            ) && (
+              <Typography
+                onClick={() => setViewOrUpdate('update')}
+                style={{ cursor: 'pointer' }}
+                variant="subtitle1"
+                mr={2}
+              >
+                {t('Edit')}
+              </Typography>
+            )
           ) : (
             <Typography
               onClick={() => setViewOrUpdate('view')}

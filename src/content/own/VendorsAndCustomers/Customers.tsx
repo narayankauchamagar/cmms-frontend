@@ -35,6 +35,8 @@ import {
 import { useDispatch, useSelector } from '../../../store';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
+import useAuth from '../../../hooks/useAuth';
+import { PermissionEntity } from '../../../models/owns/role';
 
 interface PropsType {
   values?: any;
@@ -49,6 +51,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
   const { customerId } = useParams();
   const dispatch = useDispatch();
   const { customers } = useSelector((state) => state.customers);
+  const { hasEditPermission } = useAuth();
   const [currentCustomer, setCurrentCustomer] = useState<Customer>();
   const [viewOrUpdate, setViewOrUpdate] = useState<'view' | 'update'>('view');
   const [openDelete, setOpenDelete] = useState<boolean>(false);
@@ -369,14 +372,19 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
       >
         <Box sx={{ display: 'flex', flexDirection: 'row' }}>
           {viewOrUpdate === 'view' ? (
-            <Typography
-              onClick={() => setViewOrUpdate('update')}
-              style={{ cursor: 'pointer' }}
-              variant="subtitle1"
-              mr={2}
-            >
-              {t('Edit')}
-            </Typography>
+            hasEditPermission(
+              PermissionEntity.VENDORS_AND_CUSTOMERS,
+              currentCustomer
+            ) && (
+              <Typography
+                onClick={() => setViewOrUpdate('update')}
+                style={{ cursor: 'pointer' }}
+                variant="subtitle1"
+                mr={2}
+              >
+                {t('Edit')}
+              </Typography>
+            )
           ) : (
             <Typography
               onClick={() => setViewOrUpdate('view')}

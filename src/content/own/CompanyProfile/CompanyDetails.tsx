@@ -28,7 +28,7 @@ interface CompanyDetailsProps {
 }
 function CompanyDetails(props: CompanyDetailsProps) {
   const { company } = props;
-  const { patchCompany } = useAuth();
+  const { patchCompany, user } = useAuth();
   const { t }: { t: any } = useTranslation();
   const [openEditModal, setOpenEditModal] = useState<boolean>(false);
   const handleOpenEditModal = () => setOpenEditModal(true);
@@ -235,15 +235,17 @@ function CompanyDetails(props: CompanyDetailsProps) {
                 {t('Manage informations related to your company')}
               </Typography>
             </Box>
-            <Box>
-              <Button
-                onClick={handleOpenEditModal}
-                variant="text"
-                startIcon={<EditTwoToneIcon />}
-              >
-                {t('Edit')}
-              </Button>
-            </Box>
+            {user.ownsCompany && (
+              <Box>
+                <Button
+                  onClick={handleOpenEditModal}
+                  variant="text"
+                  startIcon={<EditTwoToneIcon />}
+                >
+                  {t('Edit')}
+                </Button>
+              </Box>
+            )}
           </Box>
           <Divider />
           <CardContent

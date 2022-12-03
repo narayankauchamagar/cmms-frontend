@@ -15,6 +15,8 @@ import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import PurchaseOrder from '../../../models/owns/purchaseOrder';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
+import useAuth from '../../../hooks/useAuth';
+import { PermissionEntity } from '../../../models/owns/role';
 
 interface PurchaseOrderDetailsProps {
   purchaseOrder: PurchaseOrder;
@@ -25,6 +27,7 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
   const { purchaseOrder, handleOpenUpdate, handleDelete } = props;
   const { t }: { t: any } = useTranslation();
   const { getFormattedDate } = useContext(CompanySettingsContext);
+  const { hasEditPermission } = useAuth();
   const theme = useTheme();
   const [currentTab, setCurrentTab] = useState<string>('details');
   const tabs = [
@@ -172,9 +175,14 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
           <Typography variant="h6">{purchaseOrder?.shippingAddress}</Typography>
         </Box>
         <Box>
-          <IconButton onClick={handleOpenUpdate} style={{ marginRight: 10 }}>
-            <EditTwoToneIcon color="primary" />
-          </IconButton>
+          {hasEditPermission(
+            PermissionEntity.PURCHASE_ORDERS,
+            purchaseOrder
+          ) && (
+            <IconButton onClick={handleOpenUpdate} style={{ marginRight: 10 }}>
+              <EditTwoToneIcon color="primary" />
+            </IconButton>
+          )}
           <IconButton onClick={handleDelete}>
             <DeleteTwoToneIcon color="error" />
           </IconButton>

@@ -18,6 +18,8 @@ import HandymanTwoToneIcon from '@mui/icons-material/HandymanTwoTone';
 import AttachMoneyTwoToneIcon from '@mui/icons-material/AttachMoneyTwoTone';
 import { useContext } from 'react';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
+import useAuth from '../../../hooks/useAuth';
+import { PermissionEntity } from '../../../models/owns/role';
 
 interface PartDetailsProps {
   set: SetType;
@@ -28,6 +30,7 @@ export default function SetDetails(props: PartDetailsProps) {
   const { set, handleOpenUpdate, handleOpenDelete } = props;
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
+  const { hasEditPermission } = useAuth();
   const { getFormattedDate } = useContext(CompanySettingsContext);
 
   return (
@@ -52,9 +55,11 @@ export default function SetDetails(props: PartDetailsProps) {
           </Typography>
         </Box>
         <Box>
-          <IconButton onClick={handleOpenUpdate} style={{ marginRight: 10 }}>
-            <EditTwoToneIcon color="primary" />
-          </IconButton>
+          {hasEditPermission(PermissionEntity.PARTS_AND_MULTIPARTS, set) && (
+            <IconButton onClick={handleOpenUpdate} style={{ marginRight: 10 }}>
+              <EditTwoToneIcon color="primary" />
+            </IconButton>
+          )}
           <IconButton onClick={handleOpenDelete}>
             <DeleteTwoToneIcon color="error" />
           </IconButton>

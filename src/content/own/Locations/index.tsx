@@ -79,7 +79,7 @@ function Locations() {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const { setTitle } = useContext(TitleContext);
   const { locationId } = useParams();
-  const { hasViewPermission } = useAuth();
+  const { hasViewPermission, hasEditPermission } = useAuth();
   const [currentLocation, setCurrentLocation] = useState<Location>();
   const handleOpenUpdate = () => {
     setOpenUpdateModal(true);
@@ -233,26 +233,32 @@ function Locations() {
       type: 'actions',
       headerName: t('Actions'),
       description: t('Actions'),
-      getActions: (params: GridRowParams) => [
-        <GridActionsCellItem
-          key="edit"
-          icon={<EditTwoToneIcon fontSize="small" color="primary" />}
-          onClick={() => {
-            changeCurrentLocation(Number(params.id));
-            handleOpenUpdate();
-          }}
-          label="Edit"
-        />,
-        <GridActionsCellItem
-          key="delete"
-          icon={<DeleteTwoToneIcon fontSize="small" color="error" />}
-          onClick={() => {
-            changeCurrentLocation(Number(params.id));
-            setOpenDelete(true);
-          }}
-          label="Delete"
-        />
-      ]
+      getActions: (params: GridRowParams) => {
+        let actions = [
+          <GridActionsCellItem
+            key="edit"
+            icon={<EditTwoToneIcon fontSize="small" color="primary" />}
+            onClick={() => {
+              changeCurrentLocation(Number(params.id));
+              handleOpenUpdate();
+            }}
+            label="Edit"
+          />,
+          <GridActionsCellItem
+            key="delete"
+            icon={<DeleteTwoToneIcon fontSize="small" color="error" />}
+            onClick={() => {
+              changeCurrentLocation(Number(params.id));
+              setOpenDelete(true);
+            }}
+            label="Delete"
+          />
+        ];
+        if (!hasEditPermission(PermissionEntity.LOCATIONS, params.row)) {
+          actions.shift();
+        }
+        return actions;
+      }
     }
   ];
 

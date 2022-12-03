@@ -32,6 +32,8 @@ import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import AddTriggerModal from './AddTriggerModal';
 import EditTriggerModal from './EditTriggerModal';
 import WorkOrderMeterTrigger from '../../../models/owns/workOrderMeterTrigger';
+import useAuth from '../../../hooks/useAuth';
+import { PermissionEntity } from '../../../models/owns/role';
 
 interface MeterDetailsProps {
   meter: Meter;
@@ -42,6 +44,7 @@ export default function MeterDetails(props: MeterDetailsProps) {
   const { meter, handleOpenUpdate, handleOpenDelete } = props;
   const { t }: { t: any } = useTranslation();
   const dispatch = useDispatch();
+  const { hasEditPermission } = useAuth();
   const [currentTab, setCurrentTab] = useState<string>('details');
   const { getFormattedDate } = useContext(CompanySettingsContext);
   const theme = useTheme();
@@ -140,9 +143,11 @@ export default function MeterDetails(props: MeterDetailsProps) {
           <Typography variant="h2">{meter?.name}</Typography>
         </Box>
         <Box>
-          <IconButton onClick={handleOpenUpdate} style={{ marginRight: 10 }}>
-            <EditTwoToneIcon color="primary" />
-          </IconButton>
+          {hasEditPermission(PermissionEntity.METERS, meter) && (
+            <IconButton onClick={handleOpenUpdate} style={{ marginRight: 10 }}>
+              <EditTwoToneIcon color="primary" />
+            </IconButton>
+          )}
           <IconButton onClick={handleOpenDelete}>
             <DeleteTwoToneIcon color="error" />
           </IconButton>

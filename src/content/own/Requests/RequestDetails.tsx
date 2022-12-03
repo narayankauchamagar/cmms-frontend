@@ -26,6 +26,8 @@ import {
   getTeamUrl,
   getUserUrl
 } from '../../../utils/urlPaths';
+import useAuth from '../../../hooks/useAuth';
+import { PermissionEntity } from '../../../models/owns/role';
 
 interface RequestDetailsProps {
   request: Request;
@@ -44,6 +46,7 @@ export default function RequestDetails({
   const { t }: { t: any } = useTranslation();
   const dispatch = useDispatch();
   const theme = useTheme();
+  const { hasEditPermission } = useAuth();
   const navigate = useNavigate();
 
   const onApprove = () => {
@@ -127,11 +130,15 @@ export default function RequestDetails({
           )}
         </Box>
         <Box>
-          {!request.cancelled && (
-            <IconButton style={{ marginRight: 10 }} onClick={handleOpenUpdate}>
-              <EditTwoToneIcon color="primary" />
-            </IconButton>
-          )}
+          {!request.cancelled &&
+            hasEditPermission(PermissionEntity.REQUESTS, request) && (
+              <IconButton
+                style={{ marginRight: 10 }}
+                onClick={handleOpenUpdate}
+              >
+                <EditTwoToneIcon color="primary" />
+              </IconButton>
+            )}
           <IconButton onClick={handleOpenDelete}>
             <DeleteTwoToneIcon color="error" />
           </IconButton>

@@ -79,7 +79,7 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
   const { categories } = useSelector((state) => state.categories);
   const { setTitle } = useContext(TitleContext);
   const dispatch = useDispatch();
-  const { user, hasViewPermission } = useAuth();
+  const { user, hasViewPermission, hasEditPermission } = useAuth();
   const { companySettingsId } = user;
   const [currentCategory, setCurrentCategory] = useState<Category>();
   const { showSnackBar } = useContext(CustomSnackBarContext);
@@ -367,35 +367,42 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
                         }}
                       >
                         <Box ml={3} textAlign="right">
-                          <IconButtonWrapper
-                            onClick={() => {
-                              setCurrentCategory(
-                                categories[basePath].find(
-                                  (category) => category.id === item.id
-                                )
-                              );
-                              setOpenUpdateCategoryModal(true);
-                            }}
-                            sx={{
-                              backgroundColor: `${theme.colors.primary.main}`,
-                              color: `${theme.palette.getContrastText(
-                                theme.colors.primary.main
-                              )}`,
-                              transition: `${theme.transitions.create([
-                                'all'
-                              ])}`,
-
-                              '&:hover': {
+                          {hasEditPermission(
+                            PermissionEntity.CATEGORIES,
+                            categories[basePath].find(
+                              (category) => category.id === item.id
+                            )
+                          ) && (
+                            <IconButtonWrapper
+                              onClick={() => {
+                                setCurrentCategory(
+                                  categories[basePath].find(
+                                    (category) => category.id === item.id
+                                  )
+                                );
+                                setOpenUpdateCategoryModal(true);
+                              }}
+                              sx={{
                                 backgroundColor: `${theme.colors.primary.main}`,
                                 color: `${theme.palette.getContrastText(
                                   theme.colors.primary.main
-                                )}`
-                              }
-                            }}
-                            size="small"
-                          >
-                            <EditTwoToneIcon fontSize="small" />
-                          </IconButtonWrapper>
+                                )}`,
+                                transition: `${theme.transitions.create([
+                                  'all'
+                                ])}`,
+
+                                '&:hover': {
+                                  backgroundColor: `${theme.colors.primary.main}`,
+                                  color: `${theme.palette.getContrastText(
+                                    theme.colors.primary.main
+                                  )}`
+                                }
+                              }}
+                              size="small"
+                            >
+                              <EditTwoToneIcon fontSize="small" />
+                            </IconButtonWrapper>
+                          )}
                           <IconButtonWrapper
                             onClick={() => {
                               setCurrentCategory(
