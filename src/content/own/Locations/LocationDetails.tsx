@@ -57,7 +57,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
   const { locations } = useSelector((state) => state.assets);
   const { locations1 } = useSelector((state) => state.workOrders);
   const { locationRoot } = useSelector((state) => state.floorPlans);
-  const { hasEditPermission } = useAuth();
+  const { hasEditPermission, hasDeletePermission } = useAuth();
   const locationAssets = locations[location.id] ?? [];
   const locationWorkOrders = locations1[location.id] ?? [];
   const floorPlans = locationRoot[location.id] ?? [];
@@ -185,9 +185,11 @@ export default function LocationDetails(props: LocationDetailsProps) {
               <EditTwoToneIcon color="primary" />
             </IconButton>
           )}
-          <IconButton onClick={handleOpenDelete}>
-            <DeleteTwoToneIcon color="error" />
-          </IconButton>
+          {hasDeletePermission(PermissionEntity.LOCATIONS, location) && (
+            <IconButton onClick={handleOpenDelete}>
+              <DeleteTwoToneIcon color="error" />
+            </IconButton>
+          )}
         </Box>
       </Grid>
       <Divider />

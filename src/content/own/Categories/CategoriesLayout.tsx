@@ -79,8 +79,13 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
   const { categories } = useSelector((state) => state.categories);
   const { setTitle } = useContext(TitleContext);
   const dispatch = useDispatch();
-  const { user, hasViewPermission, hasEditPermission, hasCreatePermission } =
-    useAuth();
+  const {
+    user,
+    hasViewPermission,
+    hasEditPermission,
+    hasCreatePermission,
+    hasDeletePermission
+  } = useAuth();
   const { companySettingsId } = user;
   const [currentCategory, setCurrentCategory] = useState<Category>();
   const { showSnackBar } = useContext(CustomSnackBarContext);
@@ -408,34 +413,41 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
                               <EditTwoToneIcon fontSize="small" />
                             </IconButtonWrapper>
                           )}
-                          <IconButtonWrapper
-                            onClick={() => {
-                              setCurrentCategory(
-                                categories[basePath].find(
-                                  (category) => category.id === item.id
-                                )
-                              );
-                              setOpenDelete(true);
-                            }}
-                            sx={{
-                              ml: 1,
-                              backgroundColor: `${theme.colors.error.lighter}`,
-                              color: `${theme.colors.error.main}`,
-                              transition: `${theme.transitions.create([
-                                'all'
-                              ])}`,
+                          {hasDeletePermission(
+                            PermissionEntity.CATEGORIES,
+                            categories[basePath].find(
+                              (category) => category.id === item.id
+                            )
+                          ) && (
+                            <IconButtonWrapper
+                              onClick={() => {
+                                setCurrentCategory(
+                                  categories[basePath].find(
+                                    (category) => category.id === item.id
+                                  )
+                                );
+                                setOpenDelete(true);
+                              }}
+                              sx={{
+                                ml: 1,
+                                backgroundColor: `${theme.colors.error.lighter}`,
+                                color: `${theme.colors.error.main}`,
+                                transition: `${theme.transitions.create([
+                                  'all'
+                                ])}`,
 
-                              '&:hover': {
-                                backgroundColor: `${theme.colors.error.main}`,
-                                color: `${theme.palette.getContrastText(
-                                  theme.colors.error.main
-                                )}`
-                              }
-                            }}
-                            size="small"
-                          >
-                            <ClearTwoToneIcon fontSize="small" />
-                          </IconButtonWrapper>
+                                '&:hover': {
+                                  backgroundColor: `${theme.colors.error.main}`,
+                                  color: `${theme.palette.getContrastText(
+                                    theme.colors.error.main
+                                  )}`
+                                }
+                              }}
+                              size="small"
+                            >
+                              <ClearTwoToneIcon fontSize="small" />
+                            </IconButtonWrapper>
+                          )}
                         </Box>
                       </Box>
                     </ListItem>

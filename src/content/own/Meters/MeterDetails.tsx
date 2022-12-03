@@ -44,7 +44,7 @@ export default function MeterDetails(props: MeterDetailsProps) {
   const { meter, handleOpenUpdate, handleOpenDelete } = props;
   const { t }: { t: any } = useTranslation();
   const dispatch = useDispatch();
-  const { hasEditPermission } = useAuth();
+  const { hasEditPermission, hasDeletePermission } = useAuth();
   const [currentTab, setCurrentTab] = useState<string>('details');
   const { getFormattedDate } = useContext(CompanySettingsContext);
   const theme = useTheme();
@@ -148,9 +148,11 @@ export default function MeterDetails(props: MeterDetailsProps) {
               <EditTwoToneIcon color="primary" />
             </IconButton>
           )}
-          <IconButton onClick={handleOpenDelete}>
-            <DeleteTwoToneIcon color="error" />
-          </IconButton>
+          {hasDeletePermission(PermissionEntity.METERS, meter) && (
+            <IconButton onClick={handleOpenDelete}>
+              <DeleteTwoToneIcon color="error" />
+            </IconButton>
+          )}
         </Box>
       </Grid>
       <Divider />

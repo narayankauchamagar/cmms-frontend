@@ -33,7 +33,7 @@ interface PartDetailsProps {
 }
 export default function PartDetails(props: PartDetailsProps) {
   const { part, handleOpenUpdate, handleOpenDelete } = props;
-  const { hasEditPermission } = useAuth();
+  const { hasEditPermission, hasDeletePermission } = useAuth();
   const { t }: { t: any } = useTranslation();
   const { getFormattedDate } = useContext(CompanySettingsContext);
   const [currentTab, setCurrentTab] = useState<string>('details');
@@ -127,9 +127,11 @@ export default function PartDetails(props: PartDetailsProps) {
               <EditTwoToneIcon color="primary" />
             </IconButton>
           )}
-          <IconButton onClick={handleOpenDelete}>
-            <DeleteTwoToneIcon style={{ cursor: 'pointer' }} color="error" />
-          </IconButton>
+          {hasDeletePermission(PermissionEntity.PARTS_AND_MULTIPARTS, part) && (
+            <IconButton onClick={handleOpenDelete}>
+              <DeleteTwoToneIcon style={{ cursor: 'pointer' }} color="error" />
+            </IconButton>
+          )}
         </Box>
       </Grid>
       <Divider />

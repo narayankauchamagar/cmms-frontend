@@ -79,8 +79,12 @@ function Locations() {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const { setTitle } = useContext(TitleContext);
   const { locationId } = useParams();
-  const { hasViewPermission, hasEditPermission, hasCreatePermission } =
-    useAuth();
+  const {
+    hasViewPermission,
+    hasEditPermission,
+    hasCreatePermission,
+    hasDeletePermission
+  } = useAuth();
   const [currentLocation, setCurrentLocation] = useState<Location>();
   const handleOpenUpdate = () => {
     setOpenUpdateModal(true);
@@ -257,6 +261,9 @@ function Locations() {
         ];
         if (!hasEditPermission(PermissionEntity.LOCATIONS, params.row)) {
           actions.shift();
+        }
+        if (!hasDeletePermission(PermissionEntity.LOCATIONS, params.row)) {
+          actions.pop();
         }
         return actions;
       }

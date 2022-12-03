@@ -27,7 +27,7 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
   const { purchaseOrder, handleOpenUpdate, handleDelete } = props;
   const { t }: { t: any } = useTranslation();
   const { getFormattedDate } = useContext(CompanySettingsContext);
-  const { hasEditPermission } = useAuth();
+  const { hasEditPermission, hasDeletePermission } = useAuth();
   const theme = useTheme();
   const [currentTab, setCurrentTab] = useState<string>('details');
   const tabs = [
@@ -183,9 +183,14 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
               <EditTwoToneIcon color="primary" />
             </IconButton>
           )}
-          <IconButton onClick={handleDelete}>
-            <DeleteTwoToneIcon color="error" />
-          </IconButton>
+          {hasDeletePermission(
+            PermissionEntity.PURCHASE_ORDERS,
+            purchaseOrder
+          ) && (
+            <IconButton onClick={handleDelete}>
+              <DeleteTwoToneIcon color="error" />
+            </IconButton>
+          )}
         </Box>
       </Grid>
       <Divider />

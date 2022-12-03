@@ -46,7 +46,7 @@ export default function RequestDetails({
   const { t }: { t: any } = useTranslation();
   const dispatch = useDispatch();
   const theme = useTheme();
-  const { hasEditPermission } = useAuth();
+  const { hasEditPermission, hasDeletePermission } = useAuth();
   const navigate = useNavigate();
 
   const onApprove = () => {
@@ -139,9 +139,11 @@ export default function RequestDetails({
                 <EditTwoToneIcon color="primary" />
               </IconButton>
             )}
-          <IconButton onClick={handleOpenDelete}>
-            <DeleteTwoToneIcon color="error" />
-          </IconButton>
+          {hasDeletePermission(PermissionEntity.REQUESTS, request) && (
+            <IconButton onClick={handleOpenDelete}>
+              <DeleteTwoToneIcon color="error" />
+            </IconButton>
+          )}
         </Box>
       </Grid>
       {!request.workOrder && !request.cancelled && (

@@ -79,7 +79,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const { getFormattedDate } = useContext(CompanySettingsContext);
   const { t }: { t: any } = useTranslation();
-  const { user, hasEditPermission } = useAuth();
+  const { user, hasEditPermission, hasDeletePermission } = useAuth();
 
   const [openAddTimeModal, setOpenAddTimeModal] = useState<boolean>(false);
   const [openAddCostModal, setOpenAddCostModal] = useState<boolean>(false);
@@ -419,9 +419,11 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
               <EditTwoToneIcon color="primary" />
             </IconButton>
           )}
-          <IconButton>
-            <DeleteTwoToneIcon color="error" />
-          </IconButton>
+          {hasDeletePermission(PermissionEntity.WORK_ORDERS, workOrder) && (
+            <IconButton>
+              <DeleteTwoToneIcon color="error" />
+            </IconButton>
+          )}
         </Box>
       </Grid>
       <Divider />

@@ -42,8 +42,12 @@ function Files() {
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const handleDelete = (id: number) => {};
   const handleRename = (id: number) => {};
-  const { hasViewPermission, hasEditPermission, hasCreatePermission } =
-    useAuth();
+  const {
+    hasViewPermission,
+    hasEditPermission,
+    hasCreatePermission,
+    hasDeletePermission
+  } = useAuth();
   const dispatch = useDispatch();
   useEffect(() => {
     setTitle(t('Files'));
@@ -111,6 +115,9 @@ function Files() {
         ];
         if (!hasEditPermission(PermissionEntity.FILES, params.row)) {
           actions.shift();
+        }
+        if (!hasDeletePermission(PermissionEntity.FILES, params.row)) {
+          actions.pop();
         }
         return actions;
       }

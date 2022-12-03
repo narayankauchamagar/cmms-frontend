@@ -67,6 +67,10 @@ interface AuthContextValue extends AuthState {
     permission: PermissionEntity,
     entity: Entity
   ) => boolean;
+  hasDeletePermission: <Entity extends Audit>(
+    permission: PermissionEntity,
+    entity: Entity
+  ) => boolean;
 }
 
 interface AuthProviderProps {
@@ -348,7 +352,8 @@ const AuthContext = createContext<AuthContextValue>({
   patchFieldConfiguration: () => Promise.resolve(),
   hasViewPermission: () => false,
   hasCreatePermission: () => false,
-  hasEditPermission: () => false
+  hasEditPermission: () => false,
+  hasDeletePermission: () => false
 });
 
 export const AuthProvider: FC<AuthProviderProps> = (props) => {
@@ -599,6 +604,16 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
       state.user.role.editOtherPermissions.includes(permissionEntity)
     );
   };
+  const hasDeletePermission = <Entity extends Audit>(
+    permissionEntity: PermissionEntity,
+    entity: Entity
+  ) => {
+    if (!entity) return false;
+    return (
+      state.user.id === entity.createdBy ||
+      state.user.role.deleteOtherPermissions.includes(permissionEntity)
+    );
+  };
   useEffect(() => {
     getInfos();
   }, []);
@@ -623,6 +638,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         patchFieldConfiguration,
         hasViewPermission,
         hasEditPermission,
+        hasDeletePermission,
         hasCreatePermission
       }}
     >

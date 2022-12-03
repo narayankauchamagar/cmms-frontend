@@ -30,7 +30,7 @@ export default function SetDetails(props: PartDetailsProps) {
   const { set, handleOpenUpdate, handleOpenDelete } = props;
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
-  const { hasEditPermission } = useAuth();
+  const { hasEditPermission, hasDeletePermission } = useAuth();
   const { getFormattedDate } = useContext(CompanySettingsContext);
 
   return (
@@ -60,9 +60,11 @@ export default function SetDetails(props: PartDetailsProps) {
               <EditTwoToneIcon color="primary" />
             </IconButton>
           )}
-          <IconButton onClick={handleOpenDelete}>
-            <DeleteTwoToneIcon color="error" />
-          </IconButton>
+          {hasDeletePermission(PermissionEntity.PARTS_AND_MULTIPARTS, set) && (
+            <IconButton onClick={handleOpenDelete}>
+              <DeleteTwoToneIcon color="error" />
+            </IconButton>
+          )}
         </Box>
       </Grid>
       <Divider />

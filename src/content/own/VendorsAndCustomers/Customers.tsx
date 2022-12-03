@@ -51,7 +51,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
   const { customerId } = useParams();
   const dispatch = useDispatch();
   const { customers } = useSelector((state) => state.customers);
-  const { hasEditPermission } = useAuth();
+  const { hasEditPermission, hasDeletePermission } = useAuth();
   const [currentCustomer, setCurrentCustomer] = useState<Customer>();
   const [viewOrUpdate, setViewOrUpdate] = useState<'view' | 'update'>('view');
   const [openDelete, setOpenDelete] = useState<boolean>(false);
@@ -395,16 +395,21 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
               {t('Go back')}
             </Typography>
           )}
-          <Typography
-            onClick={() => {
-              setIsCustomerDetailsOpen(false);
-              setOpenDelete(true);
-            }}
-            variant="subtitle1"
-            style={{ cursor: 'pointer' }}
-          >
-            {t('Delete')}
-          </Typography>
+          {hasDeletePermission(
+            PermissionEntity.VENDORS_AND_CUSTOMERS,
+            currentCustomer
+          ) && (
+            <Typography
+              onClick={() => {
+                setIsCustomerDetailsOpen(false);
+                setOpenDelete(true);
+              }}
+              variant="subtitle1"
+              style={{ cursor: 'pointer' }}
+            >
+              {t('Delete')}
+            </Typography>
+          )}
         </Box>
         <IconButton
           aria-label="close"

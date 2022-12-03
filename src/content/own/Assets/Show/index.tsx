@@ -39,7 +39,8 @@ const ShowAsset = ({}: PropsType) => {
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const { assetInfos } = useSelector((state) => state.assets);
   const asset: AssetDTO = assetInfos[assetId]?.asset;
-  const { hasViewPermission, hasEditPermission } = useAuth();
+  const { hasViewPermission, hasEditPermission, hasDeletePermission } =
+    useAuth();
   const dispatch = useDispatch();
 
   useEffect(() => {

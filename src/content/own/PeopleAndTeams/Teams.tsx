@@ -29,6 +29,8 @@ import { UserMiniDTO } from '../../../models/user';
 import UserAvatars from '../components/UserAvatars';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import wait from 'src/utils/wait';
+import useAuth from '../../../hooks/useAuth';
+import { PermissionEntity } from '../../../models/owns/role';
 
 interface PropsType {
   values?: any;
@@ -44,7 +46,7 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
   const [currentTeam, setCurrentTeam] = useState<Team>();
   const { teams } = useSelector((state) => state.teams);
   const { showSnackBar } = useContext(CustomSnackBarContext);
-
+  const { hasEditPermission, hasDeletePermission } = useAuth();
   const [isTeamDetailsOpen, setIsTeamDetailsOpen] = useState(false);
   const [viewOrUpdate, setViewOrUpdate] = useState<'view' | 'update'>('view');
   const { teamId } = useParams();
@@ -243,14 +245,19 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
       >
         <Box sx={{ display: 'flex', flexDirection: 'row' }}>
           {viewOrUpdate === 'view' ? (
-            <Typography
-              onClick={() => setViewOrUpdate('update')}
-              style={{ cursor: 'pointer' }}
-              variant="subtitle1"
-              mr={2}
-            >
-              {t('Edit')}
-            </Typography>
+            hasEditPermission(
+              PermissionEntity.PEOPLE_AND_TEAMS,
+              currentTeam
+            ) && (
+              <Typography
+                onClick={() => setViewOrUpdate('update')}
+                style={{ cursor: 'pointer' }}
+                variant="subtitle1"
+                mr={2}
+              >
+                {t('Edit')}
+              </Typography>
+            )
           ) : (
             <Typography
               onClick={() => setViewOrUpdate('view')}
@@ -261,7 +268,10 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
               {t('Go back')}
             </Typography>
           )}
-          <Typography variant="subtitle1">{t('Delete')}</Typography>
+          {hasDeletePermission(
+            PermissionEntity.PEOPLE_AND_TEAMS,
+            currentTeam
+          ) && <Typography variant="subtitle1">{t('Delete')}</Typography>}
         </Box>
         <IconButton
           aria-label="close"

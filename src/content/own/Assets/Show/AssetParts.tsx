@@ -22,7 +22,7 @@ interface PropsType {
 const AssetParts = ({ asset }: PropsType) => {
   const { t }: { t: any } = useTranslation();
   const dispatch = useDispatch();
-  const { hasEditPermission } = useAuth();
+  const { hasEditPermission, hasDeletePermission } = useAuth();
 
   const handleDelete = (id: number) => {
     if (

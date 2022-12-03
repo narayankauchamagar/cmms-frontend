@@ -55,7 +55,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
   const [currentVendor, setCurrentVendor] = useState<Vendor>();
   const [viewOrUpdate, setViewOrUpdate] = useState<'view' | 'update'>('view');
   const { showSnackBar } = useContext(CustomSnackBarContext);
-  const { hasEditPermission } = useAuth();
+  const { hasEditPermission, hasDeletePermission } = useAuth();
 
   useEffect(() => {
     dispatch(getVendors());
@@ -355,16 +355,21 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
               {t('Go back')}
             </Typography>
           )}
-          <Typography
-            onClick={() => {
-              setIsVendorDetailsOpen(false);
-              setOpenDelete(true);
-            }}
-            variant="subtitle1"
-            style={{ cursor: 'pointer' }}
-          >
-            {t('Delete')}
-          </Typography>
+          {hasDeletePermission(
+            PermissionEntity.VENDORS_AND_CUSTOMERS,
+            currentVendor
+          ) && (
+            <Typography
+              onClick={() => {
+                setIsVendorDetailsOpen(false);
+                setOpenDelete(true);
+              }}
+              variant="subtitle1"
+              style={{ cursor: 'pointer' }}
+            >
+              {t('Delete')}
+            </Typography>
+          )}
         </Box>
         <IconButton
           aria-label="close"
