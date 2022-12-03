@@ -23,6 +23,9 @@ import { useDispatch, useSelector } from '../../../../store';
 import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContext';
 import { formatAssetValues } from '../../../../utils/formatters';
 import { CompanySettingsContext } from '../../../../contexts/CompanySettingsContext';
+import { PermissionEntity } from '../../../../models/owns/role';
+import PermissionErrorMessage from '../../components/PermissionErrorMessage';
+import useAuth from '../../../../hooks/useAuth';
 
 interface PropsType {}
 
@@ -36,6 +39,7 @@ const ShowAsset = ({}: PropsType) => {
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const { assetInfos } = useSelector((state) => state.assets);
   const asset = assetInfos[assetId]?.asset;
+  const { hasViewPermission } = useAuth();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -309,29 +313,38 @@ const ShowAsset = ({}: PropsType) => {
       </DialogContent>
     </Dialog>
   );
-  return (
-    <MultipleTabsLayout
-      basePath={`/app/assets/${assetId}`}
-      tabs={tabs}
-      tabIndex={tabIndex}
-      title={`Asset`}
-      action={handleOpenUpdateModal}
-      actionTitle={t('Edit')}
-      withoutCard
-      editAction
-    >
-      {isNumeric(assetId) ? (
-        tabIndex === 0 ? (
-          <AssetWorkOrders asset={asset} />
-        ) : tabIndex === 1 ? (
-          <AssetDetails asset={asset} />
-        ) : (
-          tabIndex === 2 && <AssetParts asset={asset} />
-        )
-      ) : null}
-      {renderAssetUpdateModal()}
-    </MultipleTabsLayout>
-  );
+  if (hasViewPermission(PermissionEntity.ASSETS))
+    return (
+      <MultipleTabsLayout
+        basePath={`/app/assets/${assetId}`}
+        tabs={tabs}
+        tabIndex={tabIndex}
+        title={`Asset`}
+        action={handleOpenUpdateModal}
+        actionTitle={t('Edit')}
+        withoutCard
+        editAction
+      >
+        {isNumeric(assetId) ? (
+          tabIndex === 0 ? (
+            <AssetWorkOrders asset={asset} />
+          ) : tabIndex === 1 ? (
+            <AssetDetails asset={asset} />
+          ) : (
+            tabIndex === 2 && <AssetParts asset={asset} />
+          )
+        ) : null}
+        {renderAssetUpdateModal()}
+      </MultipleTabsLayout>
+    );
+  else
+    return (
+      <PermissionErrorMessage
+        message={
+          "You don't have access to Assets. Please contact your administrator if you should have access"
+        }
+      />
+    );
 };
 
 export default ShowAsset;

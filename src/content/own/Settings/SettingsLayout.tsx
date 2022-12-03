@@ -2,6 +2,9 @@ import { ReactNode, useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import MultipleTabsLayout from '../components/MultipleTabsLayout';
 import { TitleContext } from '../../../contexts/TitleContext';
+import useAuth from '../../../hooks/useAuth';
+import { PermissionEntity } from '../../../models/owns/role';
+import PermissionErrorMessage from '../components/PermissionErrorMessage';
 
 interface SettingsLayoutProps {
   children?: ReactNode;
@@ -11,6 +14,7 @@ interface SettingsLayoutProps {
 function SettingsLayout(props: SettingsLayoutProps) {
   const { children, tabIndex } = props;
   const { t }: { t: any } = useTranslation();
+  const { user } = useAuth();
   const tabs = [
     { value: '', label: t('General Settings') },
     { value: 'work-order', label: t('Work order configuration') },
@@ -24,7 +28,7 @@ function SettingsLayout(props: SettingsLayoutProps) {
     setTitle(t('Settings'));
   }, []);
 
-  return (
+  return user.role.viewPermissions.includes(PermissionEntity.SETTINGS) ? (
     <MultipleTabsLayout
       basePath="/app/settings"
       tabs={tabs}
@@ -33,6 +37,12 @@ function SettingsLayout(props: SettingsLayoutProps) {
     >
       {children}
     </MultipleTabsLayout>
+  ) : (
+    <PermissionErrorMessage
+      message={
+        "You don't have access to settings. Please contact your administrator if you should have access"
+      }
+    />
   );
 }
 

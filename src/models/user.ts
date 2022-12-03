@@ -1,3 +1,5 @@
+import { Role } from './owns/role';
+
 export type UserRole = 'admin' | 'customer' | 'subscriber';
 
 export interface User {
@@ -25,7 +27,7 @@ export interface OwnUser {
   rate: number;
   phone: string;
   jobTitle: string;
-  role: { name: string };
+  role: Role;
   companyId: number;
 }
 export interface UserMiniDTO {

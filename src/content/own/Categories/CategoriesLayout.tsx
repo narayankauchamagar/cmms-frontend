@@ -36,6 +36,8 @@ import {
 import useAuth from '../../../hooks/useAuth';
 import Category from '../../../models/owns/category';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
+import { PermissionEntity } from '../../../models/owns/role';
+import PermissionErrorMessage from '../components/PermissionErrorMessage';
 
 const IconButtonWrapper = styled(IconButton)(
   ({ theme }) => `
@@ -77,7 +79,7 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
   const { categories } = useSelector((state) => state.categories);
   const { setTitle } = useContext(TitleContext);
   const dispatch = useDispatch();
-  const { user } = useAuth();
+  const { user, hasViewPermission } = useAuth();
   const { companySettingsId } = user;
   const [currentCategory, setCurrentCategory] = useState<Category>();
   const { showSnackBar } = useContext(CustomSnackBarContext);
@@ -90,7 +92,8 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
   };
   useEffect(() => {
     setTitle(t('Categories'));
-    dispatch(getCategories(basePath));
+    if (hasViewPermission(PermissionEntity.CATEGORIES))
+      dispatch(getCategories(basePath));
   }, []);
 
   const onCreationSuccess = () => {
@@ -318,136 +321,149 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
       </Formik>
     </Dialog>
   );
-  return (
-    <MultipleTabsLayout
-      basePath="/app/categories"
-      tabs={tabs}
-      tabIndex={tabIndex}
-      title={`${tabs[tabIndex].label} Categories`}
-      action={handleOpenAdd}
-      actionTitle={t('Categories')}
-    >
-      {renderModal()}
-      {renderUpdateModal()}
-      <Grid item xs={12}>
-        <Box p={4}>
-          {categories[basePath]?.length ? (
-            <ListWrapper disablePadding>
-              {categories[basePath].map((item) => (
-                <Fragment key={item.id}>
-                  <ListItem
-                    sx={{
-                      display: { xs: 'block', md: 'flex' },
-                      py: 1.5,
-                      px: 2
-                    }}
-                  >
-                    <ListItemText
-                      disableTypography
-                      primary={
-                        <Typography
-                          sx={{
-                            display: 'block',
-                            mb: 1
-                          }}
-                          variant="h6"
-                        >
-                          {item.name}
-                        </Typography>
-                      }
-                    />
-                    <Box
-                      component="span"
+  if (hasViewPermission(PermissionEntity.CATEGORIES))
+    return (
+      <MultipleTabsLayout
+        basePath="/app/categories"
+        tabs={tabs}
+        tabIndex={tabIndex}
+        title={`${tabs[tabIndex].label} Categories`}
+        action={handleOpenAdd}
+        actionTitle={t('Categories')}
+      >
+        {renderModal()}
+        {renderUpdateModal()}
+        <Grid item xs={12}>
+          <Box p={4}>
+            {categories[basePath]?.length ? (
+              <ListWrapper disablePadding>
+                {categories[basePath].map((item) => (
+                  <Fragment key={item.id}>
+                    <ListItem
                       sx={{
-                        display: { xs: 'none', md: 'inline-block' }
+                        display: { xs: 'block', md: 'flex' },
+                        py: 1.5,
+                        px: 2
                       }}
                     >
-                      <Box ml={3} textAlign="right">
-                        <IconButtonWrapper
-                          onClick={() => {
-                            setCurrentCategory(
-                              categories[basePath].find(
-                                (category) => category.id === item.id
-                              )
-                            );
-                            setOpenUpdateCategoryModal(true);
-                          }}
-                          sx={{
-                            backgroundColor: `${theme.colors.primary.main}`,
-                            color: `${theme.palette.getContrastText(
-                              theme.colors.primary.main
-                            )}`,
-                            transition: `${theme.transitions.create(['all'])}`,
-
-                            '&:hover': {
+                      <ListItemText
+                        disableTypography
+                        primary={
+                          <Typography
+                            sx={{
+                              display: 'block',
+                              mb: 1
+                            }}
+                            variant="h6"
+                          >
+                            {item.name}
+                          </Typography>
+                        }
+                      />
+                      <Box
+                        component="span"
+                        sx={{
+                          display: { xs: 'none', md: 'inline-block' }
+                        }}
+                      >
+                        <Box ml={3} textAlign="right">
+                          <IconButtonWrapper
+                            onClick={() => {
+                              setCurrentCategory(
+                                categories[basePath].find(
+                                  (category) => category.id === item.id
+                                )
+                              );
+                              setOpenUpdateCategoryModal(true);
+                            }}
+                            sx={{
                               backgroundColor: `${theme.colors.primary.main}`,
                               color: `${theme.palette.getContrastText(
                                 theme.colors.primary.main
-                              )}`
-                            }
-                          }}
-                          size="small"
-                        >
-                          <EditTwoToneIcon fontSize="small" />
-                        </IconButtonWrapper>
-                        <IconButtonWrapper
-                          onClick={() => {
-                            setCurrentCategory(
-                              categories[basePath].find(
-                                (category) => category.id === item.id
-                              )
-                            );
-                            setOpenDelete(true);
-                          }}
-                          sx={{
-                            ml: 1,
-                            backgroundColor: `${theme.colors.error.lighter}`,
-                            color: `${theme.colors.error.main}`,
-                            transition: `${theme.transitions.create(['all'])}`,
+                              )}`,
+                              transition: `${theme.transitions.create([
+                                'all'
+                              ])}`,
 
-                            '&:hover': {
-                              backgroundColor: `${theme.colors.error.main}`,
-                              color: `${theme.palette.getContrastText(
-                                theme.colors.error.main
-                              )}`
-                            }
-                          }}
-                          size="small"
-                        >
-                          <ClearTwoToneIcon fontSize="small" />
-                        </IconButtonWrapper>
+                              '&:hover': {
+                                backgroundColor: `${theme.colors.primary.main}`,
+                                color: `${theme.palette.getContrastText(
+                                  theme.colors.primary.main
+                                )}`
+                              }
+                            }}
+                            size="small"
+                          >
+                            <EditTwoToneIcon fontSize="small" />
+                          </IconButtonWrapper>
+                          <IconButtonWrapper
+                            onClick={() => {
+                              setCurrentCategory(
+                                categories[basePath].find(
+                                  (category) => category.id === item.id
+                                )
+                              );
+                              setOpenDelete(true);
+                            }}
+                            sx={{
+                              ml: 1,
+                              backgroundColor: `${theme.colors.error.lighter}`,
+                              color: `${theme.colors.error.main}`,
+                              transition: `${theme.transitions.create([
+                                'all'
+                              ])}`,
+
+                              '&:hover': {
+                                backgroundColor: `${theme.colors.error.main}`,
+                                color: `${theme.palette.getContrastText(
+                                  theme.colors.error.main
+                                )}`
+                              }
+                            }}
+                            size="small"
+                          >
+                            <ClearTwoToneIcon fontSize="small" />
+                          </IconButtonWrapper>
+                        </Box>
                       </Box>
-                    </Box>
-                  </ListItem>
-                  <Divider sx={{ mt: 1 }} />
-                </Fragment>
-              ))}
-            </ListWrapper>
-          ) : (
-            <Box display="flex" flexDirection="column" alignItems="center">
-              <Typography variant="h4">
-                {t(
-                  `Looks like you don\'t have any ${tabs[tabIndex].label} Categories yet.`
-                )}
-              </Typography>
-              <Typography sx={{ mt: 1 }} variant="h6">
-                {t('Press the "+" button to add your first category.')}
-              </Typography>
-            </Box>
-          )}
-        </Box>
-      </Grid>
-      <ConfirmDialog
-        open={openDelete}
-        onCancel={() => {
-          setOpenDelete(false);
-        }}
-        onConfirm={() => handleDelete(currentCategory?.id)}
-        confirmText={t('Delete')}
-        question={t('Are you sure you want to delete this Category?')}
+                    </ListItem>
+                    <Divider sx={{ mt: 1 }} />
+                  </Fragment>
+                ))}
+              </ListWrapper>
+            ) : (
+              <Box display="flex" flexDirection="column" alignItems="center">
+                <Typography variant="h4">
+                  {t(
+                    `Looks like you don\'t have any ${tabs[tabIndex].label} Categories yet.`
+                  )}
+                </Typography>
+                <Typography sx={{ mt: 1 }} variant="h6">
+                  {t('Press the "+" button to add your first category.')}
+                </Typography>
+              </Box>
+            )}
+          </Box>
+        </Grid>
+        <ConfirmDialog
+          open={openDelete}
+          onCancel={() => {
+            setOpenDelete(false);
+          }}
+          onConfirm={() => handleDelete(currentCategory?.id)}
+          confirmText={t('Delete')}
+          question={t('Are you sure you want to delete this Category?')}
+        />
+      </MultipleTabsLayout>
+    );
+  else
+    return (
+      <PermissionErrorMessage
+        message={
+          "You don't have access to Categories. Please contact your administrator if you should have access"
+        }
       />
-    </MultipleTabsLayout>
-  );
+    );
 }
 
 export default CategoriesLayout;

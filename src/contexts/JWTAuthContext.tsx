@@ -17,6 +17,7 @@ import {
   FieldType
 } from '../models/owns/fieldConfiguration';
 import { Company } from '../models/owns/company';
+import { PermissionEntity } from 'src/models/owns/role';
 
 interface AuthState {
   isInitialized: boolean;
@@ -59,6 +60,7 @@ interface AuthContextValue extends AuthState {
     fieldType: FieldType,
     fieldConfigurationsType: FieldConfigurationsType
   ) => Promise<void>;
+  hasViewPermission: (permission: PermissionEntity) => boolean;
 }
 
 interface AuthProviderProps {
@@ -337,7 +339,8 @@ const AuthContext = createContext<AuthContextValue>({
   updatePassword: () => Promise.resolve(false),
   fetchCompanySettings: () => Promise.resolve(),
   patchGeneralPreferences: () => Promise.resolve(),
-  patchFieldConfiguration: () => Promise.resolve()
+  patchFieldConfiguration: () => Promise.resolve(),
+  hasViewPermission: () => false
 });
 
 export const AuthProvider: FC<AuthProviderProps> = (props) => {
@@ -577,6 +580,9 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
       }
     });
   };
+  const hasViewPermission = (permissionEntity: PermissionEntity) => {
+    return state.user.role.viewPermissions.includes(permissionEntity);
+  };
   useEffect(() => {
     getInfos();
   }, []);
@@ -598,7 +604,8 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         fetchCompanySettings,
         fetchCompany,
         patchGeneralPreferences,
-        patchFieldConfiguration
+        patchFieldConfiguration,
+        hasViewPermission
       }}
     >
       {children}

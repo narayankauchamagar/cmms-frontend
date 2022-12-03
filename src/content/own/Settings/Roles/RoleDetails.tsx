@@ -96,6 +96,13 @@ export default function RoleDetails(props: RoleDetailsProps) {
         label: t('Work Orders'),
         condition: (role: Role) =>
           role.deleteOtherPermissions.includes(PermissionEntity.WORK_ORDERS)
+      },
+      {
+        label: t('Preventive Maintenance'),
+        condition: (role: Role) =>
+          role.deleteOtherPermissions.includes(
+            PermissionEntity.PREVENTIVE_MAINTENANCES
+          )
       }
     ],
     access: [

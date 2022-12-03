@@ -37,22 +37,27 @@ import { enumerate } from '../../../utils/displayers';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 import { getAssetUrl } from '../../../utils/urlPaths';
+import useAuth from '../../../hooks/useAuth';
+import { PermissionEntity } from '../../../models/owns/role';
+import PermissionErrorMessage from '../components/PermissionErrorMessage';
 
 function Assets() {
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
   const { uploadFiles } = useContext(CompanySettingsContext);
   const navigate = useNavigate();
+  const { hasViewPermission } = useAuth();
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const dispatch = useDispatch();
   const { assetsHierarchy } = useSelector((state) => state.assets);
   const apiRef = useGridApiRef();
   const { getFormattedDate } = useContext(CompanySettingsContext);
   const { showSnackBar } = useContext(CustomSnackBarContext);
-
   useEffect(() => {
     setTitle(t('Assets'));
-    dispatch(getAssetChildren(0, []));
+    if (hasViewPermission(PermissionEntity.ASSETS)) {
+      dispatch(getAssetChildren(0, []));
+    }
   }, []);
 
   const onCreationSuccess = () => {
@@ -327,61 +332,66 @@ function Assets() {
   };
 
   useEffect(() => {
-    const handleRowExpansionChange: GridEventListener<
-      'rowExpansionChange'
-    > = async (node) => {
-      const row = apiRef.current.getRow(node.id) as AssetRow | null;
-      if (!node.childrenExpanded || !row || row.childrenFetched) {
-        return;
-      }
-      apiRef.current.updateRows([
-        {
-          id: `Loading assets-${node.id}`,
-          hierarchy: [...row.hierarchy, '']
+    if (apiRef.current.getRow) {
+      const handleRowExpansionChange: GridEventListener<
+        'rowExpansionChange'
+      > = async (node) => {
+        const row = apiRef.current.getRow(node.id) as AssetRow | null;
+        if (!node.childrenExpanded || !row || row.childrenFetched) {
+          return;
         }
-      ]);
-      dispatch(getAssetChildren(row.id, row.hierarchy));
-      // const childrenRows = assetsHierarchy1;
-      // apiRef.current.updateRows([
-      //   ...childrenRows.map((childRow) => {
-      //     return { ...childRow, hierarchy: [...row.hierarchy, childRow.id] };
-      //   }),
-      //   { id: node.id, childrenFetched: true },
-      //   { id: `placeholder-children-${node.id}`, _action: 'delete' }
-      // ]);
-      //
-      // if (childrenRows.length) {
-      //   apiRef.current.setRowChildrenExpansion(node.id, true);
-      // }
-    };
-    /**
-     * By default, the grid does not toggle the expansion of rows with 0 children
-     * We need to override the `cellKeyDown` event listener to force the expansion if there are children on the server
-     */
-    const handleCellKeyDown: GridEventListener<'cellKeyDown'> = (
-      params,
-      event
-    ) => {
-      const cellParams = apiRef.current.getCellParams(params.id, params.field);
-      if (cellParams.colDef.type === 'treeDataGroup' && event.key === ' ') {
-        event.stopPropagation();
-        event.preventDefault();
-        event.defaultMuiPrevented = true;
-
-        apiRef.current.setRowChildrenExpansion(
+        apiRef.current.updateRows([
+          {
+            id: `Loading assets-${node.id}`,
+            hierarchy: [...row.hierarchy, '']
+          }
+        ]);
+        dispatch(getAssetChildren(row.id, row.hierarchy));
+        // const childrenRows = assetsHierarchy1;
+        // apiRef.current.updateRows([
+        //   ...childrenRows.map((childRow) => {
+        //     return { ...childRow, hierarchy: [...row.hierarchy, childRow.id] };
+        //   }),
+        //   { id: node.id, childrenFetched: true },
+        //   { id: `placeholder-children-${node.id}`, _action: 'delete' }
+        // ]);
+        //
+        // if (childrenRows.length) {
+        //   apiRef.current.setRowChildrenExpansion(node.id, true);
+        // }
+      };
+      /**
+       * By default, the grid does not toggle the expansion of rows with 0 children
+       * We need to override the `cellKeyDown` event listener to force the expansion if there are children on the server
+       */
+      const handleCellKeyDown: GridEventListener<'cellKeyDown'> = (
+        params,
+        event
+      ) => {
+        const cellParams = apiRef.current.getCellParams(
           params.id,
-          !params.rowNode.childrenExpanded
+          params.field
         );
-      }
-    };
+        if (cellParams.colDef.type === 'treeDataGroup' && event.key === ' ') {
+          event.stopPropagation();
+          event.preventDefault();
+          event.defaultMuiPrevented = true;
 
-    apiRef.current.subscribeEvent(
-      'rowExpansionChange',
-      handleRowExpansionChange
-    );
-    apiRef.current.subscribeEvent('cellKeyDown', handleCellKeyDown, {
-      isFirst: true
-    });
+          apiRef.current.setRowChildrenExpansion(
+            params.id,
+            !params.rowNode.childrenExpanded
+          );
+        }
+      };
+
+      apiRef.current.subscribeEvent(
+        'rowExpansionChange',
+        handleRowExpansionChange
+      );
+      apiRef.current.subscribeEvent('cellKeyDown', handleCellKeyDown, {
+        isFirst: true
+      });
+    }
   }, [apiRef]);
 
   const renderAssetAddModal = () => (
@@ -450,74 +460,83 @@ function Assets() {
     renderCell: (params) => <GroupingCellWithLazyLoading {...params} />
   };
 
-  return (
-    <>
-      {renderAssetAddModal()}
-      <Helmet>
-        <title>{t('Assets')}</title>
-      </Helmet>
-      <Grid
-        container
-        justifyContent="center"
-        alignItems="stretch"
-        spacing={1}
-        paddingX={4}
-      >
+  if (hasViewPermission(PermissionEntity.ASSETS))
+    return (
+      <>
+        {renderAssetAddModal()}
+        <Helmet>
+          <title>{t('Assets')}</title>
+        </Helmet>
         <Grid
-          item
-          xs={12}
-          display="flex"
-          flexDirection="row"
-          justifyContent="right"
-          alignItems="center"
+          container
+          justifyContent="center"
+          alignItems="stretch"
+          spacing={1}
+          paddingX={4}
         >
-          <Button
-            onClick={() => setOpenAddModal(true)}
-            startIcon={<AddTwoToneIcon />}
-            sx={{ mx: 6, my: 1 }}
-            variant="contained"
+          <Grid
+            item
+            xs={12}
+            display="flex"
+            flexDirection="row"
+            justifyContent="right"
+            alignItems="center"
           >
-            Asset
-          </Button>
-        </Grid>
-        <Grid item xs={12}>
-          <Card
-            sx={{
-              p: 2,
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between'
-            }}
-          >
-            <Box sx={{ height: 500, width: '95%' }}>
-              <CustomDataGrid
-                treeData
-                columns={columns}
-                rows={assetsHierarchy}
-                apiRef={apiRef}
-                getTreeDataPath={(row) =>
-                  row.hierarchy.map((id) => id.toString())
-                }
-                groupingColDef={groupingColDef}
-                components={{
-                  Toolbar: GridToolbar
-                }}
-                onRowClick={(params) => {
-                  navigate(getAssetUrl(params.id));
-                }}
-                initialState={{
-                  columns: {
-                    columnVisibilityModel: {}
+            <Button
+              onClick={() => setOpenAddModal(true)}
+              startIcon={<AddTwoToneIcon />}
+              sx={{ mx: 6, my: 1 }}
+              variant="contained"
+            >
+              Asset
+            </Button>
+          </Grid>
+          <Grid item xs={12}>
+            <Card
+              sx={{
+                p: 2,
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+              }}
+            >
+              <Box sx={{ height: 500, width: '95%' }}>
+                <CustomDataGrid
+                  treeData
+                  columns={columns}
+                  rows={assetsHierarchy}
+                  apiRef={apiRef}
+                  getTreeDataPath={(row) =>
+                    row.hierarchy.map((id) => id.toString())
                   }
-                }}
-              />
-            </Box>
-          </Card>
+                  groupingColDef={groupingColDef}
+                  components={{
+                    Toolbar: GridToolbar
+                  }}
+                  onRowClick={(params) => {
+                    navigate(getAssetUrl(params.id));
+                  }}
+                  initialState={{
+                    columns: {
+                      columnVisibilityModel: {}
+                    }
+                  }}
+                />
+              </Box>
+            </Card>
+          </Grid>
         </Grid>
-      </Grid>
-    </>
-  );
+      </>
+    );
+  else
+    return (
+      <PermissionErrorMessage
+        message={
+          "You don't have access to Assets. Please contact your administrator if you should have access"
+        }
+      />
+    );
 }
 
 export default Assets;

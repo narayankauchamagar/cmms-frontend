@@ -104,6 +104,12 @@ function Roles() {
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const dispatch = useDispatch();
   const { roles } = useSelector((state) => state.roles);
+
+  useEffect(() => {
+    if (currentRole) {
+      setCurrentRole(roles.find((role) => role.id == currentRole.id));
+    }
+  }, [roles]);
   const permissionsMapping = new Map<
     string,
     {

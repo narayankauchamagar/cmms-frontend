@@ -133,49 +133,54 @@ function Locations() {
   }, []);
 
   useEffect(() => {
-    const handleRowExpansionChange: GridEventListener<
-      'rowExpansionChange'
-    > = async (node) => {
-      const row = apiRef.current.getRow(node.id) as AssetRow | null;
-      if (!node.childrenExpanded || !row || row.childrenFetched) {
-        return;
-      }
-      apiRef.current.updateRows([
-        {
-          id: `Loading Locations-${node.id}`,
-          hierarchy: [...row.hierarchy, '']
+    if (apiRef.current.getRow) {
+      const handleRowExpansionChange: GridEventListener<
+        'rowExpansionChange'
+      > = async (node) => {
+        const row = apiRef.current.getRow(node.id) as AssetRow | null;
+        if (!node.childrenExpanded || !row || row.childrenFetched) {
+          return;
         }
-      ]);
-      dispatch(getLocationChildren(row.id, row.hierarchy));
-    };
-    /**
-     * By default, the grid does not toggle the expansion of rows with 0 children
-     * We need to override the `cellKeyDown` event listener to force the expansion if there are children on the server
-     */
-    const handleCellKeyDown: GridEventListener<'cellKeyDown'> = (
-      params,
-      event
-    ) => {
-      const cellParams = apiRef.current.getCellParams(params.id, params.field);
-      if (cellParams.colDef.type === 'treeDataGroup' && event.key === ' ') {
-        event.stopPropagation();
-        event.preventDefault();
-        event.defaultMuiPrevented = true;
-
-        apiRef.current.setRowChildrenExpansion(
+        apiRef.current.updateRows([
+          {
+            id: `Loading Locations-${node.id}`,
+            hierarchy: [...row.hierarchy, '']
+          }
+        ]);
+        dispatch(getLocationChildren(row.id, row.hierarchy));
+      };
+      /**
+       * By default, the grid does not toggle the expansion of rows with 0 children
+       * We need to override the `cellKeyDown` event listener to force the expansion if there are children on the server
+       */
+      const handleCellKeyDown: GridEventListener<'cellKeyDown'> = (
+        params,
+        event
+      ) => {
+        const cellParams = apiRef.current.getCellParams(
           params.id,
-          !params.rowNode.childrenExpanded
+          params.field
         );
-      }
-    };
+        if (cellParams.colDef.type === 'treeDataGroup' && event.key === ' ') {
+          event.stopPropagation();
+          event.preventDefault();
+          event.defaultMuiPrevented = true;
 
-    apiRef.current.subscribeEvent(
-      'rowExpansionChange',
-      handleRowExpansionChange
-    );
-    apiRef.current.subscribeEvent('cellKeyDown', handleCellKeyDown, {
-      isFirst: true
-    });
+          apiRef.current.setRowChildrenExpansion(
+            params.id,
+            !params.rowNode.childrenExpanded
+          );
+        }
+      };
+
+      apiRef.current.subscribeEvent(
+        'rowExpansionChange',
+        handleRowExpansionChange
+      );
+      apiRef.current.subscribeEvent('cellKeyDown', handleCellKeyDown, {
+        isFirst: true
+      });
+    }
   }, [apiRef]);
 
   useEffect(() => {
