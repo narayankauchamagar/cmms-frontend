@@ -26,6 +26,8 @@ import {
 import ConfirmDialog from '../../components/ConfirmDialog';
 import { getTaskFromTaskBase } from '../../../../utils/formatters';
 import useAuth from '../../../../hooks/useAuth';
+import { PlanFeature } from '../../../../models/owns/subscriptionPlan';
+import FeatureErrorMessage from '../../components/FeatureErrorMessage';
 
 function Checklists() {
   const { t }: { t: any } = useTranslation();
@@ -33,6 +35,7 @@ function Checklists() {
   const [openEditChecklist, setOpenEditChecklist] = useState(false);
   const [currentChecklist, setCurrentChecklist] = useState<Checklist>();
   const [openDelete, setOpenDelete] = useState<boolean>(false);
+  const { hasFeature } = useAuth();
   const dispatch = useDispatch();
   const { user } = useAuth();
   const { companySettingsId } = user;
@@ -40,7 +43,7 @@ function Checklists() {
   const { checklists } = useSelector((state) => state.checklists);
 
   useEffect(() => {
-    dispatch(getChecklists());
+    if (hasFeature(PlanFeature.CHECKLIST)) dispatch(getChecklists());
   }, []);
   const onDeleteSuccess = () => {
     showSnackBar(t('The Checklist has been deleted successfully'), 'success');
@@ -102,88 +105,94 @@ function Checklists() {
   ];
   return (
     <SettingsLayout tabIndex={4}>
-      <Grid item xs={12}>
-        <Box
-          sx={{
-            height: 600,
-            width: '95%',
-            p: 4
-          }}
-        >
-          <Button
-            sx={{
-              mb: 2
+      {hasFeature(PlanFeature.CHECKLIST) ? (
+        <>
+          <Grid item xs={12}>
+            <Box
+              sx={{
+                height: 600,
+                width: '95%',
+                p: 4
+              }}
+            >
+              <Button
+                sx={{
+                  mb: 2
+                }}
+                variant="contained"
+                onClick={() => setOpenCreateChecklist(true)}
+                startIcon={<AddTwoToneIcon fontSize="small" />}
+              >
+                {t('Create Checklist')}
+              </Button>
+              <CustomDataGrid
+                columns={columns}
+                rows={checklists}
+                components={{
+                  Toolbar: GridToolbar
+                }}
+                onRowClick={(params: GridRowParams<Checklist>) => {
+                  setCurrentChecklist(params.row);
+                  setOpenEditChecklist(true);
+                }}
+                initialState={{
+                  columns: {
+                    columnVisibilityModel: {}
+                  }
+                }}
+              />
+            </Box>
+          </Grid>
+          <SelectTasksModal
+            open={openCreateChecklist}
+            onClose={() => setOpenCreateChecklist(false)}
+            selected={[]}
+            onSelect={(tasks, infos) => {
+              dispatch(
+                addChecklist(
+                  { ...infos, taskBases: tasks.map((task) => task.taskBase) },
+                  companySettingsId
+                )
+              );
             }}
-            variant="contained"
-            onClick={() => setOpenCreateChecklist(true)}
-            startIcon={<AddTwoToneIcon fontSize="small" />}
-          >
-            {t('Create Checklist')}
-          </Button>
-          <CustomDataGrid
-            columns={columns}
-            rows={checklists}
-            components={{
-              Toolbar: GridToolbar
+            action="createChecklist"
+          />
+          <SelectTasksModal
+            open={openEditChecklist}
+            onClose={() => setOpenEditChecklist(false)}
+            selected={
+              currentChecklist?.taskBases.map((taskBase) =>
+                getTaskFromTaskBase(taskBase)
+              ) ?? []
+            }
+            onSelect={(tasks, infos) => {
+              dispatch(
+                editChecklist(currentChecklist.id, {
+                  ...infos,
+                  taskBases: tasks.map((task) => task.taskBase)
+                })
+              );
             }}
-            onRowClick={(params: GridRowParams<Checklist>) => {
-              setCurrentChecklist(params.row);
-              setOpenEditChecklist(true);
-            }}
-            initialState={{
-              columns: {
-                columnVisibilityModel: {}
-              }
+            action="editChecklist"
+            infos={{
+              name: currentChecklist?.name,
+              description: currentChecklist?.description,
+              category: currentChecklist?.category
             }}
           />
-        </Box>
-      </Grid>
-      <SelectTasksModal
-        open={openCreateChecklist}
-        onClose={() => setOpenCreateChecklist(false)}
-        selected={[]}
-        onSelect={(tasks, infos) => {
-          dispatch(
-            addChecklist(
-              { ...infos, taskBases: tasks.map((task) => task.taskBase) },
-              companySettingsId
-            )
-          );
-        }}
-        action="createChecklist"
-      />
-      <SelectTasksModal
-        open={openEditChecklist}
-        onClose={() => setOpenEditChecklist(false)}
-        selected={
-          currentChecklist?.taskBases.map((taskBase) =>
-            getTaskFromTaskBase(taskBase)
-          ) ?? []
-        }
-        onSelect={(tasks, infos) => {
-          dispatch(
-            editChecklist(currentChecklist.id, {
-              ...infos,
-              taskBases: tasks.map((task) => task.taskBase)
-            })
-          );
-        }}
-        action="editChecklist"
-        infos={{
-          name: currentChecklist?.name,
-          description: currentChecklist?.description,
-          category: currentChecklist?.category
-        }}
-      />
-      <ConfirmDialog
-        open={openDelete}
-        onCancel={() => {
-          setOpenDelete(false);
-        }}
-        onConfirm={() => handleDelete(currentChecklist?.id)}
-        confirmText={t('Delete')}
-        question={t('Are you sure you want to delete this Checklist?')}
-      />
+          <ConfirmDialog
+            open={openDelete}
+            onCancel={() => {
+              setOpenDelete(false);
+            }}
+            onConfirm={() => handleDelete(currentChecklist?.id)}
+            confirmText={t('Delete')}
+            question={t('Are you sure you want to delete this Checklist?')}
+          />
+        </>
+      ) : (
+        <FeatureErrorMessage message="Please Upgrade to use Checklists" />
+      )}
     </SettingsLayout>
   );
 }

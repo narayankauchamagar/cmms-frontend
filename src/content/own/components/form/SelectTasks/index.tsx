@@ -11,6 +11,7 @@ import {
   Tab,
   Tabs,
   TextField,
+  Tooltip,
   Typography,
   Zoom
 } from '@mui/material';
@@ -28,6 +29,8 @@ import { Checklist } from '../../../../../models/owns/checklists';
 import { getTaskFromTaskBase } from '../../../../../utils/formatters';
 import { useDispatch, useSelector } from '../../../../../store';
 import { getChecklists } from '../../../../../slices/checklist';
+import useAuth from '../../../../../hooks/useAuth';
+import { PlanFeature } from '../../../../../models/owns/subscriptionPlan';
 
 interface SelectTasksProps {
   selected: Task[];
@@ -57,6 +60,7 @@ export default function SelectTasks({
   const [description, setDescription] = useState<string>();
   const [category, setCategory] = useState<string>();
   const dispatch = useDispatch();
+  const { hasFeature } = useAuth();
   const { checklists } = useSelector((state) => state.checklists);
 
   useEffect(() => {
@@ -214,12 +218,23 @@ export default function SelectTasks({
               <Button onClick={addTask} startIcon={<AddTwoToneIcon />}>
                 Task
               </Button>
-              <Button
-                startIcon={<AddTwoToneIcon />}
-                onClick={() => setOpenChecklist(true)}
+              <Tooltip
+                title={
+                  hasFeature(PlanFeature.CHECKLIST)
+                    ? t('Use a checklist')
+                    : t('Upgrade to use checklists')
+                }
               >
-                Checklist
-              </Button>
+                <span>
+                  <Button
+                    disabled={!hasFeature(PlanFeature.CHECKLIST)}
+                    startIcon={<AddTwoToneIcon />}
+                    onClick={() => setOpenChecklist(true)}
+                  >
+                    Checklist
+                  </Button>
+                </span>
+              </Tooltip>
             </Box>
           </Box>
           <Box>
