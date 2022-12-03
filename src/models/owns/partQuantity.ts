@@ -17,8 +17,8 @@ export const partQuantities: PartQuantity[] = [
     quantity: 41,
     part: parts[0],
     createdAt: 'fghb',
-    createdBy: 'vvty',
+    createdBy: 1,
     updatedAt: 'string',
-    updatedBy: 'string'
+    updatedBy: 1
   }
 ];

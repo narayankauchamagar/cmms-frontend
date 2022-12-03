@@ -30,8 +30,8 @@ export const additionalTimes: AdditionalTime[] = [
     duration: 4,
     createdAt: 'fghb',
     status: 'STOPPED',
-    createdBy: 'vvty',
+    createdBy: 1,
     updatedAt: 'string',
-    updatedBy: 'string'
+    updatedBy: 1
   }
 ];

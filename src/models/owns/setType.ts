@@ -12,17 +12,17 @@ export const sets: SetType[] = [
     name: 'Set 1',
     createdAt: 'dfggj',
     parts,
-    createdBy: 'ghu',
+    createdBy: 1,
     updatedAt: 'ghfgj',
-    updatedBy: 'ghfgj'
+    updatedBy: 1
   },
   {
     id: 44,
     name: 'Set 2',
     createdAt: 'dfggj',
     parts,
-    createdBy: 'ghu',
+    createdBy: 1,
     updatedAt: 'ghfgj',
-    updatedBy: 'ghfgj'
+    updatedBy: 1
   }
 ];

@@ -32,8 +32,8 @@ export const requests: Request[] = [
     description: 'jvjhbh',
     priority: 'HIGH',
     createdAt: 'fghb',
-    createdBy: 'vvty',
+    createdBy: 1,
     updatedAt: 'string',
-    updatedBy: 'string'
+    updatedBy: 1
   }
 ];

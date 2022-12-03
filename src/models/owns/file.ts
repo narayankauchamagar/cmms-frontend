@@ -14,9 +14,9 @@ export const files: File[] = [
     id: 54,
     url: 'https://google.com',
     createdAt: 'fghb',
-    createdBy: 'vvty',
+    createdBy: 1,
     updatedAt: 'string',
-    updatedBy: 'string',
+    updatedBy: 1,
     type: 'OTHER'
   }
 ];

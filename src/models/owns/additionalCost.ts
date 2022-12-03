@@ -22,8 +22,8 @@ export const additionalCosts: AdditionalCost[] = [
     category: categories[1],
     cost: 75,
     createdAt: 'fghb',
-    createdBy: 'vvty',
+    createdBy: 1,
     updatedAt: 'string',
-    updatedBy: 'string'
+    updatedBy: 1
   }
 ];

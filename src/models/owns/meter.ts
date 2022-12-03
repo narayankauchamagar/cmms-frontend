@@ -30,9 +30,9 @@ export const meters: Meter[] = [
     asset: assets[0],
     image: null,
     createdAt: 'fghb',
-    createdBy: 'vvty',
+    createdBy: 1,
     updatedAt: 'string',
-    updatedBy: 'string',
+    updatedBy: 1,
     nextReading: '23/05/2022'
   }
 ];

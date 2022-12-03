@@ -50,9 +50,9 @@ export const parts: Part[] = [
     customers: [],
     teams: [],
     openWorkOrders: 2,
-    createdBy: 'ghu',
+    createdBy: 1,
     updatedAt: 'ghfgj',
-    updatedBy: 'ghfgj'
+    updatedBy: 1
   },
   {
     id: 44,
@@ -73,8 +73,8 @@ export const parts: Part[] = [
     customers: [],
     teams: [],
     openWorkOrders: 2,
-    createdBy: 'ghu',
+    createdBy: 1,
     updatedAt: 'ghfgj',
-    updatedBy: 'ghfgj'
+    updatedBy: 1
   }
 ];

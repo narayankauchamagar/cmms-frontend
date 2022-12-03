@@ -51,18 +51,18 @@ export const assets: Asset[] = [
     name: 'cgvg',
     createdAt: 'dfggj',
     description: 'bjhb',
-    createdBy: 'ghu',
+    createdBy: 1,
     updatedAt: 'ghfgj',
-    updatedBy: 'ghfgj'
+    updatedBy: 1
   },
   {
     id: 44,
     name: 'fcgvc',
     createdAt: 'dfggj',
-    createdBy: 'ghu',
+    createdBy: 1,
     description: 'fchg',
     updatedAt: 'ghfgj',
-    updatedBy: 'ghfgj'
+    updatedBy: 1
   }
 ];
 
@@ -87,9 +87,9 @@ export const assetDTOS: AssetDTO[] = [
     parentAsset: 'string',
     openWorkOrders: 2,
     createdAt: 'dfggj',
-    createdBy: 'ghu',
+    createdBy: 1,
     updatedAt: 'ghfgj',
-    updatedBy: 'ghfgj',
+    updatedBy: 1,
     parts: []
   },
   {
@@ -112,9 +112,9 @@ export const assetDTOS: AssetDTO[] = [
     parentAsset: 'string',
     openWorkOrders: 2,
     createdAt: 'dfggj',
-    createdBy: 'ghu',
+    createdBy: 1,
     updatedAt: 'ghfgj',
-    updatedBy: 'ghfgj',
+    updatedBy: 1,
     parts: []
   }
 ];

@@ -60,9 +60,9 @@ export const workOrders: WorkOrder[] = [
     title: 'Work Order1',
     id: 54,
     createdAt: 'fghb',
-    createdBy: 'vvty',
+    createdBy: 1,
     updatedAt: 'string',
-    updatedBy: 'string',
+    updatedBy: 1,
     customers
   }
 ];

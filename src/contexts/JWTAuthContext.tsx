@@ -18,6 +18,7 @@ import {
 } from '../models/owns/fieldConfiguration';
 import { Company } from '../models/owns/company';
 import { PermissionEntity } from 'src/models/owns/role';
+import { Audit } from 'src/models/owns/audit';
 
 interface AuthState {
   isInitialized: boolean;
@@ -61,6 +62,10 @@ interface AuthContextValue extends AuthState {
     fieldConfigurationsType: FieldConfigurationsType
   ) => Promise<void>;
   hasViewPermission: (permission: PermissionEntity) => boolean;
+  hasEditPermission: <Entity extends Audit>(
+    permission: PermissionEntity,
+    entity: Entity
+  ) => boolean;
 }
 
 interface AuthProviderProps {
@@ -340,7 +345,8 @@ const AuthContext = createContext<AuthContextValue>({
   fetchCompanySettings: () => Promise.resolve(),
   patchGeneralPreferences: () => Promise.resolve(),
   patchFieldConfiguration: () => Promise.resolve(),
-  hasViewPermission: () => false
+  hasViewPermission: () => false,
+  hasEditPermission: () => false
 });
 
 export const AuthProvider: FC<AuthProviderProps> = (props) => {
@@ -578,6 +584,16 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
   const hasViewPermission = (permissionEntity: PermissionEntity) => {
     return state.user.role.viewPermissions.includes(permissionEntity);
   };
+  const hasEditPermission = <Entity extends Audit>(
+    permissionEntity: PermissionEntity,
+    entity: Entity
+  ) => {
+    if (!entity) return false;
+    return (
+      state.user.id === entity.createdBy ||
+      state.user.role.editOtherPermissions.includes(permissionEntity)
+    );
+  };
   useEffect(() => {
     getInfos();
   }, []);
@@ -600,7 +616,8 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         fetchCompany,
         patchGeneralPreferences,
         patchFieldConfiguration,
-        hasViewPermission
+        hasViewPermission,
+        hasEditPermission
       }}
     >
       {children}

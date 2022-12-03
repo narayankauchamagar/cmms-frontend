@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import MultipleTabsLayout from '../../components/MultipleTabsLayout';
 import { TitleContext } from '../../../../contexts/TitleContext';
 import { useLocation, useParams } from 'react-router-dom';
-import Asset from '../../../../models/owns/asset';
+import Asset, { AssetDTO } from '../../../../models/owns/asset';
 import AssetWorkOrders from './AssetWorkOrders';
 import AssetDetails from './AssetDetails';
 import AssetParts from './AssetParts';
@@ -38,8 +38,8 @@ const ShowAsset = ({}: PropsType) => {
   const location = useLocation();
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const { assetInfos } = useSelector((state) => state.assets);
-  const asset = assetInfos[assetId]?.asset;
-  const { hasViewPermission } = useAuth();
+  const asset: AssetDTO = assetInfos[assetId]?.asset;
+  const { hasViewPermission, hasEditPermission } = useAuth();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -320,7 +320,11 @@ const ShowAsset = ({}: PropsType) => {
         tabs={tabs}
         tabIndex={tabIndex}
         title={`Asset`}
-        action={handleOpenUpdateModal}
+        action={
+          hasEditPermission(PermissionEntity.ASSETS, asset)
+            ? handleOpenUpdateModal
+            : null
+        }
         actionTitle={t('Edit')}
         withoutCard
         editAction

@@ -54,8 +54,8 @@ export const purchaseOrders: PurchaseOrder[] = [
     additionalInfoTerm: 'string',
     additionalInfoNotes: 'string',
     createdAt: 'fghb',
-    createdBy: 'vvty',
+    createdBy: 1,
     updatedAt: 'string',
-    updatedBy: 'string'
+    updatedBy: 1
   }
 ];

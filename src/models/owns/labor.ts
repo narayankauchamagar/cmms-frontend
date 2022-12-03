@@ -1,6 +1,5 @@
 import { Audit } from './audit';
 import User, { users } from './user';
-import Category, { categories } from './category';
 
 export default interface Labor extends Audit {
   user: User;
@@ -14,17 +13,17 @@ export const labors: Labor[] = [
     laborCost: { cost: 57 },
     id: 54,
     createdAt: 'fghb',
-    createdBy: 'vvty',
+    createdBy: 1,
     updatedAt: 'string',
-    updatedBy: 'string'
+    updatedBy: 1
   },
   {
     user: users[1],
     laborCost: { cost: 54 },
     id: 57,
     createdAt: 'fghb',
-    createdBy: 'vvty',
+    createdBy: 1,
     updatedAt: 'string',
-    updatedBy: 'string'
+    updatedBy: 1
   }
 ];

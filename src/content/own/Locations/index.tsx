@@ -371,6 +371,7 @@ function Locations() {
               const formattedValues = formatValues(values);
               return dispatch(addLocation(formattedValues))
                 .then(onCreationSuccess)
+                .then(() => dispatch(getLocationChildren(0, [])))
                 .catch(onCreationFailure);
             }}
           />
