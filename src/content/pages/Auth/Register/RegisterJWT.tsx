@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { phoneRegExp } from '../../../../utils/validators';
 import { useContext } from 'react';
 import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContext';
+import { useNavigate } from 'react-router-dom';
 
 function RegisterJWT({
   email,
@@ -29,6 +30,7 @@ function RegisterJWT({
   const isMountedRef = useRefMounted();
   const { t }: { t: any } = useTranslation();
   const { showSnackBar } = useContext(CustomSnackBarContext);
+  const navigate = useNavigate();
 
   const getFieldsAndShapes = (): [
     { [key: string]: any },
@@ -91,7 +93,15 @@ function RegisterJWT({
       onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
         setSubmitting(true);
         return register(role ? { ...values, role: { id: role } } : values)
-          .then()
+          .then((isLocalhost) => {
+            if (!isLocalhost) {
+              showSnackBar(
+                t('Please check your email to verify your account'),
+                'success'
+              );
+              navigate('/account/login');
+            }
+          })
           .catch((err) =>
             showSnackBar(t("The registration didn't succeed"), 'error')
           )

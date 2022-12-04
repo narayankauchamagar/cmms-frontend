@@ -44,7 +44,7 @@ interface AuthContextValue extends AuthState {
     phone: string,
     password: string,
     role: number | undefined
-  ) => Promise<void>;
+  ) => Promise<boolean>;
   getInfos: () => void;
   patchUserSettings: (values: Partial<UserSettings>) => Promise<void>;
   patchUser: (values: Partial<OwnUser>) => Promise<void>;
@@ -362,7 +362,7 @@ const AuthContext = createContext<AuthContextValue>({
   method: 'JWT',
   login: () => Promise.resolve(),
   logout: () => Promise.resolve(),
-  register: () => Promise.resolve(),
+  register: () => Promise.resolve(false),
   getInfos: () => Promise.resolve(),
   patchUserSettings: () => Promise.resolve(),
   patchCompany: () => Promise.resolve(),
@@ -469,25 +469,30 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     dispatch({ type: 'LOGOUT' });
   };
 
-  const register = async (values): Promise<void> => {
+  const register = async (values): Promise<boolean> => {
     const response = await api.post<{ message: string; success: boolean }>(
       'auth/signup',
       values,
       { headers: authHeader(true) }
     );
     const { message, success } = response;
-    setSession(message);
-    const user = await updateUserInfos();
-    const company = await api.get<Company>(`companies/${user.companyId}`);
-    await setupUser(company.companySettings);
-    dispatch({
-      type: 'REGISTER',
-      payload: {
-        user,
-        companySettings: company.companySettings,
-        company
-      }
-    });
+    if (message.startsWith('Successful')) {
+      return false;
+    } else {
+      setSession(message);
+      const user = await updateUserInfos();
+      const company = await api.get<Company>(`companies/${user.companyId}`);
+      await setupUser(company.companySettings);
+      dispatch({
+        type: 'REGISTER',
+        payload: {
+          user,
+          companySettings: company.companySettings,
+          company
+        }
+      });
+      return true;
+    }
   };
 
   const patchUserSettings = async (
