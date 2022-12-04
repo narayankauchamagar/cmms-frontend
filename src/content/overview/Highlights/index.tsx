@@ -435,11 +435,11 @@ function Highlights() {
       image: '/static/images/overview/performance.png'
     },
     dashboard: {
-      title: 'Get Control of your Spare Parts Inventory',
+      title: 'Your data, your way with custom dashboards',
       descriptions: [
         'Let’s face it, the first step to improving your operations is to know the good, the bad and the ugly.',
         'With Grash’s Custom Dashboards you can finally start to understand that nefarious “black hole of maintenance” and begin putting data-backed plans into action, resulting in reduced labor costs, decreased downtime and more.',
-        'With Grash’s Custom Dashboards you’ll get to …s'
+        'With Grash’s Custom Dashboards you’ll get to …'
       ],
       checks: [
         'Know where your money is being spent and why',
@@ -1004,7 +1004,7 @@ function Highlights() {
           <Button
             component={RouterLink}
             size="large"
-            to="/extended-sidebar/dashboards"
+            to="/account/register"
             variant="contained"
           >
             {t('Start a Free trial')}

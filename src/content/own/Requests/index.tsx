@@ -51,7 +51,12 @@ function Files() {
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
-  const { companySettings, hasViewPermission, hasCreatePermission } = useAuth();
+  const {
+    companySettings,
+    hasViewPermission,
+    hasCreatePermission,
+    getFilteredFields
+  } = useAuth();
   const { workOrderRequestConfiguration } = companySettings;
   const [currentRequest, setCurrentRequest] = useState<Request>();
   const { uploadFiles } = useContext(CompanySettingsContext);
@@ -166,7 +171,7 @@ function Files() {
     title: Yup.string().required(t('Request name is required'))
   };
   const getFieldsAndShapes = (): [Array<IField>, { [key: string]: any }] => {
-    let fields = [...defaultFields];
+    let fields = [...getFilteredFields(defaultFields)];
     let shape = { ...defaultShape };
     const fieldsToConfigure = [
       'asset',
