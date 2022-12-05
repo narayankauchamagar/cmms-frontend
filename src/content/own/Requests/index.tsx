@@ -130,8 +130,7 @@ function Files() {
     values.asset = formatSelect(values.asset);
     values.assignedTo = formatSelectMultiple(values.assignedTo);
     values.priority = values.priority?.value;
-    //TODO
-    delete values.category;
+    values.category = formatSelect(values.category);
     return values;
   };
   const columns: GridEnrichedColDef[] = [

@@ -115,7 +115,15 @@ export default function SelectTasks({
   const onChoicesChange = (choices: string[], id: number) => {
     const newTasks = tasks.map((task) => {
       if (task.id === id) {
-        return { ...task, taskBase: { ...task.taskBase, options: choices } };
+        return {
+          ...task,
+          taskBase: {
+            ...task.taskBase,
+            options: choices.map((choice) => {
+              return { id: randomInt(), label: choice };
+            })
+          }
+        };
       }
       return task;
     });

@@ -5,11 +5,16 @@ export type TaskType =
   | 'INSPECTION'
   | 'MULTIPLE'
   | 'METER';
+
+export interface TaskOption {
+  id: number;
+  label: string;
+}
 export interface TaskBase {
   id: number;
   label: string;
   taskType: TaskType;
-  options?: string[];
+  options?: TaskOption[];
   user?: number;
   asset?: number;
   meter?: number;

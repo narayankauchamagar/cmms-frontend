@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import DragIndicatorTwoToneIcon from '@mui/icons-material/DragIndicatorTwoTone';
-import { Task, TaskType } from '../../../../../models/owns/tasks';
+import { Task, TaskOption, TaskType } from '../../../../../models/owns/tasks';
 import { useTranslation } from 'react-i18next';
 import DoDisturbOnTwoToneIcon from '@mui/icons-material/DoDisturbOnTwoTone';
 import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
@@ -23,6 +23,7 @@ import { users } from '../../../../../models/owns/user';
 import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
 import { assets } from '../../../../../models/owns/asset';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
+import { randomInt } from '../../../../../utils/generators';
 
 const useStyles = makeStyles({
   draggingListItem: {
@@ -75,16 +76,19 @@ const DraggableListItem = ({
   const [openAssignAsset, setOpenAssignAsset] = useState<boolean>(
     !!task.taskBase.asset
   );
-  const [choices, setChoices] = useState<string[]>(
-    task.taskBase.options ?? ['', '']
+  const [choices, setChoices] = useState<TaskOption[]>(
+    task.taskBase.options ?? [
+      { id: randomInt(), label: '' },
+      { id: randomInt(), label: '' }
+    ]
   );
   const handleChoiceChange = (value: string, index: number) => {
     const newChoices = [...choices];
-    newChoices[index] = value;
+    newChoices[index] = { id: newChoices[index].id, label: value };
     setChoices(newChoices);
   };
   const handleAddOption = () => {
-    const newChoices = [...choices, ''];
+    const newChoices = [...choices, { id: randomInt(), label: '' }];
     setChoices(newChoices);
   };
   const handleRemoveOption = (id: number) => {
@@ -92,7 +96,14 @@ const DraggableListItem = ({
     newChoices.splice(id, 1);
     setChoices(newChoices);
   };
-  useEffect(() => onChoicesChange(choices, task.id), [choices]);
+  useEffect(
+    () =>
+      onChoicesChange(
+        choices.map((choice) => choice.label),
+        task.id
+      ),
+    [choices]
+  );
 
   const renderMenu = () => (
     <Menu

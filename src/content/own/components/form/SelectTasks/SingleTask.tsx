@@ -15,7 +15,7 @@ import Field from '../Field';
 import NoteTwoToneIcon from '@mui/icons-material/NoteTwoTone';
 import AttachFileTwoToneIcon from '@mui/icons-material/AttachFileTwoTone';
 import SpeedTwoToneIcon from '@mui/icons-material/SpeedTwoTone';
-import { Task, TaskType } from '../../../../../models/owns/tasks';
+import { Task, TaskOption, TaskType } from '../../../../../models/owns/tasks';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useMemo, useState } from 'react';
@@ -64,19 +64,21 @@ export default function SingleTask({
     { label: t('Fail'), value: 'FAIL' }
   ];
 
-  const getOptions = (type: TaskType, options: string[]) => {
+  const getOptions = (type: TaskType, options: TaskOption[]) => {
     switch (type) {
       case 'SUBTASK':
         return subtaskOptions;
       case 'INSPECTION':
         return inspectionOptions;
       case 'MULTIPLE':
-        return options.map((option) => {
-          return {
-            label: option,
-            value: option
-          };
-        });
+        return options
+          .map((option) => option.label)
+          .map((option) => {
+            return {
+              label: option,
+              value: option
+            };
+          });
       default:
         break;
     }

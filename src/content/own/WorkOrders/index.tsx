@@ -121,8 +121,7 @@ function WorkOrders() {
     values.requiredSignature = Array.isArray(values.requiredSignature)
       ? values?.requiredSignature.includes('on')
       : values.requiredSignature;
-    //TODO
-    delete values.category;
+    values.category = formatSelect(values.category);
     return values;
   };
   const onCreationSuccess = () => {
@@ -204,7 +203,14 @@ function WorkOrders() {
       description: t('Description'),
       width: 150
     },
-
+    {
+      field: 'primaryUser',
+      headerName: t('Worker'),
+      description: t('Worker'),
+      width: 150,
+      renderCell: (params: GridRenderCellParams<UserMiniDTO>) =>
+        params.value ? <UserAvatars users={[params.value]} /> : null
+    },
     {
       field: 'assignedTo',
       headerName: t('Assignees'),
@@ -524,11 +530,15 @@ function WorkOrders() {
                     dispatch(addWorkOrder(formattedValues))
                       .then(onCreationSuccess)
                       .then(() => resolve())
-                      .catch(onCreationFailure)
-                      .catch(rej);
+                      .catch((err) => {
+                        onCreationFailure(err);
+                        rej();
+                      });
                   })
-                  .catch(onCreationFailure)
-                  .catch(rej);
+                  .catch((err) => {
+                    onCreationFailure(err);
+                    rej();
+                  });
               });
             }}
           />

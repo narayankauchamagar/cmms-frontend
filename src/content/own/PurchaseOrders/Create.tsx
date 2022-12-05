@@ -250,8 +250,7 @@ function CreatePurchaseOrder() {
                   values={{ shippingDueDate: null, additionalInfoDate: null }}
                   onChange={({ field, e }) => {}}
                   onSubmit={async (values) => {
-                    //TODO category
-                    delete values.category;
+                    values.category = formatSelect(values.category);
                     values.vendor = formatSelect(values.vendor);
                     return dispatch(addPurchaseOrder(values))
                       .then(onCreationSuccess)

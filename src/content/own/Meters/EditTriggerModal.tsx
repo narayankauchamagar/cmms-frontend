@@ -70,8 +70,6 @@ export default function EditTriggerModal({
     values.assignedTo = formatSelectMultiple(values.assignedTo);
     values.priority = values.priority?.value;
     values.triggerCondition = values.triggerCondition.value;
-    //TODO
-    delete values.category;
     return values;
   };
   return (
