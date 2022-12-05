@@ -34,6 +34,7 @@ import EditTriggerModal from './EditTriggerModal';
 import WorkOrderMeterTrigger from '../../../models/owns/workOrderMeterTrigger';
 import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
+import { dayDiff } from '../../../utils/dates';
 
 interface MeterDetailsProps {
   meter: Meter;
@@ -67,12 +68,11 @@ export default function MeterDetails(props: MeterDetailsProps) {
 
   useEffect(() => {
     dispatch(getWorkOrderMeterTriggers(meter.id));
+    dispatch(getReadings(meter.id));
   }, [meter.id]);
 
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
-    if (value === 'history' && !currentMeterReadings.length)
-      dispatch(getReadings(meter.id));
   };
   const BasicField = ({
     label,
@@ -173,15 +173,31 @@ export default function MeterDetails(props: MeterDetailsProps) {
       <Grid item xs={12}>
         {currentTab === 'details' && (
           <Box>
-            <Form
-              fields={fields}
-              validation={Yup.object().shape(shape)}
-              submitText={t('Add Reading')}
-              values={{ value: 0 }}
-              onSubmit={async (values) => {
-                return dispatch(createReading(meter.id, values));
-              }}
-            />
+            {(currentMeterReadings.length &&
+              dayDiff(
+                new Date([...currentMeterReadings].reverse()[0].createdAt),
+                new Date()
+              ) > meter.updateFrequency) ||
+            !currentMeterReadings.length ? (
+              <Form
+                fields={fields}
+                validation={Yup.object().shape(shape)}
+                submitText={t('Add Reading')}
+                values={{ value: 0 }}
+                onSubmit={async (values) => {
+                  return dispatch(createReading(meter.id, values));
+                }}
+              />
+            ) : (
+              currentMeterReadings.length && (
+                <Box>
+                  <Typography variant="h4">{t('Last reading')}</Typography>
+                  <Typography>{`${
+                    [...currentMeterReadings].reverse()[0].value
+                  } ${meter.unit}`}</Typography>
+                </Box>
+              )
+            )}
             <Typography sx={{ mt: 2, mb: 1 }} variant="h4">
               Meter details
             </Typography>
