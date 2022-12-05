@@ -93,7 +93,7 @@ export default function AddTriggerModal({
           fields={fields}
           validation={Yup.object().shape(shape)}
           submitText={t('Add')}
-          values={{}}
+          values={{ dueDate: null }}
           onChange={({ field, e }) => {}}
           onSubmit={async (values) => {
             const formattedValues = formatValues(values);

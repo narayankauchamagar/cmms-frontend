@@ -7,9 +7,9 @@ import {
   DialogContent,
   DialogTitle,
   Drawer,
+  Grid,
   InputAdornment,
   Paper,
-  Stack,
   TextField,
   Typography,
   useTheme
@@ -225,19 +225,20 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
             </Paper>
 
             <UserRoleCardList onChange={onRoleChange} />
-            <Stack sx={{ mt: 2 }} direction="row" spacing={1}>
+            <Grid container sx={{ mt: 2 }} spacing={1}>
               {emails.map((email, index) => (
-                <Chip
-                  key={index}
-                  label={email}
-                  onDelete={() => {
-                    const emailsClone = [...emails];
-                    emailsClone.splice(index, 1);
-                    setEmails(emailsClone);
-                  }}
-                />
+                <Grid item key={index}>
+                  <Chip
+                    label={email}
+                    onDelete={() => {
+                      const emailsClone = [...emails];
+                      emailsClone.splice(index, 1);
+                      setEmails(emailsClone);
+                    }}
+                  />
+                </Grid>
               ))}
-            </Stack>
+            </Grid>
             <TextField
               sx={{ my: 2 }}
               fullWidth
@@ -294,6 +295,14 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
                         setCurrentEmail('');
                         showSnackBar(t('Users have been invited'), 'success');
                       })
+                      .catch((err) =>
+                        showSnackBar(
+                          t(
+                            "Users can't be invited. Check your current subscription members count"
+                          ),
+                          'error'
+                        )
+                      )
                       .finally(() => setIsInviteSubmitting(false));
                   } else
                     showSnackBar(t('Please type in emails to invite'), 'error');

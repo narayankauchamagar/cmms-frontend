@@ -20,7 +20,6 @@ function CompanyPlan(props: CompanyPlanProps) {
   const navigate = useNavigate();
   const theme = useTheme();
   const { t }: { t: any } = useTranslation();
-  if (plan.name == 'Business') return null;
   return (
     <Card
       sx={{

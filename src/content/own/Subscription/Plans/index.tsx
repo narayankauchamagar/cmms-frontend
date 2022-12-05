@@ -34,6 +34,7 @@ import useAuth from '../../../../hooks/useAuth';
 import PermissionErrorMessage from '../../components/PermissionErrorMessage';
 import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContext';
 import { SubscriptionPlan } from '../../../../models/owns/subscriptionPlan';
+import { useNavigate } from 'react-router-dom';
 
 function SubscriptionPlans() {
   const { t }: { t: any } = useTranslation();
@@ -52,6 +53,7 @@ function SubscriptionPlans() {
   const { setTitle } = useContext(TitleContext);
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setTitle(t('Plans'));
@@ -107,6 +109,7 @@ function SubscriptionPlans() {
       'success'
     );
     handleCloseCheckoutModal();
+    navigate('/app/work-orders');
   };
   const onSubcriptionPatchFailure = () => {
     showSnackBar(t("The Subscription couldn't be changed"), 'error');
