@@ -528,8 +528,10 @@ function WorkOrders() {
                       })
                     };
                     dispatch(addWorkOrder(formattedValues))
-                      .then(onCreationSuccess)
-                      .then(() => resolve())
+                      .then(() => {
+                        onCreationSuccess();
+                        resolve();
+                      })
                       .catch((err) => {
                         onCreationFailure(err);
                         rej();
@@ -600,7 +602,14 @@ function WorkOrders() {
                       //TODO editTask
                       patchTasks(
                         currentWorkOrder?.id,
-                        formattedValues.tasks.map((task) => task.taskBase)
+                        formattedValues.tasks.map((task) => {
+                          return {
+                            ...task.taskBase,
+                            options: task.taskBase.options.map(
+                              (option) => option.label
+                            )
+                          };
+                        })
                       )
                     ).then(() =>
                       dispatch(

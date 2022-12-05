@@ -244,7 +244,7 @@ const DraggableListItem = ({
                           }}
                         >
                           <TextField
-                            value={choice}
+                            value={choice.label}
                             onChange={(event) =>
                               handleChoiceChange(event.target.value, index)
                             }

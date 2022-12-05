@@ -78,7 +78,13 @@ export const addWorkOrder =
   async (dispatch) => {
     const workOrderResponse = await api.post<WorkOrder>(basePath, workOrder);
     dispatch(slice.actions.addWorkOrder({ workOrder: workOrderResponse }));
-    const taskBases = workOrder.tasks?.map((task) => task.taskBase) ?? [];
+    const taskBases =
+      workOrder.tasks?.map((task) => {
+        return {
+          ...task.taskBase,
+          options: task.taskBase.options.map((option) => option.label)
+        };
+      }) ?? [];
     if (taskBases.length) {
       const tasks = await api.patch<Task[]>(
         `tasks/work-order/${workOrderResponse.id}`,

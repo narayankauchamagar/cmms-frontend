@@ -150,7 +150,17 @@ function Checklists() {
             onSelect={(tasks, infos) => {
               dispatch(
                 addChecklist(
-                  { ...infos, taskBases: tasks.map((task) => task.taskBase) },
+                  {
+                    ...infos,
+                    taskBases: tasks.map((task) => {
+                      return {
+                        ...task.taskBase,
+                        options: task.taskBase.options.map(
+                          (option) => option.label
+                        )
+                      };
+                    })
+                  },
                   companySettingsId
                 )
               );
@@ -169,7 +179,14 @@ function Checklists() {
               dispatch(
                 editChecklist(currentChecklist.id, {
                   ...infos,
-                  taskBases: tasks.map((task) => task.taskBase)
+                  taskBases: tasks.map((task) => {
+                    return {
+                      ...task.taskBase,
+                      options: task.taskBase.options.map(
+                        (option) => option.label
+                      )
+                    };
+                  })
                 })
               );
             }}
