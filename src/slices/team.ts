@@ -1,15 +1,17 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 import type { AppThunk } from 'src/store';
-import Team from '../models/owns/team';
+import Team, { TeamMiniDTO } from '../models/owns/team';
 import api from '../utils/api';
 
 interface TeamState {
   teams: Team[];
+  teamsMini: TeamMiniDTO[];
 }
 
 const initialState: TeamState = {
-  teams: []
+  teams: [],
+  teamsMini: []
 };
 
 const slice = createSlice({
@@ -19,6 +21,13 @@ const slice = createSlice({
     getTeams(state: TeamState, action: PayloadAction<{ teams: Team[] }>) {
       const { teams } = action.payload;
       state.teams = teams;
+    },
+    getTeamsMini(
+      state: TeamState,
+      action: PayloadAction<{ teams: TeamMiniDTO[] }>
+    ) {
+      const { teams } = action.payload;
+      state.teamsMini = teams;
     },
     addTeam(state: TeamState, action: PayloadAction<{ team: Team }>) {
       const { team } = action.payload;
@@ -47,7 +56,10 @@ export const getTeams = (): AppThunk => async (dispatch) => {
   const teams = await api.get<Team[]>('teams');
   dispatch(slice.actions.getTeams({ teams }));
 };
-
+export const getTeamsMini = (): AppThunk => async (dispatch) => {
+  const teams = await api.get<TeamMiniDTO[]>('teams/mini');
+  dispatch(slice.actions.getTeamsMini({ teams }));
+};
 export const addTeam =
   (team): AppThunk =>
   async (dispatch) => {

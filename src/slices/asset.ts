@@ -1,7 +1,7 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 import type { AppThunk } from 'src/store';
-import { AssetDTO, AssetRow } from '../models/owns/asset';
+import { AssetDTO, AssetMiniDTO, AssetRow } from '../models/owns/asset';
 import api from '../utils/api';
 import WorkOrder from '../models/owns/workOrder';
 
@@ -11,13 +11,15 @@ interface AssetState {
   assetsHierarchy: AssetRow[];
   assetInfos: { [key: number]: { asset?: AssetDTO; workOrders: WorkOrder[] } };
   locations: { [key: number]: AssetDTO[] };
+  assetsMini: AssetMiniDTO[];
 }
 
 const initialState: AssetState = {
   assets: [],
   assetsHierarchy: [],
   assetInfos: {},
-  locations: {}
+  locations: {},
+  assetsMini: []
 };
 
 const slice = createSlice({
@@ -30,6 +32,13 @@ const slice = createSlice({
     ) {
       const { assets } = action.payload;
       state.assets = assets;
+    },
+    getAssetsMini(
+      state: AssetState,
+      action: PayloadAction<{ assets: AssetMiniDTO[] }>
+    ) {
+      const { assets } = action.payload;
+      state.assetsMini = assets;
     },
     addAsset(state: AssetState, action: PayloadAction<{ asset: AssetDTO }>) {
       const { asset } = action.payload;
@@ -100,7 +109,10 @@ export const getAssets = (): AppThunk => async (dispatch) => {
   const assets = await api.get<AssetDTO[]>(basePath);
   dispatch(slice.actions.getAssets({ assets }));
 };
-
+export const getAssetsMini = (): AppThunk => async (dispatch) => {
+  const assets = await api.get<AssetMiniDTO[]>(`${basePath}/mini`);
+  dispatch(slice.actions.getAssetsMini({ assets }));
+};
 export const addAsset =
   (asset): AppThunk =>
   async (dispatch) => {

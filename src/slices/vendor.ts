@@ -1,15 +1,17 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 import type { AppThunk } from 'src/store';
-import { Vendor } from '../models/owns/vendor';
+import { Vendor, VendorMiniDTO } from '../models/owns/vendor';
 import api from '../utils/api';
 
 interface VendorState {
   vendors: Vendor[];
+  vendorsMini: VendorMiniDTO[];
 }
 
 const initialState: VendorState = {
-  vendors: []
+  vendors: [],
+  vendorsMini: []
 };
 
 const slice = createSlice({
@@ -22,6 +24,13 @@ const slice = createSlice({
     ) {
       const { vendors } = action.payload;
       state.vendors = vendors;
+    },
+    getVendorsMini(
+      state: VendorState,
+      action: PayloadAction<{ vendors: VendorMiniDTO[] }>
+    ) {
+      const { vendors } = action.payload;
+      state.vendorsMini = vendors;
     },
     addVendor(state: VendorState, action: PayloadAction<{ vendor: Vendor }>) {
       const { vendor } = action.payload;
@@ -50,7 +59,10 @@ export const getVendors = (): AppThunk => async (dispatch) => {
   const vendors = await api.get<Vendor[]>('vendors');
   dispatch(slice.actions.getVendors({ vendors }));
 };
-
+export const getVendorsMini = (): AppThunk => async (dispatch) => {
+  const vendors = await api.get<Vendor[]>('vendors/mini');
+  dispatch(slice.actions.getVendorsMini({ vendors }));
+};
 export const addVendor =
   (vendor): AppThunk =>
   async (dispatch) => {

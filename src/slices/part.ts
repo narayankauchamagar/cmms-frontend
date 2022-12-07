@@ -1,16 +1,18 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 import type { AppThunk } from 'src/store';
-import Part from '../models/owns/part';
+import Part, { PartMiniDTO } from '../models/owns/part';
 import api from '../utils/api';
 
 const basePath = 'parts';
 interface PartState {
   parts: Part[];
+  partsMini: PartMiniDTO[];
 }
 
 const initialState: PartState = {
-  parts: []
+  parts: [],
+  partsMini: []
 };
 
 const slice = createSlice({
@@ -20,6 +22,13 @@ const slice = createSlice({
     getParts(state: PartState, action: PayloadAction<{ parts: Part[] }>) {
       const { parts } = action.payload;
       state.parts = parts;
+    },
+    getPartsMini(
+      state: PartState,
+      action: PayloadAction<{ parts: PartMiniDTO[] }>
+    ) {
+      const { parts } = action.payload;
+      state.partsMini = parts;
     },
     addPart(state: PartState, action: PayloadAction<{ part: Part }>) {
       const { part } = action.payload;
@@ -48,7 +57,10 @@ export const getParts = (): AppThunk => async (dispatch) => {
   const parts = await api.get<Part[]>(basePath);
   dispatch(slice.actions.getParts({ parts }));
 };
-
+export const getPartsMini = (): AppThunk => async (dispatch) => {
+  const parts = await api.get<PartMiniDTO[]>(`${basePath}/mini`);
+  dispatch(slice.actions.getPartsMini({ parts }));
+};
 export const addPart =
   (part): AppThunk =>
   async (dispatch) => {

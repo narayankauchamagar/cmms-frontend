@@ -1,17 +1,22 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 import type { AppThunk } from 'src/store';
-import Location, { LocationRow } from '../models/owns/location';
+import Location, {
+  LocationMiniDTO,
+  LocationRow
+} from '../models/owns/location';
 import api from '../utils/api';
 
 interface LocationState {
   locations: Location[];
   locationsHierarchy: LocationRow[];
+  locationsMini: LocationMiniDTO[];
 }
 
 const initialState: LocationState = {
   locations: [],
-  locationsHierarchy: []
+  locationsHierarchy: [],
+  locationsMini: []
 };
 
 const slice = createSlice({
@@ -24,6 +29,13 @@ const slice = createSlice({
     ) {
       const { locations } = action.payload;
       state.locations = locations;
+    },
+    getLocationsMini(
+      state: LocationState,
+      action: PayloadAction<{ locations: LocationMiniDTO[] }>
+    ) {
+      const { locations } = action.payload;
+      state.locationsMini = locations;
     },
     addLocation(
       state: LocationState,
@@ -86,7 +98,10 @@ export const getLocations = (): AppThunk => async (dispatch) => {
   const locations = await api.get<Location[]>('locations');
   dispatch(slice.actions.getLocations({ locations }));
 };
-
+export const getLocationsMini = (): AppThunk => async (dispatch) => {
+  const locations = await api.get<LocationMiniDTO[]>('locations/mini');
+  dispatch(slice.actions.getLocationsMini({ locations }));
+};
 export const addLocation =
   (location): AppThunk =>
   async (dispatch) => {

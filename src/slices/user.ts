@@ -1,15 +1,17 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 import type { AppThunk } from 'src/store';
-import { OwnUser as User } from '../models/user';
+import { OwnUser as User, UserMiniDTO } from '../models/user';
 import api from '../utils/api';
 
 interface UserState {
   users: User[];
+  usersMini: UserMiniDTO[];
 }
 
 const initialState: UserState = {
-  users: []
+  users: [],
+  usersMini: []
 };
 
 const slice = createSlice({
@@ -19,6 +21,13 @@ const slice = createSlice({
     getUsers(state: UserState, action: PayloadAction<{ users: User[] }>) {
       const { users } = action.payload;
       state.users = users;
+    },
+    getUsersMini(
+      state: UserState,
+      action: PayloadAction<{ users: UserMiniDTO[] }>
+    ) {
+      const { users } = action.payload;
+      state.usersMini = users;
     },
     addUser(state: UserState, action: PayloadAction<{ user: User }>) {
       const { user } = action.payload;
@@ -47,7 +56,10 @@ export const getUsers = (): AppThunk => async (dispatch) => {
   const users = await api.get<User[]>('users');
   dispatch(slice.actions.getUsers({ users }));
 };
-
+export const getUsersMini = (): AppThunk => async (dispatch) => {
+  const users = await api.get<UserMiniDTO[]>('users/mini');
+  dispatch(slice.actions.getUsersMini({ users }));
+};
 export const addUser =
   (user): AppThunk =>
   async (dispatch) => {

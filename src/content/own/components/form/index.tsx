@@ -26,11 +26,11 @@ import CustomSwitch from './CustomSwitch';
 import SelectTasksModal from './SelectTasks';
 import SelectMapCoordinates from './SelectMapCoordinates';
 import { getCustomersMini } from '../../../../slices/customer';
-import { getVendors } from '../../../../slices/vendor';
-import { getLocationChildren, getLocations } from 'src/slices/location';
-import { getUsers } from '../../../../slices/user';
-import { getAssets } from '../../../../slices/asset';
-import { getTeams } from '../../../../slices/team';
+import { getVendorsMini } from '../../../../slices/vendor';
+import { getLocationChildren, getLocationsMini } from 'src/slices/location';
+import { getUsersMini } from '../../../../slices/user';
+import { getAssetsMini } from '../../../../slices/asset';
+import { getTeamsMini } from '../../../../slices/team';
 import AssignmentTwoToneIcon from '@mui/icons-material/AssignmentTwoTone';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone';
@@ -56,27 +56,27 @@ export default (props: PropsType) => {
   const [openTask, setOpenTask] = useState(false);
   const dispatch = useDispatch();
   const { customersMini } = useSelector((state) => state.customers);
-  const { vendors } = useSelector((state) => state.vendors);
-  const { locations, locationsHierarchy } = useSelector(
+  const { vendorsMini } = useSelector((state) => state.vendors);
+  const { locationsMini, locationsHierarchy } = useSelector(
     (state) => state.locations
   );
   const { categories } = useSelector((state) => state.categories);
-  const { users } = useSelector((state) => state.users);
-  const { assets } = useSelector((state) => state.assets);
-  const { teams } = useSelector((state) => state.teams);
+  const { usersMini } = useSelector((state) => state.users);
+  const { assetsMini } = useSelector((state) => state.assets);
+  const { teamsMini } = useSelector((state) => state.teams);
 
   const fetchCustomers = async () => {
     if (!customersMini.length) dispatch(getCustomersMini());
   };
 
   const fetchVendors = async () => {
-    if (!vendors.length) dispatch(getVendors());
+    if (!vendorsMini.length) dispatch(getVendorsMini());
   };
   const fetchUsers = async () => {
-    if (!users.length) dispatch(getUsers());
+    if (!usersMini.length) dispatch(getUsersMini());
   };
   const fetchLocations = async () => {
-    if (!locations.length) dispatch(getLocations());
+    if (!locationsMini.length) dispatch(getLocationsMini());
   };
   const fetchRootLocations = async () => {
     dispatch(getLocationChildren(0, []));
@@ -85,10 +85,10 @@ export default (props: PropsType) => {
     if (!categories[category]) dispatch(getCategories(category));
   };
   const fetchAssets = async () => {
-    if (!assets.length) dispatch(getAssets());
+    if (!assetsMini.length) dispatch(getAssetsMini());
   };
   const fetchTeams = async () => {
-    if (!teams.length) dispatch(getTeams());
+    if (!teamsMini.length) dispatch(getTeamsMini());
   };
   props.fields.forEach((f) => {
     shape[f.name] = Yup.string();
@@ -127,34 +127,34 @@ export default (props: PropsType) => {
         onOpen = fetchCustomers;
         break;
       case 'vendor':
-        options = vendors.map((vendor) => {
+        options = vendorsMini.map((vendor) => {
           return {
             label: vendor.companyName,
-            value: vendor.id.toString()
+            value: vendor.id
           };
         });
         onOpen = fetchVendors;
         break;
       case 'user':
-        options = users.map((user) => {
+        options = usersMini.map((user) => {
           return {
             label: `${user.firstName} ${user.lastName}`,
-            value: user.id.toString()
+            value: user.id
           };
         });
         onOpen = fetchUsers;
         break;
       case 'team':
-        options = teams.map((team) => {
+        options = teamsMini.map((team) => {
           return {
             label: team.name,
-            value: team.id.toString()
+            value: team.id
           };
         });
         onOpen = fetchTeams;
         break;
       case 'location':
-        options = locations.map((location) => {
+        options = locationsMini.map((location) => {
           return {
             label: location.name,
             value: location.id.toString()
@@ -172,7 +172,7 @@ export default (props: PropsType) => {
         onOpen = fetchRootLocations;
         break;
       case 'asset':
-        options = assets
+        options = assetsMini
           .filter((asset) => asset.id !== excluded)
           .map((asset) => {
             return {
