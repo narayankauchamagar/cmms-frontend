@@ -25,7 +25,7 @@ import { useDispatch, useSelector } from '../../../../store';
 import CustomSwitch from './CustomSwitch';
 import SelectTasksModal from './SelectTasks';
 import SelectMapCoordinates from './SelectMapCoordinates';
-import { getCustomers } from '../../../../slices/customer';
+import { getCustomersMini } from '../../../../slices/customer';
 import { getVendors } from '../../../../slices/vendor';
 import { getLocationChildren, getLocations } from 'src/slices/location';
 import { getUsers } from '../../../../slices/user';
@@ -55,7 +55,7 @@ export default (props: PropsType) => {
   const shape: IHash<any> = {};
   const [openTask, setOpenTask] = useState(false);
   const dispatch = useDispatch();
-  const { customers } = useSelector((state) => state.customers);
+  const { customersMini } = useSelector((state) => state.customers);
   const { vendors } = useSelector((state) => state.vendors);
   const { locations, locationsHierarchy } = useSelector(
     (state) => state.locations
@@ -66,7 +66,7 @@ export default (props: PropsType) => {
   const { teams } = useSelector((state) => state.teams);
 
   const fetchCustomers = async () => {
-    if (!customers.length) dispatch(getCustomers());
+    if (!customersMini.length) dispatch(getCustomersMini());
   };
 
   const fetchVendors = async () => {
@@ -118,10 +118,10 @@ export default (props: PropsType) => {
 
     switch (field.type2) {
       case 'customer':
-        options = customers.map((customer) => {
+        options = customersMini.map((customer) => {
           return {
             label: customer.name,
-            value: customer.id.toString()
+            value: customer.id
           };
         });
         onOpen = fetchCustomers;

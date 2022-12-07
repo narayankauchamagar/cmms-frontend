@@ -1,15 +1,17 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 import type { AppThunk } from 'src/store';
-import { Customer } from '../models/owns/customer';
+import { Customer, CustomerMiniDTO } from '../models/owns/customer';
 import api from '../utils/api';
 
 interface CustomerState {
   customers: Customer[];
+  customersMini: CustomerMiniDTO[];
 }
 
 const initialState: CustomerState = {
-  customers: []
+  customers: [],
+  customersMini: []
 };
 
 const slice = createSlice({
@@ -22,6 +24,13 @@ const slice = createSlice({
     ) {
       const { customers } = action.payload;
       state.customers = customers;
+    },
+    getCustomersMini(
+      state: CustomerState,
+      action: PayloadAction<{ customers: CustomerMiniDTO[] }>
+    ) {
+      const { customers } = action.payload;
+      state.customersMini = customers;
     },
     addCustomer(
       state: CustomerState,
@@ -61,7 +70,10 @@ export const getCustomers = (): AppThunk => async (dispatch) => {
   const customers = await api.get<Customer[]>('customers');
   dispatch(slice.actions.getCustomers({ customers }));
 };
-
+export const getCustomersMini = (): AppThunk => async (dispatch) => {
+  const customers = await api.get<CustomerMiniDTO[]>('customers/mini');
+  dispatch(slice.actions.getCustomersMini({ customers }));
+};
 export const addCustomer =
   (customer): AppThunk =>
   async (dispatch) => {

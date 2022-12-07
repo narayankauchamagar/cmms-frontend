@@ -229,19 +229,6 @@ export default function RequestDetails({
                   </Link>
                 </Grid>
               )}
-              {request?.location && (
-                <Grid item xs={12} lg={6}>
-                  <Typography
-                    variant="h6"
-                    sx={{ color: theme.colors.alpha.black[70] }}
-                  >
-                    {t('Location')}
-                  </Typography>
-                  <Link variant="h6" href={getLocationUrl(request.location.id)}>
-                    {request.location.name}
-                  </Link>
-                </Grid>
-              )}
               {request?.primaryUser && (
                 <Grid item xs={12} lg={6}>
                   <Typography
