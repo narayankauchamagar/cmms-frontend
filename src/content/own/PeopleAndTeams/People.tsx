@@ -61,7 +61,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
       window.history.replaceState(
         null,
         'User details',
-        `/app/people-teams/${id}`
+        `/app/people-teams/people/${id}`
       );
       setDetailDrawerOpen(true);
     }

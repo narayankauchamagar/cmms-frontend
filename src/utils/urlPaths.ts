@@ -7,7 +7,7 @@ export const getLocationUrl = (id) => {
 };
 
 export const getUserUrl = (id) => {
-  return `/app/people-teams/${id}`;
+  return `/app/people-teams/people/${id}`;
 };
 export const getTeamUrl = (id) => {
   return `/app/people-teams/teams${id}`;

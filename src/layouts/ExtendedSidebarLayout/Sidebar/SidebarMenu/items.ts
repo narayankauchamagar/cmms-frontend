@@ -54,17 +54,38 @@ const menuItems: MenuItems[] = [
         permission: PermissionEntity.WORK_ORDERS
       },
       {
+        name: 'Requests',
+        link: '/app/requests',
+        icon: MoveToInboxTwoToneIcon,
+        permission: PermissionEntity.REQUESTS
+      },
+      {
         name: 'Assets',
         link: '/app/assets',
         icon: Inventory2TwoToneIcon,
         permission: PermissionEntity.ASSETS
       },
       {
-        name: 'Files',
-        link: '/app/files',
-        icon: AttachFileTwoToneIcon,
-        permission: PermissionEntity.FILES,
-        planFeature: PlanFeature.FILE
+        name: 'Locations',
+        link: '/app/locations',
+        icon: LocationOnTwoToneIcon,
+        permission: PermissionEntity.LOCATIONS
+      },
+      {
+        name: 'Parts/Inventory',
+        link: '/app/inventory',
+        icon: HandymanTwoToneIcon,
+        permission: PermissionEntity.PARTS_AND_MULTIPARTS,
+        items: [
+          {
+            name: 'Parts',
+            link: '/app/inventory/parts'
+          },
+          {
+            name: 'Sets',
+            link: '/app/inventory/sets'
+          }
+        ]
       },
       {
         name: 'Purchase Orders',
@@ -81,22 +102,36 @@ const menuItems: MenuItems[] = [
         planFeature: PlanFeature.METER
       },
       {
-        name: 'Requests',
-        link: '/app/requests',
-        icon: MoveToInboxTwoToneIcon,
-        permission: PermissionEntity.REQUESTS
+        name: 'People & Teams',
+        link: '/app/people-teams',
+        icon: People,
+        permission: PermissionEntity.PEOPLE_AND_TEAMS,
+        items: [
+          {
+            name: 'People',
+            link: '/app/people-teams/people'
+          },
+          {
+            name: 'Teams',
+            link: '/app/people-teams/teams'
+          }
+        ]
       },
       {
-        name: 'Locations',
-        link: '/app/locations',
-        icon: LocationOnTwoToneIcon,
-        permission: PermissionEntity.LOCATIONS
-      },
-      {
-        name: 'Parts/Inventory',
-        link: '/app/inventory/parts',
-        icon: HandymanTwoToneIcon,
-        permission: PermissionEntity.PARTS_AND_MULTIPARTS
+        name: 'Vendors & Customers',
+        link: '/app/vendors-customers/vendors',
+        icon: GroupsTwoTone,
+        permission: PermissionEntity.VENDORS_AND_CUSTOMERS,
+        items: [
+          {
+            name: 'Vendors',
+            link: '/app/vendors-customers/vendors'
+          },
+          {
+            name: 'Customers',
+            link: '/app/vendors-customers/customers'
+          }
+        ]
       },
       {
         name: 'Categories',
@@ -105,22 +140,17 @@ const menuItems: MenuItems[] = [
         permission: PermissionEntity.CATEGORIES
       },
       {
+        name: 'Files',
+        link: '/app/files',
+        icon: AttachFileTwoToneIcon,
+        permission: PermissionEntity.FILES,
+        planFeature: PlanFeature.FILE
+      },
+      {
         name: 'Settings',
         link: '/app/settings',
         icon: SettingsTwoToneIcon,
         permission: PermissionEntity.SETTINGS
-      },
-      {
-        name: 'Vendors & Customers',
-        link: '/app/vendors-customers/vendors',
-        icon: GroupsTwoTone,
-        permission: PermissionEntity.VENDORS_AND_CUSTOMERS
-      },
-      {
-        name: 'People & Teams',
-        link: '/app/people-teams',
-        icon: People,
-        permission: PermissionEntity.PEOPLE_AND_TEAMS
       }
     ]
   },

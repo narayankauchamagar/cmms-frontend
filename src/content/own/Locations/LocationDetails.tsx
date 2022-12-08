@@ -303,7 +303,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
                 {location.workers.map((worker, index) => (
                   <Box key={worker.id}>
                     <Link
-                      href={`/app/people-teams/${worker.id}`}
+                      href={`/app/people-teams/people/${worker.id}`}
                       variant="h6"
                       fontWeight="bold"
                     >

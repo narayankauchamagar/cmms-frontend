@@ -266,7 +266,7 @@ const appRoutes = [
     path: 'people-teams',
     children: [
       {
-        path: '',
+        path: 'people',
         children: [
           { path: '', element: <PeopleAndTeams /> },
           { path: ':peopleId', element: <PeopleAndTeams /> }

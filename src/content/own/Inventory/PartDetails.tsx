@@ -191,7 +191,7 @@ export default function PartDetails(props: PartDetailsProps) {
                   {part.assignedTo.map((user) => (
                     <Link
                       key={user.id}
-                      href={`/app/people-teams/${user.id}`}
+                      href={`/app/people-teams/people/${user.id}`}
                       variant="h6"
                     >{`${user.firstName} ${user.lastName}`}</Link>
                   ))}

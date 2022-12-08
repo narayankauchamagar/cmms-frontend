@@ -115,7 +115,7 @@ const AssetDetails = ({ asset }: PropsType) => {
                     <Typography variant="h6">{t('Primary User')}</Typography>
                     <Link
                       key={asset.primaryUser.id}
-                      href={`/app/people-teams/${asset.primaryUser.id}`}
+                      href={`/app/people-teams/people/${asset.primaryUser.id}`}
                       variant="h6"
                     >
                       {`${asset.primaryUser.firstName} ${asset.primaryUser.lastName}`}
@@ -141,7 +141,9 @@ const AssetDetails = ({ asset }: PropsType) => {
               <ListField
                 values={asset?.assignedTo}
                 label={t('Users')}
-                getHref={(user: UserMiniDTO) => `/app/people-teams/${user.id}`}
+                getHref={(user: UserMiniDTO) =>
+                  `/app/people-teams/people/${user.id}`
+                }
                 getValueLabel={(user: UserMiniDTO) =>
                   `${user.firstName} ${user.lastName}`
                 }
