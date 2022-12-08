@@ -25,7 +25,7 @@ import {
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 import { useDispatch, useSelector } from '../../../store';
-import { addFiles, editFile, getFiles } from '../../../slices/file';
+import { addFiles, deleteFile, editFile, getFiles } from '../../../slices/file';
 import { IField } from '../type';
 import Form from '../components/form';
 import * as Yup from 'yup';
@@ -35,20 +35,38 @@ import { PermissionEntity } from '../../../models/owns/role';
 import PermissionErrorMessage from '../components/PermissionErrorMessage';
 import { PlanFeature } from '../../../models/owns/subscriptionPlan';
 import FeatureErrorMessage from '../components/FeatureErrorMessage';
+import ConfirmDialog from '../components/ConfirmDialog';
+import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
   const { getFormattedDate } = useContext(CompanySettingsContext);
+  const { showSnackBar } = useContext(CustomSnackBarContext);
   const { files } = useSelector((state) => state.files);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
+  const [openDelete, setOpenDelete] = useState<boolean>(false);
   const [currentFile, setCurrentFile] = useState<File>();
-  const handleDelete = (id: number) => {};
+  const handleOpenDelete = (id: number) => {
+    setCurrentFile(files.find((file) => file.id === id));
+    setOpenDelete(true);
+  };
+  const handleDelete = (id: number) => {
+    dispatch(deleteFile(id)).then(onDeleteSuccess).catch(onDeleteFailure);
+    setOpenDelete(false);
+  };
+
   const handleRename = (id: number) => {
     setCurrentFile(files.find((file) => file.id === id));
     setOpenUpdateModal(true);
   };
+  const onDeleteSuccess = () => {
+    showSnackBar(t('The file has been deleted successfully'), 'success');
+  };
+  const onDeleteFailure = (err) =>
+    showSnackBar(t("The file couldn't be deleted"), 'error');
+
   const {
     hasViewPermission,
     hasEditPermission,
@@ -124,7 +142,7 @@ function Files() {
           <GridActionsCellItem
             key="delete"
             icon={<DeleteTwoToneIcon fontSize="small" color="error" />}
-            onClick={() => handleDelete(Number(params.id))}
+            onClick={() => handleOpenDelete(Number(params.id))}
             label="Delete"
           />
         ];
@@ -285,6 +303,15 @@ function Files() {
               </Card>
             </Grid>
           </Grid>
+          <ConfirmDialog
+            open={openDelete}
+            onCancel={() => {
+              setOpenDelete(false);
+            }}
+            onConfirm={() => handleDelete(currentFile?.id)}
+            confirmText={t('Delete')}
+            question={t('Are you sure you want to delete this File?')}
+          />
           {renderAddModal()}
           {renderUpdateModal()}
         </>
