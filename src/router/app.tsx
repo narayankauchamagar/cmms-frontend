@@ -209,7 +209,8 @@ const appRoutes = [
         children: [
           { path: 'work-orders', element: <ShowAsset /> },
           { path: 'details', element: <ShowAsset /> },
-          { path: 'parts', element: <ShowAsset /> }
+          { path: 'parts', element: <ShowAsset /> },
+          { path: 'files', element: <ShowAsset /> }
         ]
       }
     ]

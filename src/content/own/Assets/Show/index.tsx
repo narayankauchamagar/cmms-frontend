@@ -7,6 +7,7 @@ import Asset, { AssetDTO } from '../../../../models/owns/asset';
 import AssetWorkOrders from './AssetWorkOrders';
 import AssetDetails from './AssetDetails';
 import AssetParts from './AssetParts';
+import AssetFiles from './AssetFiles';
 import { isNumeric } from 'src/utils/validators';
 import { IField } from '../../type';
 import {
@@ -63,7 +64,8 @@ const ShowAsset = ({}: PropsType) => {
   const tabs = [
     { value: 'work-orders', label: t('Work Orders') },
     { value: 'details', label: t('Details') },
-    { value: 'parts', label: t('Parts') }
+    { value: 'parts', label: t('Parts') },
+    { value: 'files', label: t('Files') }
   ];
   const tabIndex = tabs.findIndex((tab) => tab.value === arr[arr.length - 1]);
 
@@ -340,8 +342,10 @@ const ShowAsset = ({}: PropsType) => {
             <AssetWorkOrders asset={asset} />
           ) : tabIndex === 1 ? (
             <AssetDetails asset={asset} />
+          ) : tabIndex === 2 ? (
+            <AssetParts asset={asset} />
           ) : (
-            tabIndex === 2 && <AssetParts asset={asset} />
+            tabIndex === 3 && <AssetFiles asset={asset} />
           )
         ) : null}
         {renderAssetUpdateModal()}

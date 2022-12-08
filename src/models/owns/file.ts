@@ -7,7 +7,11 @@ export default interface File extends Audit {
   url: string;
   type: FileType;
 }
-
+export interface FileMiniDTO {
+  name: string;
+  id: number;
+  url: string;
+}
 export const files: File[] = [
   {
     name: 'File1',

@@ -6,6 +6,7 @@ import { VendorMiniDTO, vendors } from './vendor';
 import Location, { locations } from './location';
 import { CustomerMiniDTO, customers } from './customer';
 import { users } from './user';
+import { FileMiniDTO } from './file';
 
 export default interface Asset extends Audit {
   id: number;
@@ -36,6 +37,7 @@ export interface AssetDTO extends Audit {
   warrantyExpirationDate?: string;
   inServiceDate?: string;
   parts: PartMiniDTO[];
+  files: FileMiniDTO[];
 }
 export interface AssetRow extends AssetDTO {
   hierarchy: number[];
@@ -81,6 +83,7 @@ export const assetDTOS: AssetDTO[] = [
     primaryUser: users[0],
     assignedTo: users,
     teams,
+    files: [],
     additionalInfos: '',
     vendors,
     customers,
@@ -106,6 +109,7 @@ export const assetDTOS: AssetDTO[] = [
     primaryUser: users[0],
     assignedTo: users,
     teams,
+    files: [],
     additionalInfos: '',
     vendors,
     customers,
