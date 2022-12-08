@@ -25,7 +25,7 @@ import {
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 import { useDispatch, useSelector } from '../../../store';
-import { addFiles, getFiles } from '../../../slices/file';
+import { addFiles, editFile, getFiles } from '../../../slices/file';
 import { IField } from '../type';
 import Form from '../components/form';
 import * as Yup from 'yup';
@@ -42,8 +42,13 @@ function Files() {
   const { getFormattedDate } = useContext(CompanySettingsContext);
   const { files } = useSelector((state) => state.files);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
+  const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
+  const [currentFile, setCurrentFile] = useState<File>();
   const handleDelete = (id: number) => {};
-  const handleRename = (id: number) => {};
+  const handleRename = (id: number) => {
+    setCurrentFile(files.find((file) => file.id === id));
+    setOpenUpdateModal(true);
+  };
   const {
     hasViewPermission,
     hasEditPermission,
@@ -66,7 +71,14 @@ function Files() {
       multiple: true
     }
   ];
-
+  const updateFields: Array<IField> = [
+    {
+      name: 'name',
+      type: 'text',
+      label: t('Name'),
+      required: true
+    }
+  ];
   const columns: GridEnrichedColDef[] = [
     {
       field: 'id',
@@ -129,6 +141,9 @@ function Files() {
   const shape = {
     files: Yup.array().required(t('Please upload at least a file'))
   };
+  const updateShape = {
+    name: Yup.string().required(t('Please enter a file name'))
+  };
   const renderAddModal = () => {
     return (
       <Dialog
@@ -162,6 +177,45 @@ function Files() {
               return dispatch(addFiles(values.files)).then(() =>
                 setOpenAddModal(false)
               );
+            }}
+          />
+        </DialogContent>
+      </Dialog>
+    );
+  };
+  const renderUpdateModal = () => {
+    return (
+      <Dialog
+        fullWidth
+        maxWidth="sm"
+        open={openUpdateModal}
+        onClose={() => setOpenUpdateModal(false)}
+      >
+        <DialogTitle
+          sx={{
+            p: 3
+          }}
+        >
+          <Typography variant="h4" gutterBottom>
+            {t('Edit File')}
+          </Typography>
+        </DialogTitle>
+        <DialogContent
+          dividers
+          sx={{
+            p: 3
+          }}
+        >
+          <Form
+            fields={updateFields}
+            validation={Yup.object().shape(updateShape)}
+            submitText={t('Save')}
+            values={{ ...currentFile }}
+            onChange={({ field, e }) => {}}
+            onSubmit={async (values) => {
+              return dispatch(
+                editFile(currentFile.id, { ...currentFile, name: values.name })
+              ).then(() => setOpenUpdateModal(false));
             }}
           />
         </DialogContent>
@@ -232,6 +286,7 @@ function Files() {
             </Grid>
           </Grid>
           {renderAddModal()}
+          {renderUpdateModal()}
         </>
       );
     else
