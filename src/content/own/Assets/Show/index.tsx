@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import MultipleTabsLayout from '../../components/MultipleTabsLayout';
 import { TitleContext } from '../../../../contexts/TitleContext';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Asset, { AssetDTO } from '../../../../models/owns/asset';
 import AssetWorkOrders from './AssetWorkOrders';
 import AssetDetails from './AssetDetails';
@@ -19,7 +19,11 @@ import {
 } from '@mui/material';
 import Form from '../../components/form';
 import * as Yup from 'yup';
-import { editAsset, getAssetDetails } from '../../../../slices/asset';
+import {
+  deleteAsset,
+  editAsset,
+  getAssetDetails
+} from '../../../../slices/asset';
 import { useDispatch, useSelector } from '../../../../store';
 import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContext';
 import { formatAssetValues } from '../../../../utils/formatters';
@@ -27,6 +31,8 @@ import { CompanySettingsContext } from '../../../../contexts/CompanySettingsCont
 import { PermissionEntity } from '../../../../models/owns/role';
 import PermissionErrorMessage from '../../components/PermissionErrorMessage';
 import useAuth from '../../../../hooks/useAuth';
+import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
+import ConfirmDialog from '../../components/ConfirmDialog';
 
 interface PropsType {}
 
@@ -40,6 +46,8 @@ const ShowAsset = ({}: PropsType) => {
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const { assetInfos } = useSelector((state) => state.assets);
   const asset: AssetDTO = assetInfos[assetId]?.asset;
+  const navigate = useNavigate();
+  const [openDelete, setOpenDelete] = useState<boolean>(false);
   const {
     hasViewPermission,
     hasEditPermission,
@@ -55,6 +63,11 @@ const ShowAsset = ({}: PropsType) => {
   const handleOpenUpdateModal = () => setOpenUpdateModal(true);
   const handleCloseUpdateModal = () => setOpenUpdateModal(false);
 
+  const handleDelete = () => {
+    dispatch(deleteAsset(asset.id))
+      .then(onDeleteSuccess)
+      .catch(onDeleteFailure);
+  };
   useEffect(() => {
     setTitle(asset?.name);
   }, [asset]);
@@ -68,7 +81,12 @@ const ShowAsset = ({}: PropsType) => {
     { value: 'files', label: t('Files') }
   ];
   const tabIndex = tabs.findIndex((tab) => tab.value === arr[arr.length - 1]);
-
+  const onDeleteSuccess = () => {
+    showSnackBar(t('The Asset has been deleted successfully'), 'success');
+    navigate('/app/assets');
+  };
+  const onDeleteFailure = (err) =>
+    showSnackBar(t("The Asset couldn't be deleted"), 'error');
   const defaultFields: Array<IField> = [
     {
       name: 'assetInfo',
@@ -349,6 +367,9 @@ const ShowAsset = ({}: PropsType) => {
             : null
         }
         actionTitle={t('Edit')}
+        secondAction={() => setOpenDelete(true)}
+        secondActionTitle={t('Delete')}
+        secondActionIcon={<DeleteTwoToneIcon />}
         withoutCard
         editAction
       >
@@ -363,6 +384,15 @@ const ShowAsset = ({}: PropsType) => {
             tabIndex === 3 && <AssetFiles asset={asset} />
           )
         ) : null}
+        <ConfirmDialog
+          open={openDelete}
+          onCancel={() => {
+            setOpenDelete(false);
+          }}
+          onConfirm={handleDelete}
+          confirmText={t('Delete')}
+          question={t('Are you sure you want to delete this Asset?')}
+        />
         {renderAssetUpdateModal()}
       </MultipleTabsLayout>
     );

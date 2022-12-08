@@ -1,7 +1,7 @@
 import { ChangeEvent, ReactNode } from 'react';
 import { Helmet } from 'react-helmet-async';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import { Box, Button, Card, styled, Tab, Tabs } from '@mui/material';
+import { Box, Button, Card, Stack, styled, Tab, Tabs } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
@@ -96,7 +96,10 @@ interface SettingsLayoutProps {
   title: string;
   tabIndex: number;
   action?: () => void;
+  secondAction?: () => void;
   actionTitle?: string;
+  secondActionTitle?: string;
+  secondActionIcon?: ReactNode;
   editAction?: boolean;
   withoutCard?: boolean;
 }
@@ -111,7 +114,10 @@ function MultipleTabsLayout(props: SettingsLayoutProps) {
     action,
     actionTitle,
     withoutCard,
-    editAction
+    editAction,
+    secondAction,
+    secondActionTitle,
+    secondActionIcon
   } = props;
   const { t }: { t: any } = useTranslation();
   const navigate = useNavigate();
@@ -141,16 +147,26 @@ function MultipleTabsLayout(props: SettingsLayoutProps) {
             ))}
           </Tabs>
         </TabsContainerWrapper>
-        {action && (
-          <Button
-            startIcon={editAction ? <EditTwoToneIcon /> : <AddTwoToneIcon />}
-            sx={{ mx: 6, my: 1 }}
-            variant="contained"
-            onClick={action}
-          >
-            {actionTitle}
-          </Button>
-        )}
+        <Stack direction="row" spacing={1} sx={{ mr: 4, my: 1 }}>
+          {action && (
+            <Button
+              startIcon={editAction ? <EditTwoToneIcon /> : <AddTwoToneIcon />}
+              variant="contained"
+              onClick={action}
+            >
+              {actionTitle}
+            </Button>
+          )}
+          {secondAction && (
+            <Button
+              startIcon={secondActionIcon}
+              variant="outlined"
+              onClick={secondAction}
+            >
+              {secondActionTitle}
+            </Button>
+          )}
+        </Stack>
       </Box>
       {withoutCard ? (
         children
