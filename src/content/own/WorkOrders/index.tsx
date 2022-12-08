@@ -575,7 +575,7 @@ function WorkOrders() {
       >
         <Box>
           <Form
-            fields={getFilteredFields(getFieldsAndShapes()[0])}
+            fields={getFieldsAndShapes()[0]}
             validation={Yup.object().shape(getFieldsAndShapes()[1])}
             submitText={t('Save')}
             values={{
@@ -587,7 +587,11 @@ function WorkOrders() {
             onSubmit={async (values) => {
               let formattedValues = formatValues(values);
               return new Promise<void>((resolve, rej) => {
-                uploadFiles(formattedValues.files, formattedValues.image)
+                //differentiate files from api and formattedValues
+                const files = formattedValues.files.find((file) => file.id)
+                  ? []
+                  : formattedValues.files;
+                uploadFiles(files, formattedValues.image)
                   .then((files) => {
                     formattedValues = {
                       ...formattedValues,

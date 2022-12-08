@@ -194,6 +194,13 @@ const ShowAsset = ({}: PropsType) => {
       multiple: true
     },
     {
+      name: 'files',
+      type: 'file',
+      multiple: true,
+      label: t('Files'),
+      fileType: 'file'
+    },
+    {
       name: 'structure',
       type: 'titleGroupField',
       label: t('Structure')
@@ -297,13 +304,21 @@ const ShowAsset = ({}: PropsType) => {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               let formattedValues = formatAssetValues(values);
-
+              const files = formattedValues.files.find((file) => file.id)
+                ? []
+                : formattedValues.files;
               return new Promise<void>((resolve, rej) => {
-                uploadFiles([], formattedValues.image)
+                uploadFiles(files, formattedValues.image)
                   .then((files) => {
                     formattedValues = {
                       ...formattedValues,
-                      image: files.length ? { id: files[0].id } : asset.image
+                      image: files.length ? { id: files[0].id } : asset.image,
+                      files: [
+                        ...asset.files,
+                        ...files.map((file) => {
+                          return { id: file.id };
+                        })
+                      ]
                     };
                     dispatch(editAsset(Number(assetId), formattedValues))
                       .then(onEditSuccess)

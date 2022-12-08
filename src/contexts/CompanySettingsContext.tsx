@@ -6,7 +6,10 @@ import { FileType } from '../models/owns/file';
 
 type CompanySettingsContext = {
   getFormattedDate: (dateString: string, hideTime?: boolean) => string;
-  uploadFiles: (files, images) => Promise<{ id: number; type: FileType }[]>;
+  uploadFiles: (
+    files: any[],
+    images: any[]
+  ) => Promise<{ id: number; type: FileType }[]>;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
@@ -36,8 +39,8 @@ export const CompanySettingsProvider: FC = ({ children }) => {
   };
 
   const uploadFiles = async (
-    files,
-    images
+    files: [],
+    images: []
   ): Promise<{ id: number; type: FileType }[]> => {
     let result: { id: number; type: FileType }[] = [];
     if (files?.length) {

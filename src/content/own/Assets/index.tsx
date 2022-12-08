@@ -95,7 +95,8 @@ function Assets() {
       field: 'image',
       headerName: t('Image'),
       description: t('Image'),
-      width: 150
+      width: 150,
+      renderCell: (params) => <img src={params.row.image?.url} />
     },
     {
       field: 'area',
@@ -309,6 +310,13 @@ function Assets() {
       label: t('Warranty Expiration date')
     },
     {
+      name: 'files',
+      type: 'file',
+      multiple: true,
+      label: t('Files'),
+      fileType: 'file'
+    },
+    {
       name: 'additionalInfos',
       type: 'text',
       label: t('Additional Information'),
@@ -430,11 +438,14 @@ function Assets() {
             onSubmit={async (values) => {
               let formattedValues = formatAssetValues(values);
               return new Promise<void>((resolve, rej) => {
-                uploadFiles([], formattedValues.image)
+                uploadFiles(formattedValues.files, formattedValues.image)
                   .then((files) => {
                     formattedValues = {
                       ...formattedValues,
-                      image: files.length ? { id: files[0].id } : null
+                      image: files.length ? { id: files[0].id } : null,
+                      files: files.map((file) => {
+                        return { id: file.id };
+                      })
                     };
                     dispatch(addAsset(formattedValues))
                       .then(onCreationSuccess)

@@ -480,7 +480,10 @@ const Parts = ({ setAction }: PropsType) => {
             onSubmit={async (values) => {
               let formattedValues = formatValues(values);
               return new Promise<void>((resolve, rej) => {
-                uploadFiles(formattedValues.files, formattedValues.image)
+                const files = formattedValues.files.find((file) => file.id)
+                  ? []
+                  : formattedValues.files;
+                uploadFiles(files, formattedValues.image)
                   .then((files) => {
                     formattedValues = {
                       ...formattedValues,
