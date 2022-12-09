@@ -8,6 +8,9 @@ import { useDispatch } from '../../../store';
 import { createWorkOrderMeterTrigger } from '../../../slices/workOrderMeterTrigger';
 import { getWOBaseFields } from '../../../utils/fields';
 import Meter from '../../../models/owns/meter';
+import { useContext } from 'react';
+import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
+import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 
 interface AddTriggerProps {
   open: boolean;
@@ -21,6 +24,8 @@ export default function AddTriggerModal({
 }: AddTriggerProps) {
   const { t }: { t: any } = useTranslation();
   const dispatch = useDispatch();
+  const { showSnackBar } = useContext(CustomSnackBarContext);
+  const { uploadFiles } = useContext(CompanySettingsContext);
   const fields: Array<IField> = [
     {
       name: 'name',
@@ -69,6 +74,16 @@ export default function AddTriggerModal({
     values.triggerCondition = values.triggerCondition.value;
     return values;
   };
+  const onCreationSuccess = () => {
+    onClose();
+    showSnackBar(
+      t('The Work Order trigger has been created successfully'),
+      'success'
+    );
+  };
+  const onCreationFailure = (err) =>
+    showSnackBar(t("The Work Order trigger couldn't be created"), 'error');
+
   return (
     <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
       <DialogTitle
@@ -96,10 +111,38 @@ export default function AddTriggerModal({
           values={{ dueDate: null }}
           onChange={({ field, e }) => {}}
           onSubmit={async (values) => {
-            const formattedValues = formatValues(values);
-            return dispatch(
-              createWorkOrderMeterTrigger(meter.id, formattedValues)
-            ).then(() => onClose());
+            let formattedValues = formatValues(values);
+            return new Promise<void>((resolve, rej) => {
+              uploadFiles(formattedValues.files, formattedValues.image)
+                .then((files) => {
+                  formattedValues = {
+                    ...formattedValues,
+                    image: files.find((file) => file.type === 'IMAGE')
+                      ? { id: files.find((file) => file.type === 'IMAGE').id }
+                      : null,
+                    files: files
+                      .filter((file) => file.type === 'OTHER')
+                      .map((file) => {
+                        return { id: file.id };
+                      })
+                  };
+                  dispatch(
+                    createWorkOrderMeterTrigger(meter.id, formattedValues)
+                  )
+                    .then(() => {
+                      onCreationSuccess();
+                      resolve();
+                    })
+                    .catch((err) => {
+                      onCreationFailure(err);
+                      rej();
+                    });
+                })
+                .catch((err) => {
+                  onCreationFailure(err);
+                  rej();
+                });
+            });
           }}
         />
       </DialogContent>

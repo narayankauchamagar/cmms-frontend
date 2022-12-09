@@ -523,9 +523,14 @@ function WorkOrders() {
                   .then((files) => {
                     formattedValues = {
                       ...formattedValues,
-                      files: files.map((file) => {
-                        return { id: file.id };
-                      })
+                      image: files.find((file) => file.type === 'IMAGE')
+                        ? { id: files.find((file) => file.type === 'IMAGE').id }
+                        : null,
+                      files: files
+                        .filter((file) => file.type === 'OTHER')
+                        .map((file) => {
+                          return { id: file.id };
+                        })
                     };
                     dispatch(addWorkOrder(formattedValues))
                       .then(() => {
@@ -595,11 +600,16 @@ function WorkOrders() {
                   .then((files) => {
                     formattedValues = {
                       ...formattedValues,
+                      image: files.find((file) => file.type === 'IMAGE')
+                        ? { id: files.find((file) => file.type === 'IMAGE').id }
+                        : currentWorkOrder.image,
                       files: [
                         ...currentWorkOrder.files,
-                        ...files.map((file) => {
-                          return { id: file.id };
-                        })
+                        ...files
+                          .filter((file) => file.type === 'OTHER')
+                          .map((file) => {
+                            return { id: file.id };
+                          })
                       ]
                     };
                     dispatch(

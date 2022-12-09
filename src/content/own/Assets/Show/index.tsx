@@ -332,12 +332,16 @@ const ShowAsset = ({}: PropsType) => {
                   .then((files) => {
                     formattedValues = {
                       ...formattedValues,
-                      image: files.length ? { id: files[0].id } : asset.image,
+                      image: files.find((file) => file.type === 'IMAGE')
+                        ? { id: files.find((file) => file.type === 'IMAGE').id }
+                        : asset.image,
                       files: [
                         ...asset.files,
-                        ...files.map((file) => {
-                          return { id: file.id };
-                        })
+                        ...files
+                          .filter((file) => file.type === 'OTHER')
+                          .map((file) => {
+                            return { id: file.id };
+                          })
                       ]
                     };
                     dispatch(editAsset(Number(assetId), formattedValues))

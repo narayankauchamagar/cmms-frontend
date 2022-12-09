@@ -9,6 +9,9 @@ import { editWorkOrderMeterTrigger } from '../../../slices/workOrderMeterTrigger
 import { getWOBaseFields, getWOBaseValues } from '../../../utils/fields';
 import Meter from '../../../models/owns/meter';
 import WorkOrderMeterTrigger from '../../../models/owns/workOrderMeterTrigger';
+import { useContext } from 'react';
+import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
+import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 
 interface EditTriggerProps {
   open: boolean;
@@ -24,6 +27,8 @@ export default function EditTriggerModal({
 }: EditTriggerProps) {
   const { t }: { t: any } = useTranslation();
   const dispatch = useDispatch();
+  const { showSnackBar } = useContext(CustomSnackBarContext);
+  const { uploadFiles } = useContext(CompanySettingsContext);
   const fields: Array<IField> = [
     {
       name: 'name',
@@ -56,6 +61,16 @@ export default function EditTriggerModal({
     },
     ...getWOBaseFields(t)
   ];
+  const onEditSuccess = () => {
+    onClose();
+    showSnackBar(
+      t('The Work Order trigger has been updated successfully'),
+      'success'
+    );
+  };
+  const onEditFailure = (err) =>
+    showSnackBar(t("The Work Order trigger couldn't be updated"), 'error');
+
   const shape = {
     name: Yup.string().required(t('The trigger name is required')),
     title: Yup.string().required(t('The Work Order title is required')),
@@ -106,14 +121,48 @@ export default function EditTriggerModal({
           }}
           onChange={({ field, e }) => {}}
           onSubmit={async (values) => {
-            const formattedValues = formatValues(values);
-            return dispatch(
-              editWorkOrderMeterTrigger(
-                meter.id,
-                workOrderMeterTrigger.id,
-                formattedValues
-              )
-            ).then(() => onClose());
+            let formattedValues = formatValues(values);
+            const files = formattedValues.files.find((file) => file.id)
+              ? []
+              : formattedValues.files;
+            return new Promise<void>((resolve, rej) => {
+              uploadFiles(files, formattedValues.image)
+                .then((files) => {
+                  formattedValues = {
+                    ...formattedValues,
+                    image: files.find((file) => file.type === 'IMAGE')
+                      ? { id: files.find((file) => file.type === 'IMAGE').id }
+                      : workOrderMeterTrigger.image,
+                    files: [
+                      ...workOrderMeterTrigger.files,
+                      ...files
+                        .filter((file) => file.type === 'OTHER')
+                        .map((file) => {
+                          return { id: file.id };
+                        })
+                    ]
+                  };
+                  dispatch(
+                    editWorkOrderMeterTrigger(
+                      meter.id,
+                      workOrderMeterTrigger.id,
+                      formattedValues
+                    )
+                  )
+                    .then(() => {
+                      onEditSuccess();
+                      resolve();
+                    })
+                    .catch((err) => {
+                      onEditFailure(err);
+                      rej();
+                    });
+                })
+                .catch((err) => {
+                  onEditFailure(err);
+                  rej();
+                });
+            });
           }}
         />
       </DialogContent>
