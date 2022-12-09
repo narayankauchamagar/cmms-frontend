@@ -7,10 +7,12 @@ import api from '../utils/api';
 const basePath = 'meters';
 interface MeterState {
   meters: Meter[];
+  metersByAsset: { [id: number]: Meter[] };
 }
 
 const initialState: MeterState = {
-  meters: []
+  meters: [],
+  metersByAsset: {}
 };
 
 const slice = createSlice({
@@ -20,6 +22,13 @@ const slice = createSlice({
     getMeters(state: MeterState, action: PayloadAction<{ meters: Meter[] }>) {
       const { meters } = action.payload;
       state.meters = meters;
+    },
+    getMetersByAsset(
+      state: MeterState,
+      action: PayloadAction<{ id: number; meters: Meter[] }>
+    ) {
+      const { meters, id } = action.payload;
+      state.metersByAsset[id] = meters;
     },
     addMeter(state: MeterState, action: PayloadAction<{ meter: Meter }>) {
       const { meter } = action.payload;
@@ -71,6 +80,13 @@ export const deleteMeter =
     if (success) {
       dispatch(slice.actions.deleteMeter({ id }));
     }
+  };
+
+export const getMetersByAsset =
+  (id: number): AppThunk =>
+  async (dispatch) => {
+    const meters = await api.get<Meter[]>(`${basePath}/asset/${id}`);
+    dispatch(slice.actions.getMetersByAsset({ id, meters }));
   };
 
 export default slice;

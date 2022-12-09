@@ -49,7 +49,7 @@ export default function MeterDetails(props: MeterDetailsProps) {
   const [currentTab, setCurrentTab] = useState<string>('details');
   const { getFormattedDate } = useContext(CompanySettingsContext);
   const theme = useTheme();
-  const { metersReadings } = useSelector((state) => state.readings);
+  const { readingsByMeter } = useSelector((state) => state.readings);
   const { metersTriggers } = useSelector(
     (state) => state.workOrderMeterTriggers
   );
@@ -60,7 +60,7 @@ export default function MeterDetails(props: MeterDetailsProps) {
   const [currentWorkOrderMeterTrigger, setCurrentWorkOrderMeterTrigger] =
     useState<WorkOrderMeterTrigger>();
   const currentMeterTriggers = metersTriggers[meter?.id] ?? [];
-  const currentMeterReadings = metersReadings[meter?.id] ?? [];
+  const currentMeterReadings = readingsByMeter[meter?.id] ?? [];
   const tabs = [
     { value: 'details', label: t('Details') },
     { value: 'history', label: t('History') }

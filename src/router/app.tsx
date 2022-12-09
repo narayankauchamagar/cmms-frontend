@@ -210,7 +210,8 @@ const appRoutes = [
           { path: 'work-orders', element: <ShowAsset /> },
           { path: 'details', element: <ShowAsset /> },
           { path: 'parts', element: <ShowAsset /> },
-          { path: 'files', element: <ShowAsset /> }
+          { path: 'files', element: <ShowAsset /> },
+          { path: 'meters', element: <ShowAsset /> }
         ]
       }
     ]

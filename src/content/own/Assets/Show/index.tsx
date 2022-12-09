@@ -33,6 +33,7 @@ import PermissionErrorMessage from '../../components/PermissionErrorMessage';
 import useAuth from '../../../../hooks/useAuth';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import ConfirmDialog from '../../components/ConfirmDialog';
+import AssetMeters from './AssetMeters';
 
 interface PropsType {}
 
@@ -78,7 +79,8 @@ const ShowAsset = ({}: PropsType) => {
     { value: 'work-orders', label: t('Work Orders') },
     { value: 'details', label: t('Details') },
     { value: 'parts', label: t('Parts') },
-    { value: 'files', label: t('Files') }
+    { value: 'files', label: t('Files') },
+    { value: 'meters', label: t('Meters') }
   ];
   const tabIndex = tabs.findIndex((tab) => tab.value === arr[arr.length - 1]);
   const onDeleteSuccess = () => {
@@ -380,8 +382,10 @@ const ShowAsset = ({}: PropsType) => {
             <AssetDetails asset={asset} />
           ) : tabIndex === 2 ? (
             <AssetParts asset={asset} />
+          ) : tabIndex === 3 ? (
+            <AssetFiles asset={asset} />
           ) : (
-            tabIndex === 3 && <AssetFiles asset={asset} />
+            tabIndex === 4 && <AssetMeters asset={asset} />
           )
         ) : null}
         <ConfirmDialog

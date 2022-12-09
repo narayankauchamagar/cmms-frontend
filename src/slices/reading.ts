@@ -6,11 +6,11 @@ import api from '../utils/api';
 
 const basePath = 'readings';
 interface ReadingState {
-  metersReadings: { [id: number]: Reading[] };
+  readingsByMeter: { [id: number]: Reading[] };
 }
 
 const initialState: ReadingState = {
-  metersReadings: {}
+  readingsByMeter: {}
 };
 
 const slice = createSlice({
@@ -22,7 +22,7 @@ const slice = createSlice({
       action: PayloadAction<{ id: number; readings: Reading[] }>
     ) {
       const { readings, id } = action.payload;
-      state.metersReadings[id] = readings;
+      state.readingsByMeter[id] = readings;
     },
     createReading(
       state: ReadingState,
@@ -32,9 +32,9 @@ const slice = createSlice({
       }>
     ) {
       const { reading, meterId } = action.payload;
-      if (state.metersReadings[meterId]) {
-        state.metersReadings[meterId].push(reading);
-      } else state.metersReadings[meterId] = [reading];
+      if (state.readingsByMeter[meterId]) {
+        state.readingsByMeter[meterId].push(reading);
+      } else state.readingsByMeter[meterId] = [reading];
     },
     deleteReading(
       state: ReadingState,
@@ -44,7 +44,7 @@ const slice = createSlice({
       }>
     ) {
       const { id, meterId } = action.payload;
-      state.metersReadings[meterId] = state.metersReadings[meterId].filter(
+      state.readingsByMeter[meterId] = state.readingsByMeter[meterId].filter(
         (reading) => reading.id !== id
       );
     }
