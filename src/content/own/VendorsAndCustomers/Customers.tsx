@@ -354,7 +354,39 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
       />
     </Box>
   );
-
+  const fieldsToRender = [
+    {
+      label: t('Address'),
+      value: currentCustomer?.address
+    },
+    {
+      label: t('Phone'),
+      value: currentCustomer?.phone
+    },
+    {
+      label: t('Email'),
+      value: currentCustomer?.email
+    },
+    {
+      label: t('Type'),
+      value: currentCustomer?.customerType
+    },
+    {
+      label: t('Billing Currency'),
+      value: currentCustomer?.billingCurrency
+    }
+  ];
+  const renderKeyAndValue = (key: string, value: string) => {
+    if (value)
+      return (
+        <>
+          <Typography variant="subtitle1">{key}</Typography>
+          <Typography variant="h5" sx={{ mb: 1 }}>
+            {value}
+          </Typography>
+        </>
+      );
+  };
   const ModalCustomerDetails = () => (
     <Dialog
       fullWidth
@@ -441,41 +473,20 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
             <Typography variant="subtitle1" sx={{ textAlign: 'center', mb: 3 }}>
               {currentCustomer?.description}
             </Typography>
+            {fieldsToRender.map((field) =>
+              renderKeyAndValue(field.label, field.value)
+            )}
+            {currentCustomer?.website && (
+              <>
+                <Typography variant="subtitle1">{t('Website')}</Typography>
 
-            <Typography variant="subtitle1">{t('Address')}</Typography>
-            <Typography variant="h5" sx={{ mb: 1 }}>
-              {currentCustomer?.address}
-            </Typography>
-
-            <Typography variant="subtitle1">{t('Phone')}</Typography>
-            <Typography variant="h5" sx={{ mb: 1 }}>
-              {currentCustomer?.phone}
-            </Typography>
-
-            <Typography variant="subtitle1">{t('Website')}</Typography>
-            <Typography variant="h5" sx={{ mb: 1 }}>
-              <a href={currentCustomer?.website}>{currentCustomer?.website}</a>
-            </Typography>
-
-            <Typography variant="subtitle1">{t('Name')}</Typography>
-            <Typography variant="h5" sx={{ mb: 1 }}>
-              {currentCustomer?.name}
-            </Typography>
-
-            <Typography variant="subtitle1">{t('Email')}</Typography>
-            <Typography variant="h5" sx={{ mb: 1 }}>
-              {currentCustomer?.email}
-            </Typography>
-
-            <Typography variant="subtitle1">{t('Customer Type')}</Typography>
-            <Typography variant="h5" sx={{ mb: 1 }}>
-              {currentCustomer?.customerType}
-            </Typography>
-
-            <Typography variant="subtitle1">{t('Currency')}</Typography>
-            <Typography variant="h5" sx={{ mb: 1 }}>
-              {currentCustomer?.billingCurrency}
-            </Typography>
+                <Typography variant="h5" sx={{ mb: 1 }}>
+                  <a href={currentCustomer?.website}>
+                    {currentCustomer?.website}
+                  </a>
+                </Typography>
+              </>
+            )}
           </Box>
         ) : (
           <Box>

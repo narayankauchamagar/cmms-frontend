@@ -12,6 +12,7 @@ interface PropsType {
   error: boolean;
   errorMessage: any;
   multiple?: boolean;
+  disabled: boolean;
   fullWidth?: boolean;
   onOpen?: () => void;
   onChange: (event: any, values: { label: string; value: string }[]) => void;
@@ -29,6 +30,7 @@ export default (props: PropsType) => {
       filterSelectedOptions
       limitTags={5}
       onOpen={props.onOpen}
+      disabled={props.disabled}
       onChange={props.onChange}
       loading={props.loading}
       // @ts-ignore

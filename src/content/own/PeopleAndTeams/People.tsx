@@ -83,6 +83,32 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
     dispatch(getUsers());
   }, []);
 
+  const verifyCurrentEmail = () => {
+    if (currentEmail) {
+      let error;
+      if (emails.length < 20) {
+        const emailsClone = [...emails];
+        if (emailsClone.includes(currentEmail)) {
+          error = 'This email is already selected';
+        } else {
+          if (users.map((user) => user.email).includes(currentEmail)) {
+            error = 'A user with this email is already in this company';
+          } else {
+            if (currentEmail.match(emailRegExp)) {
+              emailsClone.push(currentEmail);
+              setEmails(emailsClone);
+              setCurrentEmail('');
+            } else error = 'This email is invalid';
+          }
+        }
+      } else error = 'You can invite a maximum of 20 users at once';
+      if (error) {
+        showSnackBar(t(error), 'error');
+        return false;
+      }
+    }
+    return true;
+  };
   // let fields: Array<IField> = [];
 
   // const shape = {};
@@ -253,23 +279,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
                 setCurrentEmail(event.target.value);
               }}
               onKeyDown={(event) => {
-                if (['Enter', 'Tab'].includes(event.key)) {
-                  let error;
-                  if (emails.length < 20) {
-                    const emailsClone = [...emails];
-                    if (emailsClone.includes(currentEmail)) {
-                      error = 'This email is already selected';
-                    } else {
-                      if (currentEmail.match(emailRegExp)) {
-                        emailsClone.push(currentEmail);
-                        setEmails(emailsClone);
-                        setCurrentEmail('');
-                      } else error = 'This email is invalid';
-                    }
-                  } else
-                    error = t('You can invite a maximum of 20 users at once');
-                  if (error) showSnackBar(t(error), 'error');
-                }
+                if (['Enter', 'Tab'].includes(event.key)) verifyCurrentEmail();
               }}
               variant={'outlined'}
               required
@@ -286,24 +296,26 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
               sx={{ mb: 3 }}
               onClick={async () => {
                 if (roleId) {
-                  if (emails.length) {
+                  if (emails.length || currentEmail) {
                     setIsInviteSubmitting(true);
-                    dispatch(inviteUsers(roleId, emails))
-                      .then(() => {
-                        handleCloseModal();
-                        setEmails([]);
-                        setCurrentEmail('');
-                        showSnackBar(t('Users have been invited'), 'success');
-                      })
-                      .catch((err) =>
-                        showSnackBar(
-                          t(
-                            "Users can't be invited. Check your current subscription members count"
-                          ),
-                          'error'
+                    if (verifyCurrentEmail()) {
+                      dispatch(inviteUsers(roleId, emails))
+                        .then(() => {
+                          handleCloseModal();
+                          setEmails([]);
+                          setCurrentEmail('');
+                          showSnackBar(t('Users have been invited'), 'success');
+                        })
+                        .catch((err) =>
+                          showSnackBar(
+                            t(
+                              "Users can't be invited. Check your current subscription members count"
+                            ),
+                            'error'
+                          )
                         )
-                      )
-                      .finally(() => setIsInviteSubmitting(false));
+                        .finally(() => setIsInviteSubmitting(false));
+                    } else setIsInviteSubmitting(false);
                   } else
                     showSnackBar(t('Please type in emails to invite'), 'error');
                 } else showSnackBar(t('Please select a role'), 'error');

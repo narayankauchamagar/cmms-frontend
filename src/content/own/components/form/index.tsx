@@ -285,6 +285,7 @@ export default (props: PropsType) => {
         onChange={(e, values) => {
           handleChange(formik, field.name, values);
         }}
+        disabled={formik.isSubmitting}
         loading={loading}
         error={!!formik.errors[field.name] || field.error}
         errorMessage={formik.errors[field.name]}

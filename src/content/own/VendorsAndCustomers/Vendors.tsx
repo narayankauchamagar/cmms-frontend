@@ -244,7 +244,39 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
   ];
 
   // const searchFilterProperties = ['name', 'companyName', 'vendorType', 'email'];
-
+  const fieldsToRender = [
+    {
+      label: t('Address'),
+      value: currentVendor?.address
+    },
+    {
+      label: t('Phone'),
+      value: currentVendor?.phone
+    },
+    {
+      label: t('Email'),
+      value: currentVendor?.email
+    },
+    {
+      label: t('Type'),
+      value: currentVendor?.vendorType
+    },
+    {
+      label: t('Contact name'),
+      value: currentVendor?.name
+    }
+  ];
+  const renderKeyAndValue = (key: string, value: string) => {
+    if (value)
+      return (
+        <>
+          <Typography variant="subtitle1">{key}</Typography>
+          <Typography variant="h5" sx={{ mb: 1 }}>
+            {value}
+          </Typography>
+        </>
+      );
+  };
   const RenderVendorsAddModal = () => (
     <Dialog fullWidth maxWidth="md" open={openModal} onClose={handleCloseModal}>
       <DialogTitle
@@ -271,12 +303,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
             validation={Yup.object().shape(shape)}
             submitText={t('Add')}
             values={{}}
-            onChange={({ field, e }) => {
-              /* eslint-disable @typescript-eslint/no-unused-expressions */
-              // field === 'phone' && setPhone(e);
-              // field === 'companyName' && setCompanyName(e);
-              // field === 'term' && setAcceptTerm(e);
-            }}
+            onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               const formattedValues = {
                 ...values,
@@ -401,37 +428,14 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
             <Typography variant="subtitle1" sx={{ textAlign: 'center', mb: 3 }}>
               {currentVendor?.description}
             </Typography>
-
-            <Typography variant="subtitle1">{t('Address')}</Typography>
-            <Typography variant="h5" sx={{ mb: 1 }}>
-              {currentVendor?.address}
-            </Typography>
-
-            <Typography variant="subtitle1">{t('Phone')}</Typography>
-            <Typography variant="h5" sx={{ mb: 1 }}>
-              {currentVendor?.phone}
-            </Typography>
-
-            <Typography variant="subtitle1">{t('Website')}</Typography>
-            <Typography variant="h5" sx={{ mb: 1 }}>
-              <a href={currentVendor?.website}>{currentVendor?.website}</a>
-            </Typography>
-
-            <Typography variant="subtitle1">{t('Name')}</Typography>
-            <Typography variant="h5" sx={{ mb: 1 }}>
-              {currentVendor?.name}
-            </Typography>
-
-            <Typography variant="subtitle1">{t('Email')}</Typography>
-            <Typography variant="h5" sx={{ mb: 1 }}>
-              {currentVendor?.email}
-            </Typography>
-
-            {currentVendor?.vendorType && (
+            {fieldsToRender.map((field) =>
+              renderKeyAndValue(field.label, field.value)
+            )}
+            {currentVendor?.website && (
               <>
-                <Typography variant="subtitle1">{t('Vendor Type')}</Typography>
+                <Typography variant="subtitle1">{t('Website')}</Typography>
                 <Typography variant="h5" sx={{ mb: 1 }}>
-                  {currentVendor?.vendorType}
+                  <a href={currentVendor?.website}>{currentVendor?.website}</a>
                 </Typography>
               </>
             )}
