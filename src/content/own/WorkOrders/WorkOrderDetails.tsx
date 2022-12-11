@@ -48,9 +48,10 @@ import AdditionalTime from '../../../models/owns/additionalTime';
 import {
   controlTimer,
   deleteAdditionalTime,
+  editAdditionalTime,
   getAdditionalTimes
 } from '../../../slices/additionalTime';
-import { getHHMMSSFromDuration } from '../../../utils/formatters';
+import { durationToHours, getHoursAndMinutes } from '../../../utils/formatters';
 import {
   deleteAdditionalCost,
   getAdditionalCosts
@@ -110,6 +111,11 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const openMenu = Boolean(anchorEl);
   const { companySettings } = useAuth();
   const { workOrderConfiguration, generalPreferences } = companySettings;
+  const [openEditPrimaryTime, setOpenEditPrimaryTime] =
+    useState<boolean>(false);
+  const [primaryTimeHours, setPrimaryTimeHours] = useState<number>();
+  const [primaryTimeMinutes, setPrimaryTimeMinutes] = useState<number>();
+  const [savingPrimaryTime, setSavingPrimaryTime] = useState<boolean>(false);
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -142,6 +148,12 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
     dispatch(getTasks(workOrder.id));
     dispatch(getRelations(workOrder.id));
   }, []);
+  useEffect(() => {
+    const [hours, minutes] = getHoursAndMinutes(primaryTime?.duration);
+    setPrimaryTimeHours(hours);
+    setPrimaryTimeMinutes(minutes);
+  }, [primaryTime]);
+
   const canComplete = (): boolean => {
     let error;
     const fieldsToTest = [
@@ -302,6 +314,20 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
       default:
         return `/app/${resource}s/${id}`;
     }
+  };
+  const onSavePrimaryTime = () => {
+    setSavingPrimaryTime(true);
+    const duration = primaryTimeHours * 3600 + primaryTimeMinutes * 60;
+    dispatch(
+      editAdditionalTime(primaryTime.id, workOrder.id, {
+        ...primaryTime,
+        duration
+      })
+    )
+      .then(() => {
+        setOpenEditPrimaryTime(false);
+      })
+      .finally(() => setSavingPrimaryTime(false));
   };
   const BasicField = ({
     label,
@@ -524,7 +550,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                       ? t('Timer running')
                       : t('Run Timer') +
                         ' - ' +
-                        getHHMMSSFromDuration(primaryTime?.duration)}
+                        durationToHours(primaryTime?.duration)}
                   </Button>
                 </Box>
               </Grid>
@@ -537,6 +563,56 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                   id={field.id}
                 />
               ))}
+              <Grid item xs={12} lg={6}>
+                <Typography
+                  variant="h6"
+                  sx={{ color: theme.colors.alpha.black[70] }}
+                >
+                  {t('Time')}
+                </Typography>
+                {openEditPrimaryTime ? (
+                  <Stack direction="row" spacing={1} alignItems="center">
+                    <TextField
+                      value={primaryTimeHours}
+                      type="number"
+                      onChange={(event) =>
+                        setPrimaryTimeHours(Number(event.target.value))
+                      }
+                    />
+                    <Typography variant="h6">h</Typography>
+                    <TextField
+                      value={primaryTimeMinutes}
+                      type="number"
+                      InputProps={{ inputProps: { min: 0, max: 59 } }}
+                      onChange={(event) =>
+                        setPrimaryTimeMinutes(Number(event.target.value))
+                      }
+                    />
+                    <Typography variant="h6">m</Typography>
+                    <Button
+                      startIcon={
+                        savingPrimaryTime ? (
+                          <CircularProgress size="1rem" />
+                        ) : null
+                      }
+                      disabled={savingPrimaryTime}
+                      variant="contained"
+                      onClick={onSavePrimaryTime}
+                    >
+                      {t('Save')}
+                    </Button>
+                  </Stack>
+                ) : (
+                  <Typography
+                    variant="h6"
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => setOpenEditPrimaryTime(true)}
+                    color="primary"
+                  >
+                    {durationToHours(primaryTime?.duration)}
+                  </Typography>
+                )}
+              </Grid>
               {!!workOrder.assignedTo.length && (
                 <Grid item xs={12} lg={6}>
                   <Typography

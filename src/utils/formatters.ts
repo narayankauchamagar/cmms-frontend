@@ -59,12 +59,31 @@ export const getStatusLabel = (str: string, t: any) => {
       break;
   }
 };
-export const getHHMMSSFromDuration = (duration: number | undefined) => {
-  const date = new Date(0);
-  date.setSeconds(duration ?? 0); // specify value for SECONDS here
-  return date.toISOString().substring(11, 19);
-};
 
 export const getTaskFromTaskBase = (taskBase: TaskBase): Task => {
   return { taskBase, id: randomInt(), notes: '', value: '' };
+};
+
+export const durationToHours = (duration: number) => {
+  // Hours, minutes and seconds
+  var hrs = ~~(duration / 3600);
+  var mins = ~~((duration % 3600) / 60);
+  var secs = ~~duration % 60;
+
+  // Output like "1:01" or "4:03:59" or "123:03:59"
+  var ret = '';
+
+  if (hrs > 0) {
+    ret += '' + hrs + ':' + (mins < 10 ? '0' : '');
+  }
+
+  ret += '' + mins + ':' + (secs < 10 ? '0' : '');
+  ret += '' + secs;
+  return ret;
+};
+export const getHoursAndMinutes = (duration: number): [number, number] => {
+  // Hours, minutes and seconds
+  const hrs = ~~(duration / 3600);
+  const mins = ~~((duration % 3600) / 60);
+  return [hrs, mins];
 };

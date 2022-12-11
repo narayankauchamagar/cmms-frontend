@@ -307,7 +307,7 @@ function RegisterCover() {
                     </ListItemIconWrapper>
                     <ListItemTextWrapper
                       primaryTypographyProps={{ variant: 'h6' }}
-                      primary={t('no credit card required')}
+                      primary={t('No credit card required')}
                     />
                   </ListItem>
                 </List>

@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import {
   Box,
-  Typography,
-  Container,
   Button,
+  Container,
   Grid,
-  styled
+  styled,
+  Typography
 } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import RefreshTwoToneIcon from '@mui/icons-material/RefreshTwoTone';
@@ -140,7 +140,7 @@ function Status500() {
                     my: 2
                   }}
                 >
-                  {t('Tokyo Black React Typescript Admin Dashboard')}
+                  Grash
                 </TypographyPrimary>
                 <TypographySecondary
                   variant="h4"
@@ -149,9 +149,7 @@ function Status500() {
                     mb: 4
                   }}
                 >
-                  {t(
-                    'High performance React template built with lots of powerful MUI (Material-UI) components across multiple product niches for fast & perfect apps development processes.'
-                  )}
+                  {t('High performance CMMS')}
                 </TypographySecondary>
                 <Button href="/overview" size="large" variant="contained">
                   {t('Overview')}

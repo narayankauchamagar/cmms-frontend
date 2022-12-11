@@ -36,6 +36,24 @@ const slice = createSlice({
         state.workOrdersRoot[workOrderId].push(additionalTime);
       } else state.workOrdersRoot[workOrderId] = [additionalTime];
     },
+    editAdditionalTime(
+      state: AdditionalTimeState,
+      action: PayloadAction<{
+        id: number;
+        workOrderId: number;
+        additionalTime: AdditionalTime;
+      }>
+    ) {
+      const { additionalTime, workOrderId, id } = action.payload;
+      state.workOrdersRoot[workOrderId] = state.workOrdersRoot[workOrderId].map(
+        (addTime) => {
+          if (addTime.id === id) {
+            return additionalTime;
+          }
+          return addTime;
+        }
+      );
+    },
     deleteAdditionalTime(
       state: AdditionalTimeState,
       action: PayloadAction<{
@@ -91,6 +109,21 @@ export const createAdditionalTime =
     );
   };
 
+export const editAdditionalTime =
+  (id: number, workOrderId: number, additionalTime: AdditionalTime): AppThunk =>
+  async (dispatch) => {
+    const additionalTimeResponse = await api.patch<AdditionalTime>(
+      `${basePath}/${id}`,
+      additionalTime
+    );
+    dispatch(
+      slice.actions.editAdditionalTime({
+        workOrderId,
+        id,
+        additionalTime: additionalTimeResponse
+      })
+    );
+  };
 export const deleteAdditionalTime =
   (workOrderId: number, id: number): AppThunk =>
   async (dispatch) => {
