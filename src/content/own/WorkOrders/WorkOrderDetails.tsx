@@ -39,6 +39,7 @@ import { editWorkOrder } from '../../../slices/workOrder';
 import { useDispatch, useSelector } from '../../../store';
 import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
 import SelectParts from '../components/form/SelectParts';
+import ImageViewer from 'react-simple-image-viewer';
 import {
   editPartQuantity,
   editWOPartQuantities,
@@ -131,6 +132,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const { usersMini } = useSelector((state) => state.users);
   const [createdByName, setCreatedByName] = useState<string>('');
   const [requestedByName, setRequestedByName] = useState<string>('');
+  const [isViewerOpen, setIsViewerOpen] = useState<boolean>(false);
 
   useEffect(() => {
     setCreatedByName(getUserNameById(workOrder.createdBy, usersMini));
@@ -575,6 +577,21 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                   </Button>
                 </Box>
               </Grid>
+              {workOrder.image && (
+                <Grid
+                  item
+                  xs={12}
+                  lg={12}
+                  display="flex"
+                  justifyContent="center"
+                >
+                  <img
+                    src={workOrder.image.url}
+                    style={{ borderRadius: 5, height: 250, cursor: 'pointer' }}
+                    onClick={() => setIsViewerOpen(true)}
+                  />
+                </Grid>
+              )}
               {detailsFieldsToRender(workOrder).map((field, index) => (
                 <BasicField
                   key={index}
@@ -1152,6 +1169,20 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
         onClose={() => setOpenLinkModal(false)}
         workOrderId={workOrder.id}
       />
+      {isViewerOpen && (
+        <div style={{ zIndex: 100 }}>
+          <ImageViewer
+            src={[workOrder.image.url]}
+            currentIndex={0}
+            onClose={() => setIsViewerOpen(false)}
+            disableScroll={true}
+            backgroundStyle={{
+              backgroundColor: 'rgba(0,0,0,0.9)'
+            }}
+            closeOnClickOutside={true}
+          />
+        </div>
+      )}
       <SignatureModal
         open={openSignatureModal}
         onClose={() => setOpenSignatureModal(false)}

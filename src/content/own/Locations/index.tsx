@@ -154,7 +154,7 @@ function Locations() {
         }
         apiRef.current.updateRows([
           {
-            id: `Loading Locations-${node.id}`,
+            id: `Loading Locations under ${row.name} #${node.id}`,
             hierarchy: [...row.hierarchy, '']
           }
         ]);

@@ -351,7 +351,7 @@ function Assets() {
         }
         apiRef.current.updateRows([
           {
-            id: `Loading assets-${node.id}`,
+            id: `Loading assets under ${row.name} #$${node.id}`,
             hierarchy: [...row.hierarchy, '']
           }
         ]);
