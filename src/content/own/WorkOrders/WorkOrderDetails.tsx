@@ -25,7 +25,6 @@ import WorkOrder from '../../../models/owns/workOrder';
 import { ChangeEvent, useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
-import DoDisturbOnTwoToneIcon from '@mui/icons-material/DoDisturbOnTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import Asset from '../../../models/owns/asset';
 import AddTimeModal from './AddTimeModal';
@@ -71,6 +70,7 @@ import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
 import { getSingleUser } from '../../../slices/user';
 import { getUserNameById } from '../../../utils/displayers';
+import FilesList from '../components/FilesList';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;
@@ -1088,50 +1088,22 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
               <Box>
                 <Divider sx={{ mt: 2 }} />
                 <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
-                  Files
+                  {t('Files')}
                 </Typography>
-                <List>
-                  {workOrder.files.map((file) => (
-                    <ListItem
-                      key={file.id}
-                      secondaryAction={
-                        <IconButton
-                          edge="end"
-                          aria-label="delete"
-                          onClick={() => {
-                            if (
-                              window.confirm(
-                                t(
-                                  'Are you sure you want to remove this file from this asset ?'
-                                )
-                              )
-                            ) {
-                              dispatch(
-                                editWorkOrder(workOrder.id, {
-                                  ...workOrder,
-                                  files: workOrder.files.filter(
-                                    (f) => f.id !== file.id
-                                  )
-                                })
-                              );
-                            }
-                          }}
-                        >
-                          <DoDisturbOnTwoToneIcon color="error" />
-                        </IconButton>
-                      }
-                    >
-                      <ListItemText
-                        primary={
-                          <Link href={file.url} variant="h6">
-                            {file.name}
-                          </Link>
-                        }
-                        secondary={getFormattedDate(file.createdAt)}
-                      />
-                    </ListItem>
-                  ))}
-                </List>
+                <FilesList
+                  confirmMessage={t(
+                    'Are you sure you want to remove this file from this Work Order ?'
+                  )}
+                  files={workOrder.files}
+                  onRemove={(id: number) => {
+                    dispatch(
+                      editWorkOrder(workOrder.id, {
+                        ...workOrder,
+                        files: workOrder.files.filter((f) => f.id !== id)
+                      })
+                    );
+                  }}
+                />
               </Box>
             )}
           </Box>

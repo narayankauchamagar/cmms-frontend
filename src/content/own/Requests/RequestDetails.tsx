@@ -17,8 +17,12 @@ import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
 import Request from '../../../models/owns/request';
 import { getPriorityLabel } from '../../../utils/formatters';
 import { useDispatch, useSelector } from '../../../store';
-import { approveRequest, cancelRequest } from '../../../slices/request';
-import { useEffect, useState } from 'react';
+import {
+  approveRequest,
+  cancelRequest,
+  editRequest
+} from '../../../slices/request';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   getAssetUrl,
@@ -31,6 +35,8 @@ import { PermissionEntity } from '../../../models/owns/role';
 import { getSingleUser } from '../../../slices/user';
 import { getUserNameById } from '../../../utils/displayers';
 import ImageViewer from 'react-simple-image-viewer';
+import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
+import FilesList from '../components/FilesList';
 
 interface RequestDetailsProps {
   request: Request;
@@ -51,13 +57,14 @@ export default function RequestDetails({
   const theme = useTheme();
   const { hasEditPermission, hasDeletePermission } = useAuth();
   const navigate = useNavigate();
-  useEffect(() => {
-    dispatch(getSingleUser(request.createdBy));
-  }, []);
-
+  const { getFormattedDate } = useContext(CompanySettingsContext);
   const { usersMini } = useSelector((state) => state.users);
   const [createdByName, setCreatedByName] = useState<string>('');
   const [isImageViewerOpen, setIsImageViewerOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    dispatch(getSingleUser(request.createdBy));
+  }, []);
 
   useEffect(() => {
     setCreatedByName(getUserNameById(request.createdBy, usersMini));
@@ -294,6 +301,30 @@ export default function RequestDetails({
                   <Link variant="h6" href={getTeamUrl(request.team.id)}>
                     {request.team.name}
                   </Link>
+                </Grid>
+              )}
+              {!!request.files.length && (
+                <Grid item xs={12} lg={12}>
+                  <Typography
+                    variant="h6"
+                    sx={{ color: theme.colors.alpha.black[70] }}
+                  >
+                    {t('Files')}
+                  </Typography>
+                  <FilesList
+                    confirmMessage={t(
+                      'Are you sure you want to remove this file from this Request ?'
+                    )}
+                    files={request.files}
+                    onRemove={(id: number) => {
+                      dispatch(
+                        editRequest(request.id, {
+                          ...request,
+                          files: request.files.filter((f) => f.id !== id)
+                        })
+                      );
+                    }}
+                  />
                 </Grid>
               )}
             </>

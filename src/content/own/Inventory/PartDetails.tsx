@@ -21,11 +21,19 @@ import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import Asset, { assets } from '../../../models/owns/asset';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import Part from '../../../models/owns/part';
-import { files } from 'src/models/owns/file';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 import { PermissionEntity } from '../../../models/owns/role';
 import useAuth from '../../../hooks/useAuth';
 import ImageViewer from 'react-simple-image-viewer';
+import {
+  getCustomerUrl,
+  getTeamUrl,
+  getUserUrl,
+  getVendorUrl
+} from '../../../utils/urlPaths';
+import { editPart } from '../../../slices/part';
+import { useDispatch } from '../../../store';
+import FilesList from '../components/FilesList';
 
 interface PartDetailsProps {
   part: Part;
@@ -37,6 +45,7 @@ export default function PartDetails(props: PartDetailsProps) {
   const { hasEditPermission, hasDeletePermission } = useAuth();
   const { t }: { t: any } = useTranslation();
   const { getFormattedDate } = useContext(CompanySettingsContext);
+  const dispatch = useDispatch();
   const [currentTab, setCurrentTab] = useState<string>('details');
   const [isImageViewerOpen, setIsImageViewerOpen] = useState<boolean>(false);
   const theme = useTheme();
@@ -164,7 +173,7 @@ export default function PartDetails(props: PartDetailsProps) {
               </Grid>
             )}
             <Typography sx={{ mb: 1 }} variant="h4">
-              Part details
+              {t('Part details')}
             </Typography>
             <Grid container spacing={2}>
               {firstFieldsToRender(part).map((field) => (
@@ -176,7 +185,7 @@ export default function PartDetails(props: PartDetailsProps) {
               ))}
             </Grid>
             <Typography sx={{ mt: 2, mb: 1 }} variant="h4">
-              Area details
+              {t('Area details')}
             </Typography>
             <Grid container spacing={2}>
               {areaFieldsToRender(part).map((field) => (
@@ -188,7 +197,7 @@ export default function PartDetails(props: PartDetailsProps) {
               ))}
             </Grid>
             <Typography sx={{ mt: 2, mb: 1 }} variant="h4">
-              Assigned people
+              {t('Assigned people')}
             </Typography>
             <Grid container spacing={2}>
               {!!part.assignedTo.length && (
@@ -202,7 +211,7 @@ export default function PartDetails(props: PartDetailsProps) {
                   {part.assignedTo.map((user) => (
                     <Link
                       key={user.id}
-                      href={`/app/people-teams/people/${user.id}`}
+                      href={getUserUrl(user.id)}
                       variant="h6"
                     >{`${user.firstName} ${user.lastName}`}</Link>
                   ))}
@@ -214,12 +223,12 @@ export default function PartDetails(props: PartDetailsProps) {
                     variant="h6"
                     sx={{ color: theme.colors.alpha.black[70] }}
                   >
-                    Assigned customers
+                    {t('Assigned customers')}
                   </Typography>
                   {part.customers.map((customer) => (
                     <Link
                       key={customer.id}
-                      href={`/app/vendors-customers/customers/${customer.id}`}
+                      href={getCustomerUrl(customer.id)}
                       variant="h6"
                     >
                       {customer.name}
@@ -233,12 +242,12 @@ export default function PartDetails(props: PartDetailsProps) {
                     variant="h6"
                     sx={{ color: theme.colors.alpha.black[70] }}
                   >
-                    Assigned vendors
+                    {t('Assigned vendors')}
                   </Typography>
                   {part.vendors.map((vendor) => (
                     <Link
                       key={vendor.id}
-                      href={`/app/vendors-customers/vendors/${vendor.id}`}
+                      href={getVendorUrl(vendor.id)}
                       variant="h6"
                     >
                       {vendor.companyName}
@@ -252,14 +261,10 @@ export default function PartDetails(props: PartDetailsProps) {
                     variant="h6"
                     sx={{ color: theme.colors.alpha.black[70] }}
                   >
-                    Assigned teams
+                    {t('Assigned teams')}
                   </Typography>
                   {part.teams.map((team) => (
-                    <Link
-                      key={team.id}
-                      href={`/app/people-teams/teams/${team.id}`}
-                      variant="h6"
-                    >
+                    <Link key={team.id} href={getTeamUrl(team.id)} variant="h6">
                       {team.name}
                     </Link>
                   ))}
@@ -302,24 +307,22 @@ export default function PartDetails(props: PartDetailsProps) {
                 {t('File')}
               </Button>
             </Box>
-            <List sx={{ width: '100%' }}>
-              {files.map((file) => (
-                <ListItemButton key={file.id} divider>
-                  <ListItem
-                    secondaryAction={
-                      <Typography>
-                        {getFormattedDate(file.createdAt)}
-                      </Typography>
-                    }
-                  >
-                    <ListItemText
-                      primary={file.name}
-                      secondary={`#${file.id}`}
-                    />
-                  </ListItem>
-                </ListItemButton>
-              ))}
-            </List>
+            <Box sx={{ width: '100%' }}>
+              <FilesList
+                confirmMessage={t(
+                  'Are you sure you want to remove this file from this Part ?'
+                )}
+                files={part.files}
+                onRemove={(id: number) => {
+                  dispatch(
+                    editPart(part.id, {
+                      ...part,
+                      files: part.files.filter((f) => f.id !== id)
+                    })
+                  );
+                }}
+              />
+            </Box>
           </Box>
         )}
       </Grid>

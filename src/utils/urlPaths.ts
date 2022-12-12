@@ -28,3 +28,10 @@ export const getPartUrl = (id) => {
 export const getMeterUrl = (id) => {
   return `/app/meters/${id}`;
 };
+
+export const getCustomerUrl = (id) => {
+  return `/app/vendors-customers/customers/${id}`;
+};
+export const getVendorUrl = (id) => {
+  return `/app/vendors-customers/vendors/${id}`;
+};
