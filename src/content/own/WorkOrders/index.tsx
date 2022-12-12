@@ -76,9 +76,9 @@ function WorkOrders() {
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const { hasViewPermission, hasCreatePermission } = useAuth();
   const [currentWorkOrder, setCurrentWorkOrder] = useState<WorkOrder>();
-  const { workOrdersRoot2 } = useSelector((state) => state.tasks);
+  const { tasksByWorkOrder } = useSelector((state) => state.tasks);
   const { usersMini } = useSelector((state) => state.users);
-  const tasks = workOrdersRoot2[currentWorkOrder?.id] ?? [];
+  const tasks = tasksByWorkOrder[currentWorkOrder?.id] ?? [];
   const handleDelete = (id: number) => {};
   const handleOpenUpdate = (id: number) => {
     setCurrentWorkOrder(workOrders.find((workOrder) => workOrder.id === id));

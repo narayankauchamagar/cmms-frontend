@@ -6,11 +6,11 @@ import api from '../utils/api';
 
 const basePath = 'additional-costs';
 interface AdditionalCostState {
-  workOrdersRoot1: { [id: number]: AdditionalCost[] };
+  costsByWorkOrder: { [id: number]: AdditionalCost[] };
 }
 
 const initialState: AdditionalCostState = {
-  workOrdersRoot1: {}
+  costsByWorkOrder: {}
 };
 
 const slice = createSlice({
@@ -22,7 +22,7 @@ const slice = createSlice({
       action: PayloadAction<{ id: number; additionalCosts: AdditionalCost[] }>
     ) {
       const { additionalCosts, id } = action.payload;
-      state.workOrdersRoot1[id] = additionalCosts;
+      state.costsByWorkOrder[id] = additionalCosts;
     },
     createAdditionalCost(
       state: AdditionalCostState,
@@ -32,9 +32,9 @@ const slice = createSlice({
       }>
     ) {
       const { additionalCost, workOrderId } = action.payload;
-      if (state.workOrdersRoot1[workOrderId]) {
-        state.workOrdersRoot1[workOrderId].push(additionalCost);
-      } else state.workOrdersRoot1[workOrderId] = [additionalCost];
+      if (state.costsByWorkOrder[workOrderId]) {
+        state.costsByWorkOrder[workOrderId].push(additionalCost);
+      } else state.costsByWorkOrder[workOrderId] = [additionalCost];
     },
     deleteAdditionalCost(
       state: AdditionalCostState,
@@ -44,7 +44,7 @@ const slice = createSlice({
       }>
     ) {
       const { id, workOrderId } = action.payload;
-      state.workOrdersRoot1[workOrderId] = state.workOrdersRoot1[
+      state.costsByWorkOrder[workOrderId] = state.costsByWorkOrder[
         workOrderId
       ].filter((additionalCost) => additionalCost.id !== id);
     }

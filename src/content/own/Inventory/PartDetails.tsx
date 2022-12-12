@@ -18,7 +18,7 @@ import { ChangeEvent, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import Asset, { assets } from '../../../models/owns/asset';
+import { assets } from '../../../models/owns/asset';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import Part from '../../../models/owns/part';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
@@ -163,123 +163,136 @@ export default function PartDetails(props: PartDetailsProps) {
       <Grid item xs={12}>
         {currentTab === 'details' && (
           <Box>
-            {part.image && (
-              <Grid item xs={12} lg={12} display="flex" justifyContent="center">
-                <img
-                  src={part.image.url}
-                  style={{ borderRadius: 5, height: 250, cursor: 'pointer' }}
-                  onClick={() => setIsImageViewerOpen(true)}
-                />
+            <Grid container spacing={2}>
+              {part.image && (
+                <Grid
+                  item
+                  xs={12}
+                  lg={12}
+                  display="flex"
+                  justifyContent="center"
+                >
+                  <img
+                    src={part.image.url}
+                    style={{ borderRadius: 5, height: 250, cursor: 'pointer' }}
+                    onClick={() => setIsImageViewerOpen(true)}
+                  />
+                </Grid>
+              )}
+              <Grid item xs={12} lg={12}>
+                <Typography sx={{ mb: 1 }} variant="h4">
+                  {t('Part details')}
+                </Typography>
+                <Grid container spacing={2}>
+                  {firstFieldsToRender(part).map((field) => (
+                    <BasicField
+                      key={field.label}
+                      label={field.label}
+                      value={field.value}
+                    />
+                  ))}
+                </Grid>
               </Grid>
-            )}
-            <Typography sx={{ mb: 1 }} variant="h4">
-              {t('Part details')}
-            </Typography>
-            <Grid container spacing={2}>
-              {firstFieldsToRender(part).map((field) => (
-                <BasicField
-                  key={field.label}
-                  label={field.label}
-                  value={field.value}
-                />
-              ))}
-            </Grid>
-            <Typography sx={{ mt: 2, mb: 1 }} variant="h4">
-              {t('Area details')}
-            </Typography>
-            <Grid container spacing={2}>
-              {areaFieldsToRender(part).map((field) => (
-                <BasicField
-                  key={field.label}
-                  label={field.label}
-                  value={field.value}
-                />
-              ))}
-            </Grid>
-            <Typography sx={{ mt: 2, mb: 1 }} variant="h4">
-              {t('Assigned people')}
-            </Typography>
-            <Grid container spacing={2}>
-              {!!part.assignedTo.length && (
-                <Grid item xs={12} lg={6}>
-                  <Typography
-                    variant="h6"
-                    sx={{ color: theme.colors.alpha.black[70] }}
-                  >
-                    Assigned users
-                  </Typography>
-                  {part.assignedTo.map((user) => (
-                    <Link
-                      key={user.id}
-                      href={getUserUrl(user.id)}
-                      variant="h6"
-                    >{`${user.firstName} ${user.lastName}`}</Link>
+              <Grid item xs={12} lg={12}>
+                <Typography sx={{ mt: 2, mb: 1 }} variant="h4">
+                  {t('Area details')}
+                </Typography>
+                <Grid container spacing={2}>
+                  {areaFieldsToRender(part).map((field) => (
+                    <BasicField
+                      key={field.label}
+                      label={field.label}
+                      value={field.value}
+                    />
                   ))}
                 </Grid>
-              )}
-              {!!part.customers.length && (
-                <Grid item xs={12} lg={6}>
-                  <Typography
-                    variant="h6"
-                    sx={{ color: theme.colors.alpha.black[70] }}
-                  >
-                    {t('Assigned customers')}
-                  </Typography>
-                  {part.customers.map((customer) => (
-                    <Link
-                      key={customer.id}
-                      href={getCustomerUrl(customer.id)}
-                      variant="h6"
-                    >
-                      {customer.name}
-                    </Link>
-                  ))}
+              </Grid>
+              <Grid item xs={12} lg={12}>
+                <Typography sx={{ mt: 2, mb: 1 }} variant="h4">
+                  {t('Assigned people')}
+                </Typography>
+                <Grid container spacing={2}>
+                  {!!part.assignedTo.length && (
+                    <Grid item xs={12} lg={6}>
+                      <Typography
+                        variant="h6"
+                        sx={{ color: theme.colors.alpha.black[70] }}
+                      >
+                        Assigned users
+                      </Typography>
+                      {part.assignedTo.map((user) => (
+                        <Link
+                          key={user.id}
+                          href={getUserUrl(user.id)}
+                          variant="h6"
+                        >{`${user.firstName} ${user.lastName}`}</Link>
+                      ))}
+                    </Grid>
+                  )}
+                  {!!part.customers.length && (
+                    <Grid item xs={12} lg={6}>
+                      <Typography
+                        variant="h6"
+                        sx={{ color: theme.colors.alpha.black[70] }}
+                      >
+                        {t('Assigned customers')}
+                      </Typography>
+                      {part.customers.map((customer) => (
+                        <Link
+                          key={customer.id}
+                          href={getCustomerUrl(customer.id)}
+                          variant="h6"
+                        >
+                          {customer.name}
+                        </Link>
+                      ))}
+                    </Grid>
+                  )}
+                  {!!part.vendors.length && (
+                    <Grid item xs={12} lg={6}>
+                      <Typography
+                        variant="h6"
+                        sx={{ color: theme.colors.alpha.black[70] }}
+                      >
+                        {t('Assigned vendors')}
+                      </Typography>
+                      {part.vendors.map((vendor) => (
+                        <Link
+                          key={vendor.id}
+                          href={getVendorUrl(vendor.id)}
+                          variant="h6"
+                        >
+                          {vendor.companyName}
+                        </Link>
+                      ))}
+                    </Grid>
+                  )}
+                  {!!part.teams.length && (
+                    <Grid item xs={12} lg={6}>
+                      <Typography
+                        variant="h6"
+                        sx={{ color: theme.colors.alpha.black[70] }}
+                      >
+                        {t('Assigned teams')}
+                      </Typography>
+                      {part.teams.map((team) => (
+                        <Link
+                          key={team.id}
+                          href={getTeamUrl(team.id)}
+                          variant="h6"
+                        >
+                          {team.name}
+                        </Link>
+                      ))}
+                    </Grid>
+                  )}
                 </Grid>
-              )}
-              {!!part.vendors.length && (
-                <Grid item xs={12} lg={6}>
-                  <Typography
-                    variant="h6"
-                    sx={{ color: theme.colors.alpha.black[70] }}
-                  >
-                    {t('Assigned vendors')}
-                  </Typography>
-                  {part.vendors.map((vendor) => (
-                    <Link
-                      key={vendor.id}
-                      href={getVendorUrl(vendor.id)}
-                      variant="h6"
-                    >
-                      {vendor.companyName}
-                    </Link>
-                  ))}
-                </Grid>
-              )}
-              {!!part.teams.length && (
-                <Grid item xs={12} lg={6}>
-                  <Typography
-                    variant="h6"
-                    sx={{ color: theme.colors.alpha.black[70] }}
-                  >
-                    {t('Assigned teams')}
-                  </Typography>
-                  {part.teams.map((team) => (
-                    <Link key={team.id} href={getTeamUrl(team.id)} variant="h6">
-                      {team.name}
-                    </Link>
-                  ))}
-                </Grid>
-              )}
+              </Grid>
             </Grid>
           </Box>
         )}
         {currentTab === 'assets' && (
           <Box>
-            <Box display="flex" justifyContent="right">
-              <Button startIcon={<AddTwoToneIcon fontSize="small" />}>
-                {t('Asset')}
-              </Button>
-            </Box>
             <List sx={{ width: '100%' }}>
               {assets.map((asset) => (
                 <ListItemButton key={asset.id} divider>

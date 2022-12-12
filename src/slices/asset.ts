@@ -10,7 +10,7 @@ interface AssetState {
   assets: AssetDTO[];
   assetsHierarchy: AssetRow[];
   assetInfos: { [key: number]: { asset?: AssetDTO; workOrders: WorkOrder[] } };
-  locations: { [key: number]: AssetDTO[] };
+  assetsByLocation: { [key: number]: AssetDTO[] };
   assetsMini: AssetMiniDTO[];
 }
 
@@ -18,7 +18,7 @@ const initialState: AssetState = {
   assets: [],
   assetsHierarchy: [],
   assetInfos: {},
-  locations: {},
+  assetsByLocation: {},
   assetsMini: []
 };
 
@@ -98,7 +98,7 @@ const slice = createSlice({
       action: PayloadAction<{ assets: AssetDTO[]; id: number }>
     ) {
       const { assets, id } = action.payload;
-      state.locations[id] = assets;
+      state.assetsByLocation[id] = assets;
     }
   }
 });

@@ -95,21 +95,21 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const { workOrders } = useSelector((state) => state.partQuantities);
   const partQuantities = workOrders[workOrder.id] ?? [];
   const [controllingTime, setControllingTime] = useState<boolean>(false);
-  const { workOrdersRoot } = useSelector((state) => state.additionalTimes);
+  const { timesByWorkOrder } = useSelector((state) => state.additionalTimes);
   const { workOrderHistories } = useSelector(
     (state) => state.workOrderHistories
   );
   const { workOrdersRelations } = useSelector((state) => state.relations);
   const currentWorkOrderHistories = workOrderHistories[workOrder.id] ?? [];
   const currentWorkOrderRelations = workOrdersRelations[workOrder.id] ?? [];
-  const additionalTimes = workOrdersRoot[workOrder.id] ?? [];
+  const additionalTimes = timesByWorkOrder[workOrder.id] ?? [];
   const primaryTime = additionalTimes.find(
     (additionalTime) =>
       additionalTime.primaryTime && additionalTime.assignedTo.id === user.id
   );
   const runningTimer = primaryTime?.status === 'RUNNING';
-  const { workOrdersRoot1 } = useSelector((state) => state.additionalCosts);
-  const additionalCosts = workOrdersRoot1[workOrder.id] ?? [];
+  const { costsByWorkOrder } = useSelector((state) => state.additionalCosts);
+  const additionalCosts = costsByWorkOrder[workOrder.id] ?? [];
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);

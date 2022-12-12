@@ -6,11 +6,11 @@ import api from '../utils/api';
 
 const basePath = 'additional-times';
 interface AdditionalTimeState {
-  workOrdersRoot: { [id: number]: AdditionalTime[] };
+  timesByWorkOrder: { [id: number]: AdditionalTime[] };
 }
 
 const initialState: AdditionalTimeState = {
-  workOrdersRoot: {}
+  timesByWorkOrder: {}
 };
 
 const slice = createSlice({
@@ -22,7 +22,7 @@ const slice = createSlice({
       action: PayloadAction<{ id: number; additionalTimes: AdditionalTime[] }>
     ) {
       const { additionalTimes, id } = action.payload;
-      state.workOrdersRoot[id] = additionalTimes;
+      state.timesByWorkOrder[id] = additionalTimes;
     },
     createAdditionalTime(
       state: AdditionalTimeState,
@@ -32,9 +32,9 @@ const slice = createSlice({
       }>
     ) {
       const { additionalTime, workOrderId } = action.payload;
-      if (state.workOrdersRoot[workOrderId]) {
-        state.workOrdersRoot[workOrderId].push(additionalTime);
-      } else state.workOrdersRoot[workOrderId] = [additionalTime];
+      if (state.timesByWorkOrder[workOrderId]) {
+        state.timesByWorkOrder[workOrderId].push(additionalTime);
+      } else state.timesByWorkOrder[workOrderId] = [additionalTime];
     },
     editAdditionalTime(
       state: AdditionalTimeState,
@@ -45,14 +45,14 @@ const slice = createSlice({
       }>
     ) {
       const { additionalTime, workOrderId, id } = action.payload;
-      state.workOrdersRoot[workOrderId] = state.workOrdersRoot[workOrderId].map(
-        (addTime) => {
-          if (addTime.id === id) {
-            return additionalTime;
-          }
-          return addTime;
+      state.timesByWorkOrder[workOrderId] = state.timesByWorkOrder[
+        workOrderId
+      ].map((addTime) => {
+        if (addTime.id === id) {
+          return additionalTime;
         }
-      );
+        return addTime;
+      });
     },
     deleteAdditionalTime(
       state: AdditionalTimeState,
@@ -62,7 +62,7 @@ const slice = createSlice({
       }>
     ) {
       const { id, workOrderId } = action.payload;
-      state.workOrdersRoot[workOrderId] = state.workOrdersRoot[
+      state.timesByWorkOrder[workOrderId] = state.timesByWorkOrder[
         workOrderId
       ].filter((additionalTime) => additionalTime.id !== id);
     },
@@ -74,11 +74,11 @@ const slice = createSlice({
       }>
     ) {
       const { additionalTime, workOrderId } = action.payload;
-      const filteredAdditionalTimes = state.workOrdersRoot[workOrderId].filter(
-        (aT) => aT.id !== additionalTime.id
-      );
+      const filteredAdditionalTimes = state.timesByWorkOrder[
+        workOrderId
+      ].filter((aT) => aT.id !== additionalTime.id);
       filteredAdditionalTimes.push(additionalTime);
-      state.workOrdersRoot[workOrderId] = filteredAdditionalTimes;
+      state.timesByWorkOrder[workOrderId] = filteredAdditionalTimes;
     }
   }
 });

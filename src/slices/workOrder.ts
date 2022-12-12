@@ -8,12 +8,12 @@ import { Task } from '../models/owns/tasks';
 const basePath = 'work-orders';
 interface WorkOrderState {
   workOrders: WorkOrder[];
-  locations1: { [key: number]: WorkOrder[] };
+  workOrdersByLocation: { [key: number]: WorkOrder[] };
 }
 
 const initialState: WorkOrderState = {
   workOrders: [],
-  locations1: {}
+  workOrdersByLocation: {}
 };
 
 const slice = createSlice({
@@ -61,7 +61,7 @@ const slice = createSlice({
       action: PayloadAction<{ workOrders: WorkOrder[]; id: number }>
     ) {
       const { workOrders, id } = action.payload;
-      state.locations1[id] = workOrders;
+      state.workOrdersByLocation[id] = workOrders;
     }
   }
 });

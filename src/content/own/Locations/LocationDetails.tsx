@@ -54,13 +54,13 @@ export default function LocationDetails(props: LocationDetailsProps) {
   const { getFormattedDate, uploadFiles } = useContext(CompanySettingsContext);
   const [openAddFloorPlan, setOpenAddFloorPlan] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<string>('assets');
-  const { locations } = useSelector((state) => state.assets);
-  const { locations1 } = useSelector((state) => state.workOrders);
+  const { assetsByLocation } = useSelector((state) => state.assets);
+  const { workOrdersByLocation } = useSelector((state) => state.workOrders);
   const { locationRoot } = useSelector((state) => state.floorPlans);
   const { hasEditPermission, hasDeletePermission, getFilteredFields } =
     useAuth();
-  const locationAssets = locations[location.id] ?? [];
-  const locationWorkOrders = locations1[location.id] ?? [];
+  const locationAssets = assetsByLocation[location.id] ?? [];
+  const locationWorkOrders = workOrdersByLocation[location.id] ?? [];
   const floorPlans = locationRoot[location.id] ?? [];
   const theme = useTheme();
   const navigate = useNavigate();

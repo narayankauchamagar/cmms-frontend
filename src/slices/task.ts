@@ -6,11 +6,11 @@ import { Task } from '../models/owns/tasks';
 
 const basePath = 'tasks';
 interface TaskState {
-  workOrdersRoot2: { [id: number]: Task[] };
+  tasksByWorkOrder: { [id: number]: Task[] };
 }
 
 const initialState: TaskState = {
-  workOrdersRoot2: {}
+  tasksByWorkOrder: {}
 };
 
 const slice = createSlice({
@@ -22,7 +22,7 @@ const slice = createSlice({
       action: PayloadAction<{ id: number; tasks: Task[] }>
     ) {
       const { tasks, id } = action.payload;
-      state.workOrdersRoot2[id] = tasks;
+      state.tasksByWorkOrder[id] = tasks;
     },
     patchTasks(
       state: TaskState,
@@ -32,7 +32,7 @@ const slice = createSlice({
       }>
     ) {
       const { tasks, workOrderId } = action.payload;
-      state.workOrdersRoot2[workOrderId] = tasks;
+      state.tasksByWorkOrder[workOrderId] = tasks;
     },
     patchTask(
       state: TaskState,
@@ -42,7 +42,7 @@ const slice = createSlice({
       }>
     ) {
       const { task, workOrderId } = action.payload;
-      state.workOrdersRoot2[workOrderId] = state.workOrdersRoot2[
+      state.tasksByWorkOrder[workOrderId] = state.tasksByWorkOrder[
         workOrderId
       ].map((t) => {
         if (t.id === task.id) {
@@ -59,7 +59,7 @@ const slice = createSlice({
       }>
     ) {
       const { id, workOrderId } = action.payload;
-      state.workOrdersRoot2[workOrderId] = state.workOrdersRoot2[
+      state.tasksByWorkOrder[workOrderId] = state.tasksByWorkOrder[
         workOrderId
       ].filter((task) => task.id !== id);
     }
