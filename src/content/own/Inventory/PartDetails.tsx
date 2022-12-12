@@ -8,6 +8,7 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
+  Stack,
   Tab,
   Tabs,
   Typography,
@@ -319,32 +320,40 @@ export default function PartDetails(props: PartDetailsProps) {
         )}
         {currentTab === 'assets' && (
           <Box>
-            <List sx={{ width: '100%' }}>
-              {assets.map((asset) => (
-                <ListItemButton
-                  key={asset.id}
-                  divider
-                  onClick={() => navigate(getAssetUrl(asset.id))}
-                >
-                  <ListItem
-                    secondaryAction={
-                      <Typography>
-                        {getFormattedDate(asset.createdAt)}
-                      </Typography>
-                    }
+            {assets.length ? (
+              <List sx={{ width: '100%' }}>
+                {assets.map((asset) => (
+                  <ListItemButton
+                    key={asset.id}
+                    divider
+                    onClick={() => navigate(getAssetUrl(asset.id))}
                   >
-                    <ListItemText
-                      primary={asset.name}
-                      secondary={
-                        asset.status === 'OPERATIONAL'
-                          ? t('Operational')
-                          : t('Down')
+                    <ListItem
+                      secondaryAction={
+                        <Typography>
+                          {getFormattedDate(asset.createdAt)}
+                        </Typography>
                       }
-                    />
-                  </ListItem>
-                </ListItemButton>
-              ))}
-            </List>
+                    >
+                      <ListItemText
+                        primary={asset.name}
+                        secondary={
+                          asset.status === 'OPERATIONAL'
+                            ? t('Operational')
+                            : t('Down')
+                        }
+                      />
+                    </ListItem>
+                  </ListItemButton>
+                ))}
+              </List>
+            ) : (
+              <Stack direction="row" justifyContent="center" width="100%">
+                <Typography variant="h5">
+                  {t('No asset related to this part')}
+                </Typography>
+              </Stack>
+            )}
           </Box>
         )}
         {currentTab === 'files' && (
@@ -355,47 +364,59 @@ export default function PartDetails(props: PartDetailsProps) {
             {/*  </Button>*/}
             {/*</Box>*/}
             <Box sx={{ width: '100%' }}>
-              <FilesList
-                confirmMessage={t(
-                  'Are you sure you want to remove this file from this Part ?'
-                )}
-                files={part.files}
-                onRemove={(id: number) => {
-                  dispatch(
-                    editPart(part.id, {
-                      ...part,
-                      files: part.files.filter((f) => f.id !== id)
-                    })
-                  );
-                }}
-              />
+              {part.files.length ? (
+                <FilesList
+                  confirmMessage={t(
+                    'Are you sure you want to remove this file from this Part ?'
+                  )}
+                  files={part.files}
+                  onRemove={(id: number) => {
+                    dispatch(
+                      editPart(part.id, {
+                        ...part,
+                        files: part.files.filter((f) => f.id !== id)
+                      })
+                    );
+                  }}
+                />
+              ) : (
+                <Stack direction="row" justifyContent="center" width="100%">
+                  <Typography variant="h5">{t('No File found')}</Typography>
+                </Stack>
+              )}
             </Box>
           </Box>
         )}
         {currentTab === 'workOrders' && (
           <Box>
-            <List sx={{ width: '100%' }}>
-              {workOrders.map((workOrder) => (
-                <ListItemButton
-                  key={workOrder.id}
-                  divider
-                  onClick={() => navigate(getWorkOrderUrl(workOrder.id))}
-                >
-                  <ListItem
-                    secondaryAction={
-                      <Typography>
-                        {getFormattedDate(workOrder.createdAt)}
-                      </Typography>
-                    }
+            {workOrders.length ? (
+              <List sx={{ width: '100%' }}>
+                {workOrders.map((workOrder) => (
+                  <ListItemButton
+                    key={workOrder.id}
+                    divider
+                    onClick={() => navigate(getWorkOrderUrl(workOrder.id))}
                   >
-                    <ListItemText
-                      primary={workOrder.title}
-                      secondary={getWOStatusLabel(workOrder.status)}
-                    />
-                  </ListItem>
-                </ListItemButton>
-              ))}
-            </List>
+                    <ListItem
+                      secondaryAction={
+                        <Typography>
+                          {getFormattedDate(workOrder.createdAt)}
+                        </Typography>
+                      }
+                    >
+                      <ListItemText
+                        primary={workOrder.title}
+                        secondary={getWOStatusLabel(workOrder.status)}
+                      />
+                    </ListItem>
+                  </ListItemButton>
+                ))}
+              </List>
+            ) : (
+              <Stack direction="row" justifyContent="center" width="100%">
+                <Typography variant="h5">{t('No Work Order found')}</Typography>
+              </Stack>
+            )}
           </Box>
         )}
       </Grid>

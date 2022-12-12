@@ -77,30 +77,32 @@ const AssetMeters = ({ asset }: PropsType) => {
         <Grid item xs={12}>
           <Card sx={{ p: 2 }}>
             <Box sx={{ height: 600, width: '95%' }}>
-              <Stack
-                direction="row"
-                spacing={1}
-                sx={{ my: 2, alignItems: 'center' }}
-              >
-                <Typography variant="h5">{t('Select Meter')}</Typography>
-                <Select
-                  value={selectedMeter?.id}
-                  displayEmpty
-                  onChange={(event) => {
-                    setSelectedMeter(
-                      meters.find(
-                        (meter) => meter.id === Number(event.target.value)
-                      )
-                    );
-                  }}
+              {!!meters.length && (
+                <Stack
+                  direction="row"
+                  spacing={1}
+                  sx={{ my: 2, alignItems: 'center' }}
                 >
-                  {meters.map((meter) => (
-                    <MenuItem key={meter.id} value={meter.id}>
-                      {meter.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </Stack>
+                  <Typography variant="h5">{t('Select Meter')}</Typography>
+                  <Select
+                    value={selectedMeter?.id}
+                    displayEmpty
+                    onChange={(event) => {
+                      setSelectedMeter(
+                        meters.find(
+                          (meter) => meter.id === Number(event.target.value)
+                        )
+                      );
+                    }}
+                  >
+                    {meters.map((meter) => (
+                      <MenuItem key={meter.id} value={meter.id}>
+                        {meter.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Stack>
+              )}
               <CustomDataGrid
                 columns={columns}
                 rows={readings}

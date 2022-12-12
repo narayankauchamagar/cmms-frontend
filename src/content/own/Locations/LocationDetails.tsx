@@ -12,6 +12,7 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
+  Stack,
   Tab,
   Tabs,
   Typography,
@@ -89,7 +90,8 @@ export default function LocationDetails(props: LocationDetailsProps) {
     {
       name: 'image',
       type: 'file',
-      label: 'File',
+      fileType: 'image',
+      label: 'Image',
       placeholder: t('Upload an image')
     }
   ];
@@ -216,20 +218,28 @@ export default function LocationDetails(props: LocationDetailsProps) {
                 {t('Asset')}
               </Button>
             </Box>
-            <List sx={{ width: '100%' }}>
-              {locationAssets.map((asset) => (
-                <ListItemButton
-                  key={asset.id}
-                  divider
-                  onClick={() => navigate(getAssetUrl(asset.id))}
-                >
-                  <ListItemText
-                    primary={asset.name}
-                    secondary={getFormattedDate(asset.createdAt)}
-                  />
-                </ListItemButton>
-              ))}
-            </List>
+            {locationAssets.length ? (
+              <List sx={{ width: '100%' }}>
+                {locationAssets.map((asset) => (
+                  <ListItemButton
+                    key={asset.id}
+                    divider
+                    onClick={() => navigate(getAssetUrl(asset.id))}
+                  >
+                    <ListItemText
+                      primary={asset.name}
+                      secondary={getFormattedDate(asset.createdAt)}
+                    />
+                  </ListItemButton>
+                ))}
+              </List>
+            ) : (
+              <Stack direction="row" justifyContent="center" width="100%">
+                <Typography variant="h5">
+                  {t('No asset in this location')}
+                </Typography>
+              </Stack>
+            )}
           </Box>
         )}
         {currentTab === 'workOrders' && (
@@ -239,20 +249,28 @@ export default function LocationDetails(props: LocationDetailsProps) {
                 {t('Work Order')}
               </Button>
             </Box>
-            <List sx={{ width: '100%' }}>
-              {locationWorkOrders.map((workOrder) => (
-                <ListItemButton
-                  key={workOrder.id}
-                  divider
-                  onClick={() => navigate(`/app/work-orders/${workOrder.id}`)}
-                >
-                  <ListItemText
-                    primary={workOrder.title}
-                    secondary={getFormattedDate(workOrder.createdAt)}
-                  />
-                </ListItemButton>
-              ))}
-            </List>
+            {locationWorkOrders.length ? (
+              <List sx={{ width: '100%' }}>
+                {locationWorkOrders.map((workOrder) => (
+                  <ListItemButton
+                    key={workOrder.id}
+                    divider
+                    onClick={() => navigate(`/app/work-orders/${workOrder.id}`)}
+                  >
+                    <ListItemText
+                      primary={workOrder.title}
+                      secondary={getFormattedDate(workOrder.createdAt)}
+                    />
+                  </ListItemButton>
+                ))}
+              </List>
+            ) : (
+              <Stack direction="row" justifyContent="center" width="100%">
+                <Typography variant="h5">
+                  {t('No Work Order in this location')}
+                </Typography>
+              </Stack>
+            )}
           </Box>
         )}
         {currentTab === 'floorPlans' && (
@@ -265,29 +283,47 @@ export default function LocationDetails(props: LocationDetailsProps) {
                 {t('Floor plan')}
               </Button>
             </Box>
-            <List sx={{ width: '100%' }}>
-              {floorPlans.map((floorPlan) => (
-                <ListItemButton key={floorPlan.id} divider>
-                  <ListItem
-                    secondaryAction={
-                      <IconButton
-                        sx={{ ml: 1 }}
-                        onClick={() =>
-                          dispatch(deleteFloorPlan(location.id, floorPlan.id))
-                        }
-                      >
-                        <DeleteTwoToneIcon fontSize="small" color="error" />
-                      </IconButton>
-                    }
-                  >
-                    <ListItemText
-                      primary={floorPlan.name}
-                      secondary={`${floorPlan.area} m²`}
-                    />
-                  </ListItem>
-                </ListItemButton>
-              ))}
-            </List>
+            {floorPlans.length ? (
+              <List sx={{ width: '100%' }}>
+                {floorPlans.map((floorPlan) => (
+                  <ListItemButton key={floorPlan.id} divider>
+                    <ListItem
+                      secondaryAction={
+                        <IconButton
+                          sx={{ ml: 1 }}
+                          onClick={() => {
+                            if (
+                              window.confirm(
+                                t(
+                                  "Are you sure you want to delete this Floor Plan. It can't be undone"
+                                )
+                              )
+                            ) {
+                              dispatch(
+                                deleteFloorPlan(location.id, floorPlan.id)
+                              );
+                            }
+                          }}
+                        >
+                          <DeleteTwoToneIcon fontSize="small" color="error" />
+                        </IconButton>
+                      }
+                    >
+                      <ListItemText
+                        primary={floorPlan.name}
+                        secondary={`${floorPlan.area} m²`}
+                      />
+                    </ListItem>
+                  </ListItemButton>
+                ))}
+              </List>
+            ) : (
+              <Stack direction="row" justifyContent="center" width="100%">
+                <Typography variant="h5">
+                  {t('No Floor Plan in this location')}
+                </Typography>
+              </Stack>
+            )}
           </Box>
         )}
         {currentTab === 'people' && (
