@@ -132,7 +132,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const { usersMini } = useSelector((state) => state.users);
   const [createdByName, setCreatedByName] = useState<string>('');
   const [requestedByName, setRequestedByName] = useState<string>('');
-  const [isViewerOpen, setIsViewerOpen] = useState<boolean>(false);
+  const [isImageViewerOpen, setIsImageViewerOpen] = useState<boolean>(false);
 
   useEffect(() => {
     setCreatedByName(getUserNameById(workOrder.createdBy, usersMini));
@@ -588,7 +588,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                   <img
                     src={workOrder.image.url}
                     style={{ borderRadius: 5, height: 250, cursor: 'pointer' }}
-                    onClick={() => setIsViewerOpen(true)}
+                    onClick={() => setIsImageViewerOpen(true)}
                   />
                 </Grid>
               )}
@@ -1169,12 +1169,12 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
         onClose={() => setOpenLinkModal(false)}
         workOrderId={workOrder.id}
       />
-      {isViewerOpen && (
+      {isImageViewerOpen && (
         <div style={{ zIndex: 100 }}>
           <ImageViewer
             src={[workOrder.image.url]}
             currentIndex={0}
-            onClose={() => setIsViewerOpen(false)}
+            onClose={() => setIsImageViewerOpen(false)}
             disableScroll={true}
             backgroundStyle={{
               backgroundColor: 'rgba(0,0,0,0.9)'

@@ -35,6 +35,7 @@ import WorkOrderMeterTrigger from '../../../models/owns/workOrderMeterTrigger';
 import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
 import { dayDiff } from '../../../utils/dates';
+import ImageViewer from 'react-simple-image-viewer';
 
 interface MeterDetailsProps {
   meter: Meter;
@@ -59,6 +60,8 @@ export default function MeterDetails(props: MeterDetailsProps) {
     useState<boolean>(false);
   const [currentWorkOrderMeterTrigger, setCurrentWorkOrderMeterTrigger] =
     useState<WorkOrderMeterTrigger>();
+  const [isImageViewerOpen, setIsImageViewerOpen] = useState<boolean>(false);
+
   const currentMeterTriggers = metersTriggers[meter?.id] ?? [];
   const currentMeterReadings = readingsByMeter[meter?.id] ?? [];
   const tabs = [
@@ -198,6 +201,22 @@ export default function MeterDetails(props: MeterDetailsProps) {
                 </Box>
               )
             )}
+            {meter.image && (
+              <Grid
+                item
+                xs={12}
+                lg={12}
+                display="flex"
+                justifyContent="center"
+                sx={{ mt: 2 }}
+              >
+                <img
+                  src={meter.image.url}
+                  style={{ borderRadius: 5, height: 250, cursor: 'pointer' }}
+                  onClick={() => setIsImageViewerOpen(true)}
+                />
+              </Grid>
+            )}
             <Typography sx={{ mt: 2, mb: 1 }} variant="h4">
               Meter details
             </Typography>
@@ -295,6 +314,20 @@ export default function MeterDetails(props: MeterDetailsProps) {
         meter={meter}
         workOrderMeterTrigger={currentWorkOrderMeterTrigger}
       />
+      {isImageViewerOpen && (
+        <div style={{ zIndex: 100 }}>
+          <ImageViewer
+            src={[meter.image.url]}
+            currentIndex={0}
+            onClose={() => setIsImageViewerOpen(false)}
+            disableScroll={true}
+            backgroundStyle={{
+              backgroundColor: 'rgba(0,0,0,0.9)'
+            }}
+            closeOnClickOutside={true}
+          />
+        </div>
+      )}
     </Grid>
   );
 }

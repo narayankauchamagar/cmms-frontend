@@ -30,6 +30,7 @@ import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
 import { getSingleUser } from '../../../slices/user';
 import { getUserNameById } from '../../../utils/displayers';
+import ImageViewer from 'react-simple-image-viewer';
 
 interface RequestDetailsProps {
   request: Request;
@@ -56,6 +57,7 @@ export default function RequestDetails({
 
   const { usersMini } = useSelector((state) => state.users);
   const [createdByName, setCreatedByName] = useState<string>('');
+  const [isImageViewerOpen, setIsImageViewerOpen] = useState<boolean>(false);
 
   useEffect(() => {
     setCreatedByName(getUserNameById(request.createdBy, usersMini));
@@ -206,6 +208,21 @@ export default function RequestDetails({
           </Typography>
           <Grid container spacing={2}>
             <>
+              {request.image && (
+                <Grid
+                  item
+                  xs={12}
+                  lg={12}
+                  display="flex"
+                  justifyContent="center"
+                >
+                  <img
+                    src={request.image.url}
+                    style={{ borderRadius: 5, height: 250, cursor: 'pointer' }}
+                    onClick={() => setIsImageViewerOpen(true)}
+                  />
+                </Grid>
+              )}
               {fieldsToRender(request).map((field) => (
                 <BasicField
                   key={field.label}
@@ -283,6 +300,20 @@ export default function RequestDetails({
           </Grid>
         </Box>
       </Grid>
+      {isImageViewerOpen && (
+        <div style={{ zIndex: 100 }}>
+          <ImageViewer
+            src={[request.image.url]}
+            currentIndex={0}
+            onClose={() => setIsImageViewerOpen(false)}
+            disableScroll={true}
+            backgroundStyle={{
+              backgroundColor: 'rgba(0,0,0,0.9)'
+            }}
+            closeOnClickOutside={true}
+          />
+        </div>
+      )}
     </Grid>
   );
 }

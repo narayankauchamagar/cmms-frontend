@@ -25,6 +25,7 @@ import { files } from 'src/models/owns/file';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 import { PermissionEntity } from '../../../models/owns/role';
 import useAuth from '../../../hooks/useAuth';
+import ImageViewer from 'react-simple-image-viewer';
 
 interface PartDetailsProps {
   part: Part;
@@ -37,6 +38,7 @@ export default function PartDetails(props: PartDetailsProps) {
   const { t }: { t: any } = useTranslation();
   const { getFormattedDate } = useContext(CompanySettingsContext);
   const [currentTab, setCurrentTab] = useState<string>('details');
+  const [isImageViewerOpen, setIsImageViewerOpen] = useState<boolean>(false);
   const theme = useTheme();
   const tabs = [
     { value: 'details', label: t('Details') },
@@ -152,6 +154,15 @@ export default function PartDetails(props: PartDetailsProps) {
       <Grid item xs={12}>
         {currentTab === 'details' && (
           <Box>
+            {part.image && (
+              <Grid item xs={12} lg={12} display="flex" justifyContent="center">
+                <img
+                  src={part.image.url}
+                  style={{ borderRadius: 5, height: 250, cursor: 'pointer' }}
+                  onClick={() => setIsImageViewerOpen(true)}
+                />
+              </Grid>
+            )}
             <Typography sx={{ mb: 1 }} variant="h4">
               Part details
             </Typography>
@@ -312,6 +323,20 @@ export default function PartDetails(props: PartDetailsProps) {
           </Box>
         )}
       </Grid>
+      {isImageViewerOpen && (
+        <div style={{ zIndex: 100 }}>
+          <ImageViewer
+            src={[part.image.url]}
+            currentIndex={0}
+            onClose={() => setIsImageViewerOpen(false)}
+            disableScroll={true}
+            backgroundStyle={{
+              backgroundColor: 'rgba(0,0,0,0.9)'
+            }}
+            closeOnClickOutside={true}
+          />
+        </div>
+      )}
     </Grid>
   );
 }
