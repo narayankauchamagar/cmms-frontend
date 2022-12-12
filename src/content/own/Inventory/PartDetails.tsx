@@ -29,13 +29,15 @@ import {
   getCustomerUrl,
   getTeamUrl,
   getUserUrl,
-  getVendorUrl
+  getVendorUrl,
+  getWorkOrderUrl
 } from '../../../utils/urlPaths';
 import { editPart } from '../../../slices/part';
 import { useDispatch, useSelector } from '../../../store';
 import FilesList from '../components/FilesList';
 import { getAssetsByPart } from '../../../slices/asset';
 import { useNavigate } from 'react-router-dom';
+import { getWorkOrdersByPart } from '../../../slices/workOrder';
 
 interface PartDetailsProps {
   part: Part;
@@ -52,8 +54,10 @@ export default function PartDetails(props: PartDetailsProps) {
   const [isImageViewerOpen, setIsImageViewerOpen] = useState<boolean>(false);
   const theme = useTheme();
   const { assetsByPart } = useSelector((state) => state.assets);
+  const { workOrdersByPart } = useSelector((state) => state.workOrders);
   const navigate = useNavigate();
   const assets = assetsByPart[part?.id] ?? [];
+  const workOrders = workOrdersByPart[part?.id] ?? [];
   const tabs = [
     { value: 'details', label: t('Details') },
     { value: 'assets', label: t('Assets') },
@@ -66,6 +70,22 @@ export default function PartDetails(props: PartDetailsProps) {
     setCurrentTab(value);
     if (value === 'assets' && !assets.length) {
       dispatch(getAssetsByPart(part.id));
+    } else if (value === 'workOrders' && !workOrders.length) {
+      dispatch(getWorkOrdersByPart(part.id));
+    }
+  };
+  const getWOStatusLabel = (status: string) => {
+    switch (status) {
+      case 'OPEN':
+        return t('Open');
+      case 'IN_PROGRESS':
+        return t('In Progress');
+      case 'ON_HOLD':
+        return t('On Hold');
+      case 'COMPLETE':
+        return t('Complete');
+      default:
+        return '';
     }
   };
   const BasicField = ({
@@ -352,6 +372,32 @@ export default function PartDetails(props: PartDetailsProps) {
                 }}
               />
             </Box>
+          </Box>
+        )}
+        {currentTab === 'workOrders' && (
+          <Box>
+            <List sx={{ width: '100%' }}>
+              {workOrders.map((workOrder) => (
+                <ListItemButton
+                  key={workOrder.id}
+                  divider
+                  onClick={() => navigate(getWorkOrderUrl(workOrder.id))}
+                >
+                  <ListItem
+                    secondaryAction={
+                      <Typography>
+                        {getFormattedDate(workOrder.createdAt)}
+                      </Typography>
+                    }
+                  >
+                    <ListItemText
+                      primary={workOrder.title}
+                      secondary={getWOStatusLabel(workOrder.status)}
+                    />
+                  </ListItem>
+                </ListItemButton>
+              ))}
+            </List>
           </Box>
         )}
       </Grid>

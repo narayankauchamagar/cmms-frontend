@@ -9,11 +9,13 @@ const basePath = 'work-orders';
 interface WorkOrderState {
   workOrders: WorkOrder[];
   workOrdersByLocation: { [key: number]: WorkOrder[] };
+  workOrdersByPart: { [key: number]: WorkOrder[] };
 }
 
 const initialState: WorkOrderState = {
   workOrders: [],
-  workOrdersByLocation: {}
+  workOrdersByLocation: {},
+  workOrdersByPart: {}
 };
 
 const slice = createSlice({
@@ -62,6 +64,13 @@ const slice = createSlice({
     ) {
       const { workOrders, id } = action.payload;
       state.workOrdersByLocation[id] = workOrders;
+    },
+    getWorkOrdersByPart(
+      state: WorkOrderState,
+      action: PayloadAction<{ workOrders: WorkOrder[]; id: number }>
+    ) {
+      const { workOrders, id } = action.payload;
+      state.workOrdersByPart[id] = workOrders;
     }
   }
 });
@@ -121,6 +130,18 @@ export const getWorkOrdersByLocation =
     const workOrders = await api.get<WorkOrder[]>(`${basePath}/location/${id}`);
     dispatch(
       slice.actions.getWorkOrdersByLocation({
+        id,
+        workOrders
+      })
+    );
+  };
+
+export const getWorkOrdersByPart =
+  (id: number): AppThunk =>
+  async (dispatch) => {
+    const workOrders = await api.get<WorkOrder[]>(`${basePath}/part/${id}`);
+    dispatch(
+      slice.actions.getWorkOrdersByPart({
         id,
         workOrders
       })
