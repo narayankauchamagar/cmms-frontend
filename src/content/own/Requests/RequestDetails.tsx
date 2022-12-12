@@ -16,9 +16,9 @@ import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
 import Request from '../../../models/owns/request';
 import { getPriorityLabel } from '../../../utils/formatters';
-import { useDispatch } from '../../../store';
+import { useDispatch, useSelector } from '../../../store';
 import { approveRequest, cancelRequest } from '../../../slices/request';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   getAssetUrl,
@@ -28,6 +28,8 @@ import {
 } from '../../../utils/urlPaths';
 import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
+import { getSingleUser } from '../../../slices/user';
+import { getUserNameById } from '../../../utils/displayers';
 
 interface RequestDetailsProps {
   request: Request;
@@ -48,7 +50,16 @@ export default function RequestDetails({
   const theme = useTheme();
   const { hasEditPermission, hasDeletePermission } = useAuth();
   const navigate = useNavigate();
+  useEffect(() => {
+    dispatch(getSingleUser(request.createdBy));
+  }, []);
 
+  const { users } = useSelector((state) => state.users);
+  const [createdByName, setCreatedByName] = useState<string>('');
+
+  useEffect(() => {
+    setCreatedByName(getUserNameById(request.createdBy, users));
+  }, [users, request]);
   const onApprove = () => {
     setApproving(true);
     dispatch(approveRequest(request.id))
@@ -203,6 +214,19 @@ export default function RequestDetails({
                   isPriority={field.label === t('Priority')}
                 />
               ))}
+              {request?.createdBy && (
+                <Grid item xs={12} lg={6}>
+                  <Typography
+                    variant="h6"
+                    sx={{ color: theme.colors.alpha.black[70] }}
+                  >
+                    {t('Requested By')}
+                  </Typography>
+                  <Link variant="h6" href={getUserUrl(request.createdBy)}>
+                    {createdByName}
+                  </Link>
+                </Grid>
+              )}
               {request?.asset && (
                 <Grid item xs={12} lg={6}>
                   <Typography

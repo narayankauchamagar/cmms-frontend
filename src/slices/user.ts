@@ -22,6 +22,16 @@ const slice = createSlice({
       const { users } = action.payload;
       state.users = users;
     },
+    getSingleUser(
+      state: UserState,
+      action: PayloadAction<{ user: User; id: number }>
+    ) {
+      const { user, id } = action.payload;
+      const index = state.users.findIndex((user1) => user1.id === id);
+      if (index !== -1) {
+        state.users[index] = user;
+      } else state.users.push(user);
+    },
     getUsersMini(
       state: UserState,
       action: PayloadAction<{ users: UserMiniDTO[] }>
@@ -56,6 +66,12 @@ export const getUsers = (): AppThunk => async (dispatch) => {
   const users = await api.get<User[]>('users');
   dispatch(slice.actions.getUsers({ users }));
 };
+export const getSingleUser =
+  (id: number): AppThunk =>
+  async (dispatch) => {
+    const user = await api.get<User>(`users/${id}`);
+    dispatch(slice.actions.getSingleUser({ user, id }));
+  };
 export const getUsersMini = (): AppThunk => async (dispatch) => {
   const users = await api.get<UserMiniDTO[]>('users/mini');
   dispatch(slice.actions.getUsersMini({ users }));
