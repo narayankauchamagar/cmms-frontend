@@ -18,7 +18,6 @@ import { ChangeEvent, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import { assets } from '../../../models/owns/asset';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import Part from '../../../models/owns/part';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
@@ -26,14 +25,17 @@ import { PermissionEntity } from '../../../models/owns/role';
 import useAuth from '../../../hooks/useAuth';
 import ImageViewer from 'react-simple-image-viewer';
 import {
+  getAssetUrl,
   getCustomerUrl,
   getTeamUrl,
   getUserUrl,
   getVendorUrl
 } from '../../../utils/urlPaths';
 import { editPart } from '../../../slices/part';
-import { useDispatch } from '../../../store';
+import { useDispatch, useSelector } from '../../../store';
 import FilesList from '../components/FilesList';
+import { getAssetsByPart } from '../../../slices/asset';
+import { useNavigate } from 'react-router-dom';
 
 interface PartDetailsProps {
   part: Part;
@@ -49,6 +51,9 @@ export default function PartDetails(props: PartDetailsProps) {
   const [currentTab, setCurrentTab] = useState<string>('details');
   const [isImageViewerOpen, setIsImageViewerOpen] = useState<boolean>(false);
   const theme = useTheme();
+  const { assetsByPart } = useSelector((state) => state.assets);
+  const navigate = useNavigate();
+  const assets = assetsByPart[part?.id] ?? [];
   const tabs = [
     { value: 'details', label: t('Details') },
     { value: 'assets', label: t('Assets') },
@@ -59,6 +64,9 @@ export default function PartDetails(props: PartDetailsProps) {
 
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
+    if (value === 'assets' && !assets.length) {
+      dispatch(getAssetsByPart(part.id));
+    }
   };
   const BasicField = ({
     label,
@@ -295,7 +303,11 @@ export default function PartDetails(props: PartDetailsProps) {
           <Box>
             <List sx={{ width: '100%' }}>
               {assets.map((asset) => (
-                <ListItemButton key={asset.id} divider>
+                <ListItemButton
+                  key={asset.id}
+                  divider
+                  onClick={() => navigate(getAssetUrl(asset.id))}
+                >
                   <ListItem
                     secondaryAction={
                       <Typography>
@@ -305,7 +317,11 @@ export default function PartDetails(props: PartDetailsProps) {
                   >
                     <ListItemText
                       primary={asset.name}
-                      secondary={asset.description}
+                      secondary={
+                        asset.status === 'OPERATIONAL'
+                          ? t('Operational')
+                          : t('Down')
+                      }
                     />
                   </ListItem>
                 </ListItemButton>

@@ -11,6 +11,7 @@ interface AssetState {
   assetsHierarchy: AssetRow[];
   assetInfos: { [key: number]: { asset?: AssetDTO; workOrders: WorkOrder[] } };
   assetsByLocation: { [key: number]: AssetDTO[] };
+  assetsByPart: { [key: number]: AssetDTO[] };
   assetsMini: AssetMiniDTO[];
 }
 
@@ -19,6 +20,7 @@ const initialState: AssetState = {
   assetsHierarchy: [],
   assetInfos: {},
   assetsByLocation: {},
+  assetsByPart: {},
   assetsMini: []
 };
 
@@ -99,6 +101,13 @@ const slice = createSlice({
     ) {
       const { assets, id } = action.payload;
       state.assetsByLocation[id] = assets;
+    },
+    getAssetsByPart(
+      state: AssetState,
+      action: PayloadAction<{ assets: AssetDTO[]; id: number }>
+    ) {
+      const { assets, id } = action.payload;
+      state.assetsByPart[id] = assets;
     }
   }
 });
@@ -180,6 +189,18 @@ export const getAssetsByLocation =
     const assets = await api.get<AssetDTO[]>(`${basePath}/location/${id}`);
     dispatch(
       slice.actions.getAssetsByLocation({
+        id,
+        assets
+      })
+    );
+  };
+
+export const getAssetsByPart =
+  (id: number): AppThunk =>
+  async (dispatch) => {
+    const assets = await api.get<AssetDTO[]>(`${basePath}/part/${id}`);
+    dispatch(
+      slice.actions.getAssetsByPart({
         id,
         assets
       })
