@@ -36,6 +36,7 @@ import Asset from '../../../models/owns/asset';
 import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
 import {
   addWorkOrder,
+  deleteWorkOrder,
   editWorkOrder,
   getWorkOrders
 } from '../../../slices/workOrder';
@@ -50,6 +51,8 @@ import { PermissionEntity } from '../../../models/owns/role';
 import PermissionErrorMessage from '../components/PermissionErrorMessage';
 import { getUsersMini } from '../../../slices/user';
 import { getUserNameById } from '../../../utils/displayers';
+import NoRowsMessage from '../components/NoRowsMessage';
+import ConfirmDialog from '../components/ConfirmDialog';
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
@@ -76,15 +79,23 @@ function WorkOrders() {
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const { hasViewPermission, hasCreatePermission } = useAuth();
   const [currentWorkOrder, setCurrentWorkOrder] = useState<WorkOrder>();
+  const [openDelete, setOpenDelete] = useState<boolean>(false);
   const { tasksByWorkOrder } = useSelector((state) => state.tasks);
   const { usersMini } = useSelector((state) => state.users);
   const tasks = tasksByWorkOrder[currentWorkOrder?.id] ?? [];
-  const handleDelete = (id: number) => {};
+  const handleDelete = (id: number) => {
+    dispatch(deleteWorkOrder(id)).then(onDeleteSuccess).catch(onDeleteFailure);
+    setOpenDelete(false);
+  };
   const handleOpenUpdate = (id: number) => {
     setCurrentWorkOrder(workOrders.find((workOrder) => workOrder.id === id));
     setOpenUpdateModal(true);
   };
-
+  const handleOpenDelete = (id: number) => {
+    setCurrentWorkOrder(workOrders.find((workOrder) => workOrder.id === id));
+    setOpenDelete(true);
+    setOpenDrawer(false);
+  };
   const handleOpenDetails = (id: number) => {
     const foundWorkOrder = workOrders.find((workOrder) => workOrder.id === id);
     if (foundWorkOrder) {
@@ -140,6 +151,12 @@ function WorkOrders() {
   };
   const onEditFailure = (err) =>
     showSnackBar(t("The Work Order couldn't be edited"), 'error');
+  const onDeleteSuccess = () => {
+    showSnackBar(t('The Work Order has been deleted successfully'), 'success');
+  };
+  const onDeleteFailure = (err) =>
+    showSnackBar(t("The Work Order couldn't be deleted"), 'error');
+
   const workOrderStatuses = [
     { label: t('Open'), value: 'OPEN' },
     { label: t('In Progress'), value: 'IN_PROGRESS' },
@@ -708,20 +725,31 @@ function WorkOrders() {
               }}
             >
               <Box sx={{ height: 500, width: '95%' }}>
-                <CustomDataGrid
-                  columns={columns}
-                  rows={workOrders}
-                  loading={loadingGet}
-                  components={{
-                    Toolbar: GridToolbar
-                  }}
-                  onRowClick={(params) => handleOpenDetails(Number(params.id))}
-                  initialState={{
-                    columns: {
-                      columnVisibilityModel: {}
+                {!loadingGet && !workOrders.length ? (
+                  <NoRowsMessage
+                    message={t(
+                      'Work Orders are tasks or jobs, that can be scheduled or assigned to someone'
+                    )}
+                    action={t("Press the '+' button to create a Work Order.")}
+                  />
+                ) : (
+                  <CustomDataGrid
+                    columns={columns}
+                    rows={workOrders}
+                    loading={loadingGet}
+                    components={{
+                      Toolbar: GridToolbar
+                    }}
+                    onRowClick={(params) =>
+                      handleOpenDetails(Number(params.id))
                     }
-                  }}
-                />
+                    initialState={{
+                      columns: {
+                        columnVisibilityModel: {}
+                      }
+                    }}
+                  />
+                )}
               </Box>
             </Card>
           </Grid>
@@ -738,10 +766,21 @@ function WorkOrders() {
         >
           <WorkOrderDetails
             workOrder={currentWorkOrder}
-            handleUpdate={handleOpenUpdate}
+            onEdit={handleOpenUpdate}
             tasks={tasks}
+            onDelete={handleOpenDelete}
           />
         </Drawer>
+        <ConfirmDialog
+          open={openDelete}
+          onCancel={() => {
+            setOpenDelete(false);
+            setOpenDrawer(true);
+          }}
+          onConfirm={() => handleDelete(currentWorkOrder?.id)}
+          confirmText={t('Delete')}
+          question={t('Are you sure you want to delete this Work Order?')}
+        />
       </>
     );
   else

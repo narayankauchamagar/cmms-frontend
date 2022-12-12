@@ -75,11 +75,12 @@ import { PlanFeature } from '../../../models/owns/subscriptionPlan';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;
-  handleUpdate: (id: number) => void;
+  onEdit: (id: number) => void;
+  onDelete: (id: number) => void;
   tasks: Task[];
 }
 export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
-  const { workOrder, handleUpdate, tasks } = props;
+  const { workOrder, onEdit, tasks, onDelete } = props;
   const theme = useTheme();
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const { getFormattedDate } = useContext(CompanySettingsContext);
@@ -463,7 +464,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
           </IconButton>
           {hasEditPermission(PermissionEntity.WORK_ORDERS, workOrder) && (
             <IconButton
-              onClick={() => handleUpdate(workOrder.id)}
+              onClick={() => onEdit(workOrder.id)}
               style={{ marginRight: 10 }}
             >
               <EditTwoToneIcon color="primary" />
@@ -471,7 +472,10 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
           )}
           {hasDeletePermission(PermissionEntity.WORK_ORDERS, workOrder) && (
             <IconButton>
-              <DeleteTwoToneIcon color="error" />
+              <DeleteTwoToneIcon
+                color="error"
+                onClick={() => onDelete(workOrder.id)}
+              />
             </IconButton>
           )}
         </Box>
