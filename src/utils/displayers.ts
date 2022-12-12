@@ -1,4 +1,4 @@
-import { OwnUser } from '../models/user';
+import { UserMiniDTO } from '../models/user';
 
 export const enumerate = (array: string[]) =>
   array.reduce(
@@ -6,7 +6,7 @@ export const enumerate = (array: string[]) =>
     ''
   );
 
-export const getUserNameById = (id: number, users: OwnUser[]) => {
+export const getUserNameById = (id: number, users: UserMiniDTO[]) => {
   const user = users.find((user) => user.id === id);
   return user ? `${user.firstName} ${user.lastName}` : null;
 };

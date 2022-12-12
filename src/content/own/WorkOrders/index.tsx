@@ -48,6 +48,8 @@ import useAuth from '../../../hooks/useAuth';
 import { getWOBaseValues } from '../../../utils/fields';
 import { PermissionEntity } from '../../../models/owns/role';
 import PermissionErrorMessage from '../components/PermissionErrorMessage';
+import { getUsersMini } from '../../../slices/user';
+import { getUserNameById } from '../../../utils/displayers';
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
@@ -75,6 +77,7 @@ function WorkOrders() {
   const { hasViewPermission, hasCreatePermission } = useAuth();
   const [currentWorkOrder, setCurrentWorkOrder] = useState<WorkOrder>();
   const { workOrdersRoot2 } = useSelector((state) => state.tasks);
+  const { usersMini } = useSelector((state) => state.users);
   const tasks = workOrdersRoot2[currentWorkOrder?.id] ?? [];
   const handleDelete = (id: number) => {};
   const handleOpenUpdate = (id: number) => {
@@ -102,6 +105,7 @@ function WorkOrders() {
     setTitle(t('Work Orders'));
     if (hasViewPermission(PermissionEntity.WORK_ORDERS))
       dispatch(getWorkOrders());
+    dispatch(getUsersMini());
   }, []);
 
   useEffect(() => {
@@ -284,7 +288,8 @@ function WorkOrders() {
       headerName: t('Requested By'),
       description: t('Requested By'),
       width: 150,
-      valueGetter: (params) => params.row.parentRequest?.createdBy
+      valueGetter: (params) =>
+        getUserNameById(params.row.parentRequest?.createdBy, usersMini)
     },
     {
       field: 'laborCost',

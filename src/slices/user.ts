@@ -27,10 +27,10 @@ const slice = createSlice({
       action: PayloadAction<{ user: User; id: number }>
     ) {
       const { user, id } = action.payload;
-      const index = state.users.findIndex((user1) => user1.id === id);
+      const index = state.usersMini.findIndex((user1) => user1.id === id);
       if (index !== -1) {
-        state.users[index] = user;
-      } else state.users.push(user);
+        state.usersMini[index] = user;
+      } else state.usersMini.push(user);
     },
     getUsersMini(
       state: UserState,

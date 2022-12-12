@@ -68,6 +68,8 @@ import { getAssetUrl, getUserUrl } from '../../../utils/urlPaths';
 import SignatureModal from './SignatureModal';
 import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
+import { getSingleUser } from '../../../slices/user';
+import { getUserNameById } from '../../../utils/displayers';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;
@@ -116,6 +118,29 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const [primaryTimeHours, setPrimaryTimeHours] = useState<number>();
   const [primaryTimeMinutes, setPrimaryTimeMinutes] = useState<number>();
   const [savingPrimaryTime, setSavingPrimaryTime] = useState<boolean>(false);
+  useEffect(() => {
+    [workOrder.createdBy, workOrder.parentRequest?.createdBy].forEach(
+      (createdBy) => {
+        if (!usersMini.find((user) => user.id === createdBy) && createdBy) {
+          dispatch(getSingleUser(createdBy));
+        }
+      }
+    );
+  }, []);
+
+  const { usersMini } = useSelector((state) => state.users);
+  const [createdByName, setCreatedByName] = useState<string>('');
+  const [requestedByName, setRequestedByName] = useState<string>('');
+
+  useEffect(() => {
+    setCreatedByName(getUserNameById(workOrder.createdBy, usersMini));
+    if (workOrder.parentRequest) {
+      setRequestedByName(
+        getUserNameById(workOrder.parentRequest.createdBy, usersMini)
+      );
+    }
+  }, [usersMini, workOrder]);
+
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -403,10 +428,6 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
     {
       label: t('Date created'),
       value: getFormattedDate(workOrder.createdAt)
-    },
-    {
-      label: t('Created By'),
-      value: workOrder.createdBy
     }
   ];
   return (
@@ -568,51 +589,80 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                   variant="h6"
                   sx={{ color: theme.colors.alpha.black[70] }}
                 >
-                  {t('Time')}
+                  {workOrder.parentRequest ? t('Approved By') : t('Created By')}
                 </Typography>
-                {openEditPrimaryTime ? (
-                  <Stack direction="row" spacing={1} alignItems="center">
-                    <TextField
-                      value={primaryTimeHours}
-                      type="number"
-                      onChange={(event) =>
-                        setPrimaryTimeHours(Number(event.target.value))
-                      }
-                    />
-                    <Typography variant="h6">h</Typography>
-                    <TextField
-                      value={primaryTimeMinutes}
-                      type="number"
-                      InputProps={{ inputProps: { min: 0, max: 59 } }}
-                      onChange={(event) =>
-                        setPrimaryTimeMinutes(Number(event.target.value))
-                      }
-                    />
-                    <Typography variant="h6">m</Typography>
-                    <Button
-                      startIcon={
-                        savingPrimaryTime ? (
-                          <CircularProgress size="1rem" />
-                        ) : null
-                      }
-                      disabled={savingPrimaryTime}
-                      variant="contained"
-                      onClick={onSavePrimaryTime}
-                    >
-                      {t('Save')}
-                    </Button>
-                  </Stack>
-                ) : (
+                <Link variant="h6" href={getUserUrl(workOrder.createdBy)}>
+                  {createdByName}
+                </Link>
+              </Grid>
+              {workOrder.parentRequest && (
+                <Grid item xs={12} lg={6}>
                   <Typography
                     variant="h6"
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => setOpenEditPrimaryTime(true)}
-                    color="primary"
+                    sx={{ color: theme.colors.alpha.black[70] }}
                   >
-                    {durationToHours(primaryTime?.duration)}
+                    {t('Requested By')}
                   </Typography>
-                )}
-              </Grid>
+                  <Link
+                    variant="h6"
+                    href={getUserUrl(workOrder.parentRequest.createdBy)}
+                  >
+                    {requestedByName}
+                  </Link>
+                </Grid>
+              )}
+              {primaryTime && (
+                <Grid item xs={12} lg={6}>
+                  <Typography
+                    variant="h6"
+                    sx={{ color: theme.colors.alpha.black[70] }}
+                  >
+                    {t('Time')}
+                  </Typography>
+                  {openEditPrimaryTime ? (
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <TextField
+                        value={primaryTimeHours}
+                        type="number"
+                        onChange={(event) =>
+                          setPrimaryTimeHours(Number(event.target.value))
+                        }
+                      />
+                      <Typography variant="h6">h</Typography>
+                      <TextField
+                        value={primaryTimeMinutes}
+                        type="number"
+                        InputProps={{ inputProps: { min: 0, max: 59 } }}
+                        onChange={(event) =>
+                          setPrimaryTimeMinutes(Number(event.target.value))
+                        }
+                      />
+                      <Typography variant="h6">m</Typography>
+                      <Button
+                        startIcon={
+                          savingPrimaryTime ? (
+                            <CircularProgress size="1rem" />
+                          ) : null
+                        }
+                        disabled={savingPrimaryTime}
+                        variant="contained"
+                        onClick={onSavePrimaryTime}
+                      >
+                        {t('Save')}
+                      </Button>
+                    </Stack>
+                  ) : (
+                    <Typography
+                      variant="h6"
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => setOpenEditPrimaryTime(true)}
+                      color="primary"
+                    >
+                      {durationToHours(primaryTime?.duration)}
+                    </Typography>
+                  )}
+                </Grid>
+              )}
               {!!workOrder.assignedTo.length && (
                 <Grid item xs={12} lg={6}>
                   <Typography

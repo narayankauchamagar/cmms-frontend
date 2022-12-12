@@ -54,12 +54,12 @@ export default function RequestDetails({
     dispatch(getSingleUser(request.createdBy));
   }, []);
 
-  const { users } = useSelector((state) => state.users);
+  const { usersMini } = useSelector((state) => state.users);
   const [createdByName, setCreatedByName] = useState<string>('');
 
   useEffect(() => {
-    setCreatedByName(getUserNameById(request.createdBy, users));
-  }, [users, request]);
+    setCreatedByName(getUserNameById(request.createdBy, usersMini));
+  }, [usersMini, request]);
   const onApprove = () => {
     setApproving(true);
     dispatch(approveRequest(request.id))
