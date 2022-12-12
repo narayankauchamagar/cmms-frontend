@@ -11,12 +11,14 @@ interface LocationState {
   locations: Location[];
   locationsHierarchy: LocationRow[];
   locationsMini: LocationMiniDTO[];
+  loadingGet: boolean;
 }
 
 const initialState: LocationState = {
   locations: [],
   locationsHierarchy: [],
-  locationsMini: []
+  locationsMini: [],
+  loadingGet: false
 };
 
 const slice = createSlice({
@@ -88,6 +90,13 @@ const slice = createSlice({
         acc[locationInState] = location;
         return acc;
       }, state.locationsHierarchy);
+    },
+    setLoadingGet(
+      state: LocationState,
+      action: PayloadAction<{ loading: boolean }>
+    ) {
+      const { loading } = action.payload;
+      state.loadingGet = loading;
     }
   }
 });
@@ -132,6 +141,7 @@ export const deleteLocation =
 export const getLocationChildren =
   (id: number, parents: number[]): AppThunk =>
   async (dispatch) => {
+    dispatch(slice.actions.setLoadingGet({ loading: true }));
     const locations = await api.get<Location[]>(`locations/children/${id}`);
     dispatch(
       slice.actions.getLocationChildren({
@@ -141,5 +151,6 @@ export const getLocationChildren =
         })
       })
     );
+    dispatch(slice.actions.setLoadingGet({ loading: false }));
   };
 export default slice;

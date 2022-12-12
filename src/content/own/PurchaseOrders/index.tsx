@@ -51,7 +51,9 @@ function PurchaseOrders() {
   const { hasViewPermission, hasCreatePermission, hasFeature } = useAuth();
   const dispatch = useDispatch();
   const [openDelete, setOpenDelete] = useState<boolean>(false);
-  const { purchaseOrders } = useSelector((state) => state.purchaseOrders);
+  const { purchaseOrders, loadingGet } = useSelector(
+    (state) => state.purchaseOrders
+  );
   const [currentPurchaseOrder, setCurrentPurchaseOrder] =
     useState<PurchaseOrder>();
   const { showSnackBar } = useContext(CustomSnackBarContext);
@@ -452,6 +454,7 @@ function PurchaseOrders() {
                   <CustomDataGrid
                     columns={columns}
                     rows={purchaseOrders}
+                    loading={loadingGet}
                     components={{
                       Toolbar: GridToolbar
                     }}

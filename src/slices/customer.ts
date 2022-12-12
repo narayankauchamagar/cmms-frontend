@@ -7,11 +7,13 @@ import api from '../utils/api';
 interface CustomerState {
   customers: Customer[];
   customersMini: CustomerMiniDTO[];
+  loadingGet: boolean;
 }
 
 const initialState: CustomerState = {
   customers: [],
-  customersMini: []
+  customersMini: [],
+  loadingGet: false
 };
 
 const slice = createSlice({
@@ -60,6 +62,13 @@ const slice = createSlice({
         (customer) => customer.id === id
       );
       state.customers.splice(customerIndex, 1);
+    },
+    setLoadingGet(
+      state: CustomerState,
+      action: PayloadAction<{ loading: boolean }>
+    ) {
+      const { loading } = action.payload;
+      state.loadingGet = loading;
     }
   }
 });
@@ -67,8 +76,10 @@ const slice = createSlice({
 export const reducer = slice.reducer;
 
 export const getCustomers = (): AppThunk => async (dispatch) => {
+  dispatch(slice.actions.setLoadingGet({ loading: true }));
   const customers = await api.get<Customer[]>('customers');
   dispatch(slice.actions.getCustomers({ customers }));
+  dispatch(slice.actions.setLoadingGet({ loading: false }));
 };
 export const getCustomersMini = (): AppThunk => async (dispatch) => {
   const customers = await api.get<CustomerMiniDTO[]>('customers/mini');

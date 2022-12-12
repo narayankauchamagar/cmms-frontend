@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Divider,
   Grid,
   IconButton,
@@ -18,7 +17,6 @@ import { ChangeEvent, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import Part from '../../../models/owns/part';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 import { PermissionEntity } from '../../../models/owns/role';
@@ -351,11 +349,11 @@ export default function PartDetails(props: PartDetailsProps) {
         )}
         {currentTab === 'files' && (
           <Box>
-            <Box display="flex" justifyContent="right">
-              <Button startIcon={<AddTwoToneIcon fontSize="small" />}>
-                {t('File')}
-              </Button>
-            </Box>
+            {/*<Box display="flex" justifyContent="right">*/}
+            {/*  <Button startIcon={<AddTwoToneIcon fontSize="small" />}>*/}
+            {/*    {t('File')}*/}
+            {/*  </Button>*/}
+            {/*</Box>*/}
             <Box sx={{ width: '100%' }}>
               <FilesList
                 confirmMessage={t(

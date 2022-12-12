@@ -2,7 +2,7 @@ import { GridLocaleText } from '@mui/x-data-grid';
 
 const gridLocaleText: GridLocaleText = {
   // Root
-  noRowsLabel: 'No rows',
+  noRowsLabel: 'No Content',
   noResultsOverlayLabel: 'No results found.',
   errorOverlayDefaultLabel: 'An error occurred.',
 

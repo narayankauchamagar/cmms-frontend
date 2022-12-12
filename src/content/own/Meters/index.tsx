@@ -59,7 +59,7 @@ function Meters() {
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const { getFormattedDate, uploadFiles } = useContext(CompanySettingsContext);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
-  const { meters } = useSelector((state) => state.meters);
+  const { meters, loadingGet } = useSelector((state) => state.meters);
 
   useEffect(() => {
     setTitle(t('Meters'));
@@ -418,6 +418,7 @@ function Meters() {
                 <Box sx={{ height: 500, width: '95%' }}>
                   <CustomDataGrid
                     columns={columns}
+                    loading={loadingGet}
                     rows={meters}
                     onRowClick={({ id }) => handleOpenDetails(Number(id))}
                     components={{

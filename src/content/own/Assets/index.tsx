@@ -50,7 +50,7 @@ function Assets() {
     useAuth();
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const { assetsHierarchy } = useSelector((state) => state.assets);
+  const { assetsHierarchy, loadingGet } = useSelector((state) => state.assets);
   const apiRef = useGridApiRef();
   const { getFormattedDate } = useContext(CompanySettingsContext);
   const { showSnackBar } = useContext(CustomSnackBarContext);
@@ -524,6 +524,7 @@ function Assets() {
                   getTreeDataPath={(row) =>
                     row.hierarchy.map((id) => id.toString())
                   }
+                  loading={loadingGet}
                   groupingColDef={groupingColDef}
                   components={{
                     Toolbar: GridToolbar

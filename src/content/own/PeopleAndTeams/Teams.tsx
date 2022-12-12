@@ -30,6 +30,7 @@ import UserAvatars from '../components/UserAvatars';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
+import NoRowsMessage from '../components/NoRowsMessage';
 
 interface PropsType {
   values?: any;
@@ -215,14 +216,10 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
           }}
         />
       ) : (
-        <Box sx={{ mt: 2, px: 3, textAlign: 'center' }}>
-          <Typography variant="h5">
-            {t('Teams help you manage specific groups of people.')}
-          </Typography>
-          <Typography component="span" variant="subtitle2">
-            {t("Press the '+' button to create a team.")}
-          </Typography>
-        </Box>
+        <NoRowsMessage
+          message={t('Teams help you manage specific groups of people.')}
+          action={t("Press the '+' button to create a team.")}
+        />
       )}
     </Box>
   );

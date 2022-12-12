@@ -8,10 +8,12 @@ import WorkOrder from '../models/owns/workOrder';
 const basePath = 'requests';
 interface RequestState {
   requests: Request[];
+  loadingGet: boolean;
 }
 
 const initialState: RequestState = {
-  requests: []
+  requests: [],
+  loadingGet: false
 };
 
 const slice = createSlice({
@@ -71,6 +73,13 @@ const slice = createSlice({
         }
         return request;
       });
+    },
+    setLoadingGet(
+      state: RequestState,
+      action: PayloadAction<{ loading: boolean }>
+    ) {
+      const { loading } = action.payload;
+      state.loadingGet = loading;
     }
   }
 });
@@ -78,8 +87,10 @@ const slice = createSlice({
 export const reducer = slice.reducer;
 
 export const getRequests = (): AppThunk => async (dispatch) => {
+  dispatch(slice.actions.setLoadingGet({ loading: true }));
   const requests = await api.get<Request[]>(basePath);
   dispatch(slice.actions.getRequests({ requests }));
+  dispatch(slice.actions.setLoadingGet({ loading: false }));
 };
 
 export const addRequest =

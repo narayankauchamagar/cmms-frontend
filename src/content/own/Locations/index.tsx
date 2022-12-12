@@ -63,7 +63,7 @@ function Locations() {
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const { getFormattedDate } = useContext(CompanySettingsContext);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
-  const { locationsHierarchy, locations } = useSelector(
+  const { locationsHierarchy, locations, loadingGet } = useSelector(
     (state) => state.locations
   );
   const apiRef = useGridApiRef();
@@ -534,6 +534,7 @@ function Locations() {
                     treeData
                     columns={columns}
                     rows={locationsHierarchy}
+                    loading={loadingGet}
                     apiRef={apiRef}
                     getTreeDataPath={(row) =>
                       row.hierarchy.map((id) => id.toString())

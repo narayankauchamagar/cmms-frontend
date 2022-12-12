@@ -7,10 +7,12 @@ import api, { authHeader } from '../utils/api';
 const basePath = 'files';
 interface FileState {
   files: File[];
+  loadingGet: boolean;
 }
 
 const initialState: FileState = {
-  files: []
+  files: [],
+  loadingGet: false
 };
 
 const slice = createSlice({
@@ -42,6 +44,13 @@ const slice = createSlice({
       const { id } = action.payload;
       const fileIndex = state.files.findIndex((file) => file.id === id);
       state.files.splice(fileIndex, 1);
+    },
+    setLoadingGet(
+      state: FileState,
+      action: PayloadAction<{ loading: boolean }>
+    ) {
+      const { loading } = action.payload;
+      state.loadingGet = loading;
     }
   }
 });
@@ -49,8 +58,10 @@ const slice = createSlice({
 export const reducer = slice.reducer;
 
 export const getFiles = (): AppThunk => async (dispatch) => {
+  dispatch(slice.actions.setLoadingGet({ loading: true }));
   const files = await api.get<File[]>(basePath);
   dispatch(slice.actions.getFiles({ files }));
+  dispatch(slice.actions.setLoadingGet({ loading: false }));
 };
 
 export const addFiles =

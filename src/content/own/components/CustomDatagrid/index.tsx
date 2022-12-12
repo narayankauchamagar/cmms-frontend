@@ -32,12 +32,12 @@ function CustomDataGrid(props: CustomDatagridProps) {
       components={{
         NoRowsOverlay: () => (
           <Stack height="100%" alignItems="center" justifyContent="center">
-            <Typography variant="h5">{t('No rows')}</Typography>
+            <Typography variant="h3">{t('No Content')}</Typography>
           </Stack>
         ),
         NoResultsOverlay: () => (
           <Stack height="100%" alignItems="center" justifyContent="center">
-            <Typography variant="h5">
+            <Typography variant="h3">
               {t('No result for your search criteria')}
             </Typography>
           </Stack>

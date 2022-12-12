@@ -7,11 +7,13 @@ import api from '../utils/api';
 interface UserState {
   users: User[];
   usersMini: UserMiniDTO[];
+  loadingGet: boolean;
 }
 
 const initialState: UserState = {
   users: [],
-  usersMini: []
+  usersMini: [],
+  loadingGet: false
 };
 
 const slice = createSlice({
@@ -56,6 +58,13 @@ const slice = createSlice({
       const { id } = action.payload;
       const userIndex = state.users.findIndex((user) => user.id === id);
       state.users.splice(userIndex, 1);
+    },
+    setLoadingGet(
+      state: UserState,
+      action: PayloadAction<{ loading: boolean }>
+    ) {
+      const { loading } = action.payload;
+      state.loadingGet = loading;
     }
   }
 });
@@ -63,8 +72,10 @@ const slice = createSlice({
 export const reducer = slice.reducer;
 
 export const getUsers = (): AppThunk => async (dispatch) => {
+  dispatch(slice.actions.setLoadingGet({ loading: true }));
   const users = await api.get<User[]>('users');
   dispatch(slice.actions.getUsers({ users }));
+  dispatch(slice.actions.setLoadingGet({ loading: false }));
 };
 export const getSingleUser =
   (id: number): AppThunk =>

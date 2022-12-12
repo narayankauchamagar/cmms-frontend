@@ -7,11 +7,13 @@ import api from '../utils/api';
 interface VendorState {
   vendors: Vendor[];
   vendorsMini: VendorMiniDTO[];
+  loadingGet: boolean;
 }
 
 const initialState: VendorState = {
   vendors: [],
-  vendorsMini: []
+  vendorsMini: [],
+  loadingGet: false
 };
 
 const slice = createSlice({
@@ -49,6 +51,13 @@ const slice = createSlice({
       const { id } = action.payload;
       const vendorIndex = state.vendors.findIndex((vendor) => vendor.id === id);
       state.vendors.splice(vendorIndex, 1);
+    },
+    setLoadingGet(
+      state: VendorState,
+      action: PayloadAction<{ loading: boolean }>
+    ) {
+      const { loading } = action.payload;
+      state.loadingGet = loading;
     }
   }
 });
@@ -56,8 +65,10 @@ const slice = createSlice({
 export const reducer = slice.reducer;
 
 export const getVendors = (): AppThunk => async (dispatch) => {
+  dispatch(slice.actions.setLoadingGet({ loading: true }));
   const vendors = await api.get<Vendor[]>('vendors');
   dispatch(slice.actions.getVendors({ vendors }));
+  dispatch(slice.actions.setLoadingGet({ loading: false }));
 };
 export const getVendorsMini = (): AppThunk => async (dispatch) => {
   const vendors = await api.get<Vendor[]>('vendors/mini');

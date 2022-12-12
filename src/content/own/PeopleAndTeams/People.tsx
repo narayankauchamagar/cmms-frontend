@@ -46,7 +46,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
   const [currentUser, setCurrentUser] = useState<OwnUser>();
   const [detailDrawerOpen, setDetailDrawerOpen] = useState(false);
   const { peopleId } = useParams();
-  const { users } = useSelector((state) => state.users);
+  const { users, loadingGet } = useSelector((state) => state.users);
   const dispatch = useDispatch();
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const [emails, setEmails] = useState<string[]>([]);
@@ -159,6 +159,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
     >
       <CustomDataGrid
         rows={users}
+        loading={loadingGet}
         columns={columns}
         components={{
           Toolbar: GridToolbar

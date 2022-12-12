@@ -45,7 +45,7 @@ const Parts = ({ setAction }: PropsType) => {
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const { getFormattedDate, uploadFiles } = useContext(CompanySettingsContext);
-  const { parts } = useSelector((state) => state.parts);
+  const { parts, loadingGet } = useSelector((state) => state.parts);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [currentPart, setCurrentPart] = useState<Part>();
@@ -537,6 +537,7 @@ const Parts = ({ setAction }: PropsType) => {
           <CustomDataGrid
             columns={columns}
             rows={parts}
+            loading={loadingGet}
             components={{
               Toolbar: GridToolbar
             }}

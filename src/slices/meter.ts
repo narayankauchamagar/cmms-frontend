@@ -8,11 +8,13 @@ const basePath = 'meters';
 interface MeterState {
   meters: Meter[];
   metersByAsset: { [id: number]: Meter[] };
+  loadingGet: boolean;
 }
 
 const initialState: MeterState = {
   meters: [],
-  metersByAsset: {}
+  metersByAsset: {},
+  loadingGet: false
 };
 
 const slice = createSlice({
@@ -47,6 +49,13 @@ const slice = createSlice({
       const { id } = action.payload;
       const meterIndex = state.meters.findIndex((meter) => meter.id === id);
       state.meters.splice(meterIndex, 1);
+    },
+    setLoadingGet(
+      state: MeterState,
+      action: PayloadAction<{ loading: boolean }>
+    ) {
+      const { loading } = action.payload;
+      state.loadingGet = loading;
     }
   }
 });
@@ -54,8 +63,10 @@ const slice = createSlice({
 export const reducer = slice.reducer;
 
 export const getMeters = (): AppThunk => async (dispatch) => {
+  dispatch(slice.actions.setLoadingGet({ loading: true }));
   const meters = await api.get<Meter[]>(basePath);
   dispatch(slice.actions.getMeters({ meters }));
+  dispatch(slice.actions.setLoadingGet({ loading: false }));
 };
 
 export const addMeter =

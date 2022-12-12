@@ -8,11 +8,13 @@ const basePath = 'parts';
 interface PartState {
   parts: Part[];
   partsMini: PartMiniDTO[];
+  loadingGet: boolean;
 }
 
 const initialState: PartState = {
   parts: [],
-  partsMini: []
+  partsMini: [],
+  loadingGet: false
 };
 
 const slice = createSlice({
@@ -47,6 +49,13 @@ const slice = createSlice({
       const { id } = action.payload;
       const partIndex = state.parts.findIndex((part) => part.id === id);
       state.parts.splice(partIndex, 1);
+    },
+    setLoadingGet(
+      state: PartState,
+      action: PayloadAction<{ loading: boolean }>
+    ) {
+      const { loading } = action.payload;
+      state.loadingGet = loading;
     }
   }
 });
@@ -54,8 +63,10 @@ const slice = createSlice({
 export const reducer = slice.reducer;
 
 export const getParts = (): AppThunk => async (dispatch) => {
+  dispatch(slice.actions.setLoadingGet({ loading: true }));
   const parts = await api.get<Part[]>(basePath);
   dispatch(slice.actions.getParts({ parts }));
+  dispatch(slice.actions.setLoadingGet({ loading: false }));
 };
 export const getPartsMini = (): AppThunk => async (dispatch) => {
   const parts = await api.get<PartMiniDTO[]>(`${basePath}/mini`);

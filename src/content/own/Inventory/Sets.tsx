@@ -48,7 +48,7 @@ const Sets = ({ setAction }: PropsType) => {
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const { getFormattedDate } = useContext(CompanySettingsContext);
-  const { multiParts } = useSelector((state) => state.multiParts);
+  const { multiParts, loadingGet } = useSelector((state) => state.multiParts);
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [currentSet, setCurrentSet] = useState<SetType>();
@@ -328,6 +328,7 @@ const Sets = ({ setAction }: PropsType) => {
           <CustomDataGrid
             columns={columns}
             rows={multiParts}
+            loading={loadingGet}
             components={{
               Toolbar: GridToolbar
             }}

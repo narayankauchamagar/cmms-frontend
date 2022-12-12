@@ -13,6 +13,7 @@ interface AssetState {
   assetsByLocation: { [key: number]: AssetDTO[] };
   assetsByPart: { [key: number]: AssetDTO[] };
   assetsMini: AssetMiniDTO[];
+  loadingGet: boolean;
 }
 
 const initialState: AssetState = {
@@ -21,7 +22,8 @@ const initialState: AssetState = {
   assetInfos: {},
   assetsByLocation: {},
   assetsByPart: {},
-  assetsMini: []
+  assetsMini: [],
+  loadingGet: false
 };
 
 const slice = createSlice({
@@ -54,6 +56,13 @@ const slice = createSlice({
       const { id } = action.payload;
       const assetIndex = state.assets.findIndex((asset) => asset.id === id);
       state.assets.splice(assetIndex, 1);
+    },
+    setLoadingGet(
+      state: AssetState,
+      action: PayloadAction<{ loading: boolean }>
+    ) {
+      const { loading } = action.payload;
+      state.loadingGet = loading;
     },
     getAssetChildren(
       state: AssetState,
@@ -149,6 +158,7 @@ export const deleteAsset =
 export const getAssetChildren =
   (id: number, parents: number[]): AppThunk =>
   async (dispatch) => {
+    dispatch(slice.actions.setLoadingGet({ loading: true }));
     const assets = await api.get<AssetDTO[]>(`${basePath}/children/${id}`);
     dispatch(
       slice.actions.getAssetChildren({
@@ -158,6 +168,7 @@ export const getAssetChildren =
         })
       })
     );
+    dispatch(slice.actions.setLoadingGet({ loading: false }));
   };
 
 export const getAssetDetails =

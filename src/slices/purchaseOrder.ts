@@ -7,10 +7,12 @@ import api from '../utils/api';
 const basePath = 'purchase-orders';
 interface PurchaseOrderState {
   purchaseOrders: PurchaseOrder[];
+  loadingGet: boolean;
 }
 
 const initialState: PurchaseOrderState = {
-  purchaseOrders: []
+  purchaseOrders: [],
+  loadingGet: false
 };
 
 const slice = createSlice({
@@ -52,6 +54,13 @@ const slice = createSlice({
         (purchaseOrder) => purchaseOrder.id === id
       );
       state.purchaseOrders.splice(purchaseOrderIndex, 1);
+    },
+    setLoadingGet(
+      state: PurchaseOrderState,
+      action: PayloadAction<{ loading: boolean }>
+    ) {
+      const { loading } = action.payload;
+      state.loadingGet = loading;
     }
   }
 });
@@ -59,8 +68,10 @@ const slice = createSlice({
 export const reducer = slice.reducer;
 
 export const getPurchaseOrders = (): AppThunk => async (dispatch) => {
+  dispatch(slice.actions.setLoadingGet({ loading: true }));
   const purchaseOrders = await api.get<PurchaseOrder[]>(basePath);
   dispatch(slice.actions.getPurchaseOrders({ purchaseOrders }));
+  dispatch(slice.actions.setLoadingGet({ loading: false }));
 };
 
 export const addPurchaseOrder =

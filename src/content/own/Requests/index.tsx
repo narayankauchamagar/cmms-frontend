@@ -63,7 +63,7 @@ function Files() {
   const { requestId } = useParams();
   const dispatch = useDispatch();
   const [openDelete, setOpenDelete] = useState<boolean>(false);
-  const { requests } = useSelector((state) => state.requests);
+  const { requests, loadingGet } = useSelector((state) => state.requests);
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const navigate = useNavigate();
 
@@ -403,6 +403,7 @@ function Files() {
               <Box sx={{ height: 500, width: '95%' }}>
                 <CustomDataGrid
                   columns={columns}
+                  loading={loadingGet}
                   rows={requests}
                   onRowClick={({ id }) => handleOpenDetails(Number(id))}
                   components={{

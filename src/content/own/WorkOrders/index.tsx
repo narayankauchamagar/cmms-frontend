@@ -54,7 +54,7 @@ import { getUserNameById } from '../../../utils/displayers';
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
   const [currentTab, setCurrentTab] = useState<string>('list');
-  const { workOrders } = useSelector((state) => state.workOrders);
+  const { workOrders, loadingGet } = useSelector((state) => state.workOrders);
   const dispatch = useDispatch();
   const { uploadFiles } = useContext(CompanySettingsContext);
   const { companySettings, getFilteredFields } = useAuth();
@@ -711,6 +711,7 @@ function WorkOrders() {
                 <CustomDataGrid
                   columns={columns}
                   rows={workOrders}
+                  loading={loadingGet}
                   components={{
                     Toolbar: GridToolbar
                   }}

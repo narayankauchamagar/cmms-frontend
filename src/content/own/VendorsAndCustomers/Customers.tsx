@@ -50,7 +50,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
     useState<boolean>(false);
   const { customerId } = useParams();
   const dispatch = useDispatch();
-  const { customers } = useSelector((state) => state.customers);
+  const { customers, loadingGet } = useSelector((state) => state.customers);
   const { hasEditPermission, hasDeletePermission } = useAuth();
   const [currentCustomer, setCurrentCustomer] = useState<Customer>();
   const [viewOrUpdate, setViewOrUpdate] = useState<'view' | 'update'>('view');
@@ -342,6 +342,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
       <CustomDataGrid
         rows={customers}
         columns={columns}
+        loading={loadingGet}
         components={{
           Toolbar: GridToolbar
         }}

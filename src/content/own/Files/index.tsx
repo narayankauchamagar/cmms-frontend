@@ -43,7 +43,7 @@ function Files() {
   const { setTitle } = useContext(TitleContext);
   const { getFormattedDate } = useContext(CompanySettingsContext);
   const { showSnackBar } = useContext(CustomSnackBarContext);
-  const { files } = useSelector((state) => state.files);
+  const { files, loadingGet } = useSelector((state) => state.files);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
@@ -287,6 +287,7 @@ function Files() {
                   <CustomDataGrid
                     columns={columns}
                     rows={files}
+                    loading={loadingGet}
                     components={{
                       Toolbar: GridToolbar
                     }}

@@ -7,10 +7,12 @@ import api from '../utils/api';
 const basePath = 'multi-parts';
 interface MultiPartState {
   multiParts: SetType[];
+  loadingGet: boolean;
 }
 
 const initialState: MultiPartState = {
-  multiParts: []
+  multiParts: [],
+  loadingGet: false
 };
 
 const slice = createSlice({
@@ -52,6 +54,13 @@ const slice = createSlice({
         (multiPart) => multiPart.id === id
       );
       state.multiParts.splice(multiPartIndex, 1);
+    },
+    setLoadingGet(
+      state: MultiPartState,
+      action: PayloadAction<{ loading: boolean }>
+    ) {
+      const { loading } = action.payload;
+      state.loadingGet = loading;
     }
   }
 });
@@ -59,8 +68,10 @@ const slice = createSlice({
 export const reducer = slice.reducer;
 
 export const getMultiParts = (): AppThunk => async (dispatch) => {
+  dispatch(slice.actions.setLoadingGet({ loading: true }));
   const multiParts = await api.get<SetType[]>(basePath);
   dispatch(slice.actions.getMultiParts({ multiParts }));
+  dispatch(slice.actions.setLoadingGet({ loading: false }));
 };
 
 export const addMultiParts =

@@ -10,12 +10,14 @@ interface WorkOrderState {
   workOrders: WorkOrder[];
   workOrdersByLocation: { [key: number]: WorkOrder[] };
   workOrdersByPart: { [key: number]: WorkOrder[] };
+  loadingGet: boolean;
 }
 
 const initialState: WorkOrderState = {
   workOrders: [],
   workOrdersByLocation: {},
-  workOrdersByPart: {}
+  workOrdersByPart: {},
+  loadingGet: false
 };
 
 const slice = createSlice({
@@ -71,6 +73,13 @@ const slice = createSlice({
     ) {
       const { workOrders, id } = action.payload;
       state.workOrdersByPart[id] = workOrders;
+    },
+    setLoadingGet(
+      state: WorkOrderState,
+      action: PayloadAction<{ loading: boolean }>
+    ) {
+      const { loading } = action.payload;
+      state.loadingGet = loading;
     }
   }
 });
@@ -78,8 +87,10 @@ const slice = createSlice({
 export const reducer = slice.reducer;
 
 export const getWorkOrders = (): AppThunk => async (dispatch) => {
+  dispatch(slice.actions.setLoadingGet({ loading: true }));
   const workOrders = await api.get<WorkOrder[]>(basePath);
   dispatch(slice.actions.getWorkOrders({ workOrders }));
+  dispatch(slice.actions.setLoadingGet({ loading: false }));
 };
 
 export const addWorkOrder =

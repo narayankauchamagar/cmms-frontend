@@ -51,7 +51,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
   const { vendorId } = useParams();
   const dispatch = useDispatch();
   const [openDelete, setOpenDelete] = useState<boolean>(false);
-  const { vendors } = useSelector((state) => state.vendors);
+  const { vendors, loadingGet } = useSelector((state) => state.vendors);
   const [currentVendor, setCurrentVendor] = useState<Vendor>();
   const [viewOrUpdate, setViewOrUpdate] = useState<'view' | 'update'>('view');
   const { showSnackBar } = useContext(CustomSnackBarContext);
@@ -329,6 +329,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
       <CustomDataGrid
         rows={vendors}
         columns={columns}
+        loading={loadingGet}
         components={{
           Toolbar: GridToolbar
         }}
