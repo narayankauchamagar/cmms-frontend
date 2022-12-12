@@ -39,6 +39,7 @@ import { PermissionEntity } from '../../../models/owns/role';
 import PermissionErrorMessage from '../components/PermissionErrorMessage';
 import { PlanFeature } from '../../../models/owns/subscriptionPlan';
 import FeatureErrorMessage from '../components/FeatureErrorMessage';
+import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
 
 function PurchaseOrders() {
   const { t }: { t: any } = useTranslation();
@@ -456,7 +457,17 @@ function PurchaseOrders() {
                     rows={purchaseOrders}
                     loading={loadingGet}
                     components={{
-                      Toolbar: GridToolbar
+                      Toolbar: GridToolbar,
+                      NoRowsOverlay: () => (
+                        <NoRowsMessageWrapper
+                          message={t(
+                            'Manage your Purchase Orders in a single place'
+                          )}
+                          action={t(
+                            "Press the '+' button to create a Purchase Order."
+                          )}
+                        />
+                      )
                     }}
                     onRowClick={(params) =>
                       handleOpenDetails(Number(params.id))

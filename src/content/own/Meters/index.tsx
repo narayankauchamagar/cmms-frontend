@@ -40,6 +40,7 @@ import { PermissionEntity } from '../../../models/owns/role';
 import PermissionErrorMessage from '../components/PermissionErrorMessage';
 import FeatureErrorMessage from '../components/FeatureErrorMessage';
 import { PlanFeature } from '../../../models/owns/subscriptionPlan';
+import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
 
 function Meters() {
   const { t }: { t: any } = useTranslation();
@@ -422,7 +423,15 @@ function Meters() {
                     rows={meters}
                     onRowClick={({ id }) => handleOpenDetails(Number(id))}
                     components={{
-                      Toolbar: GridToolbar
+                      Toolbar: GridToolbar,
+                      NoRowsOverlay: () => (
+                        <NoRowsMessageWrapper
+                          message={t(
+                            'Meter readings give you the ability to monitor assets and trigger new work orders based on defined conditions'
+                          )}
+                          action={t("Press the '+' button to create a Meter")}
+                        />
+                      )
                     }}
                     initialState={{
                       columns: {

@@ -10,6 +10,7 @@ import {
   Grid,
   Tab,
   Tabs,
+  Tooltip,
   Typography,
   useTheme
 } from '@mui/material';
@@ -51,8 +52,8 @@ import { PermissionEntity } from '../../../models/owns/role';
 import PermissionErrorMessage from '../components/PermissionErrorMessage';
 import { getUsersMini } from '../../../slices/user';
 import { getUserNameById } from '../../../utils/displayers';
-import NoRowsMessage from '../components/NoRowsMessage';
 import ConfirmDialog from '../components/ConfirmDialog';
+import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
@@ -64,8 +65,9 @@ function WorkOrders() {
   const { workOrderConfiguration } = companySettings;
   const { getFormattedDate } = useContext(CompanySettingsContext);
   const tabs = [
-    { value: 'list', label: t('List View') },
-    { value: 'map', label: t('Map View') }
+    { value: 'list', label: t('List View'), disabled: false },
+    { value: 'calendar', label: t('Calendar View'), disabled: true },
+    { value: 'column', label: t('Column View'), disabled: true }
   ];
   const theme = useTheme();
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
@@ -699,9 +701,22 @@ function WorkOrders() {
               textColor="primary"
               indicatorColor="primary"
             >
-              {tabs.map((tab) => (
-                <Tab key={tab.value} label={tab.label} value={tab.value} />
-              ))}
+              {tabs.map((tab) =>
+                tab.disabled ? (
+                  <Tooltip title={t('Coming Soon')} placement="top">
+                    <span>
+                      <Tab
+                        key={tab.value}
+                        label={tab.label}
+                        value={tab.value}
+                        disabled={tab.disabled}
+                      />
+                    </span>
+                  </Tooltip>
+                ) : (
+                  <Tab key={tab.value} label={tab.label} value={tab.value} />
+                )
+              )}
             </Tabs>
             {hasCreatePermission(PermissionEntity.WORK_ORDERS) && (
               <Button
@@ -725,31 +740,30 @@ function WorkOrders() {
               }}
             >
               <Box sx={{ height: 500, width: '95%' }}>
-                {!loadingGet && !workOrders.length ? (
-                  <NoRowsMessage
-                    message={t(
-                      'Work Orders are tasks or jobs, that can be scheduled or assigned to someone'
-                    )}
-                    action={t("Press the '+' button to create a Work Order.")}
-                  />
-                ) : (
-                  <CustomDataGrid
-                    columns={columns}
-                    rows={workOrders}
-                    loading={loadingGet}
-                    components={{
-                      Toolbar: GridToolbar
-                    }}
-                    onRowClick={(params) =>
-                      handleOpenDetails(Number(params.id))
+                <CustomDataGrid
+                  columns={columns}
+                  rows={workOrders}
+                  loading={loadingGet}
+                  components={{
+                    Toolbar: GridToolbar,
+                    NoRowsOverlay: () => (
+                      <NoRowsMessageWrapper
+                        message={t(
+                          'Work Orders are tasks or jobs, that can be scheduled or assigned to someone'
+                        )}
+                        action={t(
+                          "Press the '+' button to create a Work Order"
+                        )}
+                      />
+                    )
+                  }}
+                  onRowClick={(params) => handleOpenDetails(Number(params.id))}
+                  initialState={{
+                    columns: {
+                      columnVisibilityModel: {}
                     }
-                    initialState={{
-                      columns: {
-                        columnVisibilityModel: {}
-                      }
-                    }}
-                  />
-                )}
+                  }}
+                />
               </Box>
             </Card>
           </Grid>

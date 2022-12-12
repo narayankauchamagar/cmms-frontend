@@ -40,6 +40,7 @@ import { getAssetUrl } from '../../../utils/urlPaths';
 import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
 import PermissionErrorMessage from '../components/PermissionErrorMessage';
+import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
 
 function Assets() {
   const { t }: { t: any } = useTranslation();
@@ -527,7 +528,17 @@ function Assets() {
                   loading={loadingGet}
                   groupingColDef={groupingColDef}
                   components={{
-                    Toolbar: GridToolbar
+                    Toolbar: GridToolbar,
+                    NoRowsOverlay: () => (
+                      <NoRowsMessageWrapper
+                        message={t(
+                          'Assets are resources on which your company can intervene'
+                        )}
+                        action={t(
+                          "Press the '+' button to create a new Asset."
+                        )}
+                      />
+                    )
                   }}
                   onRowClick={(params) => {
                     navigate(getAssetUrl(params.id));

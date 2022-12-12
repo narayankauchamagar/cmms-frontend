@@ -36,6 +36,7 @@ import {
 } from '../../../slices/multipart';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
+import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
 
 interface PropsType {
   setAction: (p: () => () => void) => void;
@@ -330,7 +331,15 @@ const Sets = ({ setAction }: PropsType) => {
             rows={multiParts}
             loading={loadingGet}
             components={{
-              Toolbar: GridToolbar
+              Toolbar: GridToolbar,
+              NoRowsOverlay: () => (
+                <NoRowsMessageWrapper
+                  message={t(
+                    'Manage your inventory by combining inventory part items into a single item which can be a kit, bundle or package'
+                  )}
+                  action={t("Press the '+' button to create a Set")}
+                />
+              )
             }}
             onRowClick={(params) => {
               handleOpenDetails(Number(params.id));

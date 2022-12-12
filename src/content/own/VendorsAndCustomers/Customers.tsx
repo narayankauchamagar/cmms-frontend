@@ -37,6 +37,7 @@ import ConfirmDialog from '../components/ConfirmDialog';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
+import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
 
 interface PropsType {
   values?: any;
@@ -344,7 +345,13 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
         columns={columns}
         loading={loadingGet}
         components={{
-          Toolbar: GridToolbar
+          Toolbar: GridToolbar,
+          NoRowsOverlay: () => (
+            <NoRowsMessageWrapper
+              message={t('Customers are external workers')}
+              action={t("Press the '+' button to create a Customer")}
+            />
+          )
         }}
         initialState={{
           columns: {

@@ -37,6 +37,7 @@ import { Vendor } from '../../../models/owns/vendor';
 import { useParams } from 'react-router-dom';
 import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
+import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
 
 interface PropsType {
   values?: any;
@@ -331,7 +332,15 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
         columns={columns}
         loading={loadingGet}
         components={{
-          Toolbar: GridToolbar
+          Toolbar: GridToolbar,
+          NoRowsOverlay: () => (
+            <NoRowsMessageWrapper
+              message={t(
+                'Vendors are organizations that provide Assets or Parts'
+              )}
+              action={t("Press the '+' button to create a Vendor")}
+            />
+          )
         }}
         initialState={{
           columns: {

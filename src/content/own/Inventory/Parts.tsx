@@ -34,6 +34,7 @@ import UserAvatars from '../components/UserAvatars';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 import useAuth from '../../../hooks/useAuth';
+import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
 
 interface PropsType {
   setAction: (p: () => () => void) => void;
@@ -539,7 +540,13 @@ const Parts = ({ setAction }: PropsType) => {
             rows={parts}
             loading={loadingGet}
             components={{
-              Toolbar: GridToolbar
+              Toolbar: GridToolbar,
+              NoRowsOverlay: () => (
+                <NoRowsMessageWrapper
+                  message={t('Parts can be combined into assets or used alone')}
+                  action={t("Press the '+' button to create a Part")}
+                />
+              )
             }}
             onRowClick={(params) => {
               handleOpenDetails(Number(params.id));

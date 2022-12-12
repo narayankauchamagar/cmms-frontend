@@ -44,6 +44,7 @@ import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext
 import { getWOBaseFields } from '../../../utils/fields';
 import { PermissionEntity } from '../../../models/owns/role';
 import PermissionErrorMessage from '../components/PermissionErrorMessage';
+import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
@@ -407,7 +408,15 @@ function Files() {
                   rows={requests}
                   onRowClick={({ id }) => handleOpenDetails(Number(id))}
                   components={{
-                    Toolbar: GridToolbar
+                    Toolbar: GridToolbar,
+                    NoRowsOverlay: () => (
+                      <NoRowsMessageWrapper
+                        message={t('Manage your Work Requests')}
+                        action={t(
+                          "Press the '+' button to create a Work Request"
+                        )}
+                      />
+                    )
                   }}
                   initialState={{
                     columns: {

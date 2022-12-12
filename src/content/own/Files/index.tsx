@@ -37,6 +37,7 @@ import { PlanFeature } from '../../../models/owns/subscriptionPlan';
 import FeatureErrorMessage from '../components/FeatureErrorMessage';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
+import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
@@ -289,7 +290,13 @@ function Files() {
                     rows={files}
                     loading={loadingGet}
                     components={{
-                      Toolbar: GridToolbar
+                      Toolbar: GridToolbar,
+                      NoRowsOverlay: () => (
+                        <NoRowsMessageWrapper
+                          message={t('Get All files in a Single place')}
+                          action={t("Press the '+' button to upload a File")}
+                        />
+                      )
                     }}
                     onRowClick={(params: GridRowParams<File>) =>
                       window.open(params.row.url, '_blank')

@@ -55,6 +55,7 @@ import { AssetRow } from '../../../models/owns/asset';
 import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
 import PermissionErrorMessage from '../components/PermissionErrorMessage';
+import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
 
 function Locations() {
   const { t }: { t: any } = useTranslation();
@@ -541,7 +542,17 @@ function Locations() {
                     }
                     groupingColDef={groupingColDef}
                     components={{
-                      Toolbar: GridToolbar
+                      Toolbar: GridToolbar,
+                      NoRowsOverlay: () => (
+                        <NoRowsMessageWrapper
+                          message={t(
+                            'Locations let you manage more efficiently assets and workers'
+                          )}
+                          action={t(
+                            "Press the '+' button to create a Location"
+                          )}
+                        />
+                      )
                     }}
                     onRowClick={(params) =>
                       handleOpenDetails(Number(params.id))
