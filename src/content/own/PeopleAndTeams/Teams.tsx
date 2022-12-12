@@ -20,7 +20,7 @@ import {
 import { Close } from '@mui/icons-material';
 import { isNumeric } from 'src/utils/validators';
 import { useParams } from 'react-router-dom';
-import { addTeam, deleteTeam, getTeams } from '../../../slices/team';
+import { addTeam, deleteTeam, editTeam, getTeams } from '../../../slices/team';
 import { useDispatch, useSelector } from '../../../store';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useContext, useEffect, useState } from 'react';
@@ -28,7 +28,6 @@ import { formatSelectMultiple } from '../../../utils/formatters';
 import { UserMiniDTO } from '../../../models/user';
 import UserAvatars from '../components/UserAvatars';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
-import wait from 'src/utils/wait';
 import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
 
@@ -271,7 +270,18 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
           {hasDeletePermission(
             PermissionEntity.PEOPLE_AND_TEAMS,
             currentTeam
-          ) && <Typography variant="subtitle1">{t('Delete')}</Typography>}
+          ) && (
+            <Typography
+              variant="subtitle1"
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                setIsTeamDetailsOpen(false);
+                setOpenDelete(true);
+              }}
+            >
+              {t('Delete')}
+            </Typography>
+          )}
         </Box>
         <IconButton
           aria-label="close"
@@ -325,12 +335,13 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
               }
               onChange={({ field, e }) => {}}
               onSubmit={async (values) => {
-                try {
-                  await wait(2000);
-                  setViewOrUpdate('view');
-                } catch (err) {
-                  console.error(err);
-                }
+                values.users = formatSelectMultiple(values.users);
+                return dispatch(editTeam(currentTeam.id, values))
+                  .then(() => {
+                    onEditSuccess();
+                    setViewOrUpdate('view');
+                  })
+                  .catch(onEditFailure);
               }}
             />
           </Box>
@@ -356,10 +367,11 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
         open={openDelete}
         onCancel={() => {
           setOpenDelete(false);
+          setIsTeamDetailsOpen(true);
         }}
         onConfirm={() => handleDelete(currentTeam?.id)}
         confirmText={t('Delete')}
-        question={t('Are you sure you want to delete this Vendor?')}
+        question={t('Are you sure you want to delete this Team?')}
       />
     </Box>
   );

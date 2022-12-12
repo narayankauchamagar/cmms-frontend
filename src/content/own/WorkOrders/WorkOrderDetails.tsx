@@ -71,6 +71,7 @@ import { PermissionEntity } from '../../../models/owns/role';
 import { getSingleUser } from '../../../slices/user';
 import { getUserNameById } from '../../../utils/displayers';
 import FilesList from '../components/FilesList';
+import { PlanFeature } from '../../../models/owns/subscriptionPlan';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;
@@ -112,7 +113,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);
-  const { companySettings } = useAuth();
+  const { companySettings, hasFeature } = useAuth();
   const { workOrderConfiguration, generalPreferences } = companySettings;
   const [openEditPrimaryTime, setOpenEditPrimaryTime] =
     useState<boolean>(false);
@@ -511,7 +512,15 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                         if (event.target.value === 'COMPLETE') {
                           if (canComplete()) {
                             if (workOrder.requiredSignature) {
-                              setOpenSignatureModal(true);
+                              if (hasFeature(PlanFeature.SIGNATURE)) {
+                                setOpenSignatureModal(true);
+                              } else
+                                showSnackBar(
+                                  t(
+                                    'Signature on Work Order completion is not available in your current subscription plan.'
+                                  ),
+                                  'error'
+                                );
                               return;
                             }
                           } else return;

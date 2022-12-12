@@ -30,7 +30,7 @@ const PeopleAndTeams = ({}: PropsType) => {
   const tabIndex = regex.test(location.pathname) ? 1 : 0;
 
   const tabs = [
-    { value: '', label: t('People') },
+    { value: 'people', label: t('People') },
     { value: 'teams', label: t('Teams') }
   ];
 
