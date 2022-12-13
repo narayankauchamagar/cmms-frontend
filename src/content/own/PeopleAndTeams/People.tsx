@@ -17,8 +17,10 @@ import {
 import { useTranslation } from 'react-i18next';
 import CustomDataGrid from '../components/CustomDatagrid';
 import {
+  GridActionsCellItem,
   GridEnrichedColDef,
   GridRenderCellParams,
+  GridRowParams,
   GridToolbar
 } from '@mui/x-data-grid';
 import { useContext, useEffect, useState } from 'react';
@@ -31,8 +33,15 @@ import { useParams } from 'react-router-dom';
 import { emailRegExp, isNumeric } from 'src/utils/validators';
 import { useDispatch, useSelector } from '../../../store';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
-import { getUsers, inviteUsers } from '../../../slices/user';
+import { editUser, getUsers, inviteUsers } from '../../../slices/user';
 import { OwnUser } from '../../../models/user';
+import { PermissionEntity, Role } from '../../../models/owns/role';
+import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
+import useAuth from '../../../hooks/useAuth';
+import Form from '../components/form';
+import * as Yup from 'yup';
+import { IField } from '../type';
+import { formatSelect } from '../../../utils/formatters';
 
 interface PropsType {
   values?: any;
@@ -46,13 +55,22 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
   const [currentUser, setCurrentUser] = useState<OwnUser>();
   const [detailDrawerOpen, setDetailDrawerOpen] = useState(false);
   const { peopleId } = useParams();
+  const { hasEditPermission } = useAuth();
   const { users, loadingGet } = useSelector((state) => state.users);
   const dispatch = useDispatch();
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const [emails, setEmails] = useState<string[]>([]);
+  const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const [currentEmail, setCurrentEmail] = useState<string>('');
   const [isInviteSubmitting, setIsInviteSubmitting] = useState(false);
   const [roleId, setRoleId] = useState<number>();
+
+  const onEditSuccess = () => {
+    setOpenUpdateModal(false);
+    showSnackBar(t('The changes have been saved'), 'success');
+  };
+  const onEditFailure = (err) =>
+    showSnackBar(t("The User couldn't be edited"), 'error');
 
   const handleOpenDetails = (id: number) => {
     const foundUser = users.find((user) => user.id === id);
@@ -66,11 +84,91 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
       setDetailDrawerOpen(true);
     }
   };
+  const handleOpenUpdate = (id: number) => {
+    const foundUser = users.find((user) => user.id === id);
+    if (foundUser) {
+      setCurrentUser(foundUser);
+      setOpenUpdateModal(true);
+    }
+  };
   const handleCloseDetails = () => {
-    window.history.replaceState(null, 'User', `/app/people-teams`);
+    window.history.replaceState(null, 'User', `/app/people-teams/people`);
     setDetailDrawerOpen(false);
   };
-
+  const defautfields: Array<IField> = [
+    {
+      name: 'rate',
+      type: 'number',
+      label: t('Rate')
+    },
+    {
+      name: 'role',
+      type: 'select',
+      type2: 'role',
+      label: t('Role')
+    }
+  ];
+  const getFields = () => {
+    let fields = [...defautfields];
+    if (currentUser?.ownsCompany) {
+      const roleIndex = fields.findIndex((field) => field.name === 'role');
+      fields.splice(roleIndex, 1);
+    }
+    return fields;
+  };
+  const renderEditUserModal = () => (
+    <Dialog
+      fullWidth
+      maxWidth="md"
+      open={openUpdateModal}
+      onClose={() => setOpenUpdateModal(false)}
+    >
+      <DialogTitle
+        sx={{
+          p: 3
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
+          {t('Edit User')}
+        </Typography>
+        <Typography variant="subtitle2">
+          {t('Fill in the fields below to edit the user')}
+        </Typography>
+      </DialogTitle>
+      <DialogContent
+        dividers
+        sx={{
+          p: 3
+        }}
+      >
+        <Box>
+          <Form
+            fields={getFields()}
+            validation={Yup.object().shape({})}
+            submitText={t('Save')}
+            values={{
+              rate: currentUser?.rate,
+              role: currentUser
+                ? { label: currentUser.role.name, value: currentUser.role.id }
+                : null
+            }}
+            onChange={({ field, e }) => {}}
+            onSubmit={async (values) => {
+              return dispatch(
+                editUser(currentUser.id, {
+                  ...currentUser,
+                  rate: values.rate,
+                  role: formatSelect(values.role)
+                })
+              )
+                .then(onEditSuccess)
+                .catch(onEditFailure);
+            }}
+          />
+        </Box>
+      </DialogContent>
+    </Dialog>
+  );
   const onRoleChange = (id: number) => setRoleId(id);
   // if reload with peopleId
   useEffect(() => {
@@ -148,6 +246,25 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
       field: 'rate',
       headerName: t('Hourly Rate'),
       width: 150
+    },
+    {
+      field: 'actions',
+      type: 'actions',
+      headerName: t('Actions'),
+      description: t('Actions'),
+      getActions: (params: GridRowParams<OwnUser>) => {
+        let actions = [
+          <GridActionsCellItem
+            key="edit"
+            icon={<EditTwoToneIcon fontSize="small" color={'primary'} />}
+            onClick={() => handleOpenUpdate(Number(params.id))}
+            label="Edit"
+          />
+        ];
+        if (!hasEditPermission(PermissionEntity.PEOPLE_AND_TEAMS, params.row))
+          actions = [];
+        return actions;
+      }
     }
   ];
   const RenderPeopleList = () => (
@@ -332,6 +449,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
           </Box>
         </DialogContent>
       </Dialog>
+      {renderEditUserModal()}
     </Box>
   );
 };

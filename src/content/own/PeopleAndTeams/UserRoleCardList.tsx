@@ -3,12 +3,14 @@ import {
   Box,
   Card,
   CardHeader,
+  CircularProgress,
   Divider,
   List,
   ListItem,
   ListItemAvatar,
   ListItemText,
   Radio,
+  Stack,
   styled,
   useTheme
 } from '@mui/material';
@@ -35,7 +37,7 @@ function UserRoleCardList({ onChange }: Props) {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
   const dispatch = useDispatch();
-  const { roles } = useSelector((state) => state.roles);
+  const { roles, loadingGet } = useSelector((state) => state.roles);
   const [selectedItem, setSelectedItem] = useState<number>();
   const defaultRoles: Partial<
     Record<RoleCode, { name: string; description: string }>
@@ -89,64 +91,76 @@ function UserRoleCardList({ onChange }: Props) {
       <CardHeader title={t('Select user role')} />
       <Divider />
 
-      <List disablePadding>
-        {roles.map((role, index) => (
-          <Box
-            key={role.id}
-            style={{ cursor: 'pointer' }}
-            onClick={() => handleChange(role.id)}
-          >
-            <ListItem
-              sx={[
-                { py: 2 },
-                isSelected(role.id) && {
-                  border: `2px solid ${theme.colors.primary.main}`,
-                  borderRadius: 0.5
-                }
-              ]}
+      {loadingGet ? (
+        <Stack
+          direction="row"
+          width="100%"
+          alignItems="center"
+          height={200}
+          justifyContent="center"
+        >
+          <CircularProgress />
+        </Stack>
+      ) : (
+        <List disablePadding>
+          {roles.map((role, index) => (
+            <Box
+              key={role.id}
+              style={{ cursor: 'pointer' }}
+              onClick={() => handleChange(role.id)}
             >
-              <ListItemAvatar>
-                <AvatarWrapperSuccess>
-                  <Engineering />
-                </AvatarWrapperSuccess>
-              </ListItemAvatar>
+              <ListItem
+                sx={[
+                  { py: 2 },
+                  isSelected(role.id) && {
+                    border: `2px solid ${theme.colors.primary.main}`,
+                    borderRadius: 0.5
+                  }
+                ]}
+              >
+                <ListItemAvatar>
+                  <AvatarWrapperSuccess>
+                    <Engineering />
+                  </AvatarWrapperSuccess>
+                </ListItemAvatar>
 
-              <ListItemText
-                primary={
-                  <Text color="black">
-                    {role.code === 'USER_CREATED'
-                      ? role.name
-                      : t(defaultRoles[role.code].name)}
-                  </Text>
-                }
-                primaryTypographyProps={{
-                  variant: 'body1',
-                  fontWeight: 'bold',
-                  color: 'textPrimary',
-                  gutterBottom: true,
-                  noWrap: true
-                }}
-                secondary={
-                  <Text color="black">
-                    {role.code === 'USER_CREATED'
-                      ? role.description
-                      : t(defaultRoles[role.code].description)}
-                  </Text>
-                }
-                secondaryTypographyProps={{ variant: 'body2' }}
-              />
+                <ListItemText
+                  primary={
+                    <Text color="black">
+                      {role.code === 'USER_CREATED'
+                        ? role.name
+                        : t(defaultRoles[role.code].name)}
+                    </Text>
+                  }
+                  primaryTypographyProps={{
+                    variant: 'body1',
+                    fontWeight: 'bold',
+                    color: 'textPrimary',
+                    gutterBottom: true,
+                    noWrap: true
+                  }}
+                  secondary={
+                    <Text color="black">
+                      {role.code === 'USER_CREATED'
+                        ? role.description
+                        : t(defaultRoles[role.code].description)}
+                    </Text>
+                  }
+                  secondaryTypographyProps={{ variant: 'body2' }}
+                />
 
-              <Radio
-                checked={isSelected(role.id)}
-                onChange={() => handleChange(role.id)}
-                name="radio-buttons"
-                color="primary"
-              />
-            </ListItem>
-            <Divider />
-          </Box>
-        ))}
-      </List>
+                <Radio
+                  checked={isSelected(role.id)}
+                  onChange={() => handleChange(role.id)}
+                  name="radio-buttons"
+                  color="primary"
+                />
+              </ListItem>
+              <Divider />
+            </Box>
+          ))}
+        </List>
+      )}
     </Card>
   );
 }

@@ -644,6 +644,12 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     entity: Entity
   ) => {
     if (!entity) return false;
+    if (permissionEntity === PermissionEntity.PEOPLE_AND_TEAMS) {
+      return (
+        state.user.id === entity.id ||
+        state.user.role.editOtherPermissions.includes(permissionEntity)
+      );
+    }
     return (
       state.user.id === entity.createdBy ||
       state.user.role.editOtherPermissions.includes(permissionEntity)

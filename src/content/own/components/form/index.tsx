@@ -38,6 +38,7 @@ import { useState } from 'react';
 import { getPriorityLabel } from '../../../../utils/formatters';
 import { getCategories } from '../../../../slices/category';
 import SelectPartQuantities from './SelectPartQuantities';
+import { getRoles } from '../../../../slices/role';
 
 interface PropsType {
   fields: Array<IField>;
@@ -65,6 +66,7 @@ export default (props: PropsType) => {
   const { usersMini } = useSelector((state) => state.users);
   const { assetsMini } = useSelector((state) => state.assets);
   const { teamsMini } = useSelector((state) => state.teams);
+  const { roles } = useSelector((state) => state.roles);
 
   const fetchCustomers = async () => {
     if (!customersMini.length) dispatch(getCustomersMini());
@@ -78,6 +80,9 @@ export default (props: PropsType) => {
   };
   const fetchLocations = async () => {
     if (!locationsMini.length) dispatch(getLocationsMini());
+  };
+  const fetchRoles = async () => {
+    if (!roles.length) dispatch(getRoles());
   };
   const fetchRootLocations = async () => {
     dispatch(getLocationChildren(0, []));
@@ -159,7 +164,7 @@ export default (props: PropsType) => {
         options = locationsMini.map((location) => {
           return {
             label: location.name,
-            value: location.id.toString()
+            value: location.id
           };
         });
         onOpen = fetchLocations;
@@ -168,7 +173,7 @@ export default (props: PropsType) => {
         options = locationsHierarchy.map((location) => {
           return {
             label: location.name,
-            value: location.id.toString()
+            value: location.id
           };
         });
         onOpen = fetchRootLocations;
@@ -179,17 +184,26 @@ export default (props: PropsType) => {
           .map((asset) => {
             return {
               label: asset.name,
-              value: asset.id.toString()
+              value: asset.id
             };
           });
         onOpen = fetchAssets;
+        break;
+      case 'role':
+        options = roles.map((role) => {
+          return {
+            label: role.name,
+            value: role.id
+          };
+        });
+        onOpen = fetchRoles;
         break;
       case 'category':
         options =
           categories[field.category]?.map((category) => {
             return {
               label: category.name,
-              value: category.id.toString()
+              value: category.id
             };
           }) ?? [];
         onOpen = () => fetchCategories(field.category);

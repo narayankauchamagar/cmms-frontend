@@ -1,3 +1,4 @@
+import { Audit } from './owns/audit';
 import { Role } from './owns/role';
 
 export type UserRole = 'admin' | 'customer' | 'subscriber';
@@ -18,11 +19,10 @@ export interface User {
   [key: string]: any;
 }
 
-export interface OwnUser {
+export interface OwnUser extends Audit {
   firstName: string;
   lastName: string;
   username: string;
-  id: number;
   email: string;
   rate: number;
   phone: string;
