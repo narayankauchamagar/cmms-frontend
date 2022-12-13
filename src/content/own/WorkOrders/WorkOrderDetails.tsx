@@ -138,6 +138,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const [createdByName, setCreatedByName] = useState<string>('');
   const [requestedByName, setRequestedByName] = useState<string>('');
   const [isImageViewerOpen, setIsImageViewerOpen] = useState<boolean>(false);
+  const [currentImage, setCurrentImage] = useState<string>();
 
   useEffect(() => {
     setCreatedByName(getUserNameById(workOrder.createdBy, usersMini));
@@ -600,7 +601,10 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                   <img
                     src={workOrder.image.url}
                     style={{ borderRadius: 5, height: 250, cursor: 'pointer' }}
-                    onClick={() => setIsImageViewerOpen(true)}
+                    onClick={() => {
+                      setCurrentImage(workOrder.image.url);
+                      setIsImageViewerOpen(true);
+                    }}
                   />
                 </Grid>
               )}
@@ -624,6 +628,55 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                   {createdByName}
                 </Link>
               </Grid>
+              {workOrder.status === 'COMPLETE' && (
+                <>
+                  <Grid item xs={12} lg={6}>
+                    <Typography
+                      variant="h6"
+                      sx={{ color: theme.colors.alpha.black[70] }}
+                    >
+                      {t('Completed By')}
+                    </Typography>
+                    <Link
+                      variant="h6"
+                      href={getUserUrl(workOrder.completedBy.id)}
+                    >
+                      {`${workOrder.completedBy.firstName} ${workOrder.completedBy.lastName}`}
+                    </Link>
+                  </Grid>
+                  <Grid item xs={12} lg={6}>
+                    <Typography
+                      variant="h6"
+                      sx={{ color: theme.colors.alpha.black[70] }}
+                    >
+                      {t('Completed On')}
+                    </Typography>
+                    <Typography variant="h6">
+                      {getFormattedDate(workOrder.completedOn)}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} lg={6}>
+                    <Typography
+                      variant="h6"
+                      sx={{ color: theme.colors.alpha.black[70] }}
+                    >
+                      {t('Signature')}
+                    </Typography>
+                    <img
+                      src={workOrder.signature.url}
+                      style={{
+                        borderRadius: 5,
+                        height: 100,
+                        cursor: 'pointer'
+                      }}
+                      onClick={() => {
+                        setCurrentImage(workOrder.signature.url);
+                        setIsImageViewerOpen(true);
+                      }}
+                    />
+                  </Grid>
+                </>
+              )}
               {workOrder.parentRequest && (
                 <Grid item xs={12} lg={6}>
                   <Typography
@@ -1092,7 +1145,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
       {isImageViewerOpen && (
         <div style={{ zIndex: 100 }}>
           <ImageViewer
-            src={[workOrder.image.url]}
+            src={[currentImage]}
             currentIndex={0}
             onClose={() => setIsImageViewerOpen(false)}
             disableScroll={true}

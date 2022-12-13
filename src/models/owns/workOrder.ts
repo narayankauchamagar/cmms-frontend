@@ -33,6 +33,7 @@ export default interface WorkOrder extends WorkOrderBase {
   completedOn: string;
   archived: boolean;
   parentRequest: Request;
+  signature: File;
   //parentPreventiveMaintenance:
 }
 
@@ -63,6 +64,7 @@ export const workOrders: WorkOrder[] = [
     createdBy: 1,
     updatedAt: 'string',
     updatedBy: 1,
-    customers
+    customers,
+    signature: null
   }
 ];
