@@ -137,16 +137,16 @@ export const editPartQuantity =
     );
     if (isPO)
       dispatch(
-        slice.actions.editWOPartQuantity({
-          workOrderId: rootId,
+        slice.actions.editPOPartQuantity({
+          purchaseOrderId: rootId,
           id,
           partQuantity
         })
       );
     else
       dispatch(
-        slice.actions.editPOPartQuantity({
-          purchaseOrderId: rootId,
+        slice.actions.editWOPartQuantity({
+          workOrderId: rootId,
           id,
           partQuantity
         })

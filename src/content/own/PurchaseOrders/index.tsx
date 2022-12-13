@@ -40,6 +40,10 @@ import PermissionErrorMessage from '../components/PermissionErrorMessage';
 import { PlanFeature } from '../../../models/owns/subscriptionPlan';
 import FeatureErrorMessage from '../components/FeatureErrorMessage';
 import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
+import {
+  editPOPartQuantities,
+  getPartQuantitiesByPurchaseOrder
+} from '../../../slices/partQuantity';
 
 function PurchaseOrders() {
   const { t }: { t: any } = useTranslation();
@@ -48,6 +52,9 @@ function PurchaseOrders() {
   const navigate = useNavigate();
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
+  const { partQuantitiesByPurchaseOrder } = useSelector(
+    (state) => state.partQuantities
+  );
   const { purchaseOrderId } = useParams();
   const { hasViewPermission, hasCreatePermission, hasFeature } = useAuth();
   const dispatch = useDispatch();
@@ -57,6 +64,8 @@ function PurchaseOrders() {
   );
   const [currentPurchaseOrder, setCurrentPurchaseOrder] =
     useState<PurchaseOrder>();
+  const partQuantities =
+    partQuantitiesByPurchaseOrder[currentPurchaseOrder?.id] ?? [];
   const { showSnackBar } = useContext(CustomSnackBarContext);
 
   const handleOpenUpdate = () => {
@@ -91,6 +100,11 @@ function PurchaseOrders() {
       handleOpenDetails(Number(purchaseOrderId));
     }
   }, [purchaseOrders]);
+
+  useEffect(() => {
+    if (currentPurchaseOrder)
+      dispatch(getPartQuantitiesByPurchaseOrder(currentPurchaseOrder.id));
+  }, [currentPurchaseOrder?.id]);
 
   const handleDelete = (id: number) => {
     handleCloseDetails();
@@ -387,20 +401,32 @@ function PurchaseOrders() {
             submitText={t('Save')}
             values={{
               ...currentPurchaseOrder,
-              vendor: {
-                label: currentPurchaseOrder?.vendor?.name,
-                value: currentPurchaseOrder?.vendor?.id.toString()
-              }
+              vendor: currentPurchaseOrder?.vendor
+                ? {
+                    label: currentPurchaseOrder?.vendor?.name,
+                    value: currentPurchaseOrder?.vendor?.id.toString()
+                  }
+                : null,
+              partQuantities
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               values.vendor = formatSelect(values.vendor);
               values.category = formatSelect(values.category);
-              return dispatch(
-                editPurchaseOrder(currentPurchaseOrder.id, values)
-              )
-                .then(onEditSuccess)
-                .catch(onEditFailure);
+              return new Promise<void>((resolve, rej) => {
+                dispatch(editPurchaseOrder(currentPurchaseOrder.id, values))
+                  .then(() => {
+                    dispatch(
+                      editPOPartQuantities(
+                        currentPurchaseOrder.id,
+                        values.partQuantities
+                      )
+                    );
+                  })
+                  .then(onEditSuccess)
+                  .catch(onEditFailure)
+                  .finally(resolve);
+              });
             }}
           />
         </Box>
@@ -493,6 +519,7 @@ function PurchaseOrders() {
               purchaseOrder={currentPurchaseOrder}
               handleOpenUpdate={handleOpenUpdate}
               handleDelete={() => setOpenDelete(true)}
+              partQuantities={partQuantities}
             />
           </Drawer>
           {renderUpdateModal()}

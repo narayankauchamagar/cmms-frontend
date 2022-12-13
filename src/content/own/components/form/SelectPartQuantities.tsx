@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from '../../../../store';
 import PartQuantity from '../../../../models/owns/partQuantity';
@@ -30,6 +30,10 @@ export default function SelectPartQuantities({
     setPartQuantities(partQuantitiesClone);
     onChange(partQuantitiesClone);
   };
+
+  useEffect(() => {
+    setPartQuantities(selected);
+  }, [selected]);
   return (
     <>
       <PartQuantitiesList

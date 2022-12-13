@@ -264,7 +264,6 @@ function Roles() {
     permissionsMapping.forEach((configs, name) => {
       configs.forEach((config) => {
         if ((values[name] && values[name][0] === 'on') || values[name]) {
-          console.log(name, config);
           values[config.permissionsRoot] = values[
             config.permissionsRoot
           ].concat(config.permissions);

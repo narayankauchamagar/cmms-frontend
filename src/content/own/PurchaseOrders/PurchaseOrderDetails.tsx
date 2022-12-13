@@ -10,7 +10,7 @@ import {
   Typography,
   useTheme
 } from '@mui/material';
-import { ChangeEvent, useContext, useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
@@ -18,30 +18,26 @@ import PurchaseOrder from '../../../models/owns/purchaseOrder';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
-import {
-  editPartQuantity,
-  getPartQuantitiesByPurchaseOrder
-} from '../../../slices/partQuantity';
-import { useDispatch, useSelector } from '../../../store';
+import { editPartQuantity } from '../../../slices/partQuantity';
+import { useDispatch } from '../../../store';
 import PartQuantitiesList from '../components/PartQuantitiesList';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
+import PartQuantity from 'src/models/owns/partQuantity';
 
 interface PurchaseOrderDetailsProps {
   purchaseOrder: PurchaseOrder;
   handleOpenUpdate: () => void;
   handleDelete: () => void;
+  partQuantities: PartQuantity[];
 }
 export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
-  const { purchaseOrder, handleOpenUpdate, handleDelete } = props;
+  const { purchaseOrder, handleOpenUpdate, handleDelete, partQuantities } =
+    props;
   const { t }: { t: any } = useTranslation();
   const { getFormattedDate } = useContext(CompanySettingsContext);
   const { hasEditPermission, hasDeletePermission } = useAuth();
-  const { partQuantitiesByPurchaseOrder } = useSelector(
-    (state) => state.partQuantities
-  );
   const dispatch = useDispatch();
   const { showSnackBar } = useContext(CustomSnackBarContext);
-  const partQuantities = partQuantitiesByPurchaseOrder[purchaseOrder.id] ?? [];
   const theme = useTheme();
   const [currentTab, setCurrentTab] = useState<string>('details');
   const tabs = [
@@ -51,9 +47,6 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
     { value: 'additionalInfos', label: t('Additional Informations') }
   ];
 
-  useEffect(() => {
-    dispatch(getPartQuantitiesByPurchaseOrder(purchaseOrder.id));
-  }, []);
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
