@@ -42,7 +42,7 @@ import ImageViewer from 'react-simple-image-viewer';
 import {
   editPartQuantity,
   editWOPartQuantities,
-  getPartQuantitys
+  getPartQuantitiesByWorkOrder
 } from '../../../slices/partQuantity';
 import AdditionalTime from '../../../models/owns/additionalTime';
 import {
@@ -174,7 +174,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
     }
   };
   useEffect(() => {
-    dispatch(getPartQuantitys(workOrder.id));
+    dispatch(getPartQuantitiesByWorkOrder(workOrder.id));
     dispatch(getAdditionalTimes(workOrder.id));
     dispatch(getAdditionalCosts(workOrder.id));
     dispatch(getTasks(workOrder.id));
@@ -236,7 +236,9 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
     return relation.parent.id === workOrder.id;
   };
   const onPartQuantityChange = (value: string, partQuantity) => {
-    dispatch(editPartQuantity(workOrder.id, partQuantity.id, Number(value)))
+    dispatch(
+      editPartQuantity(workOrder.id, partQuantity.id, Number(value), false)
+    )
       .then(() => showSnackBar(t('Quantity changed successfully'), 'success'))
       .catch((err) => showSnackBar(t("Quantity couldn't be changed"), 'error'));
   };

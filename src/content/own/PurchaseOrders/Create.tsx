@@ -18,6 +18,7 @@ import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
 import FeatureErrorMessage from '../components/FeatureErrorMessage';
 import { PlanFeature } from '../../../models/owns/subscriptionPlan';
+import { editPOPartQuantities } from '../../../slices/partQuantity';
 
 function CreatePurchaseOrder() {
   const { t }: { t: any } = useTranslation();
@@ -252,7 +253,13 @@ function CreatePurchaseOrder() {
                     values.category = formatSelect(values.category);
                     values.vendor = formatSelect(values.vendor);
                     return dispatch(addPurchaseOrder(values))
-                      .then(onCreationSuccess)
+                      .then((id: number) => {
+                        dispatch(
+                          editPOPartQuantities(id, values.partQuantities)
+                        )
+                          .then(onCreationSuccess)
+                          .catch(onCreationFailure);
+                      })
                       .catch(onCreationFailure);
                   }}
                 />

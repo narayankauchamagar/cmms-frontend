@@ -84,6 +84,7 @@ export const addPurchaseOrder =
     dispatch(
       slice.actions.addPurchaseOrder({ purchaseOrder: purchaseOrderResponse })
     );
+    return purchaseOrderResponse.id;
   };
 export const editPurchaseOrder =
   (id: number, purchaseOrder): AppThunk =>

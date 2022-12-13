@@ -1,5 +1,6 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
+import Part from 'src/models/owns/part';
 import type { AppThunk } from 'src/store';
 import PartQuantity from '../models/owns/partQuantity';
 import api from '../utils/api';
@@ -7,24 +8,33 @@ import api from '../utils/api';
 const basePath = 'part-quantities';
 interface PartQuantityState {
   partQuantitiesByWorkOrder: { [id: number]: PartQuantity[] };
+  partQuantitiesByPurchaseOrder: { [id: number]: PartQuantity[] };
 }
 
 const initialState: PartQuantityState = {
-  partQuantitiesByWorkOrder: {}
+  partQuantitiesByWorkOrder: {},
+  partQuantitiesByPurchaseOrder: {}
 };
 
 const slice = createSlice({
   name: 'partQuantities',
   initialState,
   reducers: {
-    getPartQuantitys(
+    getPartQuantitiesByWorkOrder(
       state: PartQuantityState,
       action: PayloadAction<{ id: number; partQuantities: PartQuantity[] }>
     ) {
       const { partQuantities, id } = action.payload;
       state.partQuantitiesByWorkOrder[id] = partQuantities;
     },
-    editPartQuantity(
+    getPartQuantitiesByPurchaseOrder(
+      state: PartQuantityState,
+      action: PayloadAction<{ id: number; partQuantities: PartQuantity[] }>
+    ) {
+      const { partQuantities, id } = action.payload;
+      state.partQuantitiesByPurchaseOrder[id] = partQuantities;
+    },
+    editWOPartQuantity(
       state: PartQuantityState,
       action: PayloadAction<{
         workOrderId: number;
@@ -39,19 +49,48 @@ const slice = createSlice({
             return partQuantity;
           } else return pq;
         });
+    },
+    editPOPartQuantity(
+      state: PartQuantityState,
+      action: PayloadAction<{
+        purchaseOrderId: number;
+        id: number;
+        partQuantity: PartQuantity;
+      }>
+    ) {
+      const { partQuantity, id, purchaseOrderId } = action.payload;
+      state.partQuantitiesByPurchaseOrder[purchaseOrderId] =
+        state.partQuantitiesByPurchaseOrder[purchaseOrderId].map((pq) => {
+          if (pq.id === id) {
+            return partQuantity;
+          } else return pq;
+        });
     }
   }
 });
 
 export const reducer = slice.reducer;
 
-export const getPartQuantitys =
+export const getPartQuantitiesByWorkOrder =
   (id: number): AppThunk =>
   async (dispatch) => {
     const partQuantities = await api.get<PartQuantity[]>(
       `${basePath}/work-order/${id}`
     );
-    dispatch(slice.actions.getPartQuantitys({ id, partQuantities }));
+    dispatch(
+      slice.actions.getPartQuantitiesByWorkOrder({ id, partQuantities })
+    );
+  };
+
+export const getPartQuantitiesByPurchaseOrder =
+  (id: number): AppThunk =>
+  async (dispatch) => {
+    const partQuantities = await api.get<PartQuantity[]>(
+      `${basePath}/purchase-order/${id}`
+    );
+    dispatch(
+      slice.actions.getPartQuantitiesByPurchaseOrder({ id, partQuantities })
+    );
   };
 
 export const editWOPartQuantities =
@@ -64,15 +103,31 @@ export const editWOPartQuantities =
       true
     );
     dispatch(
-      slice.actions.getPartQuantitys({
+      slice.actions.getPartQuantitiesByWorkOrder({
         id,
         partQuantities
       })
     );
   };
 
+export const editPOPartQuantities =
+  (id: number, partQuantities: { part: Part; quantity: number }[]): AppThunk =>
+  async (dispatch) => {
+    const partQuantitiesResponse = await api.patch<PartQuantity[]>(
+      `${basePath}/purchase-order/${id}`,
+      partQuantities,
+      null,
+      true
+    );
+    dispatch(
+      slice.actions.getPartQuantitiesByPurchaseOrder({
+        id,
+        partQuantities: partQuantitiesResponse
+      })
+    );
+  };
 export const editPartQuantity =
-  (workOrderId: number, id: number, quantity: number): AppThunk =>
+  (rootId: number, id: number, quantity: number, isPO: boolean): AppThunk =>
   async (dispatch) => {
     const partQuantity = await api.patch<PartQuantity>(
       `${basePath}/${id}`,
@@ -80,13 +135,22 @@ export const editPartQuantity =
       null,
       true
     );
-    dispatch(
-      slice.actions.editPartQuantity({
-        workOrderId,
-        id,
-        partQuantity
-      })
-    );
+    if (isPO)
+      dispatch(
+        slice.actions.editWOPartQuantity({
+          workOrderId: rootId,
+          id,
+          partQuantity
+        })
+      );
+    else
+      dispatch(
+        slice.actions.editPOPartQuantity({
+          purchaseOrderId: rootId,
+          id,
+          partQuantity
+        })
+      );
   };
 
 export default slice;

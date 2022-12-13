@@ -1,5 +1,6 @@
 import {
   Box,
+  debounce,
   Divider,
   Grid,
   IconButton,
@@ -9,7 +10,7 @@ import {
   Typography,
   useTheme
 } from '@mui/material';
-import { ChangeEvent, useContext, useState } from 'react';
+import { ChangeEvent, useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
@@ -17,6 +18,13 @@ import PurchaseOrder from '../../../models/owns/purchaseOrder';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
+import {
+  editPartQuantity,
+  getPartQuantitiesByPurchaseOrder
+} from '../../../slices/partQuantity';
+import { useDispatch, useSelector } from '../../../store';
+import PartQuantitiesList from '../components/PartQuantitiesList';
+import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 
 interface PurchaseOrderDetailsProps {
   purchaseOrder: PurchaseOrder;
@@ -28,17 +36,38 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
   const { t }: { t: any } = useTranslation();
   const { getFormattedDate } = useContext(CompanySettingsContext);
   const { hasEditPermission, hasDeletePermission } = useAuth();
+  const { partQuantitiesByPurchaseOrder } = useSelector(
+    (state) => state.partQuantities
+  );
+  const dispatch = useDispatch();
+  const { showSnackBar } = useContext(CustomSnackBarContext);
+  const partQuantities = partQuantitiesByPurchaseOrder[purchaseOrder.id] ?? [];
   const theme = useTheme();
   const [currentTab, setCurrentTab] = useState<string>('details');
   const tabs = [
     { value: 'details', label: t('Details') },
+    { value: 'parts', label: t('Parts') },
     { value: 'shipping', label: t('Shipping Information') },
     { value: 'additionalInfos', label: t('Additional Informations') }
   ];
 
+  useEffect(() => {
+    dispatch(getPartQuantitiesByPurchaseOrder(purchaseOrder.id));
+  }, []);
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
+  const onPartQuantityChange = (value: string, partQuantity) => {
+    dispatch(
+      editPartQuantity(purchaseOrder.id, partQuantity.id, Number(value), true)
+    )
+      .then(() => showSnackBar(t('Quantity changed successfully'), 'success'))
+      .catch((err) => showSnackBar(t("Quantity couldn't be changed"), 'error'));
+  };
+  const debouncedPartQuantityChange = useMemo(
+    () => debounce(onPartQuantityChange, 1500),
+    []
+  );
   const BasicField = ({
     label,
     value,
@@ -221,6 +250,12 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
               />
             ))}
           </Grid>
+        )}
+        {currentTab === 'parts' && (
+          <PartQuantitiesList
+            partQuantities={partQuantities}
+            onChange={debouncedPartQuantityChange}
+          />
         )}
         {currentTab === 'shipping' && (
           <Grid container spacing={2}>
