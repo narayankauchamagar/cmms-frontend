@@ -258,6 +258,7 @@ export default (props: PropsType) => {
               selected={values ?? []}
               onSelect={(tasks) => {
                 handleChange(formik, field.name, tasks);
+                return Promise.resolve();
               }}
             />
             <Card onClick={() => setOpenTask(true)} sx={{ cursor: 'pointer' }}>

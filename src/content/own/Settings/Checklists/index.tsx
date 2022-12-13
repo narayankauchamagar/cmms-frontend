@@ -147,23 +147,25 @@ function Checklists() {
             open={openCreateChecklist}
             onClose={() => setOpenCreateChecklist(false)}
             selected={[]}
-            onSelect={(tasks, infos) => {
-              dispatch(
-                addChecklist(
-                  {
-                    ...infos,
-                    taskBases: tasks.map((task) => {
-                      return {
-                        ...task.taskBase,
-                        options: task.taskBase.options.map(
-                          (option) => option.label
-                        )
-                      };
-                    })
-                  },
-                  companySettingsId
-                )
-              );
+            onSelect={(tasks, infos): Promise<void> => {
+              return new Promise<void>((res, rej) => {
+                dispatch(
+                  addChecklist(
+                    {
+                      ...infos,
+                      taskBases: tasks.map((task) => {
+                        return {
+                          ...task.taskBase,
+                          options: task.taskBase.options.map(
+                            (option) => option.label
+                          )
+                        };
+                      })
+                    },
+                    companySettingsId
+                  )
+                ).finally(res);
+              });
             }}
             action="createChecklist"
           />
@@ -176,19 +178,21 @@ function Checklists() {
               ) ?? []
             }
             onSelect={(tasks, infos) => {
-              dispatch(
-                editChecklist(currentChecklist.id, {
-                  ...infos,
-                  taskBases: tasks.map((task) => {
-                    return {
-                      ...task.taskBase,
-                      options: task.taskBase.options.map(
-                        (option) => option.label
-                      )
-                    };
+              return new Promise<void>((res, rej) => {
+                dispatch(
+                  editChecklist(currentChecklist.id, {
+                    ...infos,
+                    taskBases: tasks.map((task) => {
+                      return {
+                        ...task.taskBase,
+                        options: task.taskBase.options.map(
+                          (option) => option.label
+                        )
+                      };
+                    })
                   })
-                })
-              );
+                ).finally(res);
+              });
             }}
             action="editChecklist"
             infos={{

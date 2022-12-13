@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -37,7 +38,7 @@ interface SelectTasksProps {
   infos?: { name: string; description: string; category: string };
   open: boolean;
   onClose: () => void;
-  onSelect: (tasks: Task[], { name, description, category }) => void;
+  onSelect: (tasks: Task[], { name, description, category }) => Promise<void>;
   action?: 'createChecklist' | 'editChecklist';
 }
 export default function SelectTasks({
@@ -52,6 +53,7 @@ export default function SelectTasks({
   const { enqueueSnackbar } = useSnackbar();
   const [currentTab, setCurrentTab] = useState<string>('edit');
   const [openChecklist, setOpenChecklist] = useState<boolean>(false);
+  const [submitting, setSubmitting] = useState<boolean>(false);
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
@@ -140,8 +142,10 @@ export default function SelectTasks({
         TransitionComponent: Zoom
       });
     } else {
-      onSelect(tasks, { name, description, category });
-      onClose();
+      setSubmitting(true);
+      onSelect(tasks, { name, description, category })
+        .then(onClose)
+        .finally(() => setSubmitting(false));
     }
   };
 
@@ -333,9 +337,11 @@ export default function SelectTasks({
           <Button
             disabled={
               !tasks.length ||
+              submitting ||
               (['createChecklist', 'editChecklist'].includes(action) &&
                 (!name || name.trim() === ''))
             }
+            startIcon={submitting ? <CircularProgress size="1rem" /> : null}
             onClick={onSave}
             variant="contained"
           >
