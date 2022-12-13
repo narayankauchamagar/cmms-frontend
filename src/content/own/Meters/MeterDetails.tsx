@@ -34,8 +34,8 @@ import EditTriggerModal from './EditTriggerModal';
 import WorkOrderMeterTrigger from '../../../models/owns/workOrderMeterTrigger';
 import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
-import { dayDiff } from '../../../utils/dates';
 import ImageViewer from 'react-simple-image-viewer';
+import { canAddReading } from '../../../utils/overall';
 
 interface MeterDetailsProps {
   meter: Meter;
@@ -176,12 +176,7 @@ export default function MeterDetails(props: MeterDetailsProps) {
       <Grid item xs={12}>
         {currentTab === 'details' && (
           <Box>
-            {(currentMeterReadings.length &&
-              dayDiff(
-                new Date([...currentMeterReadings].reverse()[0].createdAt),
-                new Date()
-              ) > meter.updateFrequency) ||
-            !currentMeterReadings.length ? (
+            {canAddReading(currentMeterReadings, meter?.updateFrequency) ? (
               <Form
                 fields={fields}
                 validation={Yup.object().shape(shape)}
