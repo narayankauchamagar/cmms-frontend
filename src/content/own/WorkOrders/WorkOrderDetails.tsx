@@ -72,6 +72,7 @@ import { getSingleUser } from '../../../slices/user';
 import { getUserNameById } from '../../../utils/displayers';
 import FilesList from '../components/FilesList';
 import { PlanFeature } from '../../../models/owns/subscriptionPlan';
+import PartQuantitiesList from '../components/PartQuantitiesList';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;
@@ -93,16 +94,18 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const [openSignatureModal, setOpenSignatureModal] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<string>('details');
   const [changingStatus, setChangingStatus] = useState<boolean>(false);
-  const { workOrders } = useSelector((state) => state.partQuantities);
-  const partQuantities = workOrders[workOrder.id] ?? [];
+  const { partQuantitiesByWorkOrder } = useSelector(
+    (state) => state.partQuantities
+  );
+  const partQuantities = partQuantitiesByWorkOrder[workOrder.id] ?? [];
   const [controllingTime, setControllingTime] = useState<boolean>(false);
   const { timesByWorkOrder } = useSelector((state) => state.additionalTimes);
   const { workOrderHistories } = useSelector(
     (state) => state.workOrderHistories
   );
-  const { workOrdersRelations } = useSelector((state) => state.relations);
+  const { relationsByWorkOrder } = useSelector((state) => state.relations);
   const currentWorkOrderHistories = workOrderHistories[workOrder.id] ?? [];
-  const currentWorkOrderRelations = workOrdersRelations[workOrder.id] ?? [];
+  const currentWorkOrderRelations = relationsByWorkOrder[workOrder.id] ?? [];
   const additionalTimes = timesByWorkOrder[workOrder.id] ?? [];
   const primaryTime = additionalTimes.find(
     (additionalTime) =>
@@ -232,14 +235,8 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const isParent = (relation: Relation): boolean => {
     return relation.parent.id === workOrder.id;
   };
-  const onPartQuantityChange = (event, partQuantity) => {
-    dispatch(
-      editPartQuantity(
-        workOrder.id,
-        partQuantity.id,
-        Number(event.target.value)
-      )
-    )
+  const onPartQuantityChange = (value: string, partQuantity) => {
+    dispatch(editPartQuantity(workOrder.id, partQuantity.id, Number(value)))
       .then(() => showSnackBar(t('Quantity changed successfully'), 'success'))
       .catch((err) => showSnackBar(t("Quantity couldn't be changed"), 'error'));
   };
@@ -937,76 +934,12 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
             <Box>
               <Divider sx={{ mt: 2 }} />
               <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
-                Parts
+                {t('Parts')}
               </Typography>
-              <List>
-                {partQuantities.map((partQuantity, index) => (
-                  <ListItem
-                    key={partQuantity.part.id}
-                    secondaryAction={
-                      <Box
-                        display="flex"
-                        flexDirection="row"
-                        alignItems="center"
-                      >
-                        <TextField
-                          label={t('Quantity')}
-                          variant="outlined"
-                          sx={{ mr: 1 }}
-                          type="number"
-                          inputProps={{
-                            min: '0'
-                          }}
-                          size="small"
-                          onChange={(event) =>
-                            debouncedPartQuantityChange(event, partQuantity)
-                          }
-                          defaultValue={partQuantity.quantity}
-                        />
-                        <Typography variant="h6">
-                          {' * '}
-                          {`${partQuantity.part.cost} ${generalPreferences.currency.code}`}
-                        </Typography>
-                      </Box>
-                    }
-                  >
-                    <ListItemText
-                      primary={
-                        <Link
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          href={`/app/inventory/parts/${partQuantity.part.id}`}
-                          key={partQuantity.part.id}
-                          variant="h6"
-                        >
-                          {partQuantity.part.name}
-                        </Link>
-                      }
-                      secondary={partQuantity.part.description}
-                    />
-                  </ListItem>
-                ))}
-                <ListItem
-                  secondaryAction={
-                    <Typography variant="h6" fontWeight="bold">
-                      {partQuantities.reduce(
-                        (acc, partQuantity) =>
-                          acc + partQuantity.part.cost * partQuantity.quantity,
-                        0
-                      )}{' '}
-                      {generalPreferences.currency.code}
-                    </Typography>
-                  }
-                >
-                  <ListItemText
-                    primary={
-                      <Typography variant="h6" fontWeight="bold">
-                        Total
-                      </Typography>
-                    }
-                  />
-                </ListItem>
-              </List>
+              <PartQuantitiesList
+                partQuantities={partQuantities}
+                onChange={debouncedPartQuantityChange}
+              />
               <SelectParts
                 selected={partQuantities.map(
                   (partQuantity) => partQuantity.part.id

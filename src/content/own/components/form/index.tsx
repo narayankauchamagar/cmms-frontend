@@ -37,6 +37,7 @@ import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone';
 import { useState } from 'react';
 import { getPriorityLabel } from '../../../../utils/formatters';
 import { getCategories } from '../../../../slices/category';
+import SelectPartQuantities from './SelectPartQuantities';
 
 interface PropsType {
   fields: Array<IField>;
@@ -90,6 +91,7 @@ export default (props: PropsType) => {
   const fetchTeams = async () => {
     if (!teamsMini.length) dispatch(getTeamsMini());
   };
+
   props.fields.forEach((f) => {
     shape[f.name] = Yup.string();
     if (f.required) {
@@ -393,6 +395,13 @@ export default (props: PropsType) => {
                       selected={formik.values[field.name]}
                       onChange={(coordinates) => {
                         handleChange(formik, field.name, coordinates);
+                      }}
+                    />
+                  ) : field.type === 'partQuantity' ? (
+                    <SelectPartQuantities
+                      selected={formik.values[field.name] ?? []}
+                      onChange={(newPartQuantities) => {
+                        handleChange(formik, field.name, newPartQuantities);
                       }}
                     />
                   ) : (

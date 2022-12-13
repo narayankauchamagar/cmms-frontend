@@ -6,11 +6,11 @@ import api from '../utils/api';
 
 const basePath = 'part-quantities';
 interface PartQuantityState {
-  workOrders: { [id: number]: PartQuantity[] };
+  partQuantitiesByWorkOrder: { [id: number]: PartQuantity[] };
 }
 
 const initialState: PartQuantityState = {
-  workOrders: {}
+  partQuantitiesByWorkOrder: {}
 };
 
 const slice = createSlice({
@@ -22,7 +22,7 @@ const slice = createSlice({
       action: PayloadAction<{ id: number; partQuantities: PartQuantity[] }>
     ) {
       const { partQuantities, id } = action.payload;
-      state.workOrders[id] = partQuantities;
+      state.partQuantitiesByWorkOrder[id] = partQuantities;
     },
     editPartQuantity(
       state: PartQuantityState,
@@ -33,13 +33,12 @@ const slice = createSlice({
       }>
     ) {
       const { partQuantity, id, workOrderId } = action.payload;
-      state.workOrders[workOrderId] = state.workOrders[workOrderId].map(
-        (pq) => {
+      state.partQuantitiesByWorkOrder[workOrderId] =
+        state.partQuantitiesByWorkOrder[workOrderId].map((pq) => {
           if (pq.id === id) {
             return partQuantity;
           } else return pq;
-        }
-      );
+        });
     }
   }
 });

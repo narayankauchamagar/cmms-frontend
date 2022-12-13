@@ -82,9 +82,8 @@ function CreatePurchaseOrder() {
       midWidth: true
     },
     {
-      name: 'parts',
-      type: 'select',
-      type2: 'part',
+      name: 'partQuantities',
+      type: 'partQuantity',
       label: t('Parts'),
       midWidth: true,
       multiple: true

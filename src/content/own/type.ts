@@ -23,6 +23,7 @@ export interface IField {
     | 'form'
     | 'date'
     | 'switch'
+    | 'partQuantity'
     | 'coordinates';
   type2?:
     | 'customer'

@@ -244,12 +244,10 @@ function PurchaseOrders() {
       midWidth: true
     },
     {
-      name: 'parts',
-      type: 'select',
-      type2: 'part',
+      name: 'partQuantities',
+      type: 'partQuantity',
       label: t('Parts'),
-      midWidth: true,
-      multiple: true
+      midWidth: true
     },
     {
       name: 'shippingInformation',
@@ -397,6 +395,7 @@ function PurchaseOrders() {
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               values.vendor = formatSelect(values.vendor);
+              values.category = formatSelect(values.category);
               return dispatch(
                 editPurchaseOrder(currentPurchaseOrder.id, values)
               )
