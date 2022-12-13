@@ -643,23 +643,34 @@ function WorkOrders() {
                         formattedValues.tasks.map((task) => {
                           return {
                             ...task.taskBase,
+                            asset: task.taskBase.asset
+                              ? { id: task.taskBase.asset }
+                              : null,
+                            user: task.taskBase.user
+                              ? { id: task.taskBase.user }
+                              : null,
                             options: task.taskBase.options.map(
                               (option) => option.label
                             )
                           };
                         })
                       )
-                    ).then(() =>
-                      dispatch(
-                        editWorkOrder(currentWorkOrder?.id, formattedValues)
+                    )
+                      .then(() =>
+                        dispatch(
+                          editWorkOrder(currentWorkOrder?.id, formattedValues)
+                        )
+                          .then(onEditSuccess)
+                          .then(() => resolve())
+                          .catch((err) => {
+                            onEditFailure(err);
+                            rej();
+                          })
                       )
-                        .then(onEditSuccess)
-                        .then(() => resolve())
-                        .catch((err) => {
-                          onEditFailure(err);
-                          rej();
-                        })
-                    );
+                      .catch((err) => {
+                        onEditFailure(err);
+                        rej();
+                      });
                   })
                   .catch((err) => {
                     onEditFailure(err);

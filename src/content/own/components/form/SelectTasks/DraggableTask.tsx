@@ -19,11 +19,12 @@ import { Task, TaskOption, TaskType } from '../../../../../models/owns/tasks';
 import { useTranslation } from 'react-i18next';
 import DoDisturbOnTwoToneIcon from '@mui/icons-material/DoDisturbOnTwoTone';
 import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
-import { users } from '../../../../../models/owns/user';
 import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
-import { assets } from '../../../../../models/owns/asset';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { randomInt } from '../../../../../utils/generators';
+import { useDispatch, useSelector } from '../../../../../store';
+import { getUsers } from '../../../../../slices/user';
+import { getAssets } from '../../../../../slices/asset';
 
 const useStyles = makeStyles({
   draggingListItem: {
@@ -56,8 +57,16 @@ const DraggableListItem = ({
   const { t }: { t: any } = useTranslation();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const { users, loadingGet } = useSelector((state) => state.users);
+  const { assets } = useSelector((state) => state.assets);
+  const dispatch = useDispatch();
+
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
+    if (!users.length) {
+      dispatch(getUsers());
+      dispatch(getAssets());
+    }
   };
   const handleClose = () => {
     setAnchorEl(null);
