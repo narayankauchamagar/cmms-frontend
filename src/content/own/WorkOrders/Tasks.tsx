@@ -25,9 +25,14 @@ import { IField } from '../type';
 interface TasksProps {
   tasksProps: Task[];
   workOrderId: number;
+  handleZoomImage: (images: string[], image: string) => void;
 }
 
-export default function Tasks({ tasksProps, workOrderId }: TasksProps) {
+export default function Tasks({
+  tasksProps,
+  workOrderId,
+  handleZoomImage
+}: TasksProps) {
   const { t }: { t: any } = useTranslation();
   const [openSelectImages, setOpenSelectImages] = useState<boolean>(false);
   const initialNotes = new Map();
@@ -168,6 +173,7 @@ export default function Tasks({ tasksProps, workOrderId }: TasksProps) {
               handleSaveNotes={handleSaveNotes}
               toggleNotes={toggleNotes}
               handleSelectImages={handleSelectImages}
+              handleZoomImage={handleZoomImage}
               notes={notes}
             />
           ))}

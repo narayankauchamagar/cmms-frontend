@@ -80,6 +80,16 @@ export default function SelectTasks({
     setCategory(infos?.category);
   }, [infos]);
 
+  const showError = (error: string) => {
+    enqueueSnackbar(error, {
+      variant: 'error',
+      anchorOrigin: {
+        vertical: 'bottom',
+        horizontal: 'center'
+      },
+      TransitionComponent: Zoom
+    });
+  };
   const onLabelChange = (value: string, id: number) => {
     const newTasks = tasks.map((task) => {
       if (task.id === id) {
@@ -135,14 +145,13 @@ export default function SelectTasks({
   };
   const onSave = () => {
     if (tasks.some((task) => !task.taskBase.label)) {
-      enqueueSnackbar(t('Remove blank tasks'), {
-        variant: 'error',
-        anchorOrigin: {
-          vertical: 'bottom',
-          horizontal: 'center'
-        },
-        TransitionComponent: Zoom
-      });
+      showError(t('Remove blank tasks'));
+    } else if (
+      tasks.some((task) =>
+        task.taskBase.options.some((option) => !option.label.trim())
+      )
+    ) {
+      showError(t('Remove blank options'));
     } else {
       setSubmitting(true);
       onSelect(tasks, { name, description, category })

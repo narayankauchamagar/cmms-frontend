@@ -139,6 +139,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const [requestedByName, setRequestedByName] = useState<string>('');
   const [isImageViewerOpen, setIsImageViewerOpen] = useState<boolean>(false);
   const [currentImage, setCurrentImage] = useState<string>();
+  const [currentImages, setCurrentImages] = useState<string[]>();
 
   useEffect(() => {
     setCreatedByName(getUserNameById(workOrder.createdBy, usersMini));
@@ -187,6 +188,11 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
     setPrimaryTimeMinutes(minutes);
   }, [primaryTime]);
 
+  const setImageState = (images: string[], image: string) => {
+    setCurrentImage(image);
+    setCurrentImages(images);
+    setIsImageViewerOpen(true);
+  };
   const canComplete = (): boolean => {
     let error;
     const fieldsToTest = [
@@ -602,8 +608,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                     src={workOrder.image.url}
                     style={{ borderRadius: 5, height: 250, cursor: 'pointer' }}
                     onClick={() => {
-                      setCurrentImage(workOrder.image.url);
-                      setIsImageViewerOpen(true);
+                      setImageState([workOrder.image.url], workOrder.image.url);
                     }}
                   />
                 </Grid>
@@ -670,8 +675,10 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                         cursor: 'pointer'
                       }}
                       onClick={() => {
-                        setCurrentImage(workOrder.signature.url);
-                        setIsImageViewerOpen(true);
+                        setImageState(
+                          [workOrder.signature.url],
+                          workOrder.signature.url
+                        );
                       }}
                     />
                   </Grid>
@@ -789,7 +796,11 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
             {!!tasks.length && (
               <Box>
                 <Divider sx={{ mt: 2 }} />
-                <Tasks tasksProps={tasks} workOrderId={workOrder?.id} />
+                <Tasks
+                  tasksProps={tasks}
+                  workOrderId={workOrder?.id}
+                  handleZoomImage={setImageState}
+                />
               </Box>
             )}
             <Box>
@@ -1145,8 +1156,10 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
       {isImageViewerOpen && (
         <div style={{ zIndex: 100 }}>
           <ImageViewer
-            src={[currentImage]}
-            currentIndex={0}
+            src={currentImages}
+            currentIndex={currentImages.findIndex(
+              (image) => image === currentImage
+            )}
             onClose={() => setIsImageViewerOpen(false)}
             disableScroll={true}
             backgroundStyle={{

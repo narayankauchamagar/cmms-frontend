@@ -22,9 +22,6 @@ import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
 import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { randomInt } from '../../../../../utils/generators';
-import { useDispatch, useSelector } from '../../../../../store';
-import { getUsersMini } from '../../../../../slices/user';
-import { getAssetsMini } from '../../../../../slices/asset';
 import { AssetMiniDTO } from '../../../../../models/owns/asset';
 import { UserMiniDTO } from '../../../../../models/user';
 
@@ -43,6 +40,8 @@ export type DraggableListItemProps = {
   onAssetChange: (asset: AssetMiniDTO, id: number) => void;
   onChoicesChange: (choices: string[], id: number) => void;
   onRemove: (id: number) => void;
+  assetsMini: AssetMiniDTO[];
+  usersMini: UserMiniDTO[];
 };
 
 const DraggableListItem = ({
@@ -53,25 +52,19 @@ const DraggableListItem = ({
   onRemove,
   onUserChange,
   onAssetChange,
-  onChoicesChange
+  onChoicesChange,
+  assetsMini,
+  usersMini
 }: DraggableListItemProps) => {
   const classes = useStyles();
   const { t }: { t: any } = useTranslation();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const { usersMini } = useSelector((state) => state.users);
-  const { assetsMini } = useSelector((state) => state.assets);
-  const dispatch = useDispatch();
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
-    if (!usersMini.length) {
-      dispatch(getUsersMini());
-    }
-    if (!assetsMini.length) {
-      dispatch(getAssetsMini());
-    }
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };

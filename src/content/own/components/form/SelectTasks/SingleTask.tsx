@@ -17,6 +17,7 @@ import Field from '../Field';
 import NoteTwoToneIcon from '@mui/icons-material/NoteTwoTone';
 import AttachFileTwoToneIcon from '@mui/icons-material/AttachFileTwoTone';
 import SpeedTwoToneIcon from '@mui/icons-material/SpeedTwoTone';
+import ArrowDropDownCircleTwoToneIcon from '@mui/icons-material/ArrowDropDownCircleTwoTone';
 import { Task, TaskOption, TaskType } from '../../../../../models/owns/tasks';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -31,6 +32,7 @@ interface SingleTaskProps {
   handleSaveNotes?: (value: string, id: number) => Promise<void>;
   handleNoteChange?: (value: string, id: number) => void;
   handleSelectImages?: (id: number) => void;
+  handleZoomImage?: (images: string[], image: string) => void;
   toggleNotes?: (id: number) => void;
   notes?: Map<number, boolean>;
 }
@@ -42,7 +44,8 @@ export default function SingleTask({
   preview,
   toggleNotes,
   notes,
-  handleSelectImages
+  handleSelectImages,
+  handleZoomImage
 }: SingleTaskProps) {
   const theme = useTheme();
   const { t }: { t: any } = useTranslation();
@@ -141,6 +144,11 @@ export default function SingleTask({
           )}
         </Box>
         <Box>
+          <Tooltip arrow placement="top" title={t('See details')}>
+            <IconButton onClick={() => !preview && toggleNotes(task.id)}>
+              <ArrowDropDownCircleTwoToneIcon />
+            </IconButton>
+          </Tooltip>
           {task.taskBase.taskType === 'METER' && (
             <IconButton
               onClick={() =>
@@ -209,6 +217,12 @@ export default function SingleTask({
               <img
                 src={image.url}
                 alt={'task'}
+                onClick={() =>
+                  handleZoomImage(
+                    task.images.map((img) => img.url),
+                    image.url
+                  )
+                }
                 style={{ borderRadius: 5, height: 150, cursor: 'pointer' }}
               />
             </Grid>

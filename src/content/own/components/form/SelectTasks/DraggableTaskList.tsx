@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import {
   DragDropContext,
   Droppable,
@@ -8,6 +9,9 @@ import { Task, TaskType } from '../../../../../models/owns/tasks';
 import DraggableTask from './DraggableTask';
 import { AssetMiniDTO } from '../../../../../models/owns/asset';
 import { UserMiniDTO } from '../../../../../models/user';
+import { getUsersMini } from '../../../../../slices/user';
+import { getAssetsMini } from '../../../../../slices/asset';
+import { useDispatch, useSelector } from '../../../../../store';
 
 export type DraggableListProps = {
   tasks: Task[];
@@ -31,6 +35,17 @@ const DraggableTaskList = React.memo(
     onAssetChange,
     onChoicesChange
   }: DraggableListProps) => {
+    const { usersMini } = useSelector((state) => state.users);
+    const { assetsMini } = useSelector((state) => state.assets);
+    const dispatch = useDispatch();
+    useEffect(() => {
+      if (!usersMini.length) {
+        dispatch(getUsersMini());
+      }
+      if (!assetsMini.length) {
+        dispatch(getAssetsMini());
+      }
+    }, []);
     return (
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable-list">
@@ -47,6 +62,8 @@ const DraggableTaskList = React.memo(
                   onUserChange={onUserChange}
                   onAssetChange={onAssetChange}
                   onChoicesChange={onChoicesChange}
+                  assetsMini={assetsMini}
+                  usersMini={usersMini}
                 />
               ))}
               {provided.placeholder}

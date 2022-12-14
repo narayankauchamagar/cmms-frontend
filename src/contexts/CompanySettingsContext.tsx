@@ -30,7 +30,7 @@ export const CompanySettingsProvider: FC = ({ children }) => {
     const year = date.getFullYear().toString().substr(2);
     const time = hideTime
       ? ''
-      : date.getHours() +
+      : (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) +
         ':' +
         (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes());
     if (generalPreferences.dateFormat === 'MMDDYY') {
