@@ -3,12 +3,15 @@ import { Audit } from './audit';
 import { CustomerMiniDTO } from './customer';
 import { VendorMiniDTO } from './vendor';
 import { TeamMiniDTO } from './team';
+import { FileMiniDTO } from './file';
 
 export default interface Location extends Audit {
   id: number;
   name: string;
   address: string;
   longitude: number;
+  image: FileMiniDTO;
+  files: FileMiniDTO[];
   latitude: number;
   parentLocation: LocationMiniDTO | null;
   vendors: VendorMiniDTO[];
@@ -36,6 +39,8 @@ export const locations: Location[] = [
     createdBy: 1,
     updatedAt: 'string',
     updatedBy: 1,
+    image: null,
+    files: [],
     vendors: [],
     customers: [],
     parentLocation: null,
@@ -52,12 +57,14 @@ export const locations: Location[] = [
     createdBy: 1,
     updatedAt: 'string',
     updatedBy: 1,
+    image: null,
     vendors: [],
     customers: [],
     parentLocation: null,
     workers: [],
     longitude: 40.744509157650334,
     latitude: -74.06030716227161,
-    teams: []
+    teams: [],
+    files: []
   }
 ];

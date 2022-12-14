@@ -501,10 +501,38 @@ function Locations() {
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              const formattedValues = formatValues(values);
-              return dispatch(editLocation(currentLocation.id, formattedValues))
-                .then(onEditSuccess)
-                .catch(onEditFailure);
+              let formattedValues = formatValues(values);
+              //differentiate files from api and formattedValues
+              const files = formattedValues.files.find((file) => file.id)
+                ? []
+                : formattedValues.files;
+              return new Promise<void>((resolve, rej) => {
+                uploadFiles(files, formattedValues.image)
+                  .then((files) => {
+                    const imageAndFiles = getImageAndFiles(
+                      files,
+                      currentLocation.image
+                    );
+                    formattedValues = {
+                      ...formattedValues,
+                      image: imageAndFiles.image,
+                      files: [...currentLocation.files, ...imageAndFiles.files]
+                    };
+                    dispatch(editLocation(currentLocation.id, formattedValues))
+                      .then(() => {
+                        resolve();
+                        onEditSuccess();
+                      })
+                      .catch((err) => {
+                        onEditFailure(err);
+                        rej(err);
+                      });
+                  })
+                  .catch((err) => {
+                    onEditFailure(err);
+                    rej(err);
+                  });
+              });
             }}
           />
         </Box>

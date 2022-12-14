@@ -137,7 +137,7 @@ const menuItems: MenuItems[] = [
         name: 'Categories',
         link: '/app/categories',
         icon: CategoryTwoToneIcon,
-        permission: PermissionEntity.CATEGORIES
+        permission: PermissionEntity.CATEGORIES_WEB
       },
       {
         name: 'Files',

@@ -196,6 +196,21 @@ export default function LocationDetails(props: LocationDetailsProps) {
         </Box>
       </Grid>
       <Divider />
+      {location.image && (
+        <Grid
+          item
+          xs={12}
+          lg={12}
+          display="flex"
+          justifyContent="center"
+          padding={2}
+        >
+          <img
+            src={location.image.url}
+            style={{ borderRadius: 5, height: 200 }}
+          />
+        </Grid>
+      )}
       <Grid item xs={12}>
         <Tabs
           onChange={handleTabsChange}
@@ -268,6 +283,40 @@ export default function LocationDetails(props: LocationDetailsProps) {
               <Stack direction="row" justifyContent="center" width="100%">
                 <Typography variant="h5">
                   {t('No Work Order in this location')}
+                </Typography>
+              </Stack>
+            )}
+          </Box>
+        )}
+        {currentTab === 'files' && (
+          <Box>
+            <Box display="flex" justifyContent="right">
+              <Button startIcon={<AddTwoToneIcon fontSize="small" />}>
+                {t('File')}
+              </Button>
+            </Box>
+            {location.files.length ? (
+              <List sx={{ width: '100%' }}>
+                {location.files.map((file) => (
+                  <ListItemButton
+                    key={file.id}
+                    divider
+                    onClick={() => window.open(file.url, '_blank')}
+                  >
+                    <ListItemText
+                      primary={
+                        <Typography variant="h6" fontWeight="bold">
+                          {file.name}
+                        </Typography>
+                      }
+                    />
+                  </ListItemButton>
+                ))}
+              </List>
+            ) : (
+              <Stack direction="row" justifyContent="center" width="100%">
+                <Typography variant="h5">
+                  {t('No Files attached to this location')}
                 </Typography>
               </Stack>
             )}

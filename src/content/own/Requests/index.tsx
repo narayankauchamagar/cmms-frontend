@@ -89,10 +89,10 @@ function Files() {
   };
   const onCreationSuccess = () => {
     setOpenAddModal(false);
-    showSnackBar(t('New Work Order successfully requested'), 'success');
+    showSnackBar(t('Work Order successfully requested'), 'success');
   };
   const onCreationFailure = (err) =>
-    showSnackBar(t("The Request couldn't be created"), 'error');
+    showSnackBar(t("The Work Request couldn't be created"), 'error');
   const onEditSuccess = () => {
     setOpenUpdateModal(false);
     showSnackBar(t('The changes have been saved'), 'success');

@@ -55,7 +55,8 @@ export default function RequestDetails({
   const { t }: { t: any } = useTranslation();
   const dispatch = useDispatch();
   const theme = useTheme();
-  const { hasEditPermission, hasDeletePermission } = useAuth();
+  const { hasEditPermission, hasDeletePermission, hasViewPermission } =
+    useAuth();
   const navigate = useNavigate();
   const { getFormattedDate } = useContext(CompanySettingsContext);
   const { usersMini } = useSelector((state) => state.users);
@@ -166,47 +167,49 @@ export default function RequestDetails({
           )}
         </Box>
       </Grid>
-      {!request.workOrder && !request.cancelled && (
-        <>
-          <Divider />
-          <Grid
-            item
-            xs={12}
-            sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-around'
-            }}
-          >
-            <Button
-              startIcon={
-                cancelling ? (
-                  <CircularProgress size="1rem" sx={{ color: 'white' }} />
-                ) : (
-                  <ClearTwoToneIcon />
-                )
-              }
-              onClick={onCancel}
-              variant="outlined"
+      {!request.workOrder &&
+        !request.cancelled &&
+        hasViewPermission(PermissionEntity.SETTINGS) && (
+          <>
+            <Divider />
+            <Grid
+              item
+              xs={12}
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-around'
+              }}
             >
-              {t('Cancel')}
-            </Button>
-            <Button
-              startIcon={
-                approving ? (
-                  <CircularProgress size="1rem" sx={{ color: 'white' }} />
-                ) : (
-                  <CheckTwoToneIcon />
-                )
-              }
-              onClick={onApprove}
-              variant="contained"
-            >
-              {t('Approve')}
-            </Button>
-          </Grid>
-        </>
-      )}
+              <Button
+                startIcon={
+                  cancelling ? (
+                    <CircularProgress size="1rem" sx={{ color: 'white' }} />
+                  ) : (
+                    <ClearTwoToneIcon />
+                  )
+                }
+                onClick={onCancel}
+                variant="outlined"
+              >
+                {t('Cancel')}
+              </Button>
+              <Button
+                startIcon={
+                  approving ? (
+                    <CircularProgress size="1rem" sx={{ color: 'white' }} />
+                  ) : (
+                    <CheckTwoToneIcon />
+                  )
+                }
+                onClick={onApprove}
+                variant="contained"
+              >
+                {t('Approve')}
+              </Button>
+            </Grid>
+          </>
+        )}
       <Divider />
       <Grid item xs={12}>
         <Box>

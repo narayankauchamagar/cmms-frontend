@@ -98,7 +98,7 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
   };
   useEffect(() => {
     setTitle(t('Categories'));
-    if (hasViewPermission(PermissionEntity.CATEGORIES))
+    if (hasViewPermission(PermissionEntity.CATEGORIES_WEB))
       dispatch(getCategories(basePath));
   }, []);
 
@@ -327,7 +327,7 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
       </Formik>
     </Dialog>
   );
-  if (hasViewPermission(PermissionEntity.CATEGORIES))
+  if (hasViewPermission(PermissionEntity.CATEGORIES_WEB))
     return (
       <MultipleTabsLayout
         basePath="/app/categories"

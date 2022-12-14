@@ -181,7 +181,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
     dispatch(getUsers());
   }, []);
 
-  const verifyCurrentEmail = () => {
+  const verifyCurrentEmail = (): boolean => {
     if (currentEmail) {
       let error;
       if (emails.length < 20) {
@@ -192,11 +192,9 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
           if (users.map((user) => user.email).includes(currentEmail)) {
             error = 'A user with this email is already in this company';
           } else {
-            if (currentEmail.match(emailRegExp)) {
-              emailsClone.push(currentEmail);
-              setEmails(emailsClone);
-              setCurrentEmail('');
-            } else error = 'This email is invalid';
+            if (!currentEmail.match(emailRegExp)) {
+              error = 'This email is invalid';
+            }
           }
         }
       } else error = 'You can invite a maximum of 20 users at once';
@@ -397,7 +395,14 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
                 setCurrentEmail(event.target.value);
               }}
               onKeyDown={(event) => {
-                if (['Enter', 'Tab'].includes(event.key)) verifyCurrentEmail();
+                if (['Enter', 'Tab'].includes(event.key)) {
+                  if (verifyCurrentEmail()) {
+                    const emailsClone = [...emails];
+                    emailsClone.push(currentEmail);
+                    setEmails(emailsClone);
+                    setCurrentEmail('');
+                  }
+                }
               }}
               variant={'outlined'}
               required
@@ -413,27 +418,32 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
               fullWidth
               sx={{ mb: 3 }}
               onClick={async () => {
+                setIsInviteSubmitting(true);
+                const invite = (emails: string[]) =>
+                  dispatch(inviteUsers(roleId, emails))
+                    .then(() => {
+                      handleCloseModal();
+                      setEmails([]);
+                      setCurrentEmail('');
+                      showSnackBar(t('Users have been invited'), 'success');
+                    })
+                    .catch((err) =>
+                      showSnackBar(
+                        t(
+                          "Users can't be invited. Check your current subscription members count"
+                        ),
+                        'error'
+                      )
+                    )
+                    .finally(() => setIsInviteSubmitting(false));
                 if (roleId) {
                   if (emails.length || currentEmail) {
-                    setIsInviteSubmitting(true);
-                    if (verifyCurrentEmail()) {
-                      dispatch(inviteUsers(roleId, emails))
-                        .then(() => {
-                          handleCloseModal();
-                          setEmails([]);
-                          setCurrentEmail('');
-                          showSnackBar(t('Users have been invited'), 'success');
-                        })
-                        .catch((err) =>
-                          showSnackBar(
-                            t(
-                              "Users can't be invited. Check your current subscription members count"
-                            ),
-                            'error'
-                          )
-                        )
-                        .finally(() => setIsInviteSubmitting(false));
-                    } else setIsInviteSubmitting(false);
+                    if (currentEmail) {
+                      if (verifyCurrentEmail())
+                        invite([...emails, currentEmail]);
+                    } else {
+                      invite(emails);
+                    }
                   } else
                     showSnackBar(t('Please type in emails to invite'), 'error');
                 } else showSnackBar(t('Please select a role'), 'error');
