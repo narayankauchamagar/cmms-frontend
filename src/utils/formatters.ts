@@ -61,7 +61,7 @@ export const getStatusLabel = (str: string, t: any) => {
 };
 
 export const getTaskFromTaskBase = (taskBase: TaskBase): Task => {
-  return { taskBase, id: randomInt(), notes: '', value: '' };
+  return { taskBase, id: randomInt(), notes: '', value: '', images: [] };
 };
 
 export const durationToHours = (duration: number) => {

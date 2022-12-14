@@ -32,6 +32,8 @@ import { useDispatch, useSelector } from '../../../../../store';
 import { getChecklists } from '../../../../../slices/checklist';
 import useAuth from '../../../../../hooks/useAuth';
 import { PlanFeature } from '../../../../../models/owns/subscriptionPlan';
+import { AssetMiniDTO } from '../../../../../models/owns/asset';
+import { UserMiniDTO } from '../../../../../models/user';
 
 interface SelectTasksProps {
   selected: Task[];
@@ -96,7 +98,7 @@ export default function SelectTasks({
     });
     setTasks(newTasks);
   };
-  const onUserChange = (user: number, id: number) => {
+  const onUserChange = (user: UserMiniDTO, id: number) => {
     const newTasks = tasks.map((task) => {
       if (task.id === id) {
         return { ...task, taskBase: { ...task.taskBase, user } };
@@ -105,7 +107,7 @@ export default function SelectTasks({
     });
     setTasks(newTasks);
   };
-  const onAssetChange = (asset: number, id: number) => {
+  const onAssetChange = (asset: AssetMiniDTO, id: number) => {
     const newTasks = tasks.map((task) => {
       if (task.id === id) {
         return { ...task, taskBase: { ...task.taskBase, asset } };
@@ -167,7 +169,8 @@ export default function SelectTasks({
           label: '',
           taskType: 'SUBTASK'
         },
-        notes: ''
+        notes: '',
+        images: []
       }
     ]);
   };

@@ -1,3 +1,7 @@
+import { AssetMiniDTO } from './asset';
+import File from './file';
+import { UserMiniDTO } from '../user';
+
 export type TaskType =
   | 'SUBTASK'
   | 'NUMBER'
@@ -15,8 +19,8 @@ export interface TaskBase {
   label: string;
   taskType: TaskType;
   options?: TaskOption[];
-  user?: number;
-  asset?: number;
+  user?: UserMiniDTO;
+  asset?: AssetMiniDTO;
   meter?: number;
 }
 export interface Task {
@@ -24,6 +28,7 @@ export interface Task {
   value?: string | number;
   notes: string;
   taskBase: TaskBase;
+  images: File[];
 }
 export const tasks: Task[] = [
   {
@@ -34,7 +39,8 @@ export const tasks: Task[] = [
       taskType: 'SUBTASK'
     },
     value: 'OPEN',
-    notes: ''
+    notes: '',
+    images: []
   },
   {
     id: 75,
@@ -44,6 +50,7 @@ export const tasks: Task[] = [
       taskType: 'SUBTASK'
     },
     value: 'OPEN',
-    notes: ''
+    notes: '',
+    images: []
   }
 ];

@@ -2,17 +2,25 @@ import {
   Card,
   CardContent,
   CardHeader,
+  Dialog,
+  DialogContent,
+  DialogTitle,
   Divider,
-  FormControl
+  FormControl,
+  Typography
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import TaskAltTwoToneIcon from '@mui/icons-material/TaskAltTwoTone';
 import { useContext, useEffect, useState } from 'react';
 import SingleTask from '../components/form/SelectTasks/SingleTask';
 import { Task } from '../../../models/owns/tasks';
-import { patchTask } from '../../../slices/task';
+import { getTasks, patchTask } from '../../../slices/task';
 import { useDispatch } from '../../../store';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
+import Form from '../components/form';
+import * as Yup from 'yup';
+import { addFiles } from '../../../slices/file';
+import { IField } from '../type';
 
 interface TasksProps {
   tasksProps: Task[];
@@ -21,8 +29,16 @@ interface TasksProps {
 
 export default function Tasks({ tasksProps, workOrderId }: TasksProps) {
   const { t }: { t: any } = useTranslation();
-  const [notes, setNotes] = useState<Map<number, boolean>>(new Map());
+  const [openSelectImages, setOpenSelectImages] = useState<boolean>(false);
+  const initialNotes = new Map();
+  tasksProps.forEach((task) => {
+    if (task.notes || task.images.length) {
+      initialNotes.set(task.id, true);
+    }
+  });
+  const [notes, setNotes] = useState<Map<number, boolean>>(initialNotes);
   const [tasks, setTasks] = useState<Task[]>(tasksProps);
+  const [currentTask, setCurrentTask] = useState<Task>();
   const dispatch = useDispatch();
   const { showSnackBar } = useContext(CustomSnackBarContext);
 
@@ -62,9 +78,81 @@ export default function Tasks({ tasksProps, workOrderId }: TasksProps) {
   function handleSaveNotes(value: string, id: number) {
     const task = tasks.find((task) => task.id === id);
     return dispatch(patchTask(workOrderId, id, { ...task, notes: value })).then(
-      () => showSnackBar(t('Notes saved successfully'), 'success')
+      () => {
+        showSnackBar(t('Notes saved successfully'), 'success');
+        toggleNotes(task.id);
+      }
     );
   }
+  function handleSelectImages(id: number) {
+    setCurrentTask(tasks.find((task) => task.id === id));
+    setOpenSelectImages(true);
+  }
+  const onImageUploadSuccess = () => {
+    setOpenSelectImages(false);
+    showSnackBar(t('The images have been added to the task'), 'success');
+  };
+  const onImageUploadFailure = (err) =>
+    showSnackBar(t('Something went wrong'), 'error');
+
+  const fields: Array<IField> = [
+    {
+      name: 'images',
+      type: 'file',
+      label: t('Images'),
+      fileType: 'image',
+      multiple: true
+    }
+  ];
+  const shape = {
+    images: Yup.array().required(t('Please upload at least an image'))
+  };
+  const renderSelectImages = () => {
+    return (
+      <Dialog
+        fullWidth
+        maxWidth="sm"
+        open={openSelectImages}
+        onClose={() => setOpenSelectImages(false)}
+      >
+        <DialogTitle
+          sx={{
+            p: 3
+          }}
+        >
+          <Typography variant="h4" gutterBottom>
+            {t('Add Images')}
+          </Typography>
+        </DialogTitle>
+        <DialogContent
+          dividers
+          sx={{
+            p: 3
+          }}
+        >
+          <Form
+            fields={fields}
+            validation={Yup.object().shape(shape)}
+            submitText={t('Add')}
+            values={{}}
+            onChange={({ field, e }) => {}}
+            onSubmit={async (values) => {
+              return dispatch(addFiles(values.images, 'IMAGE', currentTask.id))
+                .then(onImageUploadSuccess)
+                .then(() =>
+                  dispatch(getTasks(workOrderId)).then(() => {
+                    const newNotes = new Map(notes);
+                    newNotes.set(currentTask.id, true);
+                    setNotes(newNotes);
+                  })
+                )
+                .catch(onImageUploadFailure);
+            }}
+          />
+        </DialogContent>
+      </Dialog>
+    );
+  };
   return (
     <Card>
       <CardHeader title={t('Tasks')} avatar={<TaskAltTwoToneIcon />} />
@@ -79,11 +167,13 @@ export default function Tasks({ tasksProps, workOrderId }: TasksProps) {
               handleNoteChange={handleNoteChange}
               handleSaveNotes={handleSaveNotes}
               toggleNotes={toggleNotes}
+              handleSelectImages={handleSelectImages}
               notes={notes}
             />
           ))}
         </FormControl>
       </CardContent>
+      {renderSelectImages()}
     </Card>
   );
 }

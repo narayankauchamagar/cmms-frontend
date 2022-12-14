@@ -6,15 +6,17 @@ import {
 } from 'react-beautiful-dnd';
 import { Task, TaskType } from '../../../../../models/owns/tasks';
 import DraggableTask from './DraggableTask';
+import { AssetMiniDTO } from '../../../../../models/owns/asset';
+import { UserMiniDTO } from '../../../../../models/user';
 
 export type DraggableListProps = {
   tasks: Task[];
   onDragEnd: OnDragEndResponder;
   onLabelChange: (value: string, id: number) => void;
   onTypeChange: (value: TaskType, id: number) => void;
-  onAssetChange: (user: number, id: number) => void;
+  onAssetChange: (asset: AssetMiniDTO, id: number) => void;
   onRemove: (id: number) => void;
-  onUserChange: (user: number, id: number) => void;
+  onUserChange: (user: UserMiniDTO, id: number) => void;
   onChoicesChange: (choices: string[], id: number) => void;
 };
 

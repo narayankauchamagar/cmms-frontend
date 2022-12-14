@@ -65,7 +65,7 @@ export const getFiles = (): AppThunk => async (dispatch) => {
 };
 
 export const addFiles =
-  (files: any[], fileType: FileType = 'OTHER'): AppThunk =>
+  (files: any[], fileType: FileType = 'OTHER', taskId?: number): AppThunk =>
   async (dispatch) => {
     let formData = new FormData();
     const companyId = localStorage.getItem('companyId');
@@ -74,8 +74,9 @@ export const addFiles =
     files.forEach((file) => formData.append('files', file));
     formData.append('folder', `company ${companyId}`);
     formData.append('type', fileType);
+    const baseRoute = `${basePath}/upload`;
     const filesResponse = await api.post<File[]>(
-      `${basePath}/upload`,
+      taskId ? `${baseRoute}?taskId=${taskId}` : baseRoute,
       formData,
       {
         headers

@@ -23,8 +23,10 @@ import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { randomInt } from '../../../../../utils/generators';
 import { useDispatch, useSelector } from '../../../../../store';
-import { getUsers } from '../../../../../slices/user';
-import { getAssets } from '../../../../../slices/asset';
+import { getUsersMini } from '../../../../../slices/user';
+import { getAssetsMini } from '../../../../../slices/asset';
+import { AssetMiniDTO } from '../../../../../models/owns/asset';
+import { UserMiniDTO } from '../../../../../models/user';
 
 const useStyles = makeStyles({
   draggingListItem: {
@@ -37,8 +39,8 @@ export type DraggableListItemProps = {
   index: number;
   onLabelChange: (value: string, id: number) => void;
   onTypeChange: (value: TaskType, id: number) => void;
-  onUserChange: (user: number, id: number) => void;
-  onAssetChange: (user: number, id: number) => void;
+  onUserChange: (user: UserMiniDTO, id: number) => void;
+  onAssetChange: (asset: AssetMiniDTO, id: number) => void;
   onChoicesChange: (choices: string[], id: number) => void;
   onRemove: (id: number) => void;
 };
@@ -57,15 +59,17 @@ const DraggableListItem = ({
   const { t }: { t: any } = useTranslation();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const { users, loadingGet } = useSelector((state) => state.users);
-  const { assets } = useSelector((state) => state.assets);
+  const { usersMini } = useSelector((state) => state.users);
+  const { assetsMini } = useSelector((state) => state.assets);
   const dispatch = useDispatch();
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
-    if (!users.length) {
-      dispatch(getUsers());
-      dispatch(getAssets());
+    if (!usersMini.length) {
+      dispatch(getUsersMini());
+    }
+    if (!assetsMini.length) {
+      dispatch(getAssetsMini());
     }
   };
   const handleClose = () => {
@@ -206,14 +210,19 @@ const DraggableListItem = ({
                     <Select
                       sx={{ mt: 1 }}
                       onChange={(event) =>
-                        onUserChange(Number(event.target.value), task.id)
+                        onUserChange(
+                          usersMini.find(
+                            (user) => user.id === Number(event.target.value)
+                          ),
+                          task.id
+                        )
                       }
                       displayEmpty
                       defaultValue=""
-                      value={task.taskBase.user ?? ''}
+                      value={task.taskBase.user?.id ?? ''}
                     >
                       <MenuItem value="">{t('Select User')}</MenuItem>
-                      {users.map((user) => (
+                      {usersMini.map((user) => (
                         <MenuItem
                           key={user.id}
                           value={user.id}
@@ -225,14 +234,19 @@ const DraggableListItem = ({
                     <Select
                       sx={{ mt: 1 }}
                       onChange={(event) =>
-                        onAssetChange(Number(event.target.value), task.id)
+                        onAssetChange(
+                          assetsMini.find(
+                            (asset) => asset.id === Number(event.target.value)
+                          ),
+                          task.id
+                        )
                       }
                       displayEmpty
                       defaultValue=""
-                      value={task.taskBase.asset ?? ''}
+                      value={task.taskBase.asset?.id ?? ''}
                     >
                       <MenuItem value="">{t('Select Asset')}</MenuItem>
-                      {assets.map((asset) => (
+                      {assetsMini.map((asset) => (
                         <MenuItem key={asset.id} value={asset.id}>
                           {asset.name}
                         </MenuItem>
