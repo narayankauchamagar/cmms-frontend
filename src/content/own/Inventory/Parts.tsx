@@ -562,8 +562,10 @@ const Parts = ({ setAction }: PropsType) => {
                   <CardMedia
                     component="img"
                     height="280"
-                    image="/static/images/placeholders/covers/2.jpg"
-                    alt="..."
+                    image={
+                      part.image ? part.image.url : '/static/images/nopic.jpg'
+                    }
+                    alt={part.name}
                   />
                   <Box sx={{ p: 2 }}>
                     <Typography variant="h4">{part.name}</Typography>

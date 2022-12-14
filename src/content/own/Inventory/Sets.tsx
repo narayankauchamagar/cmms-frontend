@@ -363,7 +363,7 @@ const Sets = ({ setAction }: PropsType) => {
                   <CardMedia
                     component="img"
                     height="280"
-                    image="/static/images/placeholders/covers/2.jpg"
+                    image={'/static/images/nopic.jpg'}
                     alt="..."
                   />
                   <Box sx={{ p: 2 }}>

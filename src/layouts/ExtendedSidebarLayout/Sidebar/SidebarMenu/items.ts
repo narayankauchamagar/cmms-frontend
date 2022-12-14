@@ -24,6 +24,7 @@ import MoveToInboxTwoToneIcon from '@mui/icons-material/MoveToInboxTwoTone';
 import AssignmentTwoToneIcon from '@mui/icons-material/AssignmentTwoTone';
 import { PermissionEntity } from '../../../../models/owns/role';
 import { PlanFeature } from '../../../../models/owns/subscriptionPlan';
+import { apiUrl } from '../../../../config';
 
 export interface MenuItem {
   link?: string;
@@ -43,7 +44,8 @@ export interface MenuItems {
   hidden?: PermissionEntity;
 }
 
-const menuItems: MenuItems[] = [
+const isLocalhost = apiUrl === 'http://localhost:8080/';
+const ownMenuItems: MenuItems[] = [
   {
     heading: '',
     items: [
@@ -153,7 +155,9 @@ const menuItems: MenuItems[] = [
         permission: PermissionEntity.SETTINGS
       }
     ]
-  },
+  }
+];
+const templateItems = [
   {
     heading: 'General',
     items: [
@@ -530,4 +534,7 @@ const menuItems: MenuItems[] = [
   }
 ];
 
+const menuItems = isLocalhost
+  ? ownMenuItems.concat(templateItems)
+  : ownMenuItems;
 export default menuItems;
