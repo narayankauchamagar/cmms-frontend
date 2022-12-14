@@ -31,6 +31,8 @@ import { IField } from '../../type';
 import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContext';
 import { canAddReading } from '../../../../utils/overall';
 import { getUserNameById } from '../../../../utils/displayers';
+import useAuth from '../../../../hooks/useAuth';
+import { PermissionEntity } from '../../../../models/owns/role';
 
 interface PropsType {
   asset: AssetDTO;
@@ -43,6 +45,7 @@ const AssetMeters = ({ asset }: PropsType) => {
   const { readingsByMeter } = useSelector((state) => state.readings);
   const meters = metersByAsset[asset?.id] ?? [];
   const [selectedMeter, setSelectedMeter] = useState<Meter>();
+  const { hasEditPermission } = useAuth();
   const { getFormattedDate } = useContext(CompanySettingsContext);
   const [openReadingModal, setOpenReadingModal] = useState<boolean>(false);
   const readings = readingsByMeter[selectedMeter?.id] ?? [];
@@ -180,17 +183,19 @@ const AssetMeters = ({ asset }: PropsType) => {
                     </Select>
                   </Stack>
 
-                  <Button
-                    startIcon={<AddTwoToneIcon />}
-                    variant="contained"
-                    sx={{ my: 3 }}
-                    disabled={
-                      !canAddReading(readings, selectedMeter?.updateFrequency)
-                    }
-                    onClick={() => setOpenReadingModal(true)}
-                  >
-                    {t('Add Reading')}
-                  </Button>
+                  {hasEditPermission(PermissionEntity.ASSETS, asset) && (
+                    <Button
+                      startIcon={<AddTwoToneIcon />}
+                      variant="contained"
+                      sx={{ my: 3 }}
+                      disabled={
+                        !canAddReading(readings, selectedMeter?.updateFrequency)
+                      }
+                      onClick={() => setOpenReadingModal(true)}
+                    >
+                      {t('Add Reading')}
+                    </Button>
+                  )}
                 </Stack>
               )}
               <CustomDataGrid

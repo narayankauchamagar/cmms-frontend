@@ -370,6 +370,12 @@ export default function PartDetails(props: PartDetailsProps) {
                     'Are you sure you want to remove this file from this Part ?'
                   )}
                   files={part.files}
+                  removeDisabled={
+                    !hasEditPermission(
+                      PermissionEntity.PARTS_AND_MULTIPARTS,
+                      part
+                    )
+                  }
                   onRemove={(id: number) => {
                     dispatch(
                       editPart(part.id, {

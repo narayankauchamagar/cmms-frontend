@@ -318,6 +318,9 @@ export default function RequestDetails({
                     confirmMessage={t(
                       'Are you sure you want to remove this file from this Request ?'
                     )}
+                    removeDisabled={
+                      !hasEditPermission(PermissionEntity.REQUESTS, request)
+                    }
                     files={request.files}
                     onRemove={(id: number) => {
                       dispatch(

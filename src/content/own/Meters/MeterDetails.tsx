@@ -176,7 +176,8 @@ export default function MeterDetails(props: MeterDetailsProps) {
       <Grid item xs={12}>
         {currentTab === 'details' && (
           <Box>
-            {canAddReading(currentMeterReadings, meter?.updateFrequency) ? (
+            {canAddReading(currentMeterReadings, meter?.updateFrequency) &&
+            hasEditPermission(PermissionEntity.METERS, meter) ? (
               <Form
                 fields={fields}
                 validation={Yup.object().shape(shape)}
@@ -187,7 +188,7 @@ export default function MeterDetails(props: MeterDetailsProps) {
                 }}
               />
             ) : (
-              currentMeterReadings.length && (
+              !!currentMeterReadings.length && (
                 <Box>
                   <Typography variant="h4">{t('Last reading')}</Typography>
                   <Typography>{`${
@@ -273,14 +274,16 @@ export default function MeterDetails(props: MeterDetailsProps) {
                     </ListItem>
                   ))}
                 </List>
-                <Button
-                  startIcon={<AddTwoToneIcon />}
-                  sx={{ my: 1 }}
-                  variant="outlined"
-                  onClick={() => setOpenAddTriggerModal(true)}
-                >
-                  {t('Add Trigger')}
-                </Button>
+                {hasEditPermission(PermissionEntity.METERS, meter) && (
+                  <Button
+                    startIcon={<AddTwoToneIcon />}
+                    sx={{ my: 1 }}
+                    variant="outlined"
+                    onClick={() => setOpenAddTriggerModal(true)}
+                  >
+                    {t('Add Trigger')}
+                  </Button>
+                )}
               </Grid>
             </Grid>
           </Box>

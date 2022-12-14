@@ -366,8 +366,14 @@ const ShowAsset = ({}: PropsType) => {
             : null
         }
         actionTitle={t('Edit')}
-        secondAction={() => setOpenDelete(true)}
-        secondActionTitle={t('Delete')}
+        secondAction={() => {
+          setOpenDelete(true);
+        }}
+        secondActionTitle={
+          hasDeletePermission(PermissionEntity.ASSETS, asset)
+            ? t('Delete')
+            : null
+        }
         secondActionIcon={<DeleteTwoToneIcon />}
         withoutCard
         editAction

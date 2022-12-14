@@ -247,6 +247,12 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
         {currentTab === 'parts' && (
           <PartQuantitiesList
             partQuantities={partQuantities}
+            disabled={
+              !hasEditPermission(
+                PermissionEntity.PURCHASE_ORDERS,
+                purchaseOrder
+              )
+            }
             onChange={debouncedPartQuantityChange}
           />
         )}

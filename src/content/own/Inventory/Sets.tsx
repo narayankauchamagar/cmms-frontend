@@ -37,6 +37,7 @@ import {
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
+import { formatSelectMultiple } from '../../../utils/formatters';
 
 interface PropsType {
   setAction: (p: () => () => void) => void;
@@ -72,9 +73,7 @@ const Sets = ({ setAction }: PropsType) => {
     setOpenDelete(false);
   };
   const formatValues = (values) => {
-    values.parts = values.parts.map((part) => {
-      return { id: part.id };
-    });
+    values.parts = formatSelectMultiple(values.parts);
     return values;
   };
   const onCreationSuccess = () => {

@@ -23,7 +23,7 @@ import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import Asset, { assets } from '../../../models/owns/asset';
+import { assets } from '../../../models/owns/asset';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import Form from '../components/form';
 import * as Yup from 'yup';
@@ -58,8 +58,12 @@ export default function LocationDetails(props: LocationDetailsProps) {
   const { assetsByLocation } = useSelector((state) => state.assets);
   const { workOrdersByLocation } = useSelector((state) => state.workOrders);
   const { locationRoot } = useSelector((state) => state.floorPlans);
-  const { hasEditPermission, hasDeletePermission, getFilteredFields } =
-    useAuth();
+  const {
+    hasEditPermission,
+    hasDeletePermission,
+    getFilteredFields,
+    hasCreatePermission
+  } = useAuth();
   const locationAssets = assetsByLocation[location.id] ?? [];
   const locationWorkOrders = workOrdersByLocation[location.id] ?? [];
   const floorPlans = locationRoot[location.id] ?? [];
@@ -228,11 +232,13 @@ export default function LocationDetails(props: LocationDetailsProps) {
       <Grid item xs={12}>
         {currentTab === 'assets' && (
           <Box>
-            <Box display="flex" justifyContent="right">
-              <Button startIcon={<AddTwoToneIcon fontSize="small" />}>
-                {t('Asset')}
-              </Button>
-            </Box>
+            {hasCreatePermission(PermissionEntity.ASSETS) && (
+              <Box display="flex" justifyContent="right">
+                <Button startIcon={<AddTwoToneIcon fontSize="small" />}>
+                  {t('Asset')}
+                </Button>
+              </Box>
+            )}
             {locationAssets.length ? (
               <List sx={{ width: '100%' }}>
                 {locationAssets.map((asset) => (
@@ -259,11 +265,13 @@ export default function LocationDetails(props: LocationDetailsProps) {
         )}
         {currentTab === 'workOrders' && (
           <Box>
-            <Box display="flex" justifyContent="right">
-              <Button startIcon={<AddTwoToneIcon fontSize="small" />}>
-                {t('Work Order')}
-              </Button>
-            </Box>
+            {hasCreatePermission(PermissionEntity.WORK_ORDERS) && (
+              <Box display="flex" justifyContent="right">
+                <Button startIcon={<AddTwoToneIcon fontSize="small" />}>
+                  {t('Work Order')}
+                </Button>
+              </Box>
+            )}
             {locationWorkOrders.length ? (
               <List sx={{ width: '100%' }}>
                 {locationWorkOrders.map((workOrder) => (
@@ -290,11 +298,13 @@ export default function LocationDetails(props: LocationDetailsProps) {
         )}
         {currentTab === 'files' && (
           <Box>
-            <Box display="flex" justifyContent="right">
-              <Button startIcon={<AddTwoToneIcon fontSize="small" />}>
-                {t('File')}
-              </Button>
-            </Box>
+            {hasCreatePermission(PermissionEntity.FILES) && (
+              <Box display="flex" justifyContent="right">
+                <Button startIcon={<AddTwoToneIcon fontSize="small" />}>
+                  {t('File')}
+                </Button>
+              </Box>
+            )}
             {location.files.length ? (
               <List sx={{ width: '100%' }}>
                 {location.files.map((file) => (
@@ -324,14 +334,16 @@ export default function LocationDetails(props: LocationDetailsProps) {
         )}
         {currentTab === 'floorPlans' && (
           <Box>
-            <Box display="flex" justifyContent="right">
-              <Button
-                onClick={() => setOpenAddFloorPlan(true)}
-                startIcon={<AddTwoToneIcon fontSize="small" />}
-              >
-                {t('Floor plan')}
-              </Button>
-            </Box>
+            {hasEditPermission(PermissionEntity.LOCATIONS, location) && (
+              <Box display="flex" justifyContent="right">
+                <Button
+                  onClick={() => setOpenAddFloorPlan(true)}
+                  startIcon={<AddTwoToneIcon fontSize="small" />}
+                >
+                  {t('Floor plan')}
+                </Button>
+              </Box>
+            )}
             {floorPlans.length ? (
               <List sx={{ width: '100%' }}>
                 {floorPlans.map((floorPlan) => (

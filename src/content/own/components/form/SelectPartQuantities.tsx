@@ -39,6 +39,7 @@ export default function SelectPartQuantities({
       <PartQuantitiesList
         partQuantities={partQuantities}
         onChange={onPartQuantityChange}
+        disabled={false}
       />
       <SelectParts
         selected={partQuantities.map((partQuantity) => partQuantity.part.id)}

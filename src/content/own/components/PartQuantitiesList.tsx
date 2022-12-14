@@ -14,10 +14,12 @@ import useAuth from '../../../hooks/useAuth';
 interface PartQuantityListProps {
   partQuantities: PartQuantity[];
   onChange: (value: string, partQuantity: PartQuantity) => void;
+  disabled: boolean;
 }
 export default function PartQuantitiesList({
   partQuantities,
-  onChange
+  onChange,
+  disabled
 }: PartQuantityListProps) {
   const { t }: { t: any } = useTranslation();
   const { companySettings } = useAuth();
@@ -35,6 +37,7 @@ export default function PartQuantitiesList({
                 variant="outlined"
                 sx={{ mr: 1 }}
                 type="number"
+                disabled={disabled}
                 inputProps={{
                   min: '0'
                 }}

@@ -465,9 +465,11 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
           <Typography variant="h6">{workOrder?.description}</Typography>
         </Box>
         <Box>
-          <IconButton style={{ marginRight: 10 }} onClick={handleOpenMenu}>
-            <MoreVertTwoToneIcon />
-          </IconButton>
+          {hasEditPermission(PermissionEntity.WORK_ORDERS, workOrder) && (
+            <IconButton style={{ marginRight: 10 }} onClick={handleOpenMenu}>
+              <MoreVertTwoToneIcon />
+            </IconButton>
+          )}
           {hasEditPermission(PermissionEntity.WORK_ORDERS, workOrder) && (
             <IconButton
               onClick={() => onEdit(workOrder.id)}
@@ -543,6 +545,12 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                           })
                         ).finally(() => setChangingStatus(false));
                       }}
+                      disabled={
+                        !hasEditPermission(
+                          PermissionEntity.WORK_ORDERS,
+                          workOrder
+                        )
+                      }
                       value={workOrder.status}
                       sx={
                         workOrder.status === 'OPEN'
@@ -579,7 +587,13 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                         <TimerTwoToneIcon />
                       )
                     }
-                    disabled={controllingTime}
+                    disabled={
+                      controllingTime ||
+                      !hasEditPermission(
+                        PermissionEntity.WORK_ORDERS,
+                        workOrder
+                      )
+                    }
                     onClick={() => {
                       setControllingTime(true);
                       dispatch(
@@ -835,22 +849,27 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                             <Typography variant="h6">
                               {getAdditionalTimeCost(additionalTime)} $
                             </Typography>
-                            <IconButton
-                              sx={{ ml: 1 }}
-                              onClick={() =>
-                                dispatch(
-                                  deleteAdditionalTime(
-                                    workOrder.id,
-                                    additionalTime.id
+                            {hasEditPermission(
+                              PermissionEntity.WORK_ORDERS,
+                              workOrder
+                            ) && (
+                              <IconButton
+                                sx={{ ml: 1 }}
+                                onClick={() =>
+                                  dispatch(
+                                    deleteAdditionalTime(
+                                      workOrder.id,
+                                      additionalTime.id
+                                    )
                                   )
-                                )
-                              }
-                            >
-                              <DeleteTwoToneIcon
-                                fontSize="small"
-                                color="error"
-                              />
-                            </IconButton>
+                                }
+                              >
+                                <DeleteTwoToneIcon
+                                  fontSize="small"
+                                  color="error"
+                                />
+                              </IconButton>
+                            )}
                           </Box>
                         }
                       >
@@ -905,13 +924,15 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                   </ListItem>
                 </List>
               )}
-              <Button
-                onClick={() => setOpenAddTimeModal(true)}
-                variant="outlined"
-                sx={{ mt: 1 }}
-              >
-                Add Time
-              </Button>
+              {hasEditPermission(PermissionEntity.WORK_ORDERS, workOrder) && (
+                <Button
+                  onClick={() => setOpenAddTimeModal(true)}
+                  variant="outlined"
+                  sx={{ mt: 1 }}
+                >
+                  Add Time
+                </Button>
+              )}
             </Box>
             <Box>
               <Divider sx={{ mt: 2 }} />
@@ -939,19 +960,27 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                           <Typography variant="h6">
                             {`${additionalCost.cost} ${generalPreferences.currency.code}`}
                           </Typography>
-                          <IconButton
-                            sx={{ ml: 1 }}
-                            onClick={() =>
-                              dispatch(
-                                deleteAdditionalCost(
-                                  workOrder.id,
-                                  additionalCost.id
+                          {hasEditPermission(
+                            PermissionEntity.WORK_ORDERS,
+                            workOrder
+                          ) && (
+                            <IconButton
+                              sx={{ ml: 1 }}
+                              onClick={() =>
+                                dispatch(
+                                  deleteAdditionalCost(
+                                    workOrder.id,
+                                    additionalCost.id
+                                  )
                                 )
-                              )
-                            }
-                          >
-                            <DeleteTwoToneIcon fontSize="small" color="error" />
-                          </IconButton>
+                              }
+                            >
+                              <DeleteTwoToneIcon
+                                fontSize="small"
+                                color="error"
+                              />
+                            </IconButton>
+                          )}
                         </Box>
                       }
                     >
@@ -989,13 +1018,15 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                   </ListItem>
                 </List>
               )}
-              <Button
-                onClick={() => setOpenAddCostModal(true)}
-                variant="outlined"
-                sx={{ mt: 1 }}
-              >
-                Add Additional Cost
-              </Button>
+              {hasEditPermission(PermissionEntity.WORK_ORDERS, workOrder) && (
+                <Button
+                  onClick={() => setOpenAddCostModal(true)}
+                  variant="outlined"
+                  sx={{ mt: 1 }}
+                >
+                  Add Additional Cost
+                </Button>
+              )}
             </Box>
             <Box>
               <Divider sx={{ mt: 2 }} />
@@ -1004,21 +1035,26 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
               </Typography>
               <PartQuantitiesList
                 partQuantities={partQuantities}
+                disabled={
+                  !hasEditPermission(PermissionEntity.WORK_ORDERS, workOrder)
+                }
                 onChange={debouncedPartQuantityChange}
               />
-              <SelectParts
-                selected={partQuantities.map(
-                  (partQuantity) => partQuantity.part.id
-                )}
-                onChange={(selectedParts) => {
-                  dispatch(
-                    editWOPartQuantities(
-                      workOrder.id,
-                      selectedParts.map((part) => part.id)
-                    )
-                  );
-                }}
-              />
+              {hasEditPermission(PermissionEntity.WORK_ORDERS, workOrder) && (
+                <SelectParts
+                  selected={partQuantities.map(
+                    (partQuantity) => partQuantity.part.id
+                  )}
+                  onChange={(selectedParts) => {
+                    dispatch(
+                      editWOPartQuantities(
+                        workOrder.id,
+                        selectedParts.map((part) => part.id)
+                      )
+                    );
+                  }}
+                />
+              )}
             </Box>
             {!!currentWorkOrderRelations.length && (
               <Box>
@@ -1106,6 +1142,9 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                   confirmMessage={t(
                     'Are you sure you want to remove this file from this Work Order ?'
                   )}
+                  removeDisabled={
+                    !hasEditPermission(PermissionEntity.WORK_ORDERS, workOrder)
+                  }
                   files={workOrder.files}
                   onRemove={(id: number) => {
                     dispatch(

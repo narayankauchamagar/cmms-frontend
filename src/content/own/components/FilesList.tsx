@@ -8,11 +8,13 @@ interface FilesListProps {
   files: File[];
   onRemove: (id: number) => void;
   confirmMessage: string;
+  removeDisabled: boolean;
 }
 export default function FilesList({
   files,
   onRemove,
-  confirmMessage
+  confirmMessage,
+  removeDisabled
 }: FilesListProps) {
   const { getFormattedDate } = useContext(CompanySettingsContext);
 
@@ -22,17 +24,19 @@ export default function FilesList({
         <ListItem
           key={file.id}
           secondaryAction={
-            <IconButton
-              edge="end"
-              aria-label="delete"
-              onClick={() => {
-                if (window.confirm(confirmMessage)) {
-                  onRemove(file.id);
-                }
-              }}
-            >
-              <DoDisturbOnTwoToneIcon color="error" />
-            </IconButton>
+            removeDisabled ? null : (
+              <IconButton
+                edge="end"
+                aria-label="delete"
+                onClick={() => {
+                  if (window.confirm(confirmMessage)) {
+                    onRemove(file.id);
+                  }
+                }}
+              >
+                <DoDisturbOnTwoToneIcon color="error" />
+              </IconButton>
+            )
           }
         >
           <ListItemText

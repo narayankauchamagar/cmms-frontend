@@ -157,7 +157,7 @@ function MultipleTabsLayout(props: SettingsLayoutProps) {
               {actionTitle}
             </Button>
           )}
-          {secondAction && (
+          {secondAction && secondActionTitle && (
             <Button
               startIcon={secondActionIcon}
               variant="outlined"

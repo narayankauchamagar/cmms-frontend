@@ -55,7 +55,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
   const [currentUser, setCurrentUser] = useState<OwnUser>();
   const [detailDrawerOpen, setDetailDrawerOpen] = useState(false);
   const { peopleId } = useParams();
-  const { hasEditPermission } = useAuth();
+  const { hasEditPermission, user } = useAuth();
   const { users, loadingGet } = useSelector((state) => state.users);
   const dispatch = useDispatch();
   const { showSnackBar } = useContext(CustomSnackBarContext);
@@ -110,7 +110,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
   ];
   const getFields = () => {
     let fields = [...defautfields];
-    if (currentUser?.ownsCompany) {
+    if (currentUser?.ownsCompany || currentUser?.id === user?.id) {
       const roleIndex = fields.findIndex((field) => field.name === 'role');
       fields.splice(roleIndex, 1);
     }

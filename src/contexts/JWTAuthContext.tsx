@@ -637,7 +637,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     return state.user.role.viewPermissions.includes(permissionEntity);
   };
   const hasCreatePermission = (permissionEntity: PermissionEntity) => {
-    return state.user.role.viewPermissions.includes(permissionEntity);
+    return state.user.role.createPermissions.includes(permissionEntity);
   };
   const hasEditPermission = <Entity extends Audit>(
     permissionEntity: PermissionEntity,
