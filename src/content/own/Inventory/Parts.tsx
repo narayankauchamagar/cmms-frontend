@@ -35,6 +35,7 @@ import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 import useAuth from '../../../hooks/useAuth';
 import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
+import { getImageAndFiles } from '../../../utils/overall';
 
 interface PropsType {
   setAction: (p: () => () => void) => void;
@@ -349,16 +350,11 @@ const Parts = ({ setAction }: PropsType) => {
               return new Promise<void>((resolve, rej) => {
                 uploadFiles(formattedValues.files, formattedValues.image)
                   .then((files) => {
+                    const imageAndFiles = getImageAndFiles(files);
                     formattedValues = {
                       ...formattedValues,
-                      image: files.find((file) => file.type === 'IMAGE')
-                        ? { id: files.find((file) => file.type === 'IMAGE').id }
-                        : null,
-                      files: files
-                        .filter((file) => file.type === 'OTHER')
-                        .map((file) => {
-                          return { id: file.id };
-                        })
+                      image: imageAndFiles.image,
+                      files: imageAndFiles.files
                     };
                     dispatch(addPart(formattedValues))
                       .then(onCreationSuccess)
@@ -486,19 +482,14 @@ const Parts = ({ setAction }: PropsType) => {
                   : formattedValues.files;
                 uploadFiles(files, formattedValues.image)
                   .then((files) => {
+                    const imageAndFiles = getImageAndFiles(
+                      files,
+                      currentPart.image
+                    );
                     formattedValues = {
                       ...formattedValues,
-                      image: files.find((file) => file.type === 'IMAGE')
-                        ? { id: files.find((file) => file.type === 'IMAGE').id }
-                        : currentPart.image,
-                      files: [
-                        ...currentPart.files,
-                        ...files
-                          .filter((file) => file.type === 'OTHER')
-                          .map((file) => {
-                            return { id: file.id };
-                          })
-                      ]
+                      image: imageAndFiles.image,
+                      files: [...currentPart.files, ...imageAndFiles.files]
                     };
                     dispatch(editPart(currentPart.id, formattedValues))
                       .then(onEditSuccess)

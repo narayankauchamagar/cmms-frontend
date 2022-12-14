@@ -34,6 +34,7 @@ import useAuth from '../../../../hooks/useAuth';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import ConfirmDialog from '../../components/ConfirmDialog';
 import AssetMeters from './AssetMeters';
+import { getImageAndFiles } from '../../../../utils/overall';
 
 interface PropsType {}
 
@@ -330,19 +331,11 @@ const ShowAsset = ({}: PropsType) => {
               return new Promise<void>((resolve, rej) => {
                 uploadFiles(files, formattedValues.image)
                   .then((files) => {
+                    const imageAndFiles = getImageAndFiles(files, asset.image);
                     formattedValues = {
                       ...formattedValues,
-                      image: files.find((file) => file.type === 'IMAGE')
-                        ? { id: files.find((file) => file.type === 'IMAGE').id }
-                        : asset.image,
-                      files: [
-                        ...asset.files,
-                        ...files
-                          .filter((file) => file.type === 'OTHER')
-                          .map((file) => {
-                            return { id: file.id };
-                          })
-                      ]
+                      image: imageAndFiles.image,
+                      files: [...asset.files, ...imageAndFiles.files]
                     };
                     dispatch(editAsset(Number(assetId), formattedValues))
                       .then(onEditSuccess)

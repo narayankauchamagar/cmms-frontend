@@ -45,6 +45,7 @@ import { getWOBaseFields } from '../../../utils/fields';
 import { PermissionEntity } from '../../../models/owns/role';
 import PermissionErrorMessage from '../components/PermissionErrorMessage';
 import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
+import { getImageAndFiles } from '../../../utils/overall';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
@@ -252,16 +253,11 @@ function Files() {
               return new Promise<void>((resolve, rej) => {
                 uploadFiles(formattedValues.files, formattedValues.image)
                   .then((files) => {
+                    const imageAndFiles = getImageAndFiles(files);
                     formattedValues = {
                       ...formattedValues,
-                      image: files.find((file) => file.type === 'IMAGE')
-                        ? { id: files.find((file) => file.type === 'IMAGE').id }
-                        : null,
-                      files: files
-                        .filter((file) => file.type === 'OTHER')
-                        .map((file) => {
-                          return { id: file.id };
-                        })
+                      image: imageAndFiles.image,
+                      files: imageAndFiles.files
                     };
                     dispatch(addRequest(formattedValues))
                       .then(onCreationSuccess)
@@ -327,19 +323,14 @@ function Files() {
                   : formattedValues.files;
                 uploadFiles(files, formattedValues.image)
                   .then((files) => {
+                    const imageAndFiles = getImageAndFiles(
+                      files,
+                      currentRequest.image
+                    );
                     formattedValues = {
                       ...formattedValues,
-                      image: files.find((file) => file.type === 'IMAGE')
-                        ? { id: files.find((file) => file.type === 'IMAGE').id }
-                        : currentRequest.image,
-                      files: [
-                        ...currentRequest.files,
-                        ...files
-                          .filter((file) => file.type === 'OTHER')
-                          .map((file) => {
-                            return { id: file.id };
-                          })
-                      ]
+                      image: imageAndFiles.image,
+                      files: [...currentRequest.files, ...imageAndFiles.files]
                     };
                     dispatch(editRequest(currentRequest?.id, formattedValues))
                       .then(onEditSuccess)

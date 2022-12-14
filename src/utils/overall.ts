@@ -1,5 +1,6 @@
 import Reading from '../models/owns/reading';
 import { dayDiff } from './dates';
+import { FileType } from '../models/owns/file';
 
 export const canAddReading = (
   readings: Reading[],
@@ -11,4 +12,20 @@ export const canAddReading = (
         updateFrequency) ||
     !readings.length
   );
+};
+
+export const getImageAndFiles = (
+  files: { id: number; type: FileType }[],
+  imageFallback?
+) => {
+  return {
+    image: files.find((file) => file.type === 'IMAGE')
+      ? { id: files.find((file) => file.type === 'IMAGE').id }
+      : imageFallback ?? null,
+    files: files
+      .filter((file) => file.type === 'OTHER')
+      .map((file) => {
+        return { id: file.id };
+      })
+  };
 };

@@ -56,6 +56,7 @@ import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
 import PermissionErrorMessage from '../components/PermissionErrorMessage';
 import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
+import { getImageAndFiles } from '../../../utils/overall';
 
 function Locations() {
   const { t }: { t: any } = useTranslation();
@@ -80,6 +81,7 @@ function Locations() {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const { setTitle } = useContext(TitleContext);
   const { locationId } = useParams();
+  const { uploadFiles } = useContext(CompanySettingsContext);
   const {
     hasViewPermission,
     hasEditPermission,
@@ -334,6 +336,19 @@ function Locations() {
       name: 'coordinates',
       type: 'coordinates',
       label: 'Map Coordinates'
+    },
+    {
+      name: 'image',
+      type: 'file',
+      fileType: 'image',
+      label: t('Image')
+    },
+    {
+      name: 'files',
+      type: 'file',
+      multiple: true,
+      label: t('Files'),
+      fileType: 'file'
     }
   ];
 
@@ -383,11 +398,32 @@ function Locations() {
             values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              const formattedValues = formatValues(values);
-              return dispatch(addLocation(formattedValues))
-                .then(onCreationSuccess)
-                .then(() => dispatch(getLocationChildren(0, [])))
-                .catch(onCreationFailure);
+              let formattedValues = formatValues(values);
+              return new Promise<void>((resolve, rej) => {
+                uploadFiles(formattedValues.files, formattedValues.image)
+                  .then((files) => {
+                    const imageAndFiles = getImageAndFiles(files);
+                    formattedValues = {
+                      ...formattedValues,
+                      image: imageAndFiles.image,
+                      files: imageAndFiles.files
+                    };
+                    dispatch(addLocation(formattedValues))
+                      .then(onCreationSuccess)
+                      .then(() => {
+                        resolve();
+                        dispatch(getLocationChildren(0, []));
+                      })
+                      .catch((err) => {
+                        onCreationFailure(err);
+                        rej(err);
+                      });
+                  })
+                  .catch((err) => {
+                    onCreationFailure(err);
+                    rej(err);
+                  });
+              });
             }}
           />
         </Box>

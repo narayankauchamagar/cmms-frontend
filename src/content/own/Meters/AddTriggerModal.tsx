@@ -11,6 +11,7 @@ import Meter from '../../../models/owns/meter';
 import { useContext } from 'react';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
+import { getImageAndFiles } from '../../../utils/overall';
 
 interface AddTriggerProps {
   open: boolean;
@@ -115,16 +116,11 @@ export default function AddTriggerModal({
             return new Promise<void>((resolve, rej) => {
               uploadFiles(formattedValues.files, formattedValues.image)
                 .then((files) => {
+                  const imageAndFiles = getImageAndFiles(files);
                   formattedValues = {
                     ...formattedValues,
-                    image: files.find((file) => file.type === 'IMAGE')
-                      ? { id: files.find((file) => file.type === 'IMAGE').id }
-                      : null,
-                    files: files
-                      .filter((file) => file.type === 'OTHER')
-                      .map((file) => {
-                        return { id: file.id };
-                      })
+                    image: imageAndFiles.image,
+                    files: imageAndFiles.files
                   };
                   dispatch(
                     createWorkOrderMeterTrigger(meter.id, formattedValues)

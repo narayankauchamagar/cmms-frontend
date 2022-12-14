@@ -12,6 +12,7 @@ import WorkOrderMeterTrigger from '../../../models/owns/workOrderMeterTrigger';
 import { useContext } from 'react';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
+import { getImageAndFiles } from '../../../utils/overall';
 
 interface EditTriggerProps {
   open: boolean;
@@ -128,18 +129,16 @@ export default function EditTriggerModal({
             return new Promise<void>((resolve, rej) => {
               uploadFiles(files, formattedValues.image)
                 .then((files) => {
+                  const imageAndFiles = getImageAndFiles(
+                    files,
+                    workOrderMeterTrigger.image
+                  );
                   formattedValues = {
                     ...formattedValues,
-                    image: files.find((file) => file.type === 'IMAGE')
-                      ? { id: files.find((file) => file.type === 'IMAGE').id }
-                      : workOrderMeterTrigger.image,
+                    image: imageAndFiles.image,
                     files: [
                       ...workOrderMeterTrigger.files,
-                      ...files
-                        .filter((file) => file.type === 'OTHER')
-                        .map((file) => {
-                          return { id: file.id };
-                        })
+                      ...imageAndFiles.files
                     ]
                   };
                   dispatch(
