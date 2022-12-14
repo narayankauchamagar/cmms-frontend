@@ -7,6 +7,7 @@ interface PartPurchase {
   quantity: number;
 }
 export default interface PurchaseOrder extends Audit {
+  status: 'APPROVED' | 'PENDING' | 'REJECTED';
   name: string;
   id: number;
   partPurchases: PartPurchase[];
@@ -28,6 +29,11 @@ export default interface PurchaseOrder extends Audit {
   additionalInfoTerm: string;
   additionalInfoNotes: string;
 }
+export const approvalStatusTranslations = {
+  APPROVED: 'Approved',
+  PENDING: 'Pending',
+  REJECTED: 'Rejected'
+};
 
 export const purchaseOrders: PurchaseOrder[] = [
   {
@@ -37,6 +43,7 @@ export const purchaseOrders: PurchaseOrder[] = [
       return { part, quantity: 3 };
     }),
     category: 'string',
+    status: 'APPROVED',
     additionalDetails: 'string',
     vendor: vendors[0],
     shippingDueDate: 'string',

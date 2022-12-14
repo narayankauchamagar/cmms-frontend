@@ -97,6 +97,17 @@ export const editPurchaseOrder =
       slice.actions.editPurchaseOrder({ purchaseOrder: purchaseOrderResponse })
     );
   };
+export const respondPurchaseOrder =
+  (id: number, approved: boolean): AppThunk =>
+  async (dispatch) => {
+    const purchaseOrderResponse = await api.patch<PurchaseOrder>(
+      `${basePath}/${id}/respond?approved=${approved}`,
+      {}
+    );
+    dispatch(
+      slice.actions.editPurchaseOrder({ purchaseOrder: purchaseOrderResponse })
+    );
+  };
 export const deletePurchaseOrder =
   (id: number): AppThunk =>
   async (dispatch) => {

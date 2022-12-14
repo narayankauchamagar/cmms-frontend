@@ -1,5 +1,7 @@
 import {
   Box,
+  Button,
+  CircularProgress,
   debounce,
   Divider,
   Grid,
@@ -14,7 +16,9 @@ import { ChangeEvent, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import PurchaseOrder from '../../../models/owns/purchaseOrder';
+import PurchaseOrder, {
+  approvalStatusTranslations
+} from '../../../models/owns/purchaseOrder';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
@@ -23,6 +27,9 @@ import { useDispatch } from '../../../store';
 import PartQuantitiesList from '../components/PartQuantitiesList';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import PartQuantity from 'src/models/owns/partQuantity';
+import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
+import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
+import { respondPurchaseOrder } from '../../../slices/purchaseOrder';
 
 interface PurchaseOrderDetailsProps {
   purchaseOrder: PurchaseOrder;
@@ -35,7 +42,10 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
     props;
   const { t }: { t: any } = useTranslation();
   const { getFormattedDate } = useContext(CompanySettingsContext);
-  const { hasEditPermission, hasDeletePermission } = useAuth();
+  const [approving, setApproving] = useState<boolean>(false);
+  const [cancelling, setCancelling] = useState<boolean>(false);
+  const { hasEditPermission, hasDeletePermission, hasViewPermission } =
+    useAuth();
   const dispatch = useDispatch();
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const theme = useTheme();
@@ -61,6 +71,19 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
     () => debounce(onPartQuantityChange, 1500),
     []
   );
+  const onApprove = () => {
+    setApproving(true);
+    dispatch(respondPurchaseOrder(purchaseOrder.id, true)).finally(() =>
+      setApproving(false)
+    );
+  };
+
+  const onCancel = () => {
+    setCancelling(true);
+    dispatch(respondPurchaseOrder(purchaseOrder.id, false)).finally(() =>
+      setCancelling(false)
+    );
+  };
   const BasicField = ({
     label,
     value,
@@ -195,6 +218,9 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
         <Box>
           <Typography variant="h2">{purchaseOrder?.name}</Typography>
           <Typography variant="h6">{purchaseOrder?.shippingAddress}</Typography>
+          <Typography variant="h6">
+            {t(approvalStatusTranslations[purchaseOrder?.status])}
+          </Typography>
         </Box>
         <Box>
           {hasEditPermission(
@@ -216,6 +242,48 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
         </Box>
       </Grid>
       <Divider />
+      {purchaseOrder.status === 'PENDING' &&
+        hasViewPermission(PermissionEntity.SETTINGS) && (
+          <>
+            <Grid
+              item
+              xs={12}
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-around'
+              }}
+            >
+              <Button
+                startIcon={
+                  cancelling ? (
+                    <CircularProgress size="1rem" sx={{ color: 'white' }} />
+                  ) : (
+                    <ClearTwoToneIcon />
+                  )
+                }
+                onClick={onCancel}
+                variant="outlined"
+              >
+                {t('Cancel')}
+              </Button>
+              <Button
+                startIcon={
+                  approving ? (
+                    <CircularProgress size="1rem" sx={{ color: 'white' }} />
+                  ) : (
+                    <CheckTwoToneIcon />
+                  )
+                }
+                onClick={onApprove}
+                variant="contained"
+              >
+                {t('Approve')}
+              </Button>
+            </Grid>
+            <Divider />
+          </>
+        )}
       <Grid item xs={12}>
         <Tabs
           onChange={handleTabsChange}
@@ -251,7 +319,7 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
               !hasEditPermission(
                 PermissionEntity.PURCHASE_ORDERS,
                 purchaseOrder
-              )
+              ) || purchaseOrder.status !== 'PENDING'
             }
             onChange={debouncedPartQuantityChange}
           />

@@ -37,6 +37,9 @@ function CreatePurchaseOrder() {
     );
     navigate('/app/purchase-orders');
   };
+  const onMissingPartQuantities = () => {
+    showSnackBar(t('Select at least 1 part '), 'error');
+  };
   const onCreationFailure = (err) =>
     showSnackBar(t("The Purchase Order couldn't be created"), 'error');
   const fields: Array<IField> = [
@@ -250,6 +253,10 @@ function CreatePurchaseOrder() {
                   values={{ shippingDueDate: null, additionalInfoDate: null }}
                   onChange={({ field, e }) => {}}
                   onSubmit={async (values) => {
+                    if (!values.partQuantities?.length) {
+                      onMissingPartQuantities();
+                      return;
+                    }
                     values.category = formatSelect(values.category);
                     values.vendor = formatSelect(values.vendor);
                     return dispatch(addPurchaseOrder(values))

@@ -17,7 +17,9 @@ import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import CustomDataGrid from '../components/CustomDatagrid';
 import { GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import PurchaseOrder from '../../../models/owns/purchaseOrder';
+import PurchaseOrder, {
+  approvalStatusTranslations
+} from '../../../models/owns/purchaseOrder';
 import { useDispatch, useSelector } from '../../../store';
 import {
   deletePurchaseOrder,
@@ -183,6 +185,14 @@ function PurchaseOrders() {
       headerName: t('Category'),
       description: t('Category'),
       width: 150
+    },
+    {
+      field: 'status',
+      headerName: t('Status'),
+      description: t('Status'),
+      width: 150,
+      valueGetter: (params: GridRenderCellParams<string>) =>
+        t(approvalStatusTranslations[params.value])
     },
     {
       field: 'shippingShipToName',
