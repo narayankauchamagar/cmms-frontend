@@ -1,19 +1,19 @@
-import { FC } from 'react';
+import { ChangeEvent, FC, useContext, useState } from 'react';
 import PropTypes from 'prop-types';
-import type { UserResponseDTO } from 'src/models/user';
+import type { OwnUser, UserResponseDTO } from 'src/models/user';
 import {
   Avatar,
   Box,
-  Button,
   Card,
-  CardMedia,
+  CircularProgress,
   IconButton,
   styled,
   Typography
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
 import UploadTwoToneIcon from '@mui/icons-material/UploadTwoTone';
+import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
+import useAuth from '../../../hooks/useAuth';
 
 const Input = styled('input')({
   display: 'none'
@@ -24,8 +24,8 @@ const AvatarWrapper = styled(Card)(
     position: relative;
     overflow: visible;
     display: inline-block;
-    margin-top: -${theme.spacing(9)};
     margin-left: ${theme.spacing(2)};
+    margin-top: ${theme.spacing(1)};
 
     .MuiAvatar-root {
       width: ${theme.spacing(16)};
@@ -82,44 +82,37 @@ interface ProfileCoverProps {
 
 const ProfileCover: FC<ProfileCoverProps> = ({ user }) => {
   const { t }: { t: any } = useTranslation();
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const handleBack = (): void => {
-    return navigate(
-      `/${location.pathname.split('/')[1]}/management/users/list`
-    );
+  const [changingPicture, setChangingPicture] = useState<boolean>(false);
+  const { uploadFiles } = useContext(CompanySettingsContext);
+  const { patchUser } = useAuth();
+  const onChangePicture = (event: ChangeEvent<HTMLInputElement>) => {
+    setChangingPicture(true);
+    uploadFiles([], Array.from(event.target.files))
+      .then((files) =>
+        patchUser({ image: { id: files[0].id } } as Partial<OwnUser>)
+      )
+      .finally(() => setChangingPicture(false));
   };
-
   return (
     <>
-      <CardCover>
-        <CardMedia image={user.firstName} />
-        <CardCoverAction>
-          <Input accept="image/*" id="change-cover" multiple type="file" />
-          <label htmlFor="change-cover">
-            <Button
-              startIcon={<UploadTwoToneIcon />}
-              variant="contained"
-              component="span"
-            >
-              {t('Change cover')}
-            </Button>
-          </label>
-        </CardCoverAction>
-      </CardCover>
       <AvatarWrapper>
-        <Avatar variant="rounded" alt={user.firstName} src={user.firstName} />
+        <Avatar variant="rounded" src={user.image?.url} alt={user.firstName} />
         <ButtonUploadWrapper>
           <Input
             accept="image/*"
             id="icon-button-file"
+            onChange={onChangePicture}
+            disabled={changingPicture}
             name="icon-button-file"
             type="file"
           />
           <label htmlFor="icon-button-file">
             <IconButton component="span" color="primary">
-              <UploadTwoToneIcon />
+              {changingPicture ? (
+                <CircularProgress size="1rem" sx={{ color: 'white' }} />
+              ) : (
+                <UploadTwoToneIcon />
+              )}
             </IconButton>
           </label>
         </ButtonUploadWrapper>

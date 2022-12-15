@@ -1,5 +1,6 @@
 import { Audit } from './owns/audit';
 import { Role } from './owns/role';
+import File from './owns/file';
 
 export type UserRole = 'admin' | 'customer' | 'subscriber';
 
@@ -30,6 +31,7 @@ export interface OwnUser extends Audit {
   jobTitle: string;
   role: Role;
   companyId: number;
+  image: File;
 }
 export interface UserMiniDTO {
   firstName: string;

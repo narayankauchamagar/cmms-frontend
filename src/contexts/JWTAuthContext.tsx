@@ -523,10 +523,10 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     });
   };
   const patchUser = async (values: Partial<OwnUser>): Promise<void> => {
-    const user = await api.patch<UserResponseDTO>(
-      `users/${state.user.id}`,
-      values
-    );
+    const user = await api.patch<UserResponseDTO>(`users/${state.user.id}`, {
+      ...state.user,
+      ...values
+    });
     dispatch({
       type: 'PATCH_USER',
       payload: {
