@@ -50,7 +50,9 @@ const slice = createSlice({
     },
     editAsset(state: AssetState, action: PayloadAction<{ asset: AssetDTO }>) {
       const { asset } = action.payload;
-      state.assetInfos[asset.id].asset = asset;
+      if (state.assetInfos[asset.id]) {
+        state.assetInfos[asset.id].asset = asset;
+      } else state.assetInfos[asset.id] = { asset, workOrders: [] };
     },
     deleteAsset(state: AssetState, action: PayloadAction<{ id: number }>) {
       const { id } = action.payload;
@@ -141,6 +143,12 @@ export const editAsset =
   (id: number, asset): AppThunk =>
   async (dispatch) => {
     const assetResponse = await api.patch<AssetDTO>(`${basePath}/${id}`, asset);
+    dispatch(slice.actions.editAsset({ asset: assetResponse }));
+  };
+export const getSingleAsset =
+  (id: number): AppThunk =>
+  async (dispatch) => {
+    const assetResponse = await api.get<AssetDTO>(`${basePath}/${id}`);
     dispatch(slice.actions.editAsset({ asset: assetResponse }));
   };
 export const deleteAsset =

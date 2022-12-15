@@ -31,7 +31,7 @@ import { isNumeric } from '../../../utils/validators';
 import { UserMiniDTO } from '../../../models/user';
 import Team from '../../../models/owns/team';
 import WorkOrderDetails from './WorkOrderDetails';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import Location from '../../../models/owns/location';
 import Asset from '../../../models/owns/asset';
 import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
@@ -55,11 +55,16 @@ import { getUserNameById } from '../../../utils/displayers';
 import ConfirmDialog from '../components/ConfirmDialog';
 import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
 import { getImageAndFiles } from '../../../utils/overall';
+import { getSingleLocation } from '../../../slices/location';
+import { getSingleAsset } from '../../../slices/asset';
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
   const [currentTab, setCurrentTab] = useState<string>('list');
   const { workOrders, loadingGet } = useSelector((state) => state.workOrders);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const locationParam = searchParams.get('location');
+  const assetParam = searchParams.get('asset');
   const dispatch = useDispatch();
   const { uploadFiles } = useContext(CompanySettingsContext);
   const { companySettings, getFilteredFields } = useAuth();
@@ -84,6 +89,12 @@ function WorkOrders() {
   const [currentWorkOrder, setCurrentWorkOrder] = useState<WorkOrder>();
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const { tasksByWorkOrder } = useSelector((state) => state.tasks);
+  const { locations } = useSelector((state) => state.locations);
+  const { assetInfos } = useSelector((state) => state.assets);
+  const locationParamObject = locations.find(
+    (location) => location.id === Number(locationParam)
+  );
+  const assetParamObject = assetInfos[assetParam]?.asset;
   const { usersMini } = useSelector((state) => state.users);
   const tasks = tasksByWorkOrder[currentWorkOrder?.id] ?? [];
   const handleDelete = (id: number) => {
@@ -127,6 +138,25 @@ function WorkOrders() {
       handleOpenDetails(Number(workOrderId));
     }
   }, [workOrders]);
+
+  useEffect(() => {
+    if (locationParam || assetParam) {
+      if (locationParam && isNumeric(locationParam)) {
+        dispatch(getSingleLocation(Number(locationParam)));
+      }
+      if (assetParam && isNumeric(assetParam)) {
+        dispatch(getSingleAsset(Number(assetParam)));
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    let canOpen1 = !locationParam || (locationParam && locationParamObject);
+    let canOpen2 = !assetParam || (assetParam && assetParamObject);
+    if (canOpen1 && canOpen2) {
+      setOpenAddModal(true);
+    }
+  }, [locationParamObject, assetParamObject]);
 
   const formatValues = (values) => {
     values.primaryUser = formatSelect(values.primaryUser);
@@ -539,7 +569,19 @@ function WorkOrders() {
             fields={getFieldsAndShapes()[0]}
             validation={Yup.object().shape(getFieldsAndShapes()[1])}
             submitText={t('Add')}
-            values={{ requiredSignature: false, dueDate: null }}
+            values={{
+              requiredSignature: false,
+              dueDate: null,
+              asset: assetParamObject
+                ? { label: assetParamObject.name, value: assetParamObject.id }
+                : null,
+              location: locationParamObject
+                ? {
+                    label: locationParamObject.name,
+                    value: locationParamObject.id
+                  }
+                : null
+            }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               let formattedValues = formatValues(values);

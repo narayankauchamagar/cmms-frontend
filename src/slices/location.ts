@@ -51,12 +51,14 @@ const slice = createSlice({
       action: PayloadAction<{ location: Location }>
     ) {
       const { location } = action.payload;
-      state.locations = state.locations.map((location1) => {
-        if (location1.id === location.id) {
-          return location;
-        }
-        return location1;
-      });
+      const locationIndex = state.locations.findIndex(
+        (loc) => loc.id === location.id
+      );
+      if (locationIndex === -1) {
+        state.locations = [...state.locations, location];
+      } else {
+        state.locations[locationIndex] = location;
+      }
     },
     deleteLocation(
       state: LocationState,
@@ -124,6 +126,12 @@ export const editLocation =
       `locations/${id}`,
       location
     );
+    dispatch(slice.actions.editLocation({ location: locationResponse }));
+  };
+export const getSingleLocation =
+  (id: number): AppThunk =>
+  async (dispatch) => {
+    const locationResponse = await api.get<Location>(`locations/${id}`);
     dispatch(slice.actions.editLocation({ location: locationResponse }));
   };
 export const deleteLocation =

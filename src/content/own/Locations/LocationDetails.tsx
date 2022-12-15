@@ -267,7 +267,12 @@ export default function LocationDetails(props: LocationDetailsProps) {
           <Box>
             {hasCreatePermission(PermissionEntity.WORK_ORDERS) && (
               <Box display="flex" justifyContent="right">
-                <Button startIcon={<AddTwoToneIcon fontSize="small" />}>
+                <Button
+                  startIcon={<AddTwoToneIcon fontSize="small" />}
+                  onClick={() =>
+                    navigate(`/app/work-orders?location=${location.id}`)
+                  }
+                >
                   {t('Work Order')}
                 </Button>
               </Box>
