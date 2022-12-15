@@ -22,6 +22,7 @@ import { Audit } from 'src/models/owns/audit';
 import OwnSubscription from '../models/owns/ownSubscription';
 import { PlanFeature } from '../models/owns/subscriptionPlan';
 import { IField } from '../content/own/type';
+import WorkOrder from '../models/owns/workOrder';
 
 interface AuthState {
   isInitialized: boolean;
@@ -648,6 +649,26 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
       return (
         state.user.id === entity.id ||
         state.user.role.editOtherPermissions.includes(permissionEntity)
+      );
+    }
+    if (permissionEntity === PermissionEntity.WORK_ORDERS) {
+      const isAssignedTo = (workOrder: WorkOrder, user: OwnUser): boolean => {
+        let users = [];
+        if (workOrder.primaryUser) {
+          users.push(workOrder.primaryUser);
+        }
+        if (workOrder.team) {
+          users = users.concat(workOrder.team.users);
+        }
+        if (workOrder.assignedTo) {
+          users.concat(workOrder.assignedTo);
+        }
+        return users.some((user1) => user1.id === user.id);
+      };
+      return (
+        state.user.id === entity.createdBy ||
+        state.user.role.editOtherPermissions.includes(permissionEntity) ||
+        isAssignedTo(entity as unknown as WorkOrder, state.user)
       );
     }
     return (

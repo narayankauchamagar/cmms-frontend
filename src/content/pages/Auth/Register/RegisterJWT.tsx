@@ -160,6 +160,7 @@ function RegisterJWT({
             helperText={touched.email && errors.email}
             label={t('Email address')}
             name="email"
+            disabled={!!email}
             onBlur={handleBlur}
             onChange={handleChange}
             type="email"

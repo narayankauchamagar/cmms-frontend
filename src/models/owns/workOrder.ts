@@ -1,12 +1,11 @@
 import { Audit } from './audit';
-import User, { users } from './user';
 import Request, { requests } from './request';
 import Team, { teams } from './team';
 import Asset, { assets } from './asset';
 import File, { files } from './file';
 import Location, { locations } from './location';
 import Category, { categories } from './category';
-import { UserMiniDTO } from '../user';
+import { OwnUser, UserMiniDTO } from '../user';
 import { CustomerMiniDTO, customers } from './customer';
 
 interface WorkOrderBase extends Audit {
@@ -19,7 +18,7 @@ interface WorkOrderBase extends Audit {
   requiredSignature: boolean;
   location: Location;
   team: Team;
-  primaryUser: User;
+  primaryUser: OwnUser;
   assignedTo: UserMiniDTO[];
   files: File[];
   image: File | null;
@@ -29,7 +28,7 @@ interface WorkOrderBase extends Audit {
 export default interface WorkOrder extends WorkOrderBase {
   category: Category | null;
   id: number;
-  completedBy: User;
+  completedBy: OwnUser;
   completedOn: string;
   archived: boolean;
   parentRequest: Request;
@@ -39,7 +38,7 @@ export default interface WorkOrder extends WorkOrderBase {
 
 export const workOrders: WorkOrder[] = [
   {
-    completedBy: users[0],
+    completedBy: null,
     completedOn: 'string',
     category: categories[0],
     archived: true,
@@ -54,8 +53,8 @@ export const workOrders: WorkOrder[] = [
     requiredSignature: true,
     location: locations[0],
     team: teams[0],
-    primaryUser: users[0],
-    assignedTo: users,
+    primaryUser: null,
+    assignedTo: [],
     asset: assets[0],
     //parentPreventiveMaintenance:
     title: 'Work Order1',
