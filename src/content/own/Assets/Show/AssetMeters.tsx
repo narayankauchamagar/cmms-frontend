@@ -26,11 +26,9 @@ import { CompanySettingsContext } from '../../../../contexts/CompanySettingsCont
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import Form from '../../components/form';
 import * as Yup from 'yup';
-import { getUsersMini } from '../../../../slices/user';
 import { IField } from '../../type';
 import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContext';
 import { canAddReading } from '../../../../utils/overall';
-import { getUserNameById } from '../../../../utils/displayers';
 import useAuth from '../../../../hooks/useAuth';
 import { PermissionEntity } from '../../../../models/owns/role';
 
@@ -46,11 +44,12 @@ const AssetMeters = ({ asset }: PropsType) => {
   const meters = metersByAsset[asset?.id] ?? [];
   const [selectedMeter, setSelectedMeter] = useState<Meter>();
   const { hasEditPermission } = useAuth();
-  const { getFormattedDate } = useContext(CompanySettingsContext);
+  const { getFormattedDate, getUserNameById } = useContext(
+    CompanySettingsContext
+  );
   const [openReadingModal, setOpenReadingModal] = useState<boolean>(false);
   const readings = readingsByMeter[selectedMeter?.id] ?? [];
   const { showSnackBar } = useContext(CustomSnackBarContext);
-  const { usersMini } = useSelector((state) => state.users);
 
   useEffect(() => {
     if (asset) dispatch(getMetersByAsset(asset?.id));
@@ -61,10 +60,6 @@ const AssetMeters = ({ asset }: PropsType) => {
       setSelectedMeter(meters[0]);
     }
   }, [meters]);
-
-  useEffect(() => {
-    dispatch(getUsersMini());
-  }, []);
 
   useEffect(() => {
     if (!readingsByMeter[selectedMeter?.id] && selectedMeter) {
@@ -99,7 +94,7 @@ const AssetMeters = ({ asset }: PropsType) => {
       headerName: t('Added by'),
       description: t('Added By'),
       width: 150,
-      valueGetter: (params) => getUserNameById(params.value, usersMini)
+      valueGetter: (params) => getUserNameById(params.value)
     }
   ];
   const fields: Array<IField> = [

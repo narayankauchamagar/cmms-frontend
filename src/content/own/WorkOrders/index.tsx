@@ -50,8 +50,6 @@ import useAuth from '../../../hooks/useAuth';
 import { getWOBaseValues } from '../../../utils/fields';
 import { PermissionEntity } from '../../../models/owns/role';
 import PermissionErrorMessage from '../components/PermissionErrorMessage';
-import { getUsersMini } from '../../../slices/user';
-import { getUserNameById } from '../../../utils/displayers';
 import ConfirmDialog from '../components/ConfirmDialog';
 import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
 import { getImageAndFiles } from '../../../utils/overall';
@@ -69,7 +67,9 @@ function WorkOrders() {
   const { uploadFiles } = useContext(CompanySettingsContext);
   const { companySettings, getFilteredFields } = useAuth();
   const { workOrderConfiguration } = companySettings;
-  const { getFormattedDate } = useContext(CompanySettingsContext);
+  const { getFormattedDate, getUserNameById } = useContext(
+    CompanySettingsContext
+  );
   const tabs = [
     { value: 'list', label: t('List View'), disabled: false },
     { value: 'calendar', label: t('Calendar View'), disabled: true },
@@ -95,7 +95,6 @@ function WorkOrders() {
     (location) => location.id === Number(locationParam)
   );
   const assetParamObject = assetInfos[assetParam]?.asset;
-  const { usersMini } = useSelector((state) => state.users);
   const tasks = tasksByWorkOrder[currentWorkOrder?.id] ?? [];
   const handleDelete = (id: number) => {
     dispatch(deleteWorkOrder(id)).then(onDeleteSuccess).catch(onDeleteFailure);
@@ -130,7 +129,6 @@ function WorkOrders() {
     setTitle(t('Work Orders'));
     if (hasViewPermission(PermissionEntity.WORK_ORDERS))
       dispatch(getWorkOrders());
-    dispatch(getUsersMini());
   }, []);
 
   useEffect(() => {
@@ -339,7 +337,7 @@ function WorkOrders() {
       description: t('Requested By'),
       width: 150,
       valueGetter: (params) =>
-        getUserNameById(params.row.parentRequest?.createdBy, usersMini)
+        getUserNameById(params.row.parentRequest?.createdBy)
     },
     {
       field: 'laborCost',

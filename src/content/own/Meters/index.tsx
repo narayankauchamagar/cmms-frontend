@@ -58,7 +58,9 @@ function Meters() {
   } = useAuth();
   const dispatch = useDispatch();
   const { showSnackBar } = useContext(CustomSnackBarContext);
-  const { getFormattedDate, uploadFiles } = useContext(CompanySettingsContext);
+  const { getFormattedDate, uploadFiles, getUserNameById } = useContext(
+    CompanySettingsContext
+  );
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const { meters, loadingGet } = useSelector((state) => state.meters);
 
@@ -165,7 +167,8 @@ function Meters() {
       field: 'createdBy',
       headerName: t('Created By'),
       description: t('Created By'),
-      width: 150
+      width: 150,
+      valueGetter: (params) => getUserNameById(params.value)
     },
     {
       field: 'createdAt',

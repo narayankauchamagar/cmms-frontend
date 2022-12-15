@@ -1,16 +1,18 @@
 import { Helmet } from 'react-helmet-async';
-import { Button, Card, Grid } from '@mui/material';
+import { Card, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { IField } from '../type';
 import { useContext, useEffect } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
-import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import { addPurchaseOrder } from '../../../slices/purchaseOrder';
+import {
+  addPurchaseOrder,
+  respondPurchaseOrder
+} from '../../../slices/purchaseOrder';
 import { useDispatch } from '../../../store';
 import Form from '../components/form';
 import * as Yup from 'yup';
 import { phoneRegExp } from '../../../utils/validators';
-import { formatSelect } from '../../../utils/formatters';
+import { formatSelect, formatSwitch } from '../../../utils/formatters';
 import { useNavigate } from 'react-router-dom';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import PermissionErrorMessage from '../components/PermissionErrorMessage';
@@ -25,7 +27,7 @@ function CreatePurchaseOrder() {
   const { setTitle } = useContext(TitleContext);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { hasCreatePermission, hasFeature } = useAuth();
+  const { hasCreatePermission, hasFeature, hasViewPermission } = useAuth();
   const { showSnackBar } = useContext(CustomSnackBarContext);
   useEffect(() => {
     setTitle(t('New Purchase Order'));
@@ -42,7 +44,7 @@ function CreatePurchaseOrder() {
   };
   const onCreationFailure = (err) =>
     showSnackBar(t("The Purchase Order couldn't be created"), 'error');
-  const fields: Array<IField> = [
+  const defaultFields: Array<IField> = [
     {
       name: 'purchaseOrderDetails',
       type: 'titleGroupField',
@@ -195,6 +197,17 @@ function CreatePurchaseOrder() {
       midWidth: true
     }
   ];
+  const getFields = () => {
+    let fields = [...defaultFields];
+    if (hasViewPermission(PermissionEntity.SETTINGS)) {
+      fields.push({
+        name: 'approveOnSubmit',
+        type: 'switch',
+        label: t('Approve while submitting')
+      });
+    }
+    return fields;
+  };
   const shape = {
     name: Yup.string().required(t('The name is required')),
     shippingFax: Yup.string().matches(
@@ -220,22 +233,6 @@ function CreatePurchaseOrder() {
             spacing={1}
             paddingX={4}
           >
-            <Grid
-              item
-              xs={12}
-              display="flex"
-              flexDirection="row"
-              justifyContent="right"
-              alignItems="center"
-            >
-              <Button
-                startIcon={<AddTwoToneIcon />}
-                sx={{ mx: 6, my: 1 }}
-                variant="contained"
-              >
-                Submit and Approve
-              </Button>
-            </Grid>
             <Grid item xs={12}>
               <Card
                 sx={{
@@ -247,7 +244,7 @@ function CreatePurchaseOrder() {
                 }}
               >
                 <Form
-                  fields={fields}
+                  fields={getFields()}
                   validation={Yup.object().shape(shape)}
                   submitText={t('Submit')}
                   values={{ shippingDueDate: null, additionalInfoDate: null }}
@@ -259,11 +256,20 @@ function CreatePurchaseOrder() {
                     }
                     values.category = formatSelect(values.category);
                     values.vendor = formatSelect(values.vendor);
+                    values.approveOnSubmit = formatSwitch(
+                      values,
+                      'approveOnSubmit'
+                    );
                     return dispatch(addPurchaseOrder(values))
                       .then((id: number) => {
                         dispatch(
                           editPOPartQuantities(id, values.partQuantities)
                         )
+                          .then(() => {
+                            if (values.approveOnSubmit) {
+                              dispatch(respondPurchaseOrder(id, true));
+                            }
+                          })
                           .then(onCreationSuccess)
                           .catch(onCreationFailure);
                       })

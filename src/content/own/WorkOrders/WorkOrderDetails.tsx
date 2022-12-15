@@ -69,7 +69,6 @@ import SignatureModal from './SignatureModal';
 import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
 import { getSingleUser } from '../../../slices/user';
-import { getUserNameById } from '../../../utils/displayers';
 import FilesList from '../components/FilesList';
 import { PlanFeature } from '../../../models/owns/subscriptionPlan';
 import PartQuantitiesList from '../components/PartQuantitiesList';
@@ -84,7 +83,9 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const { workOrder, onEdit, tasks, onDelete } = props;
   const theme = useTheme();
   const { showSnackBar } = useContext(CustomSnackBarContext);
-  const { getFormattedDate } = useContext(CompanySettingsContext);
+  const { getFormattedDate, getUserNameById } = useContext(
+    CompanySettingsContext
+  );
   const { t }: { t: any } = useTranslation();
   const { user, hasEditPermission, hasDeletePermission } = useAuth();
 
@@ -135,20 +136,9 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   }, []);
 
   const { usersMini } = useSelector((state) => state.users);
-  const [createdByName, setCreatedByName] = useState<string>('');
-  const [requestedByName, setRequestedByName] = useState<string>('');
   const [isImageViewerOpen, setIsImageViewerOpen] = useState<boolean>(false);
   const [currentImage, setCurrentImage] = useState<string>();
   const [currentImages, setCurrentImages] = useState<string[]>();
-
-  useEffect(() => {
-    setCreatedByName(getUserNameById(workOrder.createdBy, usersMini));
-    if (workOrder.parentRequest) {
-      setRequestedByName(
-        getUserNameById(workOrder.parentRequest.createdBy, usersMini)
-      );
-    }
-  }, [usersMini, workOrder]);
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -644,7 +634,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                   {workOrder.parentRequest ? t('Approved By') : t('Created By')}
                 </Typography>
                 <Link variant="h6" href={getUserUrl(workOrder.createdBy)}>
-                  {createdByName}
+                  {getUserNameById(workOrder.createdBy)}
                 </Link>
               </Grid>
               {workOrder.status === 'COMPLETE' && (
@@ -710,7 +700,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                     variant="h6"
                     href={getUserUrl(workOrder.parentRequest.createdBy)}
                   >
-                    {requestedByName}
+                    {getUserNameById(workOrder.parentRequest.createdBy)}
                   </Link>
                 </Grid>
               )}

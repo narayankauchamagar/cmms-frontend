@@ -23,7 +23,11 @@ import { useDispatch, useSelector } from '../../../store';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import CustomDataGrid from '../components/CustomDatagrid';
-import { GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
+import {
+  GridRenderCellParams,
+  GridToolbar,
+  GridValueGetterParams
+} from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import Request from '../../../models/owns/request';
 import Form from '../components/form';
@@ -164,7 +168,13 @@ function Files() {
       field: 'status',
       headerName: t('Status'),
       description: t('Status'),
-      width: 150
+      width: 150,
+      valueGetter: (params: GridValueGetterParams<Request>) =>
+        params.row.cancelled
+          ? t('Rejected')
+          : params.row.workOrder
+          ? t('Approved')
+          : t('Pending')
     }
   ];
   const defaultFields: Array<IField> = [...getWOBaseFields(t)];

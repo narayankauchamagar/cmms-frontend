@@ -30,6 +30,10 @@ export const formatAssetValues = (values) => {
   return values;
 };
 
+export const formatSwitch = (values: {}, key: string) => {
+  return Array.isArray(values[key]) ? values[key].includes('on') : values[key];
+};
+
 export const getPriorityLabel = (str: string, t: any) => {
   switch (str) {
     case 'NONE':

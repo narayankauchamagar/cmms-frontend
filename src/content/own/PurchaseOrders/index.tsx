@@ -50,7 +50,9 @@ import {
 function PurchaseOrders() {
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
-  const { getFormattedDate } = useContext(CompanySettingsContext);
+  const { getFormattedDate, getUserNameById } = useContext(
+    CompanySettingsContext
+  );
   const navigate = useNavigate();
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
@@ -216,7 +218,8 @@ function PurchaseOrders() {
       field: 'createdBy',
       headerName: t('Created By'),
       description: t('Created By'),
-      width: 150
+      width: 150,
+      valueGetter: (params) => getUserNameById(params.value)
     },
     {
       field: 'createdAt',

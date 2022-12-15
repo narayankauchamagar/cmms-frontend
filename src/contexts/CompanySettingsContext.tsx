@@ -1,8 +1,9 @@
-import { createContext, FC } from 'react';
+import { createContext, FC, useEffect } from 'react';
 import useAuth from '../hooks/useAuth';
 import { addFiles } from '../slices/file';
-import { useDispatch } from '../store';
+import { useDispatch, useSelector } from '../store';
 import { FileType } from '../models/owns/file';
+import { getUsersMini } from '../slices/user';
 
 type CompanySettingsContext = {
   getFormattedDate: (dateString: string, hideTime?: boolean) => string;
@@ -10,6 +11,7 @@ type CompanySettingsContext = {
     files: any[],
     images: any[]
   ) => Promise<{ id: number; type: FileType }[]>;
+  getUserNameById: (id: number) => string | null;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
@@ -21,6 +23,7 @@ export const CompanySettingsProvider: FC = ({ children }) => {
   const { companySettings } = useAuth();
   const dispatch = useDispatch();
   const { generalPreferences } = companySettings ?? { dateFormat: 'DDMMYY' };
+  const { usersMini } = useSelector((state) => state.users);
 
   const getFormattedDate = (dateString: string, hideTime?: boolean) => {
     if (!dateString) return '';
@@ -66,8 +69,19 @@ export const CompanySettingsProvider: FC = ({ children }) => {
     }
     return result;
   };
+
+  const getUserNameById = (id: number) => {
+    const user = usersMini.find((user) => user.id === id);
+    return user ? `${user.firstName} ${user.lastName}` : null;
+  };
+
+  useEffect(() => {
+    dispatch(getUsersMini());
+  }, []);
   return (
-    <CompanySettingsContext.Provider value={{ getFormattedDate, uploadFiles }}>
+    <CompanySettingsContext.Provider
+      value={{ getFormattedDate, uploadFiles, getUserNameById }}
+    >
       {children}
     </CompanySettingsContext.Provider>
   );

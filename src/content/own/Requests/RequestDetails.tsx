@@ -16,13 +16,13 @@ import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
 import Request from '../../../models/owns/request';
 import { getPriorityLabel } from '../../../utils/formatters';
-import { useDispatch, useSelector } from '../../../store';
+import { useDispatch } from '../../../store';
 import {
   approveRequest,
   cancelRequest,
   editRequest
 } from '../../../slices/request';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   getAssetUrl,
@@ -32,8 +32,6 @@ import {
 } from '../../../utils/urlPaths';
 import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
-import { getSingleUser } from '../../../slices/user';
-import { getUserNameById } from '../../../utils/displayers';
 import ImageViewer from 'react-simple-image-viewer';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 import FilesList from '../components/FilesList';
@@ -58,18 +56,11 @@ export default function RequestDetails({
   const { hasEditPermission, hasDeletePermission, hasViewPermission } =
     useAuth();
   const navigate = useNavigate();
-  const { getFormattedDate } = useContext(CompanySettingsContext);
-  const { usersMini } = useSelector((state) => state.users);
-  const [createdByName, setCreatedByName] = useState<string>('');
+  const { getFormattedDate, getUserNameById } = useContext(
+    CompanySettingsContext
+  );
   const [isImageViewerOpen, setIsImageViewerOpen] = useState<boolean>(false);
 
-  useEffect(() => {
-    dispatch(getSingleUser(request.createdBy));
-  }, []);
-
-  useEffect(() => {
-    setCreatedByName(getUserNameById(request.createdBy, usersMini));
-  }, [usersMini, request]);
   const onApprove = () => {
     setApproving(true);
     dispatch(approveRequest(request.id))
@@ -184,7 +175,7 @@ export default function RequestDetails({
               <Button
                 startIcon={
                   cancelling ? (
-                    <CircularProgress size="1rem" sx={{ color: 'white' }} />
+                    <CircularProgress size="1rem" />
                   ) : (
                     <ClearTwoToneIcon />
                   )
@@ -250,7 +241,7 @@ export default function RequestDetails({
                     {t('Requested By')}
                   </Typography>
                   <Link variant="h6" href={getUserUrl(request.createdBy)}>
-                    {createdByName}
+                    {getUserNameById(request.createdBy)}
                   </Link>
                 </Grid>
               )}

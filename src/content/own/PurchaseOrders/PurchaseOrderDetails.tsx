@@ -257,7 +257,7 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
               <Button
                 startIcon={
                   cancelling ? (
-                    <CircularProgress size="1rem" sx={{ color: 'white' }} />
+                    <CircularProgress size="1rem" />
                   ) : (
                     <ClearTwoToneIcon />
                   )

@@ -42,7 +42,9 @@ import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
 function Files() {
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
-  const { getFormattedDate } = useContext(CompanySettingsContext);
+  const { getFormattedDate, getUserNameById } = useContext(
+    CompanySettingsContext
+  );
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const { files, loadingGet } = useSelector((state) => state.files);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
@@ -118,7 +120,8 @@ function Files() {
       field: 'createdBy',
       headerName: t('Uploaded By'),
       description: t('Uploaded By'),
-      width: 150
+      width: 150,
+      valueGetter: (params) => getUserNameById(params.value)
     },
     {
       field: 'createdAt',
