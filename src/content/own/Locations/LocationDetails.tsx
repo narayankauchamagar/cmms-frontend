@@ -234,7 +234,12 @@ export default function LocationDetails(props: LocationDetailsProps) {
           <Box>
             {hasCreatePermission(PermissionEntity.ASSETS) && (
               <Box display="flex" justifyContent="right">
-                <Button startIcon={<AddTwoToneIcon fontSize="small" />}>
+                <Button
+                  startIcon={<AddTwoToneIcon fontSize="small" />}
+                  onClick={() =>
+                    navigate(`/app/assets?location=${location.id}`)
+                  }
+                >
                   {t('Asset')}
                 </Button>
               </Box>

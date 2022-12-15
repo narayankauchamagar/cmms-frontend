@@ -27,7 +27,7 @@ import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { AssetRow } from '../../../models/owns/asset';
 import Form from '../components/form';
 import * as Yup from 'yup';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { DataGridProProps, useGridApiRef } from '@mui/x-data-grid-pro';
 import { formatAssetValues } from '../../../utils/formatters';
 import { GroupingCellWithLazyLoading } from './GroupingCellWithLazyLoading';
@@ -41,11 +41,15 @@ import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
 import PermissionErrorMessage from '../components/PermissionErrorMessage';
 import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
+import { isNumeric } from '../../../utils/validators';
+import { getSingleLocation } from '../../../slices/location';
 
 function Assets() {
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
   const { uploadFiles } = useContext(CompanySettingsContext);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const locationParam = searchParams.get('location');
   const navigate = useNavigate();
   const { hasViewPermission, hasCreatePermission, getFilteredFields } =
     useAuth();
@@ -55,12 +59,30 @@ function Assets() {
   const apiRef = useGridApiRef();
   const { getFormattedDate } = useContext(CompanySettingsContext);
   const { showSnackBar } = useContext(CustomSnackBarContext);
+  const { locations } = useSelector((state) => state.locations);
+  const locationParamObject = locations.find(
+    (location) => location.id === Number(locationParam)
+  );
   useEffect(() => {
     setTitle(t('Assets'));
     if (hasViewPermission(PermissionEntity.ASSETS)) {
       dispatch(getAssetChildren(0, []));
     }
   }, []);
+
+  useEffect(() => {
+    if (locationParam) {
+      if (locationParam && isNumeric(locationParam)) {
+        dispatch(getSingleLocation(Number(locationParam)));
+      }
+    }
+  }, []);
+  useEffect(() => {
+    let canOpen1 = !locationParam || (locationParam && locationParamObject);
+    if (canOpen1) {
+      setOpenAddModal(true);
+    }
+  }, [locationParamObject]);
 
   const onCreationSuccess = () => {
     setOpenAddModal(false);
@@ -434,7 +456,16 @@ function Assets() {
             fields={getFilteredFields(defaultFields)}
             validation={Yup.object().shape(shape)}
             submitText={t('Create Asset')}
-            values={{ inServiceDate: null, warrantyExpirationDate: null }}
+            values={{
+              inServiceDate: null,
+              warrantyExpirationDate: null,
+              location: locationParamObject
+                ? {
+                    label: locationParamObject.name,
+                    value: locationParamObject.id
+                  }
+                : null
+            }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               let formattedValues = formatAssetValues(values);
