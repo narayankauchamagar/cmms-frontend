@@ -23,7 +23,8 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useMemo, useState } from 'react';
 import debounce from 'lodash.debounce';
-import { getAssetUrl } from '../../../../../utils/urlPaths';
+import { getAssetUrl, getUserUrl } from '../../../../../utils/urlPaths';
+import useAuth from '../../../../../hooks/useAuth';
 
 interface SingleTaskProps {
   task: Task;
@@ -51,6 +52,7 @@ export default function SingleTask({
   const { t }: { t: any } = useTranslation();
   const navigate = useNavigate();
   const [savingNotes, setSavingNotes] = useState<boolean>(false);
+  const { user } = useAuth();
 
   const changeHandler = (event) =>
     !preview && handleChange(event.target.value, task.id);
@@ -119,6 +121,7 @@ export default function SingleTask({
                 !preview && handleChange(event.target.value, task.id)
               }
               sx={{ backgroundColor: 'white' }}
+              disabled={task.taskBase.user && task.taskBase.user.id !== user.id}
             >
               {getOptions(task.taskBase.taskType, task.taskBase.options).map(
                 (option) => (
@@ -134,6 +137,9 @@ export default function SingleTask({
                 onChange={debouncedChangeHandler}
                 defaultValue={task.value}
                 label={t('Value')}
+                disabled={
+                  task.taskBase.user && task.taskBase.user.id !== user.id
+                }
                 type={
                   task.taskBase.taskType === 'METER'
                     ? 'number'
@@ -183,6 +189,25 @@ export default function SingleTask({
           <Link variant="h6" href={getAssetUrl(task.taskBase.asset.id)}>
             {task.taskBase.asset.name}
           </Link>
+        </Box>
+      )}
+      {task.taskBase.user && (
+        <Box
+          display="flex"
+          flexDirection="row"
+          justifyContent="space-between"
+          sx={{ mt: 1 }}
+        >
+          <Typography variant="h6" fontWeight="bold">
+            {t('Assigned To')}
+          </Typography>
+          {task.taskBase.user.id === user.id ? (
+            <Typography variant="h6">{t('Me')}</Typography>
+          ) : (
+            <Link variant="h6" href={getUserUrl(task.taskBase.user.id)}>
+              {`${task.taskBase.user.firstName} ${task.taskBase.user.lastName}`}
+            </Link>
+          )}
         </Box>
       )}
       <Collapse sx={{ mt: 2 }} in={preview ? false : notes.get(task.id)}>

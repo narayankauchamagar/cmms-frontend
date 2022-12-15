@@ -147,8 +147,10 @@ export default function SelectTasks({
     if (tasks.some((task) => !task.taskBase.label)) {
       showError(t('Remove blank tasks'));
     } else if (
-      tasks.some((task) =>
-        task.taskBase.options.some((option) => !option.label.trim())
+      tasks.some(
+        (task) =>
+          task.taskBase.taskType === 'MULTIPLE' &&
+          task.taskBase.options.some((option) => !option.label.trim())
       )
     ) {
       showError(t('Remove blank options'));
