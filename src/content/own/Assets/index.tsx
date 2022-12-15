@@ -78,8 +78,8 @@ function Assets() {
     }
   }, []);
   useEffect(() => {
-    let canOpen1 = !locationParam || (locationParam && locationParamObject);
-    if (canOpen1) {
+    let shouldOpen1 = locationParam && locationParamObject;
+    if (shouldOpen1) {
       setOpenAddModal(true);
     }
   }, [locationParamObject]);

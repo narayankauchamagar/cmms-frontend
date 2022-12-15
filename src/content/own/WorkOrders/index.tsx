@@ -151,9 +151,9 @@ function WorkOrders() {
   }, []);
 
   useEffect(() => {
-    let canOpen1 = !locationParam || (locationParam && locationParamObject);
-    let canOpen2 = !assetParam || (assetParam && assetParamObject);
-    if (canOpen1 && canOpen2) {
+    let shouldOpen1 = locationParam && locationParamObject;
+    let shouldOpen2 = assetParam && assetParamObject;
+    if (shouldOpen1 || shouldOpen2) {
       setOpenAddModal(true);
     }
   }, [locationParamObject, assetParamObject]);
