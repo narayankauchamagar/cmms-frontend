@@ -43,7 +43,7 @@ function CompanyProfile() {
           spacing={1}
         >
           <Grid item xs={12}>
-            <CompanyCover image={company.logo} />
+            <CompanyCover image={company.logo?.url} />
           </Grid>
           <Grid item xs={12}>
             <CompanyDetails company={company} />

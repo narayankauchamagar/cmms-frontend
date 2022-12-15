@@ -511,10 +511,10 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     });
   };
   const patchCompany = async (values: Partial<Company>): Promise<void> => {
-    const company = await api.patch<Company>(
-      `companies/${state.company.id}`,
-      values
-    );
+    const company = await api.patch<Company>(`companies/${state.company.id}`, {
+      ...state.company,
+      ...values
+    });
     dispatch({
       type: 'PATCH_COMPANY',
       payload: {
