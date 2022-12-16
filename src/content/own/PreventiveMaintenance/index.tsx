@@ -107,27 +107,24 @@ function Files() {
   };
   const onCreationSuccess = () => {
     setOpenAddModal(false);
-    showSnackBar(t('Work Order successfully scheduled '), 'success');
+    showSnackBar(t('Work Order successfully scheduled'), 'success');
   };
   const onCreationFailure = (err) =>
-    showSnackBar(
-      t("The Work PreventiveMaintenance couldn't be created"),
-      'error'
-    );
+    showSnackBar(t("The Work Order couldn't be scheduled"), 'error');
   const onEditSuccess = () => {
     setOpenUpdateModal(false);
     showSnackBar(t('The changes have been saved'), 'success');
   };
   const onEditFailure = (err) =>
-    showSnackBar(t("The Preventive Maintenance couldn't be edited"), 'error');
+    showSnackBar(t("The Work Order Trigger couldn't be edited"), 'error');
   const onDeleteSuccess = () => {
     showSnackBar(
-      t('The Preventive Maintenance has been deleted successfully'),
+      t('The Work Order trigger has been deleted successfully'),
       'success'
     );
   };
   const onDeleteFailure = (err) =>
-    showSnackBar(t("The Preventive Maintenance couldn't be deleted"), 'error');
+    showSnackBar(t("The Work Order Trigger couldn't be deleted"), 'error');
 
   const handleOpenDetails = (id: number) => {
     const foundPreventiveMaintenance = preventiveMaintenances.find(
@@ -373,10 +370,10 @@ function Files() {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Edit Preventive Maintenance')}
+          {t('Edit Work Order Trigger')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the fields below to edit the Preventive Maintenance')}
+          {t('Fill in the fields below to edit the Work Order Trigger')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -539,7 +536,7 @@ function Files() {
           onConfirm={() => handleDelete(currentPM?.id)}
           confirmText={t('Delete')}
           question={t(
-            'Are you sure you want to delete this Preventive Maintenance?'
+            'Are you sure you want to delete this Work Order Trigger?'
           )}
         />
       </>
@@ -548,7 +545,7 @@ function Files() {
     return (
       <PermissionErrorMessage
         message={
-          "You don't have access to Preventive Maintenances. Please contact your administrator if you should have access"
+          "You don't have access to the Preventive Maintenance section. Please contact your administrator if you should have access"
         }
       />
     );
