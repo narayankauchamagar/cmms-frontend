@@ -22,6 +22,7 @@ import HandymanTwoToneIcon from '@mui/icons-material/HandymanTwoTone';
 import SpeedTwoToneIcon from '@mui/icons-material/SpeedTwoTone';
 import MoveToInboxTwoToneIcon from '@mui/icons-material/MoveToInboxTwoTone';
 import AssignmentTwoToneIcon from '@mui/icons-material/AssignmentTwoTone';
+import PendingActionsTwoToneIcon from '@mui/icons-material/PendingActionsTwoTone';
 import { PermissionEntity } from '../../../../models/owns/role';
 import { PlanFeature } from '../../../../models/owns/subscriptionPlan';
 import { apiUrl } from '../../../../config';
@@ -54,6 +55,12 @@ const ownMenuItems: MenuItems[] = [
         link: '/app/work-orders',
         icon: AssignmentTwoToneIcon,
         permission: PermissionEntity.WORK_ORDERS
+      },
+      {
+        name: 'Preventive Maintenance',
+        link: '/app/preventive-maintenances',
+        icon: PendingActionsTwoToneIcon,
+        permission: PermissionEntity.PREVENTIVE_MAINTENANCES
       },
       {
         name: 'Requests',

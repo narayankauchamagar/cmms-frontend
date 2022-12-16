@@ -67,6 +67,9 @@ const Assets = Loader(lazy(() => import('../content/own/Assets')));
 const ShowAsset = Loader(lazy(() => import('../content/own/Assets/Show')));
 const Inventory = Loader(lazy(() => import('../content/own/Inventory')));
 const Requests = Loader(lazy(() => import('../content/own/Requests')));
+const PreventiveMaintenances = Loader(
+  lazy(() => import('../content/own/PreventiveMaintenance'))
+);
 
 const PeopleAndTeams = Loader(
   lazy(() => import('../content/own/PeopleAndTeams'))
@@ -147,6 +150,19 @@ const appRoutes = [
       {
         path: ':requestId',
         element: <Requests />
+      }
+    ]
+  },
+  {
+    path: 'preventive-maintenances',
+    children: [
+      {
+        path: '',
+        element: <PreventiveMaintenances />
+      },
+      {
+        path: ':preventiveMaintenanceId',
+        element: <PreventiveMaintenances />
       }
     ]
   },
