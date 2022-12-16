@@ -1,8 +1,11 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 import type { AppThunk } from 'src/store';
-import PreventiveMaintenance from '../models/owns/preventiveMaintenance';
+import PreventiveMaintenance, {
+  PreventiveMaintenancePost
+} from '../models/owns/preventiveMaintenance';
 import api from '../utils/api';
+import Schedule from '../models/owns/schedule';
 
 interface PreventiveMaintenanceState {
   preventiveMaintenances: PreventiveMaintenance[];
@@ -49,6 +52,20 @@ const slice = createSlice({
         }
       );
     },
+    patchSchedule(
+      state: PreventiveMaintenanceState,
+      action: PayloadAction<{ schedule: Schedule; pmId: number }>
+    ) {
+      const { schedule, pmId } = action.payload;
+      state.preventiveMaintenances = state.preventiveMaintenances.map(
+        (preventiveMaintenance) => {
+          if (preventiveMaintenance.id === pmId) {
+            return { ...preventiveMaintenance, schedule };
+          }
+          return preventiveMaintenance;
+        }
+      );
+    },
     deletePreventiveMaintenance(
       state: PreventiveMaintenanceState,
       action: PayloadAction<{ id: number }>
@@ -81,7 +98,7 @@ export const getPreventiveMaintenances = (): AppThunk => async (dispatch) => {
 };
 
 export const addPreventiveMaintenance =
-  (preventiveMaintenance): AppThunk =>
+  (preventiveMaintenance: Partial<PreventiveMaintenancePost>): AppThunk =>
   async (dispatch) => {
     const preventiveMaintenanceResponse = await api.post<PreventiveMaintenance>(
       basePath,
@@ -104,6 +121,20 @@ export const editPreventiveMaintenance =
     dispatch(
       slice.actions.editPreventiveMaintenance({
         preventiveMaintenance: preventiveMaintenanceResponse
+      })
+    );
+  };
+export const patchSchedule =
+  (scheduleId: number, pmId: number, schedule: Partial<Schedule>): AppThunk =>
+  async (dispatch) => {
+    const scheduleResponse = await api.patch<Schedule>(
+      `schedules/${scheduleId}`,
+      schedule
+    );
+    dispatch(
+      slice.actions.patchSchedule({
+        pmId,
+        schedule: scheduleResponse
       })
     );
   };

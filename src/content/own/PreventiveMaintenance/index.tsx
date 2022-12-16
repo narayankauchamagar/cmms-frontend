@@ -14,22 +14,17 @@ import { useTranslation } from 'react-i18next';
 import { useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
 import {
-  addRequest,
-  deleteRequest,
-  editRequest,
-  getRequests
-} from '../../../slices/request';
+  addPreventiveMaintenance,
+  deletePreventiveMaintenance,
+  editPreventiveMaintenance,
+  getPreventiveMaintenances
+} from '../../../slices/preventiveMaintenance';
 import { useDispatch, useSelector } from '../../../store';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import CustomDataGrid from '../components/CustomDatagrid';
-import {
-  GridRenderCellParams,
-  GridToolbar,
-  GridValueGetterParams
-} from '@mui/x-data-grid';
+import { GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import Request from '../../../models/owns/request';
 import Form from '../components/form';
 import * as Yup from 'yup';
 import { IField } from '../type';
@@ -50,6 +45,9 @@ import { PermissionEntity } from '../../../models/owns/role';
 import PermissionErrorMessage from '../components/PermissionErrorMessage';
 import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
 import { getImageAndFiles } from '../../../utils/overall';
+import { UserMiniDTO } from '../../../models/user';
+import UserAvatars from '../components/UserAvatars';
+import PreventiveMaintenance from '../../../models/owns/preventiveMaintenance';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
@@ -63,30 +61,39 @@ function Files() {
     hasCreatePermission,
     getFilteredFields
   } = useAuth();
-  const { workOrderRequestConfiguration } = companySettings;
-  const [currentRequest, setCurrentRequest] = useState<Request>();
-  const { uploadFiles } = useContext(CompanySettingsContext);
-  const { requestId } = useParams();
+  const [currentPM, setCurrentPM] = useState<PreventiveMaintenance>();
+  const { uploadFiles, getWOFieldsAndShapes } = useContext(
+    CompanySettingsContext
+  );
+  const { preventiveMaintenanceId } = useParams();
   const dispatch = useDispatch();
   const [openDelete, setOpenDelete] = useState<boolean>(false);
-  const { requests, loadingGet } = useSelector((state) => state.requests);
+  const { preventiveMaintenances, loadingGet } = useSelector(
+    (state) => state.preventiveMaintenances
+  );
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const navigate = useNavigate();
 
   useEffect(() => {
     setTitle(t('Preventive Maintenance'));
     if (hasViewPermission(PermissionEntity.PREVENTIVE_MAINTENANCES))
-      dispatch(getRequests());
+      dispatch(getPreventiveMaintenances());
   }, []);
   useEffect(() => {
-    if (requests?.length && requestId && isNumeric(requestId)) {
-      handleOpenDetails(Number(requestId));
+    if (
+      preventiveMaintenances?.length &&
+      preventiveMaintenanceId &&
+      isNumeric(preventiveMaintenanceId)
+    ) {
+      handleOpenDetails(Number(preventiveMaintenanceId));
     }
-  }, [requests]);
+  }, [preventiveMaintenances]);
 
   const handleDelete = (id: number) => {
     handleCloseDetails();
-    dispatch(deleteRequest(id)).then(onDeleteSuccess).catch(onDeleteFailure);
+    dispatch(deletePreventiveMaintenance(id))
+      .then(onDeleteSuccess)
+      .catch(onDeleteFailure);
     setOpenDelete(false);
   };
   const handleOpenUpdate = () => {
@@ -94,40 +101,48 @@ function Files() {
   };
   const onCreationSuccess = () => {
     setOpenAddModal(false);
-    showSnackBar(t('Work Order successfully requested'), 'success');
+    showSnackBar(t('Work Order successfully scheduled '), 'success');
   };
   const onCreationFailure = (err) =>
-    showSnackBar(t("The Work Request couldn't be created"), 'error');
+    showSnackBar(
+      t("The Work PreventiveMaintenance couldn't be created"),
+      'error'
+    );
   const onEditSuccess = () => {
     setOpenUpdateModal(false);
     showSnackBar(t('The changes have been saved'), 'success');
   };
   const onEditFailure = (err) =>
-    showSnackBar(t("The Request couldn't be edited"), 'error');
+    showSnackBar(t("The Preventive Maintenance couldn't be edited"), 'error');
   const onDeleteSuccess = () => {
-    showSnackBar(t('The Request has been deleted successfully'), 'success');
+    showSnackBar(
+      t('The Preventive Maintenance has been deleted successfully'),
+      'success'
+    );
   };
   const onDeleteFailure = (err) =>
-    showSnackBar(t("The Request couldn't be deleted"), 'error');
+    showSnackBar(t("The Preventive Maintenance couldn't be deleted"), 'error');
 
   const handleOpenDetails = (id: number) => {
-    const foundRequest = requests.find((request) => request.id === id);
-    if (foundRequest) {
-      if (foundRequest.workOrder) {
-        navigate(`/app/work-orders/${foundRequest.workOrder.id}`);
-      } else {
-        setCurrentRequest(foundRequest);
-        window.history.replaceState(
-          null,
-          'Request details',
-          `/app/requests/${id}`
-        );
-        setOpenDrawer(true);
-      }
+    const foundPreventiveMaintenance = preventiveMaintenances.find(
+      (preventiveMaintenance) => preventiveMaintenance.id === id
+    );
+    if (foundPreventiveMaintenance) {
+      setCurrentPM(foundPreventiveMaintenance);
+      window.history.replaceState(
+        null,
+        'PreventiveMaintenance details',
+        `/app/preventive-maintenances/${id}`
+      );
+      setOpenDrawer(true);
     }
   };
   const handleCloseDetails = () => {
-    window.history.replaceState(null, 'Request', `/app/requests`);
+    window.history.replaceState(
+      null,
+      'Preventive',
+      `/app/preventive-maintenances`
+    );
     setOpenDrawer(false);
   };
   const formatValues = (values) => {
@@ -142,20 +157,24 @@ function Files() {
   };
   const columns: GridEnrichedColDef[] = [
     {
-      field: 'title',
-      headerName: t('Title'),
-      description: t('Title'),
+      field: 'name',
+      headerName: t('Name'),
+      description: t('Name'),
       width: 150,
       renderCell: (params: GridRenderCellParams<string>) => (
         <Box sx={{ fontWeight: 'bold' }}>{params.value}</Box>
       )
     },
     {
-      field: 'description',
-      headerName: t('Description'),
-      description: t('Description'),
-      width: 150
+      field: 'title',
+      headerName: t('Work Order Title'),
+      description: t('Work Order Title'),
+      width: 150,
+      renderCell: (params: GridRenderCellParams<string>) => (
+        <Box sx={{ fontWeight: 'bold' }}>{params.value}</Box>
+      )
     },
+
     {
       field: 'priority',
       headerName: t('Priority'),
@@ -166,66 +185,96 @@ function Files() {
       )
     },
     {
-      field: 'status',
-      headerName: t('Status'),
-      description: t('Status'),
+      field: 'description',
+      headerName: t('Description'),
+      description: t('Description'),
+      width: 150
+    },
+    {
+      field: 'primaryUser',
+      headerName: t('Worker'),
+      description: t('Worker'),
       width: 150,
-      valueGetter: (params: GridValueGetterParams<Request>) =>
-        params.row.cancelled
-          ? t('Rejected')
-          : params.row.workOrder
-          ? t('Approved')
-          : t('Pending')
+      renderCell: (params: GridRenderCellParams<UserMiniDTO>) =>
+        params.value ? <UserAvatars users={[params.value]} /> : null
+    },
+    {
+      field: 'assignedTo',
+      headerName: t('Assignees'),
+      description: t('Assignees'),
+      width: 150,
+      renderCell: (params: GridRenderCellParams<UserMiniDTO[]>) => (
+        <UserAvatars users={params.value} />
+      )
+    },
+    {
+      field: 'location',
+      headerName: t('Location name'),
+      description: t('Location name'),
+      width: 150,
+      valueGetter: (params) => params.row.location?.name
+    },
+    {
+      field: 'category',
+      headerName: t('Category'),
+      description: t('Category'),
+      width: 150,
+      valueGetter: (params) => params.row.category?.name
+    },
+    {
+      field: 'asset',
+      headerName: t('Asset name'),
+      description: t('Asset name'),
+      width: 150,
+      valueGetter: (params) => params.row.asset?.name
     }
   ];
-  const defaultFields: Array<IField> = [...getWOBaseFields(t)];
+  const defaultFields: Array<IField> = [
+    {
+      name: 'triggerConfiguration',
+      type: 'titleGroupField',
+      label: 'Trigger Configuration'
+    },
+    {
+      name: 'name',
+      type: 'text',
+      label: t('Trigger Name'),
+      placeholder: t('Enter trigger Name'),
+      required: true
+    },
+    {
+      name: 'startsOn',
+      type: 'date',
+      label: t('Starts On'),
+      required: true,
+      midWidth: true
+    },
+    {
+      name: 'endsOn',
+      type: 'date',
+      label: t('Ends On'),
+      midWidth: true
+    },
+    {
+      name: 'frequency',
+      type: 'number',
+      label: t('Frequency in days'),
+      required: true
+    },
+    {
+      name: 'titleGroup',
+      type: 'titleGroupField',
+      label: 'Work Order Configuration'
+    },
+    ...getWOBaseFields(t)
+  ];
   const defaultShape = {
-    title: Yup.string().required(t('Request name is required'))
+    name: Yup.string().required(t('Trigger name is required')),
+    title: Yup.string().required(t('Work Order title is required')),
+    frequency: Yup.number().required(t('The trigger frequency is required'))
   };
   const getFieldsAndShapes = (): [Array<IField>, { [key: string]: any }] => {
-    let fields = [...getFilteredFields(defaultFields)];
-    let shape = { ...defaultShape };
-    const fieldsToConfigure = [
-      'asset',
-      'location',
-      'primaryUser',
-      'category',
-      'dueDate',
-      'team'
-    ];
-    fieldsToConfigure.forEach((name) => {
-      const fieldConfig =
-        workOrderRequestConfiguration.fieldConfigurations.find(
-          (fc) => fc.fieldName === name
-        );
-      const fieldIndexInFields = fields.findIndex(
-        (field) => field.name === name
-      );
-      if (fieldConfig.fieldType === 'REQUIRED') {
-        fields[fieldIndexInFields] = {
-          ...fields[fieldIndexInFields],
-          required: true
-        };
-        const requiredMessage = t('This field is required');
-        let yupSchema;
-        switch (fields[fieldIndexInFields].type) {
-          case 'text':
-            yupSchema = Yup.string().required(requiredMessage);
-            break;
-          case 'number':
-            yupSchema = Yup.number().required(requiredMessage);
-            break;
-          default:
-            yupSchema = Yup.object().required(requiredMessage).nullable();
-            break;
-        }
-        shape[name] = yupSchema;
-      } else if (fieldConfig.fieldType === 'HIDDEN') {
-        fields.splice(fieldIndexInFields, 1);
-      }
-    });
-
-    return [fields, shape];
+    return getWOFieldsAndShapes(defaultFields, defaultShape);
   };
   const renderAddModal = () => (
     <Dialog
@@ -240,10 +289,10 @@ function Files() {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Add Request')}
+          {t('Add Preventive Maintenance')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the fields below to create and add a new Request')}
+          {t('Fill in the fields below to create a new Preventive Maintenance')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -257,7 +306,7 @@ function Files() {
             fields={getFieldsAndShapes()[0]}
             validation={Yup.object().shape(getFieldsAndShapes()[1])}
             submitText={t('Add')}
-            values={{ dueDate: null }}
+            values={{ startsOn: null, endsOn: null }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               let formattedValues = formatValues(values);
@@ -270,7 +319,7 @@ function Files() {
                       image: imageAndFiles.image,
                       files: imageAndFiles.files
                     };
-                    dispatch(addRequest(formattedValues))
+                    dispatch(addPreventiveMaintenance(formattedValues))
                       .then(onCreationSuccess)
                       .catch(onCreationFailure)
                       .finally(resolve);
@@ -299,10 +348,10 @@ function Files() {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Edit Request')}
+          {t('Edit Preventive Maintenance')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the fields below to edit the Request')}
+          {t('Fill in the fields below to edit the Preventive Maintenance')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -317,11 +366,11 @@ function Files() {
             validation={Yup.object().shape(getFieldsAndShapes()[1])}
             submitText={t('Save')}
             values={{
-              ...currentRequest,
-              priority: currentRequest?.priority
+              ...currentPM,
+              priority: currentPM?.priority
                 ? {
-                    label: getPriorityLabel(currentRequest?.priority, t),
-                    value: currentRequest?.priority
+                    label: getPriorityLabel(currentPM?.priority, t),
+                    value: currentPM?.priority
                   }
                 : null
             }}
@@ -336,14 +385,16 @@ function Files() {
                   .then((files) => {
                     const imageAndFiles = getImageAndFiles(
                       files,
-                      currentRequest.image
+                      currentPM.image
                     );
                     formattedValues = {
                       ...formattedValues,
                       image: imageAndFiles.image,
-                      files: [...currentRequest.files, ...imageAndFiles.files]
+                      files: [...currentPM.files, ...imageAndFiles.files]
                     };
-                    dispatch(editRequest(currentRequest?.id, formattedValues))
+                    dispatch(
+                      editPreventiveMaintenance(currentPM?.id, formattedValues)
+                    )
                       .then(onEditSuccess)
                       .catch(onEditFailure)
                       .finally(resolve);
@@ -407,7 +458,7 @@ function Files() {
                 <CustomDataGrid
                   columns={columns}
                   loading={loadingGet}
-                  rows={requests}
+                  rows={preventiveMaintenances}
                   onRowClick={({ id }) => handleOpenDetails(Number(id))}
                   components={{
                     Toolbar: GridToolbar,
@@ -438,7 +489,7 @@ function Files() {
         >
           <PMDetails
             onClose={handleCloseDetails}
-            request={currentRequest}
+            preventiveMaintenance={currentPM}
             handleOpenUpdate={handleOpenUpdate}
             handleOpenDelete={() => setOpenDelete(true)}
           />
@@ -449,9 +500,11 @@ function Files() {
             setOpenDelete(false);
             setOpenDrawer(true);
           }}
-          onConfirm={() => handleDelete(currentRequest?.id)}
+          onConfirm={() => handleDelete(currentPM?.id)}
           confirmText={t('Delete')}
-          question={t('Are you sure you want to delete this Request?')}
+          question={t(
+            'Are you sure you want to delete this Preventive Maintenance?'
+          )}
         />
       </>
     );
@@ -459,7 +512,7 @@ function Files() {
     return (
       <PermissionErrorMessage
         message={
-          "You don't have access to Requests. Please contact your administrator if you should have access"
+          "You don't have access to Preventive Maintenances. Please contact your administrator if you should have access"
         }
       />
     );

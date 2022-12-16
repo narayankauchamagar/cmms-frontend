@@ -1,7 +1,5 @@
 import {
   Box,
-  Button,
-  CircularProgress,
   Divider,
   Grid,
   IconButton,
@@ -11,17 +9,11 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
-import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import ClearTwoToneIcon from '@mui/icons-material/ClearTwoTone';
-import Request from '../../../models/owns/request';
+import PreventiveMaintenance from '../../../models/owns/preventiveMaintenance';
 import { getPriorityLabel } from '../../../utils/formatters';
 import { useDispatch } from '../../../store';
-import {
-  approveRequest,
-  cancelRequest,
-  editRequest
-} from '../../../slices/request';
+import { editPreventiveMaintenance } from '../../../slices/preventiveMaintenance';
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -37,19 +29,17 @@ import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext
 import FilesList from '../components/FilesList';
 
 interface RequestDetailsProps {
-  request: Request;
+  preventiveMaintenance: PreventiveMaintenance;
   handleOpenUpdate: () => void;
   handleOpenDelete: () => void;
   onClose: () => void;
 }
 export default function PMDetails({
-  request,
+  preventiveMaintenance,
   handleOpenUpdate,
   handleOpenDelete,
   onClose
 }: RequestDetailsProps) {
-  const [approving, setApproving] = useState<boolean>(false);
-  const [cancelling, setCancelling] = useState<boolean>(false);
   const { t }: { t: any } = useTranslation();
   const dispatch = useDispatch();
   const theme = useTheme();
@@ -61,21 +51,6 @@ export default function PMDetails({
   );
   const [isImageViewerOpen, setIsImageViewerOpen] = useState<boolean>(false);
 
-  const onApprove = () => {
-    setApproving(true);
-    dispatch(approveRequest(request.id))
-      .then((workOrderId) => {
-        navigate(`/app/work-orders/${workOrderId}`);
-      })
-      .finally(() => setApproving(false));
-  };
-
-  const onCancel = () => {
-    setCancelling(true);
-    dispatch(cancelRequest(request.id))
-      .then(onClose)
-      .finally(() => setCancelling(false));
-  };
   const BasicField = ({
     label,
     value,
@@ -97,27 +72,27 @@ export default function PMDetails({
     ) : null;
   };
   const fieldsToRender = (
-    request: Request
+    preventiveMaintenance: PreventiveMaintenance
   ): { label: string; value: any }[] => [
     {
-      label: t('Description'),
-      value: request.description
+      label: t('Title'),
+      value: preventiveMaintenance.title
     },
     {
-      label: t('ID'),
-      value: request.id
+      label: t('Description'),
+      value: preventiveMaintenance.description
     },
     {
       label: t('Priority'),
-      value: request.priority
+      value: preventiveMaintenance.priority
     },
     {
       label: t('Due Date'),
-      value: request.dueDate
+      value: preventiveMaintenance.dueDate
     },
     {
       label: t('Category'),
-      value: request.category
+      value: preventiveMaintenance.category
     }
   ];
   return (
@@ -136,80 +111,39 @@ export default function PMDetails({
         justifyContent="space-between"
       >
         <Box>
-          <Typography variant="h2">{request?.title}</Typography>
-          {request?.cancelled && (
-            <Typography variant="h5">{t('Cancelled')}</Typography>
+          <Typography variant="h2">{preventiveMaintenance?.name}</Typography>
+          {preventiveMaintenance?.schedule.disabled && (
+            <Typography variant="h5">{t('Paused')}</Typography>
           )}
         </Box>
         <Box>
-          {!request.cancelled &&
-            hasEditPermission(PermissionEntity.REQUESTS, request) && (
-              <IconButton
-                style={{ marginRight: 10 }}
-                onClick={handleOpenUpdate}
-              >
-                <EditTwoToneIcon color="primary" />
-              </IconButton>
-            )}
-          {hasDeletePermission(PermissionEntity.REQUESTS, request) && (
+          {hasEditPermission(
+            PermissionEntity.PREVENTIVE_MAINTENANCES,
+            preventiveMaintenance
+          ) && (
+            <IconButton style={{ marginRight: 10 }} onClick={handleOpenUpdate}>
+              <EditTwoToneIcon color="primary" />
+            </IconButton>
+          )}
+          {hasDeletePermission(
+            PermissionEntity.PREVENTIVE_MAINTENANCES,
+            preventiveMaintenance
+          ) && (
             <IconButton onClick={handleOpenDelete}>
               <DeleteTwoToneIcon color="error" />
             </IconButton>
           )}
         </Box>
       </Grid>
-      {!request.workOrder &&
-        !request.cancelled &&
-        hasViewPermission(PermissionEntity.SETTINGS) && (
-          <>
-            <Divider />
-            <Grid
-              item
-              xs={12}
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-around'
-              }}
-            >
-              <Button
-                startIcon={
-                  cancelling ? (
-                    <CircularProgress size="1rem" />
-                  ) : (
-                    <ClearTwoToneIcon />
-                  )
-                }
-                onClick={onCancel}
-                variant="outlined"
-              >
-                {t('Cancel')}
-              </Button>
-              <Button
-                startIcon={
-                  approving ? (
-                    <CircularProgress size="1rem" sx={{ color: 'white' }} />
-                  ) : (
-                    <CheckTwoToneIcon />
-                  )
-                }
-                onClick={onApprove}
-                variant="contained"
-              >
-                {t('Approve')}
-              </Button>
-            </Grid>
-          </>
-        )}
       <Divider />
       <Grid item xs={12}>
         <Box>
           <Typography sx={{ mt: 2, mb: 1 }} variant="h4">
-            Request details
+            {t('Work Order details')}
           </Typography>
           <Grid container spacing={2}>
             <>
-              {request.image && (
+              {preventiveMaintenance.image && (
                 <Grid
                   item
                   xs={12}
@@ -218,13 +152,13 @@ export default function PMDetails({
                   justifyContent="center"
                 >
                   <img
-                    src={request.image.url}
+                    src={preventiveMaintenance.image.url}
                     style={{ borderRadius: 5, height: 250, cursor: 'pointer' }}
                     onClick={() => setIsImageViewerOpen(true)}
                   />
                 </Grid>
               )}
-              {fieldsToRender(request).map((field) => (
+              {fieldsToRender(preventiveMaintenance).map((field) => (
                 <BasicField
                   key={field.label}
                   label={field.label}
@@ -232,20 +166,23 @@ export default function PMDetails({
                   isPriority={field.label === t('Priority')}
                 />
               ))}
-              {request?.createdBy && (
+              {preventiveMaintenance?.createdBy && (
                 <Grid item xs={12} lg={6}>
                   <Typography
                     variant="h6"
                     sx={{ color: theme.colors.alpha.black[70] }}
                   >
-                    {t('Requested By')}
+                    {t('Created By')}
                   </Typography>
-                  <Link variant="h6" href={getUserUrl(request.createdBy)}>
-                    {getUserNameById(request.createdBy)}
+                  <Link
+                    variant="h6"
+                    href={getUserUrl(preventiveMaintenance.createdBy)}
+                  >
+                    {getUserNameById(preventiveMaintenance.createdBy)}
                   </Link>
                 </Grid>
               )}
-              {request?.asset && (
+              {preventiveMaintenance?.asset && (
                 <Grid item xs={12} lg={6}>
                   <Typography
                     variant="h6"
@@ -253,12 +190,15 @@ export default function PMDetails({
                   >
                     {t('Asset')}
                   </Typography>
-                  <Link variant="h6" href={getAssetUrl(request.asset.id)}>
-                    {request.asset.name}
+                  <Link
+                    variant="h6"
+                    href={getAssetUrl(preventiveMaintenance.asset.id)}
+                  >
+                    {preventiveMaintenance.asset.name}
                   </Link>
                 </Grid>
               )}
-              {request?.location && (
+              {preventiveMaintenance?.location && (
                 <Grid item xs={12} lg={6}>
                   <Typography
                     variant="h6"
@@ -266,12 +206,15 @@ export default function PMDetails({
                   >
                     {t('Location')}
                   </Typography>
-                  <Link variant="h6" href={getLocationUrl(request.location.id)}>
-                    {request.location.name}
+                  <Link
+                    variant="h6"
+                    href={getLocationUrl(preventiveMaintenance.location.id)}
+                  >
+                    {preventiveMaintenance.location.name}
                   </Link>
                 </Grid>
               )}
-              {request?.primaryUser && (
+              {preventiveMaintenance?.primaryUser && (
                 <Grid item xs={12} lg={6}>
                   <Typography
                     variant="h6"
@@ -279,12 +222,15 @@ export default function PMDetails({
                   >
                     {t('Assigned To')}
                   </Typography>
-                  <Link variant="h6" href={getUserUrl(request.primaryUser.id)}>
-                    {`${request.primaryUser.firstName} ${request.primaryUser.lastName}`}
+                  <Link
+                    variant="h6"
+                    href={getUserUrl(preventiveMaintenance.primaryUser.id)}
+                  >
+                    {`${preventiveMaintenance.primaryUser.firstName} ${preventiveMaintenance.primaryUser.lastName}`}
                   </Link>
                 </Grid>
               )}
-              {request?.team && (
+              {preventiveMaintenance?.team && (
                 <Grid item xs={12} lg={6}>
                   <Typography
                     variant="h6"
@@ -292,12 +238,15 @@ export default function PMDetails({
                   >
                     {t('Team')}
                   </Typography>
-                  <Link variant="h6" href={getTeamUrl(request.team.id)}>
-                    {request.team.name}
+                  <Link
+                    variant="h6"
+                    href={getTeamUrl(preventiveMaintenance.team.id)}
+                  >
+                    {preventiveMaintenance.team.name}
                   </Link>
                 </Grid>
               )}
-              {!!request.files.length && (
+              {!!preventiveMaintenance.files.length && (
                 <Grid item xs={12} lg={12}>
                   <Typography
                     variant="h6"
@@ -307,17 +256,22 @@ export default function PMDetails({
                   </Typography>
                   <FilesList
                     confirmMessage={t(
-                      'Are you sure you want to remove this file from this Request ?'
+                      'Are you sure you want to remove this file?'
                     )}
                     removeDisabled={
-                      !hasEditPermission(PermissionEntity.REQUESTS, request)
+                      !hasEditPermission(
+                        PermissionEntity.PREVENTIVE_MAINTENANCES,
+                        preventiveMaintenance
+                      )
                     }
-                    files={request.files}
+                    files={preventiveMaintenance.files}
                     onRemove={(id: number) => {
                       dispatch(
-                        editRequest(request.id, {
-                          ...request,
-                          files: request.files.filter((f) => f.id !== id)
+                        editPreventiveMaintenance(preventiveMaintenance.id, {
+                          ...preventiveMaintenance,
+                          files: preventiveMaintenance.files.filter(
+                            (f) => f.id !== id
+                          )
                         })
                       );
                     }}
@@ -331,7 +285,7 @@ export default function PMDetails({
       {isImageViewerOpen && (
         <div style={{ zIndex: 100 }}>
           <ImageViewer
-            src={[request.image.url]}
+            src={[preventiveMaintenance.image.url]}
             currentIndex={0}
             onClose={() => setIsImageViewerOpen(false)}
             disableScroll={true}

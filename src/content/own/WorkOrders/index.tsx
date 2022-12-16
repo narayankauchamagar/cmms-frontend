@@ -64,7 +64,9 @@ function WorkOrders() {
   const locationParam = searchParams.get('location');
   const assetParam = searchParams.get('asset');
   const dispatch = useDispatch();
-  const { uploadFiles } = useContext(CompanySettingsContext);
+  const { uploadFiles, getWOFieldsAndShapes } = useContext(
+    CompanySettingsContext
+  );
   const { companySettings, getFilteredFields } = useAuth();
   const { workOrderConfiguration } = companySettings;
   const { getFormattedDate, getUserNameById } = useContext(
@@ -483,58 +485,7 @@ function WorkOrders() {
     title: Yup.string().required(t('WorkOrder title is required'))
   };
   const getFieldsAndShapes = (): [Array<IField>, { [key: string]: any }] => {
-    let fields = [...getFilteredFields(defaultFields)];
-    let shape = { ...defaultShape };
-    const fieldsToConfigure = [
-      'asset',
-      'description',
-      'priority',
-      'images',
-      'primaryUser',
-      'assignedTo',
-      'team',
-      'location',
-      'dueDate',
-      'category',
-      'purchaseOrder',
-      'files',
-      'signature'
-    ];
-    fieldsToConfigure.forEach((name) => {
-      const fieldConfig =
-        workOrderConfiguration.workOrderFieldConfigurations.find(
-          (woFC) => woFC.fieldName === name
-        );
-      const fieldIndexInFields = fields.findIndex(
-        (field) => field.name === name
-      );
-      if (fieldIndexInFields !== -1) {
-        if (fieldConfig.fieldType === 'REQUIRED') {
-          fields[fieldIndexInFields] = {
-            ...fields[fieldIndexInFields],
-            required: true
-          };
-          const requiredMessage = t('This field is required');
-          let yupSchema;
-          switch (fields[fieldIndexInFields].type) {
-            case 'text':
-              yupSchema = Yup.string().required(requiredMessage);
-              break;
-            case 'number':
-              yupSchema = Yup.number().required(requiredMessage);
-              break;
-            default:
-              yupSchema = Yup.object().required(requiredMessage).nullable();
-              break;
-          }
-          shape[name] = yupSchema;
-        } else if (fieldConfig.fieldType === 'HIDDEN') {
-          fields.splice(fieldIndexInFields, 1);
-        }
-      }
-    });
-
-    return [fields, shape];
+    return getWOFieldsAndShapes(defaultFields, defaultShape);
   };
 
   const renderWorkOrderAddModal = () => (
