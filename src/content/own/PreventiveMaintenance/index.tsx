@@ -24,7 +24,11 @@ import { useDispatch, useSelector } from '../../../store';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import CustomDataGrid from '../components/CustomDatagrid';
-import { GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
+import {
+  GridRenderCellParams,
+  GridToolbar,
+  GridValueGetterParams
+} from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import Form from '../components/form';
 import * as Yup from 'yup';
@@ -45,7 +49,7 @@ import { getWOBaseFields } from '../../../utils/fields';
 import { PermissionEntity } from '../../../models/owns/role';
 import PermissionErrorMessage from '../components/PermissionErrorMessage';
 import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
-import { getImageAndFiles } from '../../../utils/overall';
+import { getImageAndFiles, getNextOccurence } from '../../../utils/overall';
 import { UserMiniDTO } from '../../../models/user';
 import UserAvatars from '../components/UserAvatars';
 import PreventiveMaintenance from '../../../models/owns/preventiveMaintenance';
@@ -66,6 +70,7 @@ function Files() {
   const { uploadFiles, getWOFieldsAndShapes } = useContext(
     CompanySettingsContext
   );
+  const { getFormattedDate } = useContext(CompanySettingsContext);
   const { preventiveMaintenanceId } = useParams();
   const dispatch = useDispatch();
   const [openDelete, setOpenDelete] = useState<boolean>(false);
@@ -192,6 +197,19 @@ function Files() {
       width: 150
     },
     {
+      field: 'next',
+      headerName: t('Next Work Order'),
+      description: t('Next Work Order'),
+      width: 150,
+      valueGetter: (params: GridValueGetterParams<PreventiveMaintenance>) =>
+        getFormattedDate(
+          getNextOccurence(
+            new Date(params.row.schedule?.startsOn),
+            params.row.schedule.frequency
+          ).toString()
+        )
+    },
+    {
       field: 'primaryUser',
       headerName: t('Worker'),
       description: t('Worker'),
@@ -272,7 +290,13 @@ function Files() {
   const defaultShape = {
     name: Yup.string().required(t('Trigger name is required')),
     title: Yup.string().required(t('Work Order title is required')),
-    frequency: Yup.number().required(t('The trigger frequency is required'))
+    frequency: Yup.number()
+      .required(t('The trigger frequency is required'))
+      .test(
+        'test-frequency', // this is used internally by yup
+        t('Frequency must be superior to 0'),
+        (value) => value > 0
+      )
   };
   const getFieldsAndShapes = (): [Array<IField>, { [key: string]: any }] => {
     return getWOFieldsAndShapes(defaultFields, defaultShape);
@@ -401,11 +425,10 @@ function Files() {
                     )
                       .then(() => {
                         dispatch(
-                          patchSchedule(
-                            currentPM.schedule.id,
-                            currentPM.id,
-                            formattedValues
-                          )
+                          patchSchedule(currentPM.schedule.id, currentPM.id, {
+                            ...currentPM.schedule,
+                            ...formattedValues
+                          })
                         );
                       })
                       .then(onEditSuccess)

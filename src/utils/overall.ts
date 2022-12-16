@@ -29,3 +29,18 @@ export const getImageAndFiles = (
       })
   };
 };
+
+export const getNextOccurence = (date: Date, days: number): Date => {
+  const incrementDays = (date: Date, days: number) => {
+    date.setDate(date.getDate() + days);
+    return date;
+  };
+  let result = date;
+  if (result > new Date()) {
+    result = incrementDays(result, days);
+  } else
+    while (result < new Date()) {
+      result = incrementDays(result, days);
+    }
+  return result;
+};
