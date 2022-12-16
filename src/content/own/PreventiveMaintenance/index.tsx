@@ -17,7 +17,8 @@ import {
   addPreventiveMaintenance,
   deletePreventiveMaintenance,
   editPreventiveMaintenance,
-  getPreventiveMaintenances
+  getPreventiveMaintenances,
+  patchSchedule
 } from '../../../slices/preventiveMaintenance';
 import { useDispatch, useSelector } from '../../../store';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -306,7 +307,7 @@ function Files() {
             fields={getFieldsAndShapes()[0]}
             validation={Yup.object().shape(getFieldsAndShapes()[1])}
             submitText={t('Add')}
-            values={{ startsOn: null, endsOn: null }}
+            values={{ startsOn: null, endsOn: null, dueDate: null }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
               let formattedValues = formatValues(values);
@@ -372,7 +373,10 @@ function Files() {
                     label: getPriorityLabel(currentPM?.priority, t),
                     value: currentPM?.priority
                   }
-                : null
+                : null,
+              startsOn: currentPM?.schedule.startsOn,
+              endsOn: currentPM?.schedule.endsOn,
+              frequency: currentPM?.schedule.frequency
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
@@ -395,6 +399,15 @@ function Files() {
                     dispatch(
                       editPreventiveMaintenance(currentPM?.id, formattedValues)
                     )
+                      .then(() => {
+                        dispatch(
+                          patchSchedule(
+                            currentPM.schedule.id,
+                            currentPM.id,
+                            formattedValues
+                          )
+                        );
+                      })
                       .then(onEditSuccess)
                       .catch(onEditFailure)
                       .finally(resolve);

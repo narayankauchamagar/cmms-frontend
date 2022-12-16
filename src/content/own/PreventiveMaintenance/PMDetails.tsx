@@ -139,6 +139,68 @@ export default function PMDetails({
       <Grid item xs={12}>
         <Box>
           <Typography sx={{ mt: 2, mb: 1 }} variant="h4">
+            {t('Trigger details')}
+          </Typography>
+          <Grid container spacing={2}>
+            {preventiveMaintenance.schedule?.startsOn && (
+              <Grid item xs={12} lg={6}>
+                <Typography
+                  variant="h6"
+                  sx={{ color: theme.colors.alpha.black[70] }}
+                >
+                  {t('Starts On')}
+                </Typography>
+                <Typography variant="h6">
+                  {getFormattedDate(preventiveMaintenance.schedule.startsOn)}
+                </Typography>
+              </Grid>
+            )}
+            {preventiveMaintenance.schedule?.endsOn && (
+              <Grid item xs={12} lg={6}>
+                <Typography
+                  variant="h6"
+                  sx={{ color: theme.colors.alpha.black[70] }}
+                >
+                  {t('Ends On')}
+                </Typography>
+                <Typography variant="h6">
+                  {getFormattedDate(preventiveMaintenance.schedule.endsOn)}
+                </Typography>
+              </Grid>
+            )}
+            {preventiveMaintenance.schedule.frequency && (
+              <Grid item xs={12} lg={6}>
+                <Typography
+                  variant="h6"
+                  sx={{ color: theme.colors.alpha.black[70] }}
+                >
+                  {t('Frequency')}
+                </Typography>
+                <Typography variant="h6">
+                  {`Every ${preventiveMaintenance.schedule.frequency} days`}
+                </Typography>
+              </Grid>
+            )}
+            {preventiveMaintenance?.createdBy && (
+              <Grid item xs={12} lg={6}>
+                <Typography
+                  variant="h6"
+                  sx={{ color: theme.colors.alpha.black[70] }}
+                >
+                  {t('Created By')}
+                </Typography>
+                <Link
+                  variant="h6"
+                  href={getUserUrl(preventiveMaintenance.createdBy)}
+                >
+                  {getUserNameById(preventiveMaintenance.createdBy)}
+                </Link>
+              </Grid>
+            )}
+          </Grid>
+        </Box>
+        <Box>
+          <Typography sx={{ mt: 2, mb: 1 }} variant="h4">
             {t('Work Order details')}
           </Typography>
           <Grid container spacing={2}>
@@ -166,22 +228,6 @@ export default function PMDetails({
                   isPriority={field.label === t('Priority')}
                 />
               ))}
-              {preventiveMaintenance?.createdBy && (
-                <Grid item xs={12} lg={6}>
-                  <Typography
-                    variant="h6"
-                    sx={{ color: theme.colors.alpha.black[70] }}
-                  >
-                    {t('Created By')}
-                  </Typography>
-                  <Link
-                    variant="h6"
-                    href={getUserUrl(preventiveMaintenance.createdBy)}
-                  >
-                    {getUserNameById(preventiveMaintenance.createdBy)}
-                  </Link>
-                </Grid>
-              )}
               {preventiveMaintenance?.asset && (
                 <Grid item xs={12} lg={6}>
                   <Typography
