@@ -1,7 +1,6 @@
 import { FC, ReactNode } from 'react';
-import { Box, alpha, lighten, useTheme } from '@mui/material';
+import { alpha, Box, lighten, useTheme } from '@mui/material';
 import { Outlet } from 'react-router-dom';
-import ThemeSettings from 'src/components/ThemeSettings';
 
 import Sidebar from './Sidebar';
 import Header from './Header';
@@ -59,7 +58,7 @@ const ExtendedSidebarLayout: FC<ExtendedSidebarLayoutProps> = () => {
           <Box display="block">
             <Outlet />
           </Box>
-          <ThemeSettings />
+          {/*<ThemeSettings />*/}
         </Box>
       </Box>
     </>
