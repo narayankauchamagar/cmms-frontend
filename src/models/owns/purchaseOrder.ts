@@ -1,17 +1,13 @@
 import { Audit } from './audit';
-import Part, { parts } from './part';
-import { Vendor, vendors } from './vendor';
+import { Vendor } from './vendor';
+import { PartQuantityMiniDTO } from './partQuantity';
+import Category from './category';
 
-interface PartPurchase {
-  part: Part;
-  quantity: number;
-}
 export default interface PurchaseOrder extends Audit {
   status: 'APPROVED' | 'PENDING' | 'REJECTED';
   name: string;
   id: number;
-  partPurchases: PartPurchase[];
-  category: string;
+  category: Category;
   additionalDetails: string;
   vendor?: Vendor;
   shippingDueDate: string;
@@ -24,45 +20,14 @@ export default interface PurchaseOrder extends Audit {
   shippingZipCode: string;
   shippingPhone: string;
   shippingFax: string;
-  additionalInfoRequistionerName: string;
+  additionalInfoRequisitionedName: string;
   additionalInfoShippingMethod: string;
   additionalInfoTerm: string;
   additionalInfoNotes: string;
+  partQuantities: PartQuantityMiniDTO[];
 }
 export const approvalStatusTranslations = {
   APPROVED: 'Approved',
   PENDING: 'Pending',
   REJECTED: 'Rejected'
 };
-
-export const purchaseOrders: PurchaseOrder[] = [
-  {
-    name: 'Purchase 1',
-    id: 54,
-    partPurchases: parts.map((part) => {
-      return { part, quantity: 3 };
-    }),
-    category: 'string',
-    status: 'APPROVED',
-    additionalDetails: 'string',
-    vendor: vendors[0],
-    shippingDueDate: 'string',
-    shippingAdditionalDetail: 'string',
-    shippingShipToName: 'string',
-    shippingCompanyName: 'string',
-    shippingAddress: 'string',
-    shippingCity: 'string',
-    shippingState: 'string',
-    shippingZipCode: 'string',
-    shippingPhone: 'string',
-    shippingFax: 'string',
-    additionalInfoRequistionerName: 'string',
-    additionalInfoShippingMethod: 'string',
-    additionalInfoTerm: 'string',
-    additionalInfoNotes: 'string',
-    createdAt: 'fghb',
-    createdBy: 1,
-    updatedAt: 'string',
-    updatedBy: 1
-  }
-];

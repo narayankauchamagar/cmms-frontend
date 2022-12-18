@@ -405,7 +405,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
     },
     {
       label: t('Due Date'),
-      value: workOrder.dueDate
+      value: getFormattedDate(workOrder.dueDate)
     },
     {
       label: t('Category'),

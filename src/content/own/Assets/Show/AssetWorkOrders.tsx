@@ -2,10 +2,11 @@ import Asset from '../../../../models/owns/asset';
 import { Box, Card, Grid, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from '../../../../store';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { getAssetWorkOrders } from '../../../../slices/asset';
 import { getStatusLabel } from '../../../../utils/formatters';
 import { useNavigate } from 'react-router-dom';
+import { CompanySettingsContext } from '../../../../contexts/CompanySettingsContext';
 
 interface PropsType {
   asset: Asset;
@@ -13,6 +14,7 @@ interface PropsType {
 
 const AssetWorkOrders = ({ asset }: PropsType) => {
   const { t }: { t: any } = useTranslation();
+  const { getFormattedDate } = useContext(CompanySettingsContext);
   const { assetInfos } = useSelector((state) => state.assets);
   const workOrders = assetInfos[asset?.id]?.workOrders;
   const dispatch = useDispatch();
@@ -52,7 +54,7 @@ const AssetWorkOrders = ({ asset }: PropsType) => {
                     color={workOrder.dueDate ? 'error' : 'primary'}
                   >
                     {workOrder.dueDate
-                      ? `Due ${workOrder.dueDate}`
+                      ? `Due ${getFormattedDate(workOrder.dueDate)}`
                       : t('No Due Date')}
                   </Typography>
                   <Typography variant="h6">

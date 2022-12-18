@@ -176,7 +176,7 @@ function CreatePurchaseOrder() {
       multiple: true
     },
     {
-      name: 'additionalInfoRequistionerName',
+      name: 'additionalInfoRequisitionedName',
       type: 'text',
       label: t('Requisitioner'),
       placeholder: t('Requisitioner'),
@@ -247,11 +247,26 @@ function CreatePurchaseOrder() {
                   fields={getFields()}
                   validation={Yup.object().shape(shape)}
                   submitText={t('Submit')}
-                  values={{ shippingDueDate: null, additionalInfoDate: null }}
+                  values={{
+                    shippingDueDate: null,
+                    additionalInfoDate: null,
+                    approveOnSubmit: false
+                  }}
                   onChange={({ field, e }) => {}}
                   onSubmit={async (values) => {
                     if (!values.partQuantities?.length) {
                       onMissingPartQuantities();
+                      return;
+                    }
+                    if (
+                      values.partQuantities.some(
+                        (partQuantity) => partQuantity.quantity <= 0
+                      )
+                    ) {
+                      showSnackBar(
+                        t('Each Item quantity must be superior to 0'),
+                        'error'
+                      );
                       return;
                     }
                     values.category = formatSelect(values.category);

@@ -88,7 +88,7 @@ export default function PMDetails({
     },
     {
       label: t('Due Date'),
-      value: preventiveMaintenance.dueDate
+      value: getFormattedDate(preventiveMaintenance.dueDate)
     },
     {
       label: t('Category'),

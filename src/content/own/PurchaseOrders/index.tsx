@@ -46,6 +46,7 @@ import {
   editPOPartQuantities,
   getPartQuantitiesByPurchaseOrder
 } from '../../../slices/partQuantity';
+import Category from '../../../models/owns/category';
 
 function PurchaseOrders() {
   const { t }: { t: any } = useTranslation();
@@ -60,7 +61,13 @@ function PurchaseOrders() {
     (state) => state.partQuantities
   );
   const { purchaseOrderId } = useParams();
-  const { hasViewPermission, hasCreatePermission, hasFeature } = useAuth();
+  const {
+    hasViewPermission,
+    hasCreatePermission,
+    hasFeature,
+    companySettings
+  } = useAuth();
+  const { generalPreferences } = companySettings;
   const dispatch = useDispatch();
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const { purchaseOrders, loadingGet } = useSelector(
@@ -155,38 +162,37 @@ function PurchaseOrders() {
       field: 'itemsNumber',
       headerName: t('Number of items'),
       description: t('Number of items'),
-      width: 150
-      // valueGetter: (params: GridRenderCellParams<string>) =>
-      //   params.row.partPurchases.length
+      width: 150,
+      valueGetter: (params: GridRenderCellParams<null, PurchaseOrder>) =>
+        params.row.partQuantities.length
     },
     {
       field: 'totalCost',
       headerName: t('Total Cost'),
       description: t('Total Cost'),
-      width: 150
-      // valueGetter: (params: GridRenderCellParams<string>) =>
-      //   params.row.partPurchases.reduce(
-      //     (acc, partPurchase) =>
-      //       acc + partPurchase.quantity * partPurchase.part.cost,
-      //     0
-      //   )
+      width: 150,
+      valueGetter: (params: GridRenderCellParams<null, PurchaseOrder>) => `
+        ${params.row.partQuantities.reduce((acc, partQuantity) => {
+          return acc + partQuantity.part.cost * partQuantity.quantity;
+        }, 0)} ${generalPreferences.currency.code}`
     },
     {
       field: 'totalQuantity',
       headerName: t('Total Quantity'),
       description: t('Total Quantity'),
-      width: 150
-      // valueGetter: (params: GridRenderCellParams<string>) =>
-      //   params.row.partPurchases.reduce(
-      //     (acc, partPurchase) => acc + partPurchase.quantity,
-      //     0
-      //   )
+      width: 150,
+      valueGetter: (params: GridRenderCellParams<null, PurchaseOrder>) =>
+        params.row.partQuantities.reduce((acc, partQuantity) => {
+          return acc + partQuantity.quantity;
+        }, 0)
     },
     {
       field: 'category',
       headerName: t('Category'),
       description: t('Category'),
-      width: 150
+      width: 150,
+      valueGetter: (params: GridRenderCellParams<Category>) =>
+        params.value?.name
     },
     {
       field: 'status',
@@ -245,8 +251,10 @@ function PurchaseOrders() {
     },
     {
       name: 'category',
-      type: 'text',
+      type: 'select',
       label: t('Category'),
+      type2: 'category',
+      category: 'purchase-order-categories',
       placeholder: t('Category'),
       midWidth: true
     },
@@ -358,7 +366,7 @@ function PurchaseOrders() {
       multiple: true
     },
     {
-      name: 'additionalInfoRequistionerName',
+      name: 'additionalInfoRequisitionedName',
       type: 'text',
       label: t('Requisitioner'),
       placeholder: t('Requisitioner'),
@@ -416,8 +424,14 @@ function PurchaseOrders() {
               ...currentPurchaseOrder,
               vendor: currentPurchaseOrder?.vendor
                 ? {
-                    label: currentPurchaseOrder?.vendor?.name,
-                    value: currentPurchaseOrder?.vendor?.id.toString()
+                    label: currentPurchaseOrder.vendor.name,
+                    value: currentPurchaseOrder.vendor.id.toString()
+                  }
+                : null,
+              category: currentPurchaseOrder?.category
+                ? {
+                    label: currentPurchaseOrder.category.name,
+                    values: currentPurchaseOrder?.category.id
                   }
                 : null,
               partQuantities
@@ -433,6 +447,17 @@ function PurchaseOrders() {
                       editPOPartQuantities(
                         currentPurchaseOrder.id,
                         values.partQuantities
+                      )
+                    ).then(() =>
+                      setTimeout(
+                        () =>
+                          dispatch(
+                            getPartQuantitiesByPurchaseOrder(
+                              currentPurchaseOrder.id
+                            )
+                          ),
+                        //I don't know why direct call to API doesn't have updated values
+                        1000
                       )
                     );
                   })

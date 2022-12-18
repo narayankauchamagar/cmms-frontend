@@ -108,6 +108,12 @@ export const respondPurchaseOrder =
       slice.actions.editPurchaseOrder({ purchaseOrder: purchaseOrderResponse })
     );
   };
+export const getSinglePurchaseOrder =
+  (id: number): AppThunk =>
+  async (dispatch) => {
+    const purchaseOrder = await api.get<PurchaseOrder>(`${basePath}/${id}`);
+    dispatch(slice.actions.editPurchaseOrder({ purchaseOrder }));
+  };
 export const deletePurchaseOrder =
   (id: number): AppThunk =>
   async (dispatch) => {

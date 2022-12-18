@@ -113,7 +113,7 @@ export default function RequestDetails({
     },
     {
       label: t('Due Date'),
-      value: request.dueDate
+      value: getFormattedDate(request.dueDate)
     },
     {
       label: t('Category'),

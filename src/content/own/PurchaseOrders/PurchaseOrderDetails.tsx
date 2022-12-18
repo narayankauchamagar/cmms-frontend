@@ -116,7 +116,12 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
   };
   const detailsFieldsToRender = (
     purchaseOrder1: PurchaseOrder
-  ): { label: string; value: any; type?: 'vendor'; id?: number }[] => [
+  ): {
+    label: string;
+    value: string | number;
+    type?: 'vendor';
+    id?: number;
+  }[] => [
     {
       label: t('Name'),
       value: purchaseOrder1.name
@@ -127,11 +132,11 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
     },
     {
       label: t('Due Date'),
-      value: purchaseOrder1.shippingDueDate
+      value: getFormattedDate(purchaseOrder1.shippingDueDate)
     },
     {
       label: t('Category'),
-      value: purchaseOrder1.category
+      value: purchaseOrder1.category?.name
     },
     {
       label: t('Date created'),
@@ -185,7 +190,7 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
   ): { label: string; value: any }[] => [
     {
       label: t('Requisitioner'),
-      value: purchaseOrder1.additionalInfoRequistionerName
+      value: purchaseOrder1.additionalInfoRequisitionedName
     },
     {
       label: t('Shipping method'),
