@@ -1,17 +1,12 @@
-import Reading from '../models/owns/reading';
-import { dayDiff } from './dates';
 import { FileType } from '../models/owns/file';
+import Meter from '../models/owns/meter';
 
-export const canAddReading = (
-  readings: Reading[],
-  updateFrequency: number
-): boolean => {
-  return (
-    (readings.length &&
-      dayDiff(new Date([...readings].reverse()[0].createdAt), new Date()) >
-        updateFrequency) ||
-    !readings.length
-  );
+export const canAddReading = (meter: Meter): boolean => {
+  if (!meter) {
+    return false;
+  }
+  if (!meter.nextReading) return true;
+  return new Date() > new Date(meter.nextReading);
 };
 
 export const getImageAndFiles = (

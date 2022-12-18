@@ -24,7 +24,7 @@ import {
   GridValueGetterParams
 } from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import { AssetRow } from '../../../models/owns/asset';
+import { AssetMiniDTO, AssetRow } from '../../../models/owns/asset';
 import Form from '../components/form';
 import * as Yup from 'yup';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -43,6 +43,10 @@ import PermissionErrorMessage from '../components/PermissionErrorMessage';
 import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
 import { isNumeric } from '../../../utils/validators';
 import { getSingleLocation } from '../../../slices/location';
+import { LocationMiniDTO } from '../../../models/owns/location';
+import { TeamMiniDTO } from '../../../models/owns/team';
+import { VendorMiniDTO } from '../../../models/owns/vendor';
+import Category from '../../../models/owns/category';
 
 function Assets() {
   const { t }: { t: any } = useTranslation();
@@ -112,7 +116,8 @@ function Assets() {
       headerName: t('Location'),
       description: t('Location'),
       width: 150,
-      valueGetter: (params) => params.row.location?.name
+      valueGetter: (params: GridValueGetterParams<LocationMiniDTO>) =>
+        params.value?.name
     },
     {
       field: 'image',
@@ -143,7 +148,9 @@ function Assets() {
       field: 'category',
       headerName: t('Category'),
       description: t('Category'),
-      width: 150
+      width: 150,
+      valueGetter: (params: GridValueGetterParams<Category>) =>
+        params.value?.name
     },
     {
       field: 'description',
@@ -157,8 +164,8 @@ function Assets() {
       description: t('Primary User'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<UserMiniDTO>) =>
-        params.row.primaryUser
-          ? `${params.row.primaryUser?.firstName} ${params.row.primaryUser?.lastName}`
+        params.value
+          ? `${params.value.firstName} ${params.value.lastName}`
           : null
     },
     {
@@ -175,36 +182,32 @@ function Assets() {
       headerName: t('Teams'),
       description: t('Teams'),
       width: 150,
-      valueGetter: (params) =>
-        enumerate(params.row.teams.map((team) => team.name))
+      valueGetter: (params: GridValueGetterParams<TeamMiniDTO[]>) =>
+        enumerate(params.value.map((team) => team.name))
     },
     {
       field: 'vendors',
       headerName: t('Vendors'),
       description: t('Vendors'),
       width: 150,
-      valueGetter: (params) =>
-        enumerate(params.row.vendors.map((vendor) => vendor.companyName))
+      valueGetter: (params: GridValueGetterParams<VendorMiniDTO[]>) =>
+        enumerate(params.value.map((vendor) => vendor.companyName))
     },
     {
       field: 'parentAsset',
       headerName: t('Parent Asset'),
       description: t('Parent Asset'),
       width: 150,
-      valueGetter: (params) => params.row.parentAsset?.name
-    },
-    {
-      field: 'openWorkOrders',
-      headerName: t('Open Work Orders'),
-      description: t('Open Work Orders'),
-      width: 150
+      valueGetter: (params: GridValueGetterParams<AssetMiniDTO>) =>
+        params.value?.name
     },
     {
       field: 'createdAt',
       headerName: t('Created At'),
       description: t('Created At'),
       width: 150,
-      valueGetter: (params) => getFormattedDate(params.row.createdAt)
+      valueGetter: (params: GridValueGetterParams<string>) =>
+        getFormattedDate(params.value)
     }
   ];
   const defaultFields: Array<IField> = [

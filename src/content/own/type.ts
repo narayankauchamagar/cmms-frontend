@@ -37,7 +37,8 @@ export interface IField {
     | 'task'
     | 'category'
     | 'parentLocation'
-    | 'role';
+    | 'role'
+    | 'currency';
   category?:
     | 'purchase-order-categories'
     | 'cost-categories'

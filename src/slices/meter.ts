@@ -81,6 +81,12 @@ export const editMeter =
     const meterResponse = await api.patch<Meter>(`${basePath}/${id}`, meter);
     dispatch(slice.actions.editMeter({ meter: meterResponse }));
   };
+export const getSingleMeter =
+  (id: number): AppThunk =>
+  async (dispatch) => {
+    const meterResponse = await api.get<Meter>(`${basePath}/${id}`);
+    dispatch(slice.actions.editMeter({ meter: meterResponse }));
+  };
 export const deleteMeter =
   (id: number): AppThunk =>
   async (dispatch) => {

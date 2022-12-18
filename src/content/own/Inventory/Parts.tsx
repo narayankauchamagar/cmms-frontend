@@ -15,7 +15,11 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import CustomDataGrid from '../components/CustomDatagrid';
-import { GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
+import {
+  GridRenderCellParams,
+  GridToolbar,
+  GridValueGetterParams
+} from '@mui/x-data-grid';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import Part from '../../../models/owns/part';
 import { addPart, deletePart, editPart, getParts } from '../../../slices/part';
@@ -193,7 +197,8 @@ const Parts = ({ setAction }: PropsType) => {
       headerName: t('Date Created'),
       description: t('Date Created'),
       width: 150,
-      valueGetter: (params) => getFormattedDate(params.row.createdAt)
+      valueGetter: (params: GridValueGetterParams<string>) =>
+        getFormattedDate(params.value)
     },
     {
       field: 'openWorkOrders',

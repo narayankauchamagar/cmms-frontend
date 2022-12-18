@@ -22,7 +22,11 @@ import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import CustomDataGrid from '../components/CustomDatagrid';
-import { GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
+import {
+  GridRenderCellParams,
+  GridToolbar,
+  GridValueGetterParams
+} from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import Form from '../components/form';
 import UserAvatars from '../components/UserAvatars';
@@ -32,8 +36,8 @@ import { UserMiniDTO } from '../../../models/user';
 import Team from '../../../models/owns/team';
 import WorkOrderDetails from './WorkOrderDetails';
 import { useParams, useSearchParams } from 'react-router-dom';
-import Location from '../../../models/owns/location';
-import Asset from '../../../models/owns/asset';
+import Location, { LocationMiniDTO } from '../../../models/owns/location';
+import Asset, { AssetMiniDTO } from '../../../models/owns/asset';
 import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
 import {
   addWorkOrder,
@@ -55,6 +59,8 @@ import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
 import { getImageAndFiles } from '../../../utils/overall';
 import { getSingleLocation } from '../../../slices/location';
 import { getSingleAsset } from '../../../slices/asset';
+import Category from '../../../models/owns/category';
+import File from '../../../models/owns/file';
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
@@ -279,28 +285,32 @@ function WorkOrders() {
       headerName: t('Location name'),
       description: t('Location name'),
       width: 150,
-      valueGetter: (params) => params.row.location?.name
+      valueGetter: (params: GridValueGetterParams<LocationMiniDTO>) =>
+        params.value?.name
     },
     {
       field: 'locationAddress',
       headerName: t('Location address'),
       description: t('Location address'),
       width: 150,
-      valueGetter: (params) => params.row.location?.address
+      valueGetter: (params: GridValueGetterParams<null, WorkOrder>) =>
+        params.row.location?.address
     },
     {
       field: 'category',
       headerName: t('Category'),
       description: t('Category'),
       width: 150,
-      valueGetter: (params) => params.row.category?.name
+      valueGetter: (params: GridValueGetterParams<Category>) =>
+        params.value?.name
     },
     {
       field: 'asset',
       headerName: t('Asset name'),
       description: t('Asset name'),
       width: 150,
-      valueGetter: (params) => params.row.asset?.name
+      valueGetter: (params: GridValueGetterParams<AssetMiniDTO>) =>
+        params.value?.name
     },
     {
       field: 'address',
@@ -325,7 +335,8 @@ function WorkOrders() {
       headerName: t('Files'),
       description: t('Files'),
       width: 150,
-      valueGetter: (params) => params.row.files.length
+      valueGetter: (params: GridValueGetterParams<File[]>) =>
+        params.value.length
     },
     {
       field: 'tasks',
@@ -338,7 +349,7 @@ function WorkOrders() {
       headerName: t('Requested By'),
       description: t('Requested By'),
       width: 150,
-      valueGetter: (params) =>
+      valueGetter: (params: GridValueGetterParams<null, WorkOrder>) =>
         getUserNameById(params.row.parentRequest?.createdBy)
     },
     {
@@ -365,14 +376,16 @@ function WorkOrders() {
       headerName: t('Updated At'),
       description: t('Updated At'),
       width: 150,
-      valueGetter: (params) => getFormattedDate(params.row.updatedAt)
+      valueGetter: (params: GridValueGetterParams<string>) =>
+        getFormattedDate(params.value)
     },
     {
       field: 'createdAt',
       headerName: t('Created At'),
       description: t('Created At'),
       width: 150,
-      valueGetter: (params) => getFormattedDate(params.row.createdAt)
+      valueGetter: (params: GridValueGetterParams<string>) =>
+        getFormattedDate(params.value)
     }
   ];
   const defaultFields: Array<IField> = [

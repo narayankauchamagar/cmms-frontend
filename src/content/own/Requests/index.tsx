@@ -169,7 +169,7 @@ function Files() {
       headerName: t('Status'),
       description: t('Status'),
       width: 150,
-      valueGetter: (params: GridValueGetterParams<Request>) =>
+      valueGetter: (params: GridValueGetterParams<null, Request>) =>
         params.row.cancelled
           ? t('Rejected')
           : params.row.workOrder

@@ -7,10 +7,12 @@ import api from '../utils/api';
 const basePath = 'readings';
 interface ReadingState {
   readingsByMeter: { [id: number]: Reading[] };
+  loadingGet: boolean;
 }
 
 const initialState: ReadingState = {
-  readingsByMeter: {}
+  readingsByMeter: {},
+  loadingGet: false
 };
 
 const slice = createSlice({
@@ -47,6 +49,13 @@ const slice = createSlice({
       state.readingsByMeter[meterId] = state.readingsByMeter[meterId].filter(
         (reading) => reading.id !== id
       );
+    },
+    setLoadingGet(
+      state: ReadingState,
+      action: PayloadAction<{ loading: boolean }>
+    ) {
+      const { loading } = action.payload;
+      state.loadingGet = loading;
     }
   }
 });
@@ -56,8 +65,10 @@ export const reducer = slice.reducer;
 export const getReadings =
   (id: number): AppThunk =>
   async (dispatch) => {
+    dispatch(slice.actions.setLoadingGet({ loading: true }));
     const readings = await api.get<Reading[]>(`${basePath}/meter/${id}`);
     dispatch(slice.actions.getReadings({ id, readings }));
+    dispatch(slice.actions.setLoadingGet({ loading: false }));
   };
 
 export const createReading =

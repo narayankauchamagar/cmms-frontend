@@ -1,4 +1,5 @@
 import { Audit } from './audit';
+import Currency from './currency';
 
 export interface Customer extends Audit {
   id: number;
@@ -13,7 +14,7 @@ export interface Customer extends Audit {
   billingAddress: string;
   billingAddress2: string;
   billingName: string;
-  billingCurrency: string;
+  billingCurrency: Currency;
 }
 export interface CustomerMiniDTO {
   name: string;
@@ -33,7 +34,7 @@ export const customers: Customer[] = [
     billingAddress: 'Add 1',
     billingAddress2: '-',
     billingName: 'Add 3',
-    billingCurrency: 'MAD, dirham',
+    billingCurrency: null,
     createdBy: 1,
     updatedBy: 4,
     createdAt: 'sd',
@@ -52,7 +53,7 @@ export const customers: Customer[] = [
     billingAddress: 'Add 1',
     billingAddress2: '-',
     billingName: '-',
-    billingCurrency: 'Euro',
+    billingCurrency: null,
     createdBy: 1,
     updatedBy: 4,
     createdAt: 'sd',

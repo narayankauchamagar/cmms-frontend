@@ -30,7 +30,8 @@ export default function SetDetails(props: PartDetailsProps) {
   const { set, handleOpenUpdate, handleOpenDelete } = props;
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
-  const { hasEditPermission, hasDeletePermission } = useAuth();
+  const { hasEditPermission, hasDeletePermission, companySettings } = useAuth();
+  const { generalPreferences } = companySettings;
   const { getFormattedDate } = useContext(CompanySettingsContext);
 
   return (
@@ -78,7 +79,11 @@ export default function SetDetails(props: PartDetailsProps) {
         <List sx={{ width: '100%' }}>
           {set?.parts.map((part) => (
             <ListItemButton key={part.id} divider>
-              <ListItem secondaryAction={<Typography>{part.cost}</Typography>}>
+              <ListItem
+                secondaryAction={
+                  <Typography>{`${part.cost} ${generalPreferences.currency.code}`}</Typography>
+                }
+              >
                 <ListItemText
                   primary={part.name}
                   secondary={part.description}
@@ -95,7 +100,8 @@ export default function SetDetails(props: PartDetailsProps) {
             </Typography>
           </Box>
           <Typography variant="h6" sx={{ pr: 2 }}>
-            {set?.parts.reduce((acc, part) => acc + part.cost, 0)}
+            {set?.parts.reduce((acc, part) => acc + part.cost, 0)}{' '}
+            {generalPreferences.currency.code}
           </Typography>
         </Box>
       </Grid>

@@ -13,6 +13,14 @@ import { UserMiniDTO } from '../../../../models/user';
 import { Customer } from '../../../../models/owns/customer';
 import { Vendor } from '../../../../models/owns/vendor';
 import Team from '../../../../models/owns/team';
+import {
+  getCustomerUrl,
+  getTeamUrl,
+  getUserUrl,
+  getVendorUrl
+} from '../../../../utils/urlPaths';
+import { useContext } from 'react';
+import { CompanySettingsContext } from '../../../../contexts/CompanySettingsContext';
 
 interface PropsType {
   asset: AssetDTO;
@@ -20,9 +28,11 @@ interface PropsType {
 
 const AssetDetails = ({ asset }: PropsType) => {
   const { t }: { t: any } = useTranslation();
+  const { getFormattedDate } = useContext(CompanySettingsContext);
   const informationFields = [
     { label: t('Name'), value: asset?.name },
     { label: t('Description'), value: asset?.description },
+    { label: t('Category'), value: asset?.category.name },
     { label: t('Model'), value: asset?.model },
     { label: t('Serial Number'), value: asset?.serialNumber },
     {
@@ -33,8 +43,14 @@ const AssetDetails = ({ asset }: PropsType) => {
     { label: t('Barcode'), value: asset?.barCode }
   ];
   const moreInfosFields = [
-    { label: t('Placed in Service'), value: asset?.inServiceDate },
-    { label: t('Warranty expiration'), value: asset?.warrantyExpirationDate }
+    {
+      label: t('Placed in Service'),
+      value: getFormattedDate(asset?.inServiceDate)
+    },
+    {
+      label: t('Warranty expiration'),
+      value: getFormattedDate(asset?.warrantyExpirationDate)
+    }
   ];
   const BasicField = ({
     label,
@@ -46,7 +62,9 @@ const AssetDetails = ({ asset }: PropsType) => {
     return value ? (
       <Grid item xs={12}>
         <Stack spacing={5} direction="row">
-          <Typography variant="h6">{label}</Typography>
+          <Typography variant="h6" fontWeight="bold">
+            {label}
+          </Typography>
           <Typography variant="h6">{value}</Typography>
         </Stack>
         <Divider sx={{ mt: 1 }} />
@@ -68,7 +86,9 @@ const AssetDetails = ({ asset }: PropsType) => {
       !!values?.length && (
         <Grid item xs={12}>
           <Stack spacing={5} direction="row">
-            <Typography variant="h6">{label}</Typography>
+            <Typography variant="h6" fontWeight="bold">
+              {label}
+            </Typography>
             <Stack spacing={1} direction="row">
               {values.map((value, index) => (
                 <Stack key={value.id} spacing={1} direction="row">
@@ -94,7 +114,7 @@ const AssetDetails = ({ asset }: PropsType) => {
           <Card sx={{ p: 2 }}>
             <Grid container spacing={2} padding={2}>
               <Grid item xs={12}>
-                <Typography variant="h4">Asset Information</Typography>
+                <Typography variant="h3">{t('Asset Information')}</Typography>
               </Grid>
               {informationFields.map((field) => (
                 <BasicField
@@ -104,7 +124,7 @@ const AssetDetails = ({ asset }: PropsType) => {
                 />
               ))}
               <Grid item xs={12}>
-                <Typography variant="h4">{t('More Informations')}</Typography>
+                <Typography variant="h3">{t('More Informations')}</Typography>
               </Grid>
               {moreInfosFields.map((field) => (
                 <BasicField
@@ -116,7 +136,9 @@ const AssetDetails = ({ asset }: PropsType) => {
               {asset?.primaryUser && (
                 <Grid item xs={12}>
                   <Stack spacing={5} direction="row">
-                    <Typography variant="h6">{t('Primary User')}</Typography>
+                    <Typography variant="h6" fontWeight="bold">
+                      {t('Primary User')}
+                    </Typography>
                     <Link
                       key={asset.primaryUser.id}
                       href={`/app/people-teams/people/${asset.primaryUser.id}`}
@@ -131,7 +153,9 @@ const AssetDetails = ({ asset }: PropsType) => {
               {asset?.location && (
                 <Grid item xs={12}>
                   <Stack spacing={5} direction="row">
-                    <Typography variant="h6">{t('Location')}</Typography>
+                    <Typography variant="h6" fontWeight="bold">
+                      {t('Location')}
+                    </Typography>
                     <Link
                       href={`/app/locations/${asset.location.id}`}
                       variant="h6"
@@ -144,10 +168,8 @@ const AssetDetails = ({ asset }: PropsType) => {
               )}
               <ListField
                 values={asset?.assignedTo}
-                label={t('Users')}
-                getHref={(user: UserMiniDTO) =>
-                  `/app/people-teams/people/${user.id}`
-                }
+                label={t('Assignees')}
+                getHref={(user: UserMiniDTO) => getUserUrl(user.id)}
                 getValueLabel={(user: UserMiniDTO) =>
                   `${user.firstName} ${user.lastName}`
                 }
@@ -155,23 +177,19 @@ const AssetDetails = ({ asset }: PropsType) => {
               <ListField
                 values={asset?.customers}
                 label={t('Customers')}
-                getHref={(customer: Customer) =>
-                  `/app/vendors-customers/customers/${customer.id}`
-                }
+                getHref={(customer: Customer) => getCustomerUrl(customer.id)}
                 getValueLabel={(customer: Customer) => customer.name}
               />
               <ListField
                 values={asset?.vendors}
                 label={t('Vendors')}
-                getHref={(vendor: Vendor) =>
-                  `/app/vendors-customers/vendors/${vendor.id}`
-                }
+                getHref={(vendor: Vendor) => getVendorUrl(vendor.id)}
                 getValueLabel={(vendor: Vendor) => vendor.companyName}
               />
               <ListField
                 values={asset?.teams}
                 label={t('Teams')}
-                getHref={(team: Team) => `/app/people-teams/teams/${team.id}`}
+                getHref={(team: Team) => getTeamUrl(team.id)}
                 getValueLabel={(team: Team) => team.name}
               />
             </Grid>

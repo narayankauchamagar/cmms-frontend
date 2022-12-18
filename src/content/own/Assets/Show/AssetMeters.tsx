@@ -40,7 +40,9 @@ const AssetMeters = ({ asset }: PropsType) => {
   const { t }: { t: any } = useTranslation();
   const dispatch = useDispatch();
   const { metersByAsset } = useSelector((state) => state.meters);
-  const { readingsByMeter } = useSelector((state) => state.readings);
+  const { readingsByMeter, loadingGet } = useSelector(
+    (state) => state.readings
+  );
   const meters = metersByAsset[asset?.id] ?? [];
   const [selectedMeter, setSelectedMeter] = useState<Meter>();
   const { hasEditPermission } = useAuth();
@@ -50,7 +52,8 @@ const AssetMeters = ({ asset }: PropsType) => {
   const [openReadingModal, setOpenReadingModal] = useState<boolean>(false);
   const readings = readingsByMeter[selectedMeter?.id] ?? [];
   const { showSnackBar } = useContext(CustomSnackBarContext);
-
+  const [canAddReadingInternal, setCanAddReadingInternal] =
+    useState<boolean>(true);
   useEffect(() => {
     if (asset) dispatch(getMetersByAsset(asset?.id));
   }, [asset?.id]);
@@ -138,6 +141,7 @@ const AssetMeters = ({ asset }: PropsType) => {
             onSubmit={async (values) => {
               return dispatch(createReading(selectedMeter.id, values))
                 .then(onCreationSuccess)
+                .then(() => setCanAddReadingInternal(false))
                 .catch(onCreationFailure);
             }}
           />
@@ -184,7 +188,7 @@ const AssetMeters = ({ asset }: PropsType) => {
                       variant="contained"
                       sx={{ my: 3 }}
                       disabled={
-                        !canAddReading(readings, selectedMeter?.updateFrequency)
+                        !(canAddReading(selectedMeter) && canAddReadingInternal)
                       }
                       onClick={() => setOpenReadingModal(true)}
                     >
@@ -199,6 +203,7 @@ const AssetMeters = ({ asset }: PropsType) => {
                 components={{
                   Toolbar: GridToolbar
                 }}
+                loading={loadingGet}
                 onRowClick={(params: GridRowParams<Meter>) => null}
                 initialState={{
                   columns: {

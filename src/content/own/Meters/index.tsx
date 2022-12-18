@@ -23,7 +23,11 @@ import { useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import CustomDataGrid from '../components/CustomDatagrid';
-import { GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
+import {
+  GridRenderCellParams,
+  GridToolbar,
+  GridValueGetterParams
+} from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import Meter from '../../../models/owns/meter';
 import Form from '../components/form';
@@ -133,7 +137,9 @@ function Meters() {
       field: 'nextReading',
       headerName: t('Next Reading Due'),
       description: t('Next Reading'),
-      width: 150
+      width: 150,
+      valueGetter: (params: GridValueGetterParams<string>) =>
+        getFormattedDate(params.value)
     },
     {
       field: 'unit',
@@ -145,9 +151,9 @@ function Meters() {
       field: 'lastReading',
       headerName: t('Last Reading'),
       description: t('Last Reading'),
-      width: 150
-      // valueGetter: (params) =>
-      //   params.row.readings[params.row.readings.length - 1].value
+      width: 150,
+      valueGetter: (params: GridValueGetterParams<string>) =>
+        getFormattedDate(params.value)
     },
     {
       field: 'location',
@@ -175,7 +181,8 @@ function Meters() {
       headerName: t('Date Created'),
       description: t('Date Created'),
       width: 150,
-      valueGetter: (params) => getFormattedDate(params.row.createdAt)
+      valueGetter: (params: GridValueGetterParams<string>) =>
+        getFormattedDate(params.value)
     }
   ];
   const fields: Array<IField> = [

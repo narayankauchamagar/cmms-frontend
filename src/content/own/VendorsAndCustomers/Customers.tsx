@@ -15,7 +15,8 @@ import CustomDataGrid from '../components/CustomDatagrid';
 import {
   GridEnrichedColDef,
   GridRenderCellParams,
-  GridToolbar
+  GridToolbar,
+  GridValueGetterParams
 } from '@mui/x-data-grid';
 import {
   emailRegExp,
@@ -38,6 +39,8 @@ import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
 import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
+import { formatSelect } from '../../../utils/formatters';
+import Currency from '../../../models/owns/currency';
 
 interface PropsType {
   values?: any;
@@ -112,6 +115,11 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
     }
   }, [customers]);
 
+  const formatValues = (values) => {
+    values.billingCurrency = formatSelect(values.billingCurrency);
+    values.rate = values.rate ? Number(values.rate) : null;
+    return values;
+  };
   let fields: Array<IField> = [
     {
       name: 'details',
@@ -195,15 +203,11 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
       placeholder: 'casa, maroc'
     },
     {
-      name: 'currency',
+      name: 'billingCurrency',
       type: 'select',
+      type2: 'currency',
       label: 'Currency',
-      placeholder: 'Select Currency',
-      items: [
-        { label: 'MAD, Dirham', value: 'dirham' },
-        { label: 'Euro', value: 'euro' },
-        { label: 'Dollar', value: 'dollar' }
-      ]
+      placeholder: 'Select Currency'
     }
   ];
 
@@ -286,10 +290,11 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
       field: 'billingCurrency',
       headerName: t('Currency'),
       description: t('Currency'),
-      width: 150
+      width: 150,
+      valueGetter: (params: GridValueGetterParams<Currency>) =>
+        params.value?.name
     }
   ];
-  // const searchFilterProperties = ['customerName', 'customerType', 'email'];
 
   const RenderCustomersAddModal = () => (
     <Dialog fullWidth maxWidth="md" open={openModal} onClose={handleCloseModal}>
@@ -319,10 +324,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
             values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              const formattedValues = {
-                ...values,
-                rate: Number(values.rate)
-              };
+              const formattedValues = formatValues(values);
               return dispatch(addCustomer(formattedValues))
                 .then(onCreationSuccess)
                 .catch(onCreationFailure);
@@ -362,7 +364,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
       />
     </Box>
   );
-  const fieldsToRender = [
+  const fieldsToRender: { label: string; value: string }[] = [
     {
       label: t('Address'),
       value: currentCustomer?.address
@@ -381,7 +383,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
     },
     {
       label: t('Billing Currency'),
-      value: currentCustomer?.billingCurrency
+      value: currentCustomer?.billingCurrency.name
     }
   ];
   const renderKeyAndValue = (key: string, value: string) => {
@@ -502,15 +504,18 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
               fields={fields}
               validation={Yup.object().shape(shape)}
               submitText={t('Save')}
-              values={currentCustomer || {}}
+              values={{
+                ...currentCustomer,
+                billingCurrency: currentCustomer?.billingCurrency
+                  ? {
+                      label: currentCustomer.billingCurrency.name,
+                      value: currentCustomer.billingCurrency.id
+                    }
+                  : null
+              }}
               onChange={({ field, e }) => {}}
               onSubmit={async (values) => {
-                const formattedValues = values.rate
-                  ? {
-                      ...values,
-                      rate: Number(values.rate)
-                    }
-                  : values;
+                const formattedValues = formatValues(values);
                 return dispatch(
                   editCustomer(currentCustomer.id, formattedValues)
                 )

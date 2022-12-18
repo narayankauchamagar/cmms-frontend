@@ -39,6 +39,7 @@ import { getPriorityLabel } from '../../../../utils/formatters';
 import { getCategories } from '../../../../slices/category';
 import SelectPartQuantities from './SelectPartQuantities';
 import { getRoles } from '../../../../slices/role';
+import { getCurrencies } from '../../../../slices/currency';
 
 interface PropsType {
   fields: Array<IField>;
@@ -67,6 +68,7 @@ export default (props: PropsType) => {
   const { assetsMini } = useSelector((state) => state.assets);
   const { teamsMini } = useSelector((state) => state.teams);
   const { roles } = useSelector((state) => state.roles);
+  const { currencies } = useSelector((state) => state.currencies);
 
   const fetchCustomers = async () => {
     if (!customersMini.length) dispatch(getCustomersMini());
@@ -96,7 +98,9 @@ export default (props: PropsType) => {
   const fetchTeams = async () => {
     if (!teamsMini.length) dispatch(getTeamsMini());
   };
-
+  const fetchCurrencies = async () => {
+    if (!currencies.length) dispatch(getCurrencies());
+  };
   props.fields.forEach((f) => {
     shape[f.name] = Yup.string();
     if (f.required) {
@@ -116,7 +120,7 @@ export default (props: PropsType) => {
     return formik.handleChange(field);
   };
 
-  const renderSelect = (formik, field) => {
+  const renderSelect = (formik, field: IField) => {
     let options = field.items;
     let loading = field.loading;
     let onOpen = field.onPress;
@@ -168,6 +172,15 @@ export default (props: PropsType) => {
           };
         });
         onOpen = fetchLocations;
+        break;
+      case 'currency':
+        options = currencies.map((currency) => {
+          return {
+            label: currency.name,
+            value: currency.id
+          };
+        });
+        onOpen = fetchCurrencies;
         break;
       case 'parentLocation':
         options = locationsHierarchy.map((location) => {

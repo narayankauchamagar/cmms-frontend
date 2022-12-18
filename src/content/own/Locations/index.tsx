@@ -35,7 +35,8 @@ import {
   GridEventListener,
   GridRenderCellParams,
   GridRowParams,
-  GridToolbar
+  GridToolbar,
+  GridValueGetterParams
 } from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import Form from '../components/form';
@@ -234,7 +235,8 @@ function Locations() {
       headerName: t('Created At'),
       description: t('Created At'),
       width: 150,
-      valueGetter: (params) => getFormattedDate(params.row.createdAt)
+      valueGetter: (params: GridValueGetterParams<string>) =>
+        getFormattedDate(params.value)
     },
     {
       field: 'actions',

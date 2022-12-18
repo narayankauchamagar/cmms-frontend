@@ -10,7 +10,7 @@ export const getUserUrl = (id) => {
   return `/app/people-teams/people/${id}`;
 };
 export const getTeamUrl = (id) => {
-  return `/app/people-teams/teams${id}`;
+  return `/app/people-teams/teams/${id}`;
 };
 
 export const getRequestUrl = (id) => {

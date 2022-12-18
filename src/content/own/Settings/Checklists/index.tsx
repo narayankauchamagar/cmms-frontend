@@ -81,7 +81,7 @@ function Checklists() {
       field: 'tasks',
       headerName: t('Tasks'),
       description: t('Tasks'),
-      valueGetter: (params: GridValueGetterParams<Checklist>) =>
+      valueGetter: (params: GridValueGetterParams<null, Checklist>) =>
         params.row.taskBases.length,
       width: 150
     },

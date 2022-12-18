@@ -198,7 +198,9 @@ function Files() {
       headerName: t('Next Work Order'),
       description: t('Next Work Order'),
       width: 150,
-      valueGetter: (params: GridValueGetterParams<PreventiveMaintenance>) =>
+      valueGetter: (
+        params: GridValueGetterParams<null, PreventiveMaintenance>
+      ) =>
         getFormattedDate(
           getNextOccurence(
             new Date(params.row.schedule?.startsOn),

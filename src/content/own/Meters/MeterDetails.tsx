@@ -36,6 +36,7 @@ import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
 import ImageViewer from 'react-simple-image-viewer';
 import { canAddReading } from '../../../utils/overall';
+import { getSingleMeter } from '../../../slices/meter';
 
 interface MeterDetailsProps {
   meter: Meter;
@@ -176,7 +177,7 @@ export default function MeterDetails(props: MeterDetailsProps) {
       <Grid item xs={12}>
         {currentTab === 'details' && (
           <Box>
-            {canAddReading(currentMeterReadings, meter?.updateFrequency) &&
+            {canAddReading(meter) &&
             hasEditPermission(PermissionEntity.METERS, meter) ? (
               <Form
                 fields={fields}
@@ -184,7 +185,9 @@ export default function MeterDetails(props: MeterDetailsProps) {
                 submitText={t('Add Reading')}
                 values={{ value: 0 }}
                 onSubmit={async (values) => {
-                  return dispatch(createReading(meter.id, values));
+                  return dispatch(createReading(meter.id, values)).then(() =>
+                    dispatch(getSingleMeter(meter.id))
+                  );
                 }}
               />
             ) : (
