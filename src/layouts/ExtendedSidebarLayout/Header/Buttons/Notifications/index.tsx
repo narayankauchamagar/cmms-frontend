@@ -1,4 +1,11 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import {
+  cloneElement,
+  ReactElement,
+  useContext,
+  useEffect,
+  useRef,
+  useState
+} from 'react';
 
 import {
   alpha,
@@ -28,7 +35,9 @@ import {
   editNotification,
   getNotifications
 } from '../../../../../slices/notification';
-import Notification from '../../../../../models/owns/notification';
+import Notification, {
+  NotificationType
+} from '../../../../../models/owns/notification';
 import {
   getAssetUrl,
   getLocationUrl,
@@ -39,6 +48,13 @@ import {
   getWorkOrderUrl
 } from '../../../../../utils/urlPaths';
 import { CompanySettingsContext } from '../../../../../contexts/CompanySettingsContext';
+import AssignmentTwoToneIcon from '@mui/icons-material/AssignmentTwoTone';
+import MoveToInboxTwoToneIcon from '@mui/icons-material/MoveToInboxTwoTone';
+import Inventory2TwoToneIcon from '@mui/icons-material/Inventory2TwoTone';
+import LocationOnTwoToneIcon from '@mui/icons-material/LocationOnTwoTone';
+import HandymanTwoToneIcon from '@mui/icons-material/HandymanTwoTone';
+import SpeedTwoToneIcon from '@mui/icons-material/SpeedTwoTone';
+import { People } from '@mui/icons-material';
 
 const BoxComposed = styled(Box)(
   () => `
@@ -132,9 +148,6 @@ function HeaderNotifications() {
       case 'WORK_ORDER':
         url = getWorkOrderUrl(id);
         break;
-      case 'PREVENTIVE_MAINTENANCE':
-        // url = getAssetUrl(id);
-        break;
       case 'PART':
         url = getPartUrl(id);
         break;
@@ -164,7 +177,16 @@ function HeaderNotifications() {
         })
         .finally(handleClose);
   };
-
+  const notificationIcons: Record<NotificationType, ReactElement> = {
+    ASSET: <Inventory2TwoToneIcon />,
+    LOCATION: <LocationOnTwoToneIcon />,
+    METER: <SpeedTwoToneIcon />,
+    PART: <HandymanTwoToneIcon />,
+    REQUEST: <MoveToInboxTwoToneIcon />,
+    TEAM: <People />,
+    WORK_ORDER: <AssignmentTwoToneIcon />,
+    INFO: <NotificationsNoneTwoToneIcon />
+  };
   return (
     <>
       <Tooltip arrow title={t('Notifications')}>
@@ -280,7 +302,10 @@ function HeaderNotifications() {
                     onClick={() => onReadNotification(notification)}
                   >
                     <ListItemIcon>
-                      <NotificationsNoneTwoToneIcon />
+                      {cloneElement(
+                        notificationIcons[notification.notificationType],
+                        { color: notification.seen ? undefined : 'primary' }
+                      )}
                     </ListItemIcon>
                     <ListItemText
                       primary={notification.message}
