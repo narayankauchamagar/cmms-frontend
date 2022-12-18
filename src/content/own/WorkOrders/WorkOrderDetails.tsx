@@ -65,7 +65,7 @@ import { deleteRelation, getRelations } from '../../../slices/relation';
 import Relation, { relationTypes } from '../../../models/owns/relation';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 import { getAssetUrl, getUserUrl } from '../../../utils/urlPaths';
-import SignatureModal from './SignatureModal';
+import CompleteWOModal from './CompleteWOModal';
 import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
 import { getSingleUser } from '../../../slices/user';
@@ -92,7 +92,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const [openAddTimeModal, setOpenAddTimeModal] = useState<boolean>(false);
   const [openAddCostModal, setOpenAddCostModal] = useState<boolean>(false);
   const [openLinkModal, setOpenLinkModal] = useState<boolean>(false);
-  const [openSignatureModal, setOpenSignatureModal] = useState<boolean>(false);
+  const [openCompleteModal, setOpenCompleteModal] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<string>('details');
   const [changingStatus, setChangingStatus] = useState<boolean>(false);
   const { partQuantitiesByWorkOrder } = useSelector(
@@ -243,13 +243,17 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
     () => debounce(onPartQuantityChange, 1500),
     []
   );
-  const onCompleteWithSignature = (signatureId: number) => {
+  const onCompleteWO = (
+    signatureId: number | undefined,
+    feedback: string | undefined
+  ) => {
     setChangingStatus(true);
     return dispatch(
       editWorkOrder(workOrder?.id, {
         ...workOrder,
         status: 'COMPLETE',
-        signature: { id: signatureId }
+        feedback: feedback ?? null,
+        signature: signatureId ? { id: signatureId } : null
       })
     ).finally(() => setChangingStatus(false));
   };
@@ -513,17 +517,23 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                       onChange={(event) => {
                         if (event.target.value === 'COMPLETE') {
                           if (canComplete()) {
-                            if (workOrder.requiredSignature) {
-                              if (hasFeature(PlanFeature.SIGNATURE)) {
-                                setOpenSignatureModal(true);
-                              } else
-                                showSnackBar(
-                                  t(
-                                    'Signature on Work Order completion is not available in your current subscription plan.'
-                                  ),
-                                  'error'
-                                );
-                              return;
+                            if (
+                              generalPreferences.askFeedBackOnWOClosed ||
+                              workOrder.requiredSignature
+                            ) {
+                              let error;
+                              if (workOrder.requiredSignature) {
+                                if (!hasFeature(PlanFeature.SIGNATURE)) {
+                                  error =
+                                    'Signature on Work Order completion is not available in your current subscription plan.';
+                                }
+                              }
+                              if (error) {
+                                showSnackBar(t(error), 'error');
+                              } else {
+                                setOpenCompleteModal(true);
+                                return;
+                              }
                             }
                           } else return;
                         }
@@ -664,28 +674,41 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                       {getFormattedDate(workOrder.completedOn)}
                     </Typography>
                   </Grid>
-                  <Grid item xs={12} lg={6}>
-                    <Typography
-                      variant="h6"
-                      sx={{ color: theme.colors.alpha.black[70] }}
-                    >
-                      {t('Signature')}
-                    </Typography>
-                    <img
-                      src={workOrder.signature.url}
-                      style={{
-                        borderRadius: 5,
-                        height: 100,
-                        cursor: 'pointer'
-                      }}
-                      onClick={() => {
-                        setImageState(
-                          [workOrder.signature.url],
-                          workOrder.signature.url
-                        );
-                      }}
-                    />
-                  </Grid>
+                  {workOrder.feedback && (
+                    <Grid item xs={12} lg={6}>
+                      <Typography
+                        variant="h6"
+                        sx={{ color: theme.colors.alpha.black[70] }}
+                      >
+                        {t('Feedback')}
+                      </Typography>
+                      <Typography variant="h6">{workOrder.feedback}</Typography>
+                    </Grid>
+                  )}
+                  {workOrder.signature && (
+                    <Grid item xs={12} lg={6}>
+                      <Typography
+                        variant="h6"
+                        sx={{ color: theme.colors.alpha.black[70] }}
+                      >
+                        {t('Signature')}
+                      </Typography>
+                      <img
+                        src={workOrder.signature.url}
+                        style={{
+                          borderRadius: 5,
+                          height: 100,
+                          cursor: 'pointer'
+                        }}
+                        onClick={() => {
+                          setImageState(
+                            [workOrder.signature.url],
+                            workOrder.signature.url
+                          );
+                        }}
+                      />
+                    </Grid>
+                  )}
                 </>
               )}
               {workOrder.parentRequest && (
@@ -1198,10 +1221,14 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
           />
         </div>
       )}
-      <SignatureModal
-        open={openSignatureModal}
-        onClose={() => setOpenSignatureModal(false)}
-        onCompleteWithSignature={onCompleteWithSignature}
+      <CompleteWOModal
+        open={openCompleteModal}
+        onClose={() => setOpenCompleteModal(false)}
+        fieldsConfig={{
+          feedback: generalPreferences.askFeedBackOnWOClosed,
+          signature: workOrder.requiredSignature
+        }}
+        onComplete={onCompleteWO}
       />
       <Menu anchorEl={anchorEl} open={openMenu} onClose={handleCloseMenu}>
         <MenuItem

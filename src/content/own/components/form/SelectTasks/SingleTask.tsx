@@ -25,6 +25,8 @@ import { useMemo, useState } from 'react';
 import debounce from 'lodash.debounce';
 import { getAssetUrl, getUserUrl } from '../../../../../utils/urlPaths';
 import useAuth from '../../../../../hooks/useAuth';
+import { PermissionEntity } from '../../../../../models/owns/role';
+import { PlanFeature } from '../../../../../models/owns/subscriptionPlan';
 
 interface SingleTaskProps {
   task: Task;
@@ -52,7 +54,7 @@ export default function SingleTask({
   const { t }: { t: any } = useTranslation();
   const navigate = useNavigate();
   const [savingNotes, setSavingNotes] = useState<boolean>(false);
-  const { user } = useAuth();
+  const { user, hasCreatePermission, hasFeature } = useAuth();
 
   const changeHandler = (event) =>
     !preview && handleChange(event.target.value, task.id);
@@ -169,10 +171,30 @@ export default function SingleTask({
               <NoteTwoToneIcon color="primary" />
             </IconButton>
           </Tooltip>
-          <Tooltip arrow placement="top" title={t('Attach Images')}>
-            <IconButton onClick={() => !preview && handleSelectImages(task.id)}>
-              <AttachFileTwoToneIcon color="primary" />
-            </IconButton>
+          <Tooltip
+            arrow
+            placement="top"
+            title={t(
+              hasCreatePermission(PermissionEntity.FILES) &&
+                hasFeature(PlanFeature.FILE)
+                ? 'Attach Images'
+                : 'Upgrade to attach Images'
+            )}
+          >
+            <span>
+              <IconButton
+                onClick={() => handleSelectImages(task.id)}
+                disabled={
+                  preview ||
+                  !(
+                    hasCreatePermission(PermissionEntity.FILES) &&
+                    hasFeature(PlanFeature.FILE)
+                  )
+                }
+              >
+                <AttachFileTwoToneIcon color="primary" />
+              </IconButton>
+            </span>
           </Tooltip>
         </Box>
       </Box>

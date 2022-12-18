@@ -33,6 +33,7 @@ export default interface WorkOrder extends WorkOrderBase {
   archived: boolean;
   parentRequest: Request;
   signature: File;
+  feedback: string;
   //parentPreventiveMaintenance:
 }
 
@@ -53,6 +54,7 @@ export const workOrders: WorkOrder[] = [
     requiredSignature: true,
     location: locations[0],
     team: teams[0],
+    feedback: null,
     primaryUser: null,
     assignedTo: [],
     asset: assets[0],

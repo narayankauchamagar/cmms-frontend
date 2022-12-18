@@ -3,33 +3,53 @@ import { useTranslation } from 'react-i18next';
 import Form from '../components/form';
 import * as Yup from 'yup';
 import { IField } from '../type';
-import { useDispatch } from '../../../store';
 import { useContext } from 'react';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 
 interface SignatureProps {
   open: boolean;
   onClose: () => void;
-  onCompleteWithSignature: (id: number) => Promise<void | number | number[]>;
+  fieldsConfig: { feedback: boolean; signature: boolean };
+  onComplete: (
+    id: number | undefined,
+    feedback: string
+  ) => Promise<void | number | number[]>;
 }
-export default function SignatureModal({
+export default function CompleteWOModal({
   open,
   onClose,
-  onCompleteWithSignature
+  onComplete,
+  fieldsConfig
 }: SignatureProps) {
   const { t }: { t: any } = useTranslation();
-  const dispatch = useDispatch();
   const { uploadFiles } = useContext(CompanySettingsContext);
-  const fields: Array<IField> = [
-    {
-      name: 'signature',
-      type: 'file',
-      label: t('Signature'),
-      fileType: 'image'
+
+  const getFieldsAndShape = (): [Array<IField>, { [key: string]: any }] => {
+    let fields = [];
+    let shape = {};
+    if (fieldsConfig.feedback) {
+      fields.push({
+        name: 'feedback',
+        type: 'text',
+        label: t('Feedback'),
+        placeholder: t('Give your feedback'),
+        multiple: true
+      });
+      shape = { feedback: Yup.string().required(t('Feedback is required')) };
     }
-  ];
-  const shape = {
-    signature: Yup.array().required(t('Image is required'))
+    if (fieldsConfig.signature) {
+      fields.push({
+        name: 'signature',
+        type: 'file',
+        label: t('Signature'),
+        fileType: 'image'
+      });
+      shape = {
+        ...shape,
+        signature: Yup.array().required(t('Image is required'))
+      };
+    }
+    return [fields, shape];
   };
   return (
     <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
@@ -39,7 +59,7 @@ export default function SignatureModal({
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Add Signature to close this Work Order')}
+          {t('Close Work Order')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -49,16 +69,16 @@ export default function SignatureModal({
         }}
       >
         <Form
-          fields={fields}
-          validation={Yup.object().shape(shape)}
-          submitText={t('Sign')}
+          fields={getFieldsAndShape()[0]}
+          validation={Yup.object().shape(getFieldsAndShape()[1])}
+          submitText={t('Close')}
           values={{}}
           onChange={({ field, e }) => {}}
           onSubmit={async (values) => {
             return new Promise<void>((resolve, rej) => {
-              uploadFiles([], values.signature)
+              uploadFiles([], values.signature ?? [])
                 .then((files) => {
-                  onCompleteWithSignature(files[0].id)
+                  onComplete(files[0]?.id, values?.feedback)
                     .then(onClose)
                     .finally(resolve);
                 })

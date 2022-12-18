@@ -42,6 +42,7 @@ import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext
 import { getAssetUrl } from '../../../utils/urlPaths';
 import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
+import { PlanFeature } from '../../../models/owns/subscriptionPlan';
 
 interface LocationDetailsProps {
   location: Location;
@@ -62,7 +63,8 @@ export default function LocationDetails(props: LocationDetailsProps) {
     hasEditPermission,
     hasDeletePermission,
     getFilteredFields,
-    hasCreatePermission
+    hasCreatePermission,
+    hasFeature
   } = useAuth();
   const locationAssets = assetsByLocation[location.id] ?? [];
   const locationWorkOrders = workOrdersByLocation[location.id] ?? [];
@@ -308,13 +310,17 @@ export default function LocationDetails(props: LocationDetailsProps) {
         )}
         {currentTab === 'files' && (
           <Box>
-            {hasCreatePermission(PermissionEntity.FILES) && (
-              <Box display="flex" justifyContent="right">
-                <Button startIcon={<AddTwoToneIcon fontSize="small" />}>
-                  {t('File')}
-                </Button>
-              </Box>
-            )}
+            {hasCreatePermission(PermissionEntity.FILES) &&
+              hasFeature(PlanFeature.FILE) && (
+                <Box display="flex" justifyContent="right">
+                  <Button
+                    startIcon={<AddTwoToneIcon fontSize="small" />}
+                    onClick={handleOpenUpdate}
+                  >
+                    {t('File')}
+                  </Button>
+                </Box>
+              )}
             {location.files.length ? (
               <List sx={{ width: '100%' }}>
                 {location.files.map((file) => (

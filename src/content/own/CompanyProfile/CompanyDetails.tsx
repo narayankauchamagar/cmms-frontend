@@ -58,7 +58,7 @@ function CompanyDetails(props: CompanyDetailsProps) {
           </Box>
         </Grid>
         <Grid item xs={12} sm={8} md={9}>
-          {isLink ? (
+          {isLink && value ? (
             <Link
               href={
                 value
@@ -74,7 +74,7 @@ function CompanyDetails(props: CompanyDetailsProps) {
             </Link>
           ) : (
             <Text color="black">
-              <b>{value}</b>
+              <b>{value ?? 'N/A'}</b>
             </Text>
           )}
         </Grid>
