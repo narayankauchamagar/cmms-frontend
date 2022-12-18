@@ -98,7 +98,7 @@ export default function RequestDetails({
   };
   const fieldsToRender = (
     request: Request
-  ): { label: string; value: any }[] => [
+  ): { label: string; value: string | number }[] => [
     {
       label: t('Description'),
       value: request.description
@@ -117,7 +117,7 @@ export default function RequestDetails({
     },
     {
       label: t('Category'),
-      value: request.category
+      value: request.category?.name
     }
   ];
   return (

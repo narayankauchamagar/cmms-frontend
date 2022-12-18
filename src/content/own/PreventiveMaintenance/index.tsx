@@ -38,14 +38,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { isNumeric } from '../../../utils/validators';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import PriorityWrapper from '../components/PriorityWrapper';
-import {
-  formatSelect,
-  formatSelectMultiple,
-  getPriorityLabel
-} from '../../../utils/formatters';
+import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
 import useAuth from '../../../hooks/useAuth';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
-import { getWOBaseFields } from '../../../utils/fields';
+import { getWOBaseFields, getWOBaseValues } from '../../../utils/woBase';
 import { PermissionEntity } from '../../../models/owns/role';
 import PermissionErrorMessage from '../components/PermissionErrorMessage';
 import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
@@ -53,6 +49,9 @@ import { getImageAndFiles, getNextOccurence } from '../../../utils/overall';
 import { UserMiniDTO } from '../../../models/user';
 import UserAvatars from '../components/UserAvatars';
 import PreventiveMaintenance from '../../../models/owns/preventiveMaintenance';
+import Category from '../../../models/owns/category';
+import { LocationMiniDTO } from '../../../models/owns/location';
+import { AssetMiniDTO } from '../../../models/owns/asset';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
@@ -230,21 +229,24 @@ function Files() {
       headerName: t('Location name'),
       description: t('Location name'),
       width: 150,
-      valueGetter: (params) => params.row.location?.name
+      valueGetter: (params: GridValueGetterParams<LocationMiniDTO>) =>
+        params.value?.name
     },
     {
       field: 'category',
       headerName: t('Category'),
       description: t('Category'),
       width: 150,
-      valueGetter: (params) => params.row.category?.name
+      valueGetter: (params: GridValueGetterParams<Category>) =>
+        params.value?.name
     },
     {
       field: 'asset',
       headerName: t('Asset name'),
       description: t('Asset name'),
       width: 150,
-      valueGetter: (params) => params.row.asset?.name
+      valueGetter: (params: GridValueGetterParams<AssetMiniDTO>) =>
+        params.value?.name
     }
   ];
   const defaultFields: Array<IField> = [
@@ -313,10 +315,10 @@ function Files() {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Add Preventive Maintenance')}
+          {t('Schedule Work Order')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the fields below to create a new Preventive Maintenance')}
+          {t('Fill in the fields below to schedule a Work Order')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -391,12 +393,7 @@ function Files() {
             submitText={t('Save')}
             values={{
               ...currentPM,
-              priority: currentPM?.priority
-                ? {
-                    label: getPriorityLabel(currentPM?.priority, t),
-                    value: currentPM?.priority
-                  }
-                : null,
+              ...getWOBaseValues(t, currentPM),
               startsOn: currentPM?.schedule.startsOn,
               endsOn: currentPM?.schedule.endsOn,
               frequency: currentPM?.schedule.frequency

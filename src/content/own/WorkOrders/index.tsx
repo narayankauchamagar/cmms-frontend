@@ -51,7 +51,7 @@ import PriorityWrapper from '../components/PriorityWrapper';
 import { patchTasks } from '../../../slices/task';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 import useAuth from '../../../hooks/useAuth';
-import { getWOBaseValues } from '../../../utils/fields';
+import { getWOBaseValues } from '../../../utils/woBase';
 import { PermissionEntity } from '../../../models/owns/role';
 import PermissionErrorMessage from '../components/PermissionErrorMessage';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -61,6 +61,7 @@ import { getSingleLocation } from '../../../slices/location';
 import { getSingleAsset } from '../../../slices/asset';
 import Category from '../../../models/owns/category';
 import File from '../../../models/owns/file';
+import { dayDiff } from '../../../utils/dates';
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
@@ -313,22 +314,12 @@ function WorkOrders() {
         params.value?.name
     },
     {
-      field: 'address',
-      headerName: t('Address'),
-      description: t('Address'),
-      width: 150
-    },
-    {
       field: 'daysSinceCreated',
-      headerName: t('Days since created'),
-      description: t('Days since created'),
-      width: 150
-    },
-    {
-      field: 'additionalCost',
-      headerName: t('Additional Cost'),
-      description: t('Additional Cost'),
-      width: 150
+      headerName: t('Days since creation'),
+      description: t('Days since creation'),
+      width: 150,
+      valueGetter: (params: GridValueGetterParams<null, WorkOrder>) =>
+        dayDiff(new Date(), new Date(params.row.createdAt))
     },
     {
       field: 'files',
@@ -339,12 +330,6 @@ function WorkOrders() {
         params.value.length
     },
     {
-      field: 'tasks',
-      headerName: t('Tasks'),
-      description: t('Tasks'),
-      width: 150
-    },
-    {
       field: 'requestedBy',
       headerName: t('Requested By'),
       description: t('Requested By'),
@@ -353,23 +338,12 @@ function WorkOrders() {
         getUserNameById(params.row.parentRequest?.createdBy)
     },
     {
-      field: 'laborCost',
-      headerName: t('Labor Cost'),
-      description: t('Labor Cost'),
-      width: 150
-    },
-    {
-      field: 'parts',
-      headerName: t('Parts'),
-      description: t('Parts'),
-      width: 150
-      //TODO
-    },
-    {
       field: 'completedOn',
       headerName: t('Completed On'),
       description: t('Completed On'),
-      width: 150
+      width: 150,
+      valueGetter: (params: GridValueGetterParams<string>) =>
+        getFormattedDate(params.value)
     },
     {
       field: 'updatedAt',

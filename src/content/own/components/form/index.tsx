@@ -317,6 +317,7 @@ export default (props: PropsType) => {
         }}
         disabled={formik.isSubmitting}
         loading={loading}
+        required={field?.required}
         error={!!formik.errors[field.name] || field.error}
         errorMessage={formik.errors[field.name]}
         onOpen={onOpen}
@@ -413,6 +414,7 @@ export default (props: PropsType) => {
                                 : ''
                             }
                             placeholder={t('Select date...')}
+                            required={field?.required}
                             {...params}
                           />
                         )}

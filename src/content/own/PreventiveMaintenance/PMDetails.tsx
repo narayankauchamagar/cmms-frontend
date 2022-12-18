@@ -73,7 +73,7 @@ export default function PMDetails({
   };
   const fieldsToRender = (
     preventiveMaintenance: PreventiveMaintenance
-  ): { label: string; value: any }[] => [
+  ): { label: string; value: string | number }[] => [
     {
       label: t('Title'),
       value: preventiveMaintenance.title
@@ -88,11 +88,11 @@ export default function PMDetails({
     },
     {
       label: t('Due Date'),
-      value: getFormattedDate(preventiveMaintenance.dueDate)
+      value: getFormattedDate(preventiveMaintenance?.dueDate)
     },
     {
       label: t('Category'),
-      value: preventiveMaintenance.category
+      value: preventiveMaintenance?.category.name
     }
   ];
   return (

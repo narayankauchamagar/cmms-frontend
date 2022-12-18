@@ -126,8 +126,21 @@ export const CompanySettingsProvider: FC = ({ children }) => {
             case 'text':
               yupSchema = Yup.string().required(requiredMessage);
               break;
+            case 'date':
+              yupSchema = Yup.string().required(requiredMessage);
+              break;
+            case 'file':
+              yupSchema = Yup.array().required(requiredMessage);
+              break;
             case 'number':
               yupSchema = Yup.number().required(requiredMessage);
+              break;
+            case 'select':
+              if (fields[fieldIndexInFields].multiple) {
+                yupSchema = Yup.array().required(requiredMessage);
+              } else {
+                yupSchema = Yup.object().required(requiredMessage).nullable();
+              }
               break;
             default:
               yupSchema = Yup.object().required(requiredMessage).nullable();
@@ -139,7 +152,6 @@ export const CompanySettingsProvider: FC = ({ children }) => {
         }
       }
     });
-
     return [fields, shape];
   };
   useEffect(() => {

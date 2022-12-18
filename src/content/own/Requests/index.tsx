@@ -38,14 +38,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { isNumeric } from '../../../utils/validators';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import PriorityWrapper from '../components/PriorityWrapper';
-import {
-  formatSelect,
-  formatSelectMultiple,
-  getPriorityLabel
-} from '../../../utils/formatters';
+import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
 import useAuth from '../../../hooks/useAuth';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
-import { getWOBaseFields } from '../../../utils/fields';
+import { getWOBaseFields, getWOBaseValues } from '../../../utils/woBase';
 import { PermissionEntity } from '../../../models/owns/role';
 import PermissionErrorMessage from '../components/PermissionErrorMessage';
 import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
@@ -211,6 +207,9 @@ function Files() {
           case 'text':
             yupSchema = Yup.string().required(requiredMessage);
             break;
+          case 'date':
+            yupSchema = Yup.string().required(requiredMessage);
+            break;
           case 'number':
             yupSchema = Yup.number().required(requiredMessage);
             break;
@@ -317,12 +316,7 @@ function Files() {
             submitText={t('Save')}
             values={{
               ...currentRequest,
-              priority: currentRequest?.priority
-                ? {
-                    label: getPriorityLabel(currentRequest?.priority, t),
-                    value: currentRequest?.priority
-                  }
-                : null
+              ...getWOBaseValues(t, currentRequest)
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {

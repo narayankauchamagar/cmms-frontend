@@ -12,6 +12,7 @@ interface PropsType {
   error: boolean;
   errorMessage: any;
   multiple?: boolean;
+  required?: boolean;
   disabled: boolean;
   fullWidth?: boolean;
   onOpen?: () => void;
@@ -45,6 +46,7 @@ export default (props: PropsType) => {
           {...params}
           fullWidth={props.fullWidth || true}
           variant="outlined"
+          required={props.required}
           label={t(props.label)}
           placeholder={t(props.placeholder || props.label)}
           error={props.error}

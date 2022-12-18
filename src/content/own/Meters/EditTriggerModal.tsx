@@ -6,7 +6,7 @@ import { IField } from '../type';
 import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
 import { useDispatch } from '../../../store';
 import { editWorkOrderMeterTrigger } from '../../../slices/workOrderMeterTrigger';
-import { getWOBaseFields, getWOBaseValues } from '../../../utils/fields';
+import { getWOBaseFields, getWOBaseValues } from '../../../utils/woBase';
 import Meter from '../../../models/owns/meter';
 import WorkOrderMeterTrigger from '../../../models/owns/workOrderMeterTrigger';
 import { useContext } from 'react';
