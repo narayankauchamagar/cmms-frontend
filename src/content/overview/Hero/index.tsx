@@ -154,7 +154,7 @@ function Hero() {
           </TypographyH2>
           <Button
             component={RouterLink}
-            to="/extended-sidebar/dashboards"
+            to="/app/work-orders"
             size="large"
             variant="contained"
           >
@@ -174,7 +174,7 @@ function Hero() {
         </Grid>
         <Grid item md={6}>
           <BoxContent>
-            <RouterLink to="/extended-sidebar/dashboards">
+            <RouterLink to="/app/work-orders">
               <ImgWrapper>
                 <img
                   alt="Grash"
