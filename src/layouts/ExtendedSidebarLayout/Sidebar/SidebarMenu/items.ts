@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 
 import AnalyticsTwoToneIcon from '@mui/icons-material/AnalyticsTwoTone';
+import InsertChartTwoToneIcon from '@mui/icons-material/InsertChartTwoTone';
 import HealthAndSafetyTwoToneIcon from '@mui/icons-material/HealthAndSafetyTwoTone';
 import AssignmentIndTwoToneIcon from '@mui/icons-material/AssignmentIndTwoTone';
 import AccountTreeTwoToneIcon from '@mui/icons-material/AccountTreeTwoTone';
@@ -61,6 +62,23 @@ const ownMenuItems: MenuItems[] = [
         link: '/app/preventive-maintenances',
         icon: PendingActionsTwoToneIcon,
         permission: PermissionEntity.PREVENTIVE_MAINTENANCES
+      },
+      {
+        name: 'Analytics',
+        icon: InsertChartTwoToneIcon,
+        permission: PermissionEntity.ANALYTICS,
+        items: [
+          {
+            name: 'Work Orders',
+            icon: AssignmentTwoToneIcon,
+            items: [
+              {
+                name: 'Status Report',
+                link: '/app/analytics/work-orders/status'
+              }
+            ]
+          }
+        ]
       },
       {
         name: 'Requests',
