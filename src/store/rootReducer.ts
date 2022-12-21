@@ -31,6 +31,7 @@ import { reducer as subscriptionPlanReducer } from 'src/slices/subscriptionPlan'
 import { reducer as notificationReducer } from 'src/slices/notification';
 import { reducer as workOrderMeterTriggerReducer } from 'src/slices/workOrderMeterTrigger';
 import { reducer as preventiveMaintenanceReducer } from 'src/slices/preventiveMaintenance';
+import { reducer as assetDowntimeReducer } from 'src/slices/assetDowntime';
 
 const rootReducer = combineReducers({
   calendar: calendarReducer,
@@ -64,7 +65,8 @@ const rootReducer = combineReducers({
   subscriptionPlans: subscriptionPlanReducer,
   notifications: notificationReducer,
   workOrderMeterTriggers: workOrderMeterTriggerReducer,
-  preventiveMaintenances: preventiveMaintenanceReducer
+  preventiveMaintenances: preventiveMaintenanceReducer,
+  downtimes: assetDowntimeReducer
 });
 
 export default rootReducer;

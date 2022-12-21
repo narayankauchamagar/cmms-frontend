@@ -227,7 +227,8 @@ const appRoutes = [
           { path: 'details', element: <ShowAsset /> },
           { path: 'parts', element: <ShowAsset /> },
           { path: 'files', element: <ShowAsset /> },
-          { path: 'meters', element: <ShowAsset /> }
+          { path: 'meters', element: <ShowAsset /> },
+          { path: 'downtimes', element: <ShowAsset /> }
         ]
       }
     ]

@@ -51,7 +51,10 @@ import {
   editAdditionalTime,
   getAdditionalTimes
 } from '../../../slices/additionalTime';
-import { durationToHours, getHoursAndMinutes } from '../../../utils/formatters';
+import {
+  durationToHours,
+  getHoursAndMinutesAndSeconds
+} from '../../../utils/formatters';
 import {
   deleteAdditionalCost,
   getAdditionalCosts
@@ -173,7 +176,9 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
     dispatch(getRelations(workOrder.id));
   }, []);
   useEffect(() => {
-    const [hours, minutes] = getHoursAndMinutes(primaryTime?.duration);
+    const [hours, minutes] = getHoursAndMinutesAndSeconds(
+      primaryTime?.duration
+    );
     setPrimaryTimeHours(hours);
     setPrimaryTimeMinutes(minutes);
   }, [primaryTime]);
