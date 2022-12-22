@@ -13,6 +13,9 @@ import {
 } from 'recharts';
 import AnalyticsCard from '../../AnalyticsCard';
 import { Filter } from './WOModal';
+import { useDispatch, useSelector } from '../../../../../store';
+import { useEffect } from 'react';
+import { getIncompleteByPriority } from '../../../../../slices/analytics/workOrder';
 
 interface WOStatusIncompleteProps {
   handleOpenModal: (
@@ -24,22 +27,15 @@ interface WOStatusIncompleteProps {
 function WOStatusIncomplete({ handleOpenModal }: WOStatusIncompleteProps) {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
+  const { incompleteByPriority } = useSelector((state) => state.woAnalytics);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getIncompleteByPriority());
+  }, []);
 
   const columns: string[] = ['id'];
-  const data = {
-    high: {
-      count: 10,
-      estimatedHours: 20
-    },
-    medium: {
-      count: 20,
-      estimatedHours: 30
-    },
-    low: {
-      count: 4,
-      estimatedHours: 12
-    }
-  };
+
   const formattedData: {
     label: string;
     count: number;
@@ -49,23 +45,30 @@ function WOStatusIncomplete({ handleOpenModal }: WOStatusIncompleteProps) {
   }[] = [
     {
       label: 'High',
-      count: data.high.count,
+      count: incompleteByPriority.high.count,
       color: theme.colors.error.main,
-      estimatedHours: data.high.estimatedHours,
+      estimatedHours: incompleteByPriority.high.estimatedHours,
       filters: [{ key: 'fs', value: false }]
     },
     {
       label: 'Medium',
-      count: data.medium.count,
+      count: incompleteByPriority.medium.count,
       color: theme.colors.warning.main,
-      estimatedHours: data.medium.estimatedHours,
+      estimatedHours: incompleteByPriority.medium.estimatedHours,
       filters: [{ key: 'fs', value: false }]
     },
     {
       label: 'Low',
-      count: data.low.count,
+      count: incompleteByPriority.low.count,
       color: theme.colors.success.main,
-      estimatedHours: data.low.estimatedHours,
+      estimatedHours: incompleteByPriority.low.estimatedHours,
+      filters: [{ key: 'fs', value: false }]
+    },
+    {
+      label: 'None',
+      count: incompleteByPriority.none.count,
+      color: theme.colors.alpha.black[70],
+      estimatedHours: incompleteByPriority.low.estimatedHours,
       filters: [{ key: 'fs', value: false }]
     }
   ];
