@@ -1,27 +1,26 @@
 import {
   Card,
   Stack,
-  styled,
   Tooltip as TooltipMUI,
   Typography,
   useTheme
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from '../../../../../store';
-import { Cell, Legend, Pie, PieChart, Tooltip } from 'recharts';
+import {
+  Bar,
+  CartesianGrid,
+  Cell,
+  ComposedChart,
+  Legend,
+  Line,
+  Tooltip,
+  XAxis,
+  YAxis
+} from 'recharts';
 import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
 
-const DotLegend = styled('span')(
-  ({ theme }) => `
-      border-radius: 22px;
-      width: 10px;
-      height: 10px;
-      display: inline-block;
-      margin-right: ${theme.spacing(0.5)};
-  `
-);
-
-function WOStatusPie() {
+function WOStatusIncomplete() {
   const { t }: { t: any } = useTranslation();
   const { files, loadingGet } = useSelector((state) => state.files);
   const theme = useTheme();
@@ -30,18 +29,21 @@ function WOStatusPie() {
   const data = [
     {
       label: 'High',
-      value: 10,
-      color: theme.colors.error.main
+      count: 10,
+      color: theme.colors.error.main,
+      estimatedHours: 20
     },
     {
       label: 'Medium',
-      value: 10,
-      color: theme.colors.warning.main
+      count: 10,
+      color: theme.colors.warning.main,
+      estimatedHours: 11
     },
     {
       label: 'Low',
-      value: 20,
-      color: theme.colors.success.main
+      count: 20,
+      color: theme.colors.success.main,
+      estimatedHours: 15
     }
   ];
 
@@ -66,26 +68,21 @@ function WOStatusPie() {
           <InfoTwoToneIcon />
         </TooltipMUI>
       </Stack>
-      <PieChart width={200} height={300}>
-        <Pie
-          data={data}
-          dataKey="value"
-          nameKey="label"
-          cx="50%"
-          cy="50%"
-          outerRadius={100}
-          innerRadius={50}
-          fill="#8884d8"
-        >
+      <ComposedChart width={400} height={600} data={data}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="label" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Bar dataKey="count" fill="#8884d8">
           {data.map((entry, index) => (
             <Cell key={index} fill={entry.color} />
           ))}
-        </Pie>
-        <Tooltip />
-        <Legend />
-      </PieChart>
+        </Bar>
+        <Line type="monotone" dataKey="estimatedHours" stroke="#ff7300" />
+      </ComposedChart>
     </Card>
   );
 }
 
-export default WOStatusPie;
+export default WOStatusIncomplete;

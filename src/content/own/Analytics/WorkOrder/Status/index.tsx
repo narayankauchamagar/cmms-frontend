@@ -13,6 +13,7 @@ import FeatureErrorMessage from '../../../components/FeatureErrorMessage';
 import { CustomSnackBarContext } from '../../../../../contexts/CustomSnackBarContext';
 import WOStatusNumbers from './WOStatusNumbers';
 import WOStatusPie from './WOStatusPie';
+import WOStatusIncomplete from './WOStatusIncomplete';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
@@ -59,7 +60,7 @@ function Files() {
               </Grid>
             </Grid>
             <Grid item xs={12} md={6}>
-              <WOStatusNumbers />
+              <WOStatusIncomplete />
             </Grid>
           </Grid>
         </>
