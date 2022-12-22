@@ -2,6 +2,9 @@ import { Stack, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import AnalyticsCard from '../../AnalyticsCard';
 import { Filter } from './WOModal';
+import { useDispatch, useSelector } from '../../../../../store';
+import { useEffect } from 'react';
+import { getOverviewStats } from '../../../../../slices/analytics/workOrder';
 
 interface WOStatusNumbersProps {
   handleOpenModal: (
@@ -12,12 +15,12 @@ interface WOStatusNumbersProps {
 }
 function WOStatusNumbers({ handleOpenModal }: WOStatusNumbersProps) {
   const { t }: { t: any } = useTranslation();
-  const counts = {
-    workOrdersCount: 1,
-    completeWO: 2,
-    compliant: 1,
-    avgCycleTime: 10
-  };
+  const dispatch = useDispatch();
+  const { overview } = useSelector((state) => state.woAnalytics);
+
+  useEffect(() => {
+    dispatch(getOverviewStats());
+  }, []);
 
   const datas: {
     label: string;
@@ -29,7 +32,7 @@ function WOStatusNumbers({ handleOpenModal }: WOStatusNumbersProps) {
   }[] = [
     {
       label: t('Count'),
-      value: counts.workOrdersCount,
+      value: overview.total,
       config: {
         columns: ['id'],
         filters: [{ key: 'fs', value: false }]
@@ -37,7 +40,7 @@ function WOStatusNumbers({ handleOpenModal }: WOStatusNumbersProps) {
     },
     {
       label: t('Complete'),
-      value: counts.completeWO,
+      value: overview.complete,
       config: {
         columns: ['id'],
         filters: [{ key: 'fs', value: false }]
@@ -45,7 +48,7 @@ function WOStatusNumbers({ handleOpenModal }: WOStatusNumbersProps) {
     },
     {
       label: t('Compliant'),
-      value: counts.compliant,
+      value: overview.compliant,
       config: {
         columns: ['id'],
         filters: [{ key: 'fs', value: false }]
@@ -53,7 +56,7 @@ function WOStatusNumbers({ handleOpenModal }: WOStatusNumbersProps) {
     },
     {
       label: t('Average Cycle Time (Days)'),
-      value: counts.avgCycleTime
+      value: overview.avgCycleTime
     }
   ];
   return (

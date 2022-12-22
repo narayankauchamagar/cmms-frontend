@@ -3,8 +3,7 @@ import { Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../../../contexts/TitleContext';
-import { useDispatch, useSelector } from '../../../../../store';
-import { getFiles } from '../../../../../slices/file';
+import { useDispatch } from '../../../../../store';
 import useAuth from '../../../../../hooks/useAuth';
 import { PermissionEntity } from '../../../../../models/owns/role';
 import PermissionErrorMessage from '../../../components/PermissionErrorMessage';
@@ -21,7 +20,6 @@ function Files() {
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
   const { showSnackBar } = useContext(CustomSnackBarContext);
-  const { files, loadingGet } = useSelector((state) => state.files);
   const [woModalTitle, setWoModalTitle] = useState<string>(t('Work Orders'));
   const [openWOModal, setOpenWOModal] = useState<boolean>(false);
   const [columns, setColumns] = useState<string[]>([]);
@@ -47,7 +45,6 @@ function Files() {
   };
   useEffect(() => {
     setTitle(t('Status Report'));
-    if (hasViewPermission(PermissionEntity.ANALYTICS)) dispatch(getFiles());
   }, []);
 
   if (hasFeature(PlanFeature.ANALYTICS)) {

@@ -378,7 +378,7 @@ function WorkOrders() {
     {
       name: 'estimatedDuration',
       type: 'number',
-      label: t('Estimated Duration'),
+      label: t('Estimated Duration in Hours'),
       placeholder: t('Hours')
     },
     {

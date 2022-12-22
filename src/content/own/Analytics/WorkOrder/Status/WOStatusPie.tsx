@@ -16,30 +16,37 @@ function WOStatusPie({ handleOpenModal }: WOStatusPieProps) {
   const theme = useTheme();
 
   const data = {
-    high: 10,
-    medium: 15,
-    low: 30
+    complete: 10,
+    inProgress: 15,
+    onHold: 15,
+    open: 30
   };
 
   const columns = ['id'];
   const formattedData = [
     {
-      label: 'High',
-      value: data.high,
+      label: 'Complete',
+      value: data.complete,
       color: theme.colors.error.main,
-      filters: [{ key: 'status', value: 'HIGH' }]
+      filters: [{ key: 'status', value: 'COMPLETE' }]
     },
     {
-      label: 'Medium',
-      value: data.medium,
+      label: 'On hold',
+      value: data.onHold,
       color: theme.colors.warning.main,
-      filters: [{ key: 'status', value: 'HIGH' }]
+      filters: [{ key: 'status', value: 'ON_HOLD' }]
     },
     {
-      label: 'Low',
-      value: data.low,
+      label: 'In Progress',
+      value: data.inProgress,
       color: theme.colors.success.main,
-      filters: [{ key: 'status', value: 'HIGH' }]
+      filters: [{ key: 'status', value: 'IN_PROGRESS' }]
+    },
+    {
+      label: 'Open',
+      value: data.open,
+      color: theme.colors.alpha.black[70],
+      filters: [{ key: 'status', value: 'OPEN' }]
     }
   ];
   const title = t('Work Order Status');
