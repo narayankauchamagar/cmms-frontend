@@ -4,14 +4,16 @@ import type { AppThunk } from 'src/store';
 import api from '../../utils/api';
 import {
   WoOverviewStats,
-  WOStatsByPriority
+  WOStatsByPriority,
+  WOStatsByStatus
 } from '../../models/owns/analytics/workOrder';
 
 const basePath = 'work-order-analytics';
 interface WOStatstate {
   overview: WoOverviewStats;
   incompleteByPriority: WOStatsByPriority;
-  loading: { overview: boolean; incompleteByPriority: boolean };
+  incompleteByStatus: WOStatsByStatus;
+  loading: Omit<Record<keyof WOStatstate, boolean>, 'loading'>;
 }
 type Operation = keyof WOStatstate;
 
@@ -40,7 +42,17 @@ const initialState: WOStatstate = {
       estimatedHours: 0
     }
   },
-  loading: { overview: false, incompleteByPriority: false }
+  incompleteByStatus: {
+    complete: 0,
+    inProgress: 0,
+    onHold: 0,
+    open: 0
+  },
+  loading: {
+    overview: false,
+    incompleteByPriority: false,
+    incompleteByStatus: false
+  }
 };
 
 const slice = createSlice({
@@ -60,6 +72,13 @@ const slice = createSlice({
     ) {
       const { stats } = action.payload;
       state.incompleteByPriority = stats;
+    },
+    getIncompleteByStatus(
+      state: WOStatstate,
+      action: PayloadAction<{ stats: WOStatsByStatus }>
+    ) {
+      const { stats } = action.payload;
+      state.incompleteByStatus = stats;
     },
     setLoadingGet(
       state: WOStatstate,
@@ -98,6 +117,24 @@ export const getIncompleteByPriority = (): AppThunk => async (dispatch) => {
   dispatch(
     slice.actions.setLoadingGet({
       operation: 'incompleteByPriority',
+      loading: false
+    })
+  );
+};
+export const getIncompleteByStatus = (): AppThunk => async (dispatch) => {
+  dispatch(
+    slice.actions.setLoadingGet({
+      operation: 'incompleteByStatus',
+      loading: true
+    })
+  );
+  const stats = await api.get<WOStatsByStatus>(
+    `${basePath}/incomplete-statuses`
+  );
+  dispatch(slice.actions.getIncompleteByStatus({ stats }));
+  dispatch(
+    slice.actions.setLoadingGet({
+      operation: 'incompleteByStatus',
       loading: false
     })
   );

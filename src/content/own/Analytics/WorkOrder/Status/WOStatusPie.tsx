@@ -3,6 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { Cell, Legend, Pie, PieChart, Tooltip } from 'recharts';
 import AnalyticsCard from '../../AnalyticsCard';
 import { Filter } from './WOModal';
+import { useDispatch, useSelector } from '../../../../../store';
+import { useEffect } from 'react';
+import { getIncompleteByStatus } from '../../../../../slices/analytics/workOrder';
 
 interface WOStatusPieProps {
   handleOpenModal: (
@@ -14,47 +17,43 @@ interface WOStatusPieProps {
 function WOStatusPie({ handleOpenModal }: WOStatusPieProps) {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
+  const dispatch = useDispatch();
+  const { incompleteByStatus } = useSelector((state) => state.woAnalytics);
 
-  const data = {
-    complete: 10,
-    inProgress: 15,
-    onHold: 15,
-    open: 30
-  };
+  useEffect(() => {
+    dispatch(getIncompleteByStatus());
+  }, []);
 
   const columns = ['id'];
   const formattedData = [
-    {
-      label: 'Complete',
-      value: data.complete,
-      color: theme.colors.error.main,
-      filters: [{ key: 'status', value: 'COMPLETE' }]
-    },
+    // {
+    //   label: 'Complete',
+    //   value: data.complete,
+    //   color: theme.colors.error.main,
+    //   filters: [{ key: 'status', value: 'COMPLETE' }]
+    // },
     {
       label: 'On hold',
-      value: data.onHold,
+      value: incompleteByStatus.onHold,
       color: theme.colors.warning.main,
       filters: [{ key: 'status', value: 'ON_HOLD' }]
     },
     {
       label: 'In Progress',
-      value: data.inProgress,
+      value: incompleteByStatus.inProgress,
       color: theme.colors.success.main,
       filters: [{ key: 'status', value: 'IN_PROGRESS' }]
     },
     {
       label: 'Open',
-      value: data.open,
+      value: incompleteByStatus.open,
       color: theme.colors.alpha.black[70],
       filters: [{ key: 'status', value: 'OPEN' }]
     }
   ];
   const title = t('Work Order Status');
   return (
-    <AnalyticsCard
-      title={title}
-      description="Compliant work orders are defined as work orders that were completed before the due date. Cycle time refers to the number of days until a work order was completed."
-    >
+    <AnalyticsCard title={title}>
       <PieChart width={200} height={300}>
         <Pie
           data={formattedData}

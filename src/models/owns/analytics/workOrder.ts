@@ -15,3 +15,10 @@ export interface WOStatsByPriority {
   medium: BasicStats;
   low: BasicStats;
 }
+
+export interface WOStatsByStatus {
+  open: number;
+  inProgress: number;
+  onHold: number;
+  complete: number;
+}
