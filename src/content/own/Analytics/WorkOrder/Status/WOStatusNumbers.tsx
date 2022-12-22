@@ -1,13 +1,17 @@
 import { Stack, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from '../../../../../store';
 import AnalyticsCard from '../../AnalyticsCard';
+import { Filter } from './WOModal';
 
-function WOStatusNumbers() {
+interface WOStatusNumbersProps {
+  handleOpenModal: (
+    columns: string[],
+    filters: Filter[],
+    title: string
+  ) => void;
+}
+function WOStatusNumbers({ handleOpenModal }: WOStatusNumbersProps) {
   const { t }: { t: any } = useTranslation();
-  const { files, loadingGet } = useSelector((state) => state.files);
-
-  const dispatch = useDispatch();
   const counts = {
     workOrdersCount: 1,
     completeWO: 2,
@@ -15,11 +19,42 @@ function WOStatusNumbers() {
     avgCycleTime: 10
   };
 
-  const datas: { label: string; value: number }[] = [
-    { label: t('Count'), value: counts.workOrdersCount },
-    { label: t('Complete'), value: counts.completeWO },
-    { label: t('Compliant'), value: counts.compliant },
-    { label: t('Average Cycle Time (Days)'), value: counts.avgCycleTime }
+  const datas: {
+    label: string;
+    value: number;
+    config?: {
+      columns: string[];
+      filters: Filter[];
+    };
+  }[] = [
+    {
+      label: t('Count'),
+      value: counts.workOrdersCount,
+      config: {
+        columns: ['id'],
+        filters: [{ key: 'fs', value: false }]
+      }
+    },
+    {
+      label: t('Complete'),
+      value: counts.completeWO,
+      config: {
+        columns: ['id'],
+        filters: [{ key: 'fs', value: false }]
+      }
+    },
+    {
+      label: t('Compliant'),
+      value: counts.compliant,
+      config: {
+        columns: ['id'],
+        filters: [{ key: 'fs', value: false }]
+      }
+    },
+    {
+      label: t('Average Cycle Time (Days)'),
+      value: counts.avgCycleTime
+    }
   ];
   return (
     <AnalyticsCard
@@ -34,7 +69,14 @@ function WOStatusNumbers() {
               <Typography
                 variant="h2"
                 fontWeight="bold"
-                style={{ cursor: 'pointer' }}
+                style={{ cursor: data.config ? 'pointer' : 'auto' }}
+                onClick={() =>
+                  handleOpenModal(
+                    data.config.columns,
+                    data.config.filters,
+                    t('The numbers')
+                  )
+                }
               >
                 {data.value}
               </Typography>

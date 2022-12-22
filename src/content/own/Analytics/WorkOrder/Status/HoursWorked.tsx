@@ -1,25 +1,31 @@
 import { Stack, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from '../../../../../store';
 import AnalyticsCard from '../../AnalyticsCard';
+import { Filter } from './WOModal';
 
-function HoursWorked() {
+interface HoursWorkedProps {
+  handleOpenModal: (
+    columns: string[],
+    filters: Filter[],
+    title: string
+  ) => void;
+}
+function HoursWorked({ handleOpenModal }: HoursWorkedProps) {
   const { t }: { t: any } = useTranslation();
-  const { files, loadingGet } = useSelector((state) => state.files);
 
-  const dispatch = useDispatch();
   const counts = {
     estimatedHours: 1,
     totalTime: 2
   };
-
-  const datas: { label: string; value: number }[] = [
-    { label: t('Estimated Hours'), value: counts.estimatedHours },
-    { label: t('Total time spent'), value: counts.totalTime }
+  const columns = ['id'];
+  const datas: { label: string; value: number; filters: Filter[] }[] = [
+    { label: t('Estimated Hours'), value: counts.estimatedHours, filters: [] },
+    { label: t('Total time spent'), value: counts.totalTime, filters: [] }
   ];
+  const title = t('Hours Worked');
   return (
     <AnalyticsCard
-      title="Hours Worked"
+      title={title}
       height={200}
       description="These hours correspond to work orders that have a due date within the range specified in the filters."
     >
@@ -31,6 +37,7 @@ function HoursWorked() {
                 variant="h2"
                 fontWeight="bold"
                 style={{ cursor: 'pointer' }}
+                onClick={() => handleOpenModal(columns, data.filters, title)}
               >
                 {data.value}
               </Typography>

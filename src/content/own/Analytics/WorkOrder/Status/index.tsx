@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../../../contexts/TitleContext';
 import { useDispatch, useSelector } from '../../../../../store';
 import { getFiles } from '../../../../../slices/file';
@@ -15,12 +15,17 @@ import WOStatusNumbers from './WOStatusNumbers';
 import WOStatusPie from './WOStatusPie';
 import WOStatusIncomplete from './WOStatusIncomplete';
 import HoursWorked from './HoursWorked';
+import WOModal, { Filter } from './WOModal';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const { files, loadingGet } = useSelector((state) => state.files);
+  const [woModalTitle, setWoModalTitle] = useState<string>(t('Work Orders'));
+  const [openWOModal, setOpenWOModal] = useState<boolean>(false);
+  const [columns, setColumns] = useState<string[]>([]);
+  const [filters, setFilters] = useState<Filter[]>([]);
 
   const {
     hasViewPermission,
@@ -30,6 +35,16 @@ function Files() {
     hasFeature
   } = useAuth();
   const dispatch = useDispatch();
+  const handleOpenWOModal = (
+    columns: string[],
+    filters: Filter[],
+    title: string
+  ) => {
+    setColumns(columns);
+    setFilters(filters);
+    setWoModalTitle(title);
+    setOpenWOModal(true);
+  };
   useEffect(() => {
     setTitle(t('Status Report'));
     if (hasViewPermission(PermissionEntity.ANALYTICS)) dispatch(getFiles());
@@ -53,20 +68,27 @@ function Files() {
             <Grid item xs={12} md={6}>
               <Grid container spacing={1}>
                 <Grid item xs={12} md={12}>
-                  <WOStatusNumbers />
+                  <WOStatusNumbers handleOpenModal={handleOpenWOModal} />
                 </Grid>
                 <Grid item xs={12} md={12}>
-                  <WOStatusPie />
+                  <WOStatusPie handleOpenModal={handleOpenWOModal} />
                 </Grid>
               </Grid>
             </Grid>
             <Grid item xs={12} md={6}>
-              <WOStatusIncomplete />
+              <WOStatusIncomplete handleOpenModal={handleOpenWOModal} />
             </Grid>
             <Grid item xs={12} md={12}>
-              <HoursWorked />
+              <HoursWorked handleOpenModal={handleOpenWOModal} />
             </Grid>
           </Grid>
+          <WOModal
+            title={woModalTitle}
+            open={openWOModal}
+            onClose={() => setOpenWOModal(false)}
+            columns={columns}
+            filters={filters}
+          />
         </>
       );
     else

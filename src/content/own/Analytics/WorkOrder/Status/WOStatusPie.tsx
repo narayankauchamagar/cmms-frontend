@@ -1,51 +1,56 @@
-import { styled, useTheme } from '@mui/material';
+import { useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from '../../../../../store';
 import { Cell, Legend, Pie, PieChart, Tooltip } from 'recharts';
 import AnalyticsCard from '../../AnalyticsCard';
+import { Filter } from './WOModal';
 
-const DotLegend = styled('span')(
-  ({ theme }) => `
-      border-radius: 22px;
-      width: 10px;
-      height: 10px;
-      display: inline-block;
-      margin-right: ${theme.spacing(0.5)};
-  `
-);
-
-function WOStatusPie() {
+interface WOStatusPieProps {
+  handleOpenModal: (
+    columns: string[],
+    filters: Filter[],
+    title: string
+  ) => void;
+}
+function WOStatusPie({ handleOpenModal }: WOStatusPieProps) {
   const { t }: { t: any } = useTranslation();
-  const { files, loadingGet } = useSelector((state) => state.files);
   const theme = useTheme();
 
-  const dispatch = useDispatch();
-  const data = [
+  const data = {
+    high: 10,
+    medium: 15,
+    low: 30
+  };
+
+  const columns = ['id'];
+  const formattedData = [
     {
       label: 'High',
-      value: 10,
-      color: theme.colors.error.main
+      value: data.high,
+      color: theme.colors.error.main,
+      filters: [{ key: 'status', value: 'HIGH' }]
     },
     {
       label: 'Medium',
-      value: 10,
-      color: theme.colors.warning.main
+      value: data.medium,
+      color: theme.colors.warning.main,
+      filters: [{ key: 'status', value: 'HIGH' }]
     },
     {
       label: 'Low',
-      value: 20,
-      color: theme.colors.success.main
+      value: data.low,
+      color: theme.colors.success.main,
+      filters: [{ key: 'status', value: 'HIGH' }]
     }
   ];
-
+  const title = t('Work Order Status');
   return (
     <AnalyticsCard
-      title="Work Order Status"
+      title={title}
       description="Compliant work orders are defined as work orders that were completed before the due date. Cycle time refers to the number of days until a work order was completed."
     >
       <PieChart width={200} height={300}>
         <Pie
-          data={data}
+          data={formattedData}
           dataKey="value"
           nameKey="label"
           cx="50%"
@@ -54,8 +59,14 @@ function WOStatusPie() {
           innerRadius={50}
           fill="#8884d8"
         >
-          {data.map((entry, index) => (
-            <Cell key={index} fill={entry.color} />
+          {formattedData.map((entry, index) => (
+            <Cell
+              key={index}
+              fill={entry.color}
+              onClick={() => {
+                handleOpenModal(columns, entry.filters, title);
+              }}
+            />
           ))}
         </Pie>
         <Tooltip />
