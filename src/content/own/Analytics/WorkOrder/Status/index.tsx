@@ -10,11 +10,11 @@ import PermissionErrorMessage from '../../../components/PermissionErrorMessage';
 import { PlanFeature } from '../../../../../models/owns/subscriptionPlan';
 import FeatureErrorMessage from '../../../components/FeatureErrorMessage';
 import { CustomSnackBarContext } from '../../../../../contexts/CustomSnackBarContext';
-import WOStatusNumbers from './WOStatusNumbers';
+import Overview from './Overview';
 import WOStatusPie from './WOStatusPie';
-import WOStatusIncomplete from './WOStatusIncomplete';
+import IncompleteWO from './IncompleteWO';
 import HoursWorked from './HoursWorked';
-import WOModal, { Filter } from './WOModal';
+import WOModal, { Filter } from '../WOModal';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
@@ -65,7 +65,7 @@ function Files() {
             <Grid item xs={12} md={6}>
               <Grid container spacing={1}>
                 <Grid item xs={12} md={12}>
-                  <WOStatusNumbers handleOpenModal={handleOpenWOModal} />
+                  <Overview handleOpenModal={handleOpenWOModal} />
                 </Grid>
                 <Grid item xs={12} md={12}>
                   <WOStatusPie handleOpenModal={handleOpenWOModal} />
@@ -73,7 +73,7 @@ function Files() {
               </Grid>
             </Grid>
             <Grid item xs={12} md={6}>
-              <WOStatusIncomplete handleOpenModal={handleOpenWOModal} />
+              <IncompleteWO handleOpenModal={handleOpenWOModal} />
             </Grid>
             <Grid item xs={12} md={12}>
               <HoursWorked handleOpenModal={handleOpenWOModal} />

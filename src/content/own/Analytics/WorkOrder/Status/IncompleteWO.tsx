@@ -12,7 +12,7 @@ import {
   YAxis
 } from 'recharts';
 import AnalyticsCard from '../../AnalyticsCard';
-import { Filter } from './WOModal';
+import { Filter } from '../WOModal';
 import { useDispatch, useSelector } from '../../../../../store';
 import { useEffect } from 'react';
 import { getIncompleteByPriority } from '../../../../../slices/analytics/workOrder';
@@ -24,7 +24,7 @@ interface WOStatusIncompleteProps {
     title: string
   ) => void;
 }
-function WOStatusIncomplete({ handleOpenModal }: WOStatusIncompleteProps) {
+function IncompleteWO({ handleOpenModal }: WOStatusIncompleteProps) {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
   const { incompleteByPriority } = useSelector((state) => state.woAnalytics);
@@ -84,7 +84,7 @@ function WOStatusIncomplete({ handleOpenModal }: WOStatusIncompleteProps) {
         <YAxis />
         <Tooltip />
         <Legend />
-        <Bar dataKey="count" fill="#8884d8">
+        <Bar dataKey="count" fill="#8884d8" name={t('Work Orders')}>
           {formattedData.map((entry, index) => (
             <Cell
               key={index}
@@ -95,10 +95,15 @@ function WOStatusIncomplete({ handleOpenModal }: WOStatusIncompleteProps) {
             />
           ))}
         </Bar>
-        <Line type="monotone" dataKey="estimatedHours" stroke="#ff7300" />
+        <Line
+          name={t('Estimated duration')}
+          type="monotone"
+          dataKey="estimatedHours"
+          stroke="#ff7300"
+        />
       </ComposedChart>
     </AnalyticsCard>
   );
 }
 
-export default WOStatusIncomplete;
+export default IncompleteWO;

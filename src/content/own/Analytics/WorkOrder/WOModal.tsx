@@ -5,27 +5,27 @@ import {
   DialogTitle,
   Typography
 } from '@mui/material';
-import CustomDataGrid from '../../../components/CustomDatagrid';
+import CustomDataGrid from '../../components/CustomDatagrid';
 import {
   GridRenderCellParams,
   GridToolbar,
   GridValueGetterParams
 } from '@mui/x-data-grid';
-import NoRowsMessageWrapper from '../../../components/NoRowsMessageWrapper';
+import NoRowsMessageWrapper from '../../components/NoRowsMessageWrapper';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import CircleTwoToneIcon from '@mui/icons-material/CircleTwoTone';
-import PriorityWrapper from '../../../components/PriorityWrapper';
-import { UserMiniDTO } from '../../../../../models/user';
-import UserAvatars from '../../../components/UserAvatars';
-import { LocationMiniDTO } from '../../../../../models/owns/location';
-import WorkOrder from '../../../../../models/owns/workOrder';
-import Category from '../../../../../models/owns/category';
-import { AssetMiniDTO } from '../../../../../models/owns/asset';
-import { dayDiff } from '../../../../../utils/dates';
-import File from '../../../../../models/owns/file';
+import PriorityWrapper from '../../components/PriorityWrapper';
+import { UserMiniDTO } from '../../../../models/user';
+import UserAvatars from '../../components/UserAvatars';
+import { LocationMiniDTO } from '../../../../models/owns/location';
+import WorkOrder from '../../../../models/owns/workOrder';
+import Category from '../../../../models/owns/category';
+import { AssetMiniDTO } from '../../../../models/owns/asset';
+import { dayDiff } from '../../../../utils/dates';
+import File from '../../../../models/owns/file';
 import { useTranslation } from 'react-i18next';
 import { useContext } from 'react';
-import { CompanySettingsContext } from '../../../../../contexts/CompanySettingsContext';
+import { CompanySettingsContext } from '../../../../contexts/CompanySettingsContext';
 
 export interface Filter {
   key: string;

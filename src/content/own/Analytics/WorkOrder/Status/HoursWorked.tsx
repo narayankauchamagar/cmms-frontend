@@ -1,7 +1,7 @@
 import { Stack, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import AnalyticsCard from '../../AnalyticsCard';
-import { Filter } from './WOModal';
+import { Filter } from '../WOModal';
 import { useDispatch, useSelector } from '../../../../../store';
 import { useEffect } from 'react';
 import { getWOHours } from '../../../../../slices/analytics/workOrder';

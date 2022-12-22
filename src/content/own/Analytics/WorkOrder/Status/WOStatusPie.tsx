@@ -2,7 +2,7 @@ import { useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { Cell, Legend, Pie, PieChart, Tooltip } from 'recharts';
 import AnalyticsCard from '../../AnalyticsCard';
-import { Filter } from './WOModal';
+import { Filter } from '../WOModal';
 import { useDispatch, useSelector } from '../../../../../store';
 import { useEffect } from 'react';
 import { getIncompleteByStatus } from '../../../../../slices/analytics/workOrder';

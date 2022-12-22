@@ -1,7 +1,7 @@
 import { Stack, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import AnalyticsCard from '../../AnalyticsCard';
-import { Filter } from './WOModal';
+import { Filter } from '../WOModal';
 import { useDispatch, useSelector } from '../../../../../store';
 import { useEffect } from 'react';
 import { getOverviewStats } from '../../../../../slices/analytics/workOrder';
@@ -13,7 +13,7 @@ interface WOStatusNumbersProps {
     title: string
   ) => void;
 }
-function WOStatusNumbers({ handleOpenModal }: WOStatusNumbersProps) {
+function Overview({ handleOpenModal }: WOStatusNumbersProps) {
   const { t }: { t: any } = useTranslation();
   const dispatch = useDispatch();
   const { overview } = useSelector((state) => state.woAnalytics);
@@ -92,4 +92,4 @@ function WOStatusNumbers({ handleOpenModal }: WOStatusNumbersProps) {
   );
 }
 
-export default WOStatusNumbers;
+export default Overview;
