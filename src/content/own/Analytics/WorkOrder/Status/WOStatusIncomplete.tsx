@@ -1,10 +1,4 @@
-import {
-  Card,
-  Stack,
-  Tooltip as TooltipMUI,
-  Typography,
-  useTheme
-} from '@mui/material';
+import { useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from '../../../../../store';
 import {
@@ -18,7 +12,7 @@ import {
   XAxis,
   YAxis
 } from 'recharts';
-import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
+import AnalyticsCard from '../../AnalyticsCard';
 
 function WOStatusIncomplete() {
   const { t }: { t: any } = useTranslation();
@@ -48,27 +42,11 @@ function WOStatusIncomplete() {
   ];
 
   return (
-    <Card
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        p: 2
-      }}
+    <AnalyticsCard
+      title="Work Remaining"
+      description="This graph shows the number of incomplete work orders that are due in the date range specified in the filters. The estimated hours correspond to those individual work orders."
     >
-      <Stack direction="row" spacing={1}>
-        <Typography variant="h4" textAlign="center">
-          {t('Work Order Status')}
-        </Typography>
-        <TooltipMUI
-          title={t(
-            'Compliant work orders are defined as work orders that were completed before the due date. Cycle time refers to the number of days until a work order was completed.'
-          )}
-        >
-          <InfoTwoToneIcon />
-        </TooltipMUI>
-      </Stack>
-      <ComposedChart width={400} height={600} data={data}>
+      <ComposedChart width={400} height={508} data={data}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="label" />
         <YAxis />
@@ -81,7 +59,7 @@ function WOStatusIncomplete() {
         </Bar>
         <Line type="monotone" dataKey="estimatedHours" stroke="#ff7300" />
       </ComposedChart>
-    </Card>
+    </AnalyticsCard>
   );
 }
 

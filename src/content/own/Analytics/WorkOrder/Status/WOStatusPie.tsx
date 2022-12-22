@@ -1,15 +1,8 @@
-import {
-  Card,
-  Stack,
-  styled,
-  Tooltip as TooltipMUI,
-  Typography,
-  useTheme
-} from '@mui/material';
+import { styled, useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from '../../../../../store';
 import { Cell, Legend, Pie, PieChart, Tooltip } from 'recharts';
-import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
+import AnalyticsCard from '../../AnalyticsCard';
 
 const DotLegend = styled('span')(
   ({ theme }) => `
@@ -46,26 +39,10 @@ function WOStatusPie() {
   ];
 
   return (
-    <Card
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        p: 2
-      }}
+    <AnalyticsCard
+      title="Work Order Status"
+      description="Compliant work orders are defined as work orders that were completed before the due date. Cycle time refers to the number of days until a work order was completed."
     >
-      <Stack direction="row" spacing={1}>
-        <Typography variant="h4" textAlign="center">
-          {t('Work Order Status')}
-        </Typography>
-        <TooltipMUI
-          title={t(
-            'Compliant work orders are defined as work orders that were completed before the due date. Cycle time refers to the number of days until a work order was completed.'
-          )}
-        >
-          <InfoTwoToneIcon />
-        </TooltipMUI>
-      </Stack>
       <PieChart width={200} height={300}>
         <Pie
           data={data}
@@ -84,7 +61,7 @@ function WOStatusPie() {
         <Tooltip />
         <Legend />
       </PieChart>
-    </Card>
+    </AnalyticsCard>
   );
 }
 

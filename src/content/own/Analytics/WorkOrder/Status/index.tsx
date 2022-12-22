@@ -14,6 +14,7 @@ import { CustomSnackBarContext } from '../../../../../contexts/CustomSnackBarCon
 import WOStatusNumbers from './WOStatusNumbers';
 import WOStatusPie from './WOStatusPie';
 import WOStatusIncomplete from './WOStatusIncomplete';
+import HoursWorked from './HoursWorked';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
@@ -61,6 +62,9 @@ function Files() {
             </Grid>
             <Grid item xs={12} md={6}>
               <WOStatusIncomplete />
+            </Grid>
+            <Grid item xs={12} md={12}>
+              <HoursWorked />
             </Grid>
           </Grid>
         </>

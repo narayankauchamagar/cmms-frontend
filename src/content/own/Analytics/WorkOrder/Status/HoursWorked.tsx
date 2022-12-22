@@ -3,29 +3,25 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from '../../../../../store';
 import AnalyticsCard from '../../AnalyticsCard';
 
-function WOStatusNumbers() {
+function HoursWorked() {
   const { t }: { t: any } = useTranslation();
   const { files, loadingGet } = useSelector((state) => state.files);
 
   const dispatch = useDispatch();
   const counts = {
-    workOrdersCount: 1,
-    completeWO: 2,
-    compliant: 1,
-    avgCycleTime: 10
+    estimatedHours: 1,
+    totalTime: 2
   };
 
   const datas: { label: string; value: number }[] = [
-    { label: t('Count'), value: counts.workOrdersCount },
-    { label: t('Complete'), value: counts.completeWO },
-    { label: t('Compliant'), value: counts.compliant },
-    { label: t('Average Cycle Time (Days)'), value: counts.avgCycleTime }
+    { label: t('Estimated Hours'), value: counts.estimatedHours },
+    { label: t('Total time spent'), value: counts.totalTime }
   ];
   return (
     <AnalyticsCard
-      title="The numbers"
+      title="Hours Worked"
       height={200}
-      description="Compliant work orders are defined as work orders that were completed before the due date. Cycle time refers to the number of days until a work order was completed."
+      description="These hours correspond to work orders that have a due date within the range specified in the filters."
     >
       <Stack sx={{ height: '100%', justifyContent: 'center' }}>
         <Stack direction="row" spacing={2}>
@@ -47,4 +43,4 @@ function WOStatusNumbers() {
   );
 }
 
-export default WOStatusNumbers;
+export default HoursWorked;
