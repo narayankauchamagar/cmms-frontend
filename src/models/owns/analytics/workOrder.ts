@@ -22,3 +22,8 @@ export interface WOStatsByStatus {
   onHold: number;
   complete: number;
 }
+
+export interface WOHours {
+  estimated: number;
+  actual: number;
+}

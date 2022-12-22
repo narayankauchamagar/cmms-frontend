@@ -27,7 +27,7 @@ export default function AnalyticsCard({
         height
       }}
     >
-      <Stack direction="row" spacing={1}>
+      <Stack direction="row" spacing={1} alignItems="center">
         <Typography variant="h4" textAlign="center">
           {t(title)}
         </Typography>

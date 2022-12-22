@@ -2,6 +2,9 @@ import { Stack, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import AnalyticsCard from '../../AnalyticsCard';
 import { Filter } from './WOModal';
+import { useDispatch, useSelector } from '../../../../../store';
+import { useEffect } from 'react';
+import { getWOHours } from '../../../../../slices/analytics/workOrder';
 
 interface HoursWorkedProps {
   handleOpenModal: (
@@ -12,15 +15,21 @@ interface HoursWorkedProps {
 }
 function HoursWorked({ handleOpenModal }: HoursWorkedProps) {
   const { t }: { t: any } = useTranslation();
+  const dispatch = useDispatch();
+  const { hours } = useSelector((state) => state.woAnalytics);
 
-  const counts = {
-    estimatedHours: 1,
-    totalTime: 2
-  };
+  useEffect(() => {
+    dispatch(getWOHours());
+  }, []);
+
   const columns = ['id'];
-  const datas: { label: string; value: number; filters: Filter[] }[] = [
-    { label: t('Estimated Hours'), value: counts.estimatedHours, filters: [] },
-    { label: t('Total time spent'), value: counts.totalTime, filters: [] }
+  const formattedData: { label: string; value: number; filters: Filter[] }[] = [
+    { label: t('Estimated Hours'), value: hours.estimated, filters: [] },
+    {
+      label: t('Total time spent (Hours)'),
+      value: hours.actual,
+      filters: []
+    }
   ];
   const title = t('Hours Worked');
   return (
@@ -31,7 +40,7 @@ function HoursWorked({ handleOpenModal }: HoursWorkedProps) {
     >
       <Stack sx={{ height: '100%', justifyContent: 'center' }}>
         <Stack direction="row" spacing={2}>
-          {datas.map((data) => (
+          {formattedData.map((data) => (
             <Stack key={data.label} alignItems="center">
               <Typography
                 variant="h2"

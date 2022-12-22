@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { AppThunk } from 'src/store';
 import api from '../../utils/api';
 import {
+  WOHours,
   WoOverviewStats,
   WOStatsByPriority,
   WOStatsByStatus
@@ -13,6 +14,7 @@ interface WOStatstate {
   overview: WoOverviewStats;
   incompleteByPriority: WOStatsByPriority;
   incompleteByStatus: WOStatsByStatus;
+  hours: WOHours;
   loading: Omit<Record<keyof WOStatstate, boolean>, 'loading'>;
 }
 type Operation = keyof WOStatstate;
@@ -48,10 +50,15 @@ const initialState: WOStatstate = {
     onHold: 0,
     open: 0
   },
+  hours: {
+    estimated: 0,
+    actual: 0
+  },
   loading: {
     overview: false,
     incompleteByPriority: false,
-    incompleteByStatus: false
+    incompleteByStatus: false,
+    hours: false
   }
 };
 
@@ -79,6 +86,10 @@ const slice = createSlice({
     ) {
       const { stats } = action.payload;
       state.incompleteByStatus = stats;
+    },
+    getWOHours(state: WOStatstate, action: PayloadAction<{ stats: WOHours }>) {
+      const { stats } = action.payload;
+      state.hours = stats;
     },
     setLoadingGet(
       state: WOStatstate,
@@ -135,6 +146,22 @@ export const getIncompleteByStatus = (): AppThunk => async (dispatch) => {
   dispatch(
     slice.actions.setLoadingGet({
       operation: 'incompleteByStatus',
+      loading: false
+    })
+  );
+};
+export const getWOHours = (): AppThunk => async (dispatch) => {
+  dispatch(
+    slice.actions.setLoadingGet({
+      operation: 'hours',
+      loading: true
+    })
+  );
+  const stats = await api.get<WOHours>(`${basePath}/hours`);
+  dispatch(slice.actions.getWOHours({ stats }));
+  dispatch(
+    slice.actions.setLoadingGet({
+      operation: 'hours',
       loading: false
     })
   );
