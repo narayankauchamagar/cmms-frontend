@@ -9,14 +9,17 @@ const Loader = (Component) => (props) =>
     </Suspense>
   );
 
-const WOStatusAnalytics = Loader(
-  lazy(() => import('../content/own/Analytics/WorkOrder/Status'))
+const WOAnalytics = Loader(
+  lazy(() => import('../content/own/Analytics/WorkOrder'))
 );
 
 const analyticsRoutes = [
   {
     path: 'work-orders',
-    children: [{ path: 'status', element: <WOStatusAnalytics /> }]
+    children: [
+      { path: 'status', element: <WOAnalytics /> },
+      { path: 'analysis', element: <WOAnalytics /> }
+    ]
   }
 ];
 

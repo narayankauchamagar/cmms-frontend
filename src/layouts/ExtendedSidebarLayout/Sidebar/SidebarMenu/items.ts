@@ -75,6 +75,10 @@ const ownMenuItems: MenuItems[] = [
               {
                 name: 'Status Report',
                 link: '/app/analytics/work-orders/status'
+              },
+              {
+                name: 'Work Order analysis',
+                link: '/app/analytics/work-orders/analysis'
               }
             ]
           }
