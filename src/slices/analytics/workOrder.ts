@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { AppThunk } from 'src/store';
 import api from '../../utils/api';
 import {
+  WOCountsByUser,
   WOHours,
   WoOverviewStats,
   WOStatsByPriority,
@@ -14,6 +15,7 @@ interface WOStatstate {
   overview: WoOverviewStats;
   incompleteByPriority: WOStatsByPriority;
   incompleteByStatus: WOStatsByStatus;
+  countsByUser: WOCountsByUser[];
   hours: WOHours;
   loading: Omit<Record<keyof WOStatstate, boolean>, 'loading'>;
 }
@@ -54,10 +56,12 @@ const initialState: WOStatstate = {
     estimated: 0,
     actual: 0
   },
+  countsByUser: [],
   loading: {
     overview: false,
     incompleteByPriority: false,
     incompleteByStatus: false,
+    countsByUser: false,
     hours: false
   }
 };
@@ -90,6 +94,13 @@ const slice = createSlice({
     getWOHours(state: WOStatstate, action: PayloadAction<{ stats: WOHours }>) {
       const { stats } = action.payload;
       state.hours = stats;
+    },
+    getCountsByUser(
+      state: WOStatstate,
+      action: PayloadAction<{ stats: WOCountsByUser[] }>
+    ) {
+      const { stats } = action.payload;
+      state.countsByUser = stats;
     },
     setLoadingGet(
       state: WOStatstate,
@@ -162,6 +173,24 @@ export const getWOHours = (): AppThunk => async (dispatch) => {
   dispatch(
     slice.actions.setLoadingGet({
       operation: 'hours',
+      loading: false
+    })
+  );
+};
+export const getCountsByUser = (): AppThunk => async (dispatch) => {
+  dispatch(
+    slice.actions.setLoadingGet({
+      operation: 'countsByUser',
+      loading: true
+    })
+  );
+  const stats = await api.get<WOCountsByUser[]>(
+    `${basePath}/complete/counts/users`
+  );
+  dispatch(slice.actions.getCountsByUser({ stats }));
+  dispatch(
+    slice.actions.setLoadingGet({
+      operation: 'countsByUser',
       loading: false
     })
   );

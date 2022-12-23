@@ -32,14 +32,6 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
   }[] = [
     {
       label: t('Count'),
-      value: overview.total,
-      config: {
-        columns: ['id'],
-        filters: [{ key: 'fs', value: false }]
-      }
-    },
-    {
-      label: t('Complete'),
       value: overview.complete,
       config: {
         columns: ['id'],

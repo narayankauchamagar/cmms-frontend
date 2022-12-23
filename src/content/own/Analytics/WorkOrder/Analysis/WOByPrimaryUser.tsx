@@ -5,53 +5,37 @@ import AnalyticsCard from '../../AnalyticsCard';
 import { Filter } from '../WOModal';
 import { useDispatch, useSelector } from '../../../../../store';
 import { useEffect } from 'react';
-import { getIncompleteByStatus } from '../../../../../slices/analytics/workOrder';
+import { getCountsByUser } from '../../../../../slices/analytics/workOrder';
+import { getRandomColor } from '../../../../../utils/overall';
 
-interface WOStatusPieProps {
+interface WOByPrimaryUserProps {
   handleOpenModal: (
     columns: string[],
     filters: Filter[],
     title: string
   ) => void;
 }
-function WOStatusPie({ handleOpenModal }: WOStatusPieProps) {
+function WOByPrimaryUser({ handleOpenModal }: WOByPrimaryUserProps) {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
   const dispatch = useDispatch();
-  const { incompleteByStatus } = useSelector((state) => state.woAnalytics);
+  const { countsByUser } = useSelector((state) => state.woAnalytics);
 
   useEffect(() => {
-    dispatch(getIncompleteByStatus());
+    dispatch(getCountsByUser());
   }, []);
 
   const columns = ['id'];
-  const formattedData = [
-    // {
-    //   label: 'Complete',
-    //   value: data.complete,
-    //   color: theme.colors.error.main,
-    //   filters: [{ key: 'status', value: 'COMPLETE' }]
-    // },
-    {
-      label: 'On hold',
-      value: incompleteByStatus.onHold,
-      color: theme.colors.warning.main,
-      filters: [{ key: 'status', value: 'ON_HOLD' }]
-    },
-    {
-      label: 'In Progress',
-      value: incompleteByStatus.inProgress,
-      color: theme.colors.success.main,
-      filters: [{ key: 'status', value: 'IN_PROGRESS' }]
-    },
-    {
-      label: 'Open',
-      value: incompleteByStatus.open,
-      color: theme.colors.alpha.black[70],
-      filters: [{ key: 'status', value: 'OPEN' }]
-    }
-  ];
-  const title = t('Work Order Status');
+
+  const formattedData = countsByUser.map((user) => {
+    return {
+      label: `${user.firstName} ${user.lastName}`,
+      value: user.count,
+      color: getRandomColor(),
+      filters: [{ key: 'primaryUser', value: user.id }]
+    };
+  });
+  const title = t('Grouped by Assigned to');
   return (
     <AnalyticsCard title={title}>
       <PieChart width={200} height={300}>
@@ -82,4 +66,4 @@ function WOStatusPie({ handleOpenModal }: WOStatusPieProps) {
   );
 }
 
-export default WOStatusPie;
+export default WOByPrimaryUser;

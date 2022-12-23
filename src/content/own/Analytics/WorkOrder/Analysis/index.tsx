@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useContext, useEffect } from 'react';
 import { TitleContext } from '../../../../../contexts/TitleContext';
 import Overview from './Overview';
-import WOStatusPie from './WOStatusPie';
+import WOByPrimaryUser from './WOByPrimaryUser';
 import IncompleteWO from './IncompleteWO';
 import HoursWorked from './HoursWorked';
 import { Filter } from '../WOModal';
@@ -43,7 +43,7 @@ function WOStatusStats({ handleOpenWOModal }: WOStatusStatsProps) {
               <Overview handleOpenModal={handleOpenWOModal} />
             </Grid>
             <Grid item xs={12} md={12}>
-              <WOStatusPie handleOpenModal={handleOpenWOModal} />
+              <WOByPrimaryUser handleOpenModal={handleOpenWOModal} />
             </Grid>
           </Grid>
         </Grid>

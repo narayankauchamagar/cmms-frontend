@@ -1,3 +1,5 @@
+import { UserMiniDTO } from '../../user';
+
 export interface WoOverviewStats {
   total: number;
   complete: number;
@@ -26,4 +28,8 @@ export interface WOStatsByStatus {
 export interface WOHours {
   estimated: number;
   actual: number;
+}
+
+export interface WOCountsByUser extends UserMiniDTO {
+  count: number;
 }
