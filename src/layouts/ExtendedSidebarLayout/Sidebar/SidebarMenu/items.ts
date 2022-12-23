@@ -67,6 +67,7 @@ const ownMenuItems: MenuItems[] = [
         name: 'Analytics',
         icon: InsertChartTwoToneIcon,
         permission: PermissionEntity.ANALYTICS,
+        planFeature: PlanFeature.ANALYTICS,
         items: [
           {
             name: 'Work Orders',

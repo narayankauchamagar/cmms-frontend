@@ -5,7 +5,7 @@ import AnalyticsCard from '../../AnalyticsCard';
 import { Filter } from '../WOModal';
 import { useDispatch, useSelector } from '../../../../../store';
 import { useEffect } from 'react';
-import { getCountsByUser } from '../../../../../slices/analytics/workOrder';
+import { getCompleteByCompletedBy } from '../../../../../slices/analytics/workOrder';
 import { getRandomColor } from '../../../../../utils/overall';
 
 interface WOByPrimaryUserProps {
@@ -15,27 +15,27 @@ interface WOByPrimaryUserProps {
     title: string
   ) => void;
 }
-function WOByPrimaryUser({ handleOpenModal }: WOByPrimaryUserProps) {
+function WOByCompletedBy({ handleOpenModal }: WOByPrimaryUserProps) {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
   const dispatch = useDispatch();
-  const { completeByPrimaryUser } = useSelector((state) => state.woAnalytics);
+  const { completeByCompletedBy } = useSelector((state) => state.woAnalytics);
 
   useEffect(() => {
-    dispatch(getCountsByUser());
+    dispatch(getCompleteByCompletedBy());
   }, []);
 
   const columns = ['id'];
 
-  const formattedData = completeByPrimaryUser.map((user) => {
+  const formattedData = completeByCompletedBy.map((user) => {
     return {
       label: `${user.firstName} ${user.lastName}`,
       value: user.count,
       color: getRandomColor(),
-      filters: [{ key: 'primaryUser', value: user.id }]
+      filters: [{ key: 'completedBy', value: user.id }]
     };
   });
-  const title = t('Grouped by Assigned to');
+  const title = t('Grouped by Completed By');
   return (
     <AnalyticsCard title={title}>
       <PieChart width={200} height={300}>
@@ -66,4 +66,4 @@ function WOByPrimaryUser({ handleOpenModal }: WOByPrimaryUserProps) {
   );
 }
 
-export default WOByPrimaryUser;
+export default WOByCompletedBy;

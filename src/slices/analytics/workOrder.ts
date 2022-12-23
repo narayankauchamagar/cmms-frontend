@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { AppThunk } from 'src/store';
 import api from '../../utils/api';
 import {
+  WOCountsByCategory,
   WOCountsByUser,
   WOHours,
   WoOverviewStats,
@@ -10,12 +11,15 @@ import {
   WOStatsByStatus
 } from '../../models/owns/analytics/workOrder';
 
-const basePath = 'work-order-analytics';
+const basePath = 'analytics/work-order';
 interface WOStatstate {
   overview: WoOverviewStats;
   incompleteByPriority: WOStatsByPriority;
   incompleteByStatus: WOStatsByStatus;
-  countsByUser: WOCountsByUser[];
+  completeByPrimaryUser: WOCountsByUser[];
+  completeByCompletedBy: WOCountsByUser[];
+  completeByCategory: WOCountsByCategory[];
+  completeByPriority: { [key: string]: number };
   hours: WOHours;
   loading: Omit<Record<keyof WOStatstate, boolean>, 'loading'>;
 }
@@ -56,12 +60,18 @@ const initialState: WOStatstate = {
     estimated: 0,
     actual: 0
   },
-  countsByUser: [],
+  completeByPrimaryUser: [],
+  completeByCompletedBy: [],
+  completeByCategory: [],
+  completeByPriority: {},
   loading: {
     overview: false,
     incompleteByPriority: false,
     incompleteByStatus: false,
-    countsByUser: false,
+    completeByPrimaryUser: false,
+    completeByCompletedBy: false,
+    completeByCategory: false,
+    completeByPriority: false,
     hours: false
   }
 };
@@ -100,7 +110,28 @@ const slice = createSlice({
       action: PayloadAction<{ stats: WOCountsByUser[] }>
     ) {
       const { stats } = action.payload;
-      state.countsByUser = stats;
+      state.completeByPrimaryUser = stats;
+    },
+    getCountsByCompletedBy(
+      state: WOStatstate,
+      action: PayloadAction<{ stats: WOCountsByUser[] }>
+    ) {
+      const { stats } = action.payload;
+      state.completeByCompletedBy = stats;
+    },
+    getCompleteByPriority(
+      state: WOStatstate,
+      action: PayloadAction<{ stats: { [key: string]: number } }>
+    ) {
+      const { stats } = action.payload;
+      state.completeByPriority = stats;
+    },
+    getCountsByCategory(
+      state: WOStatstate,
+      action: PayloadAction<{ stats: WOCountsByCategory[] }>
+    ) {
+      const { stats } = action.payload;
+      state.completeByCategory = stats;
     },
     setLoadingGet(
       state: WOStatstate,
@@ -180,17 +211,72 @@ export const getWOHours = (): AppThunk => async (dispatch) => {
 export const getCountsByUser = (): AppThunk => async (dispatch) => {
   dispatch(
     slice.actions.setLoadingGet({
-      operation: 'countsByUser',
+      operation: 'completeByPrimaryUser',
       loading: true
     })
   );
   const stats = await api.get<WOCountsByUser[]>(
-    `${basePath}/complete/counts/users`
+    `${basePath}/complete/counts/primaryUser`
   );
   dispatch(slice.actions.getCountsByUser({ stats }));
   dispatch(
     slice.actions.setLoadingGet({
-      operation: 'countsByUser',
+      operation: 'completeByPrimaryUser',
+      loading: false
+    })
+  );
+};
+
+export const getCompleteByCompletedBy = (): AppThunk => async (dispatch) => {
+  dispatch(
+    slice.actions.setLoadingGet({
+      operation: 'completeByCompletedBy',
+      loading: true
+    })
+  );
+  const stats = await api.get<WOCountsByUser[]>(
+    `${basePath}/complete/counts/completedBy`
+  );
+  dispatch(slice.actions.getCountsByCompletedBy({ stats }));
+  dispatch(
+    slice.actions.setLoadingGet({
+      operation: 'completeByCompletedBy',
+      loading: false
+    })
+  );
+};
+export const getCompleteByPriority = (): AppThunk => async (dispatch) => {
+  dispatch(
+    slice.actions.setLoadingGet({
+      operation: 'completeByPriority',
+      loading: true
+    })
+  );
+  const stats = await api.get<{ [key: string]: number }>(
+    `${basePath}/complete/counts/priority`
+  );
+  dispatch(slice.actions.getCompleteByPriority({ stats }));
+  dispatch(
+    slice.actions.setLoadingGet({
+      operation: 'completeByPriority',
+      loading: false
+    })
+  );
+};
+export const getCompleteByCategory = (): AppThunk => async (dispatch) => {
+  dispatch(
+    slice.actions.setLoadingGet({
+      operation: 'completeByCategory',
+      loading: true
+    })
+  );
+  const stats = await api.get<WOCountsByCategory[]>(
+    `${basePath}/complete/counts/category`
+  );
+  dispatch(slice.actions.getCountsByCategory({ stats }));
+  dispatch(
+    slice.actions.setLoadingGet({
+      operation: 'completeByCategory',
       loading: false
     })
   );

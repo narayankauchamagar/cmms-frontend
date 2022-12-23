@@ -5,9 +5,11 @@ import { useContext, useEffect } from 'react';
 import { TitleContext } from '../../../../../contexts/TitleContext';
 import Overview from './Overview';
 import WOByPrimaryUser from './WOByPrimaryUser';
-import IncompleteWO from './IncompleteWO';
 import HoursWorked from './HoursWorked';
 import { Filter } from '../WOModal';
+import WOByPriority from './WOByPriority';
+import WOByCompletedBy from './WOByCompletedBy';
+import WOByCategory from './WOByCategory';
 
 interface WOStatusStatsProps {
   handleOpenWOModal: (
@@ -37,18 +39,20 @@ function WOStatusStats({ handleOpenWOModal }: WOStatusStatsProps) {
         my={2}
         paddingX={1}
       >
-        <Grid item xs={12} md={6}>
-          <Grid container spacing={1}>
-            <Grid item xs={12} md={12}>
-              <Overview handleOpenModal={handleOpenWOModal} />
-            </Grid>
-            <Grid item xs={12} md={12}>
-              <WOByPrimaryUser handleOpenModal={handleOpenWOModal} />
-            </Grid>
-          </Grid>
+        <Grid item xs={12} md={12}>
+          <Overview handleOpenModal={handleOpenWOModal} />
         </Grid>
         <Grid item xs={12} md={6}>
-          <IncompleteWO handleOpenModal={handleOpenWOModal} />
+          <WOByPrimaryUser handleOpenModal={handleOpenWOModal} />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <WOByCompletedBy handleOpenModal={handleOpenWOModal} />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <WOByPriority handleOpenModal={handleOpenWOModal} />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <WOByCategory handleOpenModal={handleOpenWOModal} />
         </Grid>
         <Grid item xs={12} md={12}>
           <HoursWorked handleOpenModal={handleOpenWOModal} />

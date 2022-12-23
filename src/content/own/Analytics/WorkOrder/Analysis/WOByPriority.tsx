@@ -5,7 +5,7 @@ import AnalyticsCard from '../../AnalyticsCard';
 import { Filter } from '../WOModal';
 import { useDispatch, useSelector } from '../../../../../store';
 import { useEffect } from 'react';
-import { getCountsByUser } from '../../../../../slices/analytics/workOrder';
+import { getCompleteByPriority } from '../../../../../slices/analytics/workOrder';
 import { getRandomColor } from '../../../../../utils/overall';
 
 interface WOByPrimaryUserProps {
@@ -15,27 +15,29 @@ interface WOByPrimaryUserProps {
     title: string
   ) => void;
 }
-function WOByPrimaryUser({ handleOpenModal }: WOByPrimaryUserProps) {
+function WOByPriority({ handleOpenModal }: WOByPrimaryUserProps) {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
   const dispatch = useDispatch();
-  const { completeByPrimaryUser } = useSelector((state) => state.woAnalytics);
+  const { completeByPriority } = useSelector((state) => state.woAnalytics);
 
   useEffect(() => {
-    dispatch(getCountsByUser());
+    dispatch(getCompleteByPriority());
   }, []);
 
   const columns = ['id'];
 
-  const formattedData = completeByPrimaryUser.map((user) => {
-    return {
-      label: `${user.firstName} ${user.lastName}`,
-      value: user.count,
-      color: getRandomColor(),
-      filters: [{ key: 'primaryUser', value: user.id }]
-    };
-  });
-  const title = t('Grouped by Assigned to');
+  const formattedData = Object.entries(completeByPriority).map(
+    ([priority, count]) => {
+      return {
+        label: t(priority),
+        value: count,
+        color: getRandomColor(),
+        filters: [{ key: 'priority', value: priority }]
+      };
+    }
+  );
+  const title = t('Grouped by Priority');
   return (
     <AnalyticsCard title={title}>
       <PieChart width={200} height={300}>
@@ -66,4 +68,4 @@ function WOByPrimaryUser({ handleOpenModal }: WOByPrimaryUserProps) {
   );
 }
 
-export default WOByPrimaryUser;
+export default WOByPriority;

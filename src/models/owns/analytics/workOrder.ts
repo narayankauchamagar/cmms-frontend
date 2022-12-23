@@ -1,4 +1,5 @@
 import { UserMiniDTO } from '../../user';
+import { CategoryMiniDTO } from '../category';
 
 export interface WoOverviewStats {
   total: number;
@@ -31,5 +32,9 @@ export interface WOHours {
 }
 
 export interface WOCountsByUser extends UserMiniDTO {
+  count: number;
+}
+
+export interface WOCountsByCategory extends CategoryMiniDTO {
   count: number;
 }
