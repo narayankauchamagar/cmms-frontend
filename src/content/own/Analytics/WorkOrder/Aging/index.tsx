@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { useContext, useEffect } from 'react';
 import { TitleContext } from '../../../../../contexts/TitleContext';
 import Overview from './Overview';
-import WOByPrimaryUser from './WOByPrimaryUser';
 import Costs from './Costs';
 import { Filter } from '../WOModal';
 import WOByPriority from './WOByPriority';
@@ -12,6 +11,7 @@ import WOByCompletedBy from './WOByCompletedBy';
 import WOByCategory from './WOByCategory';
 import TimeByWeek from './TimeByWeek';
 import WOByWeek from './WOByWeek';
+import IncompleteWOByAsset from './IncompleteByAsset';
 
 interface WOStatusStatsProps {
   handleOpenWOModal: (
@@ -25,13 +25,13 @@ function WOStatusStats({ handleOpenWOModal }: WOStatusStatsProps) {
   const { setTitle } = useContext(TitleContext);
 
   useEffect(() => {
-    setTitle(t('Work Order Analysis'));
+    setTitle(t('Work Order Aging'));
   }, []);
 
   return (
     <>
       <Helmet>
-        <title>{t('Work Order Analysis')}</title>
+        <title>{t('Work Order Aging')}</title>
       </Helmet>
       <Grid
         container
@@ -45,7 +45,7 @@ function WOStatusStats({ handleOpenWOModal }: WOStatusStatsProps) {
           <Overview handleOpenModal={handleOpenWOModal} />
         </Grid>
         <Grid item xs={12} md={6}>
-          <WOByPrimaryUser handleOpenModal={handleOpenWOModal} />
+          <IncompleteWOByAsset handleOpenModal={handleOpenWOModal} />
         </Grid>
         <Grid item xs={12} md={6}>
           <WOByCompletedBy handleOpenModal={handleOpenWOModal} />

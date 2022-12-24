@@ -1,5 +1,6 @@
 import { UserMiniDTO } from '../../user';
 import { CategoryMiniDTO } from '../category';
+import { AssetMiniDTO } from '../asset';
 
 export interface WoOverviewStats {
   total: number;
@@ -55,4 +56,8 @@ export interface WOTimeByWeek {
 export interface WOCosts {
   total: number;
   average: number;
+}
+export interface IncompleteWOByAsset extends AssetMiniDTO {
+  count: number;
+  averageAge: number;
 }

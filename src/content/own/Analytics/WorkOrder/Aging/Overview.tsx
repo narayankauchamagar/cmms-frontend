@@ -52,7 +52,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
   ];
   return (
     <AnalyticsCard
-      title="The numbers"
+      title="Incomplete Work Orders"
       height={200}
       description="Work order age is defined as the number of days between creation of the work order (or work request) and today."
     >
@@ -71,7 +71,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
                     handleOpenModal(
                       data.config.columns,
                       data.config.filters,
-                      t('The numbers')
+                      t('Incomplete Work Orders')
                     )
                   }
                 >

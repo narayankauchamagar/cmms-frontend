@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { AppThunk } from 'src/store';
 import api from '../../utils/api';
 import {
+  IncompleteWOByAsset,
   IncompleteWoStats,
   WOCosts,
   WOCountsByCategory,
@@ -21,6 +22,7 @@ interface WOStatstate {
   incompleteOverview: IncompleteWoStats;
   incompleteByPriority: WOStatsByPriority;
   incompleteByStatus: WOStatsByStatus;
+  incompleteByAsset: IncompleteWOByAsset[];
   completeByPrimaryUser: WOCountsByUser[];
   completeByCompletedBy: WOCountsByUser[];
   completeByCategory: WOCountsByCategory[];
@@ -79,6 +81,7 @@ const initialState: WOStatstate = {
   completeByPriority: {},
   completeByWeek: [],
   completeTimesByWeek: [],
+  incompleteByAsset: [],
   loading: {
     overview: false,
     incompleteByPriority: false,
@@ -91,7 +94,8 @@ const initialState: WOStatstate = {
     completeByWeek: false,
     hours: false,
     completeTimesByWeek: false,
-    incompleteOverview: false
+    incompleteOverview: false,
+    incompleteByAsset: false
   }
 };
 
@@ -126,6 +130,13 @@ const slice = createSlice({
     ) {
       const { stats } = action.payload;
       state.incompleteByStatus = stats;
+    },
+    getIncompleteByAsset(
+      state: WOStatstate,
+      action: PayloadAction<{ stats: IncompleteWOByAsset[] }>
+    ) {
+      const { stats } = action.payload;
+      state.incompleteByAsset = stats;
     },
     getWOHours(state: WOStatstate, action: PayloadAction<{ stats: WOHours }>) {
       const { stats } = action.payload;
@@ -379,6 +390,24 @@ export const getCompleteTimesByWeek = (): AppThunk => async (dispatch) => {
   dispatch(
     slice.actions.setLoading({
       operation: 'completeTimesByWeek',
+      loading: false
+    })
+  );
+};
+export const getIncompleteByAsset = (): AppThunk => async (dispatch) => {
+  dispatch(
+    slice.actions.setLoading({
+      operation: 'incompleteByAsset',
+      loading: true
+    })
+  );
+  const stats = await api.get<IncompleteWOByAsset[]>(
+    `${basePath}/incomplete/age/assets`
+  );
+  dispatch(slice.actions.getIncompleteByAsset({ stats }));
+  dispatch(
+    slice.actions.setLoading({
+      operation: 'incompleteByAsset',
       loading: false
     })
   );
