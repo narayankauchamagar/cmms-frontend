@@ -86,9 +86,8 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const { workOrder, onEdit, tasks, onDelete } = props;
   const theme = useTheme();
   const { showSnackBar } = useContext(CustomSnackBarContext);
-  const { getFormattedDate, getUserNameById } = useContext(
-    CompanySettingsContext
-  );
+  const { getFormattedDate, getUserNameById, getFormattedCurrency } =
+    useContext(CompanySettingsContext);
   const { t }: { t: any } = useTranslation();
   const { user, hasEditPermission, hasDeletePermission } = useAuth();
 
@@ -976,7 +975,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                           }}
                         >
                           <Typography variant="h6">
-                            {`${additionalCost.cost} ${generalPreferences.currency.code}`}
+                            {getFormattedCurrency(additionalCost.cost)}
                           </Typography>
                           {hasEditPermission(
                             PermissionEntity.WORK_ORDERS,
@@ -1015,14 +1014,15 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                   <ListItem
                     secondaryAction={
                       <Typography variant="h6" fontWeight="bold">
-                        {additionalCosts.reduce(
-                          (acc, additionalCost) =>
-                            additionalCost.includeToTotalCost
-                              ? acc + additionalCost.cost
-                              : acc,
-                          0
-                        )}{' '}
-                        {generalPreferences.currency.code}
+                        {getFormattedCurrency(
+                          additionalCosts.reduce(
+                            (acc, additionalCost) =>
+                              additionalCost.includeToTotalCost
+                                ? acc + additionalCost.cost
+                                : acc,
+                            0
+                          )
+                        )}
                       </Typography>
                     }
                   >
