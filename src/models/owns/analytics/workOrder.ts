@@ -44,6 +44,11 @@ export interface WOCountsByWeek {
   reactive: number;
   date: string;
 }
+export interface WOTimeByWeek {
+  total: number;
+  reactive: number;
+  date: string;
+}
 export interface WOCosts {
   total: number;
   average: number;

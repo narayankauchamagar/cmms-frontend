@@ -10,7 +10,8 @@ import {
   WOHours,
   WoOverviewStats,
   WOStatsByPriority,
-  WOStatsByStatus
+  WOStatsByStatus,
+  WOTimeByWeek
 } from '../../models/owns/analytics/workOrder';
 
 const basePath = 'analytics/work-order';
@@ -23,6 +24,7 @@ interface WOStatstate {
   completeByCategory: WOCountsByCategory[];
   completeByPriority: { [key: string]: number };
   completeByWeek: WOCountsByWeek[];
+  completeTimesByWeek: WOTimeByWeek[];
   completeCosts: WOCosts;
   hours: WOHours;
   loading: Omit<Record<keyof WOStatstate, boolean>, 'loading'>;
@@ -70,6 +72,7 @@ const initialState: WOStatstate = {
   completeByCategory: [],
   completeByPriority: {},
   completeByWeek: [],
+  completeTimesByWeek: [],
   loading: {
     overview: false,
     incompleteByPriority: false,
@@ -80,7 +83,8 @@ const initialState: WOStatstate = {
     completeByPriority: false,
     completeCosts: false,
     completeByWeek: false,
-    hours: false
+    hours: false,
+    completeTimesByWeek: false
   }
 };
 
@@ -148,6 +152,13 @@ const slice = createSlice({
       const { stats } = action.payload;
       state.completeByWeek = stats;
     },
+    getCompleteTimesByWeek(
+      state: WOStatstate,
+      action: PayloadAction<{ stats: WOTimeByWeek[] }>
+    ) {
+      const { stats } = action.payload;
+      state.completeTimesByWeek = stats;
+    },
     getCountsByCategory(
       state: WOStatstate,
       action: PayloadAction<{ stats: WOCountsByCategory[] }>
@@ -155,7 +166,7 @@ const slice = createSlice({
       const { stats } = action.payload;
       state.completeByCategory = stats;
     },
-    setLoadingGet(
+    setLoading(
       state: WOStatstate,
       action: PayloadAction<{ loading: boolean; operation: Operation }>
     ) {
@@ -168,19 +179,15 @@ const slice = createSlice({
 export const reducer = slice.reducer;
 
 export const getOverviewStats = (): AppThunk => async (dispatch) => {
-  dispatch(
-    slice.actions.setLoadingGet({ operation: 'overview', loading: true })
-  );
+  dispatch(slice.actions.setLoading({ operation: 'overview', loading: true }));
   const overviewStats = await api.get<WoOverviewStats>(`${basePath}/overview`);
   dispatch(slice.actions.getStats({ overviewStats }));
-  dispatch(
-    slice.actions.setLoadingGet({ operation: 'overview', loading: false })
-  );
+  dispatch(slice.actions.setLoading({ operation: 'overview', loading: false }));
 };
 
 export const getIncompleteByPriority = (): AppThunk => async (dispatch) => {
   dispatch(
-    slice.actions.setLoadingGet({
+    slice.actions.setLoading({
       operation: 'incompleteByPriority',
       loading: true
     })
@@ -190,7 +197,7 @@ export const getIncompleteByPriority = (): AppThunk => async (dispatch) => {
   );
   dispatch(slice.actions.getIncompleteByPriority({ stats }));
   dispatch(
-    slice.actions.setLoadingGet({
+    slice.actions.setLoading({
       operation: 'incompleteByPriority',
       loading: false
     })
@@ -198,7 +205,7 @@ export const getIncompleteByPriority = (): AppThunk => async (dispatch) => {
 };
 export const getIncompleteByStatus = (): AppThunk => async (dispatch) => {
   dispatch(
-    slice.actions.setLoadingGet({
+    slice.actions.setLoading({
       operation: 'incompleteByStatus',
       loading: true
     })
@@ -208,7 +215,7 @@ export const getIncompleteByStatus = (): AppThunk => async (dispatch) => {
   );
   dispatch(slice.actions.getIncompleteByStatus({ stats }));
   dispatch(
-    slice.actions.setLoadingGet({
+    slice.actions.setLoading({
       operation: 'incompleteByStatus',
       loading: false
     })
@@ -216,7 +223,7 @@ export const getIncompleteByStatus = (): AppThunk => async (dispatch) => {
 };
 export const getWOHours = (): AppThunk => async (dispatch) => {
   dispatch(
-    slice.actions.setLoadingGet({
+    slice.actions.setLoading({
       operation: 'hours',
       loading: true
     })
@@ -224,7 +231,7 @@ export const getWOHours = (): AppThunk => async (dispatch) => {
   const stats = await api.get<WOHours>(`${basePath}/hours`);
   dispatch(slice.actions.getWOHours({ stats }));
   dispatch(
-    slice.actions.setLoadingGet({
+    slice.actions.setLoading({
       operation: 'hours',
       loading: false
     })
@@ -232,7 +239,7 @@ export const getWOHours = (): AppThunk => async (dispatch) => {
 };
 export const getCountsByUser = (): AppThunk => async (dispatch) => {
   dispatch(
-    slice.actions.setLoadingGet({
+    slice.actions.setLoading({
       operation: 'completeByPrimaryUser',
       loading: true
     })
@@ -242,7 +249,7 @@ export const getCountsByUser = (): AppThunk => async (dispatch) => {
   );
   dispatch(slice.actions.getCountsByUser({ stats }));
   dispatch(
-    slice.actions.setLoadingGet({
+    slice.actions.setLoading({
       operation: 'completeByPrimaryUser',
       loading: false
     })
@@ -251,7 +258,7 @@ export const getCountsByUser = (): AppThunk => async (dispatch) => {
 
 export const getCompleteByCompletedBy = (): AppThunk => async (dispatch) => {
   dispatch(
-    slice.actions.setLoadingGet({
+    slice.actions.setLoading({
       operation: 'completeByCompletedBy',
       loading: true
     })
@@ -261,7 +268,7 @@ export const getCompleteByCompletedBy = (): AppThunk => async (dispatch) => {
   );
   dispatch(slice.actions.getCountsByCompletedBy({ stats }));
   dispatch(
-    slice.actions.setLoadingGet({
+    slice.actions.setLoading({
       operation: 'completeByCompletedBy',
       loading: false
     })
@@ -269,7 +276,7 @@ export const getCompleteByCompletedBy = (): AppThunk => async (dispatch) => {
 };
 export const getCompleteByPriority = (): AppThunk => async (dispatch) => {
   dispatch(
-    slice.actions.setLoadingGet({
+    slice.actions.setLoading({
       operation: 'completeByPriority',
       loading: true
     })
@@ -279,7 +286,7 @@ export const getCompleteByPriority = (): AppThunk => async (dispatch) => {
   );
   dispatch(slice.actions.getCompleteByPriority({ stats }));
   dispatch(
-    slice.actions.setLoadingGet({
+    slice.actions.setLoading({
       operation: 'completeByPriority',
       loading: false
     })
@@ -287,7 +294,7 @@ export const getCompleteByPriority = (): AppThunk => async (dispatch) => {
 };
 export const getCompleteByCategory = (): AppThunk => async (dispatch) => {
   dispatch(
-    slice.actions.setLoadingGet({
+    slice.actions.setLoading({
       operation: 'completeByCategory',
       loading: true
     })
@@ -297,7 +304,7 @@ export const getCompleteByCategory = (): AppThunk => async (dispatch) => {
   );
   dispatch(slice.actions.getCountsByCategory({ stats }));
   dispatch(
-    slice.actions.setLoadingGet({
+    slice.actions.setLoading({
       operation: 'completeByCategory',
       loading: false
     })
@@ -305,7 +312,7 @@ export const getCompleteByCategory = (): AppThunk => async (dispatch) => {
 };
 export const getCompleteCosts = (): AppThunk => async (dispatch) => {
   dispatch(
-    slice.actions.setLoadingGet({
+    slice.actions.setLoading({
       operation: 'completeCosts',
       loading: true
     })
@@ -313,7 +320,7 @@ export const getCompleteCosts = (): AppThunk => async (dispatch) => {
   const stats = await api.get<WOCosts>(`${basePath}/complete/costs`);
   dispatch(slice.actions.getCompleteCosts({ stats }));
   dispatch(
-    slice.actions.setLoadingGet({
+    slice.actions.setLoading({
       operation: 'completeCosts',
       loading: false
     })
@@ -321,7 +328,7 @@ export const getCompleteCosts = (): AppThunk => async (dispatch) => {
 };
 export const getCompleteByWeek = (): AppThunk => async (dispatch) => {
   dispatch(
-    slice.actions.setLoadingGet({
+    slice.actions.setLoading({
       operation: 'completeByWeek',
       loading: true
     })
@@ -331,8 +338,24 @@ export const getCompleteByWeek = (): AppThunk => async (dispatch) => {
   );
   dispatch(slice.actions.getCompleteByWeek({ stats }));
   dispatch(
-    slice.actions.setLoadingGet({
+    slice.actions.setLoading({
       operation: 'completeByWeek',
+      loading: false
+    })
+  );
+};
+export const getCompleteTimesByWeek = (): AppThunk => async (dispatch) => {
+  dispatch(
+    slice.actions.setLoading({
+      operation: 'completeTimesByWeek',
+      loading: true
+    })
+  );
+  const stats = await api.get<WOTimeByWeek[]>(`${basePath}/complete/time/week`);
+  dispatch(slice.actions.getCompleteTimesByWeek({ stats }));
+  dispatch(
+    slice.actions.setLoading({
+      operation: 'completeTimesByWeek',
       loading: false
     })
   );

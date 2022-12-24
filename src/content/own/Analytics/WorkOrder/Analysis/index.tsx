@@ -10,6 +10,7 @@ import { Filter } from '../WOModal';
 import WOByPriority from './WOByPriority';
 import WOByCompletedBy from './WOByCompletedBy';
 import WOByCategory from './WOByCategory';
+import TimeByWeek from './TimeByWeek';
 import WOByWeek from './WOByWeek';
 
 interface WOStatusStatsProps {
@@ -57,6 +58,9 @@ function WOStatusStats({ handleOpenWOModal }: WOStatusStatsProps) {
         </Grid>
         <Grid item xs={12} md={6}>
           <WOByWeek handleOpenModal={handleOpenWOModal} />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <TimeByWeek handleOpenModal={handleOpenWOModal} />
         </Grid>
         <Grid item xs={12} md={12}>
           <Costs handleOpenModal={handleOpenWOModal} />

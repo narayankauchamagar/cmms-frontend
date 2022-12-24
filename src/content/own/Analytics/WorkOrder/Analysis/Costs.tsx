@@ -27,12 +27,12 @@ function Costs({ handleOpenModal }: HoursWorkedProps) {
   const formattedData: { label: string; value: string; filters: Filter[] }[] = [
     {
       label: t('Total Cost'),
-      value: getFormattedCurrency(completeCosts.total),
+      value: getFormattedCurrency(completeCosts.total.toFixed(2)),
       filters: []
     },
     {
       label: t('Average Cost'),
-      value: getFormattedCurrency(completeCosts.average),
+      value: getFormattedCurrency(completeCosts.average.toFixed(2)),
       filters: []
     }
   ];

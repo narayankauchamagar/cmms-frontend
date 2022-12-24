@@ -13,7 +13,7 @@ import AnalyticsCard from '../../AnalyticsCard';
 import { Filter } from '../WOModal';
 import { useDispatch, useSelector } from '../../../../../store';
 import { useEffect } from 'react';
-import { getCompleteByWeek } from '../../../../../slices/analytics/workOrder';
+import { getCompleteTimesByWeek } from '../../../../../slices/analytics/workOrder';
 import { getDayAndMonth } from '../../../../../utils/dates';
 
 interface WOStatusIncompleteProps {
@@ -23,41 +23,41 @@ interface WOStatusIncompleteProps {
     title: string
   ) => void;
 }
-function WOByWeek({ handleOpenModal }: WOStatusIncompleteProps) {
+function TimeByWeek({ handleOpenModal }: WOStatusIncompleteProps) {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
-  const { completeByWeek, loading } = useSelector((state) => state.woAnalytics);
+  const { completeTimesByWeek, loading } = useSelector(
+    (state) => state.woAnalytics
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getCompleteByWeek());
+    dispatch(getCompleteTimesByWeek());
   }, []);
 
   const columns: string[] = ['id'];
 
   const formattedData: {
     label: string;
-    count: number;
+    total: string;
+    reactive: string;
+    recurring: string;
     filters: Filter[];
-  }[] = completeByWeek.map((data) => {
+  }[] = completeTimesByWeek.map((data) => {
     return {
-      ...data,
-      recurring: data.count - data.reactive,
+      total: (data.total / 3600).toFixed(2),
+      reactive: (data.reactive / 3600).toFixed(2),
+      recurring: ((data.total - data.reactive) / 3600).toFixed(2),
       label: getDayAndMonth(data.date),
       filters: [{ key: 'range', value: data.date }]
     };
   });
-  const title = 'Completion comparison';
+  const title = 'Time spent';
   const lines: { label: string; dataKey: string; color: string }[] = [
     {
       label: t('Complete'),
-      dataKey: 'count',
+      dataKey: 'total',
       color: theme.colors.primary.main
-    },
-    {
-      label: t('Compliant'),
-      dataKey: 'compliant',
-      color: theme.colors.success.main
     },
     {
       label: t('Reactive'),
@@ -71,11 +71,8 @@ function WOByWeek({ handleOpenModal }: WOStatusIncompleteProps) {
     }
   ];
   return (
-    <AnalyticsCard
-      title={title}
-      description="Comparison of various types of completed work orders."
-    >
-      {loading.completeByWeek ? (
+    <AnalyticsCard title={title}>
+      {loading.completeTimesByWeek ? (
         <Stack
           width="100%"
           height="100%"
@@ -106,4 +103,4 @@ function WOByWeek({ handleOpenModal }: WOStatusIncompleteProps) {
   );
 }
 
-export default WOByWeek;
+export default TimeByWeek;

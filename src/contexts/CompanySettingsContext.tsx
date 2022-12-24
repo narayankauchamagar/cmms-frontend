@@ -19,7 +19,7 @@ type CompanySettingsContext = {
     defaultFields: Array<IField>,
     defaultShape: { [key: string]: any }
   ) => [Array<IField>, { [key: string]: any }];
-  getFormattedCurrency: (amount: number) => string;
+  getFormattedCurrency: (amount: number | string) => string;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
