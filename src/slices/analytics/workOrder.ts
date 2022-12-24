@@ -6,7 +6,7 @@ import {
   IncompleteWOByAsset,
   IncompleteWOByUser,
   IncompleteWoStats,
-  WOCosts,
+  WOCostsAndTime,
   WOCountsByCategory,
   WOCountsByUser,
   WOCountsByWeek,
@@ -31,7 +31,7 @@ interface WOStatstate {
   completeByPriority: { [key: string]: number };
   completeByWeek: WOCountsByWeek[];
   completeTimesByWeek: WOTimeByWeek[];
-  completeCosts: WOCosts;
+  completeCosts: WOCostsAndTime;
   hours: WOHours;
   loading: Omit<Record<keyof WOStatstate, boolean>, 'loading'>;
 }
@@ -44,7 +44,14 @@ const initialState: WOStatstate = {
     compliant: 0,
     avgCycleTime: 0
   },
-  completeCosts: { total: 0, average: 0 },
+  completeCosts: {
+    total: 0,
+    average: 0,
+    additionalCost: 0,
+    laborCost: 0,
+    partCost: 0,
+    laborTime: 0
+  },
   incompleteByPriority: {
     none: {
       count: 0,
@@ -155,7 +162,7 @@ const slice = createSlice({
     },
     getCompleteCosts(
       state: WOStatstate,
-      action: PayloadAction<{ stats: WOCosts }>
+      action: PayloadAction<{ stats: WOCostsAndTime }>
     ) {
       const { stats } = action.payload;
       state.completeCosts = stats;
@@ -362,7 +369,9 @@ export const getCompleteCosts = (): AppThunk => async (dispatch) => {
       loading: true
     })
   );
-  const stats = await api.get<WOCosts>(`${basePath}/complete/costs`);
+  const stats = await api.get<WOCostsAndTime>(
+    `${basePath}/complete/costs-time`
+  );
   dispatch(slice.actions.getCompleteCosts({ stats }));
   dispatch(
     slice.actions.setLoading({

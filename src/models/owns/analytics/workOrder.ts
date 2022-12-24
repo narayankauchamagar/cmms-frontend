@@ -53,9 +53,13 @@ export interface WOTimeByWeek {
   reactive: number;
   date: string;
 }
-export interface WOCosts {
+export interface WOCostsAndTime {
   total: number;
   average: number;
+  additionalCost: number;
+  laborCost: number;
+  partCost: number;
+  laborTime: number;
 }
 export interface IncompleteWOByAsset extends AssetMiniDTO {
   count: number;
