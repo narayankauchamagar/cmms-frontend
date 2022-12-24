@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Status from './Status';
 import Analysis from './Analysis';
+import Aging from './Aging';
 
 export default function Index() {
   const { t }: { t: any } = useTranslation();
@@ -28,6 +29,8 @@ export default function Index() {
         return <Status handleOpenWOModal={handleOpenWOModal} />;
       case 'analysis':
         return <Analysis handleOpenWOModal={handleOpenWOModal} />;
+      case 'aging':
+        return <Aging handleOpenWOModal={handleOpenWOModal} />;
       default:
         return null;
     }

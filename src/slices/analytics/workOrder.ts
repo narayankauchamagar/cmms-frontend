@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { AppThunk } from 'src/store';
 import api from '../../utils/api';
 import {
+  IncompleteWoStats,
   WOCosts,
   WOCountsByCategory,
   WOCountsByUser,
@@ -17,6 +18,7 @@ import {
 const basePath = 'analytics/work-order';
 interface WOStatstate {
   overview: WoOverviewStats;
+  incompleteOverview: IncompleteWoStats;
   incompleteByPriority: WOStatsByPriority;
   incompleteByStatus: WOStatsByStatus;
   completeByPrimaryUser: WOCountsByUser[];
@@ -67,6 +69,10 @@ const initialState: WOStatstate = {
     estimated: 0,
     actual: 0
   },
+  incompleteOverview: {
+    total: 0,
+    averageAge: 0
+  },
   completeByPrimaryUser: [],
   completeByCompletedBy: [],
   completeByCategory: [],
@@ -84,7 +90,8 @@ const initialState: WOStatstate = {
     completeCosts: false,
     completeByWeek: false,
     hours: false,
-    completeTimesByWeek: false
+    completeTimesByWeek: false,
+    incompleteOverview: false
   }
 };
 
@@ -98,6 +105,13 @@ const slice = createSlice({
     ) {
       const { overviewStats } = action.payload;
       state.overview = overviewStats;
+    },
+    getIncompleteStats(
+      state: WOStatstate,
+      action: PayloadAction<{ overviewStats: IncompleteWoStats }>
+    ) {
+      const { overviewStats } = action.payload;
+      state.incompleteOverview = overviewStats;
     },
     getIncompleteByPriority(
       state: WOStatstate,
@@ -180,11 +194,20 @@ export const reducer = slice.reducer;
 
 export const getOverviewStats = (): AppThunk => async (dispatch) => {
   dispatch(slice.actions.setLoading({ operation: 'overview', loading: true }));
-  const overviewStats = await api.get<WoOverviewStats>(`${basePath}/overview`);
+  const overviewStats = await api.get<WoOverviewStats>(
+    `${basePath}/complete/overview`
+  );
   dispatch(slice.actions.getStats({ overviewStats }));
   dispatch(slice.actions.setLoading({ operation: 'overview', loading: false }));
 };
-
+export const getIncompleteStats = (): AppThunk => async (dispatch) => {
+  dispatch(slice.actions.setLoading({ operation: 'overview', loading: true }));
+  const overviewStats = await api.get<IncompleteWoStats>(
+    `${basePath}/incomplete/overview`
+  );
+  dispatch(slice.actions.getIncompleteStats({ overviewStats }));
+  dispatch(slice.actions.setLoading({ operation: 'overview', loading: false }));
+};
 export const getIncompleteByPriority = (): AppThunk => async (dispatch) => {
   dispatch(
     slice.actions.setLoading({
@@ -193,7 +216,7 @@ export const getIncompleteByPriority = (): AppThunk => async (dispatch) => {
     })
   );
   const stats = await api.get<WOStatsByPriority>(
-    `${basePath}/incomplete-priority`
+    `${basePath}/incomplete/priority`
   );
   dispatch(slice.actions.getIncompleteByPriority({ stats }));
   dispatch(
@@ -211,7 +234,7 @@ export const getIncompleteByStatus = (): AppThunk => async (dispatch) => {
     })
   );
   const stats = await api.get<WOStatsByStatus>(
-    `${basePath}/incomplete-statuses`
+    `${basePath}/incomplete/statuses`
   );
   dispatch(slice.actions.getIncompleteByStatus({ stats }));
   dispatch(

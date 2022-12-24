@@ -18,7 +18,8 @@ const analyticsRoutes = [
     path: 'work-orders',
     children: [
       { path: 'status', element: <WOAnalytics /> },
-      { path: 'analysis', element: <WOAnalytics /> }
+      { path: 'analysis', element: <WOAnalytics /> },
+      { path: 'aging', element: <WOAnalytics /> }
     ]
   }
 ];

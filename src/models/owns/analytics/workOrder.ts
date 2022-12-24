@@ -7,7 +7,10 @@ export interface WoOverviewStats {
   compliant: number;
   avgCycleTime: number;
 }
-
+export interface IncompleteWoStats {
+  total: number;
+  averageAge: number;
+}
 interface BasicStats {
   count: number;
   estimatedHours: number;
