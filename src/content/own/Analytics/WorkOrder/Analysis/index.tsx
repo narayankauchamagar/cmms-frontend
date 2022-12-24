@@ -5,7 +5,7 @@ import { useContext, useEffect } from 'react';
 import { TitleContext } from '../../../../../contexts/TitleContext';
 import Overview from './Overview';
 import WOByPrimaryUser from './WOByPrimaryUser';
-import HoursWorked from './HoursWorked';
+import Costs from './Costs';
 import { Filter } from '../WOModal';
 import WOByPriority from './WOByPriority';
 import WOByCompletedBy from './WOByCompletedBy';
@@ -55,7 +55,7 @@ function WOStatusStats({ handleOpenWOModal }: WOStatusStatsProps) {
           <WOByCategory handleOpenModal={handleOpenWOModal} />
         </Grid>
         <Grid item xs={12} md={12}>
-          <HoursWorked handleOpenModal={handleOpenWOModal} />
+          <Costs handleOpenModal={handleOpenWOModal} />
         </Grid>
       </Grid>
     </>

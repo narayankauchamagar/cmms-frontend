@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { AppThunk } from 'src/store';
 import api from '../../utils/api';
 import {
+  WOCosts,
   WOCountsByCategory,
   WOCountsByUser,
   WOHours,
@@ -20,6 +21,7 @@ interface WOStatstate {
   completeByCompletedBy: WOCountsByUser[];
   completeByCategory: WOCountsByCategory[];
   completeByPriority: { [key: string]: number };
+  completeCosts: WOCosts;
   hours: WOHours;
   loading: Omit<Record<keyof WOStatstate, boolean>, 'loading'>;
 }
@@ -32,6 +34,7 @@ const initialState: WOStatstate = {
     compliant: 0,
     avgCycleTime: 0
   },
+  completeCosts: { total: 0, average: 0 },
   incompleteByPriority: {
     none: {
       count: 0,
@@ -72,6 +75,7 @@ const initialState: WOStatstate = {
     completeByCompletedBy: false,
     completeByCategory: false,
     completeByPriority: false,
+    completeCosts: false,
     hours: false
   }
 };
@@ -104,6 +108,13 @@ const slice = createSlice({
     getWOHours(state: WOStatstate, action: PayloadAction<{ stats: WOHours }>) {
       const { stats } = action.payload;
       state.hours = stats;
+    },
+    getCompleteCosts(
+      state: WOStatstate,
+      action: PayloadAction<{ stats: WOCosts }>
+    ) {
+      const { stats } = action.payload;
+      state.completeCosts = stats;
     },
     getCountsByUser(
       state: WOStatstate,
@@ -277,6 +288,22 @@ export const getCompleteByCategory = (): AppThunk => async (dispatch) => {
   dispatch(
     slice.actions.setLoadingGet({
       operation: 'completeByCategory',
+      loading: false
+    })
+  );
+};
+export const getCompleteCosts = (): AppThunk => async (dispatch) => {
+  dispatch(
+    slice.actions.setLoadingGet({
+      operation: 'completeCosts',
+      loading: true
+    })
+  );
+  const stats = await api.get<WOCosts>(`${basePath}/complete/costs`);
+  dispatch(slice.actions.getCompleteCosts({ stats }));
+  dispatch(
+    slice.actions.setLoadingGet({
+      operation: 'completeCosts',
       loading: false
     })
   );

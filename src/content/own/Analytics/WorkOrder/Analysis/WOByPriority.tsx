@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from '../../../../../store';
 import { useEffect } from 'react';
 import { getCompleteByPriority } from '../../../../../slices/analytics/workOrder';
 import { getRandomColor } from '../../../../../utils/overall';
+import { getPriorityLabel } from '../../../../../utils/formatters';
 
 interface WOByPrimaryUserProps {
   handleOpenModal: (
@@ -30,7 +31,7 @@ function WOByPriority({ handleOpenModal }: WOByPrimaryUserProps) {
   const formattedData = Object.entries(completeByPriority).map(
     ([priority, count]) => {
       return {
-        label: t(priority),
+        label: getPriorityLabel(priority, t),
         value: count,
         color: getRandomColor(),
         filters: [{ key: 'priority', value: priority }]

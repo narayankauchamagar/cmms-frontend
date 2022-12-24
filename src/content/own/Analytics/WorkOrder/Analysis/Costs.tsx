@@ -3,8 +3,9 @@ import { useTranslation } from 'react-i18next';
 import AnalyticsCard from '../../AnalyticsCard';
 import { Filter } from '../WOModal';
 import { useDispatch, useSelector } from '../../../../../store';
-import { useEffect } from 'react';
-import { getWOHours } from '../../../../../slices/analytics/workOrder';
+import { useContext, useEffect } from 'react';
+import { getCompleteCosts } from '../../../../../slices/analytics/workOrder';
+import { CompanySettingsContext } from '../../../../../contexts/CompanySettingsContext';
 
 interface HoursWorkedProps {
   handleOpenModal: (
@@ -13,30 +14,34 @@ interface HoursWorkedProps {
     title: string
   ) => void;
 }
-function HoursWorked({ handleOpenModal }: HoursWorkedProps) {
+function Costs({ handleOpenModal }: HoursWorkedProps) {
   const { t }: { t: any } = useTranslation();
   const dispatch = useDispatch();
-  const { hours } = useSelector((state) => state.woAnalytics);
-
+  const { completeCosts } = useSelector((state) => state.woAnalytics);
+  const { getFormattedCurrency } = useContext(CompanySettingsContext);
   useEffect(() => {
-    dispatch(getWOHours());
+    dispatch(getCompleteCosts());
   }, []);
 
   const columns = ['id'];
-  const formattedData: { label: string; value: number; filters: Filter[] }[] = [
-    { label: t('Estimated Hours'), value: hours.estimated, filters: [] },
+  const formattedData: { label: string; value: string; filters: Filter[] }[] = [
     {
-      label: t('Total time spent (Hours)'),
-      value: hours.actual,
+      label: t('Total Cost'),
+      value: getFormattedCurrency(completeCosts.total),
+      filters: []
+    },
+    {
+      label: t('Average Cost'),
+      value: getFormattedCurrency(completeCosts.average),
       filters: []
     }
   ];
-  const title = t('Hours Worked');
+  const title = t('Costs');
   return (
     <AnalyticsCard
       title={title}
       height={200}
-      description="These hours correspond to work orders that have a due date within the range specified in the filters."
+      description="Total cost includes labor cost, additional cost, and parts cost in a work order"
     >
       <Stack sx={{ height: '100%', justifyContent: 'center' }}>
         <Stack direction="row" spacing={2}>
@@ -59,4 +64,4 @@ function HoursWorked({ handleOpenModal }: HoursWorkedProps) {
   );
 }
 
-export default HoursWorked;
+export default Costs;
