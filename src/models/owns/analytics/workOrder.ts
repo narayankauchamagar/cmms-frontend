@@ -61,3 +61,7 @@ export interface IncompleteWOByAsset extends AssetMiniDTO {
   count: number;
   averageAge: number;
 }
+export interface IncompleteWOByUser extends UserMiniDTO {
+  count: number;
+  averageAge: number;
+}

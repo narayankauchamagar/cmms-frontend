@@ -4,6 +4,7 @@ import type { AppThunk } from 'src/store';
 import api from '../../utils/api';
 import {
   IncompleteWOByAsset,
+  IncompleteWOByUser,
   IncompleteWoStats,
   WOCosts,
   WOCountsByCategory,
@@ -23,6 +24,7 @@ interface WOStatstate {
   incompleteByPriority: WOStatsByPriority;
   incompleteByStatus: WOStatsByStatus;
   incompleteByAsset: IncompleteWOByAsset[];
+  incompleteByUser: IncompleteWOByUser[];
   completeByPrimaryUser: WOCountsByUser[];
   completeByCompletedBy: WOCountsByUser[];
   completeByCategory: WOCountsByCategory[];
@@ -82,6 +84,7 @@ const initialState: WOStatstate = {
   completeByWeek: [],
   completeTimesByWeek: [],
   incompleteByAsset: [],
+  incompleteByUser: [],
   loading: {
     overview: false,
     incompleteByPriority: false,
@@ -95,7 +98,8 @@ const initialState: WOStatstate = {
     hours: false,
     completeTimesByWeek: false,
     incompleteOverview: false,
-    incompleteByAsset: false
+    incompleteByAsset: false,
+    incompleteByUser: false
   }
 };
 
@@ -137,6 +141,13 @@ const slice = createSlice({
     ) {
       const { stats } = action.payload;
       state.incompleteByAsset = stats;
+    },
+    getIncompleteByUser(
+      state: WOStatstate,
+      action: PayloadAction<{ stats: IncompleteWOByUser[] }>
+    ) {
+      const { stats } = action.payload;
+      state.incompleteByUser = stats;
     },
     getWOHours(state: WOStatstate, action: PayloadAction<{ stats: WOHours }>) {
       const { stats } = action.payload;
@@ -408,6 +419,24 @@ export const getIncompleteByAsset = (): AppThunk => async (dispatch) => {
   dispatch(
     slice.actions.setLoading({
       operation: 'incompleteByAsset',
+      loading: false
+    })
+  );
+};
+export const getIncompleteByUser = (): AppThunk => async (dispatch) => {
+  dispatch(
+    slice.actions.setLoading({
+      operation: 'incompleteByUser',
+      loading: true
+    })
+  );
+  const stats = await api.get<IncompleteWOByUser[]>(
+    `${basePath}/incomplete/age/users`
+  );
+  dispatch(slice.actions.getIncompleteByUser({ stats }));
+  dispatch(
+    slice.actions.setLoading({
+      operation: 'incompleteByUser',
       loading: false
     })
   );
