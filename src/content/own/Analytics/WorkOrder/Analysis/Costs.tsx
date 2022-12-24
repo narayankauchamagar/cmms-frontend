@@ -17,7 +17,7 @@ interface HoursWorkedProps {
 function Costs({ handleOpenModal }: HoursWorkedProps) {
   const { t }: { t: any } = useTranslation();
   const dispatch = useDispatch();
-  const { completeCosts } = useSelector((state) => state.woAnalytics);
+  const { completeCosts, loading } = useSelector((state) => state.woAnalytics);
   const { getFormattedCurrency } = useContext(CompanySettingsContext);
   useEffect(() => {
     dispatch(getCompleteCosts());

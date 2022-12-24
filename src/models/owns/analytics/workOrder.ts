@@ -38,7 +38,12 @@ export interface WOCountsByUser extends UserMiniDTO {
 export interface WOCountsByCategory extends CategoryMiniDTO {
   count: number;
 }
-
+export interface WOCountsByWeek {
+  count: number;
+  compliant: number;
+  reactive: number;
+  date: string;
+}
 export interface WOCosts {
   total: number;
   average: number;

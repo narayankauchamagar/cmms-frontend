@@ -6,6 +6,7 @@ import { Filter } from '../WOModal';
 import { useDispatch, useSelector } from '../../../../../store';
 import { useEffect } from 'react';
 import { getIncompleteByStatus } from '../../../../../slices/analytics/workOrder';
+import Loading from '../../Loading';
 
 interface WOStatusPieProps {
   handleOpenModal: (
@@ -18,7 +19,9 @@ function WOStatusPie({ handleOpenModal }: WOStatusPieProps) {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
   const dispatch = useDispatch();
-  const { incompleteByStatus } = useSelector((state) => state.woAnalytics);
+  const { incompleteByStatus, loading } = useSelector(
+    (state) => state.woAnalytics
+  );
 
   useEffect(() => {
     dispatch(getIncompleteByStatus());
@@ -54,30 +57,34 @@ function WOStatusPie({ handleOpenModal }: WOStatusPieProps) {
   const title = t('Work Order Status');
   return (
     <AnalyticsCard title={title}>
-      <PieChart width={200} height={300}>
-        <Pie
-          data={formattedData}
-          dataKey="value"
-          nameKey="label"
-          cx="50%"
-          cy="50%"
-          outerRadius={100}
-          innerRadius={50}
-          fill="#8884d8"
-        >
-          {formattedData.map((entry, index) => (
-            <Cell
-              key={index}
-              fill={entry.color}
-              onClick={() => {
-                handleOpenModal(columns, entry.filters, title);
-              }}
-            />
-          ))}
-        </Pie>
-        <Tooltip />
-        <Legend />
-      </PieChart>
+      {loading.incompleteByStatus ? (
+        <Loading />
+      ) : (
+        <PieChart width={200} height={300}>
+          <Pie
+            data={formattedData}
+            dataKey="value"
+            nameKey="label"
+            cx="50%"
+            cy="50%"
+            outerRadius={100}
+            innerRadius={50}
+            fill="#8884d8"
+          >
+            {formattedData.map((entry, index) => (
+              <Cell
+                key={index}
+                fill={entry.color}
+                onClick={() => {
+                  handleOpenModal(columns, entry.filters, title);
+                }}
+              />
+            ))}
+          </Pie>
+          <Tooltip />
+          <Legend />
+        </PieChart>
+      )}
     </AnalyticsCard>
   );
 }

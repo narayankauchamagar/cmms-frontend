@@ -16,6 +16,7 @@ import { Filter } from '../WOModal';
 import { useDispatch, useSelector } from '../../../../../store';
 import { useEffect } from 'react';
 import { getIncompleteByPriority } from '../../../../../slices/analytics/workOrder';
+import Loading from '../../Loading';
 
 interface WOStatusIncompleteProps {
   handleOpenModal: (
@@ -27,7 +28,9 @@ interface WOStatusIncompleteProps {
 function IncompleteWO({ handleOpenModal }: WOStatusIncompleteProps) {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
-  const { incompleteByPriority } = useSelector((state) => state.woAnalytics);
+  const { incompleteByPriority, loading } = useSelector(
+    (state) => state.woAnalytics
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -78,30 +81,34 @@ function IncompleteWO({ handleOpenModal }: WOStatusIncompleteProps) {
       title={title}
       description="This graph shows the number of incomplete work orders that are due in the date range specified in the filters. The estimated hours correspond to those individual work orders."
     >
-      <ComposedChart width={400} height={508} data={formattedData}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="label" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Bar dataKey="count" fill="#8884d8" name={t('Work Orders')}>
-          {formattedData.map((entry, index) => (
-            <Cell
-              key={index}
-              fill={entry.color}
-              onClick={() => {
-                handleOpenModal(columns, entry.filters, t(title));
-              }}
-            />
-          ))}
-        </Bar>
-        <Line
-          name={t('Estimated duration')}
-          type="monotone"
-          dataKey="estimatedHours"
-          stroke="#ff7300"
-        />
-      </ComposedChart>
+      {loading.incompleteByPriority ? (
+        <Loading />
+      ) : (
+        <ComposedChart width={400} height={508} data={formattedData}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="label" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="count" fill="#8884d8" name={t('Work Orders')}>
+            {formattedData.map((entry, index) => (
+              <Cell
+                key={index}
+                fill={entry.color}
+                onClick={() => {
+                  handleOpenModal(columns, entry.filters, t(title));
+                }}
+              />
+            ))}
+          </Bar>
+          <Line
+            name={t('Estimated duration')}
+            type="monotone"
+            dataKey="estimatedHours"
+            stroke="#ff7300"
+          />
+        </ComposedChart>
+      )}
     </AnalyticsCard>
   );
 }

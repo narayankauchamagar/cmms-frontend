@@ -5,6 +5,7 @@ import { Filter } from '../WOModal';
 import { useDispatch, useSelector } from '../../../../../store';
 import { useEffect } from 'react';
 import { getWOHours } from '../../../../../slices/analytics/workOrder';
+import Loading from '../../Loading';
 
 interface HoursWorkedProps {
   handleOpenModal: (
@@ -16,7 +17,7 @@ interface HoursWorkedProps {
 function HoursWorked({ handleOpenModal }: HoursWorkedProps) {
   const { t }: { t: any } = useTranslation();
   const dispatch = useDispatch();
-  const { hours } = useSelector((state) => state.woAnalytics);
+  const { hours, loading } = useSelector((state) => state.woAnalytics);
 
   useEffect(() => {
     dispatch(getWOHours());
@@ -39,21 +40,25 @@ function HoursWorked({ handleOpenModal }: HoursWorkedProps) {
       description="These hours correspond to work orders that have a due date within the range specified in the filters."
     >
       <Stack sx={{ height: '100%', justifyContent: 'center' }}>
-        <Stack direction="row" spacing={2}>
-          {formattedData.map((data) => (
-            <Stack key={data.label} alignItems="center">
-              <Typography
-                variant="h2"
-                fontWeight="bold"
-                style={{ cursor: 'pointer' }}
-                onClick={() => handleOpenModal(columns, data.filters, title)}
-              >
-                {data.value}
-              </Typography>
-              <Typography>{data.label}</Typography>
-            </Stack>
-          ))}
-        </Stack>
+        {loading.hours ? (
+          <Loading />
+        ) : (
+          <Stack direction="row" spacing={2}>
+            {formattedData.map((data) => (
+              <Stack key={data.label} alignItems="center">
+                <Typography
+                  variant="h2"
+                  fontWeight="bold"
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => handleOpenModal(columns, data.filters, title)}
+                >
+                  {data.value}
+                </Typography>
+                <Typography>{data.label}</Typography>
+              </Stack>
+            ))}
+          </Stack>
+        )}
       </Stack>
     </AnalyticsCard>
   );
