@@ -6,6 +6,7 @@ import {
   IncompleteWOByAsset,
   IncompleteWOByUser,
   IncompleteWoStats,
+  WOCostByDate,
   WOCostsAndTime,
   WOCountsByCategory,
   WOCountsByUser,
@@ -32,6 +33,7 @@ interface WOStatstate {
   completeByWeek: WOCountsByWeek[];
   completeTimesByWeek: WOTimeByWeek[];
   completeCosts: WOCostsAndTime;
+  completeCostsByMonth: WOCostByDate[];
   hours: WOHours;
   loading: Omit<Record<keyof WOStatstate, boolean>, 'loading'>;
 }
@@ -92,6 +94,7 @@ const initialState: WOStatstate = {
   completeTimesByWeek: [],
   incompleteByAsset: [],
   incompleteByUser: [],
+  completeCostsByMonth: [],
   loading: {
     overview: false,
     incompleteByPriority: false,
@@ -106,7 +109,8 @@ const initialState: WOStatstate = {
     completeTimesByWeek: false,
     incompleteOverview: false,
     incompleteByAsset: false,
-    incompleteByUser: false
+    incompleteByUser: false,
+    completeCostsByMonth: false
   }
 };
 
@@ -194,6 +198,13 @@ const slice = createSlice({
     ) {
       const { stats } = action.payload;
       state.completeByWeek = stats;
+    },
+    getCompleteCostsByMonth(
+      state: WOStatstate,
+      action: PayloadAction<{ stats: WOCostByDate[] }>
+    ) {
+      const { stats } = action.payload;
+      state.completeCostsByMonth = stats;
     },
     getCompleteTimesByWeek(
       state: WOStatstate,
@@ -446,6 +457,24 @@ export const getIncompleteByUser = (): AppThunk => async (dispatch) => {
   dispatch(
     slice.actions.setLoading({
       operation: 'incompleteByUser',
+      loading: false
+    })
+  );
+};
+export const getCompleteCostsByMonth = (): AppThunk => async (dispatch) => {
+  dispatch(
+    slice.actions.setLoading({
+      operation: 'completeCostsByMonth',
+      loading: true
+    })
+  );
+  const stats = await api.get<WOCostByDate[]>(
+    `${basePath}/complete/costs/month`
+  );
+  dispatch(slice.actions.getCompleteCostsByMonth({ stats }));
+  dispatch(
+    slice.actions.setLoading({
+      operation: 'completeCostsByMonth',
       loading: false
     })
   );

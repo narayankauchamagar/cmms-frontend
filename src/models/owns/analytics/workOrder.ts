@@ -53,6 +53,12 @@ export interface WOTimeByWeek {
   reactive: number;
   date: string;
 }
+export interface WOCostByDate {
+  partCost: number;
+  additionalCost: number;
+  laborCost: number;
+  date: string;
+}
 export interface WOCostsAndTime {
   total: number;
   average: number;
