@@ -4,7 +4,7 @@ import type { AppThunk } from 'src/store';
 import Labor from '../models/owns/labor';
 import api from '../utils/api';
 
-const basePath = 'additional-times';
+const basePath = 'labors';
 interface LaborState {
   timesByWorkOrder: { [id: number]: Labor[] };
 }

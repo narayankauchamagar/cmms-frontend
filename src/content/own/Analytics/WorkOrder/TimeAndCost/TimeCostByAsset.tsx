@@ -49,7 +49,7 @@ function TimeCostByAsset({ handleOpenModal }: WOStatusIncompleteProps) {
   }[] = completeTimeCostByAsset.map((asset) => {
     return {
       label: asset.name,
-      time: asset.time.toFixed(2),
+      time: (asset.time / 3600).toFixed(2),
       cost: asset.cost.toFixed(2),
       color: getRandomColor(),
       filters: [{ key: 'asset', value: asset.id }]
