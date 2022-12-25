@@ -18,7 +18,7 @@ import { reducer as categoryReducer } from 'src/slices/category';
 import { reducer as multiPartsReducer } from 'src/slices/multipart';
 import { reducer as checklistReducer } from 'src/slices/checklist';
 import { reducer as partQuantityReducer } from 'src/slices/partQuantity';
-import { reducer as additionalTimeReducer } from 'src/slices/additionalTime';
+import { reducer as laborReducer } from 'src/slices/labor';
 import { reducer as additionalCostReducer } from 'src/slices/additionalCost';
 import { reducer as taskReducer } from 'src/slices/task';
 import { reducer as floorPlanReducer } from 'src/slices/floorPlan';
@@ -54,7 +54,7 @@ const rootReducer = combineReducers({
   multiParts: multiPartsReducer,
   checklists: checklistReducer,
   partQuantities: partQuantityReducer,
-  additionalTimes: additionalTimeReducer,
+  labors: laborReducer,
   additionalCosts: additionalCostReducer,
   tasks: taskReducer,
   floorPlans: floorPlanReducer,

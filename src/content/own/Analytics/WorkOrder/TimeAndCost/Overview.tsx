@@ -35,7 +35,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
   }[] = [
     {
       label: t('Total Cost'),
-      value: getFormattedCurrency(completeCosts.total),
+      value: getFormattedCurrency(completeCosts.total.toFixed(2)),
       config: {
         columns: ['id'],
         filters: [{ key: 'fs', value: false }]
@@ -43,7 +43,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
     },
     {
       label: t('Part cost'),
-      value: getFormattedCurrency(completeCosts.partCost),
+      value: getFormattedCurrency(completeCosts.partCost.toFixed(2)),
       config: {
         columns: ['id'],
         filters: [{ key: 'fs', value: false }]
@@ -51,7 +51,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
     },
     {
       label: t('Labor cost'),
-      value: getFormattedCurrency(completeCosts.laborCost),
+      value: getFormattedCurrency(completeCosts.laborCost.toFixed(2)),
       config: {
         columns: ['id'],
         filters: [{ key: 'fs', value: false }]
@@ -59,7 +59,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
     },
     {
       label: t('Additional cost'),
-      value: getFormattedCurrency(completeCosts.additionalCost),
+      value: getFormattedCurrency(completeCosts.additionalCost.toFixed(2)),
       config: {
         columns: ['id'],
         filters: [{ key: 'fs', value: false }]
