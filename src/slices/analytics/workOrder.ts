@@ -18,7 +18,7 @@ import {
   WOTimeByWeek
 } from '../../models/owns/analytics/workOrder';
 
-const basePath = 'analytics/work-order';
+const basePath = 'analytics/work-orders';
 interface WOStatstate {
   overview: WoOverviewStats;
   incompleteOverview: IncompleteWoStats;

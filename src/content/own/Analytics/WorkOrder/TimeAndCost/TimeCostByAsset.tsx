@@ -15,9 +15,9 @@ import AnalyticsCard from '../../AnalyticsCard';
 import { Filter } from '../WOModal';
 import { useDispatch, useSelector } from '../../../../../store';
 import { useEffect } from 'react';
-import { getIncompleteByAsset } from '../../../../../slices/analytics/workOrder';
 import Loading from '../../Loading';
 import { getRandomColor } from '../../../../../utils/overall';
+import { getWOTimeCostByAsset } from '../../../../../slices/analytics/asset';
 
 interface WOStatusIncompleteProps {
   handleOpenModal: (
@@ -26,41 +26,39 @@ interface WOStatusIncompleteProps {
     title: string
   ) => void;
 }
-function IncompleteWOByAsset({ handleOpenModal }: WOStatusIncompleteProps) {
+function TimeCostByAsset({ handleOpenModal }: WOStatusIncompleteProps) {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
-  const { incompleteByAsset, loading } = useSelector(
-    (state) => state.woAnalytics
+  const { completeTimeCostByAsset, loading } = useSelector(
+    (state) => state.assetAnalytics
   );
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getIncompleteByAsset());
+    dispatch(getWOTimeCostByAsset());
   }, []);
 
   const columns: string[] = ['id'];
 
   const formattedData: {
     label: string;
-    count: number;
+    time: string;
+    cost: string;
     color: string;
     filters: Filter[];
-  }[] = incompleteByAsset.map((asset) => {
+  }[] = completeTimeCostByAsset.map((asset) => {
     return {
       label: asset.name,
-      count: asset.count,
-      averageAge: asset.averageAge,
+      time: asset.time.toFixed(2),
+      cost: asset.cost.toFixed(2),
       color: getRandomColor(),
       filters: [{ key: 'asset', value: asset.id }]
     };
   });
-  const title = 'Assets';
+  const title = t('Hours and Cost By Asset');
   return (
-    <AnalyticsCard
-      title={title}
-      description="Work order age is defined as the number of days between creation of the work order (or work request) and today."
-    >
-      {loading.incompleteByAsset ? (
+    <AnalyticsCard title={title}>
+      {loading.completeTimeCostByAsset ? (
         <Loading />
       ) : (
         <ComposedChart width={400} height={508} data={formattedData}>
@@ -69,7 +67,11 @@ function IncompleteWOByAsset({ handleOpenModal }: WOStatusIncompleteProps) {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey="count" fill="#8884d8" name={t('Work Orders')}>
+          <Bar
+            dataKey="time"
+            fill={theme.colors.warning.main}
+            name={t('Hours')}
+          >
             {formattedData.map((entry, index) => (
               <Cell
                 key={index}
@@ -81,10 +83,10 @@ function IncompleteWOByAsset({ handleOpenModal }: WOStatusIncompleteProps) {
             ))}
           </Bar>
           <Line
-            name={t('Average age')}
+            name={t('Cost')}
             type="monotone"
-            dataKey="averageAge"
-            stroke="#ff7300"
+            dataKey="cost"
+            stroke={theme.colors.primary.main}
           />
         </ComposedChart>
       )}
@@ -92,4 +94,4 @@ function IncompleteWOByAsset({ handleOpenModal }: WOStatusIncompleteProps) {
   );
 }
 
-export default IncompleteWOByAsset;
+export default TimeCostByAsset;

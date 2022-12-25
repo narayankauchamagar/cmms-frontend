@@ -5,8 +5,8 @@ import { useContext, useEffect } from 'react';
 import { TitleContext } from '../../../../../contexts/TitleContext';
 import Overview from './Overview';
 import { Filter } from '../WOModal';
-import IncompleteWOByUser from './IncompleteByUser';
 import CompleteCostsByMonth from './CompleteCostsByMonth';
+import TimeCostByAsset from './TimeCostByAsset';
 
 interface WOStatusStatsProps {
   handleOpenWOModal: (
@@ -43,7 +43,7 @@ function WOStatusStats({ handleOpenWOModal }: WOStatusStatsProps) {
           <CompleteCostsByMonth handleOpenModal={handleOpenWOModal} />
         </Grid>
         <Grid item xs={12} md={6}>
-          <IncompleteWOByUser handleOpenModal={handleOpenWOModal} />
+          <TimeCostByAsset handleOpenModal={handleOpenWOModal} />
         </Grid>
       </Grid>
     </>
