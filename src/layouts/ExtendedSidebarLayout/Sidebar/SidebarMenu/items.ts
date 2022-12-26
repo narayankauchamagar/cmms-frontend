@@ -90,6 +90,24 @@ const ownMenuItems: MenuItems[] = [
                 link: '/app/analytics/work-orders/time-cost'
               }
             ]
+          },
+          {
+            name: 'Assets',
+            icon: Inventory2TwoToneIcon,
+            items: [
+              {
+                name: 'Reliability Dashboard',
+                link: '/app/analytics/assets/reliability'
+              },
+              {
+                name: 'Total Maintenance Cost',
+                link: '/app/analytics/assets/cost'
+              },
+              {
+                name: 'Useful life',
+                link: '/app/analytics/assets/useful-life'
+              }
+            ]
           }
         ]
       },

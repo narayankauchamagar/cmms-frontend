@@ -12,7 +12,9 @@ const Loader = (Component) => (props) =>
 const WOAnalytics = Loader(
   lazy(() => import('../content/own/Analytics/WorkOrder'))
 );
-
+const AssetAnalytics = Loader(
+  lazy(() => import('../content/own/Analytics/Asset'))
+);
 const analyticsRoutes = [
   {
     path: 'work-orders',
@@ -21,6 +23,14 @@ const analyticsRoutes = [
       { path: 'analysis', element: <WOAnalytics /> },
       { path: 'aging', element: <WOAnalytics /> },
       { path: 'time-cost', element: <WOAnalytics /> }
+    ]
+  },
+  {
+    path: 'assets',
+    children: [
+      { path: 'reliability', element: <AssetAnalytics /> },
+      { path: 'cost', element: <AssetAnalytics /> },
+      { path: 'useful-life', element: <AssetAnalytics /> }
     ]
   }
 ];
