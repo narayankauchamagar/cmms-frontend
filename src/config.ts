@@ -25,6 +25,6 @@ export const amplifyConfig = {
 };
 
 export const googleMapsConfig = {
-  apiKey: 'AIzaSyBGk5a8ivYnqF3jFQQONB2OfCaroDGnNwM'
+  apiKey: process.env.REACT_APP_GOOGLE_KEY
 };
 export const apiUrl = process.env.REACT_APP_API_URL ?? 'http://localhost:8080/';
