@@ -1,55 +1,39 @@
-<p align="center">
-    <a href="https://bloomui.com" title="BloomUI.com">
-        <img src="https://bloomui.s3.us-east-2.amazonaws.com/tokyo-logo.png" alt="Tokyo White React Typescript Admin Dashboard">
-    </a>
-</p>
-<h1 align="center">
-    <b>Tokyo White React Typescript Admin Dashboard</b>
-    <br>
-    <a href="https://twitter.com/intent/tweet?url=https://bloomui.com&text=I like this React admin dashboard">
-        <img src="https://img.shields.io/twitter/url/http/shields.io.svg?style=social" />
-    </a>
-</h1>
-<div align="center">
+# Grash CMMS Frontend
 
-![version](https://img.shields.io/badge/version-3.1-blue.svg)
+This project aims to help manage assets, schedule maintenance and track work orders. This is the frontend of the web application developed with React. The backend developed with Spring Boot can be found [here](https://github.com/Grashjs/api).
+We are in the beta phase and are planning to create a React Native mobile application. The link to the live website can be found [here](https://grash-cmms.com).  
+We would be very happy to have new contributors join us.
+And please star the repo.
 
-</div>
 
-<h3 align="center">High performance React template built with lots of powerful MUI (Material-UI) components across multiple product niches for fast & perfect apps development processes.
-</h3>
+**Screenshot**:
+![](https://i.ibb.co/7tGYCtv/Screenshot-502.png)
 
----
+## Usage
 
-<h2>
-    Documentation
-</h2>
+```bash
+npm i
+set REACT_APP_API_URL=https://grash-api.herokuapp.com/
+npm start
+```
 
-<p>To view the available online documentation files please visit the following link:
-<a href="https://tokyo.bloomui.com/docs" title="Click to view the online documentation">
-    https://tokyo.bloomui.com/docs
-</a>
-</p>
+[comment]: <> (## How to test the software)
 
----
+[comment]: <> (If the software includes automated tests, detail how to run those tests.)
 
-<h2>
-    Technical Support
-</h2>
-<p>
-    You can open a support ticket by sending an email here: <a href="mailto:support@bloomui.freshdesk.com" title="Open Support Ticket">
-        support@bloomui.freshdesk.com
-    </a>
-</p>
+## Getting help
 
----
+If you have questions, concerns, bug reports, etc, please file an issue in this repository's Issue Tracker or send an email at ibracool99@gmail.com.
 
-<h2>
-    Quick Start
-</h2>
-<p>
-    Make sure you have the latest stable versions for Node.js and NPM installed. After that, run <code>npm install</code> inside the project-folder and after the install finishes, run <code>npm run start</code>. A browser window will open and you will see the live preview.
-</p>
-<p>
-    We recommend browsing through the online documentation we've prepared for Tokyo White React Typescript Admin Dashboard.
-</p>
+## Getting involved
+
+You can contribute in different ways. Sending feedback on features, fixing certain bugs, implementing new features, etc.
+
+Instructions on _how_ to contribute can be found in [CONTRIBUTING](CONTRIBUTING.md).
+
+
+----
+
+## Open source licensing info
+1. [TERMS](TERMS.md)
+2. [LICENSE](LICENSE)
