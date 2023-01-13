@@ -45,7 +45,7 @@ interface AuthContextValue extends AuthState {
     phone: string,
     password: string,
     role: number | undefined
-  ) => Promise<boolean>;
+  ) => Promise<void>;
   getInfos: () => void;
   patchUserSettings: (values: Partial<UserSettings>) => Promise<void>;
   patchUser: (values: Partial<OwnUser>) => Promise<void>;
@@ -363,7 +363,7 @@ const AuthContext = createContext<AuthContextValue>({
   method: 'JWT',
   login: () => Promise.resolve(),
   logout: () => Promise.resolve(),
-  register: () => Promise.resolve(false),
+  register: () => Promise.resolve(),
   getInfos: () => Promise.resolve(),
   patchUserSettings: () => Promise.resolve(),
   patchCompany: () => Promise.resolve(),
@@ -470,7 +470,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     dispatch({ type: 'LOGOUT' });
   };
 
-  const register = async (values): Promise<boolean> => {
+  const register = async (values): Promise<void> => {
     const response = await api.post<{ message: string; success: boolean }>(
       'auth/signup',
       values,
@@ -478,7 +478,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     );
     const { message, success } = response;
     if (message.startsWith('Successful')) {
-      return false;
+      return;
     } else {
       setSession(message);
       const user = await updateUserInfos();
@@ -492,7 +492,6 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
           company
         }
       });
-      return true;
     }
   };
 
