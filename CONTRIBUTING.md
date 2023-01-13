@@ -25,7 +25,4 @@ guidance below.
 ## Changing the code-base
 
 Generally speaking, you should fork this repository, make changes in your
-own fork, and then submit a pull request.
-Additionally, the code should follow any stylistic and architectural guidelines
-prescribed by the project. In the absence of such guidelines, mimic the styles
-and patterns in the existing code-base.
+own fork, and then submit a pull request. We are using a React template and the `src/content/own` directory contains the tsx pages used in this project.

@@ -2,6 +2,7 @@
 
 This project aims to help manage assets, schedule maintenance and track work orders. This is the frontend of the web application developed with React. The backend developed with Spring Boot can be found [here](https://github.com/Grashjs/api).
 We are in the beta phase and are planning to create a React Native mobile application. The link to the live website can be found [here](https://grash-cmms.com).  
+You can see more explanations in [Purpose.pdf](Purpose.pdf).
 We would be very happy to have new contributors join us.
 And please star the repo.
 
