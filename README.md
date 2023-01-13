@@ -29,7 +29,7 @@ If you have questions, concerns, bug reports, etc, please file an issue in this 
 ## Getting involved
 
 You can contribute in different ways. Sending feedback on features, fixing certain bugs, implementing new features, etc.
-
+Here is the [trello dashboard](https://trello.com/invite/b/dHcnX2Y0/ATTI9f361dff4298643df8ef3a80a1413c42E4308099/grash).
 Instructions on _how_ to contribute can be found in [CONTRIBUTING](CONTRIBUTING.md).
 
 
