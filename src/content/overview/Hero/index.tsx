@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
+import GitHubIcon from '@mui/icons-material/GitHub';
 
 const TypographyH1 = styled(Typography)(
   ({ theme }) => `
@@ -170,6 +171,18 @@ function Hero() {
             variant="text"
           >
             {t('Key Features')}
+          </Button>
+          <Button
+            sx={{
+              ml: 2
+            }}
+            startIcon={<GitHubIcon />}
+            component="a"
+            href="https://github.com/grashjs/frontend"
+            size="large"
+            variant="text"
+          >
+            {t('Contribute')}
           </Button>
         </Grid>
         <Grid item md={6}>
