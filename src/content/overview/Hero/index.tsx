@@ -9,6 +9,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import useScrollToLocation from '../../../hooks/useScrollToLocation';
 
 const TypographyH1 = styled(Typography)(
   ({ theme }) => `
@@ -122,6 +123,7 @@ const TsAvatar = styled(Box)(
 
 function Hero() {
   const { t }: { t: any } = useTranslation();
+  useScrollToLocation();
 
   return (
     <Container maxWidth="lg">
