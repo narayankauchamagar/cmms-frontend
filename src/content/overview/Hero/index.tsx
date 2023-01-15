@@ -9,7 +9,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
 import GitHubIcon from '@mui/icons-material/GitHub';
-import useScrollToLocation from '../../../hooks/useScrollToLocation';
+import useScrollToLocation from 'src/hooks/useScrollToLocation';
 
 const TypographyH1 = styled(Typography)(
   ({ theme }) => `
