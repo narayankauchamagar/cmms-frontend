@@ -55,7 +55,7 @@ const frJSON = {
   Invoices: 'Les factures',
   'View Single': 'Voir Single',
   'Auth Pages': "Pages d'authentification",
-  Login: 'Connexion',
+  Login: 'Se connecter',
   Basic: 'De base',
   Cover: 'Couvrir',
   Register: "S'inscrire",
@@ -119,11 +119,12 @@ const frJSON = {
   IN_PROGRESS: 'En cours',
   ON_HOLD: 'En attente',
   COMPLETE: 'Complète',
+  //home
   'home.built': 'Conçu pour faciliter la gestion de la maintenance',
   'home.description':
     "Lorsque les tableaux blancs et les notes autocollantes sont chaotiques et que vous avez besoin d'un logiciel de GMAO suffisamment facile à utiliser pour votre équipe, essayez Grash",
   try_grash: 'Essayez Grash',
-  login: 'Connexion',
+  login: 'Se connecter',
   start_trial: 'Commencez un essai gratuit',
   'home.what': 'Ce que',
   'home.you_will_have': 'Vous allez avoir',
@@ -141,6 +142,7 @@ const frJSON = {
   parts_inventory: 'Inventaire des pièces',
   custom_dashboards: 'Tableaux de bord personnalisés',
   'work-orders.title': 'Gérez vos bons de travail comme un patron',
+  'work-orders.description.short': 'Affichez et gérez toutes vos tâches',
   'work-orders.descriptions.0':
     'Vous en avez assez des rames de paperasse et des ordres de travail perdus? ',
   'work-orders.descriptions.1':
@@ -184,6 +186,7 @@ const frJSON = {
   'mobile-app.checks.5':
     'Rechercher des informations sur les équipements critiques tout en diagnostiquant un problème.',
   'eam.title': "Gestion des équipements d'entreprise",
+  'eam.description.short': 'Connaissez mieux vos équipements',
   'eam.descriptions.0':
     "Frustré d'essayer d'organiser le désordre chaotique de l'équipement de l'entreprise, vous vous demandez si l'équipement a été correctement entretenu, vous ne savez pas ce qu'il en coûte pour l'entretenir et tous les autres maux de tête qui accompagnent la gestion des équipements ?",
   'eam.descriptions.1':
@@ -215,6 +218,7 @@ const frJSON = {
     "Une fois l'intervention préventive terminée, le travail est automatiquement enregistré dans le journal de maintenance de l'actif.",
   'pm.checks.5': 'Nécessite peu ou pas de formation à utiliser.',
   'part.title': 'Prenez le contrôle de votre inventaire de pièces de rechange',
+  'part.description.short': 'Sachez quand vos pièces manquent',
   'part.descriptions.0':
     'Vous ne savez pas quelles pièces vous avez en stock ou où elles sont utilisées ? ',
   'part.descriptions.1':
@@ -250,7 +254,39 @@ const frJSON = {
   'home.smarter.description':
     'Grash permet aux techniciens de travailler efficacement en toute simplicité en leur donnant accès aux outils et aux données dont ils ont besoin pour accomplir leur travail, le tout depuis la paume de leur main.',
   leading_maintenance:
-    'Ouvrir la voie à un avenir meilleur pour la maintenance et la fiabilité'
+    'Ouvrir la voie à un avenir meilleur pour la maintenance et la fiabilité',
+  //register
+  premium_included: 'Fonctionnalités premium incluses',
+  no_credit_card: 'Pas de carte de crédit nécessaire',
+  perfect_tool: "L'outil parfait pour les équipes de maintenance",
+  start_trial_today: "Commencez votre essai gratuit aujourd'hui",
+  create_account: 'Créer un compte',
+  'signup.description':
+    'Remplissez les champs ci-dessous pour ouvrir un compte.',
+  account_already: 'Vous avez déjà un compte?',
+  signin_here: 'Se connecter ici',
+
+  invalid_email: "L'e-mail fourni doit être une adresse e-mail valide",
+  required_email: 'Le champ email est obligatoire',
+  required_firstName: 'Le champ prénom est obligatoire',
+  required_lastName: 'Le champ nom de famille est obligatoire',
+  required_company: "Le champ nom de l'entreprise est obligatoire",
+  required_employeesCount: "Veuillez indiquer le nombre d'employés",
+  invalid_phone: 'Le numéro de téléphone est invalide',
+  required_password: 'Le champ mot de passe est obligatoire',
+  required_terms: 'Vous devez accepter nos termes et conditions',
+  verify_email: 'Veuillez vérifier votre e-mail pour vérifier votre compte',
+  registration_error: "L'inscription n'a pas réussi",
+  firstName: 'Prénom',
+  lastName: 'Nom de famille',
+  email: 'Adresse e-mail',
+  phone: 'Téléphone fixe',
+  password: 'Mot de passe',
+  companyName: "Nom de l'entreprise",
+  employeesCount: "Nombre d'employés",
+  i_accept: "J'accepte les",
+  terms_conditions: 'termes et conditions',
+  create_your_account: 'Créer votre compte'
 };
 
 export default frJSON;

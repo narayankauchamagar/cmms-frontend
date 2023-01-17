@@ -1,29 +1,20 @@
 import { useRef, useState } from 'react';
 
 import {
-  IconButton,
   Box,
+  IconButton,
   List,
   ListItem,
-  Divider,
-  Typography,
   ListItemText,
   Popover,
+  styled,
   Tooltip,
-  styled
+  Typography
 } from '@mui/material';
-import Text from 'src/components/Text';
-
-import WarningTwoToneIcon from '@mui/icons-material/WarningTwoTone';
 import internationalization from 'src/i18n/i18n';
 import { useTranslation } from 'react-i18next';
 
-import { DE } from 'country-flag-icons/react/3x2';
-import { US } from 'country-flag-icons/react/3x2';
-import { ES } from 'country-flag-icons/react/3x2';
-import { FR } from 'country-flag-icons/react/3x2';
-import { CN } from 'country-flag-icons/react/3x2';
-import { AE } from 'country-flag-icons/react/3x2';
+import { AE, CN, DE, ES, FR, US } from 'country-flag-icons/react/3x2';
 
 const SectionHeading = styled(Typography)(
   ({ theme }) => `
@@ -68,12 +59,12 @@ function LanguageSwitcher() {
     <>
       <Tooltip arrow title={t('Language Switcher')}>
         <IconButtonWrapper color="secondary" ref={ref} onClick={handleOpen}>
-          {getLanguage === 'de' && <DE title="German" />}
+          {getLanguage === 'fr' && <FR title="French" />}
           {getLanguage === 'en' && <US title="English" />}
+          {getLanguage === 'de' && <DE title="German" />}
           {getLanguage === 'en-US' && <US title="English" />}
           {getLanguage === 'en-GB' && <US title="English" />}
           {getLanguage === 'es' && <ES title="Spanish" />}
-          {getLanguage === 'fr' && <FR title="French" />}
           {getLanguage === 'cn' && <CN title="Chinese" />}
           {getLanguage === 'ae' && <AE title="Arabic" />}
         </IconButtonWrapper>
@@ -111,6 +102,22 @@ function LanguageSwitcher() {
             component="nav"
           >
             <ListItem
+              className={getLanguage === 'fr' ? 'active' : ''}
+              button
+              onClick={() => {
+                switchLanguage({ lng: 'fr' });
+                handleClose();
+              }}
+            >
+              <FR title="French" />
+              <ListItemText
+                sx={{
+                  pl: 1
+                }}
+                primary="French"
+              />
+            </ListItem>
+            <ListItem
               className={
                 getLanguage === 'en' || getLanguage === 'en-US' ? 'active' : ''
               }
@@ -128,7 +135,7 @@ function LanguageSwitcher() {
                 primary="English"
               />
             </ListItem>
-            <ListItem
+            {/* <ListItem
               className={getLanguage === 'de' ? 'active' : ''}
               button
               onClick={() => {
@@ -158,22 +165,6 @@ function LanguageSwitcher() {
                   pl: 1
                 }}
                 primary="Spanish"
-              />
-            </ListItem>
-            <ListItem
-              className={getLanguage === 'fr' ? 'active' : ''}
-              button
-              onClick={() => {
-                switchLanguage({ lng: 'fr' });
-                handleClose();
-              }}
-            >
-              <FR title="French" />
-              <ListItemText
-                sx={{
-                  pl: 1
-                }}
-                primary="French"
               />
             </ListItem>
             <ListItem
@@ -207,25 +198,8 @@ function LanguageSwitcher() {
                 }}
                 primary="Arabic"
               />
-            </ListItem>
+            </ListItem>*/}
           </List>
-          <Divider />
-          <Text color="warning">
-            <Box
-              p={2}
-              sx={{
-                maxWidth: 340
-              }}
-            >
-              <WarningTwoToneIcon fontSize="small" />
-              <Typography variant="body1">
-                {t(
-                  'We only translated a small part of the template, for demonstration purposes'
-                )}
-                !
-              </Typography>
-            </Box>
-          </Text>
         </Box>
       </Popover>
     </>

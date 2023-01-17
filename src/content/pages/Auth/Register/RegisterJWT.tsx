@@ -50,33 +50,18 @@ function RegisterJWT({
     };
     let shape = {
       email: Yup.string()
-        .email(t('The email provided should be a valid email address'))
+        .email(t('invalid_email'))
         .max(255)
-        .required(t('The email field is required')),
-      firstName: Yup.string()
-        .max(255)
-        .required(t('The first name field is required')),
-      lastName: Yup.string()
-        .max(255)
-        .required(t('The last name field is required')),
-      companyName: Yup.string()
-        .max(255)
-        .required(t('The company name field is required')),
+        .required(t('required_email')),
+      firstName: Yup.string().max(255).required(t('required_firstName')),
+      lastName: Yup.string().max(255).required(t('required_lastName')),
+      companyName: Yup.string().max(255).required(t('required_company')),
       employeesCount: Yup.number()
         .min(0)
-        .required(t('Please provide the number of employees')),
-      phone: Yup.string().matches(
-        phoneRegExp,
-        t('The phone number is invalid')
-      ),
-      password: Yup.string()
-        .min(8)
-        .max(255)
-        .required(t('The password field is required')),
-      terms: Yup.boolean().oneOf(
-        [true],
-        t('You must agree to our terms and conditions')
-      )
+        .required(t('required_employeesCount')),
+      phone: Yup.string().matches(phoneRegExp, t('invalid_phone')),
+      password: Yup.string().min(8).max(255).required(t('required_password')),
+      terms: Yup.boolean().oneOf([true], t('required_terms'))
     };
     if (role) {
       const keysToDelete = ['companyName', 'employeesCount'];
@@ -96,16 +81,11 @@ function RegisterJWT({
         return register(role ? { ...values, role: { id: role } } : values)
           .then(() => {
             if (!IS_LOCALHOST) {
-              showSnackBar(
-                t('Please check your email to verify your account'),
-                'success'
-              );
+              showSnackBar(t('verify_email'), 'success');
               navigate('/account/login');
             }
           })
-          .catch((err) =>
-            showSnackBar(t("The registration didn't succeed"), 'error')
-          )
+          .catch((err) => showSnackBar(t('registration_error'), 'error'))
           .finally(() => {
             if (isMountedRef.current) {
               setStatus({ success: true });
@@ -131,7 +111,7 @@ function RegisterJWT({
                 fullWidth
                 margin="normal"
                 helperText={touched.firstName && errors.firstName}
-                label={t('First Name')}
+                label={t('firstName')}
                 name="firstName"
                 onBlur={handleBlur}
                 onChange={handleChange}
@@ -145,7 +125,7 @@ function RegisterJWT({
                 fullWidth
                 margin="normal"
                 helperText={touched.lastName && errors.lastName}
-                label={t('Last Name')}
+                label={t('lastName')}
                 name="lastName"
                 onBlur={handleBlur}
                 onChange={handleChange}
@@ -159,7 +139,7 @@ function RegisterJWT({
             fullWidth
             margin="normal"
             helperText={touched.email && errors.email}
-            label={t('Email address')}
+            label={t('email')}
             name="email"
             disabled={!!email}
             onBlur={handleBlur}
@@ -173,7 +153,7 @@ function RegisterJWT({
             fullWidth
             margin="normal"
             helperText={touched.phone && errors.phone}
-            label={t('Phone')}
+            label={t('phone')}
             name="phone"
             onBlur={handleBlur}
             onChange={handleChange}
@@ -185,7 +165,7 @@ function RegisterJWT({
             fullWidth
             margin="normal"
             helperText={touched.password && errors.password}
-            label={t('Password')}
+            label={t('password')}
             name="password"
             onBlur={handleBlur}
             onChange={handleChange}
@@ -201,7 +181,7 @@ function RegisterJWT({
                   fullWidth
                   margin="normal"
                   helperText={touched.companyName && errors.companyName}
-                  label={t('Company Name')}
+                  label={t('companyName')}
                   name="companyName"
                   onBlur={handleBlur}
                   onChange={handleChange}
@@ -218,7 +198,7 @@ function RegisterJWT({
                   margin="normal"
                   type="number"
                   helperText={touched.employeesCount && errors.employeesCount}
-                  label={t('Number of Employees')}
+                  label={t('employeesCount')}
                   name="employeesCount"
                   onBlur={handleBlur}
                   onChange={handleChange}
@@ -240,9 +220,9 @@ function RegisterJWT({
             label={
               <>
                 <Typography variant="body2">
-                  {t('I accept the')}{' '}
+                  {t('i_accept')}{' '}
                   <Link component="a" href="#">
-                    {t('terms and conditions')}
+                    {t('terms_conditions')}
                   </Link>
                   .
                 </Typography>
@@ -264,7 +244,7 @@ function RegisterJWT({
             size="large"
             variant="contained"
           >
-            {t('Create your account')}
+            {t('create_your_account')}
           </Button>
         </form>
       )}

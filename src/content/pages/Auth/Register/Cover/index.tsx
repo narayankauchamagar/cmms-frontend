@@ -35,29 +35,28 @@ const icons = {
 
 const sliders = [
   {
-    title: 'Work Request System',
-    description: 'Never lose Work again',
+    title: 'request_system',
+    description: 'work-requests.checks.0',
     image: icons.Auth0
   },
   {
-    title: 'Enterprise Asset Management',
-    description: 'Know your assets',
+    title: 'eam.title',
+    description: 'eam.description.short',
     image: icons.Auth0
   },
   {
-    title: 'Preventative Maintenance',
-    description:
-      'Stop wasting precious hours manually distributing PM checklists and following up with your team to make sure the work is done',
+    title: 'preventive_maintenance',
+    description: 'pm.descriptions.0',
     image: icons.Auth0
   },
   {
-    title: 'Work Orders',
-    description: 'View and Manage all of your Tasks ',
+    title: 'work_orders',
+    description: 'work-orders.description.short',
     image: icons.Auth0
   },
   {
-    title: 'Parts Inventory',
-    description: 'Know when your parts will run out',
+    title: 'parts_inventory',
+    description: 'part.description.short',
     image: icons.Auth0
   }
 ];
@@ -218,7 +217,7 @@ function RegisterCover() {
                   px: 8
                 }}
               >
-                {t('The perfect tool for Maintenance teams ')}
+                {t('perfect_tool')}
               </TypographyPrimary>
               <SwiperWrapper>
                 <Swiper
@@ -253,7 +252,7 @@ function RegisterCover() {
                             mb: 2
                           }}
                         >
-                          {slider.title}
+                          {t(slider.title)}
                         </TypographyPrimary>
                         <TypographySecondary
                           align="center"
@@ -262,7 +261,7 @@ function RegisterCover() {
                             mb: 5
                           }}
                         >
-                          {slider.description}
+                          {t(slider.description)}
                         </TypographySecondary>
                       </Box>
                     </SwiperSlide>
@@ -283,7 +282,7 @@ function RegisterCover() {
                     mb: 3
                   }}
                 >
-                  {t('Start your Free trial today')}
+                  {t('start_trial_today')}
                 </TypographyPrimary>
 
                 <List
@@ -298,7 +297,7 @@ function RegisterCover() {
                     </ListItemIconWrapper>
                     <ListItemTextWrapper
                       primaryTypographyProps={{ variant: 'h6' }}
-                      primary={t('Premium features included')}
+                      primary={t('premium_included')}
                     />
                   </ListItem>
                   <ListItem disableGutters>
@@ -307,7 +306,7 @@ function RegisterCover() {
                     </ListItemIconWrapper>
                     <ListItemTextWrapper
                       primaryTypographyProps={{ variant: 'h6' }}
-                      primary={t('No credit card required')}
+                      primary={t('no_credit_card')}
                     />
                   </ListItem>
                 </List>
@@ -330,7 +329,7 @@ function RegisterCover() {
                     mb: 1
                   }}
                 >
-                  {t('Create account')}
+                  {t('create_account')}
                 </Typography>
                 <Typography
                   variant="h4"
@@ -340,7 +339,7 @@ function RegisterCover() {
                     mb: 3
                   }}
                 >
-                  {t('Fill in the fields below to sign up for an account.')}
+                  {t('signup.description')}
                 </Typography>
               </Box>
               <JWTRegister
@@ -354,11 +353,11 @@ function RegisterCover() {
                   color="text.primary"
                   fontWeight="bold"
                 >
-                  {t('Already have an account?')}
+                  {t('account_already')}
                 </Typography>{' '}
                 <Box display={{ xs: 'block', md: 'inline-block' }}>
                   <Link component={RouterLink} to="/account/login">
-                    <b>{t('Sign in here')}</b>
+                    <b>{t('signin_here')}</b>
                   </Link>
                 </Box>
               </Box>

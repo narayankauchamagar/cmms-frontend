@@ -34,6 +34,7 @@ const enJSON = {
   parts_inventory: 'Parts Inventory',
   custom_dashboards: 'Custom Dashboards',
   'work-orders.title': 'Manage your Work Orders like a Boss',
+  'work-orders.description.short': 'View and Manage all of your Tasks',
   'work-orders.descriptions.0':
     'Sick of the reams of paperwork and lost Work Orders? All of those lost items directly affect the bottom line and your reputation.',
   'work-orders.descriptions.1':
@@ -75,6 +76,7 @@ const enJSON = {
     'Lookup critical asset information while diagnosing a problem.',
 
   'eam.title': 'Enterprise Asset Management',
+  'eam.description.short': 'Know your assets',
   'eam.descriptions.0':
     'Frustrated with trying to organize the chaotic mess of company’s equipment, wondering if the equipment has been properly taken care of, not knowing what they cost to maintain and all the other headaches that come with managing assets?',
   'eam.descriptions.1':
@@ -105,6 +107,7 @@ const enJSON = {
   'pm.checks.5': 'Requires little to no training to use.',
 
   'part.title': 'Get Control of your Spare Parts Inventory',
+  'part.description.short': 'Know when your parts will run out',
   'part.descriptions.0':
     'Not sure what parts you have in stock or where they are being used? Don’t know when your parts will run out or if your technicians will have the necessary parts to do their jobs?',
   'part.descriptions.1':
@@ -144,7 +147,37 @@ const enJSON = {
   'home.smarter.description':
     'Grash makes it incredibly easy for technicians to work efficiently by giving them access to the tools and data they need to get work done — all from the palm of their hand.',
   leading_maintenance:
-    'Leading the Way to a Better Future for Maintenance and Reliability'
+    'Leading the Way to a Better Future for Maintenance and Reliability',
+  //register
+  premium_included: 'Premium features included',
+  no_credit_card: 'No credit card required',
+  perfect_tool: 'The perfect tool for Maintenance teams',
+  start_trial_today: 'Start your Free trial today',
+  create_account: 'Create account',
+  'signup.description': 'Fill in the fields below to sign up for an account.',
+  account_already: 'Already have an account?',
+  signin_here: 'Sign in here',
+  invalid_email: 'The email provided should be a valid email address',
+  required_email: 'The email field is required',
+  required_firstName: 'The first name field is required',
+  required_lastName: 'The last name field is required',
+  required_company: 'The company name field is required',
+  required_employeesCount: 'Please provide the number of employees',
+  invalid_phone: 'The phone number is invalid',
+  required_password: 'The password field is required',
+  required_terms: 'You must agree to our terms and conditions',
+  verify_email: 'Please check your email to verify your account',
+  registration_error: "The registration didn't succeed",
+  firstName: 'First Name',
+  lastName: 'Last Name',
+  email: 'Email address',
+  phone: 'Phone',
+  password: 'Password',
+  companyName: 'Company Name',
+  employeesCount: 'Number of Employees',
+  i_accept: 'I accept the',
+  terms_conditions: 'terms and conditions',
+  create_your_account: 'Create your account'
 };
 
 export default enJSON;
