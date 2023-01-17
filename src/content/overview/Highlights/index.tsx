@@ -14,7 +14,6 @@ import {
   styled,
   Tab,
   Tabs,
-  Tooltip,
   Typography
 } from '@mui/material';
 import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
@@ -328,126 +327,112 @@ function Highlights() {
   const [currentTab, setCurrentTab] = useState('work-orders');
 
   const tabs = [
-    { value: 'work-orders', label: t('Work Orders') },
-    { value: 'request', label: t('Work Request System') },
-    { value: 'mobile', label: t('Mobile App') },
-    { value: 'asset', label: t('Asset Management') },
-    { value: 'preventative', label: t('Preventative Maintenance') },
-    { value: 'part', label: t('Parts Inventory') },
-    { value: 'dashboard', label: t('Custom Dashboards') }
-    // { value: 'auth', label: t('Custom Dashboards') },
-    // { value: 'rtl', label: t('Custom Dashboards') }
+    { value: 'work-orders', label: t('work_orders') },
+    { value: 'request', label: t('request_system') },
+    { value: 'mobile', label: t('mobile_app') },
+    { value: 'asset', label: t('asset_management') },
+    { value: 'preventative', label: t('preventive_maintenance') },
+    { value: 'part', label: t('parts_inventory') },
+    { value: 'dashboard', label: t('custom_dashboards') }
   ];
 
   const featuresConfiguration = {
     'work-orders': {
-      title: 'Manage your Work Orders like a Boss',
+      title: 'work-orders.title',
       descriptions: [
-        'Sick of the reams of paperwork and lost Work Orders? All of those lost items directly affect the bottom line and your reputation.',
-        'With Grash you can easily and quickly organize all of your Work Orders, PMs and other Tasks throughout your team in a centralized database that can be accessed anywhere on any device.'
+        'work-orders.descriptions.0',
+        'work-orders.descriptions.1'
       ],
       checks: [
-        'View all of your Tasks including WOs, PMs, and Work Requests',
-        'Set Task priority so the right work gets done first.',
-        'View a calendar of current and upcoming Tasks.',
-        'View work assignments with critical information such as Asset information, due date, priority and more.',
-        'View critical KPIs such as actual completed work, time spent and planned vs unplanned work.'
+        'work-orders.checks.0',
+        'work-orders.checks.1',
+        'work-orders.checks.2',
+        'work-orders.checks.3',
+        'work-orders.checks.4'
       ],
       image: '/static/images/overview/performance.png'
     },
     request: {
-      title: 'A streamlined mobile work request system',
+      title: 'work-requests.title',
       descriptions: [
-        'Sick of using the old phone and email system that result in LOST tickets, constant daily interruptions, and duplicated work?',
-        'Grash’s maintenance management solution allows anyone you authorize to submit a problem to your maintenance department by simply scanning a QR code (bar code) or visiting a URL and typing in their request through their mobile devices.'
+        'work-requests.descriptions.0',
+        'work-requests.descriptions.1'
       ],
       checks: [
-        'Never lose Work again.',
-        'Reduce time spent handling Work Requests by up to 34%.',
-        'Reduce time communicating with Requesters by up to 41% (calls, emails, texts).'
+        'work-requests.checks.0',
+        'work-requests.checks.1',
+        'work-requests.checks.2'
       ],
       image: '/static/images/overview/performance.png'
     },
     mobile: {
-      title: 'A mobile CMMS app that empowers your maintenance team',
-      descriptions: [
-        'Through the use of our Android and IOS mobile apps, our clients experience better organization, communication, accountability and productivity by up to 30% throughout their entire maintenance team.',
-        'From their handheld device anyone on your maintenance team can:'
-      ],
+      title: 'mobile-app.title',
+      descriptions: ['mobile-app.descriptions.0', 'mobile-app.descriptions.1'],
       checks: [
-        'View their assigned Work Orders and PMs.',
-        'Log their Work Orders within under 60 seconds',
-        'Receive instant communications via push and email notifications.',
-        'Start new Work Orders while out in the field.',
-        'Respond to and log problems while actually working on the problem.',
-        'Lookup critical asset information while diagnosing a problem.'
+        'mobile-app.checks.0',
+        'mobile-app.checks.1',
+        'mobile-app.checks.2',
+        'mobile-app.checks.3',
+        'mobile-app.checks.4',
+        'mobile-app.checks.5'
       ],
       image: '/static/images/overview/performance.png'
     },
     asset: {
-      title: 'Enterprise Asset Management',
-      descriptions: [
-        'Frustrated with trying to organize the chaotic mess of company’s equipment, wondering if the equipment has been properly taken care of, not knowing what they cost to maintain and all the other headaches that come with managing assets?',
-        'Grash CMMS’s Enterprise Asset Management module can be used for anywhere between 10 to 1,000,000 Assets, allowing you to track exactly what you want, the way you want to, in an easy-to-use and searchable tree structure.'
-      ],
+      title: 'eam.title',
+      descriptions: ['eam.descriptions.0', 'eam.descriptions.1'],
       checks: [
-        'Know the health of your assets at every point of time and what they are costing you',
-        'View complete and detailed Maintenance Logs.',
-        'Track only what you want with unlimited custom fields',
-        'Organize your assets in a clear parent-to-child hierarchy',
-        'Find information quickly and easily with QR Codes (bar codes)',
-        'Receive real-time asset data with sensor connectivity.'
+        'eam.checks.0',
+        'eam.checks.1',
+        'eam.checks.2',
+        'eam.checks.3',
+        'eam.checks.4',
+        'eam.checks.5'
       ],
       image: '/static/images/overview/performance.png'
     },
     preventative: {
-      title: 'An Effective Preventative Maintenance Program',
-      descriptions: [
-        'Stop wasting precious hours manually distributing PM checklists and following up with your team to make sure the work is done.',
-        'Grash allows you to easily automate PM scheduling so the right work is automatically delivered at the right time to the right technician for the right Asset.'
-      ],
+      title: 'pm.title',
+      descriptions: ['pm.descriptions.0', 'pm.descriptions.1'],
       checks: [
-        'Automate PM scheduling to be daily, weekly, monthly, yearly, or based on events or meter readings.',
-        'Automatic push and email notifications when a PM is created or due.',
-        'Our easy-to-use Calendar allows you to view all open work and upcoming PM schedules.',
-        'Drag and drop to change due date.',
-        'Upon PM completion, the work is automatically logged in the asset’s maintenance log.',
-        'Requires little to no training to use'
+        'pm.checks.0',
+        'pm.checks.1',
+        'pm.checks.2',
+        'pm.checks.3',
+        'pm.checks.4',
+        'pm.checks.5'
       ],
       image: '/static/images/overview/performance.png'
     },
     part: {
-      title: 'Get Control of your Spare Parts Inventory',
-      descriptions: [
-        'Not sure what parts you have in stock or where they are being used? Don’t know when your parts will run out or if your technicians will have the necessary parts to do their jobs?',
-        'We designed Grash’s parts management to solve those problems and more:'
-      ],
+      title: 'part.title',
+      descriptions: ['part.descriptions.0', 'part.descriptions.1'],
       checks: [
-        'Get instant push and email notifications when a part’s quantity is low. Keep the right number of parts in stock by receiving instant and automatic push/email notifications when the quantity of a part is below a custom set threshold.',
-        'Technicians instantly know if the part is in stock from inside of a Work Order. If the part is not in stock easily check other locations to see if it is available.',
-        'Automatic parts usage tracking. As Work Orders or PMs use parts, the inventory will be automatically updated to reflect the parts used.',
-        'Know part usage. View Parts Log to see where the part is being used and by whom',
-        'Eliminate unused parts. Know when a part has gone stale.',
-        'Real Time Reporting. Know what parts are used where and how much they are costing you.',
-        'Optimize stock levels. Instantly view forecasting for a part to see how many parts may be used within the next year.',
-        'Barcode lookup. Make your inventory easy to track and access with custom QR codes.'
+        'part.checks.0',
+        'part.checks.1',
+        'part.checks.2',
+        'part.checks.3',
+        'part.checks.4',
+        'part.checks.5',
+        'part.checks.6',
+        'part.checks.7'
       ],
       image: '/static/images/overview/performance.png'
     },
     dashboard: {
-      title: 'Your data, your way with custom dashboards',
+      title: 'dashboard.title',
       descriptions: [
-        'Let’s face it, the first step to improving your operations is to know the good, the bad and the ugly.',
-        'With Grash’s Custom Dashboards you can finally start to understand that nefarious “black hole of maintenance” and begin putting data-backed plans into action, resulting in reduced labor costs, decreased downtime and more.',
-        'With Grash’s Custom Dashboards you’ll get to …'
+        'dashboard.descriptions.0',
+        'dashboard.descriptions.1',
+        'dashboard.descriptions.2'
       ],
       checks: [
-        'Know where your money is being spent and why',
-        'Know which asset is costing the most and why',
-        'Create your own custom KPIs.',
-        'View reports that are automatically generated and updated based on your metric',
-        'View reports that are easily shared via Excel sheets, PDFs or within Grash',
-        'And so much more ...'
+        'dashboard.checks.0',
+        'dashboard.checks.1',
+        'dashboard.checks.2',
+        'dashboard.checks.3',
+        'dashboard.checks.4',
+        'dashboard.checks.5'
       ],
       image: '/static/images/overview/performance.png'
     }
@@ -557,7 +542,7 @@ function Highlights() {
                   mt: { lg: 10 }
                 }}
               >
-                What
+                {t('home.what')}
               </TypographyFeature>
               <TypographyHeading
                 className="typo-heading"
@@ -566,7 +551,7 @@ function Highlights() {
                 }}
                 variant="h3"
               >
-                You'll have
+                {t('home.you_will_have')}
               </TypographyHeading>
               <TypographySubHeading
                 className="typo-subheading"
@@ -577,9 +562,7 @@ function Highlights() {
                 color="text.secondary"
                 fontWeight="normal"
               >
-                {t(
-                  'Build efficient, reliable workflows that put you in control of maintenance. Generate, assign, and track work orders. Control inventory. And get reliable automated reports that improve visibility and create accountability.'
-                )}
+                {t('home.you_will_have.description')}
               </TypographySubHeading>
             </Grid>
             <Grid item xs={12} md={6}>
@@ -656,9 +639,9 @@ function Highlights() {
                 }}
                 variant="h3"
               >
-                {t('Work')}
+                {t('home.work')}
               </TypographyHeading>
-              <TypographyFeature>{t('Smarter')}</TypographyFeature>
+              <TypographyFeature>{t('home.smarter')}</TypographyFeature>
               <TypographySubHeading
                 sx={{
                   lineHeight: 1.5,
@@ -668,9 +651,7 @@ function Highlights() {
                 color="text.secondary"
                 fontWeight="normal"
               >
-                {t(
-                  'Grash makes it incredibly easy for technicians to work efficiently by giving them access to the tools and data they need to get work done — all from the palm of their hand.'
-                )}
+                {t('home.smarter.description')}
               </TypographySubHeading>
             </Box>
           </Grid>
@@ -684,7 +665,7 @@ function Highlights() {
           }}
           variant="h1"
         >
-          {t('Key Features')}
+          {t('key_features')}
         </TypographyH1Primary>
         <Container maxWidth="sm">
           <TypographyH2
@@ -697,9 +678,7 @@ function Highlights() {
             color="text.secondary"
             fontWeight="normal"
           >
-            {t(
-              'Some of the features that make Grash one of the best CMMS availables today'
-            )}
+            {t('key_features.description')}
           </TypographyH2>
         </Container>
         <TabsContainerWrapper sx={{ justifyContent: 'flex-start' }}>
@@ -730,172 +709,6 @@ function Highlights() {
             </>
           );
         })}
-        {currentTab === 'auth' && (
-          <>
-            <Typography
-              textAlign="center"
-              sx={{
-                mt: 14,
-                mb: 2
-              }}
-              variant="h2"
-            >
-              {t('Integrated Auth Services')}
-            </Typography>
-            <Container
-              sx={{
-                position: 'relative',
-                pb: 4
-              }}
-              maxWidth="sm"
-            >
-              <Tooltip arrow placement="top" title="Auth0">
-                <CardImg
-                  sx={{
-                    width: 80,
-                    height: 80,
-                    top: -110,
-                    left: -30
-                  }}
-                >
-                  <img width={40} alt="Auth0" src={icons['Auth0']} />
-                </CardImg>
-              </Tooltip>
-              <Tooltip arrow placement="top" title="Firebase">
-                <CardImg
-                  sx={{
-                    width: 120,
-                    height: 120,
-                    top: -40,
-                    left: -190
-                  }}
-                >
-                  <img width={50} alt="Firebase" src={icons['FirebaseAuth']} />
-                </CardImg>
-              </Tooltip>
-              <Tooltip arrow placement="top" title="JSON Web Token">
-                <CardImg
-                  sx={{
-                    width: 130,
-                    height: 130,
-                    top: -50,
-                    right: -160
-                  }}
-                >
-                  <img width={80} alt="JSON Web Token" src={icons['JWT']} />
-                </CardImg>
-              </Tooltip>
-              <Tooltip arrow placement="top" title="AWS Amplify">
-                <CardImg
-                  sx={{
-                    width: 90,
-                    height: 90,
-                    top: -120,
-                    right: 20
-                  }}
-                >
-                  <img width={50} alt="Amplify" src={icons['Amplify']} />
-                </CardImg>
-              </Tooltip>
-              <TypographyH2
-                sx={{
-                  pb: 4,
-                  lineHeight: 1.5
-                }}
-                textAlign="center"
-                variant="h4"
-                color="text.secondary"
-                fontWeight="normal"
-              >
-                {t(
-                  'Easily switch between multiple integrated auth methods based on your app needs'
-                )}
-                .
-              </TypographyH2>
-            </Container>
-
-            <Grid
-              container
-              sx={{
-                textAlign: 'center'
-              }}
-              spacing={4}
-            >
-              <Grid item xs={12} md={4}>
-                <AvatarSuccess
-                  sx={{
-                    mx: 'auto',
-                    width: 50,
-                    height: 50
-                  }}
-                >
-                  <CheckTwoToneIcon />
-                </AvatarSuccess>
-                <Typography
-                  variant="h3"
-                  sx={{
-                    py: 2
-                  }}
-                >
-                  {t('Multiple Auth Methods')}
-                </Typography>
-                <Typography variant="subtitle2">
-                  {t(
-                    'Firebase, AWS Amplify, JWT Tokens and Auth0 are available in this release'
-                  )}
-                </Typography>
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <AvatarSuccess
-                  sx={{
-                    mx: 'auto',
-                    width: 50,
-                    height: 50
-                  }}
-                >
-                  <CheckTwoToneIcon />
-                </AvatarSuccess>
-                <Typography
-                  variant="h3"
-                  sx={{
-                    py: 2
-                  }}
-                >
-                  {t('Status Pages')}
-                </Typography>
-                <Typography variant="subtitle2">
-                  {t(
-                    'Multiple status pages included 500, 404 Error Pages, Coming Soon, Maintenance'
-                  )}
-                </Typography>
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <AvatarSuccess
-                  sx={{
-                    mx: 'auto',
-                    width: 50,
-                    height: 50
-                  }}
-                >
-                  <CheckTwoToneIcon />
-                </AvatarSuccess>
-                <Typography
-                  variant="h3"
-                  sx={{
-                    py: 2
-                  }}
-                >
-                  {t('Auth Pages')}
-                </Typography>
-                <Typography variant="subtitle2">
-                  {t(
-                    'Login/Register Pages, Wizards, Recover Password with confirmation'
-                  )}
-                </Typography>
-              </Grid>
-            </Grid>
-          </>
-        )}
         {currentTab === 'rtl' && (
           <BoxRtl
             sx={{
@@ -990,9 +803,7 @@ function Highlights() {
           }}
           variant="h1"
         >
-          {t(
-            'Leading the Way to a Better Future for Maintenance and Reliability'
-          )}
+          {t('leading_maintenance')}
         </TypographyH1Primary>
         <Container
           sx={{
@@ -1007,7 +818,7 @@ function Highlights() {
             to="/account/register"
             variant="contained"
           >
-            {t('Start a Free trial')}
+            {t('start_trial')}
           </Button>
         </Container>
       </Container>

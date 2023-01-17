@@ -55,7 +55,7 @@ function Overview() {
                     ml: 2
                   }}
                 >
-                  {t('Log In')}
+                  {t('login')}
                 </Button>
                 <Button
                   component={RouterLink}
@@ -65,7 +65,7 @@ function Overview() {
                     ml: 2
                   }}
                 >
-                  {t('Start a Free Trial')}
+                  {t('start_trial')}
                 </Button>
               </Box>
             </Box>

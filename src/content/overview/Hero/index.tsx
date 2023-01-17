@@ -140,7 +140,7 @@ function Hero() {
             }}
             variant="h1"
           >
-            {t('Built to Make Managing Maintenance Easier')}
+            {t('home.built')}
           </TypographyH1>
           <TypographyH2
             sx={{
@@ -151,9 +151,7 @@ function Hero() {
             color="text.secondary"
             fontWeight="normal"
           >
-            {t(
-              "When whiteboards and sticky notes are chaos, and you need a CMMS software that's easy enough for your team to actually use - try Grash"
-            )}
+            {t('home.description')}
           </TypographyH2>
           <Button
             component={RouterLink}
@@ -161,7 +159,7 @@ function Hero() {
             size="large"
             variant="contained"
           >
-            {t('Try Grash')}
+            {t('try_grash')}
           </Button>
           <Button
             sx={{
@@ -172,7 +170,7 @@ function Hero() {
             size="large"
             variant="text"
           >
-            {t('Key Features')}
+            {t('key_features')}
           </Button>
           <Button
             sx={{
@@ -184,7 +182,7 @@ function Hero() {
             size="large"
             variant="text"
           >
-            {t('Contribute')}
+            {t('contribute')}
           </Button>
         </Grid>
         <Grid item md={6}>
