@@ -15,9 +15,13 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import CustomDataGrid from '../components/CustomDatagrid';
-import { GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
+import {
+  GridRenderCellParams,
+  GridToolbar,
+  GridValueGetterParams
+} from '@mui/x-data-grid';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
-import { parts } from '../../../models/owns/part';
+import Part, { parts } from '../../../models/owns/part';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useDispatch, useSelector } from '../../../store';
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
@@ -118,7 +122,8 @@ const Sets = ({ setAction }: PropsType) => {
       headerName: t('Parts'),
       description: t('Parts'),
       width: 150,
-      valueGetter: (params) => params.row.parts.length
+      valueGetter: (params: GridValueGetterParams<Part[]>) =>
+        params.value.length
     },
     {
       field: 'cost',

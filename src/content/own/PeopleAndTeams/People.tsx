@@ -21,7 +21,8 @@ import {
   GridEnrichedColDef,
   GridRenderCellParams,
   GridRowParams,
-  GridToolbar
+  GridToolbar,
+  GridValueGetterParams
 } from '@mui/x-data-grid';
 import { useContext, useEffect, useState } from 'react';
 import UserDetailsDrawer from './UserDetailsDrawer';
@@ -42,6 +43,7 @@ import Form from '../components/form';
 import * as Yup from 'yup';
 import { IField } from '../type';
 import { formatSelect } from '../../../utils/formatters';
+import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 
 interface PropsType {
   values?: any;
@@ -59,6 +61,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
   const { users, loadingGet } = useSelector((state) => state.users);
   const dispatch = useDispatch();
   const { showSnackBar } = useContext(CustomSnackBarContext);
+  const { getFormattedCurrency } = useContext(CompanySettingsContext);
   const [emails, setEmails] = useState<string[]>([]);
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const [currentEmail, setCurrentEmail] = useState<string>('');
@@ -238,12 +241,14 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
       field: 'role',
       headerName: t('Role'),
       width: 150,
-      valueGetter: (params) => params.value.name
+      valueGetter: (params: GridValueGetterParams<Role>) => params.value.name
     },
     {
       field: 'rate',
       headerName: t('Hourly Rate'),
-      width: 150
+      width: 150,
+      valueGetter: (params: GridValueGetterParams<number>) =>
+        getFormattedCurrency(params.value)
     },
     {
       field: 'actions',
