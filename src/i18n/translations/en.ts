@@ -177,7 +177,14 @@ const enJSON = {
   employeesCount: 'Number of Employees',
   i_accept: 'I accept the',
   terms_conditions: 'terms and conditions',
-  create_your_account: 'Create your account'
+  create_your_account: 'Create your account',
+  register: 'Register',
+  //signin
+  login_description: 'Fill in the fields below to sign into your account.',
+  no_account_yet: 'Don’t have an account, yet?',
+  signup_here: 'Sign up here',
+  wrong_credentials: 'Wrong credentials provided',
+  lost_password: 'Lost password ?'
 };
 
 export default enJSON;

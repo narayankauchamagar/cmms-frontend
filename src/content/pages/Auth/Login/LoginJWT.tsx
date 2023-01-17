@@ -25,12 +25,10 @@ const LoginJWT: FC = () => {
       }}
       validationSchema={Yup.object().shape({
         email: Yup.string()
-          .email(t('The email provided should be a valid email address'))
+          .email(t('invalid_email'))
           .max(255)
-          .required(t('The email field is required')),
-        password: Yup.string()
-          .max(255)
-          .required(t('The password field is required'))
+          .required(t('required_email')),
+        password: Yup.string().max(255).required(t('required_password'))
       })}
       onSubmit={async (
         values,
@@ -39,7 +37,7 @@ const LoginJWT: FC = () => {
         setSubmitting(true);
         return login(values.email, values.password)
           .catch((err) => {
-            showSnackBar(t('Wrong credentials provided'), 'error');
+            showSnackBar(t('wrong_credentials'), 'error');
             setStatus({ success: false });
           })
           .finally(() => {
@@ -65,7 +63,7 @@ const LoginJWT: FC = () => {
             margin="normal"
             autoFocus
             helperText={touched.email && errors.email}
-            label={t('Email address')}
+            label={t('email')}
             name="email"
             onBlur={handleBlur}
             onChange={handleChange}
@@ -78,7 +76,7 @@ const LoginJWT: FC = () => {
             fullWidth
             margin="normal"
             helperText={touched.password && errors.password}
-            label={t('Password')}
+            label={t('password')}
             name="password"
             onBlur={handleBlur}
             onChange={handleChange}
@@ -92,7 +90,7 @@ const LoginJWT: FC = () => {
             justifyContent="space-between"
           >
             <Link component={RouterLink} to="/account/recover-password">
-              <b>{t('Lost password?')}</b>
+              <b>{t('lost_password')}</b>
             </Link>
           </Box>
 
@@ -108,7 +106,7 @@ const LoginJWT: FC = () => {
             size="large"
             variant="contained"
           >
-            {t('Sign in')}
+            {t('login')}
           </Button>
         </form>
       )}

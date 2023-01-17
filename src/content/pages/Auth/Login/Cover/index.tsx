@@ -43,7 +43,7 @@ function LoginCover() {
                   mb: 1
                 }}
               >
-                {t('Sign in')}
+                {t('login')}
               </Typography>
               <Typography
                 variant="h4"
@@ -53,7 +53,7 @@ function LoginCover() {
                   mb: 3
                 }}
               >
-                {t('Fill in the fields below to sign into your account.')}
+                {t('login_description')}
               </Typography>
             </Box>
             <JWTLogin />
@@ -64,11 +64,11 @@ function LoginCover() {
                 color="text.primary"
                 fontWeight="bold"
               >
-                {t('Don’t have an account, yet?')}
+                {t('no_account_yet')}
               </Typography>{' '}
               <Box display={{ xs: 'block', md: 'inline-block' }}>
                 <Link component={RouterLink} to="/account/register">
-                  <b>Sign up here</b>
+                  <b>{t('signup_here')}</b>
                 </Link>
               </Box>
             </Box>

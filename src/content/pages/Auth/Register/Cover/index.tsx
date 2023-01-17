@@ -191,7 +191,7 @@ function RegisterCover() {
   return (
     <>
       <Helmet>
-        <title>Register</title>
+        <title>{t('register')}</title>
       </Helmet>
       <Content>
         <SidebarWrapper

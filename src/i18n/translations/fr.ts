@@ -286,7 +286,14 @@ const frJSON = {
   employeesCount: "Nombre d'employés",
   i_accept: "J'accepte les",
   terms_conditions: 'termes et conditions',
-  create_your_account: 'Créer votre compte'
+  create_your_account: 'Créer votre compte',
+  login_description:
+    'Remplissez les champs ci-dessous pour vous connecter à votre compte.',
+  no_account_yet: "Vous n'avez pas encore de compte?",
+  signup_here: 'Inscrivez-vous ici',
+  wrong_credentials: "Informations d'identification erronées fournies",
+  lost_password: 'Mot de passe oublié ?',
+  register: "S'inscrire"
 };
 
 export default frJSON;
