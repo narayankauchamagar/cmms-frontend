@@ -33,11 +33,10 @@ import UserAvatars from '../components/UserAvatars';
 import * as Yup from 'yup';
 import { isNumeric } from '../../../utils/validators';
 import { UserMiniDTO } from '../../../models/user';
-import Team from '../../../models/owns/team';
 import WorkOrderDetails from './WorkOrderDetails';
 import { useParams, useSearchParams } from 'react-router-dom';
-import Location, { LocationMiniDTO } from '../../../models/owns/location';
-import Asset, { AssetMiniDTO } from '../../../models/owns/asset';
+import { LocationMiniDTO } from '../../../models/owns/location';
+import { AssetMiniDTO } from '../../../models/owns/asset';
 import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
 import {
   addWorkOrder,
@@ -80,9 +79,9 @@ function WorkOrders() {
     CompanySettingsContext
   );
   const tabs = [
-    { value: 'list', label: t('List View'), disabled: false },
-    { value: 'calendar', label: t('Calendar View'), disabled: true },
-    { value: 'column', label: t('Column View'), disabled: true }
+    { value: 'list', label: t('list_view'), disabled: false },
+    { value: 'calendar', label: t('calendar_view'), disabled: true },
+    { value: 'column', label: t('column_view'), disabled: true }
   ];
   const theme = useTheme();
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
@@ -135,7 +134,7 @@ function WorkOrders() {
     setOpenDrawer(false);
   };
   useEffect(() => {
-    setTitle(t('Work Orders'));
+    setTitle(t('work_orders'));
     if (hasViewPermission(PermissionEntity.WORK_ORDERS))
       dispatch(getWorkOrders());
   }, []);
@@ -181,32 +180,31 @@ function WorkOrders() {
   };
   const onCreationSuccess = () => {
     setOpenAddModal(false);
-    showSnackBar(t('The Work Order has been created successfully'), 'success');
+    showSnackBar(t('wo_create_success'), 'success');
   };
   const onCreationFailure = (err) =>
-    showSnackBar(t("The Work Order couldn't be created"), 'error');
+    showSnackBar(t('wo_create_failure'), 'error');
   const onEditSuccess = () => {
     setOpenUpdateModal(false);
-    showSnackBar(t('The changes have been saved'), 'success');
+    showSnackBar(t('changes_saved_success'), 'success');
   };
-  const onEditFailure = (err) =>
-    showSnackBar(t("The Work Order couldn't be edited"), 'error');
+  const onEditFailure = (err) => showSnackBar(t('wo_update_failure'), 'error');
   const onDeleteSuccess = () => {
-    showSnackBar(t('The Work Order has been deleted successfully'), 'success');
+    showSnackBar(t('wo_delete_success'), 'success');
   };
   const onDeleteFailure = (err) =>
-    showSnackBar(t("The Work Order couldn't be deleted"), 'error');
+    showSnackBar(t('wo_delete_failure'), 'error');
 
   const columns: GridEnrichedColDef[] = [
     {
       field: 'id',
-      headerName: t('ID'),
-      description: t('ID')
+      headerName: t('id'),
+      description: t('id')
     },
     {
       field: 'status',
-      headerName: t('Status'),
-      description: t('Status'),
+      headerName: t('status'),
+      description: t('status'),
       width: 150,
       renderCell: (params: GridRenderCellParams<string>) => (
         <Box display="flex" flexDirection="row" justifyContent="center">
@@ -228,8 +226,8 @@ function WorkOrders() {
     },
     {
       field: 'title',
-      headerName: t('Title'),
-      description: t('Title'),
+      headerName: t('title'),
+      description: t('title'),
       width: 150,
       renderCell: (params: GridRenderCellParams<string>) => (
         <Box sx={{ fontWeight: 'bold' }}>{params.value}</Box>
@@ -238,8 +236,8 @@ function WorkOrders() {
 
     {
       field: 'priority',
-      headerName: t('Priority'),
-      description: t('Priority'),
+      headerName: t('priority'),
+      description: t('priority'),
       width: 150,
       renderCell: (params: GridRenderCellParams<string>) => (
         <PriorityWrapper priority={params.value} />
@@ -247,22 +245,22 @@ function WorkOrders() {
     },
     {
       field: 'description',
-      headerName: t('Description'),
-      description: t('Description'),
+      headerName: t('description'),
+      description: t('description'),
       width: 150
     },
     {
       field: 'primaryUser',
-      headerName: t('Worker'),
-      description: t('Worker'),
+      headerName: t('worker'),
+      description: t('worker'),
       width: 150,
       renderCell: (params: GridRenderCellParams<UserMiniDTO>) =>
         params.value ? <UserAvatars users={[params.value]} /> : null
     },
     {
       field: 'assignedTo',
-      headerName: t('Assignees'),
-      description: t('Assignees'),
+      headerName: t('assigned_to'),
+      description: t('assigned_to'),
       width: 150,
       renderCell: (params: GridRenderCellParams<UserMiniDTO[]>) => (
         <UserAvatars users={params.value} />
@@ -270,80 +268,80 @@ function WorkOrders() {
     },
     {
       field: 'location',
-      headerName: t('Location name'),
-      description: t('Location name'),
+      headerName: t('location_name'),
+      description: t('location_name'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<LocationMiniDTO>) =>
         params.value?.name
     },
     {
       field: 'locationAddress',
-      headerName: t('Location address'),
-      description: t('Location address'),
+      headerName: t('location_address'),
+      description: t('location_address'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<null, WorkOrder>) =>
         params.row.location?.address
     },
     {
       field: 'category',
-      headerName: t('Category'),
-      description: t('Category'),
+      headerName: t('category'),
+      description: t('category'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<Category>) =>
         params.value?.name
     },
     {
       field: 'asset',
-      headerName: t('Asset name'),
-      description: t('Asset name'),
+      headerName: t('asset_name'),
+      description: t('asset_name'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<AssetMiniDTO>) =>
         params.value?.name
     },
     {
       field: 'daysSinceCreated',
-      headerName: t('Days since creation'),
-      description: t('Days since creation'),
+      headerName: t('days_since_creation'),
+      description: t('days_since_creation'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<null, WorkOrder>) =>
         dayDiff(new Date(), new Date(params.row.createdAt))
     },
     {
       field: 'files',
-      headerName: t('Files'),
-      description: t('Files'),
+      headerName: t('files'),
+      description: t('files'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<File[]>) =>
         params.value.length
     },
     {
       field: 'requestedBy',
-      headerName: t('Requested By'),
-      description: t('Requested By'),
+      headerName: t('requested_by'),
+      description: t('requested_by'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<null, WorkOrder>) =>
         getUserNameById(params.row.parentRequest?.createdBy)
     },
     {
       field: 'completedOn',
-      headerName: t('Completed On'),
-      description: t('Completed On'),
+      headerName: t('completed_on'),
+      description: t('completed_on'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<string>) =>
         getFormattedDate(params.value)
     },
     {
       field: 'updatedAt',
-      headerName: t('Updated At'),
-      description: t('Updated At'),
+      headerName: t('updated_at'),
+      description: t('updated_at'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<string>) =>
         getFormattedDate(params.value)
     },
     {
       field: 'createdAt',
-      headerName: t('Created At'),
-      description: t('Created At'),
+      headerName: t('created_at'),
+      description: t('created_at'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<string>) =>
         getFormattedDate(params.value)
@@ -353,64 +351,64 @@ function WorkOrders() {
     {
       name: 'title',
       type: 'text',
-      label: t('Title'),
-      placeholder: t('Enter Work Order title'),
+      label: t('title'),
+      placeholder: t('wo.title.description'),
       required: true
     },
     {
       name: 'description',
       type: 'text',
-      label: t('Description'),
-      placeholder: t('Description'),
+      label: t('description'),
+      placeholder: t('description'),
       multiple: true
     },
     {
       name: 'image',
       type: 'file',
       fileType: 'image',
-      label: t('Image')
+      label: t('image')
     },
     {
       name: 'dueDate',
       type: 'date',
-      label: t('Due Date')
+      label: t('due_date')
     },
     {
       name: 'estimatedDuration',
       type: 'number',
-      label: t('Estimated Duration in Hours'),
-      placeholder: t('Hours')
+      label: t('estimated_duration'),
+      placeholder: t('hours')
     },
     {
       name: 'priority',
       type: 'select',
-      label: t('Priority'),
+      label: t('priority'),
       type2: 'priority'
     },
     {
       name: 'category',
       type: 'select',
-      label: t('Category'),
+      label: t('category'),
       type2: 'category',
       category: 'work-order-categories'
     },
     {
       name: 'primaryUser',
       type: 'select',
-      label: t('Primary Worker'),
+      label: t('primary_worker'),
       type2: 'user'
     },
     {
       name: 'assignedTo',
       type: 'select',
-      label: t('Additional Workers'),
+      label: t('additional_workers'),
       type2: 'user',
       multiple: true
     },
     {
       name: 'customers',
       type: 'select',
-      label: t('Customers'),
+      label: t('customers'),
       type2: 'customer',
       multiple: true
     },
@@ -418,45 +416,45 @@ function WorkOrders() {
       name: 'team',
       type: 'select',
       type2: 'team',
-      label: 'Team',
-      placeholder: 'Select team'
+      label: t('team'),
+      placeholder: t('select_team')
     },
     {
       name: 'location',
       type: 'select',
       type2: 'location',
-      label: 'Location',
-      placeholder: 'Select location'
+      label: t('location'),
+      placeholder: t('select_location')
     },
     {
       name: 'asset',
       type: 'select',
       type2: 'asset',
-      label: t('Asset'),
-      placeholder: 'Select Asset'
+      label: t('asset'),
+      placeholder: t('select_asset')
     },
     {
       name: 'tasks',
       type: 'select',
       type2: 'task',
-      label: t('Tasks'),
-      placeholder: 'Select Tasks'
+      label: t('tasks'),
+      placeholder: t('select_tasks')
     },
     {
       name: 'files',
       type: 'file',
       multiple: true,
-      label: t('Files'),
+      label: t('files'),
       fileType: 'file'
     },
     {
       name: 'requiredSignature',
       type: 'switch',
-      label: t('Requires Signature')
+      label: t('requires_signature')
     }
   ];
   const defaultShape: { [key: string]: any } = {
-    title: Yup.string().required(t('WorkOrder title is required'))
+    title: Yup.string().required(t('required_wo_title'))
   };
   const getFieldsAndShapes = (): [Array<IField>, { [key: string]: any }] => {
     return getWOFieldsAndShapes(defaultFields, defaultShape);
@@ -475,11 +473,9 @@ function WorkOrders() {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Add Work Order')}
+          {t('add_wo')}
         </Typography>
-        <Typography variant="subtitle2">
-          {t('Fill in the fields below to create and add a new Work Order')}
-        </Typography>
+        <Typography variant="subtitle2">{t('add_wo.description')}</Typography>
       </DialogTitle>
       <DialogContent
         dividers
@@ -491,7 +487,7 @@ function WorkOrders() {
           <Form
             fields={getFieldsAndShapes()[0]}
             validation={Yup.object().shape(getFieldsAndShapes()[1])}
-            submitText={t('Add')}
+            submitText={t('add')}
             values={{
               requiredSignature: false,
               dueDate: null,
@@ -567,7 +563,7 @@ function WorkOrders() {
           <Form
             fields={getFieldsAndShapes()[0]}
             validation={Yup.object().shape(getFieldsAndShapes()[1])}
-            submitText={t('Save')}
+            submitText={t('save')}
             values={{
               ...currentWorkOrder,
               tasks: tasks,
@@ -637,7 +633,7 @@ function WorkOrders() {
     return (
       <>
         <Helmet>
-          <title>{t('Work Orders')}</title>
+          <title>{t('work_orders')}</title>
         </Helmet>
         <Grid
           container
@@ -686,7 +682,7 @@ function WorkOrders() {
                 sx={{ mx: 6, my: 1 }}
                 variant="contained"
               >
-                Work Order
+                {t('work_order')}
               </Button>
             )}
           </Grid>
@@ -709,12 +705,8 @@ function WorkOrders() {
                     Toolbar: GridToolbar,
                     NoRowsOverlay: () => (
                       <NoRowsMessageWrapper
-                        message={t(
-                          'Work Orders are tasks or jobs, that can be scheduled or assigned to someone'
-                        )}
-                        action={t(
-                          "Press the '+' button to create a Work Order"
-                        )}
+                        message={t('noRows.wo')}
+                        action={t('noRows.wo.action')}
                       />
                     )
                   }}
@@ -753,19 +745,12 @@ function WorkOrders() {
             setOpenDrawer(true);
           }}
           onConfirm={() => handleDelete(currentWorkOrder?.id)}
-          confirmText={t('Delete')}
-          question={t('Are you sure you want to delete this Work Order?')}
+          confirmText={t('to_delete')}
+          question={t('confirm_delete_wo')}
         />
       </>
     );
-  else
-    return (
-      <PermissionErrorMessage
-        message={
-          "You don't have access to Work Orders. Please contact your administrator if you should have access"
-        }
-      />
-    );
+  else return <PermissionErrorMessage message={'noAccess.wo'} />;
 }
 
 export default WorkOrders;

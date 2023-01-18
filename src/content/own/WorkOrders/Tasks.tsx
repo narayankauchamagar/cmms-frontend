@@ -52,8 +52,8 @@ export default function Tasks({
   function handleChange(value: string | number, id: number) {
     const task = tasks.find((task) => task.id === id);
     dispatch(patchTask(workOrderId, id, { ...task, value }))
-      .then(() => showSnackBar(t('Task updated successfully'), 'success'))
-      .catch(() => showSnackBar(t("Task couldn't be updated"), 'error'));
+      .then(() => showSnackBar(t('task_update_success'), 'success'))
+      .catch(() => showSnackBar(t('task_update_failure'), 'error'));
 
     const newTasks = tasks.map((task) => {
       if (task.id === id) {
@@ -84,7 +84,7 @@ export default function Tasks({
     const task = tasks.find((task) => task.id === id);
     return dispatch(patchTask(workOrderId, id, { ...task, notes: value })).then(
       () => {
-        showSnackBar(t('Notes saved successfully'), 'success');
+        showSnackBar(t('notes_save_success'), 'success');
         toggleNotes(task.id);
       }
     );
@@ -95,10 +95,10 @@ export default function Tasks({
   }
   const onImageUploadSuccess = () => {
     setOpenSelectImages(false);
-    showSnackBar(t('The images have been added to the task'), 'success');
+    showSnackBar(t('images_add_task_success'), 'success');
   };
   const onImageUploadFailure = (err) =>
-    showSnackBar(t('Something went wrong'), 'error');
+    showSnackBar(t('images_add_task_failure'), 'error');
 
   const fields: Array<IField> = [
     {
@@ -110,7 +110,7 @@ export default function Tasks({
     }
   ];
   const shape = {
-    images: Yup.array().required(t('Please upload at least an image'))
+    images: Yup.array().required(t('required_images'))
   };
   const renderSelectImages = () => {
     return (
@@ -126,7 +126,7 @@ export default function Tasks({
           }}
         >
           <Typography variant="h4" gutterBottom>
-            {t('Add Images')}
+            {t('add_images')}
           </Typography>
         </DialogTitle>
         <DialogContent
@@ -138,7 +138,7 @@ export default function Tasks({
           <Form
             fields={fields}
             validation={Yup.object().shape(shape)}
-            submitText={t('Add')}
+            submitText={t('add')}
             values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
@@ -160,7 +160,7 @@ export default function Tasks({
   };
   return (
     <Card>
-      <CardHeader title={t('Tasks')} avatar={<TaskAltTwoToneIcon />} />
+      <CardHeader title={t('tasks')} avatar={<TaskAltTwoToneIcon />} />
       <Divider />
       <CardContent>
         <FormControl fullWidth>

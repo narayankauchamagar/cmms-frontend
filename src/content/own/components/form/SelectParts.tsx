@@ -173,12 +173,12 @@ export default function SelectParts({ onChange, selected }: SelectPartsProps) {
               setOpenModal(false);
             }}
           >
-            {t('Add Parts')}
+            {t('add_parts')}
           </Button>
         </DialogActions>
       </Dialog>
       <Button startIcon={<AddTwoToneIcon />} onClick={() => setOpenModal(true)}>
-        Add Parts
+        {t('add_parts')}
       </Button>
     </>
   );

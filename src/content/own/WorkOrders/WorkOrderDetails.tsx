@@ -26,7 +26,6 @@ import { ChangeEvent, useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import Asset from '../../../models/owns/asset';
 import AddTimeModal from './AddTimeModal';
 import AddCostModal from './AddCostModal';
 import Tasks from './Tasks';
@@ -148,19 +147,13 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
     setAnchorEl(null);
   };
   const onArchiveSuccess = () => {
-    showSnackBar(t('The Work Order has been archived'), 'success');
+    showSnackBar(t('wo_archive_success'), 'success');
   };
   const onArchiveFailure = (err) =>
-    showSnackBar(t("The Work Order couldn't be archived"), 'error');
+    showSnackBar(t('wo_archive_failure'), 'error');
   const onArchive = () => {
     handleCloseMenu();
-    if (
-      window.confirm(
-        t('Are you sure you want to archive this Work Order') +
-          workOrder.title +
-          ' ?'
-      )
-    ) {
+    if (window.confirm(t('wo_archive_confirm') + workOrder.title + ' ?')) {
       dispatch(editWorkOrder(workOrder?.id, { ...workOrder, archived: true }))
         .then(onArchiveSuccess)
         .catch(onArchiveFailure);
@@ -239,8 +232,8 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
     dispatch(
       editPartQuantity(workOrder.id, partQuantity.id, Number(value), false)
     )
-      .then(() => showSnackBar(t('Quantity changed successfully'), 'success'))
-      .catch((err) => showSnackBar(t("Quantity couldn't be changed"), 'error'));
+      .then(() => showSnackBar(t('quantity_change_success'), 'success'))
+      .catch((err) => showSnackBar(t('quantity_change_failure'), 'error'));
   };
   const debouncedPartQuantityChange = useMemo(
     () => debounce(onPartQuantityChange, 1500),
@@ -322,15 +315,10 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
     const [hours, minutes] = getHoursAndMinutesAndSeconds(labor.duration);
     return Number((labor.hourlyRate * (hours + minutes / 60)).toFixed(2));
   };
-  const workOrderStatuses = [
-    { label: t('Open'), value: 'OPEN' },
-    { label: t('In Progress'), value: 'IN_PROGRESS' },
-    { label: t('On Hold'), value: 'ON_HOLD' },
-    { label: t('Complete'), value: 'COMPLETE' }
-  ];
+  const workOrderStatuses = ['OPEN', 'IN_PROGRESS', 'ON_HOLD', 'COMPLETE'];
   const tabs = [
-    { value: 'details', label: t('Details') },
-    { value: 'updates', label: t('Updates') }
+    { value: 'details', label: t('details') },
+    { value: 'updates', label: t('updates') }
   ];
 
   const getPath = (resource, id) => {
@@ -399,37 +387,37 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
     id?: number;
   }[] => [
     {
-      label: t('ID'),
+      label: t('id'),
       value: workOrder.id
     },
     {
-      label: t('Due Date'),
+      label: t('due_date'),
       value: getFormattedDate(workOrder.dueDate)
     },
     {
-      label: t('Category'),
+      label: t('category'),
       value: workOrder.category?.name
     },
     {
-      label: t('Location'),
+      label: t('location'),
       value: workOrder.location?.name,
       type: 'location',
       id: workOrder.location?.id
     },
     {
-      label: t('Asset'),
+      label: t('asset'),
       value: workOrder.asset?.name,
       type: 'asset',
       id: workOrder.asset?.id
     },
     {
-      label: t('Team'),
+      label: t('team'),
       value: workOrder.team?.name,
       type: 'team',
       id: workOrder.team?.id
     },
     {
-      label: t('Date created'),
+      label: t('created_at'),
       value: getFormattedDate(workOrder.createdAt)
     }
   ];
@@ -570,8 +558,8 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                       }
                     >
                       {workOrderStatuses.map((workOrderStatus, index) => (
-                        <MenuItem key={index} value={workOrderStatus.value}>
-                          {workOrderStatus.label}
+                        <MenuItem key={index} value={workOrderStatus}>
+                          {t(workOrderStatus)}
                         </MenuItem>
                       ))}
                     </Select>
@@ -602,8 +590,8 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                     variant={runningTimer ? 'contained' : 'outlined'}
                   >
                     {runningTimer
-                      ? t('Timer running')
-                      : t('Run Timer') +
+                      ? t('timer_running')
+                      : t('run_timer') +
                         ' - ' +
                         durationToHours(primaryTime?.duration)}
                   </Button>
@@ -640,7 +628,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                   variant="h6"
                   sx={{ color: theme.colors.alpha.black[70] }}
                 >
-                  {workOrder.parentRequest ? t('Approved By') : t('Created By')}
+                  {workOrder.parentRequest ? t('approved_by') : t('created_by')}
                 </Typography>
                 <Link variant="h6" href={getUserUrl(workOrder.createdBy)}>
                   {getUserNameById(workOrder.createdBy)}
@@ -653,7 +641,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                       variant="h6"
                       sx={{ color: theme.colors.alpha.black[70] }}
                     >
-                      {t('Completed By')}
+                      {t('completed_by')}
                     </Typography>
                     <Link
                       variant="h6"
@@ -667,7 +655,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                       variant="h6"
                       sx={{ color: theme.colors.alpha.black[70] }}
                     >
-                      {t('Completed On')}
+                      {t('completed_on')}
                     </Typography>
                     <Typography variant="h6">
                       {getFormattedDate(workOrder.completedOn)}
@@ -679,7 +667,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                         variant="h6"
                         sx={{ color: theme.colors.alpha.black[70] }}
                       >
-                        {t('Feedback')}
+                        {t('feedback')}
                       </Typography>
                       <Typography variant="h6">{workOrder.feedback}</Typography>
                     </Grid>
@@ -690,7 +678,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                         variant="h6"
                         sx={{ color: theme.colors.alpha.black[70] }}
                       >
-                        {t('Signature')}
+                        {t('signature')}
                       </Typography>
                       <img
                         src={workOrder.signature.url}
@@ -716,7 +704,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                     variant="h6"
                     sx={{ color: theme.colors.alpha.black[70] }}
                   >
-                    {t('Requested By')}
+                    {t('requested_by')}
                   </Typography>
                   <Link
                     variant="h6"
@@ -732,7 +720,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                     variant="h6"
                     sx={{ color: theme.colors.alpha.black[70] }}
                   >
-                    {t('Time')}
+                    {t('time')}
                   </Typography>
                   {openEditPrimaryTime ? (
                     <Stack direction="row" spacing={1} alignItems="center">
@@ -763,7 +751,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                         variant="contained"
                         onClick={onSavePrimaryTime}
                       >
-                        {t('Save')}
+                        {t('save')}
                       </Button>
                     </Stack>
                   ) : (
@@ -803,7 +791,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                     variant="h6"
                     sx={{ color: theme.colors.alpha.black[70] }}
                   >
-                    {t('Customers')}
+                    {t('customers')}
                   </Typography>
                   {workOrder.customers.map((customer, index) => (
                     <Box key={customer.id}>
@@ -832,13 +820,11 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
             <Box>
               <Divider sx={{ mt: 2 }} />
               <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
-                Labors
+                {t('labors')}
               </Typography>
               {!labors.filter((labor) => !labor.logged).length ? (
                 <Typography sx={{ color: theme.colors.alpha.black[70] }}>
-                  {t(
-                    "No labor costs have been added yet. They'll show up here when a user logs time and has an hourly rate stored in Grash."
-                  )}
+                  {t('no_labor')}
                 </Typography>
               ) : (
                 <List>
@@ -889,7 +875,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                                   {`${labor.assignedTo.firstName} ${labor.assignedTo.lastName}`}
                                 </Link>
                               ) : (
-                                <Typography>{t('Not Assigned')}</Typography>
+                                <Typography>{t('not_assigned')}</Typography>
                               )}
                             </>
                           }
@@ -935,18 +921,18 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                   variant="outlined"
                   sx={{ mt: 1 }}
                 >
-                  Add Time
+                  {t('add_time')}
                 </Button>
               )}
             </Box>
             <Box>
               <Divider sx={{ mt: 2 }} />
               <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
-                Additional Costs
+                {t('additional_costs')}
               </Typography>
               {!additionalCosts.length ? (
                 <Typography sx={{ color: theme.colors.alpha.black[70] }}>
-                  {t('No Additional costs have been added yet')}
+                  {t('no_additional_cost')}
                 </Typography>
               ) : (
                 <List>
@@ -1030,14 +1016,14 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                   variant="outlined"
                   sx={{ mt: 1 }}
                 >
-                  Add Additional Cost
+                  {t('add_additional_cost')}
                 </Button>
               )}
             </Box>
             <Box>
               <Divider sx={{ mt: 2 }} />
               <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
-                {t('Parts')}
+                {t('parts')}
               </Typography>
               <PartQuantitiesList
                 partQuantities={partQuantities}
@@ -1066,7 +1052,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
               <Box>
                 <Divider sx={{ mt: 2 }} />
                 <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
-                  {t('Links')}
+                  {t('links')}
                 </Typography>
                 {
                   <List>
@@ -1134,7 +1120,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                   variant="outlined"
                   sx={{ mt: 1 }}
                 >
-                  {t('Link Work Orders')}
+                  {t('link_wo')}
                 </Button>
               </Box>
             )}
@@ -1142,12 +1128,10 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
               <Box>
                 <Divider sx={{ mt: 2 }} />
                 <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
-                  {t('Files')}
+                  {t('files')}
                 </Typography>
                 <FilesList
-                  confirmMessage={t(
-                    'Are you sure you want to remove this file from this Work Order ?'
-                  )}
+                  confirmMessage={t('confirm_remove_file_wo')}
                   removeDisabled={
                     !hasEditPermission(PermissionEntity.WORK_ORDERS, workOrder)
                   }
@@ -1232,13 +1216,13 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
         >
           <Stack spacing={2} direction="row">
             <LinkTwoToneIcon />
-            <Typography variant="h6">{t('Link')}</Typography>
+            <Typography variant="h6">{t('link')}</Typography>
           </Stack>
         </MenuItem>
         <MenuItem onClick={onArchive}>
           <Stack spacing={2} direction="row">
             <ArchiveTwoToneIcon />
-            <Typography variant="h6">{t('Archive')}</Typography>
+            <Typography variant="h6">{t('archive')}</Typography>
           </Stack>
         </MenuItem>
       </Menu>

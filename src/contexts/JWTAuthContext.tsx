@@ -407,6 +407,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         setSession(accessToken);
         const user = await updateUserInfos();
         const company = await api.get<Company>(`companies/${user.companyId}`);
+        await setupUser(company.companySettings);
         dispatch({
           type: 'INITIALIZE',
           payload: {

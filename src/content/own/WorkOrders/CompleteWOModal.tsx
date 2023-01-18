@@ -31,22 +31,22 @@ export default function CompleteWOModal({
       fields.push({
         name: 'feedback',
         type: 'text',
-        label: t('Feedback'),
-        placeholder: t('Give your feedback'),
+        label: t('feedback'),
+        placeholder: t('feedback.description'),
         multiple: true
       });
-      shape = { feedback: Yup.string().required(t('Feedback is required')) };
+      shape = { feedback: Yup.string().required(t('required_feedback')) };
     }
     if (fieldsConfig.signature) {
       fields.push({
         name: 'signature',
         type: 'file',
-        label: t('Signature'),
+        label: t('signature'),
         fileType: 'image'
       });
       shape = {
         ...shape,
-        signature: Yup.array().required(t('Image is required'))
+        signature: Yup.array().required(t('required_signature'))
       };
     }
     return [fields, shape];
@@ -59,7 +59,7 @@ export default function CompleteWOModal({
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Close Work Order')}
+          {t('close_wo')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -71,7 +71,7 @@ export default function CompleteWOModal({
         <Form
           fields={getFieldsAndShape()[0]}
           validation={Yup.object().shape(getFieldsAndShape()[1])}
-          submitText={t('Close')}
+          submitText={t('close')}
           values={{}}
           onChange={({ field, e }) => {}}
           onSubmit={async (values) => {

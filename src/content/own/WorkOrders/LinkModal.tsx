@@ -41,11 +41,9 @@ export default function LinkModal({
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Link Work Orders')}
+          {t('link_wo')}
         </Typography>
-        <Typography variant="subtitle2">
-          {t('Create relationships between Work Orders')}
-        </Typography>
+        <Typography variant="subtitle2">{t('link_wo.description')}</Typography>
       </DialogTitle>
       <Formik
         initialValues={{
@@ -53,10 +51,8 @@ export default function LinkModal({
           child: null
         }}
         validationSchema={Yup.object().shape({
-          relationType: Yup.string().required(
-            t('Please select the relationship type.')
-          ),
-          child: Yup.number().required(t('The Work Order field is required.'))
+          relationType: Yup.string().required(t('required_relationType')),
+          child: Yup.number().required(t('required_wo'))
         })}
         onSubmit={(
           _values,
@@ -91,7 +87,7 @@ export default function LinkModal({
                   <Grid container spacing={3}>
                     <Grid item xs={12}>
                       <Typography variant="h6" fontWeight="bold">
-                        {t('This Work Order')}
+                        {t('this_wo')}
                       </Typography>
                       <Select
                         fullWidth
@@ -110,7 +106,7 @@ export default function LinkModal({
                     </Grid>
                     <Grid item xs={12}>
                       <Typography variant="h6" fontWeight="bold">
-                        {t('The Work Order')}
+                        {t('the_wo')}
                       </Typography>
                       <Select
                         fullWidth
@@ -131,7 +127,7 @@ export default function LinkModal({
                       </Select>
                       {!!errors.child && (
                         <FormHelperText color="error">
-                          {t('Please select a Work Order')}
+                          {t('required_wo')}
                         </FormHelperText>
                       )}
                     </Grid>
@@ -146,7 +142,7 @@ export default function LinkModal({
                     }
                     disabled={isSubmitting}
                   >
-                    {t('Link')}
+                    {t('link')}
                   </Button>
                 </Grid>
               </Grid>

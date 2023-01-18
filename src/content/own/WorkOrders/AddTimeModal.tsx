@@ -27,59 +27,57 @@ export default function AddTimeModal({
     {
       name: 'assignedTo',
       type: 'select',
-      label: t('Assigned To'),
+      label: t('assigned_to'),
       type2: 'user',
       midWidth: true
     },
     {
       name: 'hourlyRate',
       type: 'number',
-      label: t('Hourly Rate'),
+      label: t('hourly_rate'),
       midWidth: true
     },
     {
       name: 'includeToTotalTime',
       type: 'switch',
-      label: t('Include this time in the total time'),
-      helperText: t(
-        'This will add the duration to the total time spent on the Work Order'
-      )
+      label: t('include_time'),
+      helperText: t('include_time.description')
     },
     {
       name: 'startedAt',
       type: 'date',
-      label: t('Work Started At')
+      label: t('work_started_at')
     },
     {
       name: 'timeCategory',
       type: 'select',
-      label: t('Category'),
+      label: t('category'),
       type2: 'category',
       category: 'time-categories'
     },
     {
       name: 'duration',
       type: 'titleGroupField',
-      label: t('Duration')
+      label: t('duration')
     },
     {
       name: 'hours',
       type: 'number',
-      label: t('Hours'),
+      label: t('hours'),
       midWidth: true,
       required: true
     },
     {
       name: 'minutes',
       type: 'number',
-      label: t('Minutes'),
+      label: t('minutes'),
       midWidth: true,
       required: true
     }
   ];
   const shape = {
-    hours: Yup.number().required(t('Hours field is required')),
-    minutes: Yup.number().required(t('Minutes field is required'))
+    hours: Yup.number().required(t('required_hours')),
+    minutes: Yup.number().required(t('required_minutes'))
   };
   return (
     <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
@@ -89,11 +87,9 @@ export default function AddTimeModal({
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Add Time')}
+          {t('add_time')}
         </Typography>
-        <Typography variant="subtitle2">
-          {t('Fill in the fields below to create and add Time')}
-        </Typography>
+        <Typography variant="subtitle2">{t('add_time.description')}</Typography>
       </DialogTitle>
       <DialogContent
         dividers
@@ -105,7 +101,7 @@ export default function AddTimeModal({
           <Form
             fields={fields}
             validation={Yup.object().shape(shape)}
-            submitText={t('Add')}
+            submitText={t('add')}
             values={{ includeToTotalTime: true }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {

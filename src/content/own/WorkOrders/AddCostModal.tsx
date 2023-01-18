@@ -27,20 +27,20 @@ export default function AddCostModal({
     {
       name: 'description',
       type: 'text',
-      label: t('Cost Description'),
+      label: t('cost_description'),
       required: true
     },
     {
       name: 'assignedTo',
       type: 'select',
-      label: t('Assigned To'),
+      label: t('assigned_to'),
       type2: 'user',
       midWidth: true
     },
     {
       name: 'category',
       type: 'select',
-      label: t('Category'),
+      label: t('category'),
       type2: 'category',
       category: 'cost-categories',
       midWidth: true
@@ -48,27 +48,25 @@ export default function AddCostModal({
     {
       name: 'date',
       type: 'date',
-      label: t('Date'),
+      label: t('date'),
       midWidth: true
     },
     {
       name: 'cost',
       type: 'number',
-      label: t('Cost'),
+      label: t('cost'),
       midWidth: true
     },
     {
       name: 'includeToTotalCost',
       type: 'switch',
-      label: t('Include this cost in the total cost'),
-      helperText: t(
-        'This will add the cost to the total cost spent on the Work Order'
-      )
+      label: t('include_cost'),
+      helperText: t('include_cost.description')
     }
   ];
   const shape = {
-    description: Yup.string().required(t('Cost Description is required')),
-    cost: Yup.number().required(t('Cost is required'))
+    description: Yup.string().required(t('required_cost_description')),
+    cost: Yup.number().required(t('required_costs'))
   };
   return (
     <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
@@ -78,11 +76,9 @@ export default function AddCostModal({
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Add Additional Cost')}
+          {t('add_cost')}
         </Typography>
-        <Typography variant="subtitle2">
-          {t('Fill in the fields below to create and add Additional Cost')}
-        </Typography>
+        <Typography variant="subtitle2">{t('add_cost.description')}</Typography>
       </DialogTitle>
       <DialogContent
         dividers
@@ -94,7 +90,7 @@ export default function AddCostModal({
           <Form
             fields={fields}
             validation={Yup.object().shape(shape)}
-            submitText={t('Add')}
+            submitText={t('add')}
             values={{ includeToTotalCost: true }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
