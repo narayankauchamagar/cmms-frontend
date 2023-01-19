@@ -75,23 +75,23 @@ export default function PMDetails({
     preventiveMaintenance: PreventiveMaintenance
   ): { label: string; value: string | number }[] => [
     {
-      label: t('Title'),
+      label: t('title'),
       value: preventiveMaintenance.title
     },
     {
-      label: t('Description'),
+      label: t('description'),
       value: preventiveMaintenance.description
     },
     {
-      label: t('Priority'),
+      label: t('priority'),
       value: preventiveMaintenance.priority
     },
     {
-      label: t('Due Date'),
+      label: t('due_date'),
       value: getFormattedDate(preventiveMaintenance?.dueDate)
     },
     {
-      label: t('Category'),
+      label: t('category'),
       value: preventiveMaintenance?.category?.name
     }
   ];
@@ -113,7 +113,7 @@ export default function PMDetails({
         <Box>
           <Typography variant="h2">{preventiveMaintenance?.name}</Typography>
           {preventiveMaintenance?.schedule.disabled && (
-            <Typography variant="h5">{t('Paused')}</Typography>
+            <Typography variant="h5">{t('paused')}</Typography>
           )}
         </Box>
         <Box>
@@ -139,7 +139,7 @@ export default function PMDetails({
       <Grid item xs={12}>
         <Box>
           <Typography sx={{ mt: 2, mb: 1 }} variant="h4">
-            {t('Trigger details')}
+            {t('trigger_details')}
           </Typography>
           <Grid container spacing={2}>
             {preventiveMaintenance.schedule?.startsOn && (
@@ -148,7 +148,7 @@ export default function PMDetails({
                   variant="h6"
                   sx={{ color: theme.colors.alpha.black[70] }}
                 >
-                  {t('Starts On')}
+                  {t('starts_on')}
                 </Typography>
                 <Typography variant="h6">
                   {getFormattedDate(preventiveMaintenance.schedule.startsOn)}
@@ -161,7 +161,7 @@ export default function PMDetails({
                   variant="h6"
                   sx={{ color: theme.colors.alpha.black[70] }}
                 >
-                  {t('Ends On')}
+                  {t('ends_on')}
                 </Typography>
                 <Typography variant="h6">
                   {getFormattedDate(preventiveMaintenance.schedule.endsOn)}
@@ -174,10 +174,12 @@ export default function PMDetails({
                   variant="h6"
                   sx={{ color: theme.colors.alpha.black[70] }}
                 >
-                  {t('Frequency')}
+                  {t('frequency')}
                 </Typography>
                 <Typography variant="h6">
-                  {`Every ${preventiveMaintenance.schedule.frequency} days`}
+                  {t(`every_frequency_days`, {
+                    frequency: preventiveMaintenance.schedule.frequency
+                  })}
                 </Typography>
               </Grid>
             )}
@@ -187,7 +189,7 @@ export default function PMDetails({
                   variant="h6"
                   sx={{ color: theme.colors.alpha.black[70] }}
                 >
-                  {t('Created By')}
+                  {t('created_by')}
                 </Typography>
                 <Link
                   variant="h6"
@@ -201,7 +203,7 @@ export default function PMDetails({
         </Box>
         <Box>
           <Typography sx={{ mt: 2, mb: 1 }} variant="h4">
-            {t('Work Order details')}
+            {t('wo_details')}
           </Typography>
           <Grid container spacing={2}>
             <>
@@ -225,7 +227,7 @@ export default function PMDetails({
                   key={field.label}
                   label={field.label}
                   value={field.value}
-                  isPriority={field.label === t('Priority')}
+                  isPriority={field.label === t('priority')}
                 />
               ))}
               {preventiveMaintenance?.asset && (
@@ -234,7 +236,7 @@ export default function PMDetails({
                     variant="h6"
                     sx={{ color: theme.colors.alpha.black[70] }}
                   >
-                    {t('Asset')}
+                    {t('asset')}
                   </Typography>
                   <Link
                     variant="h6"
@@ -250,7 +252,7 @@ export default function PMDetails({
                     variant="h6"
                     sx={{ color: theme.colors.alpha.black[70] }}
                   >
-                    {t('Location')}
+                    {t('location')}
                   </Typography>
                   <Link
                     variant="h6"
@@ -266,7 +268,7 @@ export default function PMDetails({
                     variant="h6"
                     sx={{ color: theme.colors.alpha.black[70] }}
                   >
-                    {t('Assigned To')}
+                    {t('assigned_to')}
                   </Typography>
                   <Link
                     variant="h6"
@@ -282,7 +284,7 @@ export default function PMDetails({
                     variant="h6"
                     sx={{ color: theme.colors.alpha.black[70] }}
                   >
-                    {t('Team')}
+                    {t('team')}
                   </Typography>
                   <Link
                     variant="h6"
@@ -298,12 +300,10 @@ export default function PMDetails({
                     variant="h6"
                     sx={{ color: theme.colors.alpha.black[70] }}
                   >
-                    {t('Files')}
+                    {t('files')}
                   </Typography>
                   <FilesList
-                    confirmMessage={t(
-                      'Are you sure you want to remove this file?'
-                    )}
+                    confirmMessage={t('confirm_delete_file')}
                     removeDisabled={
                       !hasEditPermission(
                         PermissionEntity.PREVENTIVE_MAINTENANCES,

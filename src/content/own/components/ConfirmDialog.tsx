@@ -104,7 +104,7 @@ export default function ConfirmDialog({
             }}
             onClick={onCancel}
           >
-            {t('Cancel')}
+            {t('cancel')}
           </Button>
           <ButtonError
             onClick={onConfirm}

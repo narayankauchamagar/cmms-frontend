@@ -41,8 +41,8 @@ export default function SelectParts({ onChange, selected }: SelectPartsProps) {
     setCurrentTab(value);
   };
   const tabs = [
-    { value: 'parts', label: t('Parts') },
-    { value: 'sets', label: t('Sets of Parts') }
+    { value: 'parts', label: t('parts') },
+    { value: 'sets', label: t('sets_of_parts') }
   ];
 
   useEffect(() => {
@@ -85,7 +85,7 @@ export default function SelectParts({ onChange, selected }: SelectPartsProps) {
           }}
         >
           <Typography variant="h4" gutterBottom>
-            {t('Select Parts')}
+            {t('select_parts')}
           </Typography>
         </DialogTitle>
         <DialogContent
@@ -163,7 +163,7 @@ export default function SelectParts({ onChange, selected }: SelectPartsProps) {
         </DialogContent>
         <DialogActions>
           <Button variant="outlined" onClick={() => setOpenModal(false)}>
-            {t('Cancel')}
+            {t('cancel')}
           </Button>
           <Button
             variant="contained"

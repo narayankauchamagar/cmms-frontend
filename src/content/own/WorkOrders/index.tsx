@@ -705,7 +705,7 @@ function WorkOrders() {
                     Toolbar: GridToolbar,
                     NoRowsOverlay: () => (
                       <NoRowsMessageWrapper
-                        message={t('noRows.wo')}
+                        message={t('noRows.wo.message')}
                         action={t('noRows.wo.action')}
                       />
                     )

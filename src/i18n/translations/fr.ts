@@ -123,7 +123,7 @@ const frJSON = {
   'home.built': 'Conçu pour faciliter la gestion de la maintenance',
   'home.description':
     "Lorsque les tableaux blancs et les notes autocollantes sont chaotiques et que vous avez besoin d'un logiciel de GMAO suffisamment facile à utiliser pour votre équipe, essayez Grash",
-  try_grash: 'Essayez Grash',
+  try_grash: 'Essayer Grash',
   login: 'Se connecter',
   start_trial: 'Commencez un essai gratuit',
   'home.what': 'Ce que',
@@ -301,7 +301,7 @@ const frJSON = {
   required_wo: 'Le champ Bon de commande est obligatoire.',
   this_wo: 'Cet ordre de travail',
   the_wo: "L'ordre de travail",
-  link: 'Lien',
+  link: 'Lier',
   cost_description: 'Descriptif des coûts',
   assigned_to: 'Assigné à',
   category: 'Catégorie',
@@ -423,7 +423,51 @@ const frJSON = {
   'noRows.wo.action': "Appuyez sur le bouton '+' pour créer un bon de travail",
   to_delete: 'Supprimer',
   confirm_delete_wo: 'Voulez-vous vraiment supprimer ce bon de travail ?',
-  'noAccess.wo': "Vous n'avez pas accès aux bons de travail. "
+  'noAccess.wo': "Vous n'avez pas accès aux bons de travail. ",
+  cancel: 'Annuler',
+  select_parts: 'Sélectionner des pièces',
+  sets_of_parts: 'Jeux de pièces',
+  //pm
+  paused: 'En pause',
+  trigger_details: 'Détails du déclencheur',
+  starts_on: 'Commence le',
+  ends_on: 'Se termine le',
+  frequency: 'Fréquence',
+  every_frequency_days: 'Tous les {{frequency}} jours',
+  wo_details: 'Détails du bon de travail',
+  confirm_delete_file: 'Voulez-vous vraiment supprimer ce fichier ?',
+  wo_schedule_success: 'Ordre de travail planifié avec succès',
+  wo_schedule_failure: "L'ordre de travail n'a pas pu être planifié",
+  wo_trigger_edit_failure:
+    "Impossible de modifier le déclencheur d'ordre de travail",
+  wo_trigger_delete_success:
+    "Le déclencheur d'ordre de travail a été supprimé avec succès",
+  wo_trigger_delete_failure:
+    "Le déclencheur d'ordre de travail n'a pas pu être supprimé",
+  name: 'Nom',
+  wo_title: "Titre de l'ordre de travail",
+  next_wo: 'Prochain ordre de travail',
+  trigger_name: 'Nom du déclencheur',
+  enter_trigger_name: 'Entrez le nom du déclencheur',
+  'frequency.description': 'Fréquence en jours',
+  wo_configuration: "Configuration de l'ordre de travail",
+  required_trigger_name: 'Le nom du déclencheur est requis',
+  required_frequency: 'La fréquence de déclenchement est requise',
+  invalid_frequency: 'La fréquence doit être supérieure à 0',
+  schedule_wo: "Planifier l'ordre de travail",
+  'schedule_wo.description':
+    'Remplissez les champs ci-dessous pour planifier un bon de travail',
+  edit_wo_trigger: "Modifier le déclencheur d'ordre de travail",
+  'edit_wo_trigger.description':
+    "Remplissez les champs ci-dessous pour modifier le déclencheur d'ordre de travail",
+  create_trigger: 'Créer un déclencheur',
+  'noRows.pm.message':
+    'Planifier des ordres de travail avec des déclencheurs personnalisés',
+  'noRows.pm.action': "Appuyez sur le bouton '+' pour créer un déclencheur",
+  confirm_delete_pm:
+    "Voulez-vous vraiment supprimer ce déclencheur d'ordre de travail ?",
+  'noAccess.pm': "Vous n'avez pas accès à la section Maintenance préventive. ",
+  enter_wo_title: 'Entrez le titre du bon de travail'
 };
 
 export default frJSON;

@@ -6,33 +6,33 @@ export const getWOBaseFields = (t: any) => {
     {
       name: 'title',
       type: 'text',
-      label: t('Title'),
-      placeholder: t('Enter Request Title'),
+      label: t('title'),
+      placeholder: t('enter_wo_title'),
       required: true
     },
     {
       name: 'description',
       type: 'text',
-      label: t('Description'),
-      placeholder: t('Description'),
+      label: t('description'),
+      placeholder: t('description'),
       multiple: true
     },
     {
       name: 'priority',
       type: 'select',
       type2: 'priority',
-      label: t('Priority'),
-      placeholder: t('Priority')
+      label: t('priority'),
+      placeholder: t('priority')
     },
     {
       name: 'dueDate',
       type: 'date',
-      label: t('Due Date')
+      label: t('due_date')
     },
     {
       name: 'category',
       type: 'select',
-      label: t('Category'),
+      label: t('category'),
       type2: 'category',
       category: 'work-order-categories'
     },
@@ -40,41 +40,41 @@ export const getWOBaseFields = (t: any) => {
       name: 'location',
       type: 'select',
       type2: 'location',
-      label: 'Location',
+      label: t('location'),
       placeholder: 'Select location'
     },
     {
       name: 'asset',
       type: 'select',
       type2: 'asset',
-      label: t('Asset'),
+      label: t('asset'),
       placeholder: 'Select Asset',
       required: true
     },
     {
       name: 'primaryUser',
       type: 'select',
-      label: t('Primary Worker'),
+      label: t('primary_worker'),
       type2: 'user'
     },
     {
       name: 'team',
       type: 'select',
       type2: 'team',
-      label: 'Team',
+      label: t('team'),
       placeholder: 'Select team'
     },
     {
       name: 'image',
       type: 'file',
       fileType: 'image',
-      label: t('Image')
+      label: t('image')
     },
     {
       name: 'files',
       type: 'file',
       multiple: true,
-      label: t('Files'),
+      label: t('files'),
       fileType: 'file'
     }
   ] as const;

@@ -80,7 +80,7 @@ function Files() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setTitle(t('Preventive Maintenance'));
+    setTitle(t('preventive_maintenance'));
     if (hasViewPermission(PermissionEntity.PREVENTIVE_MAINTENANCES))
       dispatch(getPreventiveMaintenances());
   }, []);
@@ -106,24 +106,21 @@ function Files() {
   };
   const onCreationSuccess = () => {
     setOpenAddModal(false);
-    showSnackBar(t('Work Order successfully scheduled'), 'success');
+    showSnackBar(t('wo_schedule_success'), 'success');
   };
   const onCreationFailure = (err) =>
-    showSnackBar(t("The Work Order couldn't be scheduled"), 'error');
+    showSnackBar(t('wo_schedule_failure'), 'error');
   const onEditSuccess = () => {
     setOpenUpdateModal(false);
-    showSnackBar(t('The changes have been saved'), 'success');
+    showSnackBar(t('changes_saved_success'), 'success');
   };
   const onEditFailure = (err) =>
-    showSnackBar(t("The Work Order Trigger couldn't be edited"), 'error');
+    showSnackBar(t('wo_trigger_edit_failure'), 'error');
   const onDeleteSuccess = () => {
-    showSnackBar(
-      t('The Work Order trigger has been deleted successfully'),
-      'success'
-    );
+    showSnackBar(t('wo_trigger_delete_success'), 'success');
   };
   const onDeleteFailure = (err) =>
-    showSnackBar(t("The Work Order Trigger couldn't be deleted"), 'error');
+    showSnackBar(t('wo_trigger_delete_failure'), 'error');
 
   const handleOpenDetails = (id: number) => {
     const foundPreventiveMaintenance = preventiveMaintenances.find(
@@ -160,8 +157,8 @@ function Files() {
   const columns: GridEnrichedColDef[] = [
     {
       field: 'name',
-      headerName: t('Name'),
-      description: t('Name'),
+      headerName: t('name'),
+      description: t('name'),
       width: 150,
       renderCell: (params: GridRenderCellParams<string>) => (
         <Box sx={{ fontWeight: 'bold' }}>{params.value}</Box>
@@ -169,8 +166,8 @@ function Files() {
     },
     {
       field: 'title',
-      headerName: t('Work Order Title'),
-      description: t('Work Order Title'),
+      headerName: t('wo_title'),
+      description: t('wo_title'),
       width: 150,
       renderCell: (params: GridRenderCellParams<string>) => (
         <Box sx={{ fontWeight: 'bold' }}>{params.value}</Box>
@@ -179,8 +176,8 @@ function Files() {
 
     {
       field: 'priority',
-      headerName: t('Priority'),
-      description: t('Priority'),
+      headerName: t('priority'),
+      description: t('priority'),
       width: 150,
       renderCell: (params: GridRenderCellParams<string>) => (
         <PriorityWrapper priority={params.value} />
@@ -188,14 +185,14 @@ function Files() {
     },
     {
       field: 'description',
-      headerName: t('Description'),
-      description: t('Description'),
+      headerName: t('description'),
+      description: t('description'),
       width: 150
     },
     {
       field: 'next',
-      headerName: t('Next Work Order'),
-      description: t('Next Work Order'),
+      headerName: t('next_wo'),
+      description: t('next_wo'),
       width: 150,
       valueGetter: (
         params: GridValueGetterParams<null, PreventiveMaintenance>
@@ -209,16 +206,16 @@ function Files() {
     },
     {
       field: 'primaryUser',
-      headerName: t('Worker'),
-      description: t('Worker'),
+      headerName: t('worker'),
+      description: t('worker'),
       width: 150,
       renderCell: (params: GridRenderCellParams<UserMiniDTO>) =>
         params.value ? <UserAvatars users={[params.value]} /> : null
     },
     {
       field: 'assignedTo',
-      headerName: t('Assignees'),
-      description: t('Assignees'),
+      headerName: t('assigned_to'),
+      description: t('assigned_to'),
       width: 150,
       renderCell: (params: GridRenderCellParams<UserMiniDTO[]>) => (
         <UserAvatars users={params.value} />
@@ -226,24 +223,24 @@ function Files() {
     },
     {
       field: 'location',
-      headerName: t('Location name'),
-      description: t('Location name'),
+      headerName: t('location_name'),
+      description: t('location_name'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<LocationMiniDTO>) =>
         params.value?.name
     },
     {
       field: 'category',
-      headerName: t('Category'),
-      description: t('Category'),
+      headerName: t('category'),
+      description: t('category'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<Category>) =>
         params.value?.name
     },
     {
       field: 'asset',
-      headerName: t('Asset name'),
-      description: t('Asset name'),
+      headerName: t('asset_name'),
+      description: t('asset_name'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<AssetMiniDTO>) =>
         params.value?.name
@@ -258,44 +255,44 @@ function Files() {
     {
       name: 'name',
       type: 'text',
-      label: t('Trigger Name'),
-      placeholder: t('Enter trigger Name'),
+      label: t('trigger_name'),
+      placeholder: t('enter_trigger_name'),
       required: true
     },
     {
       name: 'startsOn',
       type: 'date',
-      label: t('Starts On'),
+      label: t('starts_on'),
       required: true,
       midWidth: true
     },
     {
       name: 'endsOn',
       type: 'date',
-      label: t('Ends On'),
+      label: t('ends_on'),
       midWidth: true
     },
     {
       name: 'frequency',
       type: 'number',
-      label: t('Frequency in days'),
+      label: t('frequency.description'),
       required: true
     },
     {
       name: 'titleGroup',
       type: 'titleGroupField',
-      label: 'Work Order Configuration'
+      label: 'wo_configuration'
     },
     ...getWOBaseFields(t)
   ];
   const defaultShape = {
-    name: Yup.string().required(t('Trigger name is required')),
-    title: Yup.string().required(t('Work Order title is required')),
+    name: Yup.string().required(t('required_trigger_name')),
+    title: Yup.string().required(t('required_wo_title')),
     frequency: Yup.number()
-      .required(t('The trigger frequency is required'))
+      .required(t('required_frequency'))
       .test(
         'test-frequency', // this is used internally by yup
-        t('Frequency must be superior to 0'),
+        t('invalid_frequency'),
         (value) => value > 0
       )
   };
@@ -315,10 +312,10 @@ function Files() {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Schedule Work Order')}
+          {t('schedule_wo')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the fields below to schedule a Work Order')}
+          {t('schedule_wo.description')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -331,7 +328,7 @@ function Files() {
           <Form
             fields={getFieldsAndShapes()[0]}
             validation={Yup.object().shape(getFieldsAndShapes()[1])}
-            submitText={t('Add')}
+            submitText={t('add')}
             values={{ startsOn: null, endsOn: null, dueDate: null }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
@@ -374,10 +371,10 @@ function Files() {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Edit Work Order Trigger')}
+          {t('edit_wo_trigger')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the fields below to edit the Work Order Trigger')}
+          {t('edit_wo_trigger.description')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -390,7 +387,7 @@ function Files() {
           <Form
             fields={getFieldsAndShapes()[0]}
             validation={Yup.object().shape(getFieldsAndShapes()[1])}
-            submitText={t('Save')}
+            submitText={t('save')}
             values={{
               ...currentPM,
               ...getWOBaseValues(t, currentPM),
@@ -446,7 +443,7 @@ function Files() {
     return (
       <>
         <Helmet>
-          <title>{t('Preventive Maintenance')}</title>
+          <title>{t('preventive_maintenance')}</title>
         </Helmet>
         {renderAddModal()}
         {renderUpdateModal()}
@@ -472,7 +469,7 @@ function Files() {
                 variant="contained"
                 onClick={() => setOpenAddModal(true)}
               >
-                {t('Create Trigger')}
+                {t('create_trigger')}
               </Button>
             </Grid>
           )}
@@ -496,8 +493,8 @@ function Files() {
                     Toolbar: GridToolbar,
                     NoRowsOverlay: () => (
                       <NoRowsMessageWrapper
-                        message={t('Schedule Work Orders with custom triggers')}
-                        action={t("Press the '+' button to create a trigger")}
+                        message={t('noRows.pm.message')}
+                        action={t('noRows.pm.action')}
                       />
                     )
                   }}
@@ -533,21 +530,12 @@ function Files() {
             setOpenDrawer(true);
           }}
           onConfirm={() => handleDelete(currentPM?.id)}
-          confirmText={t('Delete')}
-          question={t(
-            'Are you sure you want to delete this Work Order Trigger?'
-          )}
+          confirmText={t('delete')}
+          question={t('confirm_delete_pm')}
         />
       </>
     );
-  else
-    return (
-      <PermissionErrorMessage
-        message={
-          "You don't have access to the Preventive Maintenance section. Please contact your administrator if you should have access"
-        }
-      />
-    );
+  else return <PermissionErrorMessage message={t('noAccess.pm')} />;
 }
 
 export default Files;

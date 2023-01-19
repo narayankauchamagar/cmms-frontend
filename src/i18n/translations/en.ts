@@ -314,7 +314,48 @@ const enJSON = {
   to_delete: 'Delete',
   confirm_delete_wo: 'Are you sure you want to delete this Work Order?',
   'noAccess.wo':
-    "You don't have access to Work Orders. Please contact your administrator if you should have access"
+    "You don't have access to Work Orders. Please contact your administrator if you should have access",
+  cancel: 'Cancel',
+  select_parts: 'Select Parts',
+  sets_of_parts: 'Sets of Parts',
+  //preventive maintenance
+  paused: 'Paused',
+  trigger_details: 'Trigger details',
+  starts_on: 'Starts On',
+  ends_on: 'Ends On',
+  frequency: 'Frequency',
+  every_frequency_days: 'Every {{frequency}} days',
+  wo_details: 'Work Order details',
+  confirm_delete_file: 'Are you sure you want to remove this file?',
+  wo_schedule_success: 'Work Order successfully scheduled',
+  wo_schedule_failure: "The Work Order couldn't be scheduled",
+  wo_trigger_edit_failure: "The Work Order Trigger couldn't be edited",
+  wo_trigger_delete_success:
+    'The Work Order trigger has been deleted successfully',
+  wo_trigger_delete_failure: "The Work Order Trigger couldn't be deleted",
+  name: 'Name',
+  wo_title: 'Work Order Title',
+  next_wo: 'Next Work Order',
+  trigger_name: 'Trigger Name',
+  enter_trigger_name: 'Enter trigger Name',
+  'frequency.description': 'Frequency in days',
+  wo_configuration: 'Work Order Configuration',
+  required_trigger_name: 'Trigger name is required',
+  required_frequency: 'The trigger frequency is required',
+  invalid_frequency: 'Frequency must be superior to 0',
+  schedule_wo: 'Schedule Work Order',
+  'schedule_wo.description':
+    'Fill in the fields below to schedule a Work Order',
+  edit_wo_trigger: 'Edit Work Order Trigger',
+  'edit_wo_trigger.description':
+    'Fill in the fields below to edit the Work Order Trigger',
+  create_trigger: 'Create Trigger',
+  'noRows.pm.message': 'Schedule Work Orders with custom triggers',
+  'noRows.pm.action': "Press the '+' button to create a trigger",
+  confirm_delete_pm: 'Are you sure you want to delete this Work Order Trigger?',
+  'noAccess.pm':
+    "You don't have access to the Preventive Maintenance section. Please contact your administrator if you should have access",
+  enter_wo_title: 'Enter Work Order title'
 };
 
 export default enJSON;
