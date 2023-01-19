@@ -138,7 +138,7 @@ const frJSON = {
   request_system: "Demandes d'intervention",
   mobile_app: 'Application mobile',
   asset_management: "Gestion d'équipements",
-  preventive_maintenance: 'Maintenance préventive',
+  preventive_maintenance: 'Maintenance Préventive',
   parts_inventory: 'Inventaire des pièces',
   custom_dashboards: 'Tableaux de bord personnalisés',
   'work-orders.title': 'Gérez vos bons de travail comme un patron',
@@ -467,7 +467,28 @@ const frJSON = {
   confirm_delete_pm:
     "Voulez-vous vraiment supprimer ce déclencheur d'ordre de travail ?",
   'noAccess.pm': "Vous n'avez pas accès à la section Maintenance préventive. ",
-  enter_wo_title: 'Entrez le titre du bon de travail'
+  enter_wo_title: 'Entrez le titre du bon de travail',
+  //menuItems
+  status_report: 'Rapport de situation',
+  wo_analysis: 'Analyse des bons de travail',
+  wo_aging: 'Ancienneté des bons de travail',
+  time_and_cost: 'Temps et coût',
+  assets: 'Actifs',
+  reliability_dashboard: 'Tableau de bord de fiabilité',
+  total_maintenance_cost: "Coût d'entretien total",
+  useful_life: 'Vie utile',
+  requests: 'Demandes',
+  locations: 'Emplacements',
+  parts_and_inventory: 'Pièces/Inventaire',
+  purchase_orders: 'Bons de commande',
+  meters: 'Compteurs',
+  people_teams: 'Personnes & Equipes',
+  people: 'Personnes',
+  teams: 'Équipes',
+  vendors_customers: 'Fournisseurs et clients',
+  vendors: 'Fournisseurs',
+  categories: 'Catégories',
+  settings: 'Paramètres'
 };
 
 export default frJSON;

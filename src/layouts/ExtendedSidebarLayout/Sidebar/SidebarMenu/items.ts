@@ -51,13 +51,13 @@ const ownMenuItems: MenuItems[] = [
     heading: '',
     items: [
       {
-        name: 'Work Orders',
+        name: 'work_orders',
         link: '/app/work-orders',
         icon: AssignmentTwoToneIcon,
         permission: PermissionEntity.WORK_ORDERS
       },
       {
-        name: 'Preventive Maintenance',
+        name: 'preventive_maintenance',
         link: '/app/preventive-maintenances',
         icon: PendingActionsTwoToneIcon,
         permission: PermissionEntity.PREVENTIVE_MAINTENANCES
@@ -69,41 +69,41 @@ const ownMenuItems: MenuItems[] = [
         planFeature: PlanFeature.ANALYTICS,
         items: [
           {
-            name: 'Work Orders',
+            name: 'work_orders',
             icon: AssignmentTwoToneIcon,
             items: [
               {
-                name: 'Status Report',
+                name: 'status_report',
                 link: '/app/analytics/work-orders/status'
               },
               {
-                name: 'Work Order analysis',
+                name: 'wo_analysis',
                 link: '/app/analytics/work-orders/analysis'
               },
               {
-                name: 'Work Order Aging',
+                name: 'wo_aging',
                 link: '/app/analytics/work-orders/aging'
               },
               {
-                name: 'Time and Cost',
+                name: 'time_and_cost',
                 link: '/app/analytics/work-orders/time-cost'
               }
             ]
           },
           {
-            name: 'Assets',
+            name: 'assets',
             icon: Inventory2TwoToneIcon,
             items: [
               {
-                name: 'Reliability Dashboard',
+                name: 'reliability_dashboard',
                 link: '/app/analytics/assets/reliability'
               },
               {
-                name: 'Total Maintenance Cost',
+                name: 'total_maintenance_cost',
                 link: '/app/analytics/assets/cost'
               },
               {
-                name: 'Useful life',
+                name: 'useful_life',
                 link: '/app/analytics/assets/useful-life'
               }
             ]
@@ -111,100 +111,100 @@ const ownMenuItems: MenuItems[] = [
         ]
       },
       {
-        name: 'Requests',
+        name: 'requests',
         link: '/app/requests',
         icon: MoveToInboxTwoToneIcon,
         permission: PermissionEntity.REQUESTS
       },
       {
-        name: 'Assets',
+        name: 'assets',
         link: '/app/assets',
         icon: Inventory2TwoToneIcon,
         permission: PermissionEntity.ASSETS
       },
       {
-        name: 'Locations',
+        name: 'locations',
         link: '/app/locations',
         icon: LocationOnTwoToneIcon,
         permission: PermissionEntity.LOCATIONS
       },
       {
-        name: 'Parts/Inventory',
+        name: 'parts_and_inventory',
         link: '/app/inventory',
         icon: HandymanTwoToneIcon,
         permission: PermissionEntity.PARTS_AND_MULTIPARTS,
         items: [
           {
-            name: 'Parts',
+            name: 'parts',
             link: '/app/inventory/parts'
           },
           {
-            name: 'Sets',
+            name: 'sets_of_parts',
             link: '/app/inventory/sets'
           }
         ]
       },
       {
-        name: 'Purchase Orders',
+        name: 'purchase_orders',
         link: '/app/purchase-orders',
         icon: ReceiptTwoToneIcon,
         permission: PermissionEntity.PURCHASE_ORDERS,
         planFeature: PlanFeature.PURCHASE_ORDER
       },
       {
-        name: 'Meters',
+        name: 'meters',
         link: '/app/meters',
         icon: SpeedTwoToneIcon,
         permission: PermissionEntity.METERS,
         planFeature: PlanFeature.METER
       },
       {
-        name: 'People & Teams',
+        name: 'people_teams',
         link: '/app/people-teams',
         icon: People,
         permission: PermissionEntity.PEOPLE_AND_TEAMS,
         items: [
           {
-            name: 'People',
+            name: 'people',
             link: '/app/people-teams/people'
           },
           {
-            name: 'Teams',
+            name: 'teams',
             link: '/app/people-teams/teams'
           }
         ]
       },
       {
-        name: 'Vendors & Customers',
+        name: 'vendors_customers',
         link: '/app/vendors-customers/vendors',
         icon: GroupsTwoTone,
         permission: PermissionEntity.VENDORS_AND_CUSTOMERS,
         items: [
           {
-            name: 'Vendors',
+            name: 'vendors',
             link: '/app/vendors-customers/vendors'
           },
           {
-            name: 'Customers',
+            name: 'customers',
             link: '/app/vendors-customers/customers'
           }
         ]
       },
       {
-        name: 'Categories',
+        name: 'categories',
         link: '/app/categories',
         icon: CategoryTwoToneIcon,
         permission: PermissionEntity.CATEGORIES_WEB
       },
       {
-        name: 'Files',
+        name: 'files',
         link: '/app/files',
         icon: AttachFileTwoToneIcon,
         permission: PermissionEntity.FILES,
         planFeature: PlanFeature.FILE
       },
       {
-        name: 'Settings',
+        name: 'settings',
         link: '/app/settings',
         icon: SettingsTwoToneIcon,
         permission: PermissionEntity.SETTINGS

@@ -355,7 +355,28 @@ const enJSON = {
   confirm_delete_pm: 'Are you sure you want to delete this Work Order Trigger?',
   'noAccess.pm':
     "You don't have access to the Preventive Maintenance section. Please contact your administrator if you should have access",
-  enter_wo_title: 'Enter Work Order title'
+  enter_wo_title: 'Enter Work Order title',
+  //menuItems
+  status_report: 'Status Report',
+  wo_analysis: 'Work Order analysis',
+  wo_aging: 'Work Order Aging',
+  time_and_cost: 'Time and Cost',
+  assets: 'Assets',
+  reliability_dashboard: 'Reliability Dashboard',
+  total_maintenance_cost: 'Total Maintenance Cost',
+  useful_life: 'Useful life',
+  requests: 'Requests',
+  locations: 'Locations',
+  parts_and_inventory: 'Parts/Inventory',
+  purchase_orders: 'Purchase Orders',
+  meters: 'Meters',
+  people_teams: 'People & Teams',
+  people: 'People',
+  teams: 'Teams',
+  vendors_customers: 'Vendors & Customers',
+  vendors: 'Vendors',
+  categories: 'Categories',
+  settings: 'Settings'
 };
 
 export default enJSON;
