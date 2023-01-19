@@ -488,7 +488,33 @@ const frJSON = {
   vendors_customers: 'Fournisseurs et clients',
   vendors: 'Fournisseurs',
   categories: 'Catégories',
-  settings: 'Paramètres'
+  settings: 'Paramètres',
+  //request
+  cancelled: 'Annulé',
+  reject: 'Rejeter',
+  approve: 'Approuver',
+  request_create_success: 'Bon de travail demandé avec succès',
+  request_create_failure: "La demande de travail n'a pas pu être créée",
+  request_edit_failure: "La demande n'a pas pu être modifiée",
+  request_delete_success: 'La demande a été supprimée avec succès',
+  request_delete_failure: "La demande n'a pas pu être supprimée",
+  rejected: 'Rejeté',
+  approved: 'Approuvé',
+  pending: 'En attente',
+  required_request_name: 'Le titre de la demande est requis',
+  required_field: 'Ce champ est obligatoire',
+  add_request: 'Ajouter une demande',
+  'add_request.description':
+    'Remplissez les champs ci-dessous pour créer et ajouter une nouvelle demande',
+  edit_request: 'Modifier la demande',
+  'edit_request.description':
+    'Remplissez les champs ci-dessous pour modifier la demande',
+  'noRows.request.message': 'Gérez vos demandes de travail',
+  'noRows.request.action':
+    "Appuyez sur le bouton '+' pour créer une demande de travail",
+  confirm_delete_request: 'Voulez-vous vraiment supprimer cette demande ?',
+  request: 'Demande',
+  request_details: 'Détails sur la demande'
 };
 
 export default frJSON;

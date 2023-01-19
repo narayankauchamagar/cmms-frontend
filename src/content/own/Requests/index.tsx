@@ -70,7 +70,7 @@ function Files() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setTitle(t('Requests'));
+    setTitle(t('requests'));
     if (hasViewPermission(PermissionEntity.REQUESTS)) dispatch(getRequests());
   }, []);
   useEffect(() => {
@@ -89,21 +89,21 @@ function Files() {
   };
   const onCreationSuccess = () => {
     setOpenAddModal(false);
-    showSnackBar(t('Work Order successfully requested'), 'success');
+    showSnackBar(t('request_create_success'), 'success');
   };
   const onCreationFailure = (err) =>
-    showSnackBar(t("The Work Request couldn't be created"), 'error');
+    showSnackBar(t('request_create_failure'), 'error');
   const onEditSuccess = () => {
     setOpenUpdateModal(false);
-    showSnackBar(t('The changes have been saved'), 'success');
+    showSnackBar(t('changes_saved_success'), 'success');
   };
   const onEditFailure = (err) =>
-    showSnackBar(t("The Request couldn't be edited"), 'error');
+    showSnackBar(t('request_edit_failure'), 'error');
   const onDeleteSuccess = () => {
-    showSnackBar(t('The Request has been deleted successfully'), 'success');
+    showSnackBar(t('request_delete_success'), 'success');
   };
   const onDeleteFailure = (err) =>
-    showSnackBar(t("The Request couldn't be deleted"), 'error');
+    showSnackBar(t('request_delete_failure'), 'error');
 
   const handleOpenDetails = (id: number) => {
     const foundRequest = requests.find((request) => request.id === id);
@@ -138,8 +138,8 @@ function Files() {
   const columns: GridEnrichedColDef[] = [
     {
       field: 'title',
-      headerName: t('Title'),
-      description: t('Title'),
+      headerName: t('title'),
+      description: t('title'),
       width: 150,
       renderCell: (params: GridRenderCellParams<string>) => (
         <Box sx={{ fontWeight: 'bold' }}>{params.value}</Box>
@@ -147,14 +147,14 @@ function Files() {
     },
     {
       field: 'description',
-      headerName: t('Description'),
-      description: t('Description'),
+      headerName: t('description'),
+      description: t('description'),
       width: 150
     },
     {
       field: 'priority',
-      headerName: t('Priority'),
-      description: t('Priority'),
+      headerName: t('priority'),
+      description: t('priority'),
       width: 150,
       renderCell: (params: GridRenderCellParams<string>) => (
         <PriorityWrapper priority={params.value} />
@@ -162,20 +162,20 @@ function Files() {
     },
     {
       field: 'status',
-      headerName: t('Status'),
-      description: t('Status'),
+      headerName: t('status'),
+      description: t('status'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<null, Request>) =>
         params.row.cancelled
-          ? t('Rejected')
+          ? t('rejected')
           : params.row.workOrder
-          ? t('Approved')
-          : t('Pending')
+          ? t('approved')
+          : t('pending')
     }
   ];
   const defaultFields: Array<IField> = [...getWOBaseFields(t)];
   const defaultShape = {
-    title: Yup.string().required(t('Request name is required'))
+    title: Yup.string().required(t('required_request_name'))
   };
   const getFieldsAndShapes = (): [Array<IField>, { [key: string]: any }] => {
     let fields = [...getFilteredFields(defaultFields)];
@@ -201,7 +201,7 @@ function Files() {
           ...fields[fieldIndexInFields],
           required: true
         };
-        const requiredMessage = t('This field is required');
+        const requiredMessage = t('required_field');
         let yupSchema;
         switch (fields[fieldIndexInFields].type) {
           case 'text':
@@ -238,10 +238,10 @@ function Files() {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Add Request')}
+          {t('add_request')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the fields below to create and add a new Request')}
+          {t('add_request.description')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -254,7 +254,7 @@ function Files() {
           <Form
             fields={getFieldsAndShapes()[0]}
             validation={Yup.object().shape(getFieldsAndShapes()[1])}
-            submitText={t('Add')}
+            submitText={t('add')}
             values={{ dueDate: null }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
@@ -297,10 +297,10 @@ function Files() {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Edit Request')}
+          {t('edit_request')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the fields below to edit the Request')}
+          {t('edit_request.description')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -313,7 +313,7 @@ function Files() {
           <Form
             fields={getFieldsAndShapes()[0]}
             validation={Yup.object().shape(getFieldsAndShapes()[1])}
-            submitText={t('Save')}
+            submitText={t('save')}
             values={{
               ...currentRequest,
               ...getWOBaseValues(t, currentRequest)
@@ -356,7 +356,7 @@ function Files() {
     return (
       <>
         <Helmet>
-          <title>{t('Requests')}</title>
+          <title>{t('requests')}</title>
         </Helmet>
         {renderAddModal()}
         {renderUpdateModal()}
@@ -382,7 +382,7 @@ function Files() {
                 variant="contained"
                 onClick={() => setOpenAddModal(true)}
               >
-                Request
+                {t('request')}
               </Button>
             </Grid>
           )}
@@ -406,10 +406,8 @@ function Files() {
                     Toolbar: GridToolbar,
                     NoRowsOverlay: () => (
                       <NoRowsMessageWrapper
-                        message={t('Manage your Work Requests')}
-                        action={t(
-                          "Press the '+' button to create a Work Request"
-                        )}
+                        message={t('noRows.request.message')}
+                        action={t('noRows.request.action')}
                       />
                     )
                   }}
@@ -445,8 +443,8 @@ function Files() {
             setOpenDrawer(true);
           }}
           onConfirm={() => handleDelete(currentRequest?.id)}
-          confirmText={t('Delete')}
-          question={t('Are you sure you want to delete this Request?')}
+          confirmText={t('delete')}
+          question={t('confirm_delete_request')}
         />
       </>
     );

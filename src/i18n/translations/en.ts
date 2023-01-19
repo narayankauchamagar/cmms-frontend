@@ -376,7 +376,31 @@ const enJSON = {
   vendors_customers: 'Vendors & Customers',
   vendors: 'Vendors',
   categories: 'Categories',
-  settings: 'Settings'
+  settings: 'Settings',
+  //request
+  cancelled: 'Cancelled',
+  reject: 'Reject',
+  approve: 'Approve',
+  request_create_success: 'Work Order successfully requested',
+  request_create_failure: "The Work Request couldn't be created",
+  request_edit_failure: "The Request couldn't be edited",
+  request_delete_success: 'The Request has been deleted successfully',
+  request_delete_failure: "The Request couldn't be deleted",
+  rejected: 'Rejected',
+  approved: 'Approved',
+  pending: 'Pending',
+  required_request_name: 'Request title is required',
+  required_field: 'This field is required',
+  add_request: 'Add Request',
+  'add_request.description':
+    'Fill in the fields below to create and add a new Request',
+  edit_request: 'Edit Request',
+  'edit_request.description': 'Fill in the fields below to edit the Request',
+  'noRows.request.message': 'Manage your Work Requests',
+  'noRows.request.action': "Press the '+' button to create a Work Request",
+  confirm_delete_request: 'Are you sure you want to delete this Request?',
+  request: 'Request',
+  request_details: 'Request details'
 };
 
 export default enJSON;

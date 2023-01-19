@@ -100,23 +100,23 @@ export default function RequestDetails({
     request: Request
   ): { label: string; value: string | number }[] => [
     {
-      label: t('Description'),
+      label: t('description'),
       value: request.description
     },
     {
-      label: t('ID'),
+      label: t('id'),
       value: request.id
     },
     {
-      label: t('Priority'),
+      label: t('priority'),
       value: request.priority
     },
     {
-      label: t('Due Date'),
+      label: t('due_date'),
       value: getFormattedDate(request.dueDate)
     },
     {
-      label: t('Category'),
+      label: t('category'),
       value: request.category?.name
     }
   ];
@@ -138,7 +138,7 @@ export default function RequestDetails({
         <Box>
           <Typography variant="h2">{request?.title}</Typography>
           {request?.cancelled && (
-            <Typography variant="h5">{t('Cancelled')}</Typography>
+            <Typography variant="h5">{t('cancelled')}</Typography>
           )}
         </Box>
         <Box>
@@ -183,7 +183,7 @@ export default function RequestDetails({
                 onClick={onCancel}
                 variant="outlined"
               >
-                {t('Cancel')}
+                {t('reject')}
               </Button>
               <Button
                 startIcon={
@@ -196,7 +196,7 @@ export default function RequestDetails({
                 onClick={onApprove}
                 variant="contained"
               >
-                {t('Approve')}
+                {t('approve')}
               </Button>
             </Grid>
           </>
@@ -205,7 +205,7 @@ export default function RequestDetails({
       <Grid item xs={12}>
         <Box>
           <Typography sx={{ mt: 2, mb: 1 }} variant="h4">
-            Request details
+            {t('request_details')}
           </Typography>
           <Grid container spacing={2}>
             <>
@@ -229,7 +229,7 @@ export default function RequestDetails({
                   key={field.label}
                   label={field.label}
                   value={field.value}
-                  isPriority={field.label === t('Priority')}
+                  isPriority={field.label === t('priority')}
                 />
               ))}
               {request?.createdBy && (
@@ -238,7 +238,7 @@ export default function RequestDetails({
                     variant="h6"
                     sx={{ color: theme.colors.alpha.black[70] }}
                   >
-                    {t('Requested By')}
+                    {t('requested_by')}
                   </Typography>
                   <Link variant="h6" href={getUserUrl(request.createdBy)}>
                     {getUserNameById(request.createdBy)}
@@ -251,7 +251,7 @@ export default function RequestDetails({
                     variant="h6"
                     sx={{ color: theme.colors.alpha.black[70] }}
                   >
-                    {t('Asset')}
+                    {t('asset')}
                   </Typography>
                   <Link variant="h6" href={getAssetUrl(request.asset.id)}>
                     {request.asset.name}
@@ -264,7 +264,7 @@ export default function RequestDetails({
                     variant="h6"
                     sx={{ color: theme.colors.alpha.black[70] }}
                   >
-                    {t('Location')}
+                    {t('location')}
                   </Typography>
                   <Link variant="h6" href={getLocationUrl(request.location.id)}>
                     {request.location.name}
@@ -277,7 +277,7 @@ export default function RequestDetails({
                     variant="h6"
                     sx={{ color: theme.colors.alpha.black[70] }}
                   >
-                    {t('Assigned To')}
+                    {t('assigned_to')}
                   </Typography>
                   <Link variant="h6" href={getUserUrl(request.primaryUser.id)}>
                     {`${request.primaryUser.firstName} ${request.primaryUser.lastName}`}
@@ -290,7 +290,7 @@ export default function RequestDetails({
                     variant="h6"
                     sx={{ color: theme.colors.alpha.black[70] }}
                   >
-                    {t('Team')}
+                    {t('team')}
                   </Typography>
                   <Link variant="h6" href={getTeamUrl(request.team.id)}>
                     {request.team.name}
@@ -303,7 +303,7 @@ export default function RequestDetails({
                     variant="h6"
                     sx={{ color: theme.colors.alpha.black[70] }}
                   >
-                    {t('Files')}
+                    {t('files')}
                   </Typography>
                   <FilesList
                     confirmMessage={t(
