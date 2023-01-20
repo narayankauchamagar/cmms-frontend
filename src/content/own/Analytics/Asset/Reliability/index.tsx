@@ -5,7 +5,7 @@ import { useContext, useEffect } from 'react';
 import { TitleContext } from '../../../../../contexts/TitleContext';
 import Overview from './Overview';
 import WOStatusPie from './WOStatusPie';
-import IncompleteWO from './IncompleteWO';
+import DowntimesByAsset from './DowntimesByAsset';
 import HoursWorked from './HoursWorked';
 import { Filter } from '../WOModal';
 
@@ -48,7 +48,7 @@ function WOStatusStats({ handleOpenWOModal }: WOStatusStatsProps) {
           </Grid>
         </Grid>
         <Grid item xs={12} md={6}>
-          <IncompleteWO handleOpenModal={handleOpenWOModal} />
+          <DowntimesByAsset handleOpenModal={handleOpenWOModal} />
         </Grid>
         <Grid item xs={12} md={12}>
           <HoursWorked handleOpenModal={handleOpenWOModal} />

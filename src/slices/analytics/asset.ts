@@ -4,6 +4,7 @@ import type { AppThunk } from 'src/store';
 import api from '../../utils/api';
 import {
   AssetOverviewStats,
+  DowntimesByAsset,
   TimeCostByAsset
 } from '../../models/owns/analytics/asset';
 
@@ -11,6 +12,7 @@ const basePath = 'analytics/assets';
 interface AssetStatstate {
   overview: AssetOverviewStats;
   completeTimeCostByAsset: TimeCostByAsset[];
+  downtimesByAsset: DowntimesByAsset[];
   loading: Omit<Record<keyof AssetStatstate, boolean>, 'loading'>;
 }
 type Operation = keyof AssetStatstate;
@@ -22,9 +24,11 @@ const initialState: AssetStatstate = {
     availability: 100,
     downtimeEvents: 0
   },
+  downtimesByAsset: [],
   loading: {
     completeTimeCostByAsset: false,
-    overview: false
+    overview: false,
+    downtimesByAsset: false
   }
 };
 
@@ -45,6 +49,13 @@ const slice = createSlice({
     ) {
       const { stats } = action.payload;
       state.overview = stats;
+    },
+    getDowntimesByAsset(
+      state: AssetStatstate,
+      action: PayloadAction<{ stats: DowntimesByAsset[] }>
+    ) {
+      const { stats } = action.payload;
+      state.downtimesByAsset = stats;
     },
     setLoading(
       state: AssetStatstate,
@@ -86,6 +97,22 @@ export const getAssetOverview = (): AppThunk => async (dispatch) => {
   dispatch(
     slice.actions.setLoading({
       operation: 'overview',
+      loading: false
+    })
+  );
+};
+export const getDowntimesByAsset = (): AppThunk => async (dispatch) => {
+  dispatch(
+    slice.actions.setLoading({
+      operation: 'downtimesByAsset',
+      loading: true
+    })
+  );
+  const stats = await api.get<DowntimesByAsset[]>(`${basePath}/downtimes`);
+  dispatch(slice.actions.getDowntimesByAsset({ stats }));
+  dispatch(
+    slice.actions.setLoading({
+      operation: 'downtimesByAsset',
       loading: false
     })
   );

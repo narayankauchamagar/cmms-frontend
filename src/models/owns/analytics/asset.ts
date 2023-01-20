@@ -10,3 +10,7 @@ export interface AssetOverviewStats {
   availability: number;
   downtimeEvents: number;
 }
+export interface DowntimesByAsset extends AssetMiniDTO {
+  count: number;
+  percent: number;
+}
