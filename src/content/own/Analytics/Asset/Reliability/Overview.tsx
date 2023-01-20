@@ -4,8 +4,8 @@ import AnalyticsCard from '../../AnalyticsCard';
 import { Filter } from '../WOModal';
 import { useDispatch, useSelector } from '../../../../../store';
 import { useEffect } from 'react';
-import { getOverviewStats } from '../../../../../slices/analytics/workOrder';
 import Loading from '../../Loading';
+import { getAssetOverview } from '../../../../../slices/analytics/asset';
 
 interface WOStatusNumbersProps {
   handleOpenModal: (
@@ -17,54 +17,50 @@ interface WOStatusNumbersProps {
 function Overview({ handleOpenModal }: WOStatusNumbersProps) {
   const { t }: { t: any } = useTranslation();
   const dispatch = useDispatch();
-  const { overview, loading } = useSelector((state) => state.woAnalytics);
+  const { overview, loading } = useSelector((state) => state.assetAnalytics);
 
   useEffect(() => {
-    dispatch(getOverviewStats());
+    dispatch(getAssetOverview());
   }, []);
 
   const datas: {
     label: string;
-    value: number;
+    value: number | string;
     config?: {
       columns: string[];
       filters: Filter[];
     };
   }[] = [
     {
-      label: t('Count'),
-      value: overview.total,
+      label: t('Total downtime (hours)'),
+      value: (overview.downtime / 3600).toFixed(1),
       config: {
         columns: ['id'],
         filters: [{ key: 'fs', value: false }]
       }
     },
     {
-      label: t('Complete'),
-      value: overview.complete,
+      label: t('Availability percentage'),
+      value: overview.availability.toFixed(1),
       config: {
         columns: ['id'],
         filters: [{ key: 'fs', value: false }]
       }
     },
     {
-      label: t('Compliant'),
-      value: overview.compliant,
+      label: t('Downtime Events'),
+      value: overview.downtimeEvents,
       config: {
         columns: ['id'],
         filters: [{ key: 'fs', value: false }]
       }
-    },
-    {
-      label: t('Average Cycle Time (Days)'),
-      value: overview.avgCycleTime
     }
   ];
   return (
     <AnalyticsCard
-      title="The numbers"
+      title="Downtime and availability"
       height={200}
-      description="Compliant work orders are defined as work orders that were completed before the due date. Cycle time refers to the number of days until a work order was completed."
+      description="Availability refers to the percentage that the assets were in an operational state since their placed in service date. Total downtimes refers to the number of downtime events that happened during the specified date range"
     >
       <Stack sx={{ height: '100%', justifyContent: 'center' }}>
         {loading.overview ? (
