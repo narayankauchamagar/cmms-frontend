@@ -251,7 +251,7 @@ function PageHeader({ rolesNumber, formatValues }: PageHeaderProps) {
                         mb={3}
                       >
                         <Typography variant="h4" sx={{ pb: 1 }}>
-                          {t('Delete')}
+                          {t('to_delete')}
                         </Typography>
                         <FormControlLabel
                           onChange={handleChange}

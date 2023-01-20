@@ -231,7 +231,7 @@ function EditRole({ role, open, onClose, formatValues }: EditRoleProps) {
                       mb={3}
                     >
                       <Typography variant="h4" sx={{ pb: 1 }}>
-                        {t('Delete')}
+                        {t('to_delete')}
                       </Typography>
                       <FormControlLabel
                         onChange={handleChange}
@@ -348,7 +348,7 @@ function EditRole({ role, open, onClose, formatValues }: EditRoleProps) {
                 disabled={Boolean(errors.submit) || isSubmitting}
                 variant="contained"
               >
-                {t('Save')}
+                {t('save')}
               </Button>
             </DialogActions>
           </form>

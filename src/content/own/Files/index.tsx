@@ -192,7 +192,7 @@ function Files() {
           <Form
             fields={fields}
             validation={Yup.object().shape(shape)}
-            submitText={t('Add')}
+            submitText={t('add')}
             values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
@@ -231,7 +231,7 @@ function Files() {
           <Form
             fields={updateFields}
             validation={Yup.object().shape(updateShape)}
-            submitText={t('Save')}
+            submitText={t('save')}
             values={{ ...currentFile }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
@@ -320,7 +320,7 @@ function Files() {
               setOpenDelete(false);
             }}
             onConfirm={() => handleDelete(currentFile?.id)}
-            confirmText={t('Delete')}
+            confirmText={t('to_delete')}
             question={t('Are you sure you want to delete this File?')}
           />
           {renderAddModal()}

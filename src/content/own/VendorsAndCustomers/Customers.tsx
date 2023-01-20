@@ -320,7 +320,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
           <Form
             fields={fields}
             validation={Yup.object().shape(shape)}
-            submitText={t('Add')}
+            submitText={t('add')}
             values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
@@ -424,7 +424,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
                 variant="subtitle1"
                 mr={2}
               >
-                {t('Edit')}
+                {t('edit')}
               </Typography>
             )
           ) : (
@@ -449,7 +449,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
               variant="subtitle1"
               style={{ cursor: 'pointer' }}
             >
-              {t('Delete')}
+              {t('to_delete')}
             </Typography>
           )}
         </Box>
@@ -503,7 +503,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
             <Form
               fields={fields}
               validation={Yup.object().shape(shape)}
-              submitText={t('Save')}
+              submitText={t('save')}
               values={{
                 ...currentCustomer,
                 billingCurrency: currentCustomer?.billingCurrency
@@ -549,7 +549,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
           setIsCustomerDetailsOpen(true);
         }}
         onConfirm={() => handleDelete(currentCustomer?.id)}
-        confirmText={t('Delete')}
+        confirmText={t('to_delete')}
         question={t('Are you sure you want to delete this Customer?')}
       />
     </Box>

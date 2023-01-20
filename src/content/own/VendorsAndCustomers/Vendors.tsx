@@ -302,7 +302,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
           <Form
             fields={fields}
             validation={Yup.object().shape(shape)}
-            submitText={t('Add')}
+            submitText={t('add')}
             values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
@@ -379,7 +379,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
                 variant="subtitle1"
                 mr={2}
               >
-                {t('Edit')}
+                {t('edit')}
               </Typography>
             )
           ) : (
@@ -404,7 +404,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
               variant="subtitle1"
               style={{ cursor: 'pointer' }}
             >
-              {t('Delete')}
+              {t('to_delete')}
             </Typography>
           )}
         </Box>
@@ -455,7 +455,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
             <Form
               fields={fields}
               validation={Yup.object().shape(shape)}
-              submitText={t('Save')}
+              submitText={t('save')}
               values={currentVendor || {}}
               onChange={({ field, e }) => {}}
               onSubmit={async (values) => {
@@ -496,7 +496,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
           setIsVendorDetailsOpen(true);
         }}
         onConfirm={() => handleDelete(currentVendor?.id)}
-        confirmText={t('Delete')}
+        confirmText={t('to_delete')}
         question={t('Are you sure you want to delete this Vendor?')}
       />
     </Box>

@@ -1,18 +1,18 @@
-import { FC, ChangeEvent, useState, useRef } from 'react';
+import { ChangeEvent, FC, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Box,
   Checkbox,
   IconButton,
-  Tooltip,
-  Typography,
-  TextField,
-  ListItemText,
-  ListItem,
-  List,
   InputAdornment,
+  List,
+  ListItem,
+  ListItemText,
   Menu,
-  styled
+  styled,
+  TextField,
+  Tooltip,
+  Typography
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
@@ -115,7 +115,7 @@ const ActionBarItem: FC<ActionBarItemProps> = ({
                   <ArchiveTwoToneIcon />
                 </IconButton>
               </Tooltip>
-              <Tooltip arrow placement="top" title={t('Delete')}>
+              <Tooltip arrow placement="top" title={t('to_delete')}>
                 <IconButton
                   color="primary"
                   sx={{

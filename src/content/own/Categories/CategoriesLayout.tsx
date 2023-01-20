@@ -319,7 +319,7 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
                 disabled={isSubmitting}
                 variant="contained"
               >
-                {t('Save')}
+                {t('save')}
               </Button>
             </DialogActions>
           </form>
@@ -475,7 +475,7 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
             setOpenDelete(false);
           }}
           onConfirm={() => handleDelete(currentCategory?.id)}
-          confirmText={t('Delete')}
+          confirmText={t('to_delete')}
           question={t('Are you sure you want to delete this Category?')}
         />
       </MultipleTabsLayout>

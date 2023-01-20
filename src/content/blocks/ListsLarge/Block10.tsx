@@ -1,21 +1,21 @@
 import { Fragment } from 'react';
 
 import {
+  Avatar,
+  Badge,
   Box,
+  Button,
+  Card,
+  Divider,
+  FormControl,
+  InputAdornment,
+  List,
+  ListItem,
   ListItemAvatar,
   ListItemText,
-  Divider,
-  List,
-  Card,
-  Button,
-  Typography,
-  Avatar,
-  styled,
-  ListItem,
-  Badge,
   OutlinedInput,
-  InputAdornment,
-  FormControl,
+  styled,
+  Typography,
   useTheme
 } from '@mui/material';
 import Scrollbar from 'src/components/Scrollbar';
@@ -208,7 +208,7 @@ function Block10() {
                         }
                       }}
                     >
-                      {t('Add')}
+                      {t('add')}
                     </Button>
                   }
                 >

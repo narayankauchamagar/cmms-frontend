@@ -21,7 +21,6 @@ import { getMetersByAsset } from '../../../../slices/meter';
 import { useContext, useEffect, useState } from 'react';
 import Meter from '../../../../models/owns/meter';
 import { createReading, getReadings } from '../../../../slices/reading';
-import Reading from '../../../../models/owns/reading';
 import { CompanySettingsContext } from '../../../../contexts/CompanySettingsContext';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import Form from '../../components/form';
@@ -72,30 +71,30 @@ const AssetMeters = ({ asset }: PropsType) => {
 
   const onCreationSuccess = () => {
     setOpenReadingModal(false);
-    showSnackBar(t('The Reading has been added successfully'), 'success');
+    showSnackBar(t('reading_create_success'), 'success');
   };
   const onCreationFailure = (err) =>
-    showSnackBar(t("The Reading couldn't be added"), 'error');
+    showSnackBar(t('reading_create_failure'), 'error');
 
   const columns: GridEnrichedColDef[] = [
     {
       field: 'value',
-      headerName: t('Reading'),
-      description: t('Reading'),
+      headerName: t('reading'),
+      description: t('reading'),
       width: 150,
       valueGetter: (params) => `${params.value} ${selectedMeter.unit}`
     },
     {
       field: 'createdAt',
-      headerName: t('Date'),
-      description: t('Date'),
+      headerName: t('date'),
+      description: t('date'),
       width: 150,
       valueGetter: (params) => getFormattedDate(params.value)
     },
     {
       field: 'createdBy',
-      headerName: t('Added by'),
-      description: t('Added By'),
+      headerName: t('added_by'),
+      description: t('added_by'),
       width: 150,
       valueGetter: (params) => getUserNameById(params.value)
     }
@@ -104,8 +103,8 @@ const AssetMeters = ({ asset }: PropsType) => {
     {
       name: 'value',
       type: 'number',
-      label: t('Reading'),
-      placeholder: t('Enter Meter value'),
+      label: t('reading'),
+      placeholder: t('enter_meter_value'),
       required: true
     }
   ];
@@ -122,7 +121,7 @@ const AssetMeters = ({ asset }: PropsType) => {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Add Reading')}
+          {t('add_reading')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -135,7 +134,7 @@ const AssetMeters = ({ asset }: PropsType) => {
           <Form
             fields={fields}
             validation={Yup.object().shape({})}
-            submitText={t('Add')}
+            submitText={t('add')}
             values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
@@ -162,7 +161,7 @@ const AssetMeters = ({ asset }: PropsType) => {
                     spacing={1}
                     sx={{ my: 2, alignItems: 'center' }}
                   >
-                    <Typography variant="h5">{t('Select Meter')}</Typography>
+                    <Typography variant="h5">{t('select_meter')}</Typography>
                     <Select
                       value={selectedMeter?.id ?? ''}
                       onChange={(event) => {
@@ -173,7 +172,7 @@ const AssetMeters = ({ asset }: PropsType) => {
                         );
                       }}
                     >
-                      <MenuItem value={''}>{t('Select a Meter')}</MenuItem>
+                      <MenuItem value={''}>{t('select_meter')}</MenuItem>
                       {meters.map((meter) => (
                         <MenuItem key={meter.id} value={meter.id}>
                           {meter.name}
@@ -192,7 +191,7 @@ const AssetMeters = ({ asset }: PropsType) => {
                       }
                       onClick={() => setOpenReadingModal(true)}
                     >
-                      {t('Add Reading')}
+                      {t('add_reading')}
                     </Button>
                   )}
                 </Stack>

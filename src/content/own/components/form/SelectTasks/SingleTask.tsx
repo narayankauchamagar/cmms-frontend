@@ -255,7 +255,7 @@ export default function SingleTask({
               );
             }}
           >
-            {t('Save')}
+            {t('save')}
           </Button>
         </Box>
         <Grid container spacing={1} sx={{ mt: 2 }}>

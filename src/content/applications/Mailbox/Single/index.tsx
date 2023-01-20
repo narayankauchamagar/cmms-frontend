@@ -1,22 +1,22 @@
-import { useEffect, useState, useRef } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { format, formatDistance } from 'date-fns';
 import {
   Avatar,
   Box,
+  Button,
+  Card,
   Divider,
   IconButton,
-  Tooltip,
-  Typography,
-  ListItemText,
-  ListItem,
-  Card,
-  List,
-  Menu,
-  Button,
-  TextField,
   lighten,
-  styled
+  List,
+  ListItem,
+  ListItemText,
+  Menu,
+  styled,
+  TextField,
+  Tooltip,
+  Typography
 } from '@mui/material';
 import { useDispatch, useSelector } from 'src/store';
 import { getMail } from 'src/slices/mailbox';
@@ -159,7 +159,7 @@ function MailboxSingle() {
               <ArchiveTwoToneIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip arrow placement="top" title={t('Delete')}>
+          <Tooltip arrow placement="top" title={t('to_delete')}>
             <IconButton
               color="primary"
               sx={{

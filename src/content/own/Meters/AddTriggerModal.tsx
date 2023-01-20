@@ -108,7 +108,7 @@ export default function AddTriggerModal({
         <Form
           fields={fields}
           validation={Yup.object().shape(shape)}
-          submitText={t('Add')}
+          submitText={t('add')}
           values={{ dueDate: null }}
           onChange={({ field, e }) => {}}
           onSubmit={async (values) => {

@@ -326,7 +326,7 @@ function SubscriptionPlans() {
                 disabled={isSubmitting}
                 variant="contained"
               >
-                {t('Save')}
+                {t('save')}
               </Button>
             </DialogActions>
           </form>

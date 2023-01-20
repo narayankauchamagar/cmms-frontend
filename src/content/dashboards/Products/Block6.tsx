@@ -1,25 +1,25 @@
-import { useState, ChangeEvent, MouseEvent } from 'react';
+import { ChangeEvent, MouseEvent, useState } from 'react';
 
 import {
-  Divider,
+  alpha,
+  Avatar,
   Box,
   Card,
-  Typography,
+  Divider,
+  IconButton,
   InputAdornment,
-  alpha,
   Link,
-  Avatar,
+  styled,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TablePagination,
+  TableRow,
   TextField,
   Tooltip,
-  IconButton,
-  TablePagination,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  Table,
-  TableContainer,
-  styled,
+  Typography,
   useTheme
 } from '@mui/material';
 
@@ -336,7 +336,7 @@ function Block6() {
                         <LaunchTwoToneIcon fontSize="small" />
                       </IconButtonWrapper>
                     </Tooltip>
-                    <Tooltip title={t('Delete')} arrow>
+                    <Tooltip title={t('to_delete')} arrow>
                       <IconButtonWrapper
                         sx={{
                           ml: 1,
@@ -469,7 +469,7 @@ function Block6() {
                         <LaunchTwoToneIcon fontSize="small" />
                       </IconButtonWrapper>
                     </Tooltip>
-                    <Tooltip title={t('Delete')} arrow>
+                    <Tooltip title={t('to_delete')} arrow>
                       <IconButtonWrapper
                         sx={{
                           ml: 1,
@@ -602,7 +602,7 @@ function Block6() {
                         <LaunchTwoToneIcon fontSize="small" />
                       </IconButtonWrapper>
                     </Tooltip>
-                    <Tooltip title={t('Delete')} arrow>
+                    <Tooltip title={t('to_delete')} arrow>
                       <IconButtonWrapper
                         sx={{
                           ml: 1,

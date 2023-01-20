@@ -1,5 +1,5 @@
-import { useState, ReactElement, Ref, forwardRef } from 'react';
-import type { FC, ChangeEvent } from 'react';
+import type { ChangeEvent, FC } from 'react';
+import { forwardRef, ReactElement, Ref, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import numeral from 'numeral';
@@ -7,31 +7,31 @@ import numeral from 'numeral';
 import {
   Avatar,
   Box,
+  Button,
   Card,
   Checkbox,
-  Grid,
-  Slide,
+  Dialog,
   Divider,
-  Tooltip,
+  FormControl,
+  Grid,
   IconButton,
+  InputAdornment,
+  InputLabel,
   MenuItem,
+  Select,
+  Slide,
+  styled,
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TablePagination,
-  TableContainer,
   TableRow,
   TextField,
-  Button,
+  Tooltip,
   Typography,
-  Dialog,
-  FormControl,
-  Select,
-  InputLabel,
-  Zoom,
-  InputAdornment,
-  styled
+  Zoom
 } from '@mui/material';
 import { TransitionProps } from '@mui/material/transitions';
 import CloseIcon from '@mui/icons-material/Close';
@@ -477,7 +477,7 @@ const Results: FC<ResultsProps> = ({ invoices }) => {
                                 <LaunchTwoToneIcon fontSize="small" />
                               </IconButton>
                             </Tooltip>
-                            <Tooltip title={t('Delete')} arrow>
+                            <Tooltip title={t('to_delete')} arrow>
                               <IconButton
                                 onClick={handleConfirmDelete}
                                 color="primary"
@@ -572,7 +572,7 @@ const Results: FC<ResultsProps> = ({ invoices }) => {
               }}
               variant="contained"
             >
-              {t('Delete')}
+              {t('to_delete')}
             </ButtonError>
           </Box>
         </Box>

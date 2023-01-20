@@ -207,7 +207,7 @@ function Checklists() {
               setOpenDelete(false);
             }}
             onConfirm={() => handleDelete(currentChecklist?.id)}
-            confirmText={t('Delete')}
+            confirmText={t('to_delete')}
             question={t('Are you sure you want to delete this Checklist?')}
           />
         </>

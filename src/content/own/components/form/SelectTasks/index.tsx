@@ -167,7 +167,7 @@ export default function SelectTasks({
     setTasks(newTasks);
   };
   const tabs = [
-    { value: 'edit', label: t('Edit') },
+    { value: 'edit', label: t('edit') },
     { value: 'preview', label: t('Preview') }
   ];
   const addTask = () => {

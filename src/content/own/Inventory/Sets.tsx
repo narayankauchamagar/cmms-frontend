@@ -21,7 +21,7 @@ import {
   GridValueGetterParams
 } from '@mui/x-data-grid';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
-import Part, { parts } from '../../../models/owns/part';
+import Part from '../../../models/owns/part';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useDispatch, useSelector } from '../../../store';
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
@@ -410,7 +410,7 @@ const Sets = ({ setAction }: PropsType) => {
           setOpenDrawer(true);
         }}
         onConfirm={() => handleDelete(currentSet?.id)}
-        confirmText={t('Delete')}
+        confirmText={t('to_delete')}
         question={t('Are you sure you want to delete this Set?')}
       />
     </Box>

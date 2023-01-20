@@ -37,28 +37,13 @@ export const formatSwitch = (values: {}, key: string) => {
 export const getPriorityLabel = (str: string, t: any) => {
   switch (str) {
     case 'NONE':
-      return t('None');
+      return t('none_priority');
     case 'LOW':
-      return t('Low');
+      return t('low_priority');
     case 'MEDIUM':
-      return t('Medium');
+      return t('medium_priority');
     case 'HIGH':
-      return t('High');
-    default:
-      break;
-  }
-};
-
-export const getStatusLabel = (str: string, t: any) => {
-  switch (str) {
-    case 'OPEN':
-      return t('Open');
-    case 'IN_PROGRESS':
-      return t('In Progress');
-    case 'ON_HOLD':
-      return t('On Hold');
-    case 'COMPLETE':
-      return t('Complete');
+      return t('high_priority');
     default:
       break;
   }

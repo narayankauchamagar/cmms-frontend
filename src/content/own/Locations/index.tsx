@@ -42,8 +42,6 @@ import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import Form from '../components/form';
 import * as Yup from 'yup';
 import { isNumeric } from '../../../utils/validators';
-import { teams } from '../../../models/owns/team';
-import { vendors } from '../../../models/owns/vendor';
 import LocationDetails from './LocationDetails';
 import { useParams } from 'react-router-dom';
 import Map from '../components/Map';
@@ -396,7 +394,7 @@ function Locations() {
           <Form
             fields={fields}
             validation={Yup.object().shape(shape)}
-            submitText={t('Add')}
+            submitText={t('add')}
             values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
@@ -466,7 +464,7 @@ function Locations() {
           <Form
             fields={getEditFields()}
             validation={Yup.object().shape(shape)}
-            submitText={t('Save')}
+            submitText={t('save')}
             values={{
               ...currentLocation,
               title: currentLocation?.name,
@@ -683,7 +681,7 @@ function Locations() {
             setOpenDelete(false);
           }}
           onConfirm={() => handleDelete(currentLocation?.id)}
-          confirmText={t('Delete')}
+          confirmText={t('to_delete')}
           question={t('Are you sure you want to delete this Location?')}
         />
       </>

@@ -1,16 +1,16 @@
-import { useState, useRef } from 'react';
+import { useRef, useState } from 'react';
 
 import {
   Box,
-  Menu,
-  Tooltip,
-  IconButton,
   Button,
-  ListItemText,
-  ListItem,
+  IconButton,
   List,
-  Typography,
-  styled
+  ListItem,
+  ListItemText,
+  Menu,
+  styled,
+  Tooltip,
+  Typography
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
@@ -67,7 +67,7 @@ function BulkActions() {
             startIcon={<DeleteTwoToneIcon />}
             variant="contained"
           >
-            {t('Delete')}
+            {t('to_delete')}
           </ButtonError>
         </Box>
         <IconButton

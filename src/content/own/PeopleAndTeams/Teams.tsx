@@ -251,7 +251,7 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
                 variant="subtitle1"
                 mr={2}
               >
-                {t('Edit')}
+                {t('edit')}
               </Typography>
             )
           ) : (
@@ -276,7 +276,7 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
                 setOpenDelete(true);
               }}
             >
-              {t('Delete')}
+              {t('to_delete')}
             </Typography>
           )}
         </Box>
@@ -367,7 +367,7 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
           setIsTeamDetailsOpen(true);
         }}
         onConfirm={() => handleDelete(currentTeam?.id)}
-        confirmText={t('Delete')}
+        confirmText={t('to_delete')}
         question={t('Are you sure you want to delete this Team?')}
       />
     </Box>

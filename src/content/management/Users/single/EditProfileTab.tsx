@@ -1,11 +1,11 @@
 import {
-  Grid,
-  Typography,
-  CardContent,
-  Card,
   Box,
+  Button,
+  Card,
+  CardContent,
   Divider,
-  Button
+  Grid,
+  Typography
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
@@ -35,7 +35,7 @@ function EditProfileTab() {
               </Typography>
             </Box>
             <Button variant="text" startIcon={<EditTwoToneIcon />}>
-              {t('Edit')}
+              {t('edit')}
             </Button>
           </Box>
           <Divider />
@@ -105,7 +105,7 @@ function EditProfileTab() {
               </Typography>
             </Box>
             <Button variant="text" startIcon={<EditTwoToneIcon />}>
-              {t('Edit')}
+              {t('edit')}
             </Button>
           </Box>
           <Divider />
@@ -169,7 +169,7 @@ function EditProfileTab() {
               </Typography>
             </Box>
             <Button variant="text" startIcon={<EditTwoToneIcon />}>
-              {t('Edit')}
+              {t('edit')}
             </Button>
           </Box>
           <Divider />

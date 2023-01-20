@@ -1,27 +1,27 @@
-import { FC, forwardRef, useState, useRef } from 'react';
+import { FC, forwardRef, useRef, useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
   Avatar,
+  AvatarGroup,
   Box,
-  LinearProgress,
+  Button,
   Card,
-  Tooltip,
+  IconButton,
+  LinearProgress,
   List as ListWrapper,
   ListItem,
   ListItemText,
   Menu,
-  Button,
-  IconButton,
-  Typography,
-  AvatarGroup,
-  styled
+  styled,
+  Tooltip,
+  Typography
 } from '@mui/material';
 import { formatDistance } from 'date-fns';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'src/store';
 import type { RootState } from 'src/store';
-import type { Task as TaskType, List, Member } from 'src/models/projects_board';
+import { useSelector } from 'src/store';
+import type { List, Member, Task as TaskType } from 'src/models/projects_board';
 import CommentTwoToneIcon from '@mui/icons-material/CommentTwoTone';
 import MoreHorizTwoToneIcon from '@mui/icons-material/MoreHorizTwoTone';
 import AttachFileTwoToneIcon from '@mui/icons-material/AttachFileTwoTone';
@@ -225,7 +225,7 @@ const Task: FC<TaskProps> = forwardRef(
             </ListItem>
             <ListItem button>
               <DeleteForeverTwoToneIcon />
-              <ListItemText primary={t('Delete')} />
+              <ListItemText primary={t('to_delete')} />
             </ListItem>
           </ListWrapper>
         </Menu>

@@ -414,7 +414,7 @@ function PurchaseOrders() {
           <Form
             fields={fields}
             validation={Yup.object().shape(shape)}
-            submitText={t('Save')}
+            submitText={t('save')}
             values={{
               ...currentPurchaseOrder,
               vendor: currentPurchaseOrder?.vendor
@@ -563,7 +563,7 @@ function PurchaseOrders() {
               setOpenDrawer(true);
             }}
             onConfirm={() => handleDelete(currentPurchaseOrder?.id)}
-            confirmText={t('Delete')}
+            confirmText={t('to_delete')}
             question={t('Are you sure you want to delete this Purchase Order?')}
           />
         </>

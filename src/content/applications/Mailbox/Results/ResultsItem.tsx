@@ -1,18 +1,17 @@
-import type { FC, ChangeEvent } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import { useParams, useLocation } from 'react-router-dom';
+import type { ChangeEvent, FC } from 'react';
+import { Link as RouterLink, useLocation, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { format } from 'date-fns';
 import {
   Avatar,
   Box,
-  Tooltip,
-  Checkbox,
   Card,
+  Checkbox,
   IconButton,
-  Typography,
-  styled
+  styled,
+  Tooltip,
+  Typography
 } from '@mui/material';
 import { useSelector } from 'src/store';
 import type { Mail } from 'src/models/mailbox';
@@ -248,7 +247,7 @@ const ResultsItem: FC<ResultsItemProps> = ({
             <ArchiveTwoToneIcon fontSize="small" />
           </IconButton>
         </Tooltip>
-        <Tooltip arrow placement="top" title={t('Delete')}>
+        <Tooltip arrow placement="top" title={t('to_delete')}>
           <IconButton
             color="primary"
             sx={{

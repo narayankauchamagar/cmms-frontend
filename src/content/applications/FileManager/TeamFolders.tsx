@@ -1,23 +1,23 @@
 import { MouseEvent, useState } from 'react';
 import {
-  Card,
-  Box,
-  Typography,
-  ToggleButton,
-  ToggleButtonGroup,
-  Grid,
+  Avatar,
   AvatarGroup,
+  Box,
+  Card,
+  Grid,
   IconButton,
   Link,
+  styled,
   Table,
-  Avatar,
+  TableBody,
+  TableCell,
+  TableContainer,
   TableHead,
   TableRow,
-  TableCell,
-  TableBody,
+  ToggleButton,
+  ToggleButtonGroup,
   Tooltip,
-  TableContainer,
-  styled,
+  Typography,
   useTheme
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -388,7 +388,7 @@ function TeamFolders() {
                             <LaunchTwoToneIcon fontSize="small" />
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title={t('Delete')} arrow>
+                        <Tooltip title={t('to_delete')} arrow>
                           <IconButton
                             sx={{
                               '&:hover': {
@@ -476,7 +476,7 @@ function TeamFolders() {
                             <LaunchTwoToneIcon fontSize="small" />
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title={t('Delete')} arrow>
+                        <Tooltip title={t('to_delete')} arrow>
                           <IconButton
                             sx={{
                               '&:hover': {

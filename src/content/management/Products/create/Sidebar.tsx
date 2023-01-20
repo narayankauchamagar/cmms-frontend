@@ -1,23 +1,23 @@
 import { ChangeEvent, useState } from 'react';
 
 import {
-  ListItemText,
+  Alert,
   Avatar,
   Box,
-  Typography,
-  Checkbox,
-  FormControlLabel,
   Button,
-  Switch,
+  Card,
+  CardHeader,
+  Checkbox,
   Chip,
   Divider,
+  FormControlLabel,
   Grid,
-  ListItem,
   List,
-  CardHeader,
-  Alert,
-  Card,
+  ListItem,
+  ListItemText,
   styled,
+  Switch,
+  Typography,
   useTheme
 } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
@@ -177,7 +177,7 @@ function Sidebar() {
               variant="outlined"
               startIcon={<EditTwoToneIcon />}
             >
-              {t('Edit')}
+              {t('edit')}
             </Button>
           }
           title={t('Publish')}

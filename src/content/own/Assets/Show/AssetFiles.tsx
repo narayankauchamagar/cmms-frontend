@@ -25,11 +25,7 @@ const AssetFiles = ({ asset }: PropsType) => {
   const { hasEditPermission, hasDeletePermission } = useAuth();
 
   const handleDelete = (id: number) => {
-    if (
-      window.confirm(
-        t('Are you sure you want to remove this File from this asset?')
-      )
-    ) {
+    if (window.confirm(t('confirm_remove_file_asset'))) {
       dispatch(
         editAsset(asset.id, {
           ...asset,
@@ -41,15 +37,15 @@ const AssetFiles = ({ asset }: PropsType) => {
   const columns: GridEnrichedColDef[] = [
     {
       field: 'name',
-      headerName: t('Name'),
-      description: t('Name'),
+      headerName: t('name'),
+      description: t('name'),
       width: 150
     },
     {
       field: 'actions',
       type: 'actions',
-      headerName: t('Actions'),
-      description: t('Actions'),
+      headerName: t('actions'),
+      description: t('actions'),
       getActions: (params: GridRowParams) => {
         let actions = [
           <GridActionsCellItem

@@ -1,29 +1,29 @@
-import { useState, ChangeEvent, SyntheticEvent } from 'react';
+import { ChangeEvent, SyntheticEvent, useState } from 'react';
 import {
-  ListItemIcon,
   Accordion,
-  AccordionSummary,
   AccordionDetails,
+  AccordionSummary,
   Avatar,
+  AvatarGroup,
   Box,
-  Typography,
-  Divider,
-  Link,
   Button,
+  CardContent,
+  Divider,
+  Grid,
   IconButton,
+  lighten,
+  Link,
   List,
   ListItem,
-  ListItemText,
-  CardContent,
-  Tabs,
-  Tab,
-  Tooltip,
-  AvatarGroup,
-  Grid,
-  lighten,
-  ListSubheader,
   ListItemAvatar,
-  styled
+  ListItemIcon,
+  ListItemText,
+  ListSubheader,
+  styled,
+  Tab,
+  Tabs,
+  Tooltip,
+  Typography
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { formatDistance, subDays } from 'date-fns';
@@ -324,7 +324,7 @@ function SidebarDrawer() {
                     variant="text"
                     size="small"
                   >
-                    {t('Edit')}
+                    {t('edit')}
                   </Button>
                 </Grid>
                 <Grid item sm={12}>
@@ -362,7 +362,7 @@ function SidebarDrawer() {
                     <ShareTwoToneIcon />
                   </IconButtonWrapper>
                 </Tooltip>
-                <Tooltip arrow placement="top" title={t('Delete')}>
+                <Tooltip arrow placement="top" title={t('to_delete')}>
                   <IconButtonWrapper>
                     <DeleteTwoToneIcon />
                   </IconButtonWrapper>

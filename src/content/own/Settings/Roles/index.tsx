@@ -363,7 +363,7 @@ function Roles() {
             }}
             variant="contained"
           >
-            {t('Delete')}
+            {t('to_delete')}
           </ButtonError>
         </Box>
       </Box>

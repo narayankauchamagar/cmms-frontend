@@ -54,7 +54,7 @@ export default function CustomGridTreeDataGroupingCell(
             tabIndex={-1}
             size="small"
           >
-            {t('Show')} {filteredDescendantCount}{' '}
+            {t('show')} {filteredDescendantCount}{' '}
             {filteredDescendantCount === 1 ? 'Asset' : 'Assets'}
           </Button>
         ) : (

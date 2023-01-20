@@ -1,49 +1,49 @@
 import {
-  FC,
   ChangeEvent,
+  FC,
+  forwardRef,
   MouseEvent,
-  useState,
   ReactElement,
   Ref,
-  forwardRef
+  useState
 } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Avatar,
   Autocomplete,
+  Avatar,
+  AvatarGroup,
   Box,
+  Button,
   Card,
+  CardMedia,
   Checkbox,
-  Grid,
-  Slide,
+  Dialog,
   Divider,
-  Tooltip,
+  FormControl,
+  Grid,
   IconButton,
   InputAdornment,
-  MenuItem,
+  InputLabel,
+  lighten,
+  LinearProgress,
   Link,
-  AvatarGroup,
+  MenuItem,
+  Select,
+  Slide,
+  styled,
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TablePagination,
-  TableContainer,
   TableRow,
+  TextField,
   ToggleButton,
   ToggleButtonGroup,
-  LinearProgress,
-  TextField,
-  Button,
+  Tooltip,
   Typography,
-  Dialog,
-  FormControl,
-  Select,
-  InputLabel,
-  Zoom,
-  CardMedia,
-  lighten,
-  styled
+  Zoom
 } from '@mui/material';
 import { TransitionProps } from '@mui/material/transitions';
 import CloseIcon from '@mui/icons-material/Close';
@@ -58,7 +58,7 @@ import GridViewTwoToneIcon from '@mui/icons-material/GridViewTwoTone';
 import TableRowsTwoToneIcon from '@mui/icons-material/TableRowsTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import { useSnackbar } from 'notistack';
-import { formatDistance, format } from 'date-fns';
+import { format, formatDistance } from 'date-fns';
 import Text from 'src/components/Text';
 
 const DialogWrapper = styled(Dialog)(
@@ -619,7 +619,7 @@ const Results: FC<ResultsProps> = ({ projects }) => {
                                   <LaunchTwoToneIcon fontSize="small" />
                                 </IconButton>
                               </Tooltip>
-                              <Tooltip title={t('Delete')} arrow>
+                              <Tooltip title={t('to_delete')} arrow>
                                 <IconButton
                                   onClick={handleConfirmDelete}
                                   color="primary"
@@ -866,9 +866,9 @@ const Results: FC<ResultsProps> = ({ projects }) => {
                                 variant="contained"
                                 color="primary"
                               >
-                                {t('Edit')}
+                                {t('edit')}
                               </Button>
-                              <Tooltip title={t('Delete')} arrow>
+                              <Tooltip title={t('to_delete')} arrow>
                                 <IconButtonError
                                   onClick={handleConfirmDelete}
                                   color="primary"
@@ -1003,7 +1003,7 @@ const Results: FC<ResultsProps> = ({ projects }) => {
               }}
               variant="contained"
             >
-              {t('Delete')}
+              {t('to_delete')}
             </ButtonError>
           </Box>
         </Box>

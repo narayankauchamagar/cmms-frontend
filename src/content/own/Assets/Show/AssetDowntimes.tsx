@@ -65,19 +65,19 @@ const AssetDowntimes = ({ asset }: PropsType) => {
     if (asset) dispatch(getAssetDowntimes(asset.id));
   }, [asset]);
   const handleDelete = (id: number) => {
-    if (window.confirm(t('Are you sure you want to remove this Downtime?'))) {
+    if (window.confirm(t('confirm_remove_asset_downtime'))) {
       dispatch(deleteAssetDowntime(asset.id, id));
     }
   };
   const onCreationSuccess = () => {
     setOpenAddModal(false);
-    showSnackBar(t('The Downtime has been added successfully'), 'success');
+    showSnackBar(t('create_downtime_success'), 'success');
   };
   const onCreationFailure = (err) =>
-    showSnackBar(t("The Downtime couldn't be added"), 'error');
+    showSnackBar(t('create_downtime_failure'), 'error');
   const onEditSuccess = () => {
     setOpenEditModal(false);
-    showSnackBar(t('The Downtime has been edited successfully'), 'success');
+    showSnackBar(t('edit_downtime_success'), 'success');
   };
   const onEditFailure = (err) =>
     showSnackBar(t("The Downtime couldn't be edited"), 'error');
@@ -102,16 +102,16 @@ const AssetDowntimes = ({ asset }: PropsType) => {
   const columns: GridEnrichedColDef[] = [
     {
       field: 'duration',
-      headerName: t('Duration'),
-      description: t('Duration'),
+      headerName: t('duration'),
+      description: t('duration'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<number>) =>
         getHMSString(params.value)
     },
     {
       field: 'startsOn',
-      headerName: t('Started On'),
-      description: t('Started On'),
+      headerName: t('started_on'),
+      description: t('started_on'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<string>) =>
         getFormattedDate(params.value)
@@ -119,21 +119,21 @@ const AssetDowntimes = ({ asset }: PropsType) => {
     {
       field: 'actions',
       type: 'actions',
-      headerName: t('Actions'),
-      description: t('Actions'),
+      headerName: t('actions'),
+      description: t('actions'),
       getActions: (params: GridRowParams) => {
         let actions = [
           <GridActionsCellItem
             key="edit"
             icon={<EditTwoToneIcon fontSize="small" color="primary" />}
             onClick={() => handleEdit(Number(params.id))}
-            label="Edit Downtime"
+            label={t('edit_downtime')}
           />,
           <GridActionsCellItem
             key="delete"
             icon={<DeleteTwoToneIcon fontSize="small" color="error" />}
             onClick={() => handleDelete(Number(params.id))}
-            label="Remove Downtime"
+            label={t('remove_downtime')}
           />
         ];
         if (!hasEditPermission(PermissionEntity.ASSETS, asset)) actions = [];
@@ -142,28 +142,28 @@ const AssetDowntimes = ({ asset }: PropsType) => {
     }
   ];
   const fields: Array<IField> = [
-    { name: 'startsOn', type: 'date', label: 'Started On' },
+    { name: 'startsOn', type: 'date', label: t('started_on') },
     {
       name: 'hours',
       type: 'number',
-      label: t('Hours'),
-      placeholder: t('Hours'),
+      label: t('hours'),
+      placeholder: t('hours'),
       required: true,
       midWidth: true
     },
     {
       name: 'minutes',
       type: 'number',
-      label: t('Minutes'),
-      placeholder: t('Minutes'),
+      label: t('minutes'),
+      placeholder: t('minutes'),
       required: true,
       midWidth: true
     }
   ];
   const shape = {
-    startsOn: Yup.string().required(t('The start date is required')),
-    hours: Yup.number().required(t('The hours are required')),
-    minutes: Yup.number().required(t('The minutes are required'))
+    startsOn: Yup.string().required(t('required_startsOn')),
+    hours: Yup.number().required(t('required_hours')),
+    minutes: Yup.number().required(t('required_minutes'))
   };
   const renderAddModal = () => (
     <Dialog
@@ -178,7 +178,7 @@ const AssetDowntimes = ({ asset }: PropsType) => {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Add Downtime')}
+          {t('add_downtime')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -191,7 +191,7 @@ const AssetDowntimes = ({ asset }: PropsType) => {
           <Form
             fields={fields}
             validation={Yup.object().shape(shape)}
-            submitText={t('Add')}
+            submitText={t('add')}
             values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
@@ -236,7 +236,7 @@ const AssetDowntimes = ({ asset }: PropsType) => {
           <Form
             fields={fields}
             validation={Yup.object().shape(shape)}
-            submitText={t('Save')}
+            submitText={t('save')}
             values={{
               ...currentDowntime,
               hours: currentDowntime
@@ -290,7 +290,7 @@ const AssetDowntimes = ({ asset }: PropsType) => {
                     variant="contained"
                     onClick={() => setOpenAddModal(true)}
                   >
-                    {t('Add Downtime')}
+                    {t('add_downtime')}
                   </Button>
                 )}
               </Stack>

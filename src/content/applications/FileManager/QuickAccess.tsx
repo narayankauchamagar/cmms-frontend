@@ -1,27 +1,27 @@
 import { MouseEvent, useState } from 'react';
 import {
-  Card,
+  Avatar,
   Box,
-  Typography,
-  ToggleButton,
-  ToggleButtonGroup,
-  Grid,
-  CardActions,
+  Card,
   CardActionArea,
+  CardActions,
   Divider,
+  Drawer,
+  Grid,
   IconButton,
   Link,
+  styled,
   Table,
-  Avatar,
+  TableBody,
+  TableCell,
+  TableContainer,
   TableHead,
   TableRow,
-  TableCell,
-  TableBody,
+  ToggleButton,
+  ToggleButtonGroup,
   Tooltip,
-  Drawer,
-  styled,
-  useTheme,
-  TableContainer
+  Typography,
+  useTheme
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { formatDistance, subDays } from 'date-fns';
@@ -367,7 +367,7 @@ function QuickAccess() {
                             <LaunchTwoToneIcon fontSize="small" />
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title={t('Delete')} arrow>
+                        <Tooltip title={t('to_delete')} arrow>
                           <IconButton
                             sx={{
                               '&:hover': {
@@ -433,7 +433,7 @@ function QuickAccess() {
                             <LaunchTwoToneIcon fontSize="small" />
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title={t('Delete')} arrow>
+                        <Tooltip title={t('to_delete')} arrow>
                           <IconButton
                             sx={{
                               '&:hover': {
@@ -499,7 +499,7 @@ function QuickAccess() {
                             <LaunchTwoToneIcon fontSize="small" />
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title={t('Delete')} arrow>
+                        <Tooltip title={t('to_delete')} arrow>
                           <IconButton
                             sx={{
                               '&:hover': {
@@ -559,7 +559,7 @@ function QuickAccess() {
                             <LaunchTwoToneIcon fontSize="small" />
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title={t('Delete')} arrow>
+                        <Tooltip title={t('to_delete')} arrow>
                           <IconButton
                             sx={{
                               '&:hover': {

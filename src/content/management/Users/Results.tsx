@@ -1,44 +1,44 @@
 import {
-  FC,
   ChangeEvent,
+  FC,
+  forwardRef,
   MouseEvent,
-  SyntheticEvent,
-  useState,
   ReactElement,
   Ref,
-  forwardRef
+  SyntheticEvent,
+  useState
 } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
   Avatar,
   Box,
+  Button,
   Card,
   Checkbox,
-  Grid,
-  Slide,
+  Dialog,
   Divider,
-  Tooltip,
+  Grid,
   IconButton,
   InputAdornment,
   Link,
+  Slide,
+  styled,
+  Tab,
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TablePagination,
-  TableContainer,
   TableRow,
-  ToggleButton,
-  ToggleButtonGroup,
-  Tab,
   Tabs,
   TextField,
-  Button,
+  ToggleButton,
+  ToggleButtonGroup,
+  Tooltip,
   Typography,
-  Dialog,
-  Zoom,
-  styled
+  Zoom
 } from '@mui/material';
 import { TransitionProps } from '@mui/material/transitions';
 import CloseIcon from '@mui/icons-material/Close';
@@ -496,7 +496,7 @@ const Results: FC<ResultsProps> = ({ users }) => {
                                   <LaunchTwoToneIcon fontSize="small" />
                                 </IconButton>
                               </Tooltip>
-                              <Tooltip title={t('Delete')} arrow>
+                              <Tooltip title={t('to_delete')} arrow>
                                 <IconButton
                                   onClick={handleConfirmDelete}
                                   color="primary"
@@ -812,7 +812,7 @@ const Results: FC<ResultsProps> = ({ users }) => {
               }}
               variant="contained"
             >
-              {t('Delete')}
+              {t('to_delete')}
             </ButtonError>
           </Box>
         </Box>

@@ -6,32 +6,32 @@ import wait from 'src/utils/wait';
 import numeral from 'numeral';
 
 import {
-  styled,
-  Grid,
-  Dialog,
-  DialogTitle,
-  Chip,
-  DialogContent,
-  Box,
-  Zoom,
-  Typography,
-  TextField,
-  CircularProgress,
-  Avatar,
   Autocomplete,
+  Avatar,
+  Box,
   Button,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  TableContainer,
-  Tooltip,
+  Chip,
+  CircularProgress,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Grid,
   IconButton,
   lighten,
-  useTheme,
+  styled,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableFooter,
+  TableHead,
+  TableRow,
+  TextField,
+  Tooltip,
+  Typography,
   useMediaQuery,
-  TableFooter
+  useTheme,
+  Zoom
 } from '@mui/material';
 import DatePicker from '@mui/lab/DatePicker';
 import { useSnackbar } from 'notistack';
@@ -345,7 +345,7 @@ function PageHeader() {
                           {numeral(item.price).format(`${item.currency}0,0.00`)}
                         </TableCell>
                         <TableCell align="right">
-                          <Tooltip arrow title={t('Delete')}>
+                          <Tooltip arrow title={t('to_delete')}>
                             <IconButtonError>
                               <DeleteTwoToneIcon fontSize="small" />
                             </IconButtonError>

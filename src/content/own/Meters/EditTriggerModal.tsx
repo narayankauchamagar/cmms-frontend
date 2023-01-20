@@ -111,7 +111,7 @@ export default function EditTriggerModal({
         <Form
           fields={fields}
           validation={Yup.object().shape(shape)}
-          submitText={t('Save')}
+          submitText={t('save')}
           values={{
             ...workOrderMeterTrigger,
             triggerCondition: {

@@ -30,25 +30,25 @@ const AssetDetails = ({ asset }: PropsType) => {
   const { t }: { t: any } = useTranslation();
   const { getFormattedDate } = useContext(CompanySettingsContext);
   const informationFields = [
-    { label: t('Name'), value: asset?.name },
-    { label: t('Description'), value: asset?.description },
-    { label: t('Category'), value: asset?.category?.name },
-    { label: t('Model'), value: asset?.model },
-    { label: t('Serial Number'), value: asset?.serialNumber },
+    { label: t('name'), value: asset?.name },
+    { label: t('description'), value: asset?.description },
+    { label: t('category'), value: asset?.category?.name },
+    { label: t('model'), value: asset?.model },
+    { label: t('serial_number'), value: asset?.serialNumber },
     {
-      label: t('Status'),
-      value: asset?.status === 'OPERATIONAL' ? t('Operational') : t('Down')
+      label: t('status'),
+      value: asset?.status === 'OPERATIONAL' ? t('operational') : t('down')
     },
-    { label: t('Area'), value: asset?.area },
-    { label: t('Barcode'), value: asset?.barCode }
+    { label: t('area'), value: asset?.area },
+    { label: t('barcode'), value: asset?.barCode }
   ];
   const moreInfosFields = [
     {
-      label: t('Placed in Service'),
+      label: t('placed_in_service'),
       value: getFormattedDate(asset?.inServiceDate)
     },
     {
-      label: t('Warranty expiration'),
+      label: t('warranty_expiration'),
       value: getFormattedDate(asset?.warrantyExpirationDate)
     }
   ];
@@ -114,7 +114,7 @@ const AssetDetails = ({ asset }: PropsType) => {
           <Card sx={{ p: 2 }}>
             <Grid container spacing={2} padding={2}>
               <Grid item xs={12}>
-                <Typography variant="h3">{t('Asset Information')}</Typography>
+                <Typography variant="h3">{t('asset_information')}</Typography>
               </Grid>
               {informationFields.map((field) => (
                 <BasicField
@@ -124,7 +124,7 @@ const AssetDetails = ({ asset }: PropsType) => {
                 />
               ))}
               <Grid item xs={12}>
-                <Typography variant="h3">{t('More Informations')}</Typography>
+                <Typography variant="h3">{t('more_informations')}</Typography>
               </Grid>
               {moreInfosFields.map((field) => (
                 <BasicField
@@ -137,7 +137,7 @@ const AssetDetails = ({ asset }: PropsType) => {
                 <Grid item xs={12}>
                   <Stack spacing={5} direction="row">
                     <Typography variant="h6" fontWeight="bold">
-                      {t('Primary User')}
+                      {t('primary_worker')}
                     </Typography>
                     <Link
                       key={asset.primaryUser.id}
@@ -154,7 +154,7 @@ const AssetDetails = ({ asset }: PropsType) => {
                 <Grid item xs={12}>
                   <Stack spacing={5} direction="row">
                     <Typography variant="h6" fontWeight="bold">
-                      {t('Location')}
+                      {t('location')}
                     </Typography>
                     <Link
                       href={`/app/locations/${asset.location.id}`}
@@ -168,7 +168,7 @@ const AssetDetails = ({ asset }: PropsType) => {
               )}
               <ListField
                 values={asset?.assignedTo}
-                label={t('Assignees')}
+                label={t('assigned_to')}
                 getHref={(user: UserMiniDTO) => getUserUrl(user.id)}
                 getValueLabel={(user: UserMiniDTO) =>
                   `${user.firstName} ${user.lastName}`
@@ -176,19 +176,19 @@ const AssetDetails = ({ asset }: PropsType) => {
               />
               <ListField
                 values={asset?.customers}
-                label={t('Customers')}
+                label={t('customers')}
                 getHref={(customer: Customer) => getCustomerUrl(customer.id)}
                 getValueLabel={(customer: Customer) => customer.name}
               />
               <ListField
                 values={asset?.vendors}
-                label={t('Vendors')}
+                label={t('vendors')}
                 getHref={(vendor: Vendor) => getVendorUrl(vendor.id)}
                 getValueLabel={(vendor: Vendor) => vendor.companyName}
               />
               <ListField
                 values={asset?.teams}
-                label={t('Teams')}
+                label={t('teams')}
                 getHref={(team: Team) => getTeamUrl(team.id)}
                 getValueLabel={(team: Team) => team.name}
               />

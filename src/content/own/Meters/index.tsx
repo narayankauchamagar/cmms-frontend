@@ -277,7 +277,7 @@ function Meters() {
           <Form
             fields={getFilteredFields(fields)}
             validation={Yup.object().shape(shape)}
-            submitText={t('Add')}
+            submitText={t('add')}
             values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
@@ -333,7 +333,7 @@ function Meters() {
           <Form
             fields={fields}
             validation={Yup.object().shape(shape)}
-            submitText={t('Save')}
+            submitText={t('save')}
             values={{
               ...currentMeter,
               users: currentMeter?.users.map((worker) => {
@@ -474,7 +474,7 @@ function Meters() {
               setOpenDrawer(true);
             }}
             onConfirm={() => handleDelete(currentMeter?.id)}
-            confirmText={t('Delete')}
+            confirmText={t('to_delete')}
             question={t('Are you sure you want to delete this Meter?')}
           />
         </>

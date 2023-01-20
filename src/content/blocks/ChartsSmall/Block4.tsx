@@ -1,13 +1,13 @@
 import {
-  Box,
-  Card,
-  Typography,
-  Grid,
-  Badge,
   Avatar,
-  Divider,
+  Badge,
+  Box,
   Button,
+  Card,
+  Divider,
+  Grid,
   styled,
+  Typography,
   useTheme
 } from '@mui/material';
 import Text from 'src/components/Text';
@@ -205,7 +205,7 @@ function Block4() {
             justifyContent="space-between"
           >
             <Button variant="outlined" size="small" color="error">
-              {t('Delete')}
+              {t('to_delete')}
             </Button>
             <Button variant="contained" size="small" color="primary">
               {t('View details')}
@@ -250,7 +250,7 @@ function Block4() {
             justifyContent="space-between"
           >
             <Button variant="outlined" size="small" color="error">
-              {t('Delete')}
+              {t('to_delete')}
             </Button>
             <Button variant="contained" size="small" color="primary">
               {t('View details')}
@@ -291,7 +291,7 @@ function Block4() {
             justifyContent="space-between"
           >
             <Button variant="outlined" size="small" color="error">
-              {t('Delete')}
+              {t('to_delete')}
             </Button>
             <Button variant="contained" size="small" color="primary">
               {t('View details')}

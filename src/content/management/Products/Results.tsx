@@ -1,10 +1,10 @@
 import {
-  FC,
-  useState,
-  ReactElement,
   ChangeEvent,
+  FC,
+  forwardRef,
+  ReactElement,
   Ref,
-  forwardRef
+  useState
 } from 'react';
 import PropTypes from 'prop-types';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
@@ -13,29 +13,29 @@ import numeral from 'numeral';
 import {
   Avatar,
   Box,
+  Button,
   Card,
   Checkbox,
-  Slide,
+  Dialog,
   Divider,
-  Tooltip,
   IconButton,
-  Link,
   InputAdornment,
+  Link,
+  Slide,
+  styled,
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TablePagination,
-  TableContainer,
   TableRow,
   TextField,
-  Button,
+  Tooltip,
   Typography,
-  Dialog,
   useMediaQuery,
   useTheme,
-  Zoom,
-  styled
+  Zoom
 } from '@mui/material';
 import { TransitionProps } from '@mui/material/transitions';
 import CloseIcon from '@mui/icons-material/Close';
@@ -402,7 +402,7 @@ const Results: FC<ResultsProps> = ({ products }) => {
                                 <LaunchTwoToneIcon fontSize="small" />
                               </IconButton>
                             </Tooltip>
-                            <Tooltip title={t('Delete')} arrow>
+                            <Tooltip title={t('to_delete')} arrow>
                               <IconButton
                                 onClick={handleConfirmDelete}
                                 color="primary"
@@ -496,7 +496,7 @@ const Results: FC<ResultsProps> = ({ products }) => {
               }}
               variant="contained"
             >
-              {t('Delete')}
+              {t('to_delete')}
             </ButtonError>
           </Box>
         </Box>

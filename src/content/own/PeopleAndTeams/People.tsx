@@ -148,7 +148,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
           <Form
             fields={getFields()}
             validation={Yup.object().shape({})}
-            submitText={t('Save')}
+            submitText={t('save')}
             values={{
               rate: currentUser?.rate,
               role: currentUser

@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from '../../../../store';
 import { useContext, useEffect } from 'react';
 import { getAssetWorkOrders } from '../../../../slices/asset';
-import { getStatusLabel } from '../../../../utils/formatters';
 import { useNavigate } from 'react-router-dom';
 import { CompanySettingsContext } from '../../../../contexts/CompanySettingsContext';
 
@@ -54,17 +53,17 @@ const AssetWorkOrders = ({ asset }: PropsType) => {
                     color={workOrder.dueDate ? 'error' : 'primary'}
                   >
                     {workOrder.dueDate
-                      ? `Due ${getFormattedDate(workOrder.dueDate)}`
-                      : t('No Due Date')}
+                      ? t('due_at_date', {
+                          date: getFormattedDate(workOrder.dueDate)
+                        })
+                      : t('no_due_date')}
                   </Typography>
                   <Typography variant="h6">
                     {workOrder.primaryUser
                       ? `${workOrder.primaryUser.firstName} ${workOrder.primaryUser.lastName}`
-                      : t('No primary User')}
+                      : t('no_primary_worker')}
                   </Typography>
-                  <Typography variant="h6">
-                    {getStatusLabel(workOrder.status, t)}
-                  </Typography>
+                  <Typography variant="h6">{t(workOrder.status)}</Typography>
                 </Box>
               </Card>
             </Grid>
@@ -82,9 +81,7 @@ const AssetWorkOrders = ({ asset }: PropsType) => {
                   alignItems: 'center'
                 }}
               >
-                <Typography variant="h4">
-                  {t('There is no Work Order linked to this Asset')}
-                </Typography>
+                <Typography variant="h4">{t('no_wo_linked_asset')}</Typography>
               </Box>
             </Card>
           </Grid>

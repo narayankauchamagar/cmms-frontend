@@ -78,67 +78,67 @@ const ShowAsset = ({}: PropsType) => {
   const arr = location.pathname.split('/');
 
   const tabs = [
-    { value: 'work-orders', label: t('Work Orders') },
-    { value: 'details', label: t('Details') },
-    { value: 'parts', label: t('Parts') },
-    { value: 'files', label: t('Files') },
-    { value: 'meters', label: t('Meters') },
-    { value: 'downtimes', label: t('Downtimes') }
+    { value: 'work-orders', label: t('work_orders') },
+    { value: 'details', label: t('details') },
+    { value: 'parts', label: t('parts') },
+    { value: 'files', label: t('files') },
+    { value: 'meters', label: t('meters') },
+    { value: 'downtimes', label: t('downtimes') }
   ];
   const tabIndex = tabs.findIndex((tab) => tab.value === arr[arr.length - 1]);
   const onDeleteSuccess = () => {
-    showSnackBar(t('The Asset has been deleted successfully'), 'success');
+    showSnackBar(t('asset_remove_success'), 'success');
     navigate('/app/assets');
   };
   const onDeleteFailure = (err) =>
-    showSnackBar(t("The Asset couldn't be deleted"), 'error');
+    showSnackBar(t('asset_remove_failure'), 'error');
   const defaultFields: Array<IField> = [
     {
       name: 'assetInfo',
       type: 'titleGroupField',
-      label: t('Asset Information')
+      label: t('asset_information')
     },
     {
       name: 'name',
       type: 'text',
-      label: t('Name'),
-      placeholder: t('Enter asset name'),
+      label: t('name'),
+      placeholder: t('asset_name.description'),
       required: true
     },
     {
       name: 'location',
       type: 'select',
       type2: 'location',
-      label: t('Location'),
-      placeholder: t('Select asset location'),
+      label: t('location'),
+      placeholder: t('select_asset_location'),
       required: true
     },
     {
       name: 'description',
       type: 'text',
-      label: t('Description'),
-      placeholder: t('Description'),
+      label: t('description'),
+      placeholder: t('description'),
       multiple: true
     },
     {
       name: 'model',
       type: 'text',
-      label: t('Model'),
-      placeholder: t('Model'),
+      label: t('model'),
+      placeholder: t('model'),
       midWidth: true
     },
     {
       name: 'serialNumber',
       type: 'text',
-      label: t('Serial Number'),
-      placeholder: t('Serial Number'),
+      label: t('serial_number'),
+      placeholder: t('serial_number'),
       midWidth: true
     },
     {
       name: 'category',
       midWidth: true,
-      label: t('Category'),
-      placeholder: t('Category'),
+      label: t('category'),
+      placeholder: t('category'),
       type: 'select',
       type2: 'category',
       category: 'asset-categories'
@@ -147,33 +147,33 @@ const ShowAsset = ({}: PropsType) => {
       name: 'area',
       type: 'text',
       midWidth: true,
-      label: t('Area'),
-      placeholder: t('Area')
+      label: t('area'),
+      placeholder: t('area')
     },
     {
       name: 'image',
       type: 'file',
       fileType: 'image',
-      label: t('Image')
+      label: t('image')
     },
     {
       name: 'assignedTo',
       type: 'titleGroupField',
-      label: t('Assigned To')
+      label: t('assigned_to')
     },
     {
       name: 'primaryUser',
       type: 'select',
       type2: 'user',
-      label: 'Worker',
-      placeholder: 'Select primary user'
+      label: t('worker'),
+      placeholder: t('primary_user.description')
     },
     {
       name: 'assignedTo',
       type: 'select',
       type2: 'user',
       multiple: true,
-      label: t('Additional Workers'),
+      label: t('additional_workers'),
       placeholder: 'Select additional workers'
     },
     {
@@ -181,67 +181,67 @@ const ShowAsset = ({}: PropsType) => {
       type: 'select',
       type2: 'team',
       multiple: true,
-      label: t('Teams'),
-      placeholder: 'Select teams'
+      label: t('teams'),
+      placeholder: t('teams.description')
     },
     {
       name: 'moreInfos',
       type: 'titleGroupField',
-      label: t('More Informations')
+      label: t('more_informations')
     },
     {
       name: 'customers',
       type: 'select',
       type2: 'customer',
       multiple: true,
-      label: t('Customers'),
-      placeholder: 'Select customers'
+      label: t('customers'),
+      placeholder: t('customers.description')
     },
     {
       name: 'vendors',
       type: 'select',
       type2: 'vendor',
       multiple: true,
-      label: t('Vendors'),
-      placeholder: t('Select vendors')
+      label: t('vendors'),
+      placeholder: t('vendors.description')
     },
     {
       name: 'inServiceDate',
       type: 'date',
       midWidth: true,
-      label: t('Placed in Service date')
+      label: t('inServiceDate.description')
     },
     {
       name: 'warrantyExpirationDate',
       type: 'date',
       midWidth: true,
-      label: t('Warranty Expiration date')
+      label: t('warranty_expiration_date')
     },
     {
       name: 'additionalInfos',
       type: 'text',
-      label: t('Additional Information'),
-      placeholder: t('Additional Information'),
+      label: t('additional_information'),
+      placeholder: t('additional_information'),
       multiple: true
     },
     {
       name: 'files',
       type: 'file',
       multiple: true,
-      label: t('Files'),
+      label: t('files'),
       fileType: 'file'
     },
     {
       name: 'structure',
       type: 'titleGroupField',
-      label: t('Structure')
+      label: t('structure')
     },
-    { name: 'parts', type: 'select', type2: 'part', label: t('Parts') },
+    { name: 'parts', type: 'select', type2: 'part', label: t('parts') },
     {
       name: 'parentAsset',
       type: 'select',
       type2: 'asset',
-      label: t('Parent Asset'),
+      label: t('parent_asset'),
       excluded: Number(assetId)
     }
   ];
@@ -269,10 +269,10 @@ const ShowAsset = ({}: PropsType) => {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Edit Asset')}
+          {t('edit_asset')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the fields below to edit this asset')}
+          {t('edit_asset.description')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -285,7 +285,7 @@ const ShowAsset = ({}: PropsType) => {
           <Form
             fields={getFilteredFields(defaultFields)}
             validation={Yup.object().shape(shape)}
-            submitText={t('Save')}
+            submitText={t('save')}
             values={{
               ...asset,
               location: asset?.location
@@ -381,13 +381,13 @@ const ShowAsset = ({}: PropsType) => {
             ? handleOpenUpdateModal
             : null
         }
-        actionTitle={t('Edit')}
+        actionTitle={t('edit')}
         secondAction={() => {
           setOpenDelete(true);
         }}
         secondActionTitle={
           hasDeletePermission(PermissionEntity.ASSETS, asset)
-            ? t('Delete')
+            ? t('to_delete')
             : null
         }
         secondActionIcon={<DeleteTwoToneIcon />}
@@ -415,8 +415,8 @@ const ShowAsset = ({}: PropsType) => {
             setOpenDelete(false);
           }}
           onConfirm={handleDelete}
-          confirmText={t('Delete')}
-          question={t('Are you sure you want to delete this Asset?')}
+          confirmText={t('to_delete')}
+          question={t('confirm_delete_asset')}
         />
         {renderAssetUpdateModal()}
       </MultipleTabsLayout>

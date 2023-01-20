@@ -241,7 +241,7 @@ function ProfileDetails() {
                 disabled={isSubmitting}
                 variant="contained"
               >
-                {t('Save')}
+                {t('save')}
               </Button>
             </DialogActions>
           </form>
@@ -377,7 +377,7 @@ function ProfileDetails() {
                 disabled={isSubmitting}
                 variant="contained"
               >
-                {t('Save')}
+                {t('save')}
               </Button>
             </DialogActions>
           </form>
@@ -411,7 +411,7 @@ function ProfileDetails() {
                 variant="text"
                 startIcon={<EditTwoToneIcon />}
               >
-                {t('Edit')}
+                {t('edit')}
               </Button>
               <Button
                 onClick={handleOpenPasswordModal}

@@ -450,7 +450,7 @@ const Parts = ({ setAction }: PropsType) => {
           <Form
             fields={getFilteredFields(fields)}
             validation={Yup.object().shape(shape)}
-            submitText={t('Save')}
+            submitText={t('save')}
             values={{
               ...currentPart,
               assignedTo: currentPart?.assignedTo.map((user) => {
@@ -611,7 +611,7 @@ const Parts = ({ setAction }: PropsType) => {
           setOpenDrawer(true);
         }}
         onConfirm={() => handleDelete(currentPart?.id)}
-        confirmText={t('Delete')}
+        confirmText={t('to_delete')}
         question={t('Are you sure you want to delete this Part?')}
       />
     </Box>

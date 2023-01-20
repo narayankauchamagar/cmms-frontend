@@ -68,7 +68,7 @@ function Assets() {
     (location) => location.id === Number(locationParam)
   );
   useEffect(() => {
-    setTitle(t('Assets'));
+    setTitle(t('assets'));
     if (hasViewPermission(PermissionEntity.ASSETS)) {
       dispatch(getAssetChildren(0, []));
     }
@@ -90,22 +90,22 @@ function Assets() {
 
   const onCreationSuccess = () => {
     setOpenAddModal(false);
-    showSnackBar(t('The Asset has been created successfully'), 'success');
+    showSnackBar(t('asset_create_success'), 'success');
   };
   const onCreationFailure = (err) =>
-    showSnackBar(t("The Asset couldn't be created"), 'error');
+    showSnackBar(t('asset_create_failure'), 'error');
 
   const columns: GridEnrichedColDef[] = [
     {
       field: 'id',
-      headerName: t('ID'),
-      description: t('ID'),
+      headerName: t('id'),
+      description: t('id'),
       width: 150
     },
     {
       field: 'name',
-      headerName: t('Name'),
-      description: t('Name'),
+      headerName: t('name'),
+      description: t('name'),
       width: 150,
       renderCell: (params: GridRenderCellParams<string>) => (
         <Box sx={{ fontWeight: 'bold' }}>{params.value}</Box>
@@ -113,55 +113,55 @@ function Assets() {
     },
     {
       field: 'location',
-      headerName: t('Location'),
-      description: t('Location'),
+      headerName: t('location'),
+      description: t('location'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<LocationMiniDTO>) =>
         params.value?.name
     },
     {
       field: 'image',
-      headerName: t('Image'),
-      description: t('Image'),
+      headerName: t('image'),
+      description: t('image'),
       width: 150,
       renderCell: (params) => <img src={params.row.image?.url} />
     },
     {
       field: 'area',
-      headerName: t('Area'),
-      description: t('Area'),
+      headerName: t('area'),
+      description: t('area'),
       width: 150
     },
     {
       field: 'model',
-      headerName: t('Model'),
-      description: t('Model'),
+      headerName: t('model'),
+      description: t('model'),
       width: 150
     },
     {
       field: 'barCode',
-      headerName: t('BarCode'),
-      description: t('BarCode'),
+      headerName: t('barcode'),
+      description: t('barcode'),
       width: 150
     },
     {
       field: 'category',
-      headerName: t('Category'),
-      description: t('Category'),
+      headerName: t('category'),
+      description: t('category'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<Category>) =>
         params.value?.name
     },
     {
       field: 'description',
-      headerName: t('Description'),
-      description: t('Description'),
+      headerName: t('description'),
+      description: t('description'),
       width: 150
     },
     {
       field: 'primaryUser',
-      headerName: t('Primary User'),
-      description: t('Primary User'),
+      headerName: t('primary_worker'),
+      description: t('primary_worker'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<UserMiniDTO>) =>
         params.value
@@ -170,8 +170,8 @@ function Assets() {
     },
     {
       field: 'assignedTo',
-      headerName: t('Users'),
-      description: t('Users'),
+      headerName: t('assigned_to'),
+      description: t('assigned_to'),
       width: 150,
       renderCell: (params: GridRenderCellParams<UserMiniDTO[]>) => (
         <UserAvatars users={params.value ?? []} />
@@ -179,32 +179,32 @@ function Assets() {
     },
     {
       field: 'teams',
-      headerName: t('Teams'),
-      description: t('Teams'),
+      headerName: t('teams'),
+      description: t('teams'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<TeamMiniDTO[]>) =>
         enumerate(params.value.map((team) => team.name))
     },
     {
       field: 'vendors',
-      headerName: t('Vendors'),
-      description: t('Vendors'),
+      headerName: t('vendors'),
+      description: t('vendors'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<VendorMiniDTO[]>) =>
         enumerate(params.value.map((vendor) => vendor.companyName))
     },
     {
       field: 'parentAsset',
-      headerName: t('Parent Asset'),
-      description: t('Parent Asset'),
+      headerName: t('parent_asset'),
+      description: t('parent_asset'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<AssetMiniDTO>) =>
         params.value?.name
     },
     {
       field: 'createdAt',
-      headerName: t('Created At'),
-      description: t('Created At'),
+      headerName: t('created_at'),
+      description: t('created_at'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<string>) =>
         getFormattedDate(params.value)
@@ -214,49 +214,49 @@ function Assets() {
     {
       name: 'assetInfo',
       type: 'titleGroupField',
-      label: t('Asset Information')
+      label: t('asset_information')
     },
     {
       name: 'name',
       type: 'text',
-      label: t('Name'),
-      placeholder: t('Enter asset name'),
+      label: t('name'),
+      placeholder: t('asset_name.description'),
       required: true
     },
     {
       name: 'location',
       type: 'select',
       type2: 'location',
-      label: t('Location'),
-      placeholder: t('Select asset location'),
+      label: t('location'),
+      placeholder: t('select_asset_location'),
       required: true
     },
     {
       name: 'description',
       type: 'text',
-      label: t('Description'),
-      placeholder: t('Description'),
+      label: t('description'),
+      placeholder: t('description'),
       multiple: true
     },
     {
       name: 'model',
       type: 'text',
-      label: t('Model'),
-      placeholder: t('Model'),
+      label: t('model'),
+      placeholder: t('model'),
       midWidth: true
     },
     {
       name: 'serialNumber',
       type: 'text',
-      label: t('Serial Number'),
-      placeholder: t('Serial Number'),
+      label: t('serial_number'),
+      placeholder: t('serial_number'),
       midWidth: true
     },
     {
       name: 'category',
       midWidth: true,
-      label: t('Category'),
-      placeholder: t('Category'),
+      label: t('category'),
+      placeholder: t('category'),
       type: 'select',
       type2: 'category',
       category: 'asset-categories'
@@ -265,105 +265,105 @@ function Assets() {
       name: 'area',
       type: 'text',
       midWidth: true,
-      label: t('Area'),
-      placeholder: t('Area')
+      label: t('area'),
+      placeholder: t('area')
     },
     {
       name: 'image',
       type: 'file',
       fileType: 'image',
-      label: t('Image')
+      label: t('image')
     },
     {
       name: 'assignedTo',
       type: 'titleGroupField',
-      label: t('Assigned To')
+      label: t('assigned_to')
     },
     {
       name: 'primaryUser',
       type: 'select',
       type2: 'user',
-      label: 'Worker',
-      placeholder: 'Select primary user'
+      label: t('worker'),
+      placeholder: t('primary_user.description')
     },
     {
       name: 'assignedTo',
       type: 'select',
       type2: 'user',
       multiple: true,
-      label: t('Additional Workers'),
-      placeholder: 'Select additional workers'
+      label: t('additional_workers'),
+      placeholder: 'additional_workers.description'
     },
     {
       name: 'teams',
       type: 'select',
       type2: 'team',
       multiple: true,
-      label: t('Teams'),
+      label: t('teams'),
       placeholder: 'Select teams'
     },
     {
       name: 'moreInfos',
       type: 'titleGroupField',
-      label: t('More Informations')
+      label: t('more_informations')
     },
     {
       name: 'customers',
       type: 'select',
       type2: 'customer',
       multiple: true,
-      label: t('Customers'),
-      placeholder: 'Select customers'
+      label: t('customers'),
+      placeholder: 'customers.description'
     },
     {
       name: 'vendors',
       type: 'select',
       type2: 'vendor',
       multiple: true,
-      label: t('Vendors'),
-      placeholder: t('Select vendors')
+      label: t('vendors'),
+      placeholder: t('vendors.description')
     },
     {
       name: 'inServiceDate',
       type: 'date',
       midWidth: true,
-      label: t('Placed in Service date')
+      label: t('inServiceDate.description')
     },
     {
       name: 'warrantyExpirationDate',
       type: 'date',
       midWidth: true,
-      label: t('Warranty Expiration date')
+      label: t('warranty_expiration_date')
     },
     {
       name: 'files',
       type: 'file',
       multiple: true,
-      label: t('Files'),
+      label: t('files'),
       fileType: 'file'
     },
     {
       name: 'additionalInfos',
       type: 'text',
-      label: t('Additional Information'),
-      placeholder: t('Additional Information'),
+      label: t('additional_information'),
+      placeholder: t('additional_information'),
       multiple: true
     },
     {
       name: 'structure',
       type: 'titleGroupField',
-      label: t('Structure')
+      label: t('structure')
     },
     { name: 'parts', type: 'select', type2: 'part', label: t('Parts') },
     {
       name: 'parentAsset',
       type: 'select',
       type2: 'asset',
-      label: t('Parent Asset')
+      label: t('parent_asset')
     }
   ];
   const shape = {
-    name: Yup.string().required(t('Asset name is required'))
+    name: Yup.string().required(t('required_asset_name'))
   };
 
   useEffect(() => {
@@ -377,7 +377,7 @@ function Assets() {
         }
         apiRef.current.updateRows([
           {
-            id: `Loading assets under ${row.name} #$${node.id}`,
+            id: t('loading_assets', { name: row.name, id: node.id }),
             hierarchy: [...row.hierarchy, '']
           }
         ]);
@@ -442,10 +442,10 @@ function Assets() {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Add Asset')}
+          {t('add_asset')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the fields below to create and add a new asset')}
+          {t('add_asset.description')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -458,7 +458,7 @@ function Assets() {
           <Form
             fields={getFilteredFields(defaultFields)}
             validation={Yup.object().shape(shape)}
-            submitText={t('Create Asset')}
+            submitText={t('create_asset')}
             values={{
               inServiceDate: null,
               warrantyExpirationDate: null,
@@ -503,7 +503,7 @@ function Assets() {
   );
 
   const groupingColDef: DataGridProProps['groupingColDef'] = {
-    headerName: 'Hierarchy',
+    headerName: t('hierarchy'),
     renderCell: (params) => <GroupingCellWithLazyLoading {...params} />
   };
 
@@ -512,7 +512,7 @@ function Assets() {
       <>
         {renderAssetAddModal()}
         <Helmet>
-          <title>{t('Assets')}</title>
+          <title>{t('assets')}</title>
         </Helmet>
         <Grid
           container

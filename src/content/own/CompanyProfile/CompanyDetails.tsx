@@ -208,7 +208,7 @@ function CompanyDetails(props: CompanyDetailsProps) {
                 disabled={isSubmitting}
                 variant="contained"
               >
-                {t('Save')}
+                {t('save')}
               </Button>
             </DialogActions>
           </form>
@@ -242,7 +242,7 @@ function CompanyDetails(props: CompanyDetailsProps) {
                   variant="text"
                   startIcon={<EditTwoToneIcon />}
                 >
-                  {t('Edit')}
+                  {t('edit')}
                 </Button>
               </Box>
             )}
