@@ -285,9 +285,9 @@ function SecurityTab() {
                 <TableRow>
                   <TableCell>{t('Browser')}</TableCell>
                   <TableCell>{t('IP Address')}</TableCell>
-                  <TableCell>{t('Location')}</TableCell>
+                  <TableCell>{t('location')}</TableCell>
                   <TableCell>{t('Date/Time')}</TableCell>
-                  <TableCell align="right">{t('Actions')}</TableCell>
+                  <TableCell align="right">{t('actions')}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

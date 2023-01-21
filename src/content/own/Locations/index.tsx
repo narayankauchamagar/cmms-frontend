@@ -56,6 +56,7 @@ import { PermissionEntity } from '../../../models/owns/role';
 import PermissionErrorMessage from '../components/PermissionErrorMessage';
 import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
 import { getImageAndFiles } from '../../../utils/overall';
+import { getLocationUrl } from '../../../utils/urlPaths';
 
 function Locations() {
   const { t }: { t: any } = useTranslation();
@@ -69,8 +70,8 @@ function Locations() {
   );
   const apiRef = useGridApiRef();
   const tabs = [
-    { value: 'list', label: t('List View') },
-    { value: 'map', label: t('Map View') }
+    { value: 'list', label: t('list_view') },
+    { value: 'map', label: t('map_view') }
   ];
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
@@ -105,31 +106,27 @@ function Locations() {
   };
   const onCreationSuccess = () => {
     setOpenAddModal(false);
-    showSnackBar(t('The location has been created successfully'), 'success');
+    showSnackBar(t('location_create_success'), 'success');
   };
   const onCreationFailure = (err) =>
-    showSnackBar(t("The location couldn't be created"), 'error');
+    showSnackBar(t('location_create_failure'), 'error');
   const onEditSuccess = () => {
     setOpenUpdateModal(false);
-    showSnackBar(t('The changes have been saved'), 'success');
+    showSnackBar(t('changes_saved_success'), 'success');
   };
   const onEditFailure = (err) =>
-    showSnackBar(t("The location couldn't be edited"), 'error');
+    showSnackBar(t('location_edit_failure'), 'error');
   const onDeleteSuccess = () => {
-    showSnackBar(t('The location has been deleted successfully'), 'success');
+    showSnackBar(t('location_delete_success'), 'success');
   };
   const onDeleteFailure = (err) =>
-    showSnackBar(t("The location couldn't be deleted"), 'error');
+    showSnackBar(t('location_delete_failure'), 'error');
 
   const handleOpenDetails = (id: number) => {
     const foundLocation = locations.find((location) => location.id === id);
     if (foundLocation) {
       setCurrentLocation(foundLocation);
-      window.history.replaceState(
-        null,
-        'Location details',
-        `/app/locations/${id}`
-      );
+      window.history.replaceState(null, 'Location details', getLocationUrl(id));
       setOpenDrawer(true);
     }
   };
@@ -138,7 +135,7 @@ function Locations() {
     setOpenDrawer(false);
   };
   useEffect(() => {
-    setTitle(t('Locations'));
+    setTitle(t('locations'));
     if (hasViewPermission(PermissionEntity.LOCATIONS)) {
       dispatch(getLocations());
       dispatch(getLocationChildren(0, []));
@@ -215,8 +212,8 @@ function Locations() {
   const columns: GridEnrichedColDef[] = [
     {
       field: 'name',
-      headerName: t('Name'),
-      description: t('Name'),
+      headerName: t('name'),
+      description: t('name'),
       width: 150,
       renderCell: (params: GridRenderCellParams<string>) => (
         <Box sx={{ fontWeight: 'bold' }}>{params.value}</Box>
@@ -224,14 +221,14 @@ function Locations() {
     },
     {
       field: 'address',
-      headerName: t('Address'),
-      description: t('Address'),
+      headerName: t('address'),
+      description: t('address'),
       width: 150
     },
     {
       field: 'createdAt',
-      headerName: t('Created At'),
-      description: t('Created At'),
+      headerName: t('created_at'),
+      description: t('created_at'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<string>) =>
         getFormattedDate(params.value)
@@ -239,8 +236,8 @@ function Locations() {
     {
       field: 'actions',
       type: 'actions',
-      headerName: t('Actions'),
-      description: t('Actions'),
+      headerName: t('actions'),
+      description: t('actions'),
       getActions: (params: GridRowParams) => {
         let actions = [
           <GridActionsCellItem
@@ -250,7 +247,7 @@ function Locations() {
               changeCurrentLocation(Number(params.id));
               handleOpenUpdate();
             }}
-            label="Edit"
+            label={t('edit')}
           />,
           <GridActionsCellItem
             key="delete"
@@ -259,7 +256,7 @@ function Locations() {
               changeCurrentLocation(Number(params.id));
               setOpenDelete(true);
             }}
-            label="Delete"
+            label={'to_delete'}
           />
         ];
         if (!hasEditPermission(PermissionEntity.LOCATIONS, params.row)) {
@@ -277,14 +274,14 @@ function Locations() {
     {
       name: 'name',
       type: 'text',
-      label: t('Name'),
-      placeholder: t('Enter location name'),
+      label: t('name'),
+      placeholder: t('enter_location_name'),
       required: true
     },
     {
       name: 'address',
       type: 'text',
-      label: 'Address',
+      label: t('address'),
       placeholder: 'Casa, Maroc',
       required: true
     },
@@ -292,23 +289,23 @@ function Locations() {
       name: 'parentLocation',
       type: 'select',
       type2: 'parentLocation',
-      label: t('Parent Location'),
-      placeholder: t('Select Location')
+      label: t('parent_location'),
+      placeholder: t('select_location')
     },
     {
       name: 'workers',
       multiple: true,
       type: 'select',
       type2: 'user',
-      label: 'Workers',
-      placeholder: 'Select workers'
+      label: t('workers'),
+      placeholder: t('select_workers')
     },
     {
       name: 'teams',
       multiple: true,
       type: 'select',
       type2: 'team',
-      label: 'Teams',
+      label: t('teams'),
       placeholder: 'Select teams'
     },
     {
@@ -316,7 +313,7 @@ function Locations() {
       multiple: true,
       type: 'select',
       type2: 'vendor',
-      label: 'Vendors',
+      label: t('vendors'),
       placeholder: 'Select vendors'
     },
     {
@@ -324,30 +321,30 @@ function Locations() {
       multiple: true,
       type: 'select',
       type2: 'customer',
-      label: 'Customers',
+      label: t('customers'),
       placeholder: 'Select customers'
     },
     {
       name: 'mapTitle',
       type: 'titleGroupField',
-      label: t('Map Coordinates')
+      label: t('map_coordinates')
     },
     {
       name: 'coordinates',
       type: 'coordinates',
-      label: 'Map Coordinates'
+      label: t('map_coordinates')
     },
     {
       name: 'image',
       type: 'file',
       fileType: 'image',
-      label: t('Image')
+      label: t('image')
     },
     {
       name: 'files',
       type: 'file',
       multiple: true,
-      label: t('Files'),
+      label: t('files'),
       fileType: 'file'
     }
   ];
@@ -361,8 +358,8 @@ function Locations() {
     return fieldsClone;
   };
   const shape = {
-    name: Yup.string().required(t('Location title is required')),
-    address: Yup.string().required(t('Location address is required'))
+    name: Yup.string().required(t('required_location_name')),
+    address: Yup.string().required(t('required_location_address'))
   };
 
   const renderLocationAddModal = () => (
@@ -378,10 +375,10 @@ function Locations() {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Add location')}
+          {t('add_location')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the fields below to create and add a new location')}
+          {t('add_location.description')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -448,10 +445,10 @@ function Locations() {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Edit location')}
+          {t('edit_location')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the fields below to update the location')}
+          {t('edit_location.description')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -543,7 +540,7 @@ function Locations() {
     return (
       <>
         <Helmet>
-          <title>{t('Locations')}</title>
+          <title>{t('locations')}</title>
         </Helmet>
         <Grid
           container
@@ -682,18 +679,11 @@ function Locations() {
           }}
           onConfirm={() => handleDelete(currentLocation?.id)}
           confirmText={t('to_delete')}
-          question={t('Are you sure you want to delete this Location?')}
+          question={t('confirm_delete_location')}
         />
       </>
     );
-  else
-    return (
-      <PermissionErrorMessage
-        message={
-          "You don't have access to Locations. Please contact your administrator if you should have access"
-        }
-      />
-    );
+  else return <PermissionErrorMessage message={'no_access_location'} />;
 }
 
 export default Locations;

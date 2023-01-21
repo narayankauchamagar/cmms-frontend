@@ -289,7 +289,7 @@ const Results: FC<ResultsProps> = ({ products }) => {
                     <TableCell align="center">{t('Rating')}</TableCell>
                     <TableCell align="center">{t('Orders')}</TableCell>
                     <TableCell>{t('Categories')}</TableCell>
-                    <TableCell align="center">{t('Actions')}</TableCell>
+                    <TableCell align="center">{t('actions')}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>

@@ -71,25 +71,25 @@ export default function LocationDetails(props: LocationDetailsProps) {
   const theme = useTheme();
   const navigate = useNavigate();
   const tabs = [
-    { value: 'assets', label: t('Assets') },
-    { value: 'files', label: t('Files') },
-    { value: 'workOrders', label: t('Work Orders') },
-    { value: 'floorPlans', label: t('Floor Plans') },
-    { value: 'people', label: t('People') }
+    { value: 'assets', label: t('assets') },
+    { value: 'files', label: t('files') },
+    { value: 'workOrders', label: t('work_orders') },
+    { value: 'floorPlans', label: t('floor_plans') },
+    { value: 'people', label: t('people') }
   ];
 
   const fields: Array<IField> = [
     {
       name: 'name',
       type: 'text',
-      label: t('Name'),
-      placeholder: t('Floor plan name'),
+      label: t('name'),
+      placeholder: t('floor_plan_name.description'),
       required: true
     },
     {
       name: 'area',
       type: 'number',
-      label: 'Area',
+      label: t('area'),
       placeholder: t('Floor plan area in m²')
     },
     {
@@ -97,11 +97,11 @@ export default function LocationDetails(props: LocationDetailsProps) {
       type: 'file',
       fileType: 'image',
       label: 'Image',
-      placeholder: t('Upload an image')
+      placeholder: t('upload_image')
     }
   ];
   const floorPlanShape = {
-    name: Yup.string().required(t('Floor plan name is required'))
+    name: Yup.string().required(t('required_floor_plan_name'))
   };
 
   useEffect(() => {
@@ -123,10 +123,10 @@ export default function LocationDetails(props: LocationDetailsProps) {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Add new Floor Plan')}
+          {t('add_floor_plan')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the fields below to create a new Floor Plan')}
+          {t('add_floor_plan.description')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -139,7 +139,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
           <Form
             fields={getFilteredFields(fields)}
             validation={Yup.object().shape(floorPlanShape)}
-            submitText={t('Add Floor Plan')}
+            submitText={t('add_floor_plan')}
             values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
@@ -241,7 +241,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
                     navigate(`/app/assets?location=${location.id}`)
                   }
                 >
-                  {t('Asset')}
+                  {t('asset')}
                 </Button>
               </Box>
             )}
@@ -263,7 +263,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
             ) : (
               <Stack direction="row" justifyContent="center" width="100%">
                 <Typography variant="h5">
-                  {t('No asset in this location')}
+                  {t('no_asset_in_location')}
                 </Typography>
               </Stack>
             )}
@@ -279,7 +279,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
                     navigate(`/app/work-orders?location=${location.id}`)
                   }
                 >
-                  {t('Work Order')}
+                  {t('work_order')}
                 </Button>
               </Box>
             )}
@@ -300,9 +300,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
               </List>
             ) : (
               <Stack direction="row" justifyContent="center" width="100%">
-                <Typography variant="h5">
-                  {t('No Work Order in this location')}
-                </Typography>
+                <Typography variant="h5">{t('no_wo_in_location')}</Typography>
               </Stack>
             )}
           </Box>
@@ -316,7 +314,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
                     startIcon={<AddTwoToneIcon fontSize="small" />}
                     onClick={handleOpenUpdate}
                   >
-                    {t('File')}
+                    {t('file')}
                   </Button>
                 </Box>
               )}
@@ -340,9 +338,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
               </List>
             ) : (
               <Stack direction="row" justifyContent="center" width="100%">
-                <Typography variant="h5">
-                  {t('No Files attached to this location')}
-                </Typography>
+                <Typography variant="h5">{t('no_file_in_location')}</Typography>
               </Stack>
             )}
           </Box>
@@ -355,7 +351,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
                   onClick={() => setOpenAddFloorPlan(true)}
                   startIcon={<AddTwoToneIcon fontSize="small" />}
                 >
-                  {t('Floor plan')}
+                  {t('floor_plan')}
                 </Button>
               </Box>
             )}
@@ -396,7 +392,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
             ) : (
               <Stack direction="row" justifyContent="center" width="100%">
                 <Typography variant="h5">
-                  {t('No Floor Plan in this location')}
+                  {t('no_floor_plan_in_location')}
                 </Typography>
               </Stack>
             )}
@@ -410,7 +406,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
                   variant="h6"
                   sx={{ color: theme.colors.alpha.black[70] }}
                 >
-                  {t('Assigned Workers')}
+                  {t('assigned_to')}
                 </Typography>
                 {location.workers.map((worker, index) => (
                   <Box key={worker.id}>
@@ -431,7 +427,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
                   variant="h6"
                   sx={{ color: theme.colors.alpha.black[70] }}
                 >
-                  {t('Assigned Teams')}
+                  {t('assigned_teams')}
                 </Typography>
                 {location.teams.map((team, index) => (
                   <Box key={team.id}>
@@ -452,7 +448,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
                   variant="h6"
                   sx={{ color: theme.colors.alpha.black[70] }}
                 >
-                  {t('Assigned Customers')}
+                  {t('assigned_customers')}
                 </Typography>
                 {location.customers.map((customer, index) => (
                   <Box key={customer.id}>
@@ -473,7 +469,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
                   variant="h6"
                   sx={{ color: theme.colors.alpha.black[70] }}
                 >
-                  {t('Assigned Vendors')}
+                  {t('assigned_vendors')}
                 </Typography>
                 {location.vendors.map((vendor, index) => (
                   <Box key={vendor.id}>

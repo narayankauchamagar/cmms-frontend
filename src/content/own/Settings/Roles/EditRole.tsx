@@ -142,7 +142,7 @@ function EditRole({ role, open, onClose, formatValues }: EditRoleProps) {
                         error={Boolean(touched.name && errors.name)}
                         fullWidth
                         helperText={touched.name && errors.name}
-                        label={t('Name')}
+                        label={t('name')}
                         name="name"
                         onBlur={handleBlur}
                         onChange={handleChange}

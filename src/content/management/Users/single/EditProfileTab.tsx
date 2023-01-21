@@ -48,7 +48,7 @@ function EditProfileTab() {
               <Grid container spacing={0}>
                 <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
                   <Box pr={3} pb={2}>
-                    {t('Name')}:
+                    {t('name')}:
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={8} md={9}>

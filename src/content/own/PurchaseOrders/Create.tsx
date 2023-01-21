@@ -53,7 +53,7 @@ function CreatePurchaseOrder() {
     {
       name: 'name',
       type: 'text',
-      label: t('Name'),
+      label: t('name'),
       placeholder: t('Enter Purchase Order name'),
       required: true,
       midWidth: true
@@ -297,13 +297,7 @@ function CreatePurchaseOrder() {
         </>
       );
     else
-      return (
-        <PermissionErrorMessage
-          message={
-            "You can't create a Purchase Order. Please contact your administrator if you should have access"
-          }
-        />
-      );
+      return <PermissionErrorMessage message={'no_access_purchase_orders'} />;
   } else
     return (
       <FeatureErrorMessage message={'Upgrade to create Purchase Orders'} />

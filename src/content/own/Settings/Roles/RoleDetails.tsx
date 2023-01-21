@@ -53,7 +53,7 @@ export default function RoleDetails(props: RoleDetailsProps) {
           )
       },
       {
-        label: t('Files'),
+        label: t('files'),
         condition: (role: Role) =>
           role.deleteOtherPermissions.includes(PermissionEntity.FILES)
       },

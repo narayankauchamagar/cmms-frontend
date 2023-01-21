@@ -189,7 +189,7 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
                         error={Boolean(touched.name && errors.name)}
                         fullWidth
                         helperText={touched.name && errors.name}
-                        label={t('Name')}
+                        label={t('name')}
                         name="name"
                         onBlur={handleBlur}
                         onChange={handleChange}
@@ -288,7 +288,7 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
                         error={Boolean(touched.name && errors.name)}
                         fullWidth
                         helperText={touched.name && errors.name}
-                        label={t('Name')}
+                        label={t('name')}
                         name="name"
                         onBlur={handleBlur}
                         onChange={handleChange}
@@ -480,14 +480,7 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
         />
       </MultipleTabsLayout>
     );
-  else
-    return (
-      <PermissionErrorMessage
-        message={
-          "You don't have access to Categories. Please contact your administrator if you should have access"
-        }
-      />
-    );
+  else return <PermissionErrorMessage message={'no_access_categories'} />;
 }
 
 export default CategoriesLayout;

@@ -423,7 +423,7 @@ const frJSON = {
   'noRows.wo.action': "Appuyez sur le bouton '+' pour créer un bon de travail",
   to_delete: 'Supprimer',
   confirm_delete_wo: 'Voulez-vous vraiment supprimer ce bon de travail ?',
-  'noAccess.wo': "Vous n'avez pas accès aux bons de travail. ",
+  no_access_wo: "Vous n'avez pas accès aux bons de travail. ",
   cancel: 'Annuler',
   select_parts: 'Sélectionner des pièces',
   sets_of_parts: 'Jeux de pièces',
@@ -466,7 +466,7 @@ const frJSON = {
   'noRows.pm.action': "Appuyez sur le bouton '+' pour créer un déclencheur",
   confirm_delete_pm:
     "Voulez-vous vraiment supprimer ce déclencheur d'ordre de travail ?",
-  'noAccess.pm': "Vous n'avez pas accès à la section Maintenance préventive. ",
+  no_access_pm: "Vous n'avez pas accès à la section Maintenance préventive. ",
   enter_wo_title: 'Entrez le titre du bon de travail',
   //menuItems
   status_report: 'Rapport de situation',
@@ -588,7 +588,70 @@ const frJSON = {
   confirm_delete_asset: 'Etes-vous sûrs de vouloir supprimer cet équipement ?',
   no_content: 'Pas de contenu',
   no_result_criteria: 'Aucun résultat pour vos critères de recherche',
-  loading_assets: 'Chargement des actifs enfants de {{name}} #{{id}}'
+  loading_assets: 'Chargement des actifs enfants de {{name}} #{{id}}',
+  //location
+  map_view: 'Vue carte',
+  location_create_success: "L'emplacement a été créé avec succès",
+  location_create_failure: "L'emplacement n'a pas pu être créé",
+  location_edit_failure: "Impossible de modifier l'emplacement",
+  location_delete_success: "L'emplacement a été supprimé avec succès",
+  location_delete_failure: "L'emplacement n'a pas pu être supprimé",
+  enter_location_name: "Entrez le nom de l'emplacement",
+  address: 'Adresse',
+  parent_location: 'Emplacement parent',
+  select_workers: 'Sélectionnez les travailleurs',
+  map_coordinates: 'Coordonnées cartographiques',
+  required_location_name: "Le nom de l'emplacement est requis",
+  required_location_address: "L'adresse de l'emplacement est obligatoire",
+  add_location: 'Ajouter un emplacement',
+  'add_location.description':
+    'Remplissez les champs ci-dessous pour créer et ajouter un nouvel emplacement',
+  edit_location: "Modifier l'emplacement",
+  'edit_location.description':
+    "Remplissez les champs ci-dessous pour mettre à jour l'emplacement",
+  confirm_delete_location:
+    'Êtes-vous sûr de vouloir supprimer cet emplacement?',
+  floor_plans: "Plans d'étage",
+  floor_plan: "Plan d'étage",
+  'floor_plan_name.description': "Nom du plan d'étage",
+  'Floor plan area in m²': "Superficie du plan d'étage en m²",
+  upload_image: 'Télécharger une image',
+  required_floor_plan_name: "Le nom du plan d'étage est requis",
+  add_floor_plan: "Ajouter un nouveau plan d'étage",
+  'add_floor_plan.description':
+    "Remplissez les champs ci-dessous pour créer un nouveau plan d'étage",
+  no_asset_in_location: 'Aucun actif à cet emplacement',
+  no_wo_in_location: 'Aucun ordre de travail à cet emplacement',
+  no_file_in_location: 'Aucun fichier joint à cet emplacement',
+  no_floor_plan_in_location: "Pas de plan d'étage à cet emplacement",
+  assigned_teams: 'Équipes assignées',
+  assigned_customers: 'Sous-traitants assignés',
+  assigned_vendors: 'Fournisseurs affectés',
+  no_access_location:
+    "Vous n'avez pas accès aux emplacements. Veuillez contacter votre administrateur si vous devriez avoir accès.",
+  no_access_vendors_customers:
+    "Vous n'avez pas accès aux fournisseurs et aux clients.Veuillez contacter votre administrateur si vous devriez avoir accès. ",
+  no_access_people_team:
+    "Vous n'avez pas accès aux personnes et aux équipes. Veuillez contacter votre administrateur si vous devriez avoir accès.",
+  no_access_analytics:
+    "Vous n'avez pas accès à Analytics. Veuillez contacter votre administrateur si vous devriez avoir accès.",
+  no_access_assets:
+    "Vous n'avez pas accès aux ressources. Veuillez contacter votre administrateur si vous devriez avoir accès.",
+  no_access_categories:
+    "Vous n'avez pas accès aux catégories. Veuillez contacter votre administrateur si vous devriez avoir accès.",
+  no_access_files:
+    "Vous n'avez pas accès aux fichiers. Veuillez contacter votre administrateur si vous devriez avoir accès.",
+  no_access_inventory:
+    "Vous n'avez pas accès à l'inventaire. Veuillez contacter votre administrateur si vous devriez avoir accès.",
+  no_access_meters:
+    "Vous n'avez pas accès aux compteurs. Veuillez contacter votre administrateur si vous devriez avoir accès.",
+  no_access_purchase_orders:
+    'Vous ne pouvez pas accès aux bons de commande. Veuillez contacter votre administrateur si vous devriez avoir accès.',
+  no_access_requests:
+    "Vous n'avez pas accès aux demandes. Veuillez contacter votre administrateur si vous devriez avoir accès.",
+  no_access_settings:
+    "Vous n'avez pas accès aux paramètres. Veuillez contacter votre administrateur si vous devriez avoir accès.",
+  no_access_page: "Vous n'avez pas accès à cette page"
 };
 
 export default frJSON;

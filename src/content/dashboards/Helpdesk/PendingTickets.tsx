@@ -1,33 +1,33 @@
-import { useRef, useState, ChangeEvent, MouseEvent } from 'react';
+import { ChangeEvent, MouseEvent, useRef, useState } from 'react';
 import {
+  Avatar,
+  Badge,
+  Box,
   Button,
   Card,
-  Box,
   CardHeader,
+  Divider,
+  IconButton,
   Menu,
   MenuItem,
-  Typography,
-  Avatar,
-  IconButton,
-  Divider,
+  styled,
   Table,
-  TableHead,
-  TableRow,
-  TableCell,
   TableBody,
-  Tooltip,
-  TablePagination,
-  useTheme,
-  Badge,
+  TableCell,
   TableContainer,
-  styled
+  TableHead,
+  TablePagination,
+  TableRow,
+  Tooltip,
+  Typography,
+  useTheme
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import Label from 'src/components/Label';
 import LaunchTwoToneIcon from '@mui/icons-material/LaunchTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import { formatDistance, subMinutes, subSeconds, subHours } from 'date-fns';
+import { formatDistance, subHours, subMinutes, subSeconds } from 'date-fns';
 
 const DotLegend = styled('span')(
   ({ theme }) => `
@@ -157,7 +157,7 @@ function PendingTickets() {
                 <TableCell>{t('Details')}</TableCell>
                 <TableCell>{t('Assigned')}</TableCell>
                 <TableCell align="right">{t('Status')}</TableCell>
-                <TableCell align="right">{t('Actions')}</TableCell>
+                <TableCell align="right">{t('actions')}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

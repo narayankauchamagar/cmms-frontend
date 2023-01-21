@@ -38,11 +38,7 @@ function SettingsLayout(props: SettingsLayoutProps) {
       {children}
     </MultipleTabsLayout>
   ) : (
-    <PermissionErrorMessage
-      message={
-        "You don't have access to settings. Please contact your administrator if you should have access"
-      }
-    />
+    <PermissionErrorMessage message={'no_access_settings'} />
   );
 }
 

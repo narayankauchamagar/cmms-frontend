@@ -60,7 +60,7 @@ export default function PartDetails(props: PartDetailsProps) {
   const tabs = [
     { value: 'details', label: t('Details') },
     { value: 'assets', label: t('Assets') },
-    { value: 'files', label: t('Files') },
+    { value: 'files', label: t('files') },
     { value: 'workOrders', label: t('Work Orders') }
     //TODO events
   ];
@@ -105,7 +105,7 @@ export default function PartDetails(props: PartDetailsProps) {
   };
   const firstFieldsToRender = (part: Part): { label: string; value: any }[] => [
     {
-      label: t('Name'),
+      label: t('name'),
       value: part.name
     },
     {
@@ -360,7 +360,7 @@ export default function PartDetails(props: PartDetailsProps) {
           <Box>
             {/*<Box display="flex" justifyContent="right">*/}
             {/*  <Button startIcon={<AddTwoToneIcon fontSize="small" />}>*/}
-            {/*    {t('File')}*/}
+            {/*    {t('file')}*/}
             {/*  </Button>*/}
             {/*</Box>*/}
             <Box sx={{ width: '100%' }}>

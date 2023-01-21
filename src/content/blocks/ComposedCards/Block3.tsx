@@ -1,20 +1,20 @@
 import { MouseEvent, useState } from 'react';
 import {
-  CardContent,
-  Box,
-  CardHeader,
-  Card,
-  Typography,
-  Divider,
   alpha,
-  ToggleButton,
-  ToggleButtonGroup,
-  LinearProgress,
+  Box,
+  Card,
+  CardContent,
+  CardHeader,
+  Divider,
   Grid,
   IconButton,
+  LinearProgress,
+  linearProgressClasses,
   styled,
-  useTheme,
-  linearProgressClasses
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography,
+  useTheme
 } from '@mui/material';
 import Text from 'src/components/Text';
 import { useTranslation } from 'react-i18next';
@@ -273,7 +273,7 @@ function Block3() {
               alignItems="center"
               justifyContent="space-between"
             >
-              <Typography variant="h4">{t('Customers')}</Typography>
+              <Typography variant="h4">{t('customers')}</Typography>
               <Typography variant="h6" fontWeight="bold">
                 <Text color="error">853</Text>
               </Typography>

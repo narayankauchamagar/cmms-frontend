@@ -1,20 +1,20 @@
 import {
-  Tooltip,
-  Box,
+  alpha,
+  Avatar,
   Badge,
+  Box,
+  Button,
   Card,
-  Typography,
-  List,
-  ListItem,
-  ListItemText,
   CardActionArea,
   Checkbox,
   Grid,
-  Button,
   Link,
-  alpha,
-  Avatar,
+  List,
+  ListItem,
+  ListItemText,
   styled,
+  Tooltip,
+  Typography,
   useTheme
 } from '@mui/material';
 
@@ -189,7 +189,7 @@ function Block6() {
               primaryTypographyProps={{
                 variant: 'h5'
               }}
-              primary={t('Location') + ':'}
+              primary={t('location') + ':'}
             />
             <Typography variant="subtitle1">San Francisco, USA</Typography>
           </ListItem>
@@ -321,7 +321,7 @@ function Block6() {
                   />
                 </Text>
                 <Typography gutterBottom variant="h4">
-                  {t('Customers')}
+                  {t('customers')}
                 </Typography>
                 <Typography
                   variant="subtitle2"

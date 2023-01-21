@@ -421,14 +421,7 @@ const ShowAsset = ({}: PropsType) => {
         {renderAssetUpdateModal()}
       </MultipleTabsLayout>
     );
-  else
-    return (
-      <PermissionErrorMessage
-        message={
-          "You don't have access to Assets. Please contact your administrator if you should have access"
-        }
-      />
-    );
+  else return <PermissionErrorMessage message={'no_access_assets'} />;
 };
 
 export default ShowAsset;

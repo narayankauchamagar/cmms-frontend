@@ -144,8 +144,8 @@ function PurchaseOrders() {
     },
     {
       field: 'name',
-      headerName: t('Name'),
-      description: t('Name'),
+      headerName: t('name'),
+      description: t('name'),
       width: 150,
       renderCell: (params: GridRenderCellParams<string>) => (
         <Box sx={{ fontWeight: 'bold' }}>{params.value}</Box>
@@ -217,8 +217,8 @@ function PurchaseOrders() {
     },
     {
       field: 'createdBy',
-      headerName: t('Created By'),
-      description: t('Created By'),
+      headerName: t('created_by'),
+      description: t('created_by'),
       width: 150,
       valueGetter: (params) => getUserNameById(params.value)
     },
@@ -239,7 +239,7 @@ function PurchaseOrders() {
     {
       name: 'name',
       type: 'text',
-      label: t('Name'),
+      label: t('name'),
       placeholder: t('Enter Purchase Order name'),
       required: true,
       midWidth: true
@@ -569,13 +569,7 @@ function PurchaseOrders() {
         </>
       );
     else
-      return (
-        <PermissionErrorMessage
-          message={
-            "You don't have access to Purchase Orders. Please contact your administrator if you should have access"
-          }
-        />
-      );
+      return <PermissionErrorMessage message={'no_access_purchase_orders'} />;
   } else
     return (
       <FeatureErrorMessage message={'Upgrade to create Purchase Orders'} />

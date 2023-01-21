@@ -302,7 +302,7 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
       >
         {viewOrUpdate === 'view' ? (
           <Box>
-            <Typography variant="subtitle1">{t('Name')}</Typography>
+            <Typography variant="subtitle1">{t('name')}</Typography>
             <Typography variant="h5" sx={{ mb: 1 }}>
               {currentTeam?.name}
             </Typography>

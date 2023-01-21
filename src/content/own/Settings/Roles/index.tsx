@@ -373,8 +373,8 @@ function Roles() {
   const columns: GridEnrichedColDef[] = [
     {
       field: 'name',
-      headerName: t('Name'),
-      description: t('Name'),
+      headerName: t('name'),
+      description: t('name'),
       width: 150,
       renderCell: (params: GridRenderCellParams<string>) => (
         <Box sx={{ fontWeight: 'bold' }}>{params.value}</Box>
@@ -415,8 +415,8 @@ function Roles() {
     {
       field: 'actions',
       type: 'actions',
-      headerName: t('Actions'),
-      description: t('Actions'),
+      headerName: t('actions'),
+      description: t('actions'),
       getActions: (params: GridRowParams<Role>) => {
         let actions = [
           <GridActionsCellItem

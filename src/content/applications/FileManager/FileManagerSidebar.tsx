@@ -1,15 +1,15 @@
 import {
-  Box,
-  Typography,
-  Divider,
-  Avatar,
-  List,
-  ListItemAvatar,
-  ListItem,
-  ListItemText,
   Alert,
+  Avatar,
+  Box,
   Button,
-  styled
+  Divider,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  styled,
+  Typography
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import Gauge from 'src/components/Gauge';
@@ -212,7 +212,7 @@ function FileManagerSidebar() {
               }}
               primary={
                 <TypographyPrimary variant="h4" gutterBottom>
-                  {t('Images')}
+                  {t('images')}
                 </TypographyPrimary>
               }
               secondary={

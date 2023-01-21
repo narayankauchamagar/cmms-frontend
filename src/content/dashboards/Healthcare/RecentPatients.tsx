@@ -1,29 +1,29 @@
 import {
+  Avatar,
+  Box,
   Button,
   Card,
-  Avatar,
-  CardHeader,
-  Pagination,
   CardActions,
-  Typography,
+  CardHeader,
   Divider,
+  IconButton,
+  Pagination,
+  styled,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
   TableHead,
   TableRow,
-  TableCell,
-  TableBody,
-  Table,
   Tooltip,
-  IconButton,
-  useTheme,
-  Box,
-  TableContainer,
-  styled
+  Typography,
+  useTheme
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import ArrowForwardTwoToneIcon from '@mui/icons-material/ArrowForwardTwoTone';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import { format, subHours, subDays } from 'date-fns';
+import { format, subDays, subHours } from 'date-fns';
 import Text from 'src/components/Text';
 
 const DotSuccess = styled('span')(
@@ -76,7 +76,7 @@ function RecentPatients() {
               <TableCell>{t('Doctor')}</TableCell>
               <TableCell>{t('Weight')}</TableCell>
               <TableCell>{t('Department')}</TableCell>
-              <TableCell align="right">{t('Actions')}</TableCell>
+              <TableCell align="right">{t('actions')}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

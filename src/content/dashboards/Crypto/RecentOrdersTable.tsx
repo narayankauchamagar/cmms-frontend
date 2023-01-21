@@ -1,28 +1,28 @@
-import { FC, ChangeEvent, useState } from 'react';
+import { ChangeEvent, FC, useState } from 'react';
 import { format } from 'date-fns';
 import numeral from 'numeral';
 import PropTypes from 'prop-types';
 import {
-  Tooltip,
-  Divider,
   Box,
-  FormControl,
-  InputLabel,
   Card,
+  CardHeader,
   Checkbox,
+  Divider,
+  FormControl,
   IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TablePagination,
   TableRow,
-  TableContainer,
-  Select,
-  MenuItem,
+  Tooltip,
   Typography,
-  useTheme,
-  CardHeader
+  useTheme
 } from '@mui/material';
 
 import Label from 'src/components/Label';
@@ -226,7 +226,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
               <TableCell>{t('Source')}</TableCell>
               <TableCell align="right">{t('Amount')}</TableCell>
               <TableCell align="right">{t('Status')}</TableCell>
-              <TableCell align="right">{t('Actions')}</TableCell>
+              <TableCell align="right">{t('actions')}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

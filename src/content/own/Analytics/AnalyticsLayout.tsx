@@ -11,13 +11,6 @@ export default function AnalyticsLayout(props) {
   if (hasFeature(PlanFeature.ANALYTICS)) {
     if (hasViewPermission(PermissionEntity.ANALYTICS)) {
       return children;
-    } else
-      return (
-        <PermissionErrorMessage
-          message={
-            "You don't have access to Analytics. Please contact your administrator if you should have access"
-          }
-        />
-      );
+    } else return <PermissionErrorMessage message={'no_access_analytics'} />;
   } else return <FeatureErrorMessage message={'Upgrade to see Analytics...'} />;
 }

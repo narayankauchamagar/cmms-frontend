@@ -162,8 +162,8 @@ export default function WOModal({
     },
     {
       field: 'files',
-      headerName: t('Files'),
-      description: t('Files'),
+      headerName: t('files'),
+      description: t('files'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<File[]>) =>
         params.value.length
@@ -194,8 +194,8 @@ export default function WOModal({
     },
     {
       field: 'createdAt',
-      headerName: t('Created At'),
-      description: t('Created At'),
+      headerName: t('created_at'),
+      description: t('created_at'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<string>) =>
         getFormattedDate(params.value)

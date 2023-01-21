@@ -1,21 +1,21 @@
 import {
-  Box,
-  Card,
-  Typography,
-  Link,
+  alpha,
+  Avatar,
   Badge,
+  Box,
+  Button,
+  Card,
+  Divider,
+  IconButton,
+  LinearProgress,
+  linearProgressClasses,
+  Link,
   List,
   ListItem,
   ListItemText,
-  Avatar,
-  alpha,
-  IconButton,
-  Button,
-  Divider,
-  LinearProgress,
   styled,
-  useTheme,
-  linearProgressClasses
+  Typography,
+  useTheme
 } from '@mui/material';
 
 import { useTranslation } from 'react-i18next';
@@ -182,7 +182,7 @@ function Block11() {
             primaryTypographyProps={{
               variant: 'h5'
             }}
-            primary={t('Location') + ':'}
+            primary={t('location') + ':'}
           />
           <Typography variant="subtitle1">San Francisco, USA</Typography>
         </ListItem>

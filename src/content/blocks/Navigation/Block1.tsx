@@ -1,16 +1,16 @@
 import {
-  Box,
-  Grid,
-  Card,
-  Tooltip,
-  Avatar,
-  CardActionArea,
-  Typography,
-  IconButton,
-  Divider,
-  Button,
   alpha,
+  Avatar,
+  Box,
+  Button,
+  Card,
+  CardActionArea,
+  Divider,
+  Grid,
+  IconButton,
   styled,
+  Tooltip,
+  Typography,
   useTheme
 } from '@mui/material';
 
@@ -454,7 +454,7 @@ function Block1() {
                       />
                     </Text>
                     <Typography gutterBottom variant="h4">
-                      {t('Customers')}
+                      {t('customers')}
                     </Typography>
                     <Typography variant="subtitle2" noWrap>
                       {t('Manage data')}

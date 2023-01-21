@@ -494,13 +494,13 @@ const Results: FC<ResultsProps> = ({ projects }) => {
                           onChange={handleSelectAllProjects}
                         />
                       </TableCell>
-                      <TableCell>{t('Name')}</TableCell>
+                      <TableCell>{t('name')}</TableCell>
                       <TableCell>{t('Tags')}</TableCell>
                       <TableCell>{t('Time Left')}</TableCell>
                       <TableCell>{t('Members')}</TableCell>
                       <TableCell>{t('Progress')}</TableCell>
                       <TableCell>{t('Status')}</TableCell>
-                      <TableCell align="center">{t('Actions')}</TableCell>
+                      <TableCell align="center">{t('actions')}</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>

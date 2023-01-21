@@ -1,21 +1,21 @@
 import { ChangeEvent, useState } from 'react';
 import {
-  Box,
-  CardHeader,
-  Card,
-  Typography,
   alpha,
-  Tooltip,
-  CardActionArea,
-  CardMedia,
-  ButtonGroup,
   Avatar,
   AvatarGroup,
+  Badge,
+  Box,
+  Button,
+  ButtonGroup,
+  Card,
+  CardActionArea,
+  CardHeader,
+  CardMedia,
+  styled,
   Tab,
   Tabs,
-  Badge,
-  Button,
-  styled,
+  Tooltip,
+  Typography,
   useTheme
 } from '@mui/material';
 import Text from 'src/components/Text';
@@ -194,7 +194,7 @@ function Block4() {
             variant="outlined"
             size="small"
           >
-            {t('Actions')}
+            {t('actions')}
           </Button>
         }
         title={

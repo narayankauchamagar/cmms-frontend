@@ -319,7 +319,7 @@ function QuickAccess() {
                       <TableCell>{t('Filename')}</TableCell>
                       <TableCell>{t('Owner')}</TableCell>
                       <TableCell>{t('Date Created')}</TableCell>
-                      <TableCell align="right">{t('Actions')}</TableCell>
+                      <TableCell align="right">{t('actions')}</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>

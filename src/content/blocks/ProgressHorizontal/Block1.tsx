@@ -1,14 +1,14 @@
 import {
-  Stack,
-  Card,
-  Typography,
-  Box,
-  Divider,
   alpha,
+  Box,
+  Card,
+  Divider,
   LinearProgress,
+  linearProgressClasses,
+  Stack,
   styled,
-  useTheme,
-  linearProgressClasses
+  Typography,
+  useTheme
 } from '@mui/material';
 
 import { useTranslation } from 'react-i18next';
@@ -185,7 +185,7 @@ function Block1() {
           >
             <Box>
               <Typography color="text.primary" variant="h4" gutterBottom>
-                {t('Customers')}
+                {t('customers')}
               </Typography>
               <Typography variant="subtitle2" noWrap>
                 {t('Total customers to date')}

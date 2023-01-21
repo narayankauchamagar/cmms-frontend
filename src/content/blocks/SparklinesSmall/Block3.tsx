@@ -247,7 +247,7 @@ function Block3() {
                 fontWeight: 'bold'
               }}
             >
-              {t('Customers')}
+              {t('customers')}
             </Typography>
             <Typography
               variant="h2"

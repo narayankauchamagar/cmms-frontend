@@ -214,8 +214,8 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
     },
     {
       field: 'name',
-      headerName: t('Name'),
-      description: t('Name'),
+      headerName: t('name'),
+      description: t('name'),
       width: 150
     },
     {

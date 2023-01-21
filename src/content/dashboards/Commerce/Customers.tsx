@@ -3,10 +3,10 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Typography,
   IconButton,
+  styled,
   Tooltip,
-  styled
+  Typography
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import HelpOutlineTwoToneIcon from '@mui/icons-material/HelpOutlineTwoTone';
@@ -52,7 +52,7 @@ function Customers() {
             </IconButton>
           </Tooltip>
         }
-        title={t('Customers')}
+        title={t('customers')}
       />
       <CardContent
         sx={{

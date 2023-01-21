@@ -443,19 +443,12 @@ function Files() {
             setOpenDrawer(true);
           }}
           onConfirm={() => handleDelete(currentRequest?.id)}
-          confirmText={t('delete')}
+          confirmText={t('to_delete')}
           question={t('confirm_delete_request')}
         />
       </>
     );
-  else
-    return (
-      <PermissionErrorMessage
-        message={
-          "You don't have access to Requests. Please contact your administrator if you should have access"
-        }
-      />
-    );
+  else return <PermissionErrorMessage message={'no_access_requests'} />;
 }
 
 export default Files;

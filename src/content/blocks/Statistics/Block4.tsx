@@ -1,11 +1,11 @@
 import {
-  Typography,
-  Box,
   Avatar,
+  Box,
   Card,
   Grid,
-  useTheme,
-  styled
+  styled,
+  Typography,
+  useTheme
 } from '@mui/material';
 
 import { useTranslation } from 'react-i18next';
@@ -193,7 +193,7 @@ function Block4() {
               variant="subtitle2"
               component="div"
             >
-              {t('Customers')}
+              {t('customers')}
             </Typography>
           </Box>
           <Box

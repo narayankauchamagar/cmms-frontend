@@ -1,18 +1,20 @@
 import {
-  Grid,
   Box,
   Card,
-  Typography,
+  Grid,
   IconButton,
   styled,
+  Typography,
   useTheme
 } from '@mui/material';
 
 import { useTranslation } from 'react-i18next';
 import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
 import MoreHorizTwoToneIcon from '@mui/icons-material/MoreHorizTwoTone';
-import { CircularProgressbarWithChildren } from 'react-circular-progressbar';
-import { buildStyles } from 'react-circular-progressbar';
+import {
+  buildStyles,
+  CircularProgressbarWithChildren
+} from 'react-circular-progressbar';
 
 const CardActions = styled(Box)(
   ({ theme }) => `
@@ -56,7 +58,7 @@ function Block4() {
                 fontSize: `${theme.typography.pxToRem(16)}`
               }}
             >
-              {t('Customers')}
+              {t('customers')}
             </Typography>
             <IconButton size="small" color="primary">
               <MoreVertTwoToneIcon />

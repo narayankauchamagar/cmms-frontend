@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { Helmet } from 'react-helmet-async';
 import PageHeader from './PageHeader';
@@ -6,16 +6,16 @@ import Footer from 'src/components/Footer';
 import Sidebar from './Sidebar';
 
 import {
-  TextField,
-  Divider,
-  Card,
-  Stack,
-  Box,
   Autocomplete,
+  Box,
+  Card,
+  Divider,
+  Drawer,
   Grid,
   IconButton,
-  Drawer,
+  Stack,
   styled,
+  TextField,
   useTheme
 } from '@mui/material';
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
@@ -186,7 +186,7 @@ function ApplicationsJobsPlatform() {
                     {...params}
                     fullWidth
                     variant="outlined"
-                    label={t('Location')}
+                    label={t('location')}
                     placeholder={t('Select location...')}
                   />
                 )}

@@ -1,28 +1,29 @@
-import { FC, useState, useRef, ChangeEvent } from 'react';
+import { ChangeEvent, FC, useRef, useState } from 'react';
 import type { Job } from 'src/models/job';
 import PropTypes from 'prop-types';
 import {
-  Grid,
-  Chip,
-  Typography,
-  Card,
-  Box,
-  IconButton,
   Avatar,
+  Box,
   Button,
-  MenuItem,
-  Menu,
-  useTheme,
+  Card,
+  Chip,
   Divider,
+  Grid,
+  IconButton,
   lighten,
+  Menu,
+  MenuItem,
   styled,
-  TablePagination
+  TablePagination,
+  Typography,
+  useTheme
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import ThumbUpTwoToneIcon from '@mui/icons-material/ThumbUpTwoTone';
 import ThumbDownTwoToneIcon from '@mui/icons-material/ThumbDownTwoTone';
+
 interface ResultsProps {
   jobs: Job[];
 }
@@ -62,7 +63,7 @@ const Results: FC<ResultsProps> = ({ jobs, ...rest }) => {
     },
     {
       value: '3',
-      text: t('Location')
+      text: t('location')
     },
     {
       value: '4',

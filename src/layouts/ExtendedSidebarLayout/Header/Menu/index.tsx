@@ -1,21 +1,21 @@
 import { useRef, useState } from 'react';
 import {
+  alpha,
   Box,
   Button,
-  useTheme,
-  CardActionArea,
-  Typography,
-  MenuList,
-  Grid,
-  Divider,
   Card,
-  MenuItem,
-  ListItemText,
-  alpha,
+  CardActionArea,
+  Divider,
+  Grid,
   Link,
+  ListItemText,
+  MenuItem,
+  MenuList,
   Popover,
   Stack,
-  styled
+  styled,
+  Typography,
+  useTheme
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import KeyboardArrowDownTwoToneIcon from '@mui/icons-material/KeyboardArrowDownTwoTone';
@@ -669,7 +669,7 @@ function HeaderMenu() {
                       }}
                     />
                   </Text>
-                  <Typography variant="h4">{t('Customers')}</Typography>
+                  <Typography variant="h4">{t('customers')}</Typography>
                 </CardActionAreaWrapper>
               </Card>
             </Grid>

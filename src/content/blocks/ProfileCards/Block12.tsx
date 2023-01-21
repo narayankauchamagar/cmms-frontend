@@ -1,15 +1,15 @@
 import {
+  alpha,
+  Avatar,
   Box,
   Card,
-  Typography,
-  Link,
-  Grid,
-  Tooltip,
-  Avatar,
-  alpha,
   CardActionArea,
+  Grid,
   IconButton,
+  Link,
   styled,
+  Tooltip,
+  Typography,
   useTheme
 } from '@mui/material';
 
@@ -333,7 +333,7 @@ function Block12() {
                       }}
                     />
                   </Text>
-                  <Typography variant="h4">{t('Customers')}</Typography>
+                  <Typography variant="h4">{t('customers')}</Typography>
                   <Typography variant="subtitle2" noWrap>
                     {t('Manage data')}
                   </Typography>

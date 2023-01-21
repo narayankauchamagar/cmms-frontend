@@ -392,7 +392,7 @@ const Results: FC<ResultsProps> = ({ invoices }) => {
                     <TableCell>{t('Client')}</TableCell>
                     <TableCell>{t('Amount')}</TableCell>
                     <TableCell>{t('Status')}</TableCell>
-                    <TableCell align="center">{t('Actions')}</TableCell>
+                    <TableCell align="center">{t('actions')}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>

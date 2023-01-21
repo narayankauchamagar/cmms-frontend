@@ -52,14 +52,7 @@ const VendorsAndCustomers = ({}: PropsType) => {
         {tabIndex === 1 && <Sets setAction={setAction} />}
       </MultipleTabsLayout>
     );
-  else
-    return (
-      <PermissionErrorMessage
-        message={
-          "You don't have access to The Inventory. Please contact your administrator if you should have access"
-        }
-      />
-    );
+  else return <PermissionErrorMessage message={'no_access_inventory'} />;
 };
 
 export default VendorsAndCustomers;

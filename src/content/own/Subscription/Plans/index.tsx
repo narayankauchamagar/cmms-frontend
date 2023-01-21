@@ -554,10 +554,7 @@ function SubscriptionPlans() {
         </Grid>
       </>
     );
-  else
-    return (
-      <PermissionErrorMessage message={"You don't have access to this page"} />
-    );
+  else return <PermissionErrorMessage message={'no_access_page'} />;
 }
 
 export default SubscriptionPlans;

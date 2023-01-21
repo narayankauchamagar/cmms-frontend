@@ -123,7 +123,7 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
     id?: number;
   }[] => [
     {
-      label: t('Name'),
+      label: t('name'),
       value: purchaseOrder1.name
     },
     {

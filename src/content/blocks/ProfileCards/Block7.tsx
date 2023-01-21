@@ -1,18 +1,18 @@
 import {
-  Box,
-  Card,
-  Typography,
   alpha,
-  TableHead,
-  Button,
-  Link,
-  TableRow,
-  TableCell,
-  TableBody,
   Avatar,
-  Table,
-  TableContainer,
+  Box,
+  Button,
+  Card,
+  Link,
   styled,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
   useTheme
 } from '@mui/material';
 
@@ -232,7 +232,7 @@ function Block7() {
               <TableRow>
                 <TableCell>{t('Employee')}</TableCell>
                 <TableCell align="center">{t('Status')}</TableCell>
-                <TableCell align="right">{t('Actions')}</TableCell>
+                <TableCell align="right">{t('actions')}</TableCell>
               </TableRow>
             </TableHeadWrapper>
             <TableBody>

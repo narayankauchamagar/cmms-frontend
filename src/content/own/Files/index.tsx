@@ -79,7 +79,7 @@ function Files() {
   } = useAuth();
   const dispatch = useDispatch();
   useEffect(() => {
-    setTitle(t('Files'));
+    setTitle(t('files'));
     if (hasViewPermission(PermissionEntity.FILES)) dispatch(getFiles());
   }, []);
 
@@ -87,7 +87,7 @@ function Files() {
     {
       name: 'files',
       type: 'file',
-      label: t('Files'),
+      label: t('files'),
       fileType: 'file',
       multiple: true
     }
@@ -96,7 +96,7 @@ function Files() {
     {
       name: 'name',
       type: 'text',
-      label: t('Name'),
+      label: t('name'),
       required: true
     }
   ];
@@ -109,8 +109,8 @@ function Files() {
     },
     {
       field: 'name',
-      headerName: t('Name'),
-      description: t('Name'),
+      headerName: t('name'),
+      description: t('name'),
       width: 150,
       renderCell: (params: GridRenderCellParams<string>) => (
         <Box sx={{ fontWeight: 'bold' }}>{params.value}</Box>
@@ -133,8 +133,8 @@ function Files() {
     {
       field: 'actions',
       type: 'actions',
-      headerName: t('Actions'),
-      description: t('Actions'),
+      headerName: t('actions'),
+      description: t('actions'),
       getActions: (params: GridRowParams<File>) => {
         let actions = [
           <GridActionsCellItem
@@ -249,7 +249,7 @@ function Files() {
       return (
         <>
           <Helmet>
-            <title>{t('Files')}</title>
+            <title>{t('files')}</title>
           </Helmet>
           <Grid
             container
@@ -327,14 +327,7 @@ function Files() {
           {renderUpdateModal()}
         </>
       );
-    else
-      return (
-        <PermissionErrorMessage
-          message={
-            "You don't have access to Files. Please contact your administrator if you should have access"
-          }
-        />
-      );
+    else return <PermissionErrorMessage message={'no_access_files'} />;
   } else
     return (
       <FeatureErrorMessage

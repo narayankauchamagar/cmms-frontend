@@ -28,8 +28,8 @@ const VendorsAndCustomers = ({}: PropsType) => {
   }, []);
 
   const tabs = [
-    { value: 'vendors', label: t('Vendors') },
-    { value: 'customers', label: t('Customers') }
+    { value: 'vendors', label: t('vendors') },
+    { value: 'customers', label: t('customers') }
   ];
   const arr = location.pathname.split('/');
   const minus = customerId || vendorId ? 2 : 1;
@@ -67,13 +67,7 @@ const VendorsAndCustomers = ({}: PropsType) => {
       </MultipleTabsLayout>
     );
   else
-    return (
-      <PermissionErrorMessage
-        message={
-          "You don't have access to Vendors And Customers. Please contact your administrator if you should have access"
-        }
-      />
-    );
+    return <PermissionErrorMessage message={'no_access_vendors_customers'} />;
 };
 
 export default VendorsAndCustomers;

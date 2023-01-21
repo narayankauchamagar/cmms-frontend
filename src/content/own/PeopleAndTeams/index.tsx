@@ -31,7 +31,7 @@ const PeopleAndTeams = ({}: PropsType) => {
 
   const tabs = [
     { value: 'people', label: t('People') },
-    { value: 'teams', label: t('Teams') }
+    { value: 'teams', label: t('teams') }
   ];
 
   if (hasViewPermission(PermissionEntity.PEOPLE_AND_TEAMS))
@@ -61,14 +61,7 @@ const PeopleAndTeams = ({}: PropsType) => {
         )}
       </MultipleTabsLayout>
     );
-  else
-    return (
-      <PermissionErrorMessage
-        message={
-          "You don't have access to People And Teams. Please contact your administrator if you should have access"
-        }
-      />
-    );
+  else return <PermissionErrorMessage message={'no_access_people_team'} />;
 };
 
 export default PeopleAndTeams;

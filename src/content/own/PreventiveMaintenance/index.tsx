@@ -530,12 +530,12 @@ function Files() {
             setOpenDrawer(true);
           }}
           onConfirm={() => handleDelete(currentPM?.id)}
-          confirmText={t('delete')}
+          confirmText={t('to_delete')}
           question={t('confirm_delete_pm')}
         />
       </>
     );
-  else return <PermissionErrorMessage message={t('noAccess.pm')} />;
+  else return <PermissionErrorMessage message={'no_access_pm'} />;
 }
 
 export default Files;

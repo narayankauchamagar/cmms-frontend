@@ -1,14 +1,14 @@
 import {
-  CardHeader,
-  Card,
-  List,
-  ListItemAvatar,
-  ListItem,
-  ListItemText,
   Avatar,
   Button,
-  Typography,
+  Card,
+  CardHeader,
   Divider,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Typography,
   useTheme
 } from '@mui/material';
 
@@ -81,7 +81,7 @@ function Block5() {
           <ListItemText
             primary={
               <Typography gutterBottom variant="h4">
-                {t('Customers')}
+                {t('customers')}
               </Typography>
             }
             secondary={

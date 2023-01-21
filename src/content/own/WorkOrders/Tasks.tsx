@@ -104,7 +104,7 @@ export default function Tasks({
     {
       name: 'images',
       type: 'file',
-      label: t('Images'),
+      label: t('images'),
       fileType: 'image',
       multiple: true
     }

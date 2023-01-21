@@ -221,7 +221,7 @@ const Results: FC<ResultsProps> = ({ users }) => {
     },
     {
       value: 'customer',
-      label: t('Customers')
+      label: t('customers')
     },
     {
       value: 'admin',
@@ -416,12 +416,12 @@ const Results: FC<ResultsProps> = ({ users }) => {
                         />
                       </TableCell>
                       <TableCell>{t('Username')}</TableCell>
-                      <TableCell>{t('Name')}</TableCell>
+                      <TableCell>{t('name')}</TableCell>
                       <TableCell>{t('Email')}</TableCell>
                       <TableCell align="center">{t('Posts')}</TableCell>
-                      <TableCell>{t('Location')}</TableCell>
+                      <TableCell>{t('location')}</TableCell>
                       <TableCell>{t('Role')}</TableCell>
-                      <TableCell align="center">{t('Actions')}</TableCell>
+                      <TableCell align="center">{t('actions')}</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>

@@ -215,7 +215,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
   const columns: GridEnrichedColDef[] = [
     {
       field: 'name',
-      headerName: t('Name'),
+      headerName: t('name'),
       width: 150,
       valueGetter: (params) => `${params.row.firstName} ${params.row.lastName}`,
       renderCell: (params: GridRenderCellParams<string>) => (
@@ -253,8 +253,8 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
     {
       field: 'actions',
       type: 'actions',
-      headerName: t('Actions'),
-      description: t('Actions'),
+      headerName: t('actions'),
+      description: t('actions'),
       getActions: (params: GridRowParams<OwnUser>) => {
         let actions = [
           <GridActionsCellItem

@@ -328,7 +328,7 @@ function PageHeader() {
                       <TableCell>{t('Qty')}</TableCell>
                       <TableCell>{t('Price')}</TableCell>
                       <TableCell>{t('Total')}</TableCell>
-                      <TableCell align="right">{t('Actions')}</TableCell>
+                      <TableCell align="right">{t('actions')}</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>

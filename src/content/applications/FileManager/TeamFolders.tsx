@@ -284,11 +284,11 @@ function TeamFolders() {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell>{t('Name')}</TableCell>
-                      <TableCell>{t('Files')}</TableCell>
+                      <TableCell>{t('name')}</TableCell>
+                      <TableCell>{t('files')}</TableCell>
                       <TableCell>{t('Members')}</TableCell>
                       <TableCell>{t('Created')}</TableCell>
-                      <TableCell align="right">{t('Actions')}</TableCell>
+                      <TableCell align="right">{t('actions')}</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>

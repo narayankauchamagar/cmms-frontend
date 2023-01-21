@@ -309,7 +309,7 @@ const TableCustomized: FC<TableCustomizedProps> = ({
                   ))}
 
                   {actions && (
-                    <TableCell align="center">{t('Actions')}</TableCell>
+                    <TableCell align="center">{t('actions')}</TableCell>
                   )}
                 </TableRow>
               </TableHead>

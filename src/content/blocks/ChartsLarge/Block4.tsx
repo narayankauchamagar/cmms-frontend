@@ -1,16 +1,16 @@
 import {
-  CardContent,
-  Box,
-  CardHeader,
-  Card,
-  Grid,
-  Typography,
   alpha,
-  LinearProgress,
-  Divider,
+  Box,
   Button,
-  styled,
+  Card,
+  CardContent,
+  CardHeader,
+  Divider,
+  Grid,
+  LinearProgress,
   linearProgressClasses,
+  styled,
+  Typography,
   useTheme
 } from '@mui/material';
 import Chart from 'react-apexcharts';
@@ -173,7 +173,7 @@ function Block4() {
             variant="outlined"
             endIcon={<ExpandMoreTwoToneIcon />}
           >
-            {t('Actions')}
+            {t('actions')}
           </Button>
         }
         title={t('Users list')}
@@ -290,7 +290,7 @@ function Block4() {
                 pb: 1
               }}
             >
-              {t('Customers')}
+              {t('customers')}
             </Typography>
             <LinearProgressError variant="determinate" value={65.34} />
             <Box

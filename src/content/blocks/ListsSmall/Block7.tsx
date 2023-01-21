@@ -1,17 +1,17 @@
 import {
-  Box,
-  Card,
-  Typography,
-  IconButton,
-  ListItemText,
-  ListItem,
-  Avatar,
-  List,
-  Button,
-  ListItemAvatar,
-  Divider,
   alpha,
+  Avatar,
+  Box,
+  Button,
+  Card,
+  Divider,
+  IconButton,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
   styled,
+  Typography,
   useTheme
 } from '@mui/material';
 
@@ -229,7 +229,7 @@ function Block7() {
                       alignItems: 'center'
                     }}
                   >
-                    {t('Images')}
+                    {t('images')}
                     <LabelWrapper
                       ml={1}
                       component="span"

@@ -110,8 +110,8 @@ const Sets = ({ setAction }: PropsType) => {
   const columns: GridEnrichedColDef[] = [
     {
       field: 'name',
-      headerName: t('Name'),
-      description: t('Name'),
+      headerName: t('name'),
+      description: t('name'),
       width: 150,
       renderCell: (params: GridRenderCellParams<string>) => (
         <Box sx={{ fontWeight: 'bold' }}>{params.value}</Box>
@@ -145,7 +145,7 @@ const Sets = ({ setAction }: PropsType) => {
     {
       name: 'name',
       type: 'text',
-      label: t('Name'),
+      label: t('name'),
       placeholder: t('Enter Part name'),
       required: true
     },

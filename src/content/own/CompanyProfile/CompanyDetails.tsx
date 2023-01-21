@@ -141,7 +141,7 @@ function CompanyDetails(props: CompanyDetailsProps) {
                         error={Boolean(touched.name && errors.name)}
                         fullWidth
                         helperText={touched.name && errors.name}
-                        label={t('Name')}
+                        label={t('name')}
                         name="name"
                         onBlur={handleBlur}
                         onChange={handleChange}

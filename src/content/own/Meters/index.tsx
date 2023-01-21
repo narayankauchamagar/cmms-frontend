@@ -126,8 +126,8 @@ function Meters() {
   const columns: GridEnrichedColDef[] = [
     {
       field: 'name',
-      headerName: t('Name'),
-      description: t('Name'),
+      headerName: t('name'),
+      description: t('name'),
       width: 150,
       renderCell: (params: GridRenderCellParams<string>) => (
         <Box sx={{ fontWeight: 'bold' }}>{params.value}</Box>
@@ -157,8 +157,8 @@ function Meters() {
     },
     {
       field: 'location',
-      headerName: t('Location'),
-      description: t('Location'),
+      headerName: t('location'),
+      description: t('location'),
       width: 150,
       valueGetter: (params) => params.row.location?.name
     },
@@ -171,8 +171,8 @@ function Meters() {
     },
     {
       field: 'createdBy',
-      headerName: t('Created By'),
-      description: t('Created By'),
+      headerName: t('created_by'),
+      description: t('created_by'),
       width: 150,
       valueGetter: (params) => getUserNameById(params.value)
     },
@@ -189,7 +189,7 @@ function Meters() {
     {
       name: 'name',
       type: 'text',
-      label: t('Name'),
+      label: t('name'),
       placeholder: t('Enter Meter name'),
       required: true
     },
@@ -217,7 +217,7 @@ function Meters() {
       name: 'image',
       type: 'file',
       fileType: 'image',
-      label: t('Image')
+      label: t('image')
     },
     {
       name: 'asset',
@@ -237,7 +237,7 @@ function Meters() {
       name: 'location',
       type: 'select',
       type2: 'location',
-      label: t('Location')
+      label: t('location')
     }
   ];
   const shape = {
@@ -479,14 +479,7 @@ function Meters() {
           />
         </>
       );
-    else
-      return (
-        <PermissionErrorMessage
-          message={
-            "You don't have access to Meters. Please contact your administrator if you should have access"
-          }
-        />
-      );
+    else return <PermissionErrorMessage message={'no_access_meters'} />;
   } else return <FeatureErrorMessage message={'Upgrade to create Meters'} />;
 }
 

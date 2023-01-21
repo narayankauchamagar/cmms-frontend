@@ -13,7 +13,7 @@ function WorkOrderSettings() {
   const fields = [
     { label: t('Asset'), name: 'asset' },
     {
-      label: t('Location'),
+      label: t('location'),
       name: 'location'
     },
     { label: t('Worker Assigned'), name: 'primaryUser' },

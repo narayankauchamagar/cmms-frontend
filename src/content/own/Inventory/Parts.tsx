@@ -134,8 +134,8 @@ const Parts = ({ setAction }: PropsType) => {
   const columns: GridEnrichedColDef[] = [
     {
       field: 'name',
-      headerName: t('Name'),
-      description: t('Name'),
+      headerName: t('name'),
+      description: t('name'),
       width: 150,
       renderCell: (params: GridRenderCellParams<string>) => (
         <Box sx={{ fontWeight: 'bold' }}>{params.value}</Box>
@@ -211,7 +211,7 @@ const Parts = ({ setAction }: PropsType) => {
     {
       name: 'name',
       type: 'text',
-      label: t('Name'),
+      label: t('name'),
       placeholder: t('Enter Part name'),
       required: true
     },
@@ -283,7 +283,7 @@ const Parts = ({ setAction }: PropsType) => {
       type: 'select',
       type2: 'team',
       multiple: true,
-      label: t('Teams'),
+      label: t('teams'),
       placeholder: 'Select Teams'
     },
     {
@@ -291,7 +291,7 @@ const Parts = ({ setAction }: PropsType) => {
       type: 'select',
       type2: 'vendor',
       multiple: true,
-      label: t('Vendors'),
+      label: t('vendors'),
       placeholder: 'Select Vendors'
     },
     {
@@ -299,20 +299,20 @@ const Parts = ({ setAction }: PropsType) => {
       type: 'select',
       type2: 'customer',
       multiple: true,
-      label: t('Customers'),
+      label: t('customers'),
       placeholder: 'Select Customers'
     },
     {
       name: 'image',
       type: 'file',
-      label: t('Image'),
+      label: t('image'),
       fileType: 'image'
     },
     {
       name: 'files',
       type: 'file',
       multiple: true,
-      label: t('Files')
+      label: t('files')
     }
   ];
   const shape = {

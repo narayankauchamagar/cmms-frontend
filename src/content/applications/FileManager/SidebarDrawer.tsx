@@ -349,7 +349,7 @@ function SidebarDrawer() {
                   mb: 3
                 }}
               >
-                {t('Actions')}
+                {t('actions')}
               </Typography>
               <Box mb={3} display="flex" justifyContent="center">
                 <Tooltip arrow placement="top" title={t('Open')}>

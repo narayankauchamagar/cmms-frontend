@@ -313,7 +313,7 @@ const enJSON = {
   'noRows.wo.action': "Press the '+' button to create a Work Order",
   to_delete: 'Delete',
   confirm_delete_wo: 'Are you sure you want to delete this Work Order?',
-  'noAccess.wo':
+  no_access_wo:
     "You don't have access to Work Orders. Please contact your administrator if you should have access",
   cancel: 'Cancel',
   select_parts: 'Select Parts',
@@ -353,7 +353,7 @@ const enJSON = {
   'noRows.pm.message': 'Schedule Work Orders with custom triggers',
   'noRows.pm.action': "Press the '+' button to create a trigger",
   confirm_delete_pm: 'Are you sure you want to delete this Work Order Trigger?',
-  'noAccess.pm':
+  no_access_pm:
     "You don't have access to the Preventive Maintenance section. Please contact your administrator if you should have access",
   enter_wo_title: 'Enter Work Order title',
   //menuItems
@@ -472,7 +472,70 @@ const enJSON = {
   confirm_delete_asset: 'Are you sure you want to delete this Asset?',
   loading_assets: 'Loading assets under {{name}} #{{id}}',
   no_content: 'No Content',
-  no_result_criteria: 'No result matches your search criteria'
+  no_result_criteria: 'No result matches your search criteria',
+  //location
+  map_view: 'Map View',
+  location_create_success: 'The location has been created successfully',
+  location_create_failure: "The location couldn't be created",
+  location_edit_failure: "The location couldn't be edited",
+  location_delete_success: 'The location has been deleted successfully',
+  location_delete_failure: "The location couldn't be deleted",
+  enter_location_name: 'Enter location name',
+  address: 'Address',
+  parent_location: 'Parent Location',
+  select_workers: 'Select Workers',
+  map_coordinates: 'Map Coordinates',
+  required_location_name: 'Location title is required',
+  required_location_address: 'Location address is required',
+  add_location: 'Add location',
+  'add_location.description':
+    'Fill in the fields below to create and add a new location',
+  edit_location: 'Edit location',
+  'edit_location.description':
+    'Fill in the fields below to update the location',
+  confirm_delete_location: 'Are you sure you want to delete this Location?',
+  floor_plans: 'Floor Plans',
+  floor_plan: 'Floor Plan',
+  'floor_plan_name.description': 'Floor plan name',
+  'Floor plan area in m²': 'Floor plan area in m²',
+  upload_image: 'Upload an image',
+  required_floor_plan_name: 'Floor plan name is required',
+  add_floor_plan: 'Add new Floor Plan',
+  'add_floor_plan.description':
+    'Fill in the fields below to create a new Floor Plan',
+  no_asset_in_location: 'No asset in this location',
+  no_wo_in_location: 'No Work Order in this location',
+  no_file_in_location: 'No Files attached to this location',
+  no_floor_plan_in_location: 'No Floor Plan in this location',
+  assigned_teams: 'Assigned Teams',
+  assigned_customers: 'Assigned Customers',
+  assigned_vendors: 'Assigned Vendors',
+  //no_access
+  no_access_location:
+    "You don't have access to Locations. Please contact your administrator if you should have access",
+  no_access_vendors_customers:
+    "You don't have access to Vendors And Customers. Please contact your administrator if you should have access",
+  no_access_people_team:
+    "You don't have access to People And Teams. Please contact your administrator if you should have access",
+  no_access_analytics:
+    "You don't have access to Analytics. Please contact your administrator if you should have access",
+  no_access_assets:
+    "You don't have access to Assets. Please contact your administrator if you should have access",
+  no_access_categories:
+    "You don't have access to Categories. Please contact your administrator if you should have access",
+  no_access_files:
+    "You don't have access to Files. Please contact your administrator if you should have access",
+  no_access_inventory:
+    "You don't have access to The Inventory. Please contact your administrator if you should have access",
+  no_access_meters:
+    "You don't have access to Meters. Please contact your administrator if you should have access",
+  no_access_purchase_orders:
+    "You can't create a Purchase Order. Please contact your administrator if you should have access",
+  no_access_requests:
+    "You don't have access to Requests. Please contact your administrator if you should have access",
+  no_access_settings:
+    "You don't have access to settings. Please contact your administrator if you should have access",
+  no_access_page: "You don't have access to this page"
 };
 
 export default enJSON;

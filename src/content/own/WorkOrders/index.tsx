@@ -750,7 +750,7 @@ function WorkOrders() {
         />
       </>
     );
-  else return <PermissionErrorMessage message={'noAccess.wo'} />;
+  else return <PermissionErrorMessage message={'no_access_wo'} />;
 }
 
 export default WorkOrders;

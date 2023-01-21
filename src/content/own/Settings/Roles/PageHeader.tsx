@@ -162,7 +162,7 @@ function PageHeader({ rolesNumber, formatValues }: PageHeaderProps) {
                           error={Boolean(touched.name && errors.name)}
                           fullWidth
                           helperText={touched.name && errors.name}
-                          label={t('Name')}
+                          label={t('name')}
                           name="name"
                           onBlur={handleBlur}
                           onChange={handleChange}

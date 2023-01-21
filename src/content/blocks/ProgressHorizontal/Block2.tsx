@@ -1,12 +1,12 @@
 import {
-  Grid,
-  Card,
-  Typography,
-  Box,
   alpha,
+  Box,
+  Card,
+  Grid,
   LinearProgress,
   linearProgressClasses,
   styled,
+  Typography,
   useTheme
 } from '@mui/material';
 
@@ -197,7 +197,7 @@ function Block2() {
           >
             <Box>
               <Typography color="text.primary" variant="h4" gutterBottom>
-                {t('Customers')}
+                {t('customers')}
               </Typography>
               <Typography variant="subtitle2" noWrap>
                 {t('Total customers to date')}
