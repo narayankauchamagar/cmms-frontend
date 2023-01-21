@@ -70,27 +70,26 @@ const Parts = ({ setAction }: PropsType) => {
     setOpenDelete(false);
   };
   const tabs = [
-    { value: 'list', label: t('List View') },
-    { value: 'card', label: t('Card View') }
+    { value: 'list', label: t('list_view') },
+    { value: 'card', label: t('card_view') }
   ];
   const theme = useTheme();
   const onCreationSuccess = () => {
     setOpenAddModal(false);
-    showSnackBar(t('The Part has been created successfully'), 'success');
+    showSnackBar(t('part_create_success'), 'success');
   };
   const onCreationFailure = (err) =>
-    showSnackBar(t("The Part couldn't be created"), 'error');
+    showSnackBar(t('part_create_failure'), 'error');
   const onEditSuccess = () => {
     setOpenUpdateModal(false);
-    showSnackBar(t('The changes have been saved'), 'success');
+    showSnackBar(t('changes_saved_success'), 'success');
   };
-  const onEditFailure = (err) =>
-    showSnackBar(t("The Part couldn't be edited"), 'error');
+  const onEditFailure = (err) => showSnackBar(t('part_edit_failure'), 'error');
   const onDeleteSuccess = () => {
-    showSnackBar(t('The Part has been deleted successfully'), 'success');
+    showSnackBar(t('part_delete_success'), 'success');
   };
   const onDeleteFailure = (err) =>
-    showSnackBar(t("The meter couldn't be deleted"), 'error');
+    showSnackBar(t('part_delete_failure'), 'error');
   useEffect(() => {
     dispatch(getParts());
     const handleOpenModal = () => setOpenAddModal(true);
@@ -143,14 +142,14 @@ const Parts = ({ setAction }: PropsType) => {
     },
     {
       field: 'cost',
-      headerName: t('Cost'),
-      description: t('Cost'),
+      headerName: t('cost'),
+      description: t('cost'),
       width: 150
     },
     {
       field: 'quantity',
-      headerName: t('Quantity'),
-      description: t('Quantity'),
+      headerName: t('quantity'),
+      description: t('quantity'),
       width: 150,
       renderCell: (params: GridRenderCellParams<number>) => (
         <Box sx={params.value < params.row.minQuantity ? { color: 'red' } : {}}>
@@ -161,32 +160,32 @@ const Parts = ({ setAction }: PropsType) => {
     },
     {
       field: 'barcode',
-      headerName: t('Barcode'),
-      description: t('Barcode'),
+      headerName: t('barcode'),
+      description: t('barcode'),
       width: 150
     },
     {
       field: 'area',
-      headerName: t('Area'),
-      description: t('Area'),
+      headerName: t('area'),
+      description: t('area'),
       width: 150
     },
     {
       field: 'category',
-      headerName: t('Category'),
-      description: t('Category'),
+      headerName: t('category'),
+      description: t('category'),
       width: 150
     },
     {
       field: 'description',
-      headerName: t('Description'),
-      description: t('Description'),
+      headerName: t('description'),
+      description: t('description'),
       width: 150
     },
     {
       field: 'assignedTo',
-      headerName: t('Assigned Users'),
-      description: t('Assigned Users'),
+      headerName: t('assigned_to'),
+      description: t('assigned_to'),
       width: 150,
       renderCell: (params: GridRenderCellParams<UserMiniDTO[]>) => (
         <UserAvatars users={params.value} />
@@ -194,16 +193,16 @@ const Parts = ({ setAction }: PropsType) => {
     },
     {
       field: 'createdAt',
-      headerName: t('Date Created'),
-      description: t('Date Created'),
+      headerName: t('created_at'),
+      description: t('created_at'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<string>) =>
         getFormattedDate(params.value)
     },
     {
       field: 'openWorkOrders',
-      headerName: t('Open Work Orders'),
-      description: t('Open Work Orders'),
+      headerName: t('open_wo'),
+      description: t('open_wo'),
       width: 150
     }
   ];
@@ -212,62 +211,62 @@ const Parts = ({ setAction }: PropsType) => {
       name: 'name',
       type: 'text',
       label: t('name'),
-      placeholder: t('Enter Part name'),
+      placeholder: t('enter_part_name'),
       required: true
     },
     {
       name: 'description',
       type: 'text',
-      label: t('Description'),
-      placeholder: t('Description'),
+      label: t('description'),
+      placeholder: t('description'),
       multiple: true
     },
     {
       name: 'category',
       type: 'text',
-      label: t('Category'),
-      placeholder: t('Enter Part category')
+      label: t('category'),
+      placeholder: t('enter_part_category')
     },
     {
       name: 'cost',
       type: 'number',
-      label: t('Cost'),
-      placeholder: t('Enter Part cost')
+      label: t('cost'),
+      placeholder: t('enter_part_cost')
     },
     {
       name: 'quantity',
       type: 'number',
-      label: t('Quantity'),
-      placeholder: t('Enter Part quantity')
+      label: t('quantity'),
+      placeholder: t('enter_part_quantity')
     },
     {
       name: 'minQuantity',
       type: 'number',
-      label: t('Minimum Quantity'),
-      placeholder: t('Enter Part minimum quantity')
+      label: t('minimum_quantity'),
+      placeholder: t('enter_part_minimum_quantity')
     },
     {
       name: 'nonStock',
       type: 'checkbox',
-      label: t('Non Stock')
+      label: t('non_stock')
     },
     {
       name: 'barcode',
       type: 'text',
-      label: t('Barcode'),
-      placeholder: t('Enter Part Barcode')
+      label: t('barcode'),
+      placeholder: t('enter_part_barcode')
     },
     {
       name: 'area',
       type: 'text',
-      label: t('Area'),
-      placeholder: t('Enter Part Area')
+      label: t('area'),
+      placeholder: t('enter_part_area')
     },
     {
       name: 'additionalInfos',
       type: 'text',
-      label: t('Additional Part Details'),
-      placeholder: t('Additional Part Details'),
+      label: t('additional_part_details'),
+      placeholder: t('additional_part_details'),
       multiple: true
     },
     {
@@ -275,7 +274,7 @@ const Parts = ({ setAction }: PropsType) => {
       type: 'select',
       type2: 'user',
       multiple: true,
-      label: t('Workers'),
+      label: t('workers'),
       placeholder: 'Select Workers'
     },
     {
@@ -331,11 +330,9 @@ const Parts = ({ setAction }: PropsType) => {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Add Part')}
+          {t('add_part')}
         </Typography>
-        <Typography variant="subtitle2">
-          {t('Fill in the fields below to create and add a new Part')}
-        </Typography>
+        <Typography variant="subtitle2">{t('add_part.description')}</Typography>
       </DialogTitle>
       <DialogContent
         dividers
@@ -347,7 +344,7 @@ const Parts = ({ setAction }: PropsType) => {
           <Form
             fields={getFilteredFields(fields)}
             validation={Yup.object().shape(shape)}
-            submitText={t('Create Part')}
+            submitText={t('create_part')}
             values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
@@ -397,27 +394,27 @@ const Parts = ({ setAction }: PropsType) => {
   };
   const fieldsToRender = (part: Part) => [
     {
-      label: t('ID'),
+      label: t('id'),
       value: part.id
     },
     {
-      label: t('Category'),
+      label: t('category'),
       value: part.category
     },
     {
-      label: t('Quantity'),
+      label: t('quantity'),
       value: part.quantity
     },
     {
-      label: t('Cost'),
+      label: t('cost'),
       value: part.cost
     },
     {
-      label: t('Barcode'),
+      label: t('barcode'),
       value: part.barcode
     },
     {
-      label: t('Date created'),
+      label: t('created_at'),
       value: getFormattedDate(part.createdAt)
     }
   ];
@@ -434,10 +431,10 @@ const Parts = ({ setAction }: PropsType) => {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Update Part')}
+          {t('update_part')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the fields below to update the Part')}
+          {t('update_part.description')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -539,8 +536,8 @@ const Parts = ({ setAction }: PropsType) => {
               Toolbar: GridToolbar,
               NoRowsOverlay: () => (
                 <NoRowsMessageWrapper
-                  message={t('Parts can be combined into assets or used alone')}
-                  action={t("Press the '+' button to create a Part")}
+                  message={t('noRows.part.message')}
+                  action={t('noRows.part.action')}
                 />
               )
             }}
@@ -612,7 +609,7 @@ const Parts = ({ setAction }: PropsType) => {
         }}
         onConfirm={() => handleDelete(currentPart?.id)}
         confirmText={t('to_delete')}
-        question={t('Are you sure you want to delete this Part?')}
+        question={t('confirm_remove_part')}
       />
     </Box>
   );

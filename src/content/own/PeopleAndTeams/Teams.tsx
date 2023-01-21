@@ -117,7 +117,7 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
     },
     {
       field: 'description',
-      headerName: t('Description'),
+      headerName: t('description'),
       width: 150
     },
     {
@@ -306,7 +306,7 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
             <Typography variant="h5" sx={{ mb: 1 }}>
               {currentTeam?.name}
             </Typography>
-            <Typography variant="subtitle1">{t('Description')}</Typography>
+            <Typography variant="subtitle1">{t('description')}</Typography>
             <Typography variant="h5" sx={{ mb: 1 }}>
               {currentTeam?.description}
             </Typography>

@@ -52,8 +52,8 @@ export default function WOModal({
   const defaultColumns: GridEnrichedColDef[] = [
     {
       field: 'id',
-      headerName: t('ID'),
-      description: t('ID')
+      headerName: t('id'),
+      description: t('id')
     },
     {
       field: 'status',
@@ -99,8 +99,8 @@ export default function WOModal({
     },
     {
       field: 'description',
-      headerName: t('Description'),
-      description: t('Description'),
+      headerName: t('description'),
+      description: t('description'),
       width: 150
     },
     {
@@ -138,8 +138,8 @@ export default function WOModal({
     },
     {
       field: 'category',
-      headerName: t('Category'),
-      description: t('Category'),
+      headerName: t('category'),
+      description: t('category'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<Category>) =>
         params.value?.name

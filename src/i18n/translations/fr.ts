@@ -651,7 +651,65 @@ const frJSON = {
     "Vous n'avez pas accès aux demandes. Veuillez contacter votre administrateur si vous devriez avoir accès.",
   no_access_settings:
     "Vous n'avez pas accès aux paramètres. Veuillez contacter votre administrateur si vous devriez avoir accès.",
-  no_access_page: "Vous n'avez pas accès à cette page"
+  no_access_page: "Vous n'avez pas accès à cette page",
+  file: 'Fichier',
+  'noRows.location.message':
+    'Les emplacements vous permettent de gérer plus efficacement les actifs et les travailleurs',
+  'noRows.location.action':
+    "Appuyez sur le bouton '+' pour créer un emplacement",
+  //inventory
+  card_view: 'Vue Carte',
+  set_create_success: "L'ensemble a été créé avec succès",
+  set_create_failure: "L'ensemble n'a pas pu être créé",
+  set_edit_failure: "L'ensemble n'a pas pu être modifié",
+  set_delete_success: "L'ensemble a été supprimé avec succès",
+  set_delete_failure: "L'ensemble n'a pas pu être supprimé",
+  total_cost: 'Coût total',
+  part: 'Pièce',
+  enter_part_name: 'Entrez le nom de la pièce',
+  required_set_name: "Le nom de l'ensemble est requis",
+  add_set: 'Ajouter un ensemble',
+  'add_set.description':
+    'Remplissez les champs ci-dessous pour créer et ajouter un nouvel ensemble',
+  create_set: 'Créer un ensemble',
+  edit_set: "Modifier l'ensemble",
+  'edit_set.description':
+    "Remplissez les champs ci-dessous pour modifier l'ensemble",
+  confirm_delete_set: 'Voulez-vous vraiment supprimer cet ensemble ?',
+  part_create_success: 'La pièce a été créée avec succès',
+  part_create_failure: "La pièce n'a pas pu être créée",
+  part_edit_failure: "La pièce n'a pas pu être modifiée",
+  part_delete_success: 'La pièce a été supprimée avec succès',
+  part_delete_failure: "La pièce n'a pas pu être supprimée",
+  quantity: 'Quantité',
+  open_wo: 'Bons de travail ouverts',
+  enter_part_category: 'Entrez la catégorie de pièce',
+  enter_part_cost: 'Entrez le coût de la pièce',
+  enter_part_quantity: 'Entrez la quantité de pièces',
+  minimum_quantity: 'Quantité minimum',
+  enter_part_minimum_quantity: 'Entrez la quantité minimale de pièces',
+  non_stock: 'Hors stock',
+  enter_part_barcode: 'Entrez le code-barres de la pièce',
+  enter_part_area: 'Entrez dans la zone de pièce',
+  additional_part_details: 'Détails supplémentaires sur les pièces',
+  add_part: 'Ajouter une pièce',
+  'add_part.description':
+    'Remplissez les champs ci-dessous pour créer et ajouter une nouvelle pièce',
+  create_part: 'Créer une pièce',
+  update_part: 'Mettre à jour la pièce',
+  'update_part.description':
+    'Remplissez les champs ci-dessous pour mettre à jour la pièce',
+  'noRows.part.message':
+    'Les pièces peuvent être combinées en jeux de pièce ou utilisées seules',
+  'noRows.part.action': "Appuyez sur le bouton '+' pour créer une Pièce",
+  confirm_remove_part: 'Voulez-vous vraiment supprimer cette pièce?',
+  part_details: 'Détails de la pièce',
+  area_details: 'Détails de la zone',
+  assigned_people: 'Personnes affectées',
+  no_asset_related_part: 'Aucun actif lié à cette pièce',
+  no_file_found: 'Aucun fichier trouvé',
+  no_wo_found: 'Aucun bon de travail trouvé',
+  workers: 'Travailleurs'
 };
 
 export default frJSON;

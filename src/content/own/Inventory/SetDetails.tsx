@@ -73,7 +73,7 @@ export default function SetDetails(props: PartDetailsProps) {
         <Box display="flex" flexDirection="row">
           <HandymanTwoToneIcon />
           <Typography sx={{ mb: 1, ml: 1 }} variant="h4">
-            {`${set?.parts.length} Parts`}
+            {`${set?.parts.length} ${t('parts')}`}
           </Typography>
         </Box>
         <List sx={{ width: '100%' }}>
@@ -96,7 +96,7 @@ export default function SetDetails(props: PartDetailsProps) {
           <Box display="flex" flexDirection="row">
             <AttachMoneyTwoToneIcon />
             <Typography sx={{ mb: 1, ml: 1 }} variant="h4">
-              Total Cost
+              {t('total_cost')}
             </Typography>
           </Box>
           <Typography variant="h6" sx={{ pr: 2 }}>

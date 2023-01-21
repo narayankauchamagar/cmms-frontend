@@ -33,7 +33,7 @@ export default function PartQuantitiesList({
           secondaryAction={
             <Box display="flex" flexDirection="row" alignItems="center">
               <TextField
-                label={t('Quantity')}
+                label={t('quantity')}
                 variant="outlined"
                 sx={{ mr: 1 }}
                 type="number"

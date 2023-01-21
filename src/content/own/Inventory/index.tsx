@@ -26,8 +26,8 @@ const VendorsAndCustomers = ({}: PropsType) => {
   const arr = location.pathname.split('/');
 
   const tabs = [
-    { value: 'parts', label: t('Parts') },
-    { value: 'sets', label: t('Sets of Parts') }
+    { value: 'parts', label: t('parts') },
+    { value: 'sets', label: t('sets_of_parts') }
   ];
   const minus = partId || setId ? 2 : 1;
   const tabIndex = tabs.findIndex(

@@ -52,7 +52,7 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
   const [currentTab, setCurrentTab] = useState<string>('details');
   const tabs = [
     { value: 'details', label: t('Details') },
-    { value: 'parts', label: t('Parts') },
+    { value: 'parts', label: t('parts') },
     { value: 'shipping', label: t('Shipping Information') },
     { value: 'additionalInfos', label: t('Additional Informations') }
   ];
@@ -127,7 +127,7 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
       value: purchaseOrder1.name
     },
     {
-      label: t('ID'),
+      label: t('id'),
       value: purchaseOrder1.id
     },
     {
@@ -135,11 +135,11 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
       value: getFormattedDate(purchaseOrder1.shippingDueDate)
     },
     {
-      label: t('Category'),
+      label: t('category'),
       value: purchaseOrder1.category?.name
     },
     {
-      label: t('Date created'),
+      label: t('created_at'),
       value: getFormattedDate(purchaseOrder1.createdAt)
     },
     {

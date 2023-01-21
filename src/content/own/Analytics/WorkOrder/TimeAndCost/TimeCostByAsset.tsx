@@ -83,7 +83,7 @@ function TimeCostByAsset({ handleOpenModal }: WOStatusIncompleteProps) {
             ))}
           </Bar>
           <Line
-            name={t('Cost')}
+            name={t('cost')}
             type="monotone"
             dataKey="cost"
             stroke={theme.colors.primary.main}

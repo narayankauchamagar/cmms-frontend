@@ -178,8 +178,8 @@ function Meters() {
     },
     {
       field: 'createdAt',
-      headerName: t('Date Created'),
-      description: t('Date Created'),
+      headerName: t('created_at'),
+      description: t('created_at'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<string>) =>
         getFormattedDate(params.value)
@@ -210,8 +210,8 @@ function Meters() {
     {
       name: 'category',
       type: 'text',
-      label: t('Category'),
-      placeholder: t('Category')
+      label: t('category'),
+      placeholder: t('category')
     },
     {
       name: 'image',

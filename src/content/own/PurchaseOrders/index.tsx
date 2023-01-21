@@ -138,8 +138,8 @@ function PurchaseOrders() {
   const columns: GridEnrichedColDef[] = [
     {
       field: 'id',
-      headerName: t('ID'),
-      description: t('ID'),
+      headerName: t('id'),
+      description: t('id'),
       width: 150
     },
     {
@@ -183,8 +183,8 @@ function PurchaseOrders() {
     },
     {
       field: 'category',
-      headerName: t('Category'),
-      description: t('Category'),
+      headerName: t('category'),
+      description: t('category'),
       width: 150,
       valueGetter: (params: GridRenderCellParams<Category>) =>
         params.value?.name
@@ -247,10 +247,10 @@ function PurchaseOrders() {
     {
       name: 'category',
       type: 'select',
-      label: t('Category'),
+      label: t('category'),
       type2: 'category',
       category: 'purchase-order-categories',
-      placeholder: t('Category'),
+      placeholder: t('category'),
       midWidth: true
     },
     {
@@ -276,7 +276,7 @@ function PurchaseOrders() {
     {
       name: 'partQuantities',
       type: 'partQuantity',
-      label: t('Parts'),
+      label: t('parts'),
       midWidth: true
     },
     {

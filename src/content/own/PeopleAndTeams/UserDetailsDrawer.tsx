@@ -58,7 +58,7 @@ function UserDetailsDrawer({ user }: PropsType) {
     user: OwnUser
   ): { label: string; value: string | number }[] => [
     {
-      label: t('ID'),
+      label: t('id'),
       value: user.id
     },
     {

@@ -354,7 +354,7 @@ function Assets() {
       type: 'titleGroupField',
       label: t('structure')
     },
-    { name: 'parts', type: 'select', type2: 'part', label: t('Parts') },
+    { name: 'parts', type: 'select', type2: 'part', label: t('parts') },
     {
       name: 'parentAsset',
       type: 'select',

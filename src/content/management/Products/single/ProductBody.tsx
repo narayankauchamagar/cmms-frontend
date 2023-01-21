@@ -1,4 +1,4 @@
-import { FC, useState, ChangeEvent } from 'react';
+import { ChangeEvent, FC, useState } from 'react';
 import PropTypes from 'prop-types';
 import type { Product } from 'src/models/product';
 import numeral from 'numeral';
@@ -7,22 +7,22 @@ import { useSnackbar } from 'notistack';
 import Text from 'src/components/Text';
 
 import {
-  Typography,
   Box,
-  Grid,
-  Divider,
-  IconButton,
   Button,
   Card,
-  Rating,
+  Divider,
   FormControl,
-  styled,
-  TextField,
-  Tabs,
-  Tab,
+  Grid,
+  IconButton,
+  MenuItem,
+  Rating,
   Select,
   Slide,
-  MenuItem,
+  styled,
+  Tab,
+  Tabs,
+  TextField,
+  Typography,
   useTheme
 } from '@mui/material';
 import AddShoppingCartTwoToneIcon from '@mui/icons-material/AddShoppingCartTwoTone';
@@ -404,7 +404,7 @@ const ProductBody: FC<ProductBodyProps> = ({ product }) => {
                         }}
                         alignSelf="center"
                       >
-                        <b>{t('Quantity')}:</b>
+                        <b>{t('quantity')}:</b>
                       </Box>
                     </Grid>
                     <Grid

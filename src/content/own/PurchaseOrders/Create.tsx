@@ -61,10 +61,10 @@ function CreatePurchaseOrder() {
     {
       name: 'category',
       type: 'select',
-      label: t('Category'),
+      label: t('category'),
       type2: 'category',
       category: 'purchase-order-categories',
-      placeholder: t('Category'),
+      placeholder: t('category'),
       midWidth: true
     },
     {
@@ -90,7 +90,7 @@ function CreatePurchaseOrder() {
     {
       name: 'partQuantities',
       type: 'partQuantity',
-      label: t('Parts'),
+      label: t('parts'),
       midWidth: true,
       multiple: true
     },

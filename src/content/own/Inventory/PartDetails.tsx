@@ -58,10 +58,10 @@ export default function PartDetails(props: PartDetailsProps) {
   const assets = assetsByPart[part?.id] ?? [];
   const workOrders = workOrdersByPart[part?.id] ?? [];
   const tabs = [
-    { value: 'details', label: t('Details') },
-    { value: 'assets', label: t('Assets') },
+    { value: 'details', label: t('details') },
+    { value: 'assets', label: t('assets') },
     { value: 'files', label: t('files') },
-    { value: 'workOrders', label: t('Work Orders') }
+    { value: 'workOrders', label: t('work_orders') }
     //TODO events
   ];
 
@@ -71,20 +71,6 @@ export default function PartDetails(props: PartDetailsProps) {
       dispatch(getAssetsByPart(part.id));
     } else if (value === 'workOrders' && !workOrders.length) {
       dispatch(getWorkOrdersByPart(part.id));
-    }
-  };
-  const getWOStatusLabel = (status: string) => {
-    switch (status) {
-      case 'OPEN':
-        return t('Open');
-      case 'IN_PROGRESS':
-        return t('In Progress');
-      case 'ON_HOLD':
-        return t('On Hold');
-      case 'COMPLETE':
-        return t('Complete');
-      default:
-        return '';
     }
   };
   const BasicField = ({
@@ -109,33 +95,33 @@ export default function PartDetails(props: PartDetailsProps) {
       value: part.name
     },
     {
-      label: t('ID'),
+      label: t('id'),
       value: part.id
     },
     {
-      label: t('Description'),
+      label: t('description'),
       value: part.description
     },
     {
-      label: t('Cost'),
+      label: t('cost'),
       value: part.cost
     },
     {
-      label: t('Quantity'),
+      label: t('quantity'),
       value: part.quantity
     },
     {
-      label: t('Minimum quantity'),
+      label: t('minimum_quantity'),
       value: part.minQuantity
     },
     {
-      label: t('Barcode'),
+      label: t('barcode'),
       value: part.barcode
     }
   ];
   const areaFieldsToRender = (part: Part): { label: string; value: any }[] => [
     {
-      label: t('Area'),
+      label: t('area'),
       value: part.area
     }
   ];
@@ -208,7 +194,7 @@ export default function PartDetails(props: PartDetailsProps) {
               )}
               <Grid item xs={12} lg={12}>
                 <Typography sx={{ mb: 1 }} variant="h4">
-                  {t('Part details')}
+                  {t('part_details')}
                 </Typography>
                 <Grid container spacing={2}>
                   {firstFieldsToRender(part).map((field) => (
@@ -222,7 +208,7 @@ export default function PartDetails(props: PartDetailsProps) {
               </Grid>
               <Grid item xs={12} lg={12}>
                 <Typography sx={{ mt: 2, mb: 1 }} variant="h4">
-                  {t('Area details')}
+                  {t('area_details')}
                 </Typography>
                 <Grid container spacing={2}>
                   {areaFieldsToRender(part).map((field) => (
@@ -236,7 +222,7 @@ export default function PartDetails(props: PartDetailsProps) {
               </Grid>
               <Grid item xs={12} lg={12}>
                 <Typography sx={{ mt: 2, mb: 1 }} variant="h4">
-                  {t('Assigned people')}
+                  {t('assigned_people')}
                 </Typography>
                 <Grid container spacing={2}>
                   {!!part.assignedTo.length && (
@@ -262,7 +248,7 @@ export default function PartDetails(props: PartDetailsProps) {
                         variant="h6"
                         sx={{ color: theme.colors.alpha.black[70] }}
                       >
-                        {t('Assigned customers')}
+                        {t('assigned_customers')}
                       </Typography>
                       {part.customers.map((customer) => (
                         <Link
@@ -281,7 +267,7 @@ export default function PartDetails(props: PartDetailsProps) {
                         variant="h6"
                         sx={{ color: theme.colors.alpha.black[70] }}
                       >
-                        {t('Assigned vendors')}
+                        {t('assigned_vendors')}
                       </Typography>
                       {part.vendors.map((vendor) => (
                         <Link
@@ -300,7 +286,7 @@ export default function PartDetails(props: PartDetailsProps) {
                         variant="h6"
                         sx={{ color: theme.colors.alpha.black[70] }}
                       >
-                        {t('Assigned teams')}
+                        {t('assigned_teams')}
                       </Typography>
                       {part.teams.map((team) => (
                         <Link
@@ -339,8 +325,8 @@ export default function PartDetails(props: PartDetailsProps) {
                         primary={asset.name}
                         secondary={
                           asset.status === 'OPERATIONAL'
-                            ? t('Operational')
-                            : t('Down')
+                            ? t('operational')
+                            : t('down')
                         }
                       />
                     </ListItem>
@@ -350,7 +336,7 @@ export default function PartDetails(props: PartDetailsProps) {
             ) : (
               <Stack direction="row" justifyContent="center" width="100%">
                 <Typography variant="h5">
-                  {t('No asset related to this part')}
+                  {t('no_asset_related_part')}
                 </Typography>
               </Stack>
             )}
@@ -387,7 +373,7 @@ export default function PartDetails(props: PartDetailsProps) {
                 />
               ) : (
                 <Stack direction="row" justifyContent="center" width="100%">
-                  <Typography variant="h5">{t('No File found')}</Typography>
+                  <Typography variant="h5">{t('no_file_found')}</Typography>
                 </Stack>
               )}
             </Box>
@@ -412,7 +398,7 @@ export default function PartDetails(props: PartDetailsProps) {
                     >
                       <ListItemText
                         primary={workOrder.title}
-                        secondary={getWOStatusLabel(workOrder.status)}
+                        secondary={t(workOrder.status)}
                       />
                     </ListItem>
                   </ListItemButton>
@@ -420,7 +406,7 @@ export default function PartDetails(props: PartDetailsProps) {
               </List>
             ) : (
               <Stack direction="row" justifyContent="center" width="100%">
-                <Typography variant="h5">{t('No Work Order found')}</Typography>
+                <Typography variant="h5">{t('no_wo_found')}</Typography>
               </Stack>
             )}
           </Box>

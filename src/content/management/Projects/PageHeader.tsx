@@ -7,26 +7,26 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 import {
-  styled,
-  Grid,
+  Alert,
+  Autocomplete,
+  Avatar,
+  Box,
+  Button,
+  Chip,
+  CircularProgress,
   Dialog,
+  DialogContent,
   DialogTitle,
   Divider,
-  Alert,
-  Chip,
-  DialogContent,
-  Box,
-  Zoom,
-  ListItem,
+  Grid,
   List,
+  ListItem,
   ListItemText,
-  Typography,
+  styled,
   TextField,
-  CircularProgress,
-  Avatar,
-  Autocomplete,
-  Button,
-  useTheme
+  Typography,
+  useTheme,
+  Zoom
 } from '@mui/material';
 import DatePicker from '@mui/lab/DatePicker';
 import { useDropzone } from 'react-dropzone';
@@ -327,7 +327,7 @@ function PageHeader() {
                         pb: { xs: 1, md: 0 }
                       }}
                     >
-                      <b>{t('Description')}:</b>
+                      <b>{t('description')}:</b>
                     </Box>
                   </Grid>
                   <Grid

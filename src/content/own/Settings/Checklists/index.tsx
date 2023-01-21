@@ -67,14 +67,14 @@ function Checklists() {
     },
     {
       field: 'description',
-      headerName: t('Description'),
-      description: t('Description'),
+      headerName: t('description'),
+      description: t('description'),
       width: 150
     },
     {
       field: 'category',
-      headerName: t('Category'),
-      description: t('Category'),
+      headerName: t('category'),
+      description: t('category'),
       width: 150
     },
     {

@@ -61,8 +61,8 @@ const Sets = ({ setAction }: PropsType) => {
   const { showSnackBar } = useContext(CustomSnackBarContext);
 
   const tabs = [
-    { value: 'list', label: t('List View') },
-    { value: 'card', label: t('Card View') }
+    { value: 'list', label: t('list_view') },
+    { value: 'card', label: t('card_view') }
   ];
   const { setId } = useParams();
   const dispatch = useDispatch();
@@ -82,21 +82,20 @@ const Sets = ({ setAction }: PropsType) => {
   };
   const onCreationSuccess = () => {
     setOpenAddModal(false);
-    showSnackBar(t('The Set has been created successfully'), 'success');
+    showSnackBar(t('set_create_success'), 'success');
   };
   const onCreationFailure = (err) =>
-    showSnackBar(t("The Set couldn't be created"), 'error');
+    showSnackBar(t('set_create_failure'), 'error');
   const onEditSuccess = () => {
     setOpenUpdateModal(false);
-    showSnackBar(t('The changes have been saved'), 'success');
+    showSnackBar(t('changes_saved_success'), 'success');
   };
-  const onEditFailure = (err) =>
-    showSnackBar(t("The Set couldn't be edited"), 'error');
+  const onEditFailure = (err) => showSnackBar(t('set_edit_failure'), 'error');
   const onDeleteSuccess = () => {
-    showSnackBar(t('The Set has been deleted successfully'), 'success');
+    showSnackBar(t('set_delete_success'), 'success');
   };
   const onDeleteFailure = (err) =>
-    showSnackBar(t("The Set couldn't be deleted"), 'error');
+    showSnackBar(t('set_delete_failure'), 'error');
 
   useEffect(() => {
     dispatch(getMultiParts());
@@ -119,24 +118,24 @@ const Sets = ({ setAction }: PropsType) => {
     },
     {
       field: 'parts',
-      headerName: t('Parts'),
-      description: t('Parts'),
+      headerName: t('parts'),
+      description: t('parts'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<Part[]>) =>
         params.value.length
     },
     {
       field: 'cost',
-      headerName: t('Total Cost'),
-      description: t('Total Cost'),
+      headerName: t('total_cost'),
+      description: t('total_cost'),
       width: 150,
       valueGetter: (params) =>
         params.row.parts.reduce((acc, part) => acc + part.cost, 0)
     },
     {
       field: 'createdAt',
-      headerName: t('Date created'),
-      description: t('Date created'),
+      headerName: t('created_at'),
+      description: t('created_at'),
       width: 150,
       valueGetter: (params) => getFormattedDate(params.row.createdAt)
     }
@@ -152,18 +151,18 @@ const Sets = ({ setAction }: PropsType) => {
     {
       name: 'partsTitle',
       type: 'titleGroupField',
-      label: t('Parts')
+      label: t('parts')
     },
     {
       name: 'parts',
       type: 'select',
       type2: 'part',
-      label: t('Part'),
-      placeholder: t('Enter Part name')
+      label: t('part'),
+      placeholder: t('enter_part_name')
     }
   ];
   const shape = {
-    name: Yup.string().required(t('Set name is required'))
+    name: Yup.string().required(t('required_set_name'))
   };
 
   useEffect(() => {
@@ -191,11 +190,11 @@ const Sets = ({ setAction }: PropsType) => {
   };
   const fieldsToRender = (set: SetType) => [
     {
-      label: t('Parts'),
+      label: t('parts'),
       value: set.parts.length
     },
     {
-      label: t('Total Cost'),
+      label: t('total_cost'),
       value: set.parts.reduce((acc, part) => acc + part.cost, 0)
     }
   ];
@@ -230,11 +229,9 @@ const Sets = ({ setAction }: PropsType) => {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Add Set')}
+          {t('add_set')}
         </Typography>
-        <Typography variant="subtitle2">
-          {t('Fill in the fields below to create and add a new Set')}
-        </Typography>
+        <Typography variant="subtitle2">{t('add_set.description')}</Typography>
       </DialogTitle>
       <DialogContent
         dividers
@@ -246,7 +243,7 @@ const Sets = ({ setAction }: PropsType) => {
           <Form
             fields={fields}
             validation={Yup.object().shape(shape)}
-            submitText={t('Create Set')}
+            submitText={t('create_set')}
             values={{}}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
@@ -273,11 +270,9 @@ const Sets = ({ setAction }: PropsType) => {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Edit Set')}
+          {t('edit_set')}
         </Typography>
-        <Typography variant="subtitle2">
-          {t('Fill in the fields below to edit the Set')}
-        </Typography>
+        <Typography variant="subtitle2">{t('edit_set.description')}</Typography>
       </DialogTitle>
       <DialogContent
         dividers
@@ -289,7 +284,7 @@ const Sets = ({ setAction }: PropsType) => {
           <Form
             fields={fields}
             validation={Yup.object().shape(shape)}
-            submitText={t('Edit Set')}
+            submitText={t('edit_set')}
             values={{
               ...currentSet,
               parts: currentSet?.parts?.map((part) => {
@@ -411,7 +406,7 @@ const Sets = ({ setAction }: PropsType) => {
         }}
         onConfirm={() => handleDelete(currentSet?.id)}
         confirmText={t('to_delete')}
-        question={t('Are you sure you want to delete this Set?')}
+        question={t('confirm_delete_set')}
       />
     </Box>
   );

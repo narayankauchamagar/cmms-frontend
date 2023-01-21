@@ -16,7 +16,7 @@ function WorkOrderSettings() {
   };
 
   const createFields = [
-    { label: t('Description'), name: 'description' },
+    { label: t('description'), name: 'description' },
     {
       label: t('Priority'),
       name: 'priority'
@@ -28,7 +28,7 @@ function WorkOrderSettings() {
     { label: t('Team'), name: 'team' },
     { label: t('location'), name: 'location' },
     { label: t('Due date'), name: 'dueDate' },
-    { label: t('Category'), name: 'category' },
+    { label: t('category'), name: 'category' },
     { label: t('Purchase Order'), name: 'purchaseOrder' },
     { label: t('files'), name: 'files' },
     { label: t('Signature'), name: 'signature' }
@@ -41,8 +41,8 @@ function WorkOrderSettings() {
       name: 'completeTasks'
     },
     { label: t('Time'), name: 'completeTime' },
-    { label: t('Parts'), name: 'completeParts' },
-    { label: t('Cost'), name: 'completeCost' }
+    { label: t('parts'), name: 'completeParts' },
+    { label: t('cost'), name: 'completeCost' }
   ];
 
   return (

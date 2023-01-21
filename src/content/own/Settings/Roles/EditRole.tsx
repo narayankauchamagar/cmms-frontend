@@ -157,7 +157,7 @@ function EditRole({ role, open, onClose, formatValues }: EditRoleProps) {
                         )}
                         fullWidth
                         helperText={touched.description && errors.description}
-                        label={t('Description')}
+                        label={t('description')}
                         name="description"
                         onBlur={handleBlur}
                         onChange={handleChange}

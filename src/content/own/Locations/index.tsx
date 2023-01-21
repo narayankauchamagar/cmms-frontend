@@ -428,7 +428,7 @@ function Locations() {
     </Dialog>
   );
   const groupingColDef: DataGridProProps['groupingColDef'] = {
-    headerName: 'Hierarchy',
+    headerName: t('hierarchy'),
     renderCell: (params) => <GroupingCellWithLazyLoading {...params} />
   };
 
@@ -576,7 +576,7 @@ function Locations() {
                 sx={{ mx: 6, my: 1 }}
                 variant="contained"
               >
-                Location
+                {t('location')}
               </Button>
             )}
           </Grid>
@@ -606,12 +606,8 @@ function Locations() {
                       Toolbar: GridToolbar,
                       NoRowsOverlay: () => (
                         <NoRowsMessageWrapper
-                          message={t(
-                            'Locations let you manage more efficiently assets and workers'
-                          )}
-                          action={t(
-                            "Press the '+' button to create a Location"
-                          )}
+                          message={t('noRows.location.message')}
+                          action={t('noRows.location.action')}
                         />
                       )
                     }}

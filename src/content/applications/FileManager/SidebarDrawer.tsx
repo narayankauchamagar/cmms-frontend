@@ -317,7 +317,7 @@ function SidebarDrawer() {
                   justifyContent="space-between"
                 >
                   <Typography variant="subtitle2">
-                    {t('Description')}:
+                    {t('description')}:
                   </Typography>
                   <Button
                     startIcon={<EditTwoToneIcon />}

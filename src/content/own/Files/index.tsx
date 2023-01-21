@@ -103,8 +103,8 @@ function Files() {
   const columns: GridEnrichedColDef[] = [
     {
       field: 'id',
-      headerName: t('ID'),
-      description: t('ID'),
+      headerName: t('id'),
+      description: t('id'),
       width: 150
     },
     {
