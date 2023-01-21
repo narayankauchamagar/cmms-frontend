@@ -20,7 +20,7 @@ const VendorsAndCustomers = ({}: PropsType) => {
   const { hasViewPermission, hasCreatePermission } = useAuth();
 
   useEffect(() => {
-    setTitle('Parts & Inventory');
+    setTitle(t('Parts_and_Inventory'));
   }, []);
 
   const arr = location.pathname.split('/');

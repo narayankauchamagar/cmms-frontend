@@ -588,7 +588,8 @@ const enJSON = {
   no_asset_related_part: 'No asset related to this part',
   no_file_found: 'No File found',
   no_wo_found: 'No Work Order found',
-  workers: 'Workers'
+  workers: 'Workers',
+  Parts_and_Inventory: 'Parts & Inventory'
 };
 
 export default enJSON;

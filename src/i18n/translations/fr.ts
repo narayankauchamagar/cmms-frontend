@@ -709,7 +709,8 @@ const frJSON = {
   no_asset_related_part: 'Aucun actif lié à cette pièce',
   no_file_found: 'Aucun fichier trouvé',
   no_wo_found: 'Aucun bon de travail trouvé',
-  workers: 'Travailleurs'
+  workers: 'Travailleurs',
+  Parts_and_Inventory: 'Pièces & Inventaire'
 };
 
 export default frJSON;

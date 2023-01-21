@@ -8,7 +8,6 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
-import GitHubIcon from '@mui/icons-material/GitHub';
 import useScrollToLocation from 'src/hooks/useScrollToLocation';
 
 const TypographyH1 = styled(Typography)(
@@ -171,18 +170,6 @@ function Hero() {
             variant="text"
           >
             {t('key_features')}
-          </Button>
-          <Button
-            sx={{
-              ml: 2
-            }}
-            startIcon={<GitHubIcon />}
-            component="a"
-            href="https://github.com/grashjs/frontend"
-            size="large"
-            variant="text"
-          >
-            {t('contribute')}
           </Button>
         </Grid>
         <Grid item md={6}>
