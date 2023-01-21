@@ -114,7 +114,7 @@ function Meters() {
     showSnackBar(t("The meter couldn't be created"), 'error');
   const onEditSuccess = () => {
     setOpenUpdateModal(false);
-    showSnackBar(t('The changes have been saved'), 'success');
+    showSnackBar(t('changes_saved_success'), 'success');
   };
   const onEditFailure = (err) =>
     showSnackBar(t("The meter couldn't be edited"), 'error');

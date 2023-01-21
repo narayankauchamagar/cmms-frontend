@@ -298,7 +298,7 @@ function SubscriptionPlans() {
                       </Typography>
                     </Grid>
                     <Grid item xs={12} lg={12}>
-                      <Typography variant={'h4'}>{t('Total cost')}</Typography>
+                      <Typography variant={'h4'}>{t('total_cost')}</Typography>
                       <Typography variant="h6">{getCost()} $</Typography>
                     </Grid>
                     <Grid item xs={12} lg={12}>
@@ -316,7 +316,7 @@ function SubscriptionPlans() {
               }}
             >
               <Button color="secondary" onClick={handleCloseCheckoutModal}>
-                {t('Cancel')}
+                {t('cancel')}
               </Button>
               <Button
                 type="submit"

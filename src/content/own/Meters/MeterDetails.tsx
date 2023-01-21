@@ -66,7 +66,7 @@ export default function MeterDetails(props: MeterDetailsProps) {
   const currentMeterTriggers = metersTriggers[meter?.id] ?? [];
   const currentMeterReadings = readingsByMeter[meter?.id] ?? [];
   const tabs = [
-    { value: 'details', label: t('Details') },
+    { value: 'details', label: t('details') },
     { value: 'history', label: t('History') }
   ];
 

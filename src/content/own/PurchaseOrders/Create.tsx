@@ -30,31 +30,28 @@ function CreatePurchaseOrder() {
   const { hasCreatePermission, hasFeature, hasViewPermission } = useAuth();
   const { showSnackBar } = useContext(CustomSnackBarContext);
   useEffect(() => {
-    setTitle(t('New Purchase Order'));
+    setTitle(t('new_po'));
   }, []);
   const onCreationSuccess = () => {
-    showSnackBar(
-      t('The Purchase Order has been created successfully'),
-      'success'
-    );
+    showSnackBar(t('po_create_success'), 'success');
     navigate('/app/purchase-orders');
   };
   const onMissingPartQuantities = () => {
-    showSnackBar(t('Select at least 1 part '), 'error');
+    showSnackBar(t('select_one_part'), 'error');
   };
   const onCreationFailure = (err) =>
-    showSnackBar(t("The Purchase Order couldn't be created"), 'error');
+    showSnackBar(t('po_create_failure'), 'error');
   const defaultFields: Array<IField> = [
     {
       name: 'purchaseOrderDetails',
       type: 'titleGroupField',
-      label: t('Purchase Order Details')
+      label: t('po_details')
     },
     {
       name: 'name',
       type: 'text',
       label: t('name'),
-      placeholder: t('Enter Purchase Order name'),
+      placeholder: t('enter_po_name'),
       required: true,
       midWidth: true
     },
@@ -70,13 +67,13 @@ function CreatePurchaseOrder() {
     {
       name: 'shippingDueDate',
       type: 'date',
-      label: t('Due Date'),
+      label: t('due_date'),
       midWidth: true
     },
     {
       name: 'shippingAdditionalDetail',
       type: 'text',
-      label: t('Additional Details'),
+      label: t('additional_details'),
       midWidth: true,
       multiple: true
     },
@@ -84,7 +81,7 @@ function CreatePurchaseOrder() {
       name: 'vendor',
       type: 'select',
       type2: 'vendor',
-      label: t('Vendor'),
+      label: t('vendor'),
       midWidth: true
     },
     {
@@ -97,103 +94,103 @@ function CreatePurchaseOrder() {
     {
       name: 'shippingInformation',
       type: 'titleGroupField',
-      label: t('Shipping Information')
+      label: t('shipping_information')
     },
     {
       name: 'shippingCompanyName',
       type: 'text',
-      label: t('Company name'),
-      placeholder: t('Company name'),
+      label: t('company_name'),
+      placeholder: t('company_name'),
       midWidth: true
     },
     {
       name: 'shippingShipToName',
       type: 'text',
-      label: t('Ship To'),
-      placeholder: t('Ship To'),
+      label: t('ship_to'),
+      placeholder: t('ship_to'),
       midWidth: true
     },
     {
       name: 'shippingAddress',
       type: 'text',
-      label: t('Address'),
-      placeholder: t('Address'),
+      label: t('address'),
+      placeholder: t('address'),
       midWidth: true
     },
     {
       name: 'shippingCity',
       type: 'text',
-      label: t('City'),
-      placeholder: t('City'),
+      label: t('city'),
+      placeholder: t('city'),
       midWidth: true
     },
     {
       name: 'shippingState',
       type: 'text',
-      label: t('State'),
-      placeholder: t('State'),
+      label: t('state'),
+      placeholder: t('state'),
       midWidth: true
     },
     {
       name: 'shippingZipCode',
       type: 'number',
-      label: t('Zip Code'),
-      placeholder: t('Zip Code'),
+      label: t('zip_code'),
+      placeholder: t('zip_code'),
       midWidth: true
     },
     {
       name: 'shippingPhone',
       type: 'text',
-      label: t('Phone number'),
-      placeholder: t('Phone number'),
+      label: t('phone'),
+      placeholder: t('phone'),
       midWidth: true
     },
     {
       name: 'shippingFax',
       type: 'text',
-      label: t('Fax Number'),
-      placeholder: t('Fax Number'),
+      label: t('fax_number'),
+      placeholder: t('fax_number'),
       midWidth: true
     },
     {
       name: 'additionalInformation',
       type: 'titleGroupField',
-      label: t('Additional Information')
+      label: t('additional_information')
     },
     {
       name: 'additionalInfoDate',
       type: 'date',
-      label: t('Purchase Order Date'),
-      placeholder: t('Purchase Order Date'),
+      label: t('po_date'),
+      placeholder: t('po_date'),
       midWidth: true
     },
     {
       name: 'additionalInfoNotes',
       type: 'text',
-      label: t('Notes'),
-      placeholder: t('Add Notes'),
+      label: t('notes'),
+      placeholder: t('add_notes'),
       midWidth: true,
       multiple: true
     },
     {
       name: 'additionalInfoRequisitionedName',
       type: 'text',
-      label: t('Requisitioner'),
-      placeholder: t('Requisitioner'),
+      label: t('requisitioner'),
+      placeholder: t('requisitioner'),
       midWidth: true
     },
     {
       name: 'additionalInfoTerm',
       type: 'text',
-      label: t('Terms'),
-      placeholder: t('Terms'),
+      label: t('terms'),
+      placeholder: t('terms'),
       midWidth: true
     },
     {
       name: 'additionalInfoShippingOrderCategory',
       type: 'text',
-      label: t('Shipping Method'),
-      placeholder: t('Shipping Method'),
+      label: t('shipping_method'),
+      placeholder: t('shipping_method'),
       midWidth: true
     }
   ];
@@ -203,28 +200,22 @@ function CreatePurchaseOrder() {
       fields.push({
         name: 'approveOnSubmit',
         type: 'switch',
-        label: t('Approve while submitting')
+        label: t('approve_while_submitting')
       });
     }
     return fields;
   };
   const shape = {
-    name: Yup.string().required(t('The name is required')),
-    shippingFax: Yup.string().matches(
-      phoneRegExp,
-      t('The fax number is invalid')
-    ),
-    shippingPhone: Yup.string().matches(
-      phoneRegExp,
-      t('The phone number is invalid')
-    )
+    name: Yup.string().required(t('required_name')),
+    shippingFax: Yup.string().matches(phoneRegExp, t('invalid_fax')),
+    shippingPhone: Yup.string().matches(phoneRegExp, t('invalid_phone'))
   };
   if (hasFeature(PlanFeature.PURCHASE_ORDER)) {
     if (hasCreatePermission(PermissionEntity.PURCHASE_ORDERS))
       return (
         <>
           <Helmet>
-            <title>{t('Purchase Orders')}</title>
+            <title>{t('purchase_orders')}</title>
           </Helmet>
           <Grid
             container
@@ -246,7 +237,7 @@ function CreatePurchaseOrder() {
                 <Form
                   fields={getFields()}
                   validation={Yup.object().shape(shape)}
-                  submitText={t('Submit')}
+                  submitText={t('submit')}
                   values={{
                     shippingDueDate: null,
                     additionalInfoDate: null,
@@ -263,10 +254,7 @@ function CreatePurchaseOrder() {
                         (partQuantity) => partQuantity.quantity <= 0
                       )
                     ) {
-                      showSnackBar(
-                        t('Each Item quantity must be superior to 0'),
-                        'error'
-                      );
+                      showSnackBar(t('each_item_superior_zero'), 'error');
                       return;
                     }
                     values.category = formatSelect(values.category);

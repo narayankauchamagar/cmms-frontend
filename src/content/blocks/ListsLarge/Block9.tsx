@@ -1,20 +1,20 @@
 import {
+  alpha,
+  Avatar,
   Box,
-  ListItemAvatar,
-  ListItemText,
+  Card,
   Divider,
   IconButton,
-  List,
-  Card,
-  Tooltip,
-  alpha,
   LinearProgress,
-  Typography,
-  Avatar,
-  styled,
+  linearProgressClasses,
+  List,
+  ListItemAvatar,
   ListItemButton,
-  useTheme,
-  linearProgressClasses
+  ListItemText,
+  styled,
+  Tooltip,
+  Typography,
+  useTheme
 } from '@mui/material';
 
 import { useTranslation } from 'react-i18next';
@@ -115,7 +115,7 @@ function Block9() {
               fontSize: `${theme.typography.pxToRem(12)}`
             }}
           >
-            {t('Status')}
+            {t('status')}
           </Typography>
           <Typography variant="h4">{t('Team Performance')}</Typography>
         </Box>

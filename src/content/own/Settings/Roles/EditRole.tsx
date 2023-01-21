@@ -34,7 +34,7 @@ function EditRole({ role, open, onClose, formatValues }: EditRoleProps) {
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const onEditSuccess = () => {
     onClose();
-    showSnackBar(t('The changes have been saved'), 'success');
+    showSnackBar(t('changes_saved_success'), 'success');
   };
   const onEditFailure = (err) =>
     showSnackBar(t("The Role couldn't be edited"), 'error');
@@ -338,7 +338,7 @@ function EditRole({ role, open, onClose, formatValues }: EditRoleProps) {
               }}
             >
               <Button color="secondary" onClick={onClose}>
-                {t('Cancel')}
+                {t('cancel')}
               </Button>
               <Button
                 type="submit"

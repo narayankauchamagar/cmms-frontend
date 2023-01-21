@@ -8,27 +8,27 @@ import { useSnackbar } from 'notistack';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 
 import {
-  styled,
+  Alert,
   Box,
-  Card,
-  TextField,
   Button,
-  IconButton,
+  Card,
+  Checkbox,
+  CircularProgress,
   Divider,
   FormControlLabel,
   Grid,
-  Alert,
-  Checkbox,
-  CircularProgress,
+  IconButton,
+  lighten,
+  styled,
+  TextField,
   Tooltip,
   Typography,
-  lighten,
   Zoom
 } from '@mui/material';
 import { DateTimePicker } from '@mui/lab';
 import type { Event } from 'src/models/calendar';
 import { useDispatch } from 'src/store';
-import { createEvent, updateEvent, deleteEvent } from 'src/slices/calendar';
+import { createEvent, deleteEvent, updateEvent } from 'src/slices/calendar';
 import { useTranslation } from 'react-i18next';
 
 const IconButtonError = styled(IconButton)(
@@ -329,7 +329,7 @@ const EventDrawer: FC<AddEditEventModalProps> = ({
                 color="secondary"
                 onClick={onCancel}
               >
-                {t('Cancel')}
+                {t('cancel')}
               </Button>
               <Button
                 variant="contained"

@@ -352,7 +352,7 @@ function Roles() {
             }}
             onClick={closeConfirmDelete}
           >
-            {t('Cancel')}
+            {t('cancel')}
           </Button>
           <ButtonError
             onClick={() => handleDelete(currentRole.id)}

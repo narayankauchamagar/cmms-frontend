@@ -251,7 +251,7 @@ const ShowAsset = ({}: PropsType) => {
   };
   const onEditSuccess = () => {
     setOpenUpdateModal(false);
-    showSnackBar(t('The changes have been saved'), 'success');
+    showSnackBar(t('changes_saved_success'), 'success');
   };
   const onEditFailure = (err) =>
     showSnackBar(t("The Asset couldn't be edited"), 'error');

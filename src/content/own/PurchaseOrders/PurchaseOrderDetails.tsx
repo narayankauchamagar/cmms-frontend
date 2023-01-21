@@ -16,9 +16,7 @@ import { ChangeEvent, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import PurchaseOrder, {
-  approvalStatusTranslations
-} from '../../../models/owns/purchaseOrder';
+import PurchaseOrder from '../../../models/owns/purchaseOrder';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
@@ -51,10 +49,10 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
   const theme = useTheme();
   const [currentTab, setCurrentTab] = useState<string>('details');
   const tabs = [
-    { value: 'details', label: t('Details') },
+    { value: 'details', label: t('details') },
     { value: 'parts', label: t('parts') },
-    { value: 'shipping', label: t('Shipping Information') },
-    { value: 'additionalInfos', label: t('Additional Informations') }
+    { value: 'shipping', label: t('shipping_information') },
+    { value: 'additionalInfos', label: t('additional_information') }
   ];
 
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
@@ -64,8 +62,8 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
     dispatch(
       editPartQuantity(purchaseOrder.id, partQuantity.id, Number(value), true)
     )
-      .then(() => showSnackBar(t('Quantity changed successfully'), 'success'))
-      .catch((err) => showSnackBar(t("Quantity couldn't be changed"), 'error'));
+      .then(() => showSnackBar(t('quantity_edit_success'), 'success'))
+      .catch((err) => showSnackBar(t('quantity_edit_failure'), 'error'));
   };
   const debouncedPartQuantityChange = useMemo(
     () => debounce(onPartQuantityChange, 1500),
@@ -131,7 +129,7 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
       value: purchaseOrder1.id
     },
     {
-      label: t('Due Date'),
+      label: t('due_date'),
       value: getFormattedDate(purchaseOrder1.shippingDueDate)
     },
     {
@@ -143,7 +141,7 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
       value: getFormattedDate(purchaseOrder1.createdAt)
     },
     {
-      label: t('Vendor'),
+      label: t('vendor'),
       type: 'vendor',
       value: purchaseOrder1.vendor?.companyName,
       id: purchaseOrder1.vendor?.id
@@ -157,31 +155,31 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
       value: purchaseOrder1.shippingCompanyName
     },
     {
-      label: t('Address'),
+      label: t('address'),
       value: purchaseOrder1.shippingAddress
     },
     {
-      label: t('City'),
+      label: t('city'),
       value: purchaseOrder1.shippingCity
     },
     {
-      label: t('State'),
+      label: t('state'),
       value: purchaseOrder1.shippingState
     },
     {
-      label: t('Phone'),
+      label: t('phone'),
       value: purchaseOrder1.shippingPhone
     },
     {
-      label: t('Fax'),
+      label: t('fax_number'),
       value: purchaseOrder1.shippingFax
     },
     {
-      label: t('Ship To'),
+      label: t('ship_to'),
       value: purchaseOrder1.shippingShipToName
     },
     {
-      label: t('Additional Detail'),
+      label: t('additional_details'),
       value: purchaseOrder1.shippingAdditionalDetail
     }
   ];
@@ -189,19 +187,19 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
     purchaseOrder1: PurchaseOrder
   ): { label: string; value: any }[] => [
     {
-      label: t('Requisitioner'),
+      label: t('requisitioner'),
       value: purchaseOrder1.additionalInfoRequisitionedName
     },
     {
-      label: t('Shipping method'),
+      label: t('shipping_method'),
       value: purchaseOrder1.additionalInfoShippingMethod
     },
     {
-      label: t('Notes'),
+      label: t('notes'),
       value: purchaseOrder1.additionalInfoNotes
     },
     {
-      label: t('Terms'),
+      label: t('terms'),
       value: purchaseOrder1.additionalInfoTerm
     }
   ];
@@ -223,9 +221,7 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
         <Box>
           <Typography variant="h2">{purchaseOrder?.name}</Typography>
           <Typography variant="h6">{purchaseOrder?.shippingAddress}</Typography>
-          <Typography variant="h6">
-            {t(approvalStatusTranslations[purchaseOrder?.status])}
-          </Typography>
+          <Typography variant="h6">{t(purchaseOrder?.status)}</Typography>
         </Box>
         <Box>
           {hasEditPermission(
@@ -270,7 +266,7 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
                 onClick={onCancel}
                 variant="outlined"
               >
-                {t('Cancel')}
+                {t('reject')}
               </Button>
               <Button
                 startIcon={
@@ -283,7 +279,7 @@ export default function PurchaseOrderDetails(props: PurchaseOrderDetailsProps) {
                 onClick={onApprove}
                 variant="contained"
               >
-                {t('Approve')}
+                {t('approve')}
               </Button>
             </Grid>
             <Divider />

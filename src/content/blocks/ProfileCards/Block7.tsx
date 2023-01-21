@@ -231,7 +231,7 @@ function Block7() {
             <TableHeadWrapper>
               <TableRow>
                 <TableCell>{t('Employee')}</TableCell>
-                <TableCell align="center">{t('Status')}</TableCell>
+                <TableCell align="center">{t('status')}</TableCell>
                 <TableCell align="right">{t('actions')}</TableCell>
               </TableRow>
             </TableHeadWrapper>

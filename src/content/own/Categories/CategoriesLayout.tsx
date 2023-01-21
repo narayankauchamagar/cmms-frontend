@@ -110,7 +110,7 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
     showSnackBar(t("The Category couldn't be created"), 'error');
   const onEditSuccess = () => {
     setOpenUpdateCategoryModal(false);
-    showSnackBar(t('The changes have been saved'), 'success');
+    showSnackBar(t('changes_saved_success'), 'success');
   };
   const onEditFailure = (err) =>
     showSnackBar(t("The Category couldn't be edited"), 'error');
@@ -207,7 +207,7 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
               }}
             >
               <Button color="secondary" onClick={handleCloseAdd}>
-                {t('Cancel')}
+                {t('cancel')}
               </Button>
               <Button
                 type="submit"
@@ -309,7 +309,7 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
                 color="secondary"
                 onClick={() => setOpenUpdateCategoryModal(false)}
               >
-                {t('Cancel')}
+                {t('cancel')}
               </Button>
               <Button
                 type="submit"

@@ -1,15 +1,15 @@
 import {
-  Box,
-  Card,
-  Stack,
-  Typography,
-  Divider,
   Avatar,
   Badge,
-  Tooltip,
-  IconButton,
+  Box,
+  Card,
+  Divider,
   Grid,
+  IconButton,
+  Stack,
   styled,
+  Tooltip,
+  Typography,
   useTheme
 } from '@mui/material';
 import Chart from 'react-apexcharts';
@@ -279,7 +279,7 @@ function Block6() {
                       fontWeight="bold"
                       noWrap
                     >
-                      {t('Customer')}
+                      {t('customer')}
                     </Typography>
                     <Typography variant="h4" noWrap>
                       Leonardo D.

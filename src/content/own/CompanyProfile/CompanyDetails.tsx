@@ -36,7 +36,7 @@ function CompanyDetails(props: CompanyDetailsProps) {
 
   const companyDetails = {
     name: { value: company.name, title: t(' Name') },
-    address: { value: company.address, title: t('Address') },
+    address: { value: company.address, title: t('address') },
     website: { value: company.website, title: 'Website', isLink: true },
     phone: { value: company.phone, title: 'Phone' }
   };
@@ -154,7 +154,7 @@ function CompanyDetails(props: CompanyDetailsProps) {
                         error={Boolean(touched.address && errors.address)}
                         fullWidth
                         helperText={touched.address && errors.address}
-                        label={t('Address')}
+                        label={t('address')}
                         name="address"
                         onBlur={handleBlur}
                         onChange={handleChange}
@@ -198,7 +198,7 @@ function CompanyDetails(props: CompanyDetailsProps) {
               }}
             >
               <Button color="secondary" onClick={handleCloseEditModal}>
-                {t('Cancel')}
+                {t('cancel')}
               </Button>
               <Button
                 type="submit"

@@ -215,7 +215,7 @@ function Block6() {
                 <TableCell>{t('Order')}</TableCell>
                 <TableCell align="left">{t('Client')}</TableCell>
                 <TableCell align="left">{t('Product')}</TableCell>
-                <TableCell align="center">{t('Status')}</TableCell>
+                <TableCell align="center">{t('status')}</TableCell>
                 <TableCell align="center">{t('Total')}</TableCell>
                 <TableCell align="right">{t('actions')}</TableCell>
               </TableRow>

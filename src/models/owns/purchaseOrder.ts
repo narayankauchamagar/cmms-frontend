@@ -26,8 +26,3 @@ export default interface PurchaseOrder extends Audit {
   additionalInfoNotes: string;
   partQuantities: PartQuantityMiniDTO[];
 }
-export const approvalStatusTranslations = {
-  APPROVED: 'Approved',
-  PENDING: 'Pending',
-  REJECTED: 'Rejected'
-};

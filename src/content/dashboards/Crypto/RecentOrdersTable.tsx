@@ -189,11 +189,11 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
           action={
             <Box width={150}>
               <FormControl fullWidth variant="outlined">
-                <InputLabel>{t('Status')}</InputLabel>
+                <InputLabel>{t('status')}</InputLabel>
                 <Select
                   value={filters.status || 'all'}
                   onChange={handleStatusChange}
-                  label={t('Status')}
+                  label={t('status')}
                   autoWidth
                 >
                   {statusOptions.map((statusOption) => (
@@ -225,7 +225,7 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders }) => {
               <TableCell>{t('Order ID')}</TableCell>
               <TableCell>{t('Source')}</TableCell>
               <TableCell align="right">{t('Amount')}</TableCell>
-              <TableCell align="right">{t('Status')}</TableCell>
+              <TableCell align="right">{t('status')}</TableCell>
               <TableCell align="right">{t('actions')}</TableCell>
             </TableRow>
           </TableHead>

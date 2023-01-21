@@ -6,23 +6,23 @@ import wait from 'src/utils/wait';
 import useAuth from 'src/hooks/useAuth';
 
 import {
-  styled,
-  Grid,
+  Autocomplete,
+  Avatar,
+  Box,
+  Button,
+  CircularProgress,
   Dialog,
-  DialogTitle,
   DialogActions,
   DialogContent,
-  Box,
-  Zoom,
-  Typography,
+  DialogTitle,
   Divider,
-  TextField,
-  CircularProgress,
-  Switch,
-  Avatar,
-  Autocomplete,
+  Grid,
   IconButton,
-  Button
+  styled,
+  Switch,
+  TextField,
+  Typography,
+  Zoom
 } from '@mui/material';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { useSnackbar } from 'notistack';
@@ -372,7 +372,7 @@ function PageHeader() {
                 }}
               >
                 <Button color="secondary" onClick={handleCreateUserClose}>
-                  {t('Cancel')}
+                  {t('cancel')}
                 </Button>
                 <Button
                   type="submit"

@@ -70,7 +70,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
 
   const onEditSuccess = () => {
     setOpenUpdateModal(false);
-    showSnackBar(t('The changes have been saved'), 'success');
+    showSnackBar(t('changes_saved_success'), 'success');
   };
   const onEditFailure = (err) =>
     showSnackBar(t("The User couldn't be edited"), 'error');
@@ -229,7 +229,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
     },
     {
       field: 'phone',
-      headerName: t('Phone'),
+      headerName: t('phone'),
       width: 150
     },
     {

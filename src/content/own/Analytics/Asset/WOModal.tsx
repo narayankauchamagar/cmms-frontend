@@ -57,8 +57,8 @@ export default function WOModal({
     },
     {
       field: 'status',
-      headerName: t('Status'),
-      description: t('Status'),
+      headerName: t('status'),
+      description: t('status'),
       width: 150,
       renderCell: (params: GridRenderCellParams<string>) => (
         <Box display="flex" flexDirection="row" justifyContent="center">

@@ -154,9 +154,9 @@ function PendingTickets() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>{t('Details')}</TableCell>
+                <TableCell>{t('details')}</TableCell>
                 <TableCell>{t('Assigned')}</TableCell>
-                <TableCell align="right">{t('Status')}</TableCell>
+                <TableCell align="right">{t('status')}</TableCell>
                 <TableCell align="right">{t('actions')}</TableCell>
               </TableRow>
             </TableHead>

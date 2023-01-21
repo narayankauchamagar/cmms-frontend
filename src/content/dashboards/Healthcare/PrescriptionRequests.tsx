@@ -1,22 +1,22 @@
 import { useRef, useState } from 'react';
 import {
+  Box,
   Button,
   Card,
-  Box,
-  Grid,
   CardHeader,
-  Menu,
-  Link,
-  ListItemText,
-  List,
-  ListItem,
-  Tooltip,
-  Typography,
   Divider,
   FormControl,
+  Grid,
   InputLabel,
+  Link,
+  List,
+  ListItem,
+  ListItemText,
+  Menu,
+  MenuItem,
   Select,
-  MenuItem
+  Tooltip,
+  Typography
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import FilterAltTwoToneIcon from '@mui/icons-material/FilterAltTwoTone';
@@ -98,7 +98,7 @@ function PrescriptionRequests() {
                   </Grid>
                   <Grid item md={6}>
                     <FormControl fullWidth variant="outlined" size="small">
-                      <InputLabel>{t('Status')}</InputLabel>
+                      <InputLabel>{t('status')}</InputLabel>
                       <Select
                         label="Status"
                         value={status}

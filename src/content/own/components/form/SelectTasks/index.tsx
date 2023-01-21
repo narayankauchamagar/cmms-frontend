@@ -346,7 +346,7 @@ export default function SelectTasks({
         </DialogContent>
         <DialogActions>
           <Button variant="outlined" onClick={onClose}>
-            {t('Cancel')}
+            {t('cancel')}
           </Button>
           <Button
             disabled={

@@ -75,7 +75,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
     showSnackBar(t("The Vendor couldn't be created"), 'error');
   const onEditSuccess = () => {
     setViewOrUpdate('view');
-    showSnackBar(t('The changes have been saved'), 'success');
+    showSnackBar(t('changes_saved_success'), 'success');
   };
   const onEditFailure = (err) =>
     showSnackBar(t("The Vendor couldn't be edited"), 'error');
@@ -196,14 +196,14 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
     },
     {
       field: 'address',
-      headerName: t('Address'),
-      description: t('Address'),
+      headerName: t('address'),
+      description: t('address'),
       width: 150
     },
     {
       field: 'phone',
-      headerName: t('Phone'),
-      description: t('Phone'),
+      headerName: t('phone'),
+      description: t('phone'),
       width: 150
     },
     {
@@ -247,11 +247,11 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
   // const searchFilterProperties = ['name', 'companyName', 'vendorType', 'email'];
   const fieldsToRender = [
     {
-      label: t('Address'),
+      label: t('address'),
       value: currentVendor?.address
     },
     {
-      label: t('Phone'),
+      label: t('phone'),
       value: currentVendor?.phone
     },
     {

@@ -564,7 +564,7 @@ function PageHeader() {
                       }}
                       alignSelf="center"
                     >
-                      <b>{t('Due Date')}:</b>
+                      <b>{t('due_date')}:</b>
                     </Box>
                   </Grid>
                   <Grid
@@ -626,7 +626,7 @@ function PageHeader() {
                       variant="outlined"
                       onClick={handleCreateProjectClose}
                     >
-                      {t('Cancel')}
+                      {t('cancel')}
                     </Button>
                   </Grid>
                 </Grid>

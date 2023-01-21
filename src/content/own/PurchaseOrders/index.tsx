@@ -17,9 +17,7 @@ import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import CustomDataGrid from '../components/CustomDatagrid';
 import { GridRenderCellParams, GridToolbar } from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import PurchaseOrder, {
-  approvalStatusTranslations
-} from '../../../models/owns/purchaseOrder';
+import PurchaseOrder from '../../../models/owns/purchaseOrder';
 import { useDispatch, useSelector } from '../../../store';
 import {
   deletePurchaseOrder,
@@ -90,7 +88,7 @@ function PurchaseOrders() {
     }
   };
   useEffect(() => {
-    setTitle(t('Purchase Orders'));
+    setTitle(t('purchase_orders'));
     if (hasViewPermission(PermissionEntity.PURCHASE_ORDERS))
       dispatch(getPurchaseOrders());
   }, []);
@@ -123,18 +121,14 @@ function PurchaseOrders() {
   };
   const onEditSuccess = () => {
     setOpenUpdateModal(false);
-    showSnackBar(t('The changes have been saved'), 'success');
+    showSnackBar(t('changes_saved_success'), 'success');
   };
-  const onEditFailure = (err) =>
-    showSnackBar(t("The Purchase Order couldn't be edited"), 'error');
+  const onEditFailure = (err) => showSnackBar(t('po_edit_failure'), 'error');
   const onDeleteSuccess = () => {
-    showSnackBar(
-      t('The Purchase Order has been deleted successfully'),
-      'success'
-    );
+    showSnackBar(t('po_delete_success'), 'success');
   };
   const onDeleteFailure = (err) =>
-    showSnackBar(t("The Purchase Order couldn't be deleted"), 'error');
+    showSnackBar(t('po_delete_failure'), 'error');
   const columns: GridEnrichedColDef[] = [
     {
       field: 'id',
@@ -153,16 +147,16 @@ function PurchaseOrders() {
     },
     {
       field: 'itemsNumber',
-      headerName: t('Number of items'),
-      description: t('Number of items'),
+      headerName: t('number_of_items'),
+      description: t('number_of_items'),
       width: 150,
       valueGetter: (params: GridRenderCellParams<null, PurchaseOrder>) =>
         params.row.partQuantities.length
     },
     {
       field: 'totalCost',
-      headerName: t('Total Cost'),
-      description: t('Total Cost'),
+      headerName: t('total_cost'),
+      description: t('total_cost'),
       width: 150,
       valueGetter: (params: GridRenderCellParams<null, PurchaseOrder>) =>
         getFormattedCurrency(
@@ -173,8 +167,8 @@ function PurchaseOrders() {
     },
     {
       field: 'totalQuantity',
-      headerName: t('Total Quantity'),
-      description: t('Total Quantity'),
+      headerName: t('total_quantity'),
+      description: t('total_quantity'),
       width: 150,
       valueGetter: (params: GridRenderCellParams<null, PurchaseOrder>) =>
         params.row.partQuantities.reduce((acc, partQuantity) => {
@@ -191,28 +185,27 @@ function PurchaseOrders() {
     },
     {
       field: 'status',
-      headerName: t('Status'),
-      description: t('Status'),
+      headerName: t('status'),
+      description: t('status'),
       width: 150,
-      valueGetter: (params: GridRenderCellParams<string>) =>
-        t(approvalStatusTranslations[params.value])
+      valueGetter: (params: GridRenderCellParams<string>) => t(params.value)
     },
     {
       field: 'shippingShipToName',
-      headerName: t('Shipping to'),
-      description: t('Shipping to'),
+      headerName: t('shipping_to'),
+      description: t('shipping_to'),
       width: 150
     },
     {
       field: 'shippingAddress',
-      headerName: t('Shipping Address'),
-      description: t('Shipping Address'),
+      headerName: t('shipping_address'),
+      description: t('shipping_address'),
       width: 150
     },
     {
       field: 'shippingPhone',
-      headerName: t('Phone'),
-      description: t('Phone'),
+      headerName: t('phone'),
+      description: t('phone'),
       width: 150
     },
     {
@@ -224,8 +217,8 @@ function PurchaseOrders() {
     },
     {
       field: 'createdAt',
-      headerName: t('Created On'),
-      description: t('Created On'),
+      headerName: t('created_at'),
+      description: t('created_at'),
       width: 150,
       valueGetter: (params) => getFormattedDate(params.row.createdAt)
     }
@@ -234,13 +227,13 @@ function PurchaseOrders() {
     {
       name: 'purchaseOrderDetails',
       type: 'titleGroupField',
-      label: t('Purchase Order Details')
+      label: t('po_details')
     },
     {
       name: 'name',
       type: 'text',
       label: t('name'),
-      placeholder: t('Enter Purchase Order name'),
+      placeholder: t('enter_po_name'),
       required: true,
       midWidth: true
     },
@@ -256,13 +249,13 @@ function PurchaseOrders() {
     {
       name: 'shippingDueDate',
       type: 'date',
-      label: t('Due Date'),
+      label: t('due_date'),
       midWidth: true
     },
     {
       name: 'shippingAdditionalDetail',
       type: 'text',
-      label: t('Additional Details'),
+      label: t('additional_details'),
       midWidth: true,
       multiple: true
     },
@@ -270,7 +263,7 @@ function PurchaseOrders() {
       name: 'vendor',
       type: 'select',
       type2: 'vendor',
-      label: t('Vendor'),
+      label: t('vendor'),
       midWidth: true
     },
     {
@@ -282,108 +275,108 @@ function PurchaseOrders() {
     {
       name: 'shippingInformation',
       type: 'titleGroupField',
-      label: t('Shipping Information')
+      label: t('shipping_information')
     },
     {
       name: 'shippingCompanyName',
       type: 'text',
-      label: t('Company name'),
-      placeholder: t('Company name'),
+      label: t('company_name'),
+      placeholder: t('company_name'),
       midWidth: true
     },
     {
       name: 'shippingShipToName',
       type: 'text',
-      label: t('Ship To'),
-      placeholder: t('Ship To'),
+      label: t('ship_to'),
+      placeholder: t('ship_to'),
       midWidth: true
     },
     {
       name: 'shippingAddress',
       type: 'text',
-      label: t('Address'),
-      placeholder: t('Address'),
+      label: t('address'),
+      placeholder: t('address'),
       midWidth: true
     },
     {
       name: 'shippingCity',
       type: 'text',
-      label: t('City'),
-      placeholder: t('City'),
+      label: t('city'),
+      placeholder: t('city'),
       midWidth: true
     },
     {
       name: 'shippingState',
       type: 'text',
-      label: t('State'),
-      placeholder: t('State'),
+      label: t('state'),
+      placeholder: t('state'),
       midWidth: true
     },
     {
       name: 'shippingZipCode',
       type: 'number',
-      label: t('Zip Code'),
-      placeholder: t('Zip Code'),
+      label: t('zip_code'),
+      placeholder: t('zip_code'),
       midWidth: true
     },
     {
       name: 'shippingPhone',
       type: 'text',
-      label: t('Phone number'),
-      placeholder: t('Phone number'),
+      label: t('phone'),
+      placeholder: t('phone'),
       midWidth: true
     },
     {
       name: 'shippingFax',
       type: 'text',
-      label: t('Fax Number'),
-      placeholder: t('Fax Number'),
+      label: t('fax_number'),
+      placeholder: t('fax_number'),
       midWidth: true
     },
     {
       name: 'additionalInformation',
       type: 'titleGroupField',
-      label: t('Additional Information')
+      label: t('additional_information')
     },
     {
       name: 'additionalInfoDate',
       type: 'date',
-      label: t('Purchase Order Date'),
-      placeholder: t('Purchase Order Date'),
+      label: t('po_date'),
+      placeholder: t('po_date'),
       midWidth: true
     },
     {
       name: 'additionalInfoNotes',
       type: 'text',
-      label: t('Notes'),
-      placeholder: t('Add Notes'),
+      label: t('notes'),
+      placeholder: t('add_notes'),
       midWidth: true,
       multiple: true
     },
     {
       name: 'additionalInfoRequisitionedName',
       type: 'text',
-      label: t('Requisitioner'),
-      placeholder: t('Requisitioner'),
+      label: t('requisitioner'),
+      placeholder: t('requisitioner'),
       midWidth: true
     },
     {
       name: 'additionalInfoTerm',
       type: 'text',
-      label: t('Terms'),
-      placeholder: t('Terms'),
+      label: t('terms'),
+      placeholder: t('terms'),
       midWidth: true
     },
     {
       name: 'additionalInfoShippingOrderCategory',
       type: 'text',
-      label: t('Shipping Method'),
-      placeholder: t('Shipping Method'),
+      label: t('shipping_method'),
+      placeholder: t('shipping_method'),
       midWidth: true
     }
   ];
   const shape = {
-    name: Yup.string().required(t('The name is required'))
+    name: Yup.string().required(t('required_name'))
   };
   const renderUpdateModal = () => (
     <Dialog
@@ -398,11 +391,9 @@ function PurchaseOrders() {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Edit Purchase Order')}
+          {t('edit_po')}
         </Typography>
-        <Typography variant="subtitle2">
-          {t('Fill in the fields below to update the Purchase Order')}
-        </Typography>
+        <Typography variant="subtitle2">{t('edit_po.description')}</Typography>
       </DialogTitle>
       <DialogContent
         dividers
@@ -471,7 +462,7 @@ function PurchaseOrders() {
       return (
         <>
           <Helmet>
-            <title>{t('Purchase Orders')}</title>
+            <title>{t('purchase_orders')}</title>
           </Helmet>
           <Grid
             container
@@ -495,7 +486,7 @@ function PurchaseOrders() {
                   sx={{ mx: 6, my: 1 }}
                   variant="contained"
                 >
-                  Purchase Order
+                  {t('purchase_order')}
                 </Button>
               </Grid>
             )}
@@ -518,12 +509,8 @@ function PurchaseOrders() {
                       Toolbar: GridToolbar,
                       NoRowsOverlay: () => (
                         <NoRowsMessageWrapper
-                          message={t(
-                            'Manage your Purchase Orders in a single place'
-                          )}
-                          action={t(
-                            "Press the '+' button to create a Purchase Order."
-                          )}
+                          message={t('noRows.po.message')}
+                          action={t('noRows.po.action')}
                         />
                       )
                     }}
@@ -564,16 +551,13 @@ function PurchaseOrders() {
             }}
             onConfirm={() => handleDelete(currentPurchaseOrder?.id)}
             confirmText={t('to_delete')}
-            question={t('Are you sure you want to delete this Purchase Order?')}
+            question={t('confirm_remove_po')}
           />
         </>
       );
     else
       return <PermissionErrorMessage message={'no_access_purchase_orders'} />;
-  } else
-    return (
-      <FeatureErrorMessage message={'Upgrade to create Purchase Orders'} />
-    );
+  } else return <FeatureErrorMessage message={'upgrade_po'} />;
 }
 
 export default PurchaseOrders;

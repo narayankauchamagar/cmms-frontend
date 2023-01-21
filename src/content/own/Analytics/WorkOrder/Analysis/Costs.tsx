@@ -26,7 +26,7 @@ function Costs({ handleOpenModal }: HoursWorkedProps) {
   const columns = ['id'];
   const formattedData: { label: string; value: string; filters: Filter[] }[] = [
     {
-      label: t('Total Cost'),
+      label: t('total_cost'),
       value: getFormattedCurrency(completeCosts.total.toFixed(2)),
       filters: []
     },

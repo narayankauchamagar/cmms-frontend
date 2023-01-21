@@ -99,7 +99,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
     showSnackBar(t("The Customer couldn't be created"), 'error');
   const onEditSuccess = () => {
     setViewOrUpdate('view');
-    showSnackBar(t('The changes have been saved'), 'success');
+    showSnackBar(t('changes_saved_success'), 'success');
   };
   const onEditFailure = (err) =>
     showSnackBar(t("The Customer couldn't be edited"), 'error');
@@ -234,14 +234,14 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
     },
     {
       field: 'address',
-      headerName: t('Address'),
-      description: t('Address'),
+      headerName: t('address'),
+      description: t('address'),
       width: 150
     },
     {
       field: 'phone',
-      headerName: t('Phone'),
-      description: t('Phone'),
+      headerName: t('phone'),
+      description: t('phone'),
       width: 150
     },
     {
@@ -366,11 +366,11 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
   );
   const fieldsToRender: { label: string; value: string }[] = [
     {
-      label: t('Address'),
+      label: t('address'),
       value: currentCustomer?.address
     },
     {
-      label: t('Phone'),
+      label: t('phone'),
       value: currentCustomer?.phone
     },
     {

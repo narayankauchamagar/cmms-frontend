@@ -49,7 +49,7 @@ function ProfileDetails() {
   const userConfig = {
     firstName: { value: user.firstName, title: t('First Name') },
     lastName: { value: user.lastName, title: t('Last Name') },
-    phone: { value: user.phone, title: t('Phone') },
+    phone: { value: user.phone, title: t('phone') },
     jobTitle: { value: user.jobTitle, title: t('Job Title') },
     settings: {
       emailNotified: {
@@ -231,7 +231,7 @@ function ProfileDetails() {
               }}
             >
               <Button color="secondary" onClick={handleCloseEditModal}>
-                {t('Cancel')}
+                {t('cancel')}
               </Button>
               <Button
                 type="submit"
@@ -367,7 +367,7 @@ function ProfileDetails() {
               }}
             >
               <Button color="secondary" onClick={handleClosePasswordModal}>
-                {t('Cancel')}
+                {t('cancel')}
               </Button>
               <Button
                 type="submit"

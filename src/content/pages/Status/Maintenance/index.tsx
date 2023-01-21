@@ -1,11 +1,11 @@
 import {
   Box,
-  Typography,
   Container,
   Divider,
   IconButton,
+  styled,
   Tooltip,
-  styled
+  Typography
 } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import Logo from 'src/components/LogoSign';
@@ -78,7 +78,7 @@ function StatusMaintenance() {
           >
             <Box>
               <Typography component="span" variant="subtitle1">
-                {t('Phone')}:{' '}
+                {t('phone')}:{' '}
               </Typography>
               <Typography
                 component="span"

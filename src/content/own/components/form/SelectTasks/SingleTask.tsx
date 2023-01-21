@@ -240,7 +240,7 @@ export default function SingleTask({
               !preview && handleNoteChange(event.target.value, task.id)
             }
             value={task.notes}
-            label={t('Notes')}
+            label={t('notes')}
             type={'text'}
           />
           <Button

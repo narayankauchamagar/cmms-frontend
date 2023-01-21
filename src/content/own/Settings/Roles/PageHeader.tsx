@@ -346,7 +346,7 @@ function PageHeader({ rolesNumber, formatValues }: PageHeaderProps) {
                 }}
               >
                 <Button color="secondary" onClick={handleCreateRoleClose}>
-                  {t('Cancel')}
+                  {t('cancel')}
                 </Button>
                 <Button
                   type="submit"

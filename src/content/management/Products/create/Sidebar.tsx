@@ -202,7 +202,7 @@ function Sidebar() {
                 width: 110,
                 flex: 'initial'
               }}
-              primary={t('Status')}
+              primary={t('status')}
             />
             <b>Draft</b>
           </ListItem>

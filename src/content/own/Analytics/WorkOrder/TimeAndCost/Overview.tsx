@@ -34,7 +34,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
     };
   }[] = [
     {
-      label: t('Total Cost'),
+      label: t('total_cost'),
       value: getFormattedCurrency(completeCosts.total.toFixed(2)),
       config: {
         columns: ['id'],

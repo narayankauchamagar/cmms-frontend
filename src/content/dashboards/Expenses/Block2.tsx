@@ -1,18 +1,18 @@
 import {
-  Divider,
+  alpha,
   Box,
   Card,
-  Typography,
-  alpha,
+  Divider,
+  IconButton,
   Link,
+  styled,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
   TableHead,
   TableRow,
-  TableCell,
-  TableBody,
-  Table,
-  TableContainer,
-  IconButton,
-  styled,
+  Typography,
   useTheme
 } from '@mui/material';
 import Text from 'src/components/Text';
@@ -188,7 +188,7 @@ function Block2() {
                 <TableCell>{t('Employee')}</TableCell>
                 <TableCell align="left">{t('Income')}</TableCell>
                 <TableCell align="left">{t('Expenses')}</TableCell>
-                <TableCell align="center">{t('Status')}</TableCell>
+                <TableCell align="center">{t('status')}</TableCell>
                 <TableCell align="center">{t('Trends')}</TableCell>
                 <TableCell align="right">{t('Totals')}</TableCell>
               </TableRow>

@@ -17,7 +17,7 @@ function WorkOrderSettings() {
       name: 'location'
     },
     { label: t('Worker Assigned'), name: 'primaryUser' },
-    { label: t('Due date'), name: 'dueDate' },
+    { label: t('due_date'), name: 'dueDate' },
     { label: t('category'), name: 'category' },
     { label: t('Team'), name: 'team' }
   ];

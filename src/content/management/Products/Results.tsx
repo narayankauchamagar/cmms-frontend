@@ -485,7 +485,7 @@ const Results: FC<ResultsProps> = ({ products }) => {
               }}
               onClick={closeConfirmDelete}
             >
-              {t('Cancel')}
+              {t('cancel')}
             </Button>
             <ButtonError
               onClick={handleDeleteCompleted}

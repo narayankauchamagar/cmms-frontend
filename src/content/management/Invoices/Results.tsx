@@ -313,11 +313,11 @@ const Results: FC<ResultsProps> = ({ invoices }) => {
           </Grid>
           <Grid item xs={12} lg={5} md={6}>
             <FormControl fullWidth variant="outlined">
-              <InputLabel>{t('Status')}</InputLabel>
+              <InputLabel>{t('status')}</InputLabel>
               <Select
                 value={filters.status || 'all'}
                 onChange={handleStatusChange}
-                label={t('Status')}
+                label={t('status')}
               >
                 {statusOptions.map((statusOption) => (
                   <MenuItem key={statusOption.id} value={statusOption.id}>
@@ -391,7 +391,7 @@ const Results: FC<ResultsProps> = ({ invoices }) => {
                     <TableCell>{t('Date')}</TableCell>
                     <TableCell>{t('Client')}</TableCell>
                     <TableCell>{t('Amount')}</TableCell>
-                    <TableCell>{t('Status')}</TableCell>
+                    <TableCell>{t('status')}</TableCell>
                     <TableCell align="center">{t('actions')}</TableCell>
                   </TableRow>
                 </TableHead>
@@ -561,7 +561,7 @@ const Results: FC<ResultsProps> = ({ invoices }) => {
               }}
               onClick={closeConfirmDelete}
             >
-              {t('Cancel')}
+              {t('cancel')}
             </Button>
             <ButtonError
               onClick={handleDeleteCompleted}

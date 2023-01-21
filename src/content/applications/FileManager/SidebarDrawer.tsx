@@ -141,7 +141,7 @@ function SidebarDrawer() {
   const [currentTab, setCurrentTab] = useState<string>('details');
 
   const tabs = [
-    { value: 'details', label: t('Details') },
+    { value: 'details', label: t('details') },
     { value: 'activity', label: t('Activity') }
   ];
 
@@ -257,7 +257,7 @@ function SidebarDrawer() {
                   mb: 3
                 }}
               >
-                {t('Details')}
+                {t('details')}
               </Typography>
               <Grid container spacing={1}>
                 <Grid item sm={3}>

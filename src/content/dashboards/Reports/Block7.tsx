@@ -128,7 +128,7 @@ function Block7() {
             <TableHeadWrapper>
               <TableRow>
                 <TableCell>{t('Order')}</TableCell>
-                <TableCell align="right">{t('Status')}</TableCell>
+                <TableCell align="right">{t('status')}</TableCell>
                 <TableCell align="right">{t('actions')}</TableCell>
               </TableRow>
             </TableHeadWrapper>

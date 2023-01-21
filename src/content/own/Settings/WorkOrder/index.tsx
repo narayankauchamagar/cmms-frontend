@@ -27,7 +27,7 @@ function WorkOrderSettings() {
     { label: t('Additional Workers'), name: 'assignedTo' },
     { label: t('Team'), name: 'team' },
     { label: t('location'), name: 'location' },
-    { label: t('Due date'), name: 'dueDate' },
+    { label: t('due_date'), name: 'dueDate' },
     { label: t('category'), name: 'category' },
     { label: t('Purchase Order'), name: 'purchaseOrder' },
     { label: t('files'), name: 'files' },

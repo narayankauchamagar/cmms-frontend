@@ -302,7 +302,7 @@ function PageHeader() {
                   </Grid>
                   <Grid item xs={12} md={6}>
                     <Box pb={1}>
-                      <b>{t('Due Date')}:</b>
+                      <b>{t('due_date')}:</b>
                     </Box>
                     <DatePicker
                       value={value1}
