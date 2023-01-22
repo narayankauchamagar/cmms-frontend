@@ -67,7 +67,7 @@ export default function MeterDetails(props: MeterDetailsProps) {
   const currentMeterReadings = readingsByMeter[meter?.id] ?? [];
   const tabs = [
     { value: 'details', label: t('details') },
-    { value: 'history', label: t('History') }
+    { value: 'history', label: t('history') }
   ];
 
   useEffect(() => {
@@ -96,19 +96,19 @@ export default function MeterDetails(props: MeterDetailsProps) {
   };
   const fieldsToRender = (meter: Meter): { label: string; value: any }[] => [
     {
-      label: t('Location Name'),
+      label: t('location_name'),
       value: meter.location?.name
     },
     {
-      label: t('Asset Name'),
+      label: t('asset_name'),
       value: meter.asset.name
     },
     {
-      label: t('Reading Frequency'),
-      value: `Every ${meter.updateFrequency} day`
+      label: t('reading_frequency'),
+      value: t('every_frequency_days', { frequency: meter.updateFrequency })
     },
     {
-      label: t('Assigned To'),
+      label: t('assigned_to'),
       value: meter.users.reduce(
         (acc, user, index) =>
           acc + `${index !== 0 ? ',' : ''} ${user.firstName} ${user.lastName}`,
@@ -120,13 +120,13 @@ export default function MeterDetails(props: MeterDetailsProps) {
     {
       name: 'value',
       type: 'number',
-      label: t('Reading'),
-      placeholder: t('Enter Meter value'),
+      label: t('reading'),
+      placeholder: t('enter_meter_value'),
       required: true
     }
   ];
   const shape = {
-    value: Yup.number().required(t('Reading value is required'))
+    value: Yup.number().required(t('required_reading_value'))
   };
   return (
     <Grid
@@ -182,7 +182,7 @@ export default function MeterDetails(props: MeterDetailsProps) {
               <Form
                 fields={fields}
                 validation={Yup.object().shape(shape)}
-                submitText={t('Add Reading')}
+                submitText={t('add_reading')}
                 values={{ value: 0 }}
                 onSubmit={async (values) => {
                   return dispatch(createReading(meter.id, values)).then(() =>
@@ -193,7 +193,7 @@ export default function MeterDetails(props: MeterDetailsProps) {
             ) : (
               !!currentMeterReadings.length && (
                 <Box>
-                  <Typography variant="h4">{t('Last reading')}</Typography>
+                  <Typography variant="h4">{t('last_reading')}</Typography>
                   <Typography>{`${
                     [...currentMeterReadings].reverse()[0].value
                   } ${meter.unit}`}</Typography>
@@ -217,7 +217,7 @@ export default function MeterDetails(props: MeterDetailsProps) {
               </Grid>
             )}
             <Typography sx={{ mt: 2, mb: 1 }} variant="h4">
-              Meter details
+              {t('meter_details')}
             </Typography>
             <Grid container spacing={2}>
               {fieldsToRender(meter).map((field) => (
@@ -229,7 +229,7 @@ export default function MeterDetails(props: MeterDetailsProps) {
               ))}
             </Grid>
             <Typography sx={{ mt: 2, mb: 1 }} variant="h4">
-              {t('Work Order Triggers')}
+              {t('wo_triggers')}
             </Typography>
             <Grid container spacing={1}>
               <Grid item xs={12} lg={12}>
@@ -270,8 +270,8 @@ export default function MeterDetails(props: MeterDetailsProps) {
                         primary={trigger.name}
                         secondary={`${
                           trigger.triggerCondition === 'MORE_THAN'
-                            ? t('Greater than')
-                            : t('Less than')
+                            ? t('greater_than')
+                            : t('lower_than')
                         } ${trigger.value} ${meter.unit}`}
                       />
                     </ListItem>
@@ -284,7 +284,7 @@ export default function MeterDetails(props: MeterDetailsProps) {
                     variant="outlined"
                     onClick={() => setOpenAddTriggerModal(true)}
                   >
-                    {t('Add Trigger')}
+                    {t('add_trigger')}
                   </Button>
                 )}
               </Grid>

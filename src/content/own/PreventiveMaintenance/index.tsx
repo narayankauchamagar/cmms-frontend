@@ -275,7 +275,7 @@ function Files() {
     {
       name: 'frequency',
       type: 'number',
-      label: t('frequency.description'),
+      label: t('frequency_description'),
       required: true
     },
     {
@@ -315,7 +315,7 @@ function Files() {
           {t('schedule_wo')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('schedule_wo.description')}
+          {t('schedule_wo_description')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -374,7 +374,7 @@ function Files() {
           {t('edit_wo_trigger')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('edit_wo_trigger.description')}
+          {t('edit_wo_trigger_description')}
         </Typography>
       </DialogTitle>
       <DialogContent

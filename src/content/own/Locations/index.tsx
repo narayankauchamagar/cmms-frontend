@@ -378,7 +378,7 @@ function Locations() {
           {t('add_location')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('add_location.description')}
+          {t('add_location_description')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -448,7 +448,7 @@ function Locations() {
           {t('edit_location')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('edit_location.description')}
+          {t('edit_location_description')}
         </Typography>
       </DialogTitle>
       <DialogContent

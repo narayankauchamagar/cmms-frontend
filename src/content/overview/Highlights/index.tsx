@@ -562,7 +562,7 @@ function Highlights() {
                 color="text.secondary"
                 fontWeight="normal"
               >
-                {t('home.you_will_have.description')}
+                {t('home.you_will_have_description')}
               </TypographySubHeading>
             </Grid>
             <Grid item xs={12} md={6}>
@@ -651,7 +651,7 @@ function Highlights() {
                 color="text.secondary"
                 fontWeight="normal"
               >
-                {t('home.smarter.description')}
+                {t('home.smarter_description')}
               </TypographySubHeading>
             </Box>
           </Grid>
@@ -678,7 +678,7 @@ function Highlights() {
             color="text.secondary"
             fontWeight="normal"
           >
-            {t('key_features.description')}
+            {t('key_features_description')}
           </TypographyH2>
         </Container>
         <TabsContainerWrapper sx={{ justifyContent: 'flex-start' }}>

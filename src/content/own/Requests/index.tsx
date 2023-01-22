@@ -241,7 +241,7 @@ function Files() {
           {t('add_request')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('add_request.description')}
+          {t('add_request_description')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -300,7 +300,7 @@ function Files() {
           {t('edit_request')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('edit_request.description')}
+          {t('edit_request_description')}
         </Typography>
       </DialogTitle>
       <DialogContent

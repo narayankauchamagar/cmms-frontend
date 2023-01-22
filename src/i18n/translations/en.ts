@@ -13,18 +13,18 @@ const enJSON = {
   ON_HOLD: 'On Hold',
   COMPLETE: 'Complete',
   'home.built': 'Built to Make Managing Maintenance Easier',
-  'home.description':
+  home_description:
     "When whiteboards and sticky notes are chaos, and you need a CMMS software that's easy enough for your team to actually use - try Grash",
   try_grash: 'Try Grash',
   login: 'Log In',
   start_trial: 'Start a Free trial',
   'home.what': 'What',
   'home.you_will_have': "You'll have",
-  'home.you_will_have.description':
+  'home.you_will_have_description':
     'Build efficient, reliable workflows that put you in control of maintenance. Generate, assign, and track work orders. Control inventory. And get reliable automated reports that improve visibility and create accountability.',
   key_features: 'Key Features',
-  'key_features.description':
-    'Some of the features that make Grash one of the best CMMS availables today',
+  key_features_description:
+    'Some of the features that make Grash one of the best CMMS available today',
   contribute: 'Contribute',
   work_orders: 'Work Orders',
   request_system: 'Work Request System',
@@ -144,7 +144,7 @@ const enJSON = {
   'dashboard.checks.5': 'And so much more ...',
   'home.smarter': 'Smarter',
   'home.work': 'Work',
-  'home.smarter.description':
+  'home.smarter_description':
     'Grash makes it incredibly easy for technicians to work efficiently by giving them access to the tools and data they need to get work done — all from the palm of their hand.',
   leading_maintenance:
     'Leading the Way to a Better Future for Maintenance and Reliability',
@@ -154,7 +154,7 @@ const enJSON = {
   perfect_tool: 'The perfect tool for Maintenance teams',
   start_trial_today: 'Start your Free trial today',
   create_account: 'Create account',
-  'signup.description': 'Fill in the fields below to sign up for an account.',
+  signup_description: 'Fill in the fields below to sign up for an account.',
   account_already: 'Already have an account?',
   signin_here: 'Sign in here',
   invalid_email: 'The email provided should be a valid email address',
@@ -187,7 +187,7 @@ const enJSON = {
   lost_password: 'Lost password ?',
   //work-orders
   link_wo: 'Link Work Orders',
-  'link_wo.description': 'Create relationships between Work Orders',
+  link_wo_description: 'Create relationships between Work Orders',
   required_relationType: 'Please select the relationship type.',
   required_wo: 'The Work Order field is required.',
   this_wo: 'This Work Order',
@@ -199,17 +199,17 @@ const enJSON = {
   date: 'Date',
   cost: 'Cost',
   include_cost: 'Include this cost in the total cost',
-  'include_cost.description':
+  include_cost_description:
     'This will add the cost to the total cost spent on the Work Order',
   required_cost_description: 'Cost Description is required',
   required_cost: 'Cost is required',
   add_cost: 'Add Additional Cost',
-  'add_cost.description':
+  add_cost_description:
     'Fill in the fields below to create and add Additional Cost',
   add: 'Add',
   hourly_rate: 'Hourly Rate',
   include_time: 'Include this time in the total time',
-  'include_time.description':
+  include_time_description:
     'This will add the duration to the total time spent on the Work Order',
   work_started_at: 'Work Started At',
   duration: 'Duration',
@@ -218,9 +218,9 @@ const enJSON = {
   required_hours: 'Hours field is required',
   required_minutes: 'Minutes field is required',
   add_time: 'Add Time',
-  'add_time.description': 'Fill in the fields below to create and add Time',
+  add_time_description: 'Fill in the fields below to create and add Time',
   feedback: 'Feedback',
-  'feedback.description': 'Give your feedback',
+  feedback_description: 'Give your feedback',
   required_feedback: 'Feedback is required',
   signature: 'Signature',
   required_signature: 'Image is required',
@@ -292,7 +292,7 @@ const enJSON = {
   add_additional_cost: 'Add additional Cost',
   additional_costs: 'Additional Costs',
   add_parts: 'Add Parts',
-  'wo.title.description': 'Enter Work Order title',
+  'wo.title_description': 'Enter Work Order title',
   image: 'Image',
   estimated_duration: 'Estimated Duration in Hours',
   primary_worker: 'Primary Worker',
@@ -304,10 +304,10 @@ const enJSON = {
   requires_signature: 'Requires Signature',
   required_wo_title: 'WorkOrder title is required',
   add_wo: 'Add Work Order',
-  'add_wo.description':
+  add_wo_description:
     'Fill in the fields below to create and add a new Work Order',
   edit_wo: 'Edit Work Order',
-  'edit_wo.description': 'Fill in the fields below to update the Work Order',
+  edit_wo_description: 'Fill in the fields below to update the Work Order',
   'noRows.wo.message':
     'Work Orders are tasks or jobs, that can be scheduled or assigned to someone',
   'noRows.wo.action': "Press the '+' button to create a Work Order",
@@ -338,16 +338,15 @@ const enJSON = {
   next_wo: 'Next Work Order',
   trigger_name: 'Trigger Name',
   enter_trigger_name: 'Enter trigger Name',
-  'frequency.description': 'Frequency in days',
+  frequency_description: 'Frequency in days',
   wo_configuration: 'Work Order Configuration',
   required_trigger_name: 'Trigger name is required',
   required_frequency: 'The trigger frequency is required',
   invalid_frequency: 'Frequency must be superior to 0',
   schedule_wo: 'Schedule Work Order',
-  'schedule_wo.description':
-    'Fill in the fields below to schedule a Work Order',
+  schedule_wo_description: 'Fill in the fields below to schedule a Work Order',
   edit_wo_trigger: 'Edit Work Order Trigger',
-  'edit_wo_trigger.description':
+  edit_wo_trigger_description:
     'Fill in the fields below to edit the Work Order Trigger',
   create_trigger: 'Create Trigger',
   'noRows.pm.message': 'Schedule Work Orders with custom triggers',
@@ -392,10 +391,10 @@ const enJSON = {
   required_request_name: 'Request title is required',
   required_field: 'This field is required',
   add_request: 'Add Request',
-  'add_request.description':
+  add_request_description:
     'Fill in the fields below to create and add a new Request',
   edit_request: 'Edit Request',
-  'edit_request.description': 'Fill in the fields below to edit the Request',
+  edit_request_description: 'Fill in the fields below to edit the Request',
   'noRows.request.message': 'Manage your Work Requests',
   'noRows.request.action': "Press the '+' button to create a Work Request",
   confirm_delete_request: 'Are you sure you want to delete this Request?',
@@ -443,23 +442,23 @@ const enJSON = {
   no_wo_linked_asset: 'There is no Work Order linked to this Asset',
   asset_remove_success: 'The Asset has been deleted successfully',
   asset_remove_failure: "The Asset couldn't be deleted",
-  'asset_name.description': 'Enter asset name',
+  asset_name_description: 'Enter asset name',
   select_asset_location: 'Select asset location',
-  'primary_user.description': 'Select primary user',
-  'teams.description': 'Select teams',
-  'customers.description': 'Select customers',
-  'vendors.description': 'Select vendors',
-  'inServiceDate.description': 'Placed in Service date',
+  primary_user_description: 'Select primary user',
+  teams_description: 'Select teams',
+  customers_description: 'Select customers',
+  vendors_description: 'Select vendors',
+  inServiceDate_description: 'Placed in Service date',
   warranty_expiration_date: 'Warranty Expiration date',
   additional_information: 'Additional Information',
   structure: 'Structure',
   parent_asset: 'Parent Asset',
   asset_create_success: 'The Asset has been created successfully',
   asset_create_failure: "The Asset couldn't be created",
-  'additional_workers.description': 'Select additional workers',
-  required_asset_name: 'Asset name is requiredme',
+  additional_workers_description: 'Select additional workers',
+  required_asset_name: 'Asset name is required',
   add_asset: 'Add Asset',
-  'add_asset.description':
+  add_asset_description:
     'Fill in the fields below to create and add a new asset',
   create_asset: 'Create Asset',
   hierarchy: 'Hierarchy',
@@ -468,7 +467,7 @@ const enJSON = {
   remove_downtime: 'Remove Downtime',
   edit: 'Edit',
   edit_asset: 'Edit Asset',
-  'edit_asset.description': 'Fill in the fields below to edit this asset',
+  edit_asset_description: 'Fill in the fields below to edit this asset',
   confirm_delete_asset: 'Are you sure you want to delete this Asset?',
   loading_assets: 'Loading assets under {{name}} #{{id}}',
   no_content: 'No Content',
@@ -488,20 +487,19 @@ const enJSON = {
   required_location_name: 'Location title is required',
   required_location_address: 'Location address is required',
   add_location: 'Add location',
-  'add_location.description':
+  add_location_description:
     'Fill in the fields below to create and add a new location',
   edit_location: 'Edit location',
-  'edit_location.description':
-    'Fill in the fields below to update the location',
+  edit_location_description: 'Fill in the fields below to update the location',
   confirm_delete_location: 'Are you sure you want to delete this Location?',
   floor_plans: 'Floor Plans',
   floor_plan: 'Floor Plan',
-  'floor_plan_name.description': 'Floor plan name',
+  floor_plan_name_description: 'Floor plan name',
   'Floor plan area in m²': 'Floor plan area in m²',
   upload_image: 'Upload an image',
   required_floor_plan_name: 'Floor plan name is required',
   add_floor_plan: 'Add new Floor Plan',
-  'add_floor_plan.description':
+  add_floor_plan_description:
     'Fill in the fields below to create a new Floor Plan',
   no_asset_in_location: 'No asset in this location',
   no_wo_in_location: 'No Work Order in this location',
@@ -552,10 +550,10 @@ const enJSON = {
   enter_part_name: 'Enter Part name',
   required_set_name: 'Set name is required',
   add_set: 'Add Set',
-  'add_set.description': 'Fill in the fields below to create and add a new Set',
+  add_set_description: 'Fill in the fields below to create and add a new Set',
   create_set: 'Create Set',
   edit_set: 'Edit Set',
-  'edit_set.description': 'Fill in the fields below to edit the Set',
+  edit_set_description: 'Fill in the fields below to edit the Set',
   confirm_delete_set: 'Are you sure you want to delete this Set?',
   part_create_success: 'The Part has been created successfully',
   part_create_failure: "The Part couldn't be created",
@@ -574,11 +572,10 @@ const enJSON = {
   enter_part_area: 'Enter Part Area',
   additional_part_details: 'Additional Part Details',
   add_part: 'Add Part',
-  'add_part.description':
-    'Fill in the fields below to create and add a new Part',
+  add_part_description: 'Fill in the fields below to create and add a new Part',
   create_part: 'Create Part',
   update_part: 'Update Part',
-  'update_part.description': 'Fill in the fields below to update the Part',
+  update_part_description: 'Fill in the fields below to update the Part',
   'noRows.part.message': 'Parts can be combined into assets or used alone',
   'noRows.part.action': "Press the '+' button to create a Part",
   confirm_remove_part: 'Are you sure you want to delete this Part?',
@@ -617,8 +614,7 @@ const enJSON = {
   shipping_method: 'Shipping Method',
   required_name: 'The name is required',
   edit_po: 'Edit Purchase Order',
-  'edit_po.description':
-    'Fill in the fields below to update the Purchase Order',
+  edit_po_description: 'Fill in the fields below to update the Purchase Order',
   purchase_order: 'Purchase Order',
   'noRows.po.message': 'Manage your Purchase Orders in a single place',
   'noRows.po.action': "Press the '+' button to create a Purchase Order.",
@@ -636,7 +632,62 @@ const enJSON = {
   quantity_edit_failure: "Quantity couldn't be changed",
   APPROVED: 'Approved',
   PENDING: 'Pending',
-  REJECTED: 'Rejected'
+  REJECTED: 'Rejected',
+  //meter
+  when_reading_is: 'When Meter Reading is',
+  greater_than: 'Greater than',
+  lower_than: 'Lower than',
+  value: 'Value',
+  required_value: 'The value is required',
+  required_trigger_condition: 'The condition is required',
+  wo_trigger_create_success:
+    'The Work Order trigger has been created successfully',
+  wo_trigger_create_failure: "The Work Order trigger couldn't be created",
+  add_wo_trigger: 'Add Work Order Trigger',
+  add_wo_trigger_description:
+    'Fill in the fields below to create and add a Work Order Trigger',
+  wo_trigger_edit_success:
+    'The Work Order trigger has been updated successfully',
+  meter_create_success: 'The meter has been created successfully',
+  meter_create_failure: "The meter couldn't be created ",
+  meter_edit_failure: "The meter couldn't be edited",
+  meter_delete_success: 'The meter has been deleted successfully',
+  meter_delete_failure: "The meter couldn't be deleted",
+  next_reading_due: 'Next Reading Due',
+  unit_of_measurement: 'Unit of Measurement',
+  last_reading: 'Last Reading',
+  enter_meter_name: 'Enter Meter name',
+  unit: 'Unit',
+  update_frequency: 'Update Frequency',
+  update_frequency_in_days: 'Update Frequency in days',
+  required_meter_name: 'Meter name is required',
+  required_meter_unit: 'Meter unit is required',
+  required_meter_update_frequency: 'Meter update frequency is required',
+  required_asset: 'Asset is required',
+  add_meter: 'Add Meter',
+  add_meter_description:
+    'Fill in the fields below to create and add a new Meter',
+  edit_meter: 'Edit Meter',
+  edit_meter_description: 'Fill in the fields below to edit the Meter',
+  confirm_delete_meter: 'Are you sure you want to delete this Meter?',
+  upgrade_create_meter: 'Upgrade to create Meters',
+  history: 'History',
+  reading_frequency: 'Reading Frequency',
+  required_reading_value: 'Reading value is required',
+  wo_triggers: 'Work Order Triggers',
+  add_trigger: 'Add Trigger',
+  meter_details: 'Meter details',
+  'noRows.meter.message':
+    'Meter readings give you the ability to monitor assets and trigger new work orders based on defined conditions',
+  'noRows.meter.action': "Press the '+' button to create a Meter",
+  meter: 'Meter',
+  //upload
+  drag_one_file: 'Drag a unique file here',
+  drag_many_files: 'Drag & drop files here',
+  drop_to_start: 'Drop the files to start uploading',
+  invalid_files_type: 'You cannot upload these file types',
+  you_have_uploaded: 'You have uploaded',
+  upload: 'Upload'
 };
 
 export default enJSON;

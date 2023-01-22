@@ -339,7 +339,7 @@ function RegisterCover() {
                     mb: 3
                   }}
                 >
-                  {t('signup.description')}
+                  {t('signup_description')}
                 </Typography>
               </Box>
               <JWTRegister

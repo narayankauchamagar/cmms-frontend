@@ -43,7 +43,7 @@ export default function LinkModal({
         <Typography variant="h4" gutterBottom>
           {t('link_wo')}
         </Typography>
-        <Typography variant="subtitle2">{t('link_wo.description')}</Typography>
+        <Typography variant="subtitle2">{t('link_wo_description')}</Typography>
       </DialogTitle>
       <Formik
         initialValues={{

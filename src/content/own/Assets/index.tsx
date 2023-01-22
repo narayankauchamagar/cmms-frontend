@@ -220,7 +220,7 @@ function Assets() {
       name: 'name',
       type: 'text',
       label: t('name'),
-      placeholder: t('asset_name.description'),
+      placeholder: t('asset_name_description'),
       required: true
     },
     {
@@ -284,7 +284,7 @@ function Assets() {
       type: 'select',
       type2: 'user',
       label: t('worker'),
-      placeholder: t('primary_user.description')
+      placeholder: t('primary_user_description')
     },
     {
       name: 'assignedTo',
@@ -292,7 +292,7 @@ function Assets() {
       type2: 'user',
       multiple: true,
       label: t('additional_workers'),
-      placeholder: 'additional_workers.description'
+      placeholder: 'additional_workers_description'
     },
     {
       name: 'teams',
@@ -313,7 +313,7 @@ function Assets() {
       type2: 'customer',
       multiple: true,
       label: t('customers'),
-      placeholder: 'customers.description'
+      placeholder: 'customers_description'
     },
     {
       name: 'vendors',
@@ -321,13 +321,13 @@ function Assets() {
       type2: 'vendor',
       multiple: true,
       label: t('vendors'),
-      placeholder: t('vendors.description')
+      placeholder: t('vendors_description')
     },
     {
       name: 'inServiceDate',
       type: 'date',
       midWidth: true,
-      label: t('inServiceDate.description')
+      label: t('inServiceDate_description')
     },
     {
       name: 'warrantyExpirationDate',
@@ -445,7 +445,7 @@ function Assets() {
           {t('add_asset')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('add_asset.description')}
+          {t('add_asset_description')}
         </Typography>
       </DialogTitle>
       <DialogContent

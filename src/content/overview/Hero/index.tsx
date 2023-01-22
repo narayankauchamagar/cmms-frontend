@@ -150,7 +150,7 @@ function Hero() {
             color="text.secondary"
             fontWeight="normal"
           >
-            {t('home.description')}
+            {t('home_description')}
           </TypographyH2>
           <Button
             component={RouterLink}

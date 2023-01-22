@@ -22,7 +22,7 @@ function WorkOrderSettings() {
       name: 'priority'
     },
     { label: t('images'), name: 'images' },
-    { label: t('Asset'), name: 'asset' },
+    { label: t('asset'), name: 'asset' },
     { label: t('Primary User'), name: 'primaryUser' },
     { label: t('Additional Workers'), name: 'assignedTo' },
     { label: t('Team'), name: 'team' },

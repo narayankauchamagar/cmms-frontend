@@ -69,7 +69,7 @@ function Meters() {
   const { meters, loadingGet } = useSelector((state) => state.meters);
 
   useEffect(() => {
-    setTitle(t('Meters'));
+    setTitle(t('meters'));
     if (hasViewPermission(PermissionEntity.METERS)) dispatch(getMeters());
   }, []);
   useEffect(() => {
@@ -108,21 +108,20 @@ function Meters() {
   };
   const onCreationSuccess = () => {
     setOpenAddModal(false);
-    showSnackBar(t('The meter has been created successfully'), 'success');
+    showSnackBar(t('meter_create_success'), 'success');
   };
   const onCreationFailure = (err) =>
-    showSnackBar(t("The meter couldn't be created"), 'error');
+    showSnackBar(t('meter_create_failure'), 'error');
   const onEditSuccess = () => {
     setOpenUpdateModal(false);
     showSnackBar(t('changes_saved_success'), 'success');
   };
-  const onEditFailure = (err) =>
-    showSnackBar(t("The meter couldn't be edited"), 'error');
+  const onEditFailure = (err) => showSnackBar(t('meter_edit_failure'), 'error');
   const onDeleteSuccess = () => {
-    showSnackBar(t('The meter has been deleted successfully'), 'success');
+    showSnackBar(t('meter_delete_success'), 'success');
   };
   const onDeleteFailure = (err) =>
-    showSnackBar(t("The meter couldn't be deleted"), 'error');
+    showSnackBar(t('meter_delete_failure'), 'error');
   const columns: GridEnrichedColDef[] = [
     {
       field: 'name',
@@ -135,22 +134,22 @@ function Meters() {
     },
     {
       field: 'nextReading',
-      headerName: t('Next Reading Due'),
-      description: t('Next Reading'),
+      headerName: t('next_reading_due'),
+      description: t('next_reading_due'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<string>) =>
         getFormattedDate(params.value)
     },
     {
       field: 'unit',
-      headerName: t('Unit of Measurement'),
-      description: t('Unit of Measurement'),
+      headerName: t('unit_of_measurement'),
+      description: t('unit_of_measurement'),
       width: 150
     },
     {
       field: 'lastReading',
-      headerName: t('Last Reading'),
-      description: t('Last Reading'),
+      headerName: t('last_reading'),
+      description: t('last_reading'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<string>) =>
         getFormattedDate(params.value)
@@ -164,8 +163,8 @@ function Meters() {
     },
     {
       field: 'asset',
-      headerName: t('Asset'),
-      description: t('Asset'),
+      headerName: t('asset'),
+      description: t('asset'),
       width: 150,
       valueGetter: (params) => params.row.asset.name
     },
@@ -190,21 +189,21 @@ function Meters() {
       name: 'name',
       type: 'text',
       label: t('name'),
-      placeholder: t('Enter Meter name'),
+      placeholder: t('enter_meter_name'),
       required: true
     },
     {
       name: 'unit',
       type: 'text',
-      label: t('Unit'),
-      placeholder: t('Unit'),
+      label: t('unit'),
+      placeholder: t('unit'),
       required: true
     },
     {
       name: 'updateFrequency',
       type: 'number',
-      label: t('Update Frequency'),
-      placeholder: t('Update Frequency in days'),
+      label: t('update_frequency'),
+      placeholder: t('update_frequency_in_days'),
       required: true
     },
     {
@@ -223,14 +222,14 @@ function Meters() {
       name: 'asset',
       type: 'select',
       type2: 'asset',
-      label: t('Asset'),
+      label: t('asset'),
       required: true
     },
     {
       name: 'users',
       type: 'select',
       type2: 'user',
-      label: t('Workers'),
+      label: t('workers'),
       multiple: true
     },
     {
@@ -241,12 +240,12 @@ function Meters() {
     }
   ];
   const shape = {
-    name: Yup.string().required(t('Meter name is required')),
-    unit: Yup.string().required(t('Meter unit is required')),
+    name: Yup.string().required(t('required_meter_name')),
+    unit: Yup.string().required(t('required_meter_unit')),
     updateFrequency: Yup.number().required(
-      t('Meter update frequency is required')
+      t('required_meter_update_frequency')
     ),
-    asset: Yup.object().required(t('Asset is required')).nullable()
+    asset: Yup.object().required(t('required_asset')).nullable()
   };
   const renderAddModal = () => (
     <Dialog
@@ -261,10 +260,10 @@ function Meters() {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Add Meter')}
+          {t('add_meter')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the fields below to create and add a new Meter')}
+          {t('add_meter_description')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -317,10 +316,10 @@ function Meters() {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Edit Meter')}
+          {t('edit_meter')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the fields below to edit the Meter')}
+          {t('edit_meter_description')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -386,7 +385,7 @@ function Meters() {
       return (
         <>
           <Helmet>
-            <title>{t('Meters')}</title>
+            <title>{t('meters')}</title>
           </Helmet>
           {renderAddModal()}
           {renderUpdateModal()}
@@ -412,7 +411,7 @@ function Meters() {
                   variant="contained"
                   onClick={() => setOpenAddModal(true)}
                 >
-                  Meter
+                  {t('meter')}
                 </Button>
               </Grid>
             )}
@@ -436,10 +435,8 @@ function Meters() {
                       Toolbar: GridToolbar,
                       NoRowsOverlay: () => (
                         <NoRowsMessageWrapper
-                          message={t(
-                            'Meter readings give you the ability to monitor assets and trigger new work orders based on defined conditions'
-                          )}
-                          action={t("Press the '+' button to create a Meter")}
+                          message={t('noRows.meter.message')}
+                          action={t('')}
                         />
                       )
                     }}
@@ -475,12 +472,12 @@ function Meters() {
             }}
             onConfirm={() => handleDelete(currentMeter?.id)}
             confirmText={t('to_delete')}
-            question={t('Are you sure you want to delete this Meter?')}
+            question={t('confirm_delete_meter')}
           />
         </>
       );
     else return <PermissionErrorMessage message={'no_access_meters'} />;
-  } else return <FeatureErrorMessage message={'Upgrade to create Meters'} />;
+  } else return <FeatureErrorMessage message={'upgrade_create_meter'} />;
 }
 
 export default Meters;

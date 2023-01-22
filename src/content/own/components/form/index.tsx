@@ -388,7 +388,7 @@ export default (props: PropsType) => {
                         multiple={field.multiple}
                         title={field.label}
                         type={field.fileType || 'file'}
-                        description={t('Upload')}
+                        description={t('upload')}
                         setFieldValue={(files) => {
                           formik.setFieldValue(field.name, files);
                         }}

@@ -221,7 +221,7 @@ export default function SingleTask({
           sx={{ mt: 1 }}
         >
           <Typography variant="h6" fontWeight="bold">
-            {t('Assigned To')}
+            {t('assigned_to')}
           </Typography>
           {task.taskBase.user.id === user.id ? (
             <Typography variant="h6">{t('Me')}</Typography>

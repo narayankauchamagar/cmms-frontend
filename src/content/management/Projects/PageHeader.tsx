@@ -397,7 +397,7 @@ function PageHeader() {
                         pb: { xs: 1, md: 0 }
                       }}
                     >
-                      <b>{t('Upload files')}:</b>
+                      <b>{t('upload')}:</b>
                     </Box>
                   </Grid>
                   <Grid

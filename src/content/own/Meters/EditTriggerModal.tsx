@@ -34,13 +34,13 @@ export default function EditTriggerModal({
     {
       name: 'name',
       type: 'text',
-      label: t('Trigger Name'),
+      label: t('trigger_name'),
       required: true
     },
     {
       name: 'triggerCondition',
       type: 'select',
-      label: t('When Meter Reading is'),
+      label: t('when_reading_is'),
       items: [
         { label: 'Greater than', value: 'MORE_THAN' },
         { label: 'Lower than', value: 'LESS_THAN' }
@@ -51,32 +51,29 @@ export default function EditTriggerModal({
     {
       name: 'value',
       type: 'number',
-      label: t('Value') + '(' + meter.unit + ')',
+      label: t('value') + '(' + meter.unit + ')',
       midWidth: true,
       required: true
     },
     {
       name: 'workOrderConfig',
       type: 'titleGroupField',
-      label: t('Work Order Configuration')
+      label: t('wo_configuration')
     },
     ...getWOBaseFields(t)
   ];
   const onEditSuccess = () => {
     onClose();
-    showSnackBar(
-      t('The Work Order trigger has been updated successfully'),
-      'success'
-    );
+    showSnackBar(t('wo_trigger_edit_success'), 'success');
   };
   const onEditFailure = (err) =>
-    showSnackBar(t("The Work Order trigger couldn't be updated"), 'error');
+    showSnackBar(t('wo_trigger_edit_failure'), 'error');
 
   const shape = {
-    name: Yup.string().required(t('The trigger name is required')),
-    title: Yup.string().required(t('The Work Order title is required')),
-    value: Yup.number().required(t('The value is required')),
-    triggerCondition: Yup.object().required(t('The condition is required'))
+    name: Yup.string().required(t('Trequired_trigger_name')),
+    title: Yup.string().required(t('required_wo_title')),
+    value: Yup.number().required(t('required_value')),
+    triggerCondition: Yup.object().required(t('required_trigger_condition'))
   };
   const formatValues = (values) => {
     values.primaryUser = formatSelect(values.primaryUser);
@@ -96,10 +93,10 @@ export default function EditTriggerModal({
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Edit Work Order Trigger')}
+          {t('edit_wo_trigger')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the fields below to edit the Work Order Trigger')}
+          {t('edit_wo_trigger_description')}
         </Typography>
       </DialogTitle>
       <DialogContent

@@ -168,10 +168,10 @@ function FileUpload(props: FileUploadProps) {
   return (
     <UploadBox>
       <TypographyPrimary variant="h4" gutterBottom>
-        {title || 'File'}
+        {title || t('file')}
       </TypographyPrimary>
       <TypographySecondary variant="body1">
-        {description || 'Upload a file'}
+        {description || t('drag_one_file')}
       </TypographySecondary>
 
       <BoxUploadWrapper {...getRootProps()}>
@@ -186,7 +186,7 @@ function FileUpload(props: FileUploadProps) {
                 mt: 2
               }}
             >
-              {t('Drop the files to start uploading')}
+              {t('drop_to_start')}
             </TypographyPrimary>
           </>
         )}
@@ -200,7 +200,7 @@ function FileUpload(props: FileUploadProps) {
                 mt: 2
               }}
             >
-              {t('You cannot upload these file types')}
+              {t('invalid_files_type')}
             </TypographyPrimary>
           </>
         )}
@@ -214,9 +214,7 @@ function FileUpload(props: FileUploadProps) {
                 mt: 2
               }}
             >
-              {multiple
-                ? t('Drag & drop files here')
-                : t('Drag a unique file here')}
+              {multiple ? t('drag_many_files') : t('drag_one_file')}
             </TypographyPrimary>
           </>
         )}
@@ -231,7 +229,7 @@ function FileUpload(props: FileUploadProps) {
               }}
               severity="success"
             >
-              {t('You have uploaded')} <b>{files.length}</b> {t('files')}!
+              {t('you_have_uploaded')} <b>{files.length}</b> {t('files')}!
             </Alert>
           )}
           <DividerContrast

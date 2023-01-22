@@ -32,7 +32,7 @@ export default function CompleteWOModal({
         name: 'feedback',
         type: 'text',
         label: t('feedback'),
-        placeholder: t('feedback.description'),
+        placeholder: t('feedback_description'),
         multiple: true
       });
       shape = { feedback: Yup.string().required(t('required_feedback')) };

@@ -231,7 +231,7 @@ const Sets = ({ setAction }: PropsType) => {
         <Typography variant="h4" gutterBottom>
           {t('add_set')}
         </Typography>
-        <Typography variant="subtitle2">{t('add_set.description')}</Typography>
+        <Typography variant="subtitle2">{t('add_set_description')}</Typography>
       </DialogTitle>
       <DialogContent
         dividers
@@ -272,7 +272,7 @@ const Sets = ({ setAction }: PropsType) => {
         <Typography variant="h4" gutterBottom>
           {t('edit_set')}
         </Typography>
-        <Typography variant="subtitle2">{t('edit_set.description')}</Typography>
+        <Typography variant="subtitle2">{t('edit_set_description')}</Typography>
       </DialogTitle>
       <DialogContent
         dividers

@@ -83,7 +83,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
       name: 'name',
       type: 'text',
       label: t('name'),
-      placeholder: t('floor_plan_name.description'),
+      placeholder: t('floor_plan_name_description'),
       required: true
     },
     {
@@ -126,7 +126,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
           {t('add_floor_plan')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('add_floor_plan.description')}
+          {t('add_floor_plan_description')}
         </Typography>
       </DialogTitle>
       <DialogContent

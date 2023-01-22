@@ -352,7 +352,7 @@ function WorkOrders() {
       name: 'title',
       type: 'text',
       label: t('title'),
-      placeholder: t('wo.title.description'),
+      placeholder: t('wo.title_description'),
       required: true
     },
     {
@@ -475,7 +475,7 @@ function WorkOrders() {
         <Typography variant="h4" gutterBottom>
           {t('add_wo')}
         </Typography>
-        <Typography variant="subtitle2">{t('add_wo.description')}</Typography>
+        <Typography variant="subtitle2">{t('add_wo_description')}</Typography>
       </DialogTitle>
       <DialogContent
         dividers

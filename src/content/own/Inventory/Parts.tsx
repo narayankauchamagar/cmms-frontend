@@ -332,7 +332,7 @@ const Parts = ({ setAction }: PropsType) => {
         <Typography variant="h4" gutterBottom>
           {t('add_part')}
         </Typography>
-        <Typography variant="subtitle2">{t('add_part.description')}</Typography>
+        <Typography variant="subtitle2">{t('add_part_description')}</Typography>
       </DialogTitle>
       <DialogContent
         dividers
@@ -434,7 +434,7 @@ const Parts = ({ setAction }: PropsType) => {
           {t('update_part')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('update_part.description')}
+          {t('update_part_description')}
         </Typography>
       </DialogTitle>
       <DialogContent

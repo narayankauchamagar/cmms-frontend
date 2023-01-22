@@ -61,7 +61,7 @@ export default function AddCostModal({
       name: 'includeToTotalCost',
       type: 'switch',
       label: t('include_cost'),
-      helperText: t('include_cost.description')
+      helperText: t('include_cost_description')
     }
   ];
   const shape = {
@@ -78,7 +78,7 @@ export default function AddCostModal({
         <Typography variant="h4" gutterBottom>
           {t('add_cost')}
         </Typography>
-        <Typography variant="subtitle2">{t('add_cost.description')}</Typography>
+        <Typography variant="subtitle2">{t('add_cost_description')}</Typography>
       </DialogTitle>
       <DialogContent
         dividers

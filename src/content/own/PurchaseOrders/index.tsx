@@ -393,7 +393,7 @@ function PurchaseOrders() {
         <Typography variant="h4" gutterBottom>
           {t('edit_po')}
         </Typography>
-        <Typography variant="subtitle2">{t('edit_po.description')}</Typography>
+        <Typography variant="subtitle2">{t('edit_po_description')}</Typography>
       </DialogTitle>
       <DialogContent
         dividers

@@ -121,17 +121,17 @@ const frJSON = {
   COMPLETE: 'Terminé',
   //home
   'home.built': 'Conçu pour faciliter la gestion de la maintenance',
-  'home.description':
+  home_description:
     "Lorsque les tableaux blancs et les notes autocollantes sont chaotiques et que vous avez besoin d'un logiciel de GMAO suffisamment facile à utiliser pour votre équipe, essayez Grash",
   try_grash: 'Essayer Grash',
   login: 'Se connecter',
   start_trial: 'Commencez un essai gratuit',
   'home.what': 'Ce que',
   'home.you_will_have': 'Vous allez avoir',
-  'home.you_will_have.description':
+  'home.you_will_have_description':
     'Créez des flux de travail efficaces et fiables qui vous permettent de contrôler la maintenance. ',
   key_features: 'Principales fonctionnalités',
-  'key_features.description':
+  key_features_description:
     "Certaines des fonctionnalités qui font de Grash l'une des meilleures GMAO disponibles aujourd'hui",
   contribute: 'Contribuer',
   work_orders: 'Interventions',
@@ -251,7 +251,7 @@ const frJSON = {
   'dashboard.checks.5': 'Et bien plus ...',
   'home.smarter': 'Plus intelligent',
   'home.work': 'Travail',
-  'home.smarter.description':
+  'home.smarter_description':
     'Grash permet aux techniciens de travailler efficacement en toute simplicité en leur donnant accès aux outils et aux données dont ils ont besoin pour accomplir leur travail, le tout depuis la paume de leur main.',
   leading_maintenance:
     'Ouvrir la voie à un avenir meilleur pour la maintenance et la fiabilité',
@@ -261,8 +261,7 @@ const frJSON = {
   perfect_tool: "L'outil parfait pour les équipes de maintenance",
   start_trial_today: "Commencez votre essai gratuit aujourd'hui",
   create_account: 'Créer un compte',
-  'signup.description':
-    'Remplissez les champs ci-dessous pour ouvrir un compte.',
+  signup_description: 'Remplissez les champs ci-dessous pour ouvrir un compte.',
   account_already: 'Vous avez déjà un compte?',
   signin_here: 'Se connecter ici',
 
@@ -296,7 +295,7 @@ const frJSON = {
   register: "S'inscrire",
   //work-orders
   link_wo: 'Lier les bons de travail',
-  'link_wo.description': 'Créer des relations entre les ordres de travail',
+  link_wo_description: 'Créer des relations entre les ordres de travail',
   required_relationType: 'Veuillez sélectionner le type de relation.',
   required_wo: 'Le champ Bon de commande est obligatoire.',
   this_wo: 'Cet ordre de travail',
@@ -308,17 +307,17 @@ const frJSON = {
   date: 'Date',
   cost: 'Coût',
   include_cost: 'Inclure ce coût dans le coût total',
-  'include_cost.description':
+  include_cost_description:
     'Cela ajoutera le coût au coût total dépensé pour le bon de travail',
   required_cost_description: 'La description du coût est requise',
   required_cost: 'Le coût est requis',
   add_cost: 'Ajouter un coût supplémentaire',
-  'add_cost.description':
+  add_cost_description:
     'Remplissez les champs ci-dessous pour créer et ajouter un coût supplémentaire',
   add: 'Ajouter',
   hourly_rate: 'Taux horaire',
   include_time: 'Inclure ce temps dans le temps total',
-  'include_time.description':
+  include_time_description:
     'Cela ajoutera la durée au temps total passé sur le bon de travail',
   work_started_at: 'Le travail a commencé à',
   duration: 'Durée',
@@ -327,10 +326,10 @@ const frJSON = {
   required_hours: 'Le champ Heures est requis',
   required_minutes: 'Le champ des minutes est obligatoire',
   add_time: 'Ajouter du temps',
-  'add_time.description':
+  add_time_description:
     'Remplissez les champs ci-dessous pour créer et ajouter du temps',
   feedback: 'Retour',
-  'feedback.description': 'Donnez votre avis',
+  feedback_description: 'Donnez votre avis',
   required_feedback: "L'avis est requis",
   signature: 'Signature',
   required_signature: "L'image est requise",
@@ -401,7 +400,7 @@ const frJSON = {
   add_additional_cost: 'Ajouter un coût supplémentaire',
   additional_costs: 'Coûts supplémentaires',
   add_parts: 'Ajouter des pièces',
-  'wo.title.description': 'Entrez le titre du bon de travail',
+  'wo.title_description': 'Entrez le titre du bon de travail',
   image: 'Image',
   estimated_duration: 'Durée estimée en heures',
   primary_worker: 'Travailleur principal',
@@ -413,10 +412,10 @@ const frJSON = {
   requires_signature: 'Nécessite une signature',
   required_wo_title: "Le titre de l'ordre de travail est requis",
   add_wo: 'Ajouter un bon de travail',
-  'add_wo.description':
+  add_wo_description:
     'Remplissez les champs ci-dessous pour créer et ajouter un nouveau bon de travail',
   edit_wo: 'Modifier le bon de travail',
-  'edit_wo.description':
+  edit_wo_description:
     'Remplissez les champs ci-dessous pour mettre à jour le bon de travail',
   'noRows.wo.message':
     "Les ordres de travail sont des tâches ou des travaux qui peuvent être planifiés ou attribués à quelqu'un",
@@ -449,16 +448,16 @@ const frJSON = {
   next_wo: 'Prochain ordre de travail',
   trigger_name: 'Nom du déclencheur',
   enter_trigger_name: 'Entrez le nom du déclencheur',
-  'frequency.description': 'Fréquence en jours',
+  frequency_description: 'Fréquence en jours',
   wo_configuration: "Configuration de l'ordre de travail",
   required_trigger_name: 'Le nom du déclencheur est requis',
   required_frequency: 'La fréquence de déclenchement est requise',
   invalid_frequency: 'La fréquence doit être supérieure à 0',
   schedule_wo: "Planifier l'ordre de travail",
-  'schedule_wo.description':
+  schedule_wo_description:
     'Remplissez les champs ci-dessous pour planifier un bon de travail',
   edit_wo_trigger: "Modifier le déclencheur d'ordre de travail",
-  'edit_wo_trigger.description':
+  edit_wo_trigger_description:
     "Remplissez les champs ci-dessous pour modifier le déclencheur d'ordre de travail",
   create_trigger: 'Créer un déclencheur',
   'noRows.pm.message':
@@ -504,10 +503,10 @@ const frJSON = {
   required_request_name: 'Le titre de la demande est requis',
   required_field: 'Ce champ est obligatoire',
   add_request: 'Ajouter une demande',
-  'add_request.description':
+  add_request_description:
     'Remplissez les champs ci-dessous pour créer et ajouter une nouvelle demande',
   edit_request: 'Modifier la demande',
-  'edit_request.description':
+  edit_request_description:
     'Remplissez les champs ci-dessous pour modifier la demande',
   'noRows.request.message': 'Gérez vos demandes de travail',
   'noRows.request.action':
@@ -542,12 +541,12 @@ const frJSON = {
   edit_downtime_success: "Le temps d'arrêt a été modifié avec succès",
   started_on: 'A Commencé le',
   required_startsOn: 'La date de début est obligatoire',
-  reading_create_success: 'La lecture a été ajoutée avec succès',
-  reading_create_failure: "La lecture n'a pas pu être ajoutée",
-  reading: 'Lecture',
+  reading_create_success: 'Le relevé a été ajouté avec succès',
+  reading_create_failure: "Le relevé n'a pas pu être ajouté",
+  reading: 'Relevé',
   added_by: 'Ajouté par',
   enter_meter_value: 'Entrez la valeur du compteur',
-  add_reading: 'Ajouter une lecture',
+  add_reading: 'Ajouter un relevé',
   select_meter: 'Sélectionnez le compteur',
   confirm_remove_part_asset:
     'Voulez-vous vraiment supprimer cette pièce de cet actif ?',
@@ -557,24 +556,24 @@ const frJSON = {
   no_wo_linked_asset: "Il n'y a pas de bon de travail lié à cet actif",
   asset_remove_success: "L'actif a été supprimé avec succès",
   asset_remove_failure: "L'actif n'a pas pu être supprimé",
-  'asset_name.description': "Entrez le nom de l'actif",
+  asset_name_description: "Entrez le nom de l'actif",
   select_asset_location: "Sélectionnez l'emplacement de l'actif",
-  'primary_user.description': "Sélectionnez l'utilisateur principal",
-  'teams.description': 'Sélectionnez les équipes',
-  'customers.description': 'Sélectionnez des clients',
-  'vendors.description': 'Sélectionnez les fournisseurs',
-  'inServiceDate.description': 'Date de mise en service',
+  primary_user_description: "Sélectionnez l'utilisateur principal",
+  teams_description: 'Sélectionnez les équipes',
+  customers_description: 'Sélectionnez des clients',
+  vendors_description: 'Sélectionnez les fournisseurs',
+  inServiceDate_description: 'Date de mise en service',
   warranty_expiration_date: "Date d'expiration de la garantie",
   additional_information: 'Information additionnelle',
   structure: 'Structure',
   parent_asset: 'Actif parent',
   asset_create_success: "L'actif a été créé avec succès",
   asset_create_failure: "L'actif n'a pas pu être créé",
-  'additional_workers.description':
+  additional_workers_description:
     'Sélectionnez des travailleurs supplémentaires',
   required_asset_name: "Le nom de l'actif est requis",
   add_asset: 'Ajouter un actif',
-  'add_asset.description':
+  add_asset_description:
     'Remplissez les champs ci-dessous pour créer et ajouter un nouvel actif',
   create_asset: 'Créer un actif',
   hierarchy: 'Hiérarchie',
@@ -583,7 +582,7 @@ const frJSON = {
   remove_downtime: "Supprimer le temps d'arrêt",
   edit: 'Éditer',
   edit_asset: "Modifier l'actif",
-  'edit_asset.description':
+  edit_asset_description:
     'Remplissez les champs ci-dessous pour modifier cet actif',
   confirm_delete_asset: 'Etes-vous sûrs de vouloir supprimer cet équipement ?',
   no_content: 'Pas de contenu',
@@ -604,21 +603,21 @@ const frJSON = {
   required_location_name: "Le nom de l'emplacement est requis",
   required_location_address: "L'adresse de l'emplacement est obligatoire",
   add_location: 'Ajouter un emplacement',
-  'add_location.description':
+  add_location_description:
     'Remplissez les champs ci-dessous pour créer et ajouter un nouvel emplacement',
   edit_location: "Modifier l'emplacement",
-  'edit_location.description':
+  edit_location_description:
     "Remplissez les champs ci-dessous pour mettre à jour l'emplacement",
   confirm_delete_location:
     'Êtes-vous sûr de vouloir supprimer cet emplacement?',
   floor_plans: "Plans d'étage",
   floor_plan: "Plan d'étage",
-  'floor_plan_name.description': "Nom du plan d'étage",
+  floor_plan_name_description: "Nom du plan d'étage",
   'Floor plan area in m²': "Superficie du plan d'étage en m²",
   upload_image: 'Télécharger une image',
   required_floor_plan_name: "Le nom du plan d'étage est requis",
   add_floor_plan: "Ajouter un nouveau plan d'étage",
-  'add_floor_plan.description':
+  add_floor_plan_description:
     "Remplissez les champs ci-dessous pour créer un nouveau plan d'étage",
   no_asset_in_location: 'Aucun actif à cet emplacement',
   no_wo_in_location: 'Aucun ordre de travail à cet emplacement',
@@ -669,11 +668,11 @@ const frJSON = {
   enter_part_name: 'Entrez le nom de la pièce',
   required_set_name: "Le nom de l'ensemble est requis",
   add_set: 'Ajouter un ensemble',
-  'add_set.description':
+  add_set_description:
     'Remplissez les champs ci-dessous pour créer et ajouter un nouvel ensemble',
   create_set: 'Créer un ensemble',
   edit_set: "Modifier l'ensemble",
-  'edit_set.description':
+  edit_set_description:
     "Remplissez les champs ci-dessous pour modifier l'ensemble",
   confirm_delete_set: 'Voulez-vous vraiment supprimer cet ensemble ?',
   part_create_success: 'La pièce a été créée avec succès',
@@ -693,11 +692,11 @@ const frJSON = {
   enter_part_area: 'Entrez dans la zone de pièce',
   additional_part_details: 'Détails supplémentaires sur les pièces',
   add_part: 'Ajouter une pièce',
-  'add_part.description':
+  add_part_description:
     'Remplissez les champs ci-dessous pour créer et ajouter une nouvelle pièce',
   create_part: 'Créer une pièce',
   update_part: 'Mettre à jour la pièce',
-  'update_part.description':
+  update_part_description:
     'Remplissez les champs ci-dessous pour mettre à jour la pièce',
   'noRows.part.message':
     'Les pièces peuvent être combinées en jeux de pièce ou utilisées seules',
@@ -738,7 +737,7 @@ const frJSON = {
   shipping_method: 'Mode de livraison',
   required_name: 'Le nom est obligatoire',
   edit_po: 'Modifier le bon de commande',
-  'edit_po.description':
+  edit_po_description:
     'Remplissez les champs ci-dessous pour mettre à jour le bon de commande',
   purchase_order: 'Bon de commande',
   'noRows.po.message': 'Gérez vos bons de commande en un seul endroit',
@@ -758,7 +757,65 @@ const frJSON = {
   quantity_edit_failure: "La quantité n'a pas pu être modifiée",
   APPROVED: 'Approuvé',
   PENDING: 'En attente',
-  REJECTED: 'Rejeté'
+  REJECTED: 'Rejeté',
+  //meters
+  when_reading_is: 'Lorsque le relevé du compteur est',
+  greater_than: 'Supérieure à',
+  lower_than: 'Inférieure à',
+  value: 'Évaluer',
+  required_value: 'La valeur est requise',
+  required_trigger_condition: 'La condition est requise',
+  wo_trigger_create_success:
+    "Le déclencheur d'ordre de travail a été créé avec succès",
+  wo_trigger_create_failure:
+    "Le déclencheur d'ordre de travail n'a pas pu être créé",
+  add_wo_trigger: "Ajouter un déclencheur d'ordre de travail",
+  add_wo_trigger_description:
+    "Remplissez les champs ci-dessous pour créer et ajouter un déclencheur d'ordre de travail",
+  wo_trigger_edit_success:
+    "Le déclencheur d'ordre de travail a été mis à jour avec succès",
+  meter_create_success: 'Le compteur a été créé avec succès',
+  meter_create_failure: "Le compteur n'a pas pu être créé ",
+  meter_edit_failure: 'Impossible de modifier le compteur',
+  meter_delete_success: 'Le compteur a été supprimé avec succès',
+  meter_delete_failure: "Le compteur n'a pas pu être supprimé",
+  next_reading_due: 'Prochain relevé',
+  unit_of_measurement: 'Unité de mesure',
+  last_reading: 'Dernier relevé',
+  enter_meter_name: 'Entrez le nom du compteur',
+  unit: 'Unité',
+  update_frequency: 'Fréquence de mise à jour',
+  update_frequency_in_days: 'Fréquence de mise à jour en jours',
+  required_meter_name: 'Le nom du compteur est requis',
+  required_meter_unit: "L'unité de compteur est requise",
+  required_meter_update_frequency:
+    'La fréquence de mise à jour du compteur est requise',
+  required_asset: "L'actif est requis",
+  add_meter: 'Ajouter un compteur',
+  add_meter_description:
+    'Remplissez les champs ci-dessous pour créer et ajouter un nouveau Compteur',
+  edit_meter: 'Modifier le compteur',
+  edit_meter_description:
+    'Remplissez les champs ci-dessous pour modifier le compteur',
+  confirm_delete_meter: 'Voulez-vous vraiment supprimer ce compteur ?',
+  upgrade_create_meter: 'Mettre à niveau pour créer des compteurs',
+  history: 'Historique',
+  reading_frequency: 'Fréquence de relevés',
+  required_reading_value: 'La valeur du relevé est requise',
+  wo_triggers: "Déclencheurs d'ordre de travail",
+  add_trigger: 'Ajouter un déclencheur',
+  meter_details: 'Détails du compteur',
+
+  'noRows.meter.message':
+    'Les relevés de compteur vous permettent de surveiller les actifs et de déclencher de nouveaux ordres de travail en fonction de conditions définies',
+  'noRows.meter.action': "Appuyez sur le bouton '+' pour créer un Compteur",
+  meter: 'Compteur',
+  drag_one_file: 'Faites glisser un seul fichier ici',
+  drag_many_files: 'Faites glisser plusieurs fichier ici',
+  drop_to_start: 'Déposez les fichiers pour commencer le téléchargement',
+  invalid_files_type: 'Vous ne pouvez pas télécharger ces types de fichiers',
+  you_have_uploaded: 'Vous avez téléchargé',
+  upload: 'Télécharger'
 };
 
 export default frJSON;

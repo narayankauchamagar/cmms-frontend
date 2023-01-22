@@ -102,7 +102,7 @@ const ShowAsset = ({}: PropsType) => {
       name: 'name',
       type: 'text',
       label: t('name'),
-      placeholder: t('asset_name.description'),
+      placeholder: t('asset_name_description'),
       required: true
     },
     {
@@ -166,7 +166,7 @@ const ShowAsset = ({}: PropsType) => {
       type: 'select',
       type2: 'user',
       label: t('worker'),
-      placeholder: t('primary_user.description')
+      placeholder: t('primary_user_description')
     },
     {
       name: 'assignedTo',
@@ -182,7 +182,7 @@ const ShowAsset = ({}: PropsType) => {
       type2: 'team',
       multiple: true,
       label: t('teams'),
-      placeholder: t('teams.description')
+      placeholder: t('teams_description')
     },
     {
       name: 'moreInfos',
@@ -195,7 +195,7 @@ const ShowAsset = ({}: PropsType) => {
       type2: 'customer',
       multiple: true,
       label: t('customers'),
-      placeholder: t('customers.description')
+      placeholder: t('customers_description')
     },
     {
       name: 'vendors',
@@ -203,13 +203,13 @@ const ShowAsset = ({}: PropsType) => {
       type2: 'vendor',
       multiple: true,
       label: t('vendors'),
-      placeholder: t('vendors.description')
+      placeholder: t('vendors_description')
     },
     {
       name: 'inServiceDate',
       type: 'date',
       midWidth: true,
-      label: t('inServiceDate.description')
+      label: t('inServiceDate_description')
     },
     {
       name: 'warrantyExpirationDate',
@@ -272,7 +272,7 @@ const ShowAsset = ({}: PropsType) => {
           {t('edit_asset')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('edit_asset.description')}
+          {t('edit_asset_description')}
         </Typography>
       </DialogTitle>
       <DialogContent

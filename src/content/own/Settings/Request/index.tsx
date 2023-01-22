@@ -11,7 +11,7 @@ function WorkOrderSettings() {
   const { hasFeature } = useAuth();
 
   const fields = [
-    { label: t('Asset'), name: 'asset' },
+    { label: t('asset'), name: 'asset' },
     {
       label: t('location'),
       name: 'location'

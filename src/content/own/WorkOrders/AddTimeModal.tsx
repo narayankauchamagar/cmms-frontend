@@ -41,7 +41,7 @@ export default function AddTimeModal({
       name: 'includeToTotalTime',
       type: 'switch',
       label: t('include_time'),
-      helperText: t('include_time.description')
+      helperText: t('include_time_description')
     },
     {
       name: 'startedAt',
@@ -89,7 +89,7 @@ export default function AddTimeModal({
         <Typography variant="h4" gutterBottom>
           {t('add_time')}
         </Typography>
-        <Typography variant="subtitle2">{t('add_time.description')}</Typography>
+        <Typography variant="subtitle2">{t('add_time_description')}</Typography>
       </DialogTitle>
       <DialogContent
         dividers

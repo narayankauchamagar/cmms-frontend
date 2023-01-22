@@ -31,16 +31,16 @@ export default function AddTriggerModal({
     {
       name: 'name',
       type: 'text',
-      label: t('Trigger Name'),
+      label: t('trigger_name'),
       required: true
     },
     {
       name: 'triggerCondition',
       type: 'select',
-      label: t('When Meter Reading is'),
+      label: t('when_reading_is'),
       items: [
-        { label: 'Greater than', value: 'MORE_THAN' },
-        { label: 'Lower than', value: 'LESS_THAN' }
+        { label: 'greater_than', value: 'MORE_THAN' },
+        { label: 'lower_than', value: 'LESS_THAN' }
       ],
       midWidth: true,
       required: true
@@ -48,22 +48,22 @@ export default function AddTriggerModal({
     {
       name: 'value',
       type: 'number',
-      label: t('Value') + '(' + meter.unit + ')',
+      label: t('value') + '(' + meter.unit + ')',
       midWidth: true,
       required: true
     },
     {
       name: 'workOrderConfig',
       type: 'titleGroupField',
-      label: t('Work Order Configuration')
+      label: t('wo_configuration')
     },
     ...getWOBaseFields(t)
   ];
   const shape = {
-    name: Yup.string().required(t('The trigger name is required')),
-    title: Yup.string().required(t('The Work Order title is required')),
-    value: Yup.number().required(t('The value is required')),
-    triggerCondition: Yup.object().required(t('The condition is required'))
+    name: Yup.string().required(t('required_trigger_name')),
+    title: Yup.string().required(t('required_wo_title')),
+    value: Yup.number().required(t('required_value')),
+    triggerCondition: Yup.object().required(t('required_trigger_condition'))
   };
   const formatValues = (values) => {
     values.primaryUser = formatSelect(values.primaryUser);
@@ -77,13 +77,10 @@ export default function AddTriggerModal({
   };
   const onCreationSuccess = () => {
     onClose();
-    showSnackBar(
-      t('The Work Order trigger has been created successfully'),
-      'success'
-    );
+    showSnackBar(t('wo_trigger_create_success'), 'success');
   };
   const onCreationFailure = (err) =>
-    showSnackBar(t("The Work Order trigger couldn't be created"), 'error');
+    showSnackBar(t('wo_trigger_create_failure'), 'error');
 
   return (
     <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
@@ -93,10 +90,10 @@ export default function AddTriggerModal({
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Add Work Order Trigger')}
+          {t('add_wo_trigger')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the fields below to create and add a Work Order Trigger')}
+          {t('add_wo_trigger_description')}
         </Typography>
       </DialogTitle>
       <DialogContent
