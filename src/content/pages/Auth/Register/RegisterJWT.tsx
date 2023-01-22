@@ -111,7 +111,7 @@ function RegisterJWT({
                 fullWidth
                 margin="normal"
                 helperText={touched.firstName && errors.firstName}
-                label={t('firstName')}
+                label={t('first_name')}
                 name="firstName"
                 onBlur={handleBlur}
                 onChange={handleChange}
@@ -125,7 +125,7 @@ function RegisterJWT({
                 fullWidth
                 margin="normal"
                 helperText={touched.lastName && errors.lastName}
-                label={t('lastName')}
+                label={t('last_name')}
                 name="lastName"
                 onBlur={handleBlur}
                 onChange={handleChange}

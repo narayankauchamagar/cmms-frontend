@@ -168,8 +168,8 @@ const enJSON = {
   required_terms: 'You must agree to our terms and conditions',
   verify_email: 'Please check your email to verify your account',
   registration_error: "The registration didn't succeed",
-  firstName: 'First Name',
-  lastName: 'Last Name',
+  first_name: 'First Name',
+  last_name: 'Last Name',
   email: 'Email address',
   phone: 'Phone',
   password: 'Password',
@@ -735,7 +735,61 @@ const enJSON = {
   'noRows.vendor.message':
     'Vendors are organizations that provide Assets or Parts',
   'noRows.vendor.action': "Press the '+' button to create a Vendor",
-  vendor_type_description: 'ex. Plumbing, Electrical'
+  vendor_type_description: 'ex. Plumbing, Electrical',
+  //people teams
+  role: 'Role',
+  edit_user: 'Edit User',
+  edit_user_description: 'Fill in the fields below to edit the user',
+  job_title: 'Job Title',
+  invite_users: 'Invite Users',
+  bring_people_team: 'Bring new people to the team',
+  add_20_users:
+    "You may add 20 users at a time by pressing 'tab' or 'enter' after each email entry. Any duplicate and registered emails will be removed while registering the requested users.",
+  enter_email: 'Enter email address',
+  users_invite_success: 'Users have been invited',
+  users_invite_failure:
+    "Users can't be invited. Check your current subscription members count",
+  please_type_emails: 'Please type in emails to invite',
+  please_select_role: 'Please select a role',
+  invite: 'Invite',
+  team_create_success: 'The Team has been created successfully',
+  team_create_failure: "The Team couldn't be created",
+  team_edit_failure: "The Team couldn't be edited",
+  team_delete_success: 'The Team has been deleted successfully',
+  team_delete_failure: "The Team couldn't be deleted",
+  team_name: 'Team Name',
+  people_in_team: 'People in the team',
+  required_team_name: 'Team Name is required',
+  create_team: 'Create team',
+  create_team_description: 'You can add team members from here',
+  confirm_delete_team: 'Are you sure you want to delete this Team ?',
+  overview: 'Overview',
+  activity: 'Activity',
+  wo_complete_last_14_days: 'Work orders completed in last 14 days',
+  no_wo_complete_last_14_days:
+    'You have not completed any work orders in the last two weeks',
+  ADMIN_name: 'Administrator',
+  ADMIN_description:
+    'Administrator has full access; including editing, adding, deleting work orders and requests',
+  LIMITED_ADMIN_name: 'Limited Administrator',
+  LIMITED_ADMIN_description:
+    'Limited administrators have the same access as administrator except they are unable to view/edit settings or add/edit people and teams. They cannot delete Work Orders, Assets Locations, Meters and Purchase Orders unless they created Customers, Categories and PM triggers.',
+  TECHNICIAN_name: 'Technician',
+  TECHNICIAN_description:
+    'Technicians can create and close work orders, assets and locations. Able to edit and delete only what they have created',
+  LIMITED_TECHNICIAN_name: 'Limited Technician',
+  LIMITED_TECHNICIAN_description:
+    'Limited technicians can only see work orders assigned to them',
+  VIEW_ONLY_name: 'View Only',
+  VIEW_ONLY_description:
+    'View only users have full view access, but cannot edit anything',
+  REQUESTER_name: 'Requester',
+  REQUESTER_description:
+    'Requesters can only submit work requests and view their status',
+  select_user_role: 'Select user role',
+  'noRows.team.message': 'Teams help you manage specific groups of people.',
+  'noRows.team.action': "Press the '+' button to create a team.",
+  user_details: 'User Details'
 };
 
 export default enJSON;

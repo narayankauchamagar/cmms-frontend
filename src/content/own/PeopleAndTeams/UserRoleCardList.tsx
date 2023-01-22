@@ -43,35 +43,28 @@ function UserRoleCardList({ onChange }: Props) {
     Record<RoleCode, { name: string; description: string }>
   > = {
     ADMIN: {
-      name: t('Administrator'),
-      description: t(
-        'Administrator has full access; including editing, adding, deleting work orders and requests'
-      )
+      name: 'ADMIN_name',
+      description: 'ADMIN_description'
     },
     LIMITED_ADMIN: {
-      name: 'Limited Administrator',
-      description:
-        'Limited administrators have the same access as administrator except they are unable to view/edit settings or add/edit people and teams. They cannot delete Work Orders, Assets Locations, Meters and Purchase Orders unless they created Customers, Categories and PM triggers.'
+      name: 'LIMITED_ADMIN_name',
+      description: 'LIMITED_ADMIN_description'
     },
     TECHNICIAN: {
-      name: 'Technician',
-      description:
-        'Technicians can create and close work orders, assets and locations. Able to edit and delete only what they have created'
+      name: 'TECHNICIAN_name',
+      description: 'TECHNICIAN_description'
     },
     LIMITED_TECHNICIAN: {
-      name: 'Limited Technician',
-      description:
-        'Limited technicians can only see work orders assigned to them'
+      name: 'LIMITED_TECHNICIAN_name',
+      description: 'LIMITED_TECHNICIAN_description'
     },
     VIEW_ONLY: {
-      name: 'View Only',
-      description:
-        'View only users have full view access, but cannot edit anything'
+      name: 'VIEW_ONLY_name',
+      description: 'VIEW_ONLY_description'
     },
     REQUESTER: {
-      name: 'Requester',
-      description:
-        'Requesters can only submit work requests and view their status'
+      name: 'REQUESTER_name',
+      description: 'REQUESTER_description'
     }
   };
   useEffect(() => {
@@ -88,9 +81,8 @@ function UserRoleCardList({ onChange }: Props) {
 
   return (
     <Card>
-      <CardHeader title={t('Select user role')} />
+      <CardHeader title={t('select_user_role')} />
       <Divider />
-
       {loadingGet ? (
         <Stack
           direction="row"

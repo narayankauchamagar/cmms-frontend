@@ -47,8 +47,8 @@ function UserDetailsDrawer({ user }: PropsType) {
   const [currentTab, setCurrentTab] = useState<string>('overview');
 
   const tabs = [
-    { value: 'overview', label: t('Overview') },
-    { value: 'activity', label: t('Activity') }
+    { value: 'overview', label: t('overview') },
+    { value: 'activity', label: t('activity') }
   ];
 
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
@@ -62,11 +62,11 @@ function UserDetailsDrawer({ user }: PropsType) {
       value: user.id
     },
     {
-      label: t('First Name'),
+      label: t('first_name'),
       value: user.firstName
     },
     {
-      label: t('Last Name'),
+      label: t('last_name'),
       value: user.lastName
     },
     {
@@ -78,15 +78,15 @@ function UserDetailsDrawer({ user }: PropsType) {
       value: user.phone
     },
     {
-      label: t('Job Title'),
+      label: t('job_title'),
       value: user.jobTitle
     },
     {
-      label: t('Role'),
+      label: t('role'),
       value: user.role.name
     },
     {
-      label: t('Hourly Rate'),
+      label: t('hourly_rate'),
       value: user.rate
     }
   ];
@@ -168,7 +168,7 @@ function UserDetailsDrawer({ user }: PropsType) {
           }}
         >
           <Typography component="span" variant="subtitle2">
-            User Details
+            {t('user_details')}
           </Typography>
         </Box>
         <Divider sx={{ my: 1 }} />
@@ -233,13 +233,11 @@ function UserDetailsDrawer({ user }: PropsType) {
         {currentTab === 'activity' && (
           <Box sx={{ mt: 3, px: 3, textAlign: 'center' }}>
             <Typography variant="subtitle2">
-              {t('Work orders completed in last 14 days')}
+              {t('wo_complete_last_14_days')}
             </Typography>
             <Typography variant="h2">{t('0')}</Typography>
             <Typography variant="subtitle2" color="green">
-              {t(
-                'You have not completed any work orders in the last two weeks'
-              )}
+              {t('no_wo_complete_last_14_days')}
             </Typography>
 
             {/* ////////////////////////////////////////////////////////////////////////// */}

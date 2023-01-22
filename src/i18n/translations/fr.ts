@@ -276,8 +276,8 @@ const frJSON = {
   required_terms: 'Vous devez accepter nos termes et conditions',
   verify_email: 'Veuillez vérifier votre e-mail pour vérifier votre compte',
   registration_error: "L'inscription n'a pas réussi",
-  firstName: 'Prénom',
-  lastName: 'Nom de famille',
+  first_name: 'Prénom',
+  last_name: 'Nom de famille',
   email: 'Adresse e-mail',
   phone: 'Téléphone fixe',
   password: 'Mot de passe',
@@ -864,7 +864,64 @@ const frJSON = {
   'noRows.vendor.message':
     'Les fournisseurs sont des organisations qui fournissent des actifs ou des pièces',
   'noRows.vendor.action': "Appuyez sur le bouton '+' pour créer un fournisseur",
-  vendor_type_description: 'ex. Plombier, Electricien'
+  vendor_type_description: 'ex. Plombier, Electricien',
+  //people teams
+  role: 'Rôle',
+  edit_user: "Modifier l'utilisateur",
+  edit_user_description:
+    "Remplissez les champs ci-dessous pour modifier l'utilisateur",
+  job_title: 'Profession',
+  invite_users: 'Inviter des utilisateurs',
+  bring_people_team: "Amener de nouvelles personnes dans l'équipe",
+  add_20_users:
+    "Vous pouvez ajouter 20 utilisateurs à la fois en appuyant sur «Tab» ou «Entrée» après chaque entrée d'e-mail. ",
+  enter_email: "Entrer l'adresse e-mail",
+  users_invite_success: 'Les utilisateurs ont été invités',
+  users_invite_failure:
+    'Les utilisateurs ne peuvent pas être invités. Vérifiez le nombre de membres de votre abonnement actuel.',
+  please_type_emails: 'Veuillez saisir des e-mails à inviter',
+  please_select_role: 'Veuillez sélectionner un rôle',
+  invite: 'Inviter',
+  team_create_success: "L'équipe a été créée avec succès",
+  team_create_failure: "L'équipe n'a pas pu être créée",
+  team_edit_failure: "L'équipe n'a pas pu être modifiée",
+  team_delete_success: "L'équipe a été supprimée avec succès",
+  team_delete_failure: "L'équipe n'a pas pu être supprimée",
+  team_name: "Nom de l'équipe",
+  people_in_team: "Les membres de l'équipe",
+  required_team_name: "Le nom de l'équipe est requis",
+  create_team: 'Créer une équipe',
+  create_team_description: "Vous pouvez ajouter des membres à partir d'ici",
+  confirm_delete_team: 'Êtes-vous sûr de vouloir supprimer cette équipe ?',
+  overview: 'Aperçu',
+  activity: 'Activité',
+  wo_complete_last_14_days:
+    'Ordres de travail terminés au cours des 14 derniers jours',
+  no_wo_complete_last_14_days:
+    "Vous n'avez exécuté aucun bon de travail au cours des deux dernières semaines",
+  ADMIN_name: 'Administrateur',
+  ADMIN_description:
+    "L'administrateur a un accès complet; y compris l'édition, l'ajout, la suppression d'ordres de travail et de demandes",
+  LIMITED_ADMIN_name: 'Administrateur limité',
+  LIMITED_ADMIN_description:
+    "Les administrateurs limités ont le même accès que l'administrateur, sauf qu'ils ne peuvent pas afficher/modifier les paramètres ou ajouter/modifier des personnes et des équipes. Ils ne peuvent pas supprimer les ordres de travail, les emplacements des actifs, les compteurs et les bons de commande à moins d'avoir créé des déclencheurs d'ordre de travail, des catégories ou des sous-traitants.",
+  TECHNICIAN_name: 'Technicien',
+  TECHNICIAN_description:
+    "Les techniciens peuvent créer et clôturer des ordres de travail, des équipe et des emplacements. Capables de modifier et de supprimer uniquement ce qu'ils ont créé",
+  LIMITED_TECHNICIAN_name: 'Technicien limité',
+  LIMITED_TECHNICIAN_description:
+    'Les techniciens limités ne peuvent voir que les bons de travail qui leur sont assignés',
+  VIEW_ONLY_name: 'Vue uniquement',
+  VIEW_ONLY_description:
+    'Ces utilisateurs peuvent tout voir, mais ne peuvent rien modifier',
+  REQUESTER_name: 'Demandeur',
+  REQUESTER_description:
+    'Les demandeurs peuvent uniquement soumettre des demandes de travail et voir leur statut',
+  select_user_role: 'Sélectionnez le rôle',
+  'noRows.team.message':
+    'Les équipes vous aident à gérer des groupes spécifiques de personnes.',
+  'noRows.team.action': "Appuyez sur le bouton '+' pour créer une équipe.",
+  user_details: "Détails sur l'utilisateur"
 };
 
 export default frJSON;

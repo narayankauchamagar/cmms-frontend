@@ -108,7 +108,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
       name: 'role',
       type: 'select',
       type2: 'role',
-      label: t('Role')
+      label: t('role')
     }
   ];
   const getFields = () => {
@@ -132,10 +132,10 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Edit User')}
+          {t('edit_user')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the fields below to edit the user')}
+          {t('edit_user_description')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -234,18 +234,18 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
     },
     {
       field: 'jobTitle',
-      headerName: t('Job Title'),
+      headerName: t('job_title'),
       width: 150
     },
     {
       field: 'role',
-      headerName: t('Role'),
+      headerName: t('role'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<Role>) => params.value.name
     },
     {
       field: 'rate',
-      headerName: t('Hourly Rate'),
+      headerName: t('hourly_rate'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<number>) =>
         getFormattedCurrency(params.value)
@@ -261,7 +261,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
             key="edit"
             icon={<EditTwoToneIcon fontSize="small" color={'primary'} />}
             onClick={() => handleOpenUpdate(Number(params.id))}
-            label="Edit"
+            label={t('edit')}
           />
         ];
         if (!hasEditPermission(PermissionEntity.PEOPLE_AND_TEAMS, params.row))
@@ -333,7 +333,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
           }}
         >
           <Typography variant="h4" gutterBottom>
-            {t('Invite Users')}
+            {t('invite_users')}
           </Typography>
         </DialogTitle>
 
@@ -366,9 +366,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
                 }
                 src="/static/images/team.png"
               />
-              <Typography variant="h5">
-                {t('Bring new people to the team')}
-              </Typography>
+              <Typography variant="h5">{t('bring_people_team')}</Typography>
             </Paper>
 
             <UserRoleCardList onChange={onRoleChange} />
@@ -389,10 +387,8 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
             <TextField
               sx={{ my: 2 }}
               fullWidth
-              helperText={t(
-                "You may add 20 users at a time by pressing 'tab' or 'enter' after each email entry. Any duplicate and registered emails will be removed while registering the requested users."
-              )}
-              label={t('Enter email address')}
+              helperText={t('add_20_users')}
+              label={t('enter_email')}
               placeholder={t('example@email.com')}
               name="email"
               value={currentEmail}
@@ -430,15 +426,10 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
                       handleCloseModal();
                       setEmails([]);
                       setCurrentEmail('');
-                      showSnackBar(t('Users have been invited'), 'success');
+                      showSnackBar(t('users_invite_success'), 'success');
                     })
                     .catch((err) =>
-                      showSnackBar(
-                        t(
-                          "Users can't be invited. Check your current subscription members count"
-                        ),
-                        'error'
-                      )
+                      showSnackBar(t('users_invite_failure'), 'error')
                     )
                     .finally(() => setIsInviteSubmitting(false));
                 if (roleId) {
@@ -449,9 +440,8 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
                     } else {
                       invite(emails);
                     }
-                  } else
-                    showSnackBar(t('Please type in emails to invite'), 'error');
-                } else showSnackBar(t('Please select a role'), 'error');
+                  } else showSnackBar(t('please_type_emails'), 'error');
+                } else showSnackBar(t('please_select_role'), 'error');
               }}
               variant="contained"
               startIcon={
@@ -459,7 +449,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
               }
               disabled={isInviteSubmitting}
             >
-              {t('Invite')}
+              {t('invite')}
             </Button>
           </Box>
         </DialogContent>

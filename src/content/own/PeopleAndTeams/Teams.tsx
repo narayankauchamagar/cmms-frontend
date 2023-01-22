@@ -61,55 +61,53 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
   };
   const onCreationSuccess = () => {
     handleCloseModal();
-    showSnackBar(t('The Team has been created successfully'), 'success');
+    showSnackBar(t('team_create_success'), 'success');
   };
   const onCreationFailure = (err) =>
-    showSnackBar(t("The Team couldn't be created"), 'error');
+    showSnackBar(t('team_create_failure'), 'error');
   const onEditSuccess = () => {
     setOpenUpdateModal(false);
     showSnackBar(t('changes_saved_success'), 'success');
   };
-  const onEditFailure = (err) =>
-    showSnackBar(t("The Team couldn't be edited"), 'error');
+  const onEditFailure = (err) => showSnackBar(t('team_edit_failure'), 'error');
   const onDeleteSuccess = () => {
-    showSnackBar(t('The Team has been deleted successfully'), 'success');
+    showSnackBar(t('team_delete_success'), 'success');
   };
   const onDeleteFailure = (err) =>
-    showSnackBar(t("The Team couldn't be deleted"), 'error');
+    showSnackBar(t('team_delete_failure'), 'error');
   let fields: Array<IField> = [
     {
       name: 'name',
       type: 'text',
-      label: 'Name',
-      placeholder: 'Team Name',
+      label: t('name'),
+      placeholder: t('team_name'),
       required: true
     },
     {
       name: 'description',
       type: 'text',
       multiple: true,
-      label: 'Description',
-      placeholder: 'Description'
+      label: t('description'),
+      placeholder: t('description')
     },
     {
       name: 'users',
       type: 'select',
       type2: 'user',
       multiple: true,
-      label: 'People in the team',
-      placeholder: 'Team Users'
+      label: t('people_in_team'),
+      placeholder: t('people_in_team')
     }
   ];
 
   const shape = {
-    name: Yup.string().required('Team Name is required'),
-    description: Yup.string().required('Description is required')
+    name: Yup.string().required('required_team_name')
   };
 
   const columns: GridEnrichedColDef[] = [
     {
       field: 'name',
-      headerName: t('Team Name'),
+      headerName: t('team_name'),
       width: 150,
       renderCell: (params: GridRenderCellParams<string>) => (
         <Box sx={{ fontWeight: 'bold' }}>{params.value}</Box>
@@ -122,7 +120,7 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
     },
     {
       field: 'users',
-      headerName: t('People in the team'),
+      headerName: t('people_in_team'),
       width: 200,
       renderCell: (params: GridRenderCellParams<UserMiniDTO[]>) => (
         <UserAvatars users={params.value} />
@@ -161,10 +159,10 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Create team')}
+          {t('create_team')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('You can add team members to the team from here')}
+          {t('create_team_description')}
         </Typography>
       </DialogTitle>
 
@@ -217,8 +215,8 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
         />
       ) : (
         <NoRowsMessage
-          message={t('Teams help you manage specific groups of people.')}
-          action={t("Press the '+' button to create a team.")}
+          message={t('noRows.team.message')}
+          action={t('noRows.team.action')}
         />
       )}
     </Box>
@@ -261,7 +259,7 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
               variant="subtitle1"
               mr={2}
             >
-              {t('Go back')}
+              {t('go_back')}
             </Typography>
           )}
           {hasDeletePermission(
@@ -318,7 +316,7 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
             <Form
               fields={fields}
               validation={Yup.object().shape(shape)}
-              submitText={t('Update')}
+              submitText={t('save')}
               values={
                 {
                   ...currentTeam,
@@ -368,7 +366,7 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
         }}
         onConfirm={() => handleDelete(currentTeam?.id)}
         confirmText={t('to_delete')}
-        question={t('Are you sure you want to delete this Team?')}
+        question={t('confirm_delete_team')}
       />
     </Box>
   );

@@ -23,14 +23,14 @@ const PeopleAndTeams = ({}: PropsType) => {
   const handleCloseAddModal = () => setOpenAddModal(false);
 
   useEffect(() => {
-    setTitle(t('People & Teams'));
+    setTitle(t('people_teams'));
   }, []);
 
   let regex = /(\/app\/people-teams\/teams)(\/.*)?$/;
   const tabIndex = regex.test(location.pathname) ? 1 : 0;
 
   const tabs = [
-    { value: 'people', label: t('People') },
+    { value: 'people', label: t('people') },
     { value: 'teams', label: t('teams') }
   ];
 
@@ -40,7 +40,7 @@ const PeopleAndTeams = ({}: PropsType) => {
         basePath="/app/people-teams"
         tabs={tabs}
         tabIndex={tabIndex}
-        title={'People & Teams'}
+        title={t('people_teams')}
         action={
           hasCreatePermission(PermissionEntity.PEOPLE_AND_TEAMS)
             ? handleOpenAddModal

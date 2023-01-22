@@ -281,8 +281,8 @@ const AssetDowntimes = ({ asset }: PropsType) => {
                     );
                   }}
                 >
-                  <MenuItem value={'OPERATIONAL'}>{t('Operational')}</MenuItem>
-                  <MenuItem value={'DOWN'}>{t('Down')}</MenuItem>
+                  <MenuItem value={'OPERATIONAL'}>{t('operational')}</MenuItem>
+                  <MenuItem value={'DOWN'}>{t('down')}</MenuItem>
                 </Select>
                 {hasEditPermission(PermissionEntity.ASSETS, asset) && (
                   <Button
