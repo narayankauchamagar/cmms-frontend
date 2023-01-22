@@ -134,7 +134,7 @@ const frJSON = {
   key_features_description:
     "Certaines des fonctionnalités qui font de Grash l'une des meilleures GMAO disponibles aujourd'hui",
   contribute: 'Contribuer',
-  work_orders: 'Interventions',
+  work_orders: 'Ordres de travail',
   request_system: "Demandes d'intervention",
   mobile_app: 'Application mobile',
   asset_management: "Gestion d'équipements",
@@ -206,7 +206,7 @@ const frJSON = {
   'pm.descriptions.0':
     'Arrêtez de perdre de précieuses heures à distribuer manuellement des checklists et à faire un suivi avec votre équipe pour vous assurer que le travail est fait.',
   'pm.descriptions.1':
-    "Grash vous permet d'automatiser facilement la planification des interventions afin que le bon travail soit automatiquement livré au bon moment au bon technicien pour le bon actif.",
+    "Grash vous permet d'automatiser facilement la planification des interventions afin que le bon travail soit automatiquement livré au bon moment au bon technicien pour le bon équipement.",
   'pm.checks.0':
     "Automatisez la planification des interventions préventives pour qu'elle soit quotidienne, hebdomadaire, mensuelle, annuelle ou basée sur des événements ou des relevés de compteurs.",
   'pm.checks.1':
@@ -215,7 +215,7 @@ const frJSON = {
     'Notre calendrier facile à utiliser vous permet de visualiser tous les horaires de travail ouverts et de maintenance préventive à venir.',
   'pm.checks.3': "Faites glisser et déposez pour modifier la date d'échéance.",
   'pm.checks.4':
-    "Une fois l'intervention préventive terminée, le travail est automatiquement enregistré dans le journal de maintenance de l'actif.",
+    "Une fois l'intervention préventive terminée, le travail est automatiquement enregistré dans le journal de maintenance de l'équipement.",
   'pm.checks.5': 'Nécessite peu ou pas de formation à utiliser.',
   'part.title': 'Prenez le contrôle de votre inventaire de pièces de rechange',
   'part.description.short': 'Sachez quand vos pièces manquent',
@@ -242,7 +242,7 @@ const frJSON = {
   'dashboard.descriptions.2':
     'Avec les tableaux de bord personnalisés de Grash, vous pourrez…',
   'dashboard.checks.0': 'Savoir où votre argent est dépensé et pourquoi',
-  'dashboard.checks.1': 'Savoir quel actif coûte le plus cher et pourquoi',
+  'dashboard.checks.1': 'Savoir quel équipement coûte le plus cher et pourquoi',
   'dashboard.checks.2': 'Créer vos propres KPI personnalisés.',
   'dashboard.checks.3':
     'Afficher des rapports générés et mis à jour automatiquement en fonction de votre métrique',
@@ -354,7 +354,7 @@ const frJSON = {
   id: 'ID',
   due_date: "Date d'échéance",
   location: 'Emplacement',
-  asset: 'Actif',
+  asset: 'Équipement',
   team: 'Équipe',
   created_at: 'Date créée',
   list_view: 'Vue liste',
@@ -373,13 +373,13 @@ const frJSON = {
   worker: 'Ouvrier',
   location_name: 'Nom de la localisation',
   location_address: "Adresse de l'emplacement",
-  asset_name: "Nom de l'actif",
+  asset_name: "Nom de l'équipement",
   days_since_creation: 'Jours depuis la création',
   files: 'Fichiers',
   requested_by: 'Demandé par',
   completed_on: 'Completé le',
   updated_at: 'Modifié le',
-  work_order: 'Intervention',
+  work_order: 'Ordre de travail',
   timer_running: "Minuterie en cours d'exécution",
   run_timer: 'Démarrer la minuterie',
   approved_by: 'Approuvé par',
@@ -407,7 +407,7 @@ const frJSON = {
   additional_workers: 'Ouvriers supplémentaires',
   select_team: 'Choisis une équipe',
   select_location: "Sélectionnez l'emplacement",
-  select_asset: "Sélectionnez l'actif",
+  select_asset: "Sélectionnez l'équipement",
   select_tasks: 'Sélectionnez les tâches',
   requires_signature: 'Nécessite une signature',
   required_wo_title: "Le titre de l'ordre de travail est requis",
@@ -472,7 +472,7 @@ const frJSON = {
   wo_analysis: 'Analyse des bons de travail',
   wo_aging: 'Ancienneté des bons de travail',
   time_and_cost: 'Temps et coût',
-  assets: 'Actifs',
+  assets: 'Équipements',
   reliability_dashboard: 'Tableau de bord de fiabilité',
   total_maintenance_cost: "Coût d'entretien total",
   useful_life: 'Vie utile',
@@ -532,7 +532,7 @@ const frJSON = {
   barcode: 'Code à barre',
   placed_in_service: 'Mis en service',
   warranty_expiration: 'Expiration de la garantie',
-  asset_information: "Informations sur l'actif",
+  asset_information: "Informations sur l'équipement",
   more_informations: "Plus d'informations",
   confirm_remove_asset_downtime:
     "Voulez-vous vraiment supprimer ce temps d'arrêt ?",
@@ -549,15 +549,15 @@ const frJSON = {
   add_reading: 'Ajouter un relevé',
   select_meter: 'Sélectionnez le compteur',
   confirm_remove_part_asset:
-    'Voulez-vous vraiment supprimer cette pièce de cet actif ?',
+    'Voulez-vous vraiment supprimer cette pièce de cet équipement ?',
   no_due_date: "Pas de date d'échéance",
   due_at_date: 'Dû le {{date}}',
   no_primary_worker: 'Aucun assigné',
-  no_wo_linked_asset: "Il n'y a pas de bon de travail lié à cet actif",
-  asset_remove_success: "L'actif a été supprimé avec succès",
-  asset_remove_failure: "L'actif n'a pas pu être supprimé",
-  asset_name_description: "Entrez le nom de l'actif",
-  select_asset_location: "Sélectionnez l'emplacement de l'actif",
+  no_wo_linked_asset: "Il n'y a pas de bon de travail lié à cet équipement",
+  asset_remove_success: "L'équipement a été supprimé avec succès",
+  asset_remove_failure: "L'équipement n'a pas pu être supprimé",
+  asset_name_description: "Entrez le nom de l'équipement",
+  select_asset_location: "Sélectionnez l'emplacement de l'équipement",
   primary_user_description: "Sélectionnez l'utilisateur principal",
   teams_description: 'Sélectionnez les équipes',
   customers_description: 'Sélectionnez des sous-traitants',
@@ -566,28 +566,28 @@ const frJSON = {
   warranty_expiration_date: "Date d'expiration de la garantie",
   additional_information: 'Information additionnelle',
   structure: 'Structure',
-  parent_asset: 'Actif parent',
-  asset_create_success: "L'actif a été créé avec succès",
-  asset_create_failure: "L'actif n'a pas pu être créé",
+  parent_asset: 'Équipement parent',
+  asset_create_success: "L'équipement a été créé avec succès",
+  asset_create_failure: "L'équipement n'a pas pu être créé",
   additional_workers_description:
     'Sélectionnez des travailleurs supplémentaires',
-  required_asset_name: "Le nom de l'actif est requis",
-  add_asset: 'Ajouter un actif',
+  required_asset_name: "Le nom de l'équipement est requis",
+  add_asset: 'Ajouter un équipement',
   add_asset_description:
-    'Remplissez les champs ci-dessous pour créer et ajouter un nouvel actif',
-  create_asset: 'Créer un actif',
+    'Remplissez les champs ci-dessous pour créer et ajouter un nouvel équipement',
+  create_asset: 'Créer un équipement',
   hierarchy: 'Hiérarchie',
   add_downtime: "Ajouter un temps d'arrêt",
   edit_downtime: "Modifier le temps d'arrêt",
   remove_downtime: "Supprimer le temps d'arrêt",
   edit: 'Éditer',
-  edit_asset: "Modifier l'actif",
+  edit_asset: "Modifier l'équipement",
   edit_asset_description:
-    'Remplissez les champs ci-dessous pour modifier cet actif',
+    'Remplissez les champs ci-dessous pour modifier cet équipement',
   confirm_delete_asset: 'Etes-vous sûrs de vouloir supprimer cet équipement ?',
   no_content: 'Pas de contenu',
   no_result_criteria: 'Aucun résultat pour vos critères de recherche',
-  loading_assets: 'Chargement des actifs enfants de {{name}} #{{id}}',
+  loading_assets: 'Chargement des équipements enfants de {{name}} #{{id}}',
   //location
   map_view: 'Vue carte',
   location_create_success: "L'emplacement a été créé avec succès",
@@ -619,7 +619,7 @@ const frJSON = {
   add_floor_plan: "Ajouter un nouveau plan d'étage",
   add_floor_plan_description:
     "Remplissez les champs ci-dessous pour créer un nouveau plan d'étage",
-  no_asset_in_location: 'Aucun actif à cet emplacement',
+  no_asset_in_location: 'Aucun équipement à cet emplacement',
   no_wo_in_location: 'Aucun ordre de travail à cet emplacement',
   no_file_in_location: 'Aucun fichier joint à cet emplacement',
   no_floor_plan_in_location: "Pas de plan d'étage à cet emplacement",
@@ -653,7 +653,7 @@ const frJSON = {
   no_access_page: "Vous n'avez pas accès à cette page",
   file: 'Fichier',
   'noRows.location.message':
-    'Les emplacements vous permettent de gérer plus efficacement les actifs et les travailleurs',
+    'Les emplacements vous permettent de gérer plus efficacement les équipements et les travailleurs',
   'noRows.location.action':
     "Appuyez sur le bouton '+' pour créer un emplacement",
   //inventory
@@ -705,7 +705,7 @@ const frJSON = {
   part_details: 'Détails de la pièce',
   area_details: 'Détails de la zone',
   assigned_people: 'Personnes affectées',
-  no_asset_related_part: 'Aucun actif lié à cette pièce',
+  no_asset_related_part: 'Aucun équipement lié à cette pièce',
   no_file_found: 'Aucun fichier trouvé',
   no_wo_found: 'Aucun bon de travail trouvé',
   workers: 'Travailleurs',
@@ -790,7 +790,7 @@ const frJSON = {
   required_meter_unit: "L'unité de compteur est requise",
   required_meter_update_frequency:
     'La fréquence de mise à jour du compteur est requise',
-  required_asset: "L'actif est requis",
+  required_asset: "L'équipement est requis",
   add_meter: 'Ajouter un compteur',
   add_meter_description:
     'Remplissez les champs ci-dessous pour créer et ajouter un nouveau Compteur',
@@ -807,7 +807,7 @@ const frJSON = {
   meter_details: 'Détails du compteur',
 
   'noRows.meter.message':
-    'Les relevés de compteur vous permettent de surveiller les actifs et de déclencher de nouveaux ordres de travail en fonction de conditions définies',
+    'Les relevés de compteur vous permettent de surveiller les équipements et de déclencher de nouveaux ordres de travail en fonction de conditions définies',
   'noRows.meter.action': "Appuyez sur le bouton '+' pour créer un Compteur",
   meter: 'Compteur',
   drag_one_file: 'Faites glisser un seul fichier ici',
@@ -829,7 +829,7 @@ const frJSON = {
   customer_description_description:
     'Décrivez le but de ce sous-traitant en quelques lignes...',
   rate: 'Fréquence',
-  billing_information: 'détails de facturation',
+  billing_information: 'Détails sur la facturation',
   address_line_2: 'Adresse Ligne 2',
   billing_name: 'Nom de la facturation',
   currency: 'Devise',
@@ -848,7 +848,23 @@ const frJSON = {
   type: 'Taper',
   billing_currency: 'Devise de facturation',
   go_back: 'Retourner',
-  confirm_delete_customer: 'Voulez-vous vraiment supprimer ce sous-traitant ?'
+  confirm_delete_customer: 'Voulez-vous vraiment supprimer ce sous-traitant ?',
+  vendor_create_success: 'Le fournisseur a été créé avec succès',
+  vendor_create_failure: "Le fournisseur n'a pas pu être créé",
+  vendor_edit_failure: "Le fournisseur n'a pas pu être modifié",
+  vendor_delete_success: 'Le fournisseur a été supprimé avec succès',
+  vendor_delete_failure: "Le fournisseur n'a pas pu être supprimé",
+  required_company_name: "Le nom de l'entreprise est requis",
+  vendor_type: 'Type de fournisseur',
+  contact_name: 'Nom du contact',
+  add_vendor: 'Ajouter un fournisseur',
+  add_vendor_description:
+    'Remplissez les champs ci-dessous pour créer et ajouter un nouveau fournisseur',
+  confirm_delete_vendor: 'Voulez-vous vraiment supprimer ce fournisseur ?',
+  'noRows.vendor.message':
+    'Les fournisseurs sont des organisations qui fournissent des actifs ou des pièces',
+  'noRows.vendor.action': "Appuyez sur le bouton '+' pour créer un fournisseur",
+  vendor_type_description: 'ex. Plombier, Electricien'
 };
 
 export default frJSON;

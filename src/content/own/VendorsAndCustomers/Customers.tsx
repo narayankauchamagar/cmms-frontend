@@ -174,8 +174,8 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
     {
       name: 'rate',
       type: 'number',
-      label: t('rate'),
-      placeholder: t('rate'),
+      label: t('hourly_rate'),
+      placeholder: t('hourly_rate'),
       icon: '$'
       // helperText: 'Changes will only apply to Work Orders created in the future'
     },
@@ -270,8 +270,8 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
     },
     {
       field: 'rate',
-      headerName: t('rate'),
-      description: t('rate'),
+      headerName: t('hourly_rate'),
+      description: t('hourly_rate'),
       width: 150
     },
     {

@@ -43,7 +43,7 @@ const VendorsAndCustomers = ({}: PropsType) => {
         basePath="/app/vendors-customers"
         tabs={tabs}
         tabIndex={tabIndex}
-        title={`Vendors_Customers`}
+        title={t('Vendors_Customers')}
         action={
           hasCreatePermission(PermissionEntity.VENDORS_AND_CUSTOMERS)
             ? handleOpenAddModal
@@ -53,13 +53,11 @@ const VendorsAndCustomers = ({}: PropsType) => {
       >
         {tabIndex === 0 ? (
           <Vendors
-            // values={values}
             openModal={openAddModal}
             handleCloseModal={handleCloseAddModal}
           />
         ) : (
           <Customers
-            // values={values}
             openModal={openAddModal}
             handleCloseModal={handleCloseAddModal}
           />

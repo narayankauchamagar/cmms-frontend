@@ -69,21 +69,21 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
   };
   const onCreationSuccess = () => {
     handleCloseModal();
-    showSnackBar(t('The Vendor has been created successfully'), 'success');
+    showSnackBar(t('vendor_create_success'), 'success');
   };
   const onCreationFailure = (err) =>
-    showSnackBar(t("The Vendor couldn't be created"), 'error');
+    showSnackBar(t('vendor_create_failure'), 'error');
   const onEditSuccess = () => {
     setViewOrUpdate('view');
     showSnackBar(t('changes_saved_success'), 'success');
   };
   const onEditFailure = (err) =>
-    showSnackBar(t("The Vendor couldn't be edited"), 'error');
+    showSnackBar(t('vendor_edit_failure'), 'error');
   const onDeleteSuccess = () => {
-    showSnackBar(t('The Vendor has been deleted successfully'), 'success');
+    showSnackBar(t('vendor_delete_success'), 'success');
   };
   const onDeleteFailure = (err) =>
-    showSnackBar(t("The Customer couldn't be deleted"), 'error');
+    showSnackBar(t('vendor_delete_failure'), 'error');
   const handleOpenDetails = (id: number) => {
     const foundVendor = vendors.find((vendor) => vendor.id === id);
     if (foundVendor) {
@@ -114,81 +114,80 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
     {
       name: 'companyName',
       type: 'text',
-      label: 'Company Name',
+      label: t('company_name'),
       placeholder: 'Grash',
       required: true
     },
     {
       name: 'address',
       type: 'text',
-      label: 'Address',
-      placeholder: 'Casa, Maroc'
+      label: t('address'),
+      placeholder: t('address')
     },
     {
       name: 'phone',
       type: 'text',
-      label: 'Phone',
+      label: t('phone'),
       placeholder: '+00212611223344',
       required: true
     },
     {
       name: 'website',
       type: 'text',
-      label: 'Website',
+      label: t('website'),
       placeholder: 'https://web-site.com'
     },
     {
       name: 'name',
       type: 'text',
-      label: 'Name',
+      label: t('name'),
       placeholder: 'John Doe'
     },
     {
       name: 'email',
       type: 'text',
-      label: 'Email',
+      label: t('email'),
       placeholder: 'john.doe@gmail.com'
     },
     {
       name: 'vendorType',
       type: 'text',
-      label: 'Vendor Type',
-      placeholder: 'ex. Plumbing, Electrical'
+      label: t('vendor_type'),
+      placeholder: t('vendor_type_description')
     },
     {
       name: 'description',
       type: 'text',
-      label: 'Description',
+      label: t('Description'),
       multiple: true,
-      placeholder: 'Describe the purpose of this business in a few line...'
+      placeholder: t('description')
     },
     {
       name: 'rate',
       type: 'number',
-      label: 'Rate',
-      placeholder: 'Rate',
-      icon: '$',
-      helperText: 'Changes will only apply to Work Orders created in the future'
+      label: t('hourly_rate'),
+      placeholder: t('hourly_rate'),
+      icon: '$'
     }
   ];
 
   const shape = {
-    companyName: Yup.string().required(t('Company Name is required')),
+    companyName: Yup.string().required(t('required_company_name')),
     rate: Yup.number(),
     phone: Yup.string()
-      .matches(phoneRegExp, t('The phone number is invalid'))
-      .required(t('The phone number is required')),
+      .matches(phoneRegExp, t('invalid_phone'))
+      .required(t('required_phone')),
     website: Yup.string()
-      .matches(websiteRegExp, t('Invalid website'))
+      .matches(websiteRegExp, t('invalid_website'))
       .nullable(),
-    email: Yup.string().matches(emailRegExp, t('Invalid email')).nullable()
+    email: Yup.string().matches(emailRegExp, t('invalid_email')).nullable()
   };
 
   const columns: GridEnrichedColDef[] = [
     {
       field: 'companyName',
-      headerName: t('Company Name'),
-      description: t('Company Name'),
+      headerName: t('company_name'),
+      description: t('company_name'),
       width: 150,
       renderCell: (params: GridRenderCellParams<string>) => (
         <Box sx={{ fontWeight: 'bold' }}>{params.value}</Box>
@@ -208,8 +207,8 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
     },
     {
       field: 'website',
-      headerName: t('Website'),
-      description: t('Website'),
+      headerName: t('website'),
+      description: t('website'),
       width: 150
     },
     {
@@ -226,8 +225,8 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
     },
     {
       field: 'vendorType',
-      headerName: t('Vendor Type'),
-      description: t('Vendor Type'),
+      headerName: t('vendor_type'),
+      description: t('vendor_type'),
       width: 150
     },
     {
@@ -238,8 +237,8 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
     },
     {
       field: 'rate',
-      headerName: t('Rate'),
-      description: t('Rate'),
+      headerName: t('hourly_rate'),
+      description: t('hourly_rate'),
       width: 150
     }
   ];
@@ -259,11 +258,11 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
       value: currentVendor?.email
     },
     {
-      label: t('Type'),
+      label: t('type'),
       value: currentVendor?.vendorType
     },
     {
-      label: t('Contact name'),
+      label: t('contact_name'),
       value: currentVendor?.name
     }
   ];
@@ -286,10 +285,10 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Add vendor')}
+          {t('add_vendor')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the fields below to create and add a new vendor')}
+          {t('add_vendor_description')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -335,10 +334,8 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
           Toolbar: GridToolbar,
           NoRowsOverlay: () => (
             <NoRowsMessageWrapper
-              message={t(
-                'Vendors are organizations that provide Assets or Parts'
-              )}
-              action={t("Press the '+' button to create a Vendor")}
+              message={t('noRows.vendor.message')}
+              action={t('noRows.vendor.action')}
             />
           )
         }}
@@ -389,7 +386,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
               variant="subtitle1"
               mr={2}
             >
-              {t('Go back')}
+              {t('go_back')}
             </Typography>
           )}
           {hasDeletePermission(
@@ -443,7 +440,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
             )}
             {currentVendor?.website && (
               <>
-                <Typography variant="subtitle1">{t('Website')}</Typography>
+                <Typography variant="subtitle1">{t('website')}</Typography>
                 <Typography variant="h5" sx={{ mb: 1 }}>
                   <a href={currentVendor?.website}>{currentVendor?.website}</a>
                 </Typography>
@@ -497,7 +494,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
         }}
         onConfirm={() => handleDelete(currentVendor?.id)}
         confirmText={t('to_delete')}
-        question={t('Are you sure you want to delete this Vendor?')}
+        question={t('confirm_delete_vendor')}
       />
     </Box>
   );

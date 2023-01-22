@@ -701,7 +701,6 @@ const enJSON = {
   customer_type_description: 'ex. Plumbing, Electrical',
   customer_description_description:
     'Describe the purpose of this customer in a few line...',
-  rate: 'Rate',
   billing_information: 'Billing Information',
   address_line_2: 'Address Line 2',
   billing_name: 'Billing Name',
@@ -719,7 +718,24 @@ const enJSON = {
   type: 'Type',
   billing_currency: 'Billing Currency',
   go_back: 'Go back',
-  confirm_delete_customer: 'Are you sure you want to delete this Customer?'
+  confirm_delete_customer: 'Are you sure you want to delete this Customer?',
+  //vendor
+  vendor_create_success: 'The Vendor has been created successfully',
+  vendor_create_failure: "The Vendor couldn't be created",
+  vendor_edit_failure: "The Vendor couldn't be edited",
+  vendor_delete_success: 'The Vendor has been deleted successfully',
+  vendor_delete_failure: "The Vendor couldn't be deleted",
+  required_company_name: 'Company Name is required',
+  vendor_type: 'Vendor Type',
+  contact_name: 'Contact name',
+  add_vendor: 'Add vendor',
+  add_vendor_description:
+    'Fill in the fields below to create and add a new vendor',
+  confirm_delete_vendor: 'Are you sure you want to delete this Vendor ?',
+  'noRows.vendor.message':
+    'Vendors are organizations that provide Assets or Parts',
+  'noRows.vendor.action': "Press the '+' button to create a Vendor",
+  vendor_type_description: 'ex. Plumbing, Electrical'
 };
 
 export default enJSON;

@@ -102,7 +102,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
     {
       name: 'rate',
       type: 'number',
-      label: t('Rate')
+      label: t('hourly_rate')
     },
     {
       name: 'role',
