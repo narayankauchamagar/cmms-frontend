@@ -1,11 +1,11 @@
 import {
+  Avatar,
   Box,
-  Typography,
   Divider,
   LinearProgress,
-  Avatar,
-  useTheme,
-  styled
+  styled,
+  Typography,
+  useTheme
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import Text from 'src/components/Text';
@@ -253,7 +253,7 @@ function HelpdeskSidebar() {
       <Box py={2}>
         <Box display="flex" alignItems="center" justifyContent="space-between">
           <Typography variant="h5">
-            {t('Email')}{' '}
+            {t('email')}{' '}
             <Typography
               variant="subtitle1"
               color="text.secondary"

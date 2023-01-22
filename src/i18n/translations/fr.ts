@@ -170,7 +170,7 @@ const frJSON = {
   'mobile-app.title':
     'Une application GMAO mobile qui renforce votre équipe de maintenance',
   'mobile-app.descriptions.0':
-    "Grâce à l'utilisation de nos applications mobiles Android et IOS, nos clients bénéficient d'une meilleure organisation, communication, responsabilité et productivité jusqu'à 30% pour l'ensemble de leur équipe de maintenance.",
+    "Grâce à l'utilisation de nos applications mobiles Android et IOS, nos sous-traitants bénéficient d'une meilleure organisation, communication, responsabilité et productivité jusqu'à 30% pour l'ensemble de leur équipe de maintenance.",
   'mobile-app.descriptions.1':
     "À partir de leur appareil portable, n'importe quel membre de votre équipe de maintenance peut :",
   'mobile-app.checks.0':
@@ -484,7 +484,7 @@ const frJSON = {
   people_teams: 'Personnes & Equipes',
   people: 'Personnes',
   teams: 'Équipes',
-  vendors_customers: 'Fournisseurs et clients',
+  vendors_customers: 'Fournisseurs/Prestataires',
   vendors: 'Fournisseurs',
   categories: 'Catégories',
   settings: 'Paramètres',
@@ -560,7 +560,7 @@ const frJSON = {
   select_asset_location: "Sélectionnez l'emplacement de l'actif",
   primary_user_description: "Sélectionnez l'utilisateur principal",
   teams_description: 'Sélectionnez les équipes',
-  customers_description: 'Sélectionnez des clients',
+  customers_description: 'Sélectionnez des sous-traitants',
   vendors_description: 'Sélectionnez les fournisseurs',
   inServiceDate_description: 'Date de mise en service',
   warranty_expiration_date: "Date d'expiration de la garantie",
@@ -629,7 +629,7 @@ const frJSON = {
   no_access_location:
     "Vous n'avez pas accès aux emplacements. Veuillez contacter votre administrateur si vous devriez avoir accès.",
   no_access_vendors_customers:
-    "Vous n'avez pas accès aux fournisseurs et aux clients.Veuillez contacter votre administrateur si vous devriez avoir accès. ",
+    "Vous n'avez pas accès aux fournisseurs et aux sous-traitants.Veuillez contacter votre administrateur si vous devriez avoir accès. ",
   no_access_people_team:
     "Vous n'avez pas accès aux personnes et aux équipes. Veuillez contacter votre administrateur si vous devriez avoir accès.",
   no_access_analytics:
@@ -815,7 +815,40 @@ const frJSON = {
   drop_to_start: 'Déposez les fichiers pour commencer le téléchargement',
   invalid_files_type: 'Vous ne pouvez pas télécharger ces types de fichiers',
   you_have_uploaded: 'Vous avez téléchargé',
-  upload: 'Télécharger'
+  upload: 'Télécharger',
+  Vendors_Customers: 'Fournisseurs & Sous-Traitants',
+  customer_create_success: 'Le sous-traitant a été créé avec succès',
+  customer_create_failure: "Le sous-traitant n'a pas pu être créé",
+  customer_edit_failure: "Le sous-traitant n'a pas pu être modifié",
+  customer_delete_success: 'Le sous-traitant a été supprimé avec succès',
+  customer_delete_failure: "Le sous-traitant n'a pas pu être supprimé",
+  customer_name: 'Nom du sous-traitant',
+  website: 'Site Internet',
+  customer_type: 'Type de sous-traitant',
+  customer_type_description: 'ex. ',
+  customer_description_description:
+    'Décrivez le but de ce sous-traitant en quelques lignes...',
+  rate: 'Fréquence',
+  billing_information: 'détails de facturation',
+  address_line_2: 'Adresse Ligne 2',
+  billing_name: 'Nom de la facturation',
+  currency: 'Devise',
+  select_currency: 'Sélectionnez la devise',
+  required_customer_name: 'Le nom du sous-traitant est requis',
+  required_phone: 'Le numéro de téléphone est obligatoire',
+  invalid_website: 'Site Web invalide',
+  billing_address: 'Adresse de facturation',
+  add_customer: 'Ajouter un sous-traitant',
+  add_customer_description:
+    'Remplissez les champs ci-dessous pour créer et ajouter un nouveau sous-traitant',
+  'noRows.customer.message':
+    'Les sous-traitants sont des travailleurs externes',
+  'noRows.customer.action':
+    "Appuyez sur le bouton '+' pour créer un sous-traitant",
+  type: 'Taper',
+  billing_currency: 'Devise de facturation',
+  go_back: 'Retourner',
+  confirm_delete_customer: 'Voulez-vous vraiment supprimer ce sous-traitant ?'
 };
 
 export default frJSON;

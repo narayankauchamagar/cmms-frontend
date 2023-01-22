@@ -1,21 +1,21 @@
-import { useState, ReactElement, Children } from 'react';
+import { Children, ReactElement, useState } from 'react';
 import {
-  Typography,
-  Container,
+  Alert,
+  Avatar,
+  Box,
   Button,
   Card,
   CircularProgress,
+  Collapse,
+  Container,
   Grid,
-  Box,
+  IconButton,
+  Link,
   Step,
   StepLabel,
   Stepper,
-  Link,
-  Collapse,
-  Alert,
-  Avatar,
-  IconButton,
-  styled
+  styled,
+  Typography
 } from '@mui/material';
 import { Field, Form, Formik, FormikConfig, FormikValues } from 'formik';
 import { CheckboxWithLabel, TextField } from 'formik-mui';
@@ -173,7 +173,7 @@ function RegisterWizard() {
                         fullWidth
                         name="email"
                         component={TextField}
-                        label={t('Email')}
+                        label={t('email')}
                         placeholder={t('Write your email here...')}
                       />
                     </Grid>

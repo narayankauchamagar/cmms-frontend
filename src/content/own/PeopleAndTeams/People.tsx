@@ -224,7 +224,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
     },
     {
       field: 'email',
-      headerName: t('Email'),
+      headerName: t('email'),
       width: 150
     },
     {

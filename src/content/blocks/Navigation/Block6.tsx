@@ -171,7 +171,7 @@ function Block6() {
               primaryTypographyProps={{
                 variant: 'h5'
               }}
-              primary={t('Email') + ':'}
+              primary={t('email') + ':'}
             />
             <Typography variant="subtitle1">russotry@russo.com</Typography>
           </ListItem>

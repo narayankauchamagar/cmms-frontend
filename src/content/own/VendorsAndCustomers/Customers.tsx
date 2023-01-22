@@ -93,21 +93,21 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
   };
   const onCreationSuccess = () => {
     handleCloseModal();
-    showSnackBar(t('The Customer has been created successfully'), 'success');
+    showSnackBar(t('customer_create_success'), 'success');
   };
   const onCreationFailure = (err) =>
-    showSnackBar(t("The Customer couldn't be created"), 'error');
+    showSnackBar(t('customer_create_failure'), 'error');
   const onEditSuccess = () => {
     setViewOrUpdate('view');
     showSnackBar(t('changes_saved_success'), 'success');
   };
   const onEditFailure = (err) =>
-    showSnackBar(t("The Customer couldn't be edited"), 'error');
+    showSnackBar(t('customer_edit_failure'), 'error');
   const onDeleteSuccess = () => {
-    showSnackBar(t('The Customer has been deleted successfully'), 'success');
+    showSnackBar(t('customer_delete_success'), 'success');
   };
   const onDeleteFailure = (err) =>
-    showSnackBar(t("The Customer couldn't be deleted"), 'error');
+    showSnackBar(t('customer_delete_failure'), 'error');
 
   useEffect(() => {
     if (customers?.length && customerId && isNumeric(customerId)) {
@@ -124,109 +124,109 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
     {
       name: 'details',
       type: 'titleGroupField',
-      label: 'Details'
+      label: t('details')
     },
     {
       name: 'name',
       type: 'text',
-      label: 'Customer Name',
+      label: t('customer_name'),
       placeholder: 'Jonh Doe',
       required: true
     },
     {
       name: 'address',
       type: 'text',
-      label: 'Address',
-      placeholder: 'casa, maroc'
+      label: t('address'),
+      placeholder: t('address')
     },
     {
       name: 'phone',
       type: 'text',
-      label: 'Phone',
-      placeholder: '+00212611223344',
+      label: t('phone'),
+      placeholder: '+212611223344',
       required: true
     },
     {
       name: 'website',
       type: 'text',
-      label: 'Website',
+      label: t('website'),
       placeholder: 'https://web-site.com'
     },
     {
       name: 'email',
       type: 'text',
-      label: 'Email',
+      label: t('email'),
       placeholder: 'john.doe@gmail.com'
     },
     {
       name: 'customerType',
       type: 'text',
-      label: 'Customer Type',
-      placeholder: 'ex. Plumbing, Electrical'
+      label: t('customer_type'),
+      placeholder: t('customer_type_description')
     },
     {
       name: 'description',
       type: 'text',
-      label: 'Description',
+      label: t('description'),
       multiple: true,
-      placeholder: 'Describe the purpose of this customer in a few line...'
+      placeholder: t('customer_description_description')
     },
     {
       name: 'rate',
       type: 'number',
-      label: 'Rate',
-      placeholder: 'Rate',
-      icon: '$',
-      helperText: 'Changes will only apply to Work Orders created in the future'
+      label: t('rate'),
+      placeholder: t('rate'),
+      icon: '$'
+      // helperText: 'Changes will only apply to Work Orders created in the future'
     },
     {
       name: 'details',
       type: 'titleGroupField',
-      label: 'Billing Information'
+      label: t('billing_information')
     },
     {
       name: 'billingAddress',
       type: 'text',
-      label: 'Address',
-      placeholder: 'Casa, Maroc'
+      label: t('address'),
+      placeholder: t('address')
     },
     {
       name: 'billingAddress2',
       type: 'text',
-      label: 'Address Line 2',
-      placeholder: 'Casa, Maroc'
+      label: t('address_line_2'),
+      placeholder: t('address_line_2')
     },
     {
       name: 'billingName',
       type: 'text',
-      label: 'Billing Name',
-      placeholder: 'casa, maroc'
+      label: t('billing_name'),
+      placeholder: t('billing_name')
     },
     {
       name: 'billingCurrency',
       type: 'select',
       type2: 'currency',
-      label: 'Currency',
-      placeholder: 'Select Currency'
+      label: t('currency'),
+      placeholder: t('select_currency')
     }
   ];
 
   const shape = {
-    name: Yup.string().required('Customer Name is required'),
+    name: Yup.string().required('required_customer_name'),
     phone: Yup.string()
-      .matches(phoneRegExp, t('The phone number is invalid'))
-      .required(t('The phone number is required')),
+      .matches(phoneRegExp, t('invalid_phone'))
+      .required(t('required_phone')),
     website: Yup.string()
-      .matches(websiteRegExp, t('Invalid website'))
+      .matches(websiteRegExp, t('invalid_website'))
       .nullable(),
-    email: Yup.string().matches(emailRegExp, t('Invalid email')).nullable()
+    email: Yup.string().matches(emailRegExp, t('invalid_email')).nullable()
   };
 
   const columns: GridEnrichedColDef[] = [
     {
       field: 'name',
-      headerName: t('Customer Name'),
-      description: t('Customer Name'),
+      headerName: t('customer_name'),
+      description: t('customer_name'),
       width: 150,
       renderCell: (params: GridRenderCellParams<string>) => (
         <Box sx={{ fontWeight: 'bold' }}>{params.value}</Box>
@@ -246,20 +246,20 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
     },
     {
       field: 'website',
-      headerName: t('Website'),
-      description: t('Website'),
+      headerName: t('website'),
+      description: t('website'),
       width: 150
     },
     {
       field: 'email',
-      headerName: t('Email'),
-      description: t('Email'),
+      headerName: t('email'),
+      description: t('email'),
       width: 150
     },
     {
       field: 'customerType',
-      headerName: t('Customer Type'),
-      description: t('Customer Type'),
+      headerName: t('customer_type'),
+      description: t('customer_type'),
       width: 150
     },
     {
@@ -270,26 +270,26 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
     },
     {
       field: 'rate',
-      headerName: t('Rate'),
-      description: t('Rate'),
+      headerName: t('rate'),
+      description: t('rate'),
       width: 150
     },
     {
       field: 'billingAddress',
-      headerName: t('Billing Address'),
-      description: t('Billing Address'),
+      headerName: t('billing_address'),
+      description: t('billing_address'),
       width: 150
     },
     {
       field: 'billingName',
-      headerName: t('Billing Name'),
-      description: t('Billing Name'),
+      headerName: t('billing_name'),
+      description: t('billing_name'),
       width: 150
     },
     {
       field: 'billingCurrency',
-      headerName: t('Currency'),
-      description: t('Currency'),
+      headerName: t('currency'),
+      description: t('currency'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<Currency>) =>
         params.value?.name
@@ -304,10 +304,10 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Add Customer')}
+          {t('add_customer')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the fields below to create and add a new customer')}
+          {t('add_customer_description')}
         </Typography>
       </DialogTitle>
       <DialogContent
@@ -350,8 +350,8 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
           Toolbar: GridToolbar,
           NoRowsOverlay: () => (
             <NoRowsMessageWrapper
-              message={t('Customers are external workers')}
-              action={t("Press the '+' button to create a Customer")}
+              message={t('noRows.customer.message')}
+              action={t('noRows.customer.action')}
             />
           )
         }}
@@ -374,15 +374,15 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
       value: currentCustomer?.phone
     },
     {
-      label: t('Email'),
+      label: t('email'),
       value: currentCustomer?.email
     },
     {
-      label: t('Type'),
+      label: t('type'),
       value: currentCustomer?.customerType
     },
     {
-      label: t('Billing Currency'),
+      label: t('billing_currency'),
       value: currentCustomer?.billingCurrency.name
     }
   ];
@@ -434,7 +434,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
               variant="subtitle1"
               mr={2}
             >
-              {t('Go back')}
+              {t('go_back')}
             </Typography>
           )}
           {hasDeletePermission(
@@ -488,7 +488,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
             )}
             {currentCustomer?.website && (
               <>
-                <Typography variant="subtitle1">{t('Website')}</Typography>
+                <Typography variant="subtitle1">{t('website')}</Typography>
 
                 <Typography variant="h5" sx={{ mb: 1 }}>
                   <a href={currentCustomer?.website}>
@@ -550,7 +550,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
         }}
         onConfirm={() => handleDelete(currentCustomer?.id)}
         confirmText={t('to_delete')}
-        question={t('Are you sure you want to delete this Customer?')}
+        question={t('confirm_delete_customer')}
       />
     </Box>
   );

@@ -70,7 +70,7 @@ function UserDetailsDrawer({ user }: PropsType) {
       value: user.lastName
     },
     {
-      label: t('Email'),
+      label: t('email'),
       value: user.email
     },
     {

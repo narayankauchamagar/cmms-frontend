@@ -220,8 +220,8 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
     },
     {
       field: 'email',
-      headerName: t('Email'),
-      description: t('Email'),
+      headerName: t('email'),
+      description: t('email'),
       width: 150
     },
     {
@@ -255,7 +255,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
       value: currentVendor?.phone
     },
     {
-      label: t('Email'),
+      label: t('email'),
       value: currentVendor?.email
     },
     {

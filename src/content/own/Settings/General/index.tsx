@@ -149,7 +149,7 @@ function GeneralSettings() {
                       </Grid>
                       <Grid item xs={12}>
                         <Typography variant="h6" sx={{ mb: 0.5 }}>
-                          {t('Currency')}
+                          {t('currency')}
                         </Typography>
                         <Field
                           onChange={(event) =>

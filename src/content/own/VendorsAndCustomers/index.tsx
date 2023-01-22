@@ -24,7 +24,7 @@ const VendorsAndCustomers = ({}: PropsType) => {
   const { customerId, vendorId } = useParams();
 
   useEffect(() => {
-    setTitle(t('Vendors & Customers'));
+    setTitle(t('Vendors_Customers'));
   }, []);
 
   const tabs = [
@@ -43,7 +43,7 @@ const VendorsAndCustomers = ({}: PropsType) => {
         basePath="/app/vendors-customers"
         tabs={tabs}
         tabIndex={tabIndex}
-        title={`Vendors & Customers`}
+        title={`Vendors_Customers`}
         action={
           hasCreatePermission(PermissionEntity.VENDORS_AND_CUSTOMERS)
             ? handleOpenAddModal

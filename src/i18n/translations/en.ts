@@ -687,7 +687,39 @@ const enJSON = {
   drop_to_start: 'Drop the files to start uploading',
   invalid_files_type: 'You cannot upload these file types',
   you_have_uploaded: 'You have uploaded',
-  upload: 'Upload'
+  upload: 'Upload',
+  //vendors_customers
+  Vendors_Customers: 'Vendors & Customers',
+  customer_create_success: 'The Customer has been created successfully',
+  customer_create_failure: "The Customer couldn't be created",
+  customer_edit_failure: "The Customer couldn't be edited",
+  customer_delete_success: 'The Customer has been deleted successfully',
+  customer_delete_failure: "The Customer couldn't be deleted",
+  customer_name: 'Customer Name',
+  website: 'Website',
+  customer_type: 'customer_type',
+  customer_type_description: 'ex. Plumbing, Electrical',
+  customer_description_description:
+    'Describe the purpose of this customer in a few line...',
+  rate: 'Rate',
+  billing_information: 'Billing Information',
+  address_line_2: 'Address Line 2',
+  billing_name: 'Billing Name',
+  currency: 'Currency',
+  select_currency: 'Select Currency',
+  required_customer_name: 'Customer Name is required',
+  required_phone: 'The phone number is required',
+  invalid_website: 'Invalid website',
+  billing_address: 'Billing Address',
+  add_customer: 'Add Customer',
+  add_customer_description:
+    'Fill in the fields below to create and add a new customer',
+  'noRows.customer.message': 'Customers are external workers',
+  'noRows.customer.action': "Press the '+' button to create a Customer",
+  type: 'Type',
+  billing_currency: 'Billing Currency',
+  go_back: 'Go back',
+  confirm_delete_customer: 'Are you sure you want to delete this Customer?'
 };
 
 export default enJSON;

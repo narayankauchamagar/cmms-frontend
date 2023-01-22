@@ -417,7 +417,7 @@ const Results: FC<ResultsProps> = ({ users }) => {
                       </TableCell>
                       <TableCell>{t('Username')}</TableCell>
                       <TableCell>{t('name')}</TableCell>
-                      <TableCell>{t('Email')}</TableCell>
+                      <TableCell>{t('email')}</TableCell>
                       <TableCell align="center">{t('Posts')}</TableCell>
                       <TableCell>{t('location')}</TableCell>
                       <TableCell>{t('Role')}</TableCell>
