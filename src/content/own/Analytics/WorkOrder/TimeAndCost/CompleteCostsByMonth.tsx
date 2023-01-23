@@ -36,7 +36,6 @@ function CompleteCostsByMonth({ handleOpenModal }: WOStatusIncompleteProps) {
     dispatch(getCompleteCostsByMonth());
   }, []);
 
-  const columns: string[] = ['id'];
   const formattedData: {
     label: string;
     partCost: string;

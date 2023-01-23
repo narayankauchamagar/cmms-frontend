@@ -6,7 +6,7 @@ import { TitleContext } from '../../../../../contexts/TitleContext';
 import Overview from './Overview';
 import WOStatusPie from './WOStatusPie';
 import DowntimesByAsset from './DowntimesByAsset';
-import HoursWorked from './HoursWorked';
+import MeantimesTrends from './MeantimesTrends';
 import { Filter } from '../WOModal';
 
 interface WOStatusStatsProps {
@@ -51,7 +51,7 @@ function WOStatusStats({ handleOpenWOModal }: WOStatusStatsProps) {
           <DowntimesByAsset handleOpenModal={handleOpenWOModal} />
         </Grid>
         <Grid item xs={12} md={12}>
-          <HoursWorked handleOpenModal={handleOpenWOModal} />
+          <MeantimesTrends handleOpenModal={handleOpenWOModal} />
         </Grid>
       </Grid>
     </>
