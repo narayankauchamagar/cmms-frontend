@@ -34,6 +34,7 @@ import { reducer as preventiveMaintenanceReducer } from 'src/slices/preventiveMa
 import { reducer as assetDowntimeReducer } from 'src/slices/assetDowntime';
 import { reducer as woAnalyticsReducer } from 'src/slices/analytics/workOrder';
 import { reducer as assetAnalyticsReducer } from 'src/slices/analytics/asset';
+import { reducer as partAnalyticsReducer } from 'src/slices/analytics/part';
 
 const rootReducer = combineReducers({
   calendar: calendarReducer,
@@ -70,7 +71,8 @@ const rootReducer = combineReducers({
   preventiveMaintenances: preventiveMaintenanceReducer,
   downtimes: assetDowntimeReducer,
   woAnalytics: woAnalyticsReducer,
-  assetAnalytics: assetAnalyticsReducer
+  assetAnalytics: assetAnalyticsReducer,
+  partAnalytics: partAnalyticsReducer
 });
 
 export default rootReducer;
