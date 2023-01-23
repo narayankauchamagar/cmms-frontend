@@ -20,7 +20,7 @@ export interface AssetsCost {
   totalWOCosts: number;
   totalAcquisitionCost: number;
 }
-export interface DowntimesAndCostsByAsset {
+export interface DowntimesAndCostsByAsset extends AssetMiniDTO {
   duration: number;
   workOrdersCosts: number;
 }

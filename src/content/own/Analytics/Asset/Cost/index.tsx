@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useContext, useEffect } from 'react';
 import { TitleContext } from '../../../../../contexts/TitleContext';
 import Overview from './Overview';
-import WOByPrimaryUser from './WOByPrimaryUser';
+import DowntimesAndCosts from './DowntimesAndCosts';
 import Costs from './Costs';
 import { Filter } from '../WOModal';
 import WOByPriority from './WOByPriority';
@@ -45,7 +45,7 @@ function AssetCost({ handleOpenWOModal }: WOStatusStatsProps) {
           <Overview handleOpenModal={handleOpenWOModal} />
         </Grid>
         <Grid item xs={12} md={6}>
-          <WOByPrimaryUser handleOpenModal={handleOpenWOModal} />
+          <DowntimesAndCosts handleOpenModal={handleOpenWOModal} />
         </Grid>
         <Grid item xs={12} md={6}>
           <WOByCompletedBy handleOpenModal={handleOpenWOModal} />
