@@ -65,10 +65,10 @@ function Files() {
     setOpenUpdateModal(true);
   };
   const onDeleteSuccess = () => {
-    showSnackBar(t('The file has been deleted successfully'), 'success');
+    showSnackBar(t('file_delete_success'), 'success');
   };
   const onDeleteFailure = (err) =>
-    showSnackBar(t("The file couldn't be deleted"), 'error');
+    showSnackBar(t('file_delete_failure'), 'error');
 
   const {
     hasViewPermission,
@@ -118,15 +118,15 @@ function Files() {
     },
     {
       field: 'createdBy',
-      headerName: t('Uploaded By'),
-      description: t('Uploaded By'),
+      headerName: t('uploaded_by'),
+      description: t('uploaded_by'),
       width: 150,
       valueGetter: (params) => getUserNameById(params.value)
     },
     {
       field: 'createdAt',
-      headerName: t('Uploaded On'),
-      description: t('Uploaded On'),
+      headerName: t('uploaded_on'),
+      description: t('uploaded_on'),
       width: 150,
       valueGetter: (params) => getFormattedDate(params.row.createdAt)
     },
@@ -141,13 +141,13 @@ function Files() {
             key="rename"
             icon={<EditTwoToneIcon fontSize="small" color="primary" />}
             onClick={() => handleRename(Number(params.id))}
-            label="Rename"
+            label={t('rename')}
           />,
           <GridActionsCellItem
             key="delete"
             icon={<DeleteTwoToneIcon fontSize="small" color="error" />}
             onClick={() => handleOpenDelete(Number(params.id))}
-            label="Delete"
+            label={t('to_delete')}
           />
         ];
         if (!hasEditPermission(PermissionEntity.FILES, params.row)) {
@@ -161,10 +161,10 @@ function Files() {
     }
   ];
   const shape = {
-    files: Yup.array().required(t('Please upload at least a file'))
+    files: Yup.array().required(t('required_files'))
   };
   const updateShape = {
-    name: Yup.string().required(t('Please enter a file name'))
+    name: Yup.string().required(t('required_file_name'))
   };
   const renderAddModal = () => {
     return (
@@ -180,7 +180,7 @@ function Files() {
           }}
         >
           <Typography variant="h4" gutterBottom>
-            {t('Add Files')}
+            {t('add_files')}
           </Typography>
         </DialogTitle>
         <DialogContent
@@ -219,7 +219,7 @@ function Files() {
           }}
         >
           <Typography variant="h4" gutterBottom>
-            {t('Edit File')}
+            {t('edit_file')}
           </Typography>
         </DialogTitle>
         <DialogContent
@@ -273,7 +273,7 @@ function Files() {
                   sx={{ mx: 6, my: 1 }}
                   variant="contained"
                 >
-                  File
+                  {t('file')}
                 </Button>
               </Grid>
             )}
@@ -296,8 +296,8 @@ function Files() {
                       Toolbar: GridToolbar,
                       NoRowsOverlay: () => (
                         <NoRowsMessageWrapper
-                          message={t('Get All files in a Single place')}
-                          action={t("Press the '+' button to upload a File")}
+                          message={t('noRows.file.message')}
+                          action={t('noRows.file.action')}
                         />
                       )
                     }}
@@ -321,21 +321,14 @@ function Files() {
             }}
             onConfirm={() => handleDelete(currentFile?.id)}
             confirmText={t('to_delete')}
-            question={t('Are you sure you want to delete this File?')}
+            question={t('confirm_delete_file')}
           />
           {renderAddModal()}
           {renderUpdateModal()}
         </>
       );
     else return <PermissionErrorMessage message={'no_access_files'} />;
-  } else
-    return (
-      <FeatureErrorMessage
-        message={
-          'Upgrade to use files in your Assets, Work Orders, Locations etc...'
-        }
-      />
-    );
+  } else return <FeatureErrorMessage message={'upgrade_files'} />;
 }
 
 export default Files;

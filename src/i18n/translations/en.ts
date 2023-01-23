@@ -789,7 +789,21 @@ const enJSON = {
   select_user_role: 'Select user role',
   'noRows.team.message': 'Teams help you manage specific groups of people.',
   'noRows.team.action': "Press the '+' button to create a team.",
-  user_details: 'User Details'
+  user_details: 'User Details',
+  //files
+  file_delete_success: 'The file has been deleted successfully',
+  file_delete_failure: "The file couldn't be deleted",
+  uploaded_by: 'Uploaded By',
+  uploaded_on: 'Uploaded On',
+  rename: 'Rename',
+  required_files: 'Please upload at least a file',
+  required_file_name: 'Please enter a file name',
+  add_files: 'Add Files',
+  edit_file: 'Edit File',
+  'noRows.file.message': 'Get All files in a Single place',
+  'noRows.file.action': "Press the '+' button to upload a File",
+  upgrade_files:
+    'Upgrade to use files in your Assets, Work Orders, Locations etc...'
 };
 
 export default enJSON;

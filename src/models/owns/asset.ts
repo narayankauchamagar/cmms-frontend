@@ -37,6 +37,7 @@ export interface AssetDTO extends Audit {
   additionalInfos: string;
   hasChildren?: boolean;
   warrantyExpirationDate?: string;
+  acquisitionCost: number;
   inServiceDate?: string;
   parts: PartMiniDTO[];
   files: FileMiniDTO[];

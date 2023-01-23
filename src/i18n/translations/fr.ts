@@ -921,7 +921,20 @@ const frJSON = {
   'noRows.team.message':
     'Les équipes vous aident à gérer des groupes spécifiques de personnes.',
   'noRows.team.action': "Appuyez sur le bouton '+' pour créer une équipe.",
-  user_details: "Détails sur l'utilisateur"
+  user_details: "Détails sur l'utilisateur",
+  file_delete_success: 'Le fichier a été supprimé avec succès',
+  file_delete_failure: "Le fichier n'a pas pu être supprimé",
+  uploaded_by: 'Telechargé par',
+  uploaded_on: 'Téléchargé le',
+  rename: 'Renommer',
+  required_files: 'Veuillez télécharger au moins un fichier',
+  required_file_name: 'Veuillez entrer un nom de fichier',
+  add_files: 'Ajouter des fichiers',
+  edit_file: 'Modifier le fichier',
+  'noRows.file.message': 'Affichez tous les fichiers en un seul endroit',
+  'noRows.file.action': "Appuyez sur le bouton '+' pour télécharger un fichier",
+  upgrade_files:
+    'Mettez à niveau pour utiliser des fichiers dans vos équipements, ordres de travail, emplacements, etc.'
 };
 
 export default frJSON;
