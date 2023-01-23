@@ -14,3 +14,29 @@ export interface DowntimesByAsset extends AssetMiniDTO {
   count: number;
   percent: number;
 }
+
+export interface AssetsCost {
+  rav: number;
+  totalWOCosts: number;
+  totalAcquisitionCost: number;
+}
+export interface DowntimesAndCostsByAsset {
+  duration: number;
+  workOrdersCosts: number;
+}
+export interface DowntimesByMonth {
+  duration: number;
+  workOrdersCosts: number;
+  date: string;
+}
+export interface DowntimesMeantimeByMonth {
+  meantime: number;
+  date: string;
+}
+export interface Meantimes {
+  betweenDowntimes: number;
+  betweenMaintenances: number;
+}
+export interface RepairTimeByAsset extends AssetMiniDTO {
+  duration: number;
+}
