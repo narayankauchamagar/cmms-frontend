@@ -35,6 +35,7 @@ import { reducer as assetDowntimeReducer } from 'src/slices/assetDowntime';
 import { reducer as woAnalyticsReducer } from 'src/slices/analytics/workOrder';
 import { reducer as assetAnalyticsReducer } from 'src/slices/analytics/asset';
 import { reducer as partAnalyticsReducer } from 'src/slices/analytics/part';
+import { reducer as requestAnalyticsReducer } from 'src/slices/analytics/request';
 
 const rootReducer = combineReducers({
   calendar: calendarReducer,
@@ -72,7 +73,8 @@ const rootReducer = combineReducers({
   downtimes: assetDowntimeReducer,
   woAnalytics: woAnalyticsReducer,
   assetAnalytics: assetAnalyticsReducer,
-  partAnalytics: partAnalyticsReducer
+  partAnalytics: partAnalyticsReducer,
+  requestAnalytics: requestAnalyticsReducer
 });
 
 export default rootReducer;
