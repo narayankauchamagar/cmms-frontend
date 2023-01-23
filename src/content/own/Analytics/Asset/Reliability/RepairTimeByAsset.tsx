@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import {
   Bar,
+  BarChart,
   CartesianGrid,
   Cell,
-  ComposedChart,
   Legend,
   Tooltip,
   XAxis,
@@ -56,7 +56,7 @@ function RepairTimeByAsset({ handleOpenModal }: WOStatusPieProps) {
       {loading.downtimesByAsset ? (
         <Loading />
       ) : (
-        <ComposedChart width={400} height={508} data={formattedData}>
+        <BarChart width={400} height={508} data={formattedData}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="label" />
           <YAxis />
@@ -77,7 +77,7 @@ function RepairTimeByAsset({ handleOpenModal }: WOStatusPieProps) {
               />
             ))}
           </Bar>
-        </ComposedChart>
+        </BarChart>
       )}
     </AnalyticsCard>
   );

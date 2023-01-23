@@ -3,9 +3,10 @@ import { useTranslation } from 'react-i18next';
 import AnalyticsCard from '../../AnalyticsCard';
 import { Filter } from '../WOModal';
 import { useDispatch, useSelector } from '../../../../../store';
-import { useEffect } from 'react';
-import { getOverviewStats } from '../../../../../slices/analytics/workOrder';
+import { useContext, useEffect } from 'react';
 import Loading from '../../Loading';
+import { getAssetsCosts } from '../../../../../slices/analytics/asset';
+import { CompanySettingsContext } from '../../../../../contexts/CompanySettingsContext';
 
 interface WOStatusNumbersProps {
   handleOpenModal: (
@@ -17,10 +18,10 @@ interface WOStatusNumbersProps {
 function Overview({ handleOpenModal }: WOStatusNumbersProps) {
   const { t }: { t: any } = useTranslation();
   const dispatch = useDispatch();
-  const { overview, loading } = useSelector((state) => state.woAnalytics);
-
+  const { assetsCosts, loading } = useSelector((state) => state.assetAnalytics);
+  const { getFormattedCurrency } = useContext(CompanySettingsContext);
   useEffect(() => {
-    dispatch(getOverviewStats());
+    dispatch(getAssetsCosts());
   }, []);
 
   const formattedData: {
@@ -32,42 +33,34 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
     };
   }[] = [
     {
-      label: t('Count'),
-      value: overview.complete,
+      label: t('Total cost as Pct of RAV'),
+      value: `${assetsCosts.rav}%`,
       config: {
         columns: ['id'],
         filters: [{ key: 'fs', value: false }]
       }
     },
     {
-      label: t('Compliant'),
-      value: overview.compliant,
+      label: t('Total Maintenance Cost'),
+      value: getFormattedCurrency(assetsCosts.totalWOCosts),
       config: {
         columns: ['id'],
         filters: [{ key: 'fs', value: false }]
       }
     },
     {
-      label: t('Average Cycle Time (Days)'),
-      value: overview.avgCycleTime
-    },
-    {
-      label: t('Compliance rate'),
-      value: `${
-        overview.complete
-          ? ((overview.compliant * 100) / overview.complete).toFixed(0)
-          : 0
-      }%`
+      label: t('Total Purchase Price'),
+      value: getFormattedCurrency(assetsCosts.totalAcquisitionCost)
     }
   ];
   return (
     <AnalyticsCard
-      title="The numbers"
+      title="Cost Center"
       height={200}
-      description="Compliant work orders are defined as work orders that were completed before the due date. Cycle time refers to the number of days until a work order was completed."
+      description="Total cost as % of RAV is equal to (cost of work orders on asset / purchase price)*100. Industry standard is a target value of 3% for this metric"
     >
       <Stack sx={{ height: '100%', justifyContent: 'center' }}>
-        {loading.overview ? (
+        {loading.assetsCosts ? (
           <Loading />
         ) : (
           <Stack direction="row" spacing={2}>
