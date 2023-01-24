@@ -5,7 +5,8 @@ import { useContext, useEffect } from 'react';
 import { TitleContext } from '../../../../../contexts/TitleContext';
 import Overview from './Overview';
 import { Filter } from '../WOModal';
-import PartConsumptionsByMonth from './PartConsumptionsByMonth';
+import RequestStatsByPriority from './RequestStatsByPriority';
+import RequestsByMonth from './RequestsByMonth';
 
 interface WOStatusStatsProps {
   handleOpenWOModal: (
@@ -35,11 +36,14 @@ function RequestAnalysis({ handleOpenWOModal }: WOStatusStatsProps) {
         my={2}
         paddingX={1}
       >
-        <Grid item xs={12} md={12}>
+        <Grid item xs={12}>
           <Overview handleOpenModal={handleOpenWOModal} />
         </Grid>
         <Grid item xs={12}>
-          <PartConsumptionsByMonth handleOpenModal={handleOpenWOModal} />
+          <RequestStatsByPriority handleOpenModal={handleOpenWOModal} />
+        </Grid>
+        <Grid item xs={12}>
+          <RequestsByMonth handleOpenModal={handleOpenWOModal} />
         </Grid>
       </Grid>
     </>

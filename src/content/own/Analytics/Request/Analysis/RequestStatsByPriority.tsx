@@ -1,0 +1,98 @@
+import { useTheme } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { Cell, Legend, Pie, PieChart, Tooltip } from 'recharts';
+import AnalyticsCard from '../../AnalyticsCard';
+import { Filter } from '../WOModal';
+import { useDispatch, useSelector } from '../../../../../store';
+import { useEffect } from 'react';
+import Loading from '../../Loading';
+import { getRequestStatsByPriority } from '../../../../../slices/analytics/request';
+
+interface OwnProps {
+  handleOpenModal: (
+    columns: string[],
+    filters: Filter[],
+    title: string
+  ) => void;
+}
+function RequestStatsByPriority({ handleOpenModal }: OwnProps) {
+  const { t }: { t: any } = useTranslation();
+  const theme = useTheme();
+  const dispatch = useDispatch();
+  const { requestStatsByPriority, loading } = useSelector(
+    (state) => state.requestAnalytics
+  );
+
+  useEffect(() => {
+    dispatch(getRequestStatsByPriority());
+  }, []);
+
+  const columns: string[] = ['id'];
+
+  const formattedData: {
+    label: string;
+    count: number;
+    color: string;
+    filters: Filter[];
+  }[] = [
+    {
+      label: 'High',
+      count: requestStatsByPriority.high.count,
+      color: theme.colors.error.main,
+      filters: [{ key: 'fs', value: false }]
+    },
+    {
+      label: 'Medium',
+      count: requestStatsByPriority.medium.count,
+      color: theme.colors.warning.main,
+      filters: [{ key: 'fs', value: false }]
+    },
+    {
+      label: 'Low',
+      count: requestStatsByPriority.low.count,
+      color: theme.colors.success.main,
+      filters: [{ key: 'fs', value: false }]
+    },
+    {
+      label: 'None',
+      count: requestStatsByPriority.none.count,
+      color: theme.colors.alpha.black[70],
+      filters: [{ key: 'fs', value: false }]
+    }
+  ];
+  const title = t('Requests by Priority');
+  return (
+    <AnalyticsCard title={title}>
+      {loading.requestStatsByPriority ? (
+        <Loading />
+      ) : (
+        <PieChart width={200} height={300}>
+          <Pie
+            data={formattedData}
+            dataKey="count"
+            nameKey="label"
+            cx="50%"
+            cy="50%"
+            outerRadius={100}
+            innerRadius={50}
+            fill="#8884d8"
+          >
+            {formattedData.map((entry, index) => (
+              <Cell
+                key={index}
+                fill={entry.color}
+                onClick={() => {
+                  handleOpenModal(columns, entry.filters, title);
+                }}
+              />
+            ))}
+          </Pie>
+          <Tooltip />
+          <Legend />
+        </PieChart>
+      )}
+    </AnalyticsCard>
+  );
+}
+
+export default RequestStatsByPriority;
