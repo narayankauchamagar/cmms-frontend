@@ -4,6 +4,7 @@ import {
   Tooltip,
   tooltipClasses,
   TooltipProps,
+  useMediaQuery,
   useTheme
 } from '@mui/material';
 import { Link } from 'react-router-dom';
@@ -97,15 +98,17 @@ const TooltipWrapper = styled(({ className, ...props }: TooltipProps) => (
 function Logo() {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
-
+  const width = 104;
+  const height = 26;
+  const mobile = useMediaQuery(theme.breakpoints.down('sm'));
   return (
     <TooltipWrapper title="Grash" arrow>
       <LogoWrapper to="/overview">
         <LogoSignWrapper>
           <img
             src={'/static/images/logo/logo.png'}
-            width="104px"
-            height="26px"
+            width={`${width * (mobile ? 0.5 : 1)}px`}
+            height={`${height * (mobile ? 0.5 : 1)}px`}
           />
         </LogoSignWrapper>
       </LogoWrapper>
