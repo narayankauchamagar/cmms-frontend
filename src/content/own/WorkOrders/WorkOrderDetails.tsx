@@ -1131,7 +1131,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                   {t('files')}
                 </Typography>
                 <FilesList
-                  confirmMessage={t('confirm_remove_file_wo')}
+                  confirmMessage={t('confirm_delete_file_wo')}
                   removeDisabled={
                     !hasEditPermission(PermissionEntity.WORK_ORDERS, workOrder)
                   }

@@ -170,7 +170,7 @@ const frJSON = {
   'mobile-app.title':
     'Une application GMAO mobile qui renforce votre équipe de maintenance',
   'mobile-app.descriptions.0':
-    "Grâce à l'utilisation de nos applications mobiles Android et IOS, nos sous-traitants bénéficient d'une meilleure organisation, communication, responsabilité et productivité jusqu'à 30% pour l'ensemble de leur équipe de maintenance.",
+    "Grâce à l'utilisation de nos applications mobiles Android et IOS, nos prestataires bénéficient d'une meilleure organisation, communication, responsabilité et productivité jusqu'à 30% pour l'ensemble de leur équipe de maintenance.",
   'mobile-app.descriptions.1':
     "À partir de leur appareil portable, n'importe quel membre de votre équipe de maintenance peut :",
   'mobile-app.checks.0':
@@ -387,13 +387,13 @@ const frJSON = {
   completed_by: 'Terminé par',
   time: 'Temps',
   save: 'Sauvegarder',
-  customers: 'Sous-traitants',
+  customers: 'Prestataires',
   no_labor: "Aucun coût de main-d'œuvre n'a encore été ajouté. ",
   not_assigned: 'Non attribué',
   no_additional_cost: "Aucun coût supplémentaire n'a encore été ajouté",
   parts: 'Pièces',
   links: 'Liens',
-  confirm_remove_file_wo:
+  confirm_delete_file_wo:
     'Voulez-vous vraiment supprimer ce fichier de ce bon de travail ?',
   archive: 'Archiver',
   labors: "Main d'oeuvre",
@@ -520,7 +520,7 @@ const frJSON = {
   high_priority: 'Haute',
   //asset
   downtimes: "Temps d'arrêt",
-  confirm_remove_file_asset:
+  confirm_delete_file_asset:
     'Voulez-vous vraiment supprimer ce fichier de cet équipement?',
   actions: 'Actions',
   show: 'Montrer',
@@ -534,7 +534,7 @@ const frJSON = {
   warranty_expiration: 'Expiration de la garantie',
   asset_information: "Informations sur l'équipement",
   more_informations: "Plus d'informations",
-  confirm_remove_asset_downtime:
+  confirm_delete_asset_downtime:
     "Voulez-vous vraiment supprimer ce temps d'arrêt ?",
   create_downtime_success: "Le temps d'arrêt a été ajouté avec succès",
   create_downtime_failure: "Le temps d'arrêt n'a pas pu être ajouté",
@@ -548,7 +548,7 @@ const frJSON = {
   enter_meter_value: 'Entrez la valeur du compteur',
   add_reading: 'Ajouter un relevé',
   select_meter: 'Sélectionnez le compteur',
-  confirm_remove_part_asset:
+  confirm_delete_part_asset:
     'Voulez-vous vraiment supprimer cette pièce de cet équipement ?',
   no_due_date: "Pas de date d'échéance",
   due_at_date: 'Dû le {{date}}',
@@ -560,7 +560,7 @@ const frJSON = {
   select_asset_location: "Sélectionnez l'emplacement de l'équipement",
   primary_user_description: "Sélectionnez l'utilisateur principal",
   teams_description: 'Sélectionnez les équipes',
-  customers_description: 'Sélectionnez des sous-traitants',
+  customers_description: 'Sélectionnez des prestataires',
   vendors_description: 'Sélectionnez les fournisseurs',
   inServiceDate_description: 'Date de mise en service',
   warranty_expiration_date: "Date d'expiration de la garantie",
@@ -624,12 +624,12 @@ const frJSON = {
   no_file_in_location: 'Aucun fichier joint à cet emplacement',
   no_floor_plan_in_location: "Pas de plan d'étage à cet emplacement",
   assigned_teams: 'Équipes assignées',
-  assigned_customers: 'Sous-traitants assignés',
+  assigned_customers: 'Prestataires assignés',
   assigned_vendors: 'Fournisseurs affectés',
   no_access_location:
     "Vous n'avez pas accès aux emplacements. Veuillez contacter votre administrateur si vous devriez avoir accès.",
   no_access_vendors_customers:
-    "Vous n'avez pas accès aux fournisseurs et aux sous-traitants.Veuillez contacter votre administrateur si vous devriez avoir accès. ",
+    "Vous n'avez pas accès aux fournisseurs et aux prestataires.Veuillez contacter votre administrateur si vous devriez avoir accès. ",
   no_access_people_team:
     "Vous n'avez pas accès aux personnes et aux équipes. Veuillez contacter votre administrateur si vous devriez avoir accès.",
   no_access_analytics:
@@ -701,7 +701,7 @@ const frJSON = {
   'noRows.part.message':
     'Les pièces peuvent être combinées en jeux de pièce ou utilisées seules',
   'noRows.part.action': "Appuyez sur le bouton '+' pour créer une Pièce",
-  confirm_remove_part: 'Voulez-vous vraiment supprimer cette pièce?',
+  confirm_delete_part: 'Voulez-vous vraiment supprimer cette pièce?',
   part_details: 'Détails de la pièce',
   area_details: 'Détails de la zone',
   assigned_people: 'Personnes affectées',
@@ -743,7 +743,7 @@ const frJSON = {
   'noRows.po.message': 'Gérez vos bons de commande en un seul endroit',
   'noRows.po.action':
     "Appuyez sur le bouton '+' pour créer un bon de commande.",
-  confirm_remove_po: 'Voulez-vous vraiment supprimer ce bon de commande ?',
+  confirm_delete_po: 'Voulez-vous vraiment supprimer ce bon de commande ?',
   upgrade_po: 'Mettre à niveau pour créer des bons de commande',
   new_po: 'Nouveau bon de commande',
   po_create_success: 'Le bon de commande a été créé avec succès',
@@ -816,39 +816,38 @@ const frJSON = {
   invalid_files_type: 'Vous ne pouvez pas télécharger ces types de fichiers',
   you_have_uploaded: 'Vous avez téléchargé',
   upload: 'Télécharger',
-  Vendors_Customers: 'Fournisseurs & Sous-Traitants',
-  customer_create_success: 'Le sous-traitant a été créé avec succès',
-  customer_create_failure: "Le sous-traitant n'a pas pu être créé",
-  customer_edit_failure: "Le sous-traitant n'a pas pu être modifié",
-  customer_delete_success: 'Le sous-traitant a été supprimé avec succès',
-  customer_delete_failure: "Le sous-traitant n'a pas pu être supprimé",
-  customer_name: 'Nom du sous-traitant',
+  Vendors_Customers: 'Fournisseurs & Prestataires',
+  customer_create_success: 'Le prestataire a été créé avec succès',
+  customer_create_failure: "Le prestataire n'a pas pu être créé",
+  customer_edit_failure: "Le prestataire n'a pas pu être modifié",
+  customer_delete_success: 'Le prestataire a été supprimé avec succès',
+  customer_delete_failure: "Le prestataire n'a pas pu être supprimé",
+  customer_name: 'Nom du prestataire',
   website: 'Site Internet',
-  customer_type: 'Type de sous-traitant',
+  customer_type: 'Type de prestataire',
   customer_type_description: 'ex. ',
   customer_description_description:
-    'Décrivez le but de ce sous-traitant en quelques lignes...',
+    'Décrivez le but de ce prestataire en quelques lignes...',
   rate: 'Fréquence',
   billing_information: 'Détails sur la facturation',
   address_line_2: 'Adresse Ligne 2',
   billing_name: 'Nom de la facturation',
   currency: 'Devise',
   select_currency: 'Sélectionnez la devise',
-  required_customer_name: 'Le nom du sous-traitant est requis',
+  required_customer_name: 'Le nom du prestataire est requis',
   required_phone: 'Le numéro de téléphone est obligatoire',
   invalid_website: 'Site Web invalide',
   billing_address: 'Adresse de facturation',
-  add_customer: 'Ajouter un sous-traitant',
+  add_customer: 'Ajouter un prestataire',
   add_customer_description:
-    'Remplissez les champs ci-dessous pour créer et ajouter un nouveau sous-traitant',
-  'noRows.customer.message':
-    'Les sous-traitants sont des travailleurs externes',
+    'Remplissez les champs ci-dessous pour créer et ajouter un nouveau prestataire',
+  'noRows.customer.message': 'Les prestataires sont des travailleurs externes',
   'noRows.customer.action':
-    "Appuyez sur le bouton '+' pour créer un sous-traitant",
+    "Appuyez sur le bouton '+' pour créer un prestataire",
   type: 'Taper',
   billing_currency: 'Devise de facturation',
   go_back: 'Retourner',
-  confirm_delete_customer: 'Voulez-vous vraiment supprimer ce sous-traitant ?',
+  confirm_delete_customer: 'Voulez-vous vraiment supprimer ce prestataire ?',
   vendor_create_success: 'Le fournisseur a été créé avec succès',
   vendor_create_failure: "Le fournisseur n'a pas pu être créé",
   vendor_edit_failure: "Le fournisseur n'a pas pu être modifié",
@@ -904,7 +903,7 @@ const frJSON = {
     "L'administrateur a un accès complet; y compris l'édition, l'ajout, la suppression d'ordres de travail et de demandes",
   LIMITED_ADMIN_name: 'Administrateur limité',
   LIMITED_ADMIN_description:
-    "Les administrateurs limités ont le même accès que l'administrateur, sauf qu'ils ne peuvent pas afficher/modifier les paramètres ou ajouter/modifier des personnes et des équipes. Ils ne peuvent pas supprimer les ordres de travail, les emplacements des actifs, les compteurs et les bons de commande à moins d'avoir créé des déclencheurs d'ordre de travail, des catégories ou des sous-traitants.",
+    "Les administrateurs limités ont le même accès que l'administrateur, sauf qu'ils ne peuvent pas afficher/modifier les paramètres ou ajouter/modifier des personnes et des équipes. Ils ne peuvent pas supprimer les ordres de travail, les emplacements des actifs, les compteurs et les bons de commande à moins d'avoir créé des déclencheurs d'ordre de travail, des catégories ou des prestataires.",
   TECHNICIAN_name: 'Technicien',
   TECHNICIAN_description:
     "Les techniciens peuvent créer et clôturer des ordres de travail, des équipe et des emplacements. Capables de modifier et de supprimer uniquement ce qu'ils ont créé",
@@ -936,7 +935,24 @@ const frJSON = {
   upgrade_files:
     'Mettez à niveau pour utiliser des fichiers dans vos équipements, ordres de travail, emplacements, etc.',
   parts_consumption: 'Consommation des pièces',
-  requests_analysis: 'Analyse des Demandes'
+  requests_analysis: 'Analyse des Demandes',
+  category_create_success: 'La catégorie a été créée avec succès',
+  category_create_failure: "La catégorie n'a pas pu être créée",
+  category_edit_failure: "La catégorie n'a pas pu être modifiée",
+  category_delete_success: 'La catégorie a été supprimée avec succès',
+  category_delete_failure: "La catégorie n'a pas pu être supprimée",
+  timers: 'Minuteries',
+  costs: 'Coûts',
+  add_category: 'Ajouter une nouvelle catégorie',
+  add_category_description:
+    'Entrez le nom pour créer et ajouter une nouvelle catégorie',
+  edit_category: 'Modifier la catégorie',
+  edit_category_description: 'Entrez le nom pour modifier la catégorie',
+  no_category_action:
+    "Appuyez sur le bouton '+' pour ajouter votre première catégorie.",
+  confirm_delete_category: 'Voulez-vous vraiment supprimer cette catégorie ?',
+  no_category_message:
+    "Il semble que vous n'ayez pas encore de catégories sur les {{categoryName}}."
 };
 
 export default frJSON;

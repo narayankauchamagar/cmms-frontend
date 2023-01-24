@@ -41,7 +41,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
     },
     {
       label: t('Availability percentage'),
-      value: overview.availability.toFixed(1),
+      value: overview.availability?.toFixed(1),
       config: {
         columns: ['id'],
         filters: [{ key: 'fs', value: false }]

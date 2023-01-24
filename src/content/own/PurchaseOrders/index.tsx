@@ -551,7 +551,7 @@ function PurchaseOrders() {
             }}
             onConfirm={() => handleDelete(currentPurchaseOrder?.id)}
             confirmText={t('to_delete')}
-            question={t('confirm_remove_po')}
+            question={t('confirm_delete_po')}
           />
         </>
       );

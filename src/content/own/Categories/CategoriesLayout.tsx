@@ -97,36 +97,36 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
     setOpenDelete(false);
   };
   useEffect(() => {
-    setTitle(t('Categories'));
+    setTitle(t('categories'));
     if (hasViewPermission(PermissionEntity.CATEGORIES_WEB))
       dispatch(getCategories(basePath));
   }, []);
 
   const onCreationSuccess = () => {
     handleCloseAdd();
-    showSnackBar(t('The Category has been created successfully'), 'success');
+    showSnackBar(t('category_create_success'), 'success');
   };
   const onCreationFailure = (err) =>
-    showSnackBar(t("The Category couldn't be created"), 'error');
+    showSnackBar(t('category_create_failure'), 'error');
   const onEditSuccess = () => {
     setOpenUpdateCategoryModal(false);
     showSnackBar(t('changes_saved_success'), 'success');
   };
   const onEditFailure = (err) =>
-    showSnackBar(t("The Category couldn't be edited"), 'error');
+    showSnackBar(t('category_edit_failure'), 'error');
   const onDeleteSuccess = () => {
-    showSnackBar(t('The Category has been deleted successfully'), 'success');
+    showSnackBar(t('category_delete_success'), 'success');
   };
   const onDeleteFailure = (err) =>
-    showSnackBar(t("The Category couldn't be deleted"), 'error');
+    showSnackBar(t('category_delete_failure'), 'error');
 
   const tabs = [
-    { value: '', label: t('Work Orders') },
-    { value: 'asset', label: t('Assets') },
-    { value: 'purchase-order', label: t('Purchase Orders') },
-    { value: 'meter', label: t('Meters') },
-    { value: 'time', label: t('Timers') },
-    { value: 'cost', label: t('Costs') }
+    { value: '', label: t('work_orders') },
+    { value: 'asset', label: t('assets') },
+    { value: 'purchase-order', label: t('purchase_orders') },
+    { value: 'meter', label: t('meters') },
+    { value: 'time', label: t('timers') },
+    { value: 'cost', label: t('costs') }
   ];
   const renderModal = () => (
     <Dialog
@@ -141,16 +141,16 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Add new category')}
+          {t('add_category')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the name to create and add a new category')}
+          {t('add_category_description')}
         </Typography>
       </DialogTitle>
       <Formik
         initialValues={{ name: '' }}
         validationSchema={Yup.object().shape({
-          name: Yup.string().max(30).required(t('The name field is required'))
+          name: Yup.string().max(30).required(t('required_name'))
         })}
         onSubmit={async (
           values,
@@ -217,7 +217,7 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
                 disabled={isSubmitting}
                 variant="contained"
               >
-                {t('Add new category')}
+                {t('add_category')}
               </Button>
             </DialogActions>
           </form>
@@ -238,16 +238,16 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Edit category')}
+          {t('edit_category')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the name to edit category')}
+          {t('edit_category_description')}
         </Typography>
       </DialogTitle>
       <Formik
         initialValues={{ name: currentCategory?.name }}
         validationSchema={Yup.object().shape({
-          name: Yup.string().max(30).required(t('The name field is required'))
+          name: Yup.string().max(30).required(t('required_name'))
         })}
         onSubmit={async (
           values,
@@ -339,7 +339,7 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
             ? handleOpenAdd
             : null
         }
-        actionTitle={t('Categories')}
+        actionTitle={t('categories')}
       >
         {renderModal()}
         {renderUpdateModal()}
@@ -458,12 +458,12 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
             ) : (
               <Box display="flex" flexDirection="column" alignItems="center">
                 <Typography variant="h4">
-                  {t(
-                    `Looks like you don\'t have any ${tabs[tabIndex].label} Categories yet.`
-                  )}
+                  {t('no_category_message', {
+                    categoryName: tabs[tabIndex].label
+                  })}
                 </Typography>
                 <Typography sx={{ mt: 1 }} variant="h6">
-                  {t('Press the "+" button to add your first category.')}
+                  {t('no_category_action')}
                 </Typography>
               </Box>
             )}
@@ -476,7 +476,7 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
           }}
           onConfirm={() => handleDelete(currentCategory?.id)}
           confirmText={t('to_delete')}
-          question={t('Are you sure you want to delete this Category?')}
+          question={t('confirm_delete_category')}
         />
       </MultipleTabsLayout>
     );

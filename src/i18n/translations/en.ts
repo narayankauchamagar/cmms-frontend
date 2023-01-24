@@ -285,7 +285,7 @@ const enJSON = {
   no_additional_cost: 'No Additional costs have been added yet',
   parts: 'Parts',
   links: 'Links',
-  confirm_remove_file_wo:
+  confirm_delete_file_wo:
     'Are you sure you want to remove this file from this Work Order ?',
   archive: 'Archive',
   labors: 'Labors',
@@ -406,7 +406,7 @@ const enJSON = {
   high_priority: 'High',
   //asset
   downtimes: 'Downtimes',
-  confirm_remove_file_asset:
+  confirm_delete_file_asset:
     'Are you sure you want to remove this File from this asset?',
   actions: 'Actions',
   show: 'Show',
@@ -420,7 +420,7 @@ const enJSON = {
   warranty_expiration: 'Warranty expiration',
   asset_information: 'Asset Information',
   more_informations: 'More Informations',
-  confirm_remove_asset_downtime:
+  confirm_delete_asset_downtime:
     'Are you sure you want to remove this Downtime?',
   create_downtime_success: 'The Downtime has been added successfully',
   create_downtime_failure: "The Downtime couldn't be added",
@@ -434,7 +434,7 @@ const enJSON = {
   enter_meter_value: 'Enter Meter value',
   add_reading: 'Add Reading',
   select_meter: 'Select Meter',
-  confirm_remove_part_asset:
+  confirm_delete_part_asset:
     'Are you sure you want to remove this Part from this asset?',
   no_due_date: 'No Due Date',
   due_at_date: 'Due {{date}}',
@@ -578,7 +578,7 @@ const enJSON = {
   update_part_description: 'Fill in the fields below to update the Part',
   'noRows.part.message': 'Parts can be combined into assets or used alone',
   'noRows.part.action': "Press the '+' button to create a Part",
-  confirm_remove_part: 'Are you sure you want to delete this Part?',
+  confirm_delete_part: 'Are you sure you want to delete this Part?',
   part_details: 'Part details',
   area_details: 'Area details',
   assigned_people: 'Assigned people',
@@ -618,7 +618,7 @@ const enJSON = {
   purchase_order: 'Purchase Order',
   'noRows.po.message': 'Manage your Purchase Orders in a single place',
   'noRows.po.action': "Press the '+' button to create a Purchase Order.",
-  confirm_remove_po: 'Are you sure you want to delete this Purchase Order?',
+  confirm_delete_po: 'Are you sure you want to delete this Purchase Order?',
   upgrade_po: 'Upgrade to create Purchase Orders',
   new_po: 'New Purchase Order',
   po_create_success: 'The Purchase Order has been created successfully',
@@ -805,7 +805,23 @@ const enJSON = {
   upgrade_files:
     'Upgrade to use files in your Assets, Work Orders, Locations etc...',
   parts_consumption: 'Parts Consumption',
-  requests_analysis: 'Request Analysis'
+  requests_analysis: 'Request Analysis',
+  //categories,
+  category_create_success: 'The Category has been created successfully',
+  category_create_failure: "The Category couldn't be created",
+  category_edit_failure: "The Category couldn't be edited",
+  category_delete_success: 'The Category has been deleted successfully',
+  category_delete_failure: "The Category couldn't be deleted",
+  timers: 'Timers',
+  costs: 'Costs',
+  add_category: 'Add new category',
+  add_category_description: 'Fill in the name to create and add a new category',
+  edit_category: 'Edit Category',
+  edit_category_description: 'Fill in the name to edit category',
+  no_category_action: "Press the '+' button to add your first category.",
+  confirm_delete_category: 'Are you sure you want to delete this Category?',
+  no_category_message:
+    "Looks like you don't have any {{categoryName}} Categories yet."
 };
 
 export default enJSON;

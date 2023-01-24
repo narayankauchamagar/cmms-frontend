@@ -609,7 +609,7 @@ const Parts = ({ setAction }: PropsType) => {
         }}
         onConfirm={() => handleDelete(currentPart?.id)}
         confirmText={t('to_delete')}
-        question={t('confirm_remove_part')}
+        question={t('confirm_delete_part')}
       />
     </Box>
   );

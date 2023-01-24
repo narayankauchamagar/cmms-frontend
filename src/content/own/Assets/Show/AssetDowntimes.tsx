@@ -65,7 +65,7 @@ const AssetDowntimes = ({ asset }: PropsType) => {
     if (asset) dispatch(getAssetDowntimes(asset.id));
   }, [asset]);
   const handleDelete = (id: number) => {
-    if (window.confirm(t('confirm_remove_asset_downtime'))) {
+    if (window.confirm(t('confirm_delete_asset_downtime'))) {
       dispatch(deleteAssetDowntime(asset.id, id));
     }
   };

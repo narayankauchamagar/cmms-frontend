@@ -25,7 +25,7 @@ const AssetFiles = ({ asset }: PropsType) => {
   const { hasEditPermission, hasDeletePermission } = useAuth();
 
   const handleDelete = (id: number) => {
-    if (window.confirm(t('confirm_remove_file_asset'))) {
+    if (window.confirm(t('confirm_delete_file_asset'))) {
       dispatch(
         editAsset(asset.id, {
           ...asset,
