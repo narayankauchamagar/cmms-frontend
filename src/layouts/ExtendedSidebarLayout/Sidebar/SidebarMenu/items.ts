@@ -117,6 +117,16 @@ const ownMenuItems: MenuItems[] = [
                 link: '/app/analytics/parts/consumption'
               }
             ]
+          },
+          {
+            name: 'requests',
+            icon: MoveToInboxTwoToneIcon,
+            items: [
+              {
+                name: 'requests_analysis',
+                link: '/app/analytics/requests/analysis'
+              }
+            ]
           }
         ]
       },

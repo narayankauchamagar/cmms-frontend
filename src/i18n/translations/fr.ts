@@ -935,7 +935,8 @@ const frJSON = {
   'noRows.file.action': "Appuyez sur le bouton '+' pour télécharger un fichier",
   upgrade_files:
     'Mettez à niveau pour utiliser des fichiers dans vos équipements, ordres de travail, emplacements, etc.',
-  parts_consumption: 'Consommation des pièces'
+  parts_consumption: 'Consommation des pièces',
+  requests_analysis: 'Analyse des Demandes'
 };
 
 export default frJSON;
