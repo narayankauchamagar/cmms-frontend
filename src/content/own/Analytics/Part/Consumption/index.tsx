@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { useContext, useEffect } from 'react';
 import { TitleContext } from '../../../../../contexts/TitleContext';
 import Overview from './Overview';
-import DowntimesAndCosts from './DowntimesAndCosts';
 import { Filter } from '../WOModal';
+import PartConsumptionsByMonth from './PartConsumptionsByMonth';
 
 interface WOStatusStatsProps {
   handleOpenWOModal: (
@@ -39,7 +39,7 @@ function PartsConsumption({ handleOpenWOModal }: WOStatusStatsProps) {
           <Overview handleOpenModal={handleOpenWOModal} />
         </Grid>
         <Grid item xs={12}>
-          <DowntimesAndCosts handleOpenModal={handleOpenWOModal} />
+          <PartConsumptionsByMonth handleOpenModal={handleOpenWOModal} />
         </Grid>
       </Grid>
     </>

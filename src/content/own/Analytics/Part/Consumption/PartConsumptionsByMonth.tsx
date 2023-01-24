@@ -2,11 +2,10 @@ import { useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import {
   Bar,
+  BarChart,
   CartesianGrid,
   Cell,
-  ComposedChart,
   Legend,
-  Line,
   Tooltip,
   XAxis,
   YAxis
@@ -17,61 +16,56 @@ import { useDispatch, useSelector } from '../../../../../store';
 import { useEffect } from 'react';
 import { getRandomColor } from '../../../../../utils/overall';
 import Loading from '../../Loading';
-import { getDowntimesAndCostsByAsset } from '../../../../../slices/analytics/asset';
+import { getDayAndMonth } from '../../../../../utils/dates';
+import { getPartConsumptionsByMonth } from '../../../../../slices/analytics/part';
 
-interface WOByPrimaryUserProps {
+interface DowntimesByMonthProps {
   handleOpenModal: (
     columns: string[],
     filters: Filter[],
     title: string
   ) => void;
 }
-function DowntimesAndCosts({ handleOpenModal }: WOByPrimaryUserProps) {
+function PartConsumptionsByMonth({ handleOpenModal }: DowntimesByMonthProps) {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
   const dispatch = useDispatch();
-  const { downtimesAndCostsByAsset, loading } = useSelector(
-    (state) => state.assetAnalytics
+  const { partConsumptionsByMonth, loading } = useSelector(
+    (state) => state.partAnalytics
   );
 
   useEffect(() => {
-    dispatch(getDowntimesAndCostsByAsset());
+    dispatch(getPartConsumptionsByMonth());
   }, []);
 
   const columns: string[] = ['id'];
 
   const formattedData: {
     label: string;
-    duration: string;
     cost: string;
     color: string;
     filters: Filter[];
-  }[] = downtimesAndCostsByAsset.map((asset) => {
+  }[] = partConsumptionsByMonth.map((month) => {
     return {
-      label: asset.name,
-      duration: (asset.duration / 3600).toFixed(2),
-      cost: asset.workOrdersCosts.toFixed(2),
+      label: getDayAndMonth(month.date),
+      cost: month.cost.toFixed(2),
       color: getRandomColor(),
-      filters: [{ key: 'user', value: asset.id }]
+      filters: [{ key: 'month', value: month.date }]
     };
   });
-  const title = t('Downtime and Costs');
+  const title = t('Consumed Parts Costs');
   return (
     <AnalyticsCard title={title}>
-      {loading.downtimesAndCostsByAsset ? (
+      {loading.partConsumptionsByMonth ? (
         <Loading />
       ) : (
-        <ComposedChart width={400} height={508} data={formattedData}>
+        <BarChart width={900} height={508} data={formattedData}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="label" />
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar
-            dataKey="duration"
-            fill="#8884d8"
-            name={t('Total Downtime (hours)')}
-          >
+          <Bar dataKey="cost" fill="#8884d8" name={t('cost')}>
             {formattedData.map((entry, index) => (
               <Cell
                 key={index}
@@ -82,16 +76,10 @@ function DowntimesAndCosts({ handleOpenModal }: WOByPrimaryUserProps) {
               />
             ))}
           </Bar>
-          <Line
-            name={t('cost')}
-            type="monotone"
-            dataKey="cost"
-            stroke="#ff7300"
-          />
-        </ComposedChart>
+        </BarChart>
       )}
     </AnalyticsCard>
   );
 }
 
-export default DowntimesAndCosts;
+export default PartConsumptionsByMonth;

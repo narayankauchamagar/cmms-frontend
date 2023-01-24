@@ -82,7 +82,7 @@ function TimeByWeek({ handleOpenModal }: WOStatusIncompleteProps) {
           <CircularProgress />
         </Stack>
       ) : (
-        <LineChart width={400} height={508} data={formattedData}>
+        <LineChart width={508} height={508} data={formattedData}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="label" />
           <YAxis />

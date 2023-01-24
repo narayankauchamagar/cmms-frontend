@@ -63,7 +63,7 @@ function IncompleteWOByUser({ handleOpenModal }: WOStatusIncompleteProps) {
       {loading.incompleteByUser ? (
         <Loading />
       ) : (
-        <ComposedChart width={400} height={508} data={formattedData}>
+        <ComposedChart width={508} height={508} data={formattedData}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="label" />
           <YAxis />

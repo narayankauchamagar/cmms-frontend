@@ -109,7 +109,7 @@ const ownMenuItems: MenuItems[] = [
             ]
           },
           {
-            name: 'Parts',
+            name: 'parts',
             icon: HandymanTwoToneIcon,
             items: [
               {
