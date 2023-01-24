@@ -1,4 +1,4 @@
-import { Box, Button, Card, Container, styled } from '@mui/material';
+import { Box, Button, Card, Container, Stack, styled } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
@@ -36,23 +36,33 @@ function Overview() {
       </Helmet>
       <HeaderWrapper>
         <Container maxWidth="lg">
-          <Box display="flex" alignItems="center">
+          <Stack direction="row" alignItems="center">
             <Logo />
-            <Box
-              display="flex"
+            <Stack
+              direction="row"
               alignItems="center"
               justifyContent="space-between"
               flex={1}
             >
               <Box />
-              <Box>
-                <LanguageSwitcher />
+              <Stack direction="row" spacing={{ xs: 1, md: 2 }}>
+                <Box
+                  sx={{
+                    display: {
+                      xs: 'none',
+                      sm: 'block'
+                    }
+                  }}
+                >
+                  <LanguageSwitcher />
+                </Box>
                 <Button
                   component={RouterLink}
-                  to="/extended-sidebar/dashboards"
+                  to="/app/work-orders"
                   variant="outlined"
                   sx={{
-                    ml: 2
+                    ml: 2,
+                    size: { xs: 'small', md: 'medium' }
                   }}
                 >
                   {t('login')}
@@ -62,14 +72,15 @@ function Overview() {
                   to="/account/register"
                   variant="contained"
                   sx={{
-                    ml: 2
+                    ml: 2,
+                    size: { xs: 'small', md: 'medium' }
                   }}
                 >
                   {t('start_trial')}
                 </Button>
-              </Box>
-            </Box>
-          </Box>
+              </Stack>
+            </Stack>
+          </Stack>
         </Container>
       </HeaderWrapper>
       <Hero />
