@@ -803,7 +803,8 @@ const enJSON = {
   'noRows.file.message': 'Get All files in a Single place',
   'noRows.file.action': "Press the '+' button to upload a File",
   upgrade_files:
-    'Upgrade to use files in your Assets, Work Orders, Locations etc...'
+    'Upgrade to use files in your Assets, Work Orders, Locations etc...',
+  parts_consumption: 'Parts Consumption'
 };
 
 export default enJSON;

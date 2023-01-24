@@ -107,6 +107,16 @@ const ownMenuItems: MenuItems[] = [
                 link: '/app/analytics/assets/useful-life'
               }
             ]
+          },
+          {
+            name: 'Parts',
+            icon: HandymanTwoToneIcon,
+            items: [
+              {
+                name: 'parts_consumption',
+                link: '/app/analytics/parts/consumption'
+              }
+            ]
           }
         ]
       },
