@@ -65,15 +65,15 @@ export default function SingleTask({
   );
 
   const subtaskOptions = [
-    { label: t('Open'), value: 'OPEN' },
-    { label: t('In Progress'), value: 'IN_PROGRESS' },
-    { label: t('On Hold'), value: 'ON_HOLD' },
-    { label: t('Complete'), value: 'COMPLETE' }
+    { label: t('OPEN'), value: 'OPEN' },
+    { label: t('IN_PROGRESS'), value: 'IN_PROGRESS' },
+    { label: t('ON_HOLD'), value: 'ON_HOLD' },
+    { label: t('COMPLETE'), value: 'COMPLETE' }
   ];
   const inspectionOptions = [
-    { label: t('Pass'), value: 'PASS' },
-    { label: t('Flag'), value: 'FLAG' },
-    { label: t('Fail'), value: 'FAIL' }
+    { label: t('PASS'), value: 'PASS' },
+    { label: t('FLAG'), value: 'FLAG' },
+    { label: t('FAIL'), value: 'FAIL' }
   ];
 
   const getOptions = (type: TaskType, options: TaskOption[]) => {
@@ -107,7 +107,7 @@ export default function SingleTask({
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Box>
           <Typography variant="h6" fontWeight="bold">
-            {task.taskBase.label || `<${t('Enter a task name')}>`}
+            {task.taskBase.label || `<${t('enter_task_name')}>`}
           </Typography>
           {['SUBTASK', 'INSPECTION', 'MULTIPLE'].includes(
             task.taskBase.taskType
@@ -138,7 +138,7 @@ export default function SingleTask({
               <TextField
                 onChange={debouncedChangeHandler}
                 defaultValue={task.value}
-                label={t('Value')}
+                label={t('value')}
                 disabled={
                   task.taskBase.user && task.taskBase.user.id !== user.id
                 }
@@ -152,7 +152,7 @@ export default function SingleTask({
           )}
         </Box>
         <Box>
-          <Tooltip arrow placement="top" title={t('See details')}>
+          <Tooltip arrow placement="top" title={t('see_details')}>
             <IconButton onClick={() => !preview && toggleNotes(task.id)}>
               <ArrowDropDownCircleTwoToneIcon />
             </IconButton>
@@ -166,7 +166,7 @@ export default function SingleTask({
               <SpeedTwoToneIcon color="primary" />
             </IconButton>
           )}
-          <Tooltip arrow placement="top" title={t('Add Notes')}>
+          <Tooltip arrow placement="top" title={t('add_notes')}>
             <IconButton onClick={() => !preview && toggleNotes(task.id)}>
               <NoteTwoToneIcon color="primary" />
             </IconButton>
@@ -206,7 +206,7 @@ export default function SingleTask({
           sx={{ mt: 1 }}
         >
           <Typography variant="h6" fontWeight="bold">
-            {t('Concerned Asset')}
+            {t('concerned_asset')}
           </Typography>
           <Link variant="h6" href={getAssetUrl(task.taskBase.asset.id)}>
             {task.taskBase.asset.name}
@@ -224,7 +224,7 @@ export default function SingleTask({
             {t('assigned_to')}
           </Typography>
           {task.taskBase.user.id === user.id ? (
-            <Typography variant="h6">{t('Me')}</Typography>
+            <Typography variant="h6">{t('me')}</Typography>
           ) : (
             <Link variant="h6" href={getUserUrl(task.taskBase.user.id)}>
               {`${task.taskBase.user.firstName} ${task.taskBase.user.lastName}`}

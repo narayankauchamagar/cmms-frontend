@@ -1029,7 +1029,36 @@ const frJSON = {
   checklist_delete_failure: "La Checklist n'a pas pu être supprimée",
   create_checklist: 'Créer une Checklist',
   confirm_delete_checklist: 'Voulez-vous vraiment supprimer cette Checklist?',
-  upgrade_checklist: 'Veuillez mettre à niveau pour utiliser les Checklists'
+  upgrade_checklist: 'Veuillez mettre à niveau pour utiliser les Checklists',
+  upgrade_now: 'Mettre à jour maintenant',
+  total: 'Total',
+  sub_task_status: 'Sous-tâche',
+  text_field: 'Champ de texte',
+  number_field: 'Champ numérique',
+  inspection_check: "Contrôle d'inspection",
+  multiple_choices: 'Choix multiples',
+  meter_reading: 'Relevé de compteur',
+  select_user: "Sélectionnez l'utilisateur",
+  PASS: 'Passé',
+  FLAG: 'Signalé',
+  FAIL: 'Échoué',
+  enter_task_name: 'Entrez un nom de tâche',
+  see_details: 'Voir les détails',
+  concerned_asset: 'Equipement concerné',
+  me: 'Moi',
+  remove_blank_tasks: 'Supprimer les tâches vides',
+  remove_blank_options: 'Supprimer les options vides',
+  preview: 'Aperçu',
+  edit_checklist: 'Modifier la checklist',
+  add_tasks: 'Ajouter des tâches',
+  use_a_checklist: 'Utilisr une Checklist',
+  select_checklist: 'Sélectionner une Checklist',
+  save_checklist: 'Enregistrer la Checklist',
+  assign_tasks_description:
+    'Attribuez des tâches personnalisées aux techniciens à remplir',
+  select_date: 'Sélectionner une date',
+  task: 'Tâche',
+  checklist: 'Checklist'
 };
 
 export default frJSON;

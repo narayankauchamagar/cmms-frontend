@@ -290,7 +290,7 @@ export default (props: PropsType) => {
                     {values ? values.length : null} Tasks
                   </Typography>
                   <Typography variant="subtitle1">
-                    {t('Assign Custom Tasks for technicians to fill out')}
+                    {t('assign_tasks_description')}
                   </Typography>
                 </Box>
                 <IconButton>
@@ -413,7 +413,7 @@ export default (props: PropsType) => {
                                 ? formik.errors[field.name]
                                 : ''
                             }
-                            placeholder={t('Select date...')}
+                            placeholder={t('select_date')}
                             required={field?.required}
                             {...params}
                           />

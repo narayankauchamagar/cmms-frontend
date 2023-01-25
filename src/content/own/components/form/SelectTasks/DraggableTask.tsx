@@ -69,12 +69,12 @@ const DraggableListItem = ({
     setAnchorEl(null);
   };
   const taskTypes = [
-    { label: t('Sub-task Status'), value: 'SUBTASK' },
-    { label: t('Text Field'), value: 'TEXT' },
-    { label: t('Number Field'), value: 'NUMBER' },
-    { label: t('Inspection Check'), value: 'INSPECTION' },
-    { label: t('Multiple Choice'), value: 'MULTIPLE' },
-    { label: t('Meter Reading'), value: 'METER' }
+    { label: t('sub_task_status'), value: 'SUBTASK' },
+    { label: t('text_field'), value: 'TEXT' },
+    { label: t('number_field'), value: 'NUMBER' },
+    { label: t('inspection_check'), value: 'INSPECTION' },
+    { label: t('multiple_choices'), value: 'MULTIPLE' },
+    { label: t('meter_reading'), value: 'METER' }
   ];
   const [openAssignUser, setOpenAssignUser] = useState<boolean>(
     !!task.taskBase.user
@@ -214,7 +214,7 @@ const DraggableListItem = ({
                       defaultValue=""
                       value={task.taskBase.user?.id ?? ''}
                     >
-                      <MenuItem value="">{t('Select User')}</MenuItem>
+                      <MenuItem value="">{t('select_user')}</MenuItem>
                       {usersMini.map((user) => (
                         <MenuItem
                           key={user.id}
@@ -238,7 +238,7 @@ const DraggableListItem = ({
                       defaultValue=""
                       value={task.taskBase.asset?.id ?? ''}
                     >
-                      <MenuItem value="">{t('Select Asset')}</MenuItem>
+                      <MenuItem value="">{t('select_asset')}</MenuItem>
                       {assetsMini.map((asset) => (
                         <MenuItem key={asset.id} value={asset.id}>
                           {asset.name}

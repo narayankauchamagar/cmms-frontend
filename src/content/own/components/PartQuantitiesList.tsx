@@ -84,7 +84,7 @@ export default function PartQuantitiesList({
         <ListItemText
           primary={
             <Typography variant="h6" fontWeight="bold">
-              {t('Total')}
+              {t('total')}
             </Typography>
           }
         />

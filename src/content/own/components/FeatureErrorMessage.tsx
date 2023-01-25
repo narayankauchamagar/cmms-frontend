@@ -26,7 +26,7 @@ export default function FeatureErrorMessage({ message }: { message: string }) {
             variant="contained"
             size="large"
           >
-            {t('Upgrade Now')}
+            {t('upgrade_now')}
           </Button>
         )}
       </Stack>

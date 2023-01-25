@@ -145,7 +145,7 @@ export default function SelectTasks({
   };
   const onSave = () => {
     if (tasks.some((task) => !task.taskBase.label)) {
-      showError(t('Remove blank tasks'));
+      showError(t('remove_blank_tasks'));
     } else if (
       tasks.some(
         (task) =>
@@ -153,7 +153,7 @@ export default function SelectTasks({
           task.taskBase.options.some((option) => !option.label.trim())
       )
     ) {
-      showError(t('Remove blank options'));
+      showError(t('remove_blank_options'));
     } else {
       setSubmitting(true);
       onSelect(tasks, { name, description, category })
@@ -168,7 +168,7 @@ export default function SelectTasks({
   };
   const tabs = [
     { value: 'edit', label: t('edit') },
-    { value: 'preview', label: t('Preview') }
+    { value: 'preview', label: t('preview') }
   ];
   const addTask = () => {
     setTasks([
@@ -207,10 +207,10 @@ export default function SelectTasks({
         >
           <Typography variant="h4" gutterBottom>
             {action === 'createChecklist'
-              ? t('Create checklist')
+              ? t('create_checklist')
               : action === 'editChecklist'
-              ? t('Edit Checklist')
-              : t('Add Tasks')}
+              ? t('edit_checklist')
+              : t('add_tasks')}
           </Typography>
         </DialogTitle>
         <DialogContent
@@ -242,13 +242,13 @@ export default function SelectTasks({
             </Tabs>
             <Box>
               <Button onClick={addTask} startIcon={<AddTwoToneIcon />}>
-                Task
+                {t('task')}
               </Button>
               <Tooltip
                 title={
                   hasFeature(PlanFeature.CHECKLIST)
-                    ? t('Use a checklist')
-                    : t('Upgrade to use checklists')
+                    ? t('use_a_checklist')
+                    : t('upgrade_checklist')
                 }
               >
                 <span>
@@ -257,7 +257,7 @@ export default function SelectTasks({
                     startIcon={<AddTwoToneIcon />}
                     onClick={() => setOpenChecklist(true)}
                   >
-                    Checklist
+                    {t('checklist')}
                   </Button>
                 </span>
               </Tooltip>
@@ -277,7 +277,7 @@ export default function SelectTasks({
                   )
                 }
               >
-                <MenuItem value="">{t('Select Checklist')}</MenuItem>
+                <MenuItem value="">{t('select_checklist')}</MenuItem>
                 {checklists.map((checklist) => (
                   <MenuItem key={checklist.id} value={checklist.id}>
                     {checklist.name}
@@ -293,17 +293,17 @@ export default function SelectTasks({
                       <Grid item>
                         <TextField
                           variant="outlined"
-                          label="Name"
+                          label={t('name')}
                           value={name}
                           onChange={(event) => setName(event.target.value)}
                           error={name?.trim() === ''}
-                          helperText={t('The name is required')}
+                          helperText={t('required_name')}
                         />
                       </Grid>
                       <Grid item>
                         <TextField
                           variant="outlined"
-                          label="Description"
+                          label={t('description')}
                           value={description}
                           onChange={(event) =>
                             setDescription(event.target.value)
@@ -314,7 +314,7 @@ export default function SelectTasks({
                         <TextField
                           variant="outlined"
                           value={category}
-                          label="Category"
+                          label={t('category')}
                           onChange={(event) => setCategory(event.target.value)}
                         />
                       </Grid>
@@ -360,8 +360,8 @@ export default function SelectTasks({
             variant="contained"
           >
             {['createChecklist', 'editChecklist'].includes(action)
-              ? t('Save Checklist')
-              : t('Add tasks')}
+              ? t('save_checklist')
+              : t('add_tasks')}
           </Button>
         </DialogActions>
       </Dialog>

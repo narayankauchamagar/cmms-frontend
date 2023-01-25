@@ -892,7 +892,36 @@ const enJSON = {
   checklist_delete_failure: "The Checklist couldn't be deleted",
   create_checklist: 'Create Checklist',
   confirm_delete_checklist: 'Are you sure you want to delete this Checklist?',
-  upgrade_checklist: 'Please Upgrade to use Checklists'
+  upgrade_checklist: 'Please Upgrade to use Checklists',
+  //components
+  upgrade_now: 'Upgrade Now',
+  total: 'Total',
+  sub_task_status: 'Sub-task Status',
+  text_field: 'Text Field',
+  number_field: 'Number Field',
+  inspection_check: 'Inspection Check',
+  multiple_choices: 'Multiple Choices',
+  meter_reading: 'Meter Reading',
+  select_user: 'Select User',
+  PASS: 'Pass',
+  FLAG: 'Flag',
+  FAIL: 'Fail',
+  enter_task_name: 'Enter a task name',
+  see_details: 'See details',
+  concerned_asset: 'Concerned Asset',
+  me: 'Me',
+  remove_blank_tasks: 'Remove blank tasks',
+  remove_blank_options: 'Remove blank options',
+  preview: 'Preview',
+  edit_checklist: 'Edit Checklist',
+  add_tasks: 'Add Tasks',
+  use_a_checklist: 'Use a checklist',
+  select_checklist: 'Select Checklist',
+  save_checklist: 'Save Checklist',
+  assign_tasks_description: 'Assign Custom Tasks for technicians to fill out',
+  select_date: 'Select date',
+  task: 'Task',
+  checklist: 'Checklist'
 };
 
 export default enJSON;
