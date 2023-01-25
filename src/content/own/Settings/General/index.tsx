@@ -33,41 +33,33 @@ function GeneralSettings() {
 
   const switches = [
     {
-      title: t('Auto-assign Work Orders'),
-      description: t(
-        'Automatically assign new work orders to the person that creates them'
-      ),
+      title: t('auto_assign_wo'),
+      description: t('auto_assign_wo_description'),
       name: 'autoAssignWorkOrders'
     },
     {
-      title: t('Auto-assign requests'),
-      description: t(
-        'Automatically assign new work orders to the person who approve the request'
-      ),
+      title: t('auto_assign_requests'),
+      description: t('auto_assign_requests_description'),
       name: 'autoAssignRequests'
     },
     {
-      title: t('Disable closed Work Order notifications'),
-      description: t(
-        'Disable notifications when closed Work Orders are updated'
-      ),
+      title: t('disable_closed_wo_notification'),
+      description: t('disable_closed_wo_notification_description'),
       name: 'disableClosedWorkOrdersNotif'
     },
     {
-      title: t('Ask for feedback when Work Order is closed'),
-      description: t('Users are asked to give feedback on the job done'),
+      title: t('ask_feedback_wo_closed'),
+      description: t('ask_feedback_wo_closed_description'),
       name: 'askFeedBackOnWOClosed'
     },
     {
-      title: t('Include labor cost in the total cost'),
-      description: t(
-        'Add labor costs to the total when a user logs time and has an hourly rate stored'
-      ),
+      title: t('include_labor_in_total_cost'),
+      description: t('include_labor_in_total_cost_description'),
       name: 'laborCostInTotalCost'
     },
     {
-      title: t('Enable work order updates for Requesters'),
-      description: t('Users get updates for the work orders they requested'),
+      title: t('enable_wo_updates_requesters'),
+      description: t('enable_wo_updates_requesters_description'),
       name: 'woUpdateForRequesters'
     }
   ];
@@ -110,7 +102,7 @@ function GeneralSettings() {
                     <Grid container spacing={2}>
                       <Grid item xs={12}>
                         <Typography variant="h6" sx={{ mb: 0.5 }}>
-                          {t('Language')}
+                          {t('language')}
                         </Typography>
                         <Field
                           onChange={(event) => {
@@ -131,7 +123,7 @@ function GeneralSettings() {
                       </Grid>
                       <Grid item xs={12}>
                         <Typography variant="h6" sx={{ mb: 0.5 }}>
-                          {t('Date format')}
+                          {t('date_format')}
                         </Typography>
                         <Field
                           onChange={(event) =>
@@ -174,7 +166,7 @@ function GeneralSettings() {
                       </Grid>
                       <Grid item xs={12}>
                         <Typography variant="h6" sx={{ mb: 0.5 }}>
-                          {t('Business type')}
+                          {t('business_type')}
                         </Typography>
                         <Field
                           onChange={(event) =>
@@ -187,10 +179,10 @@ function GeneralSettings() {
                           name="businessType"
                         >
                           <MenuItem value="GENERAL_ASSET_MANAGEMENT">
-                            {t('General asset management')}
+                            {t('general_asset_management')}
                           </MenuItem>
                           <MenuItem value="PHYSICAL_ASSET_MANAGEMENT">
-                            {t('Physical asset management')}
+                            {t('physical_asset_management')}
                           </MenuItem>
                         </Field>
                       </Grid>

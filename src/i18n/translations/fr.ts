@@ -370,7 +370,7 @@ const frJSON = {
   title: 'Titre',
   priority: 'Priorité',
   description: 'Description',
-  worker: 'Ouvrier',
+  worker: 'Travailleur',
   location_name: 'Nom de la localisation',
   location_address: "Adresse de l'emplacement",
   asset_name: "Nom de l'équipement",
@@ -404,7 +404,7 @@ const frJSON = {
   image: 'Image',
   estimated_duration: 'Durée estimée en heures',
   primary_worker: 'Travailleur principal',
-  additional_workers: 'Ouvriers supplémentaires',
+  additional_workers: 'Travailleurs supplémentaires',
   select_team: 'Choisis une équipe',
   select_location: "Sélectionnez l'emplacement",
   select_asset: "Sélectionnez l'équipement",
@@ -955,7 +955,7 @@ const frJSON = {
     "Il semble que vous n'ayez pas encore de catégories sur les {{categoryName}}.",
   acquisition_cost: "Coût d'acquisition",
   //settings
-  general_settings: 'Réglages généraux',
+  general_settings: 'Paramètres généraux',
   request_form_configuration: 'Configuration du formulaire de demande',
   roles: 'Rôles',
   checklists: 'Checklists',
@@ -963,7 +963,7 @@ const frJSON = {
     'Vous pouvez marquer les champs comme facultatifs, masqués ou obligatoires',
   optional: 'Facultatif',
   required: 'Obligatoire',
-  hidden: 'Caché',
+  hidden: 'Masqué',
   creating_wo: "Création d'un bon de travail",
   completing_wo: "Finition d'un bon de travail",
   role_edit_failure: 'Impossible de modifier le rôle',
@@ -997,7 +997,34 @@ const frJSON = {
   delete_role: 'Supprimer le rôle',
   upgrade_role_delete: 'Mettez à niveau pour supprimer le rôle',
   create: 'Créer',
-  pm_trigger: 'Déclencheurs de Maintenance Préventive'
+  pm_trigger: 'Déclencheurs de Maintenance Préventive',
+  auto_assign_wo: 'Affecter automatiquement des bons de travail',
+  auto_assign_wo_description:
+    'Affecter automatiquement de nouveaux bons de travail à la personne qui les crée',
+  auto_assign_requests: 'Attribu automatiquement les demandes',
+  auto_assign_requests_description:
+    'Attribuer automatiquement de nouveaux ordres de travail à la personne qui approuve la demande',
+  disable_closed_wo_notification:
+    'Désactiver les notifications de bons de travail terminés',
+  disable_closed_wo_notification_description:
+    'Désactiver les notifications lorsque les bons de travail terminés sont mis à jour',
+  ask_feedback_wo_closed:
+    'Demander des commentaires lorsque le bon de travail est fermé',
+  ask_feedback_wo_closed_description:
+    'Les utilisateurs sont invités à donner leur avis sur le travail effectué',
+  include_labor_in_total_cost:
+    "Inclure le coût de la main-d'œuvre dans le coût total",
+  include_labor_in_total_cost_description:
+    "Ajouter les coûts de main-d'œuvre au total lorsqu'un utilisateur enregistre du temps et a un taux horaire",
+  enable_wo_updates_requesters:
+    'Activer les mises à jour des bons de travail pour les demandeurs',
+  enable_wo_updates_requesters_description:
+    "Les utilisateurs reçoivent des mises à jour pour les ordres de travail qu'ils ont demandés",
+  language: 'Langue',
+  date_format: 'Format de date',
+  business_type: "Type d'entreprise",
+  general_asset_management: 'Gestion générale des actifs',
+  physical_asset_management: 'Gestion des actifs physiques'
 };
 
 export default frJSON;

@@ -863,7 +863,30 @@ const enJSON = {
   delete_role: 'Delete Role',
   upgrade_role_delete: 'Upgrade to delete role',
   create: 'Create',
-  pm_trigger: 'Preventative Maintenance Trigger'
+  pm_trigger: 'Preventative Maintenance Trigger',
+  auto_assign_wo: 'Auto-assign Work Orders',
+  auto_assign_wo_description:
+    'Automatically assign new work orders to the person that creates them',
+  auto_assign_requests: 'Auto-assign requests',
+  auto_assign_requests_description:
+    'Automatically assign new work orders to the person who approve the request',
+  disable_closed_wo_notification: 'Disable closed Work Order notifications',
+  disable_closed_wo_notification_description:
+    'Disable notifications when closed Work Orders are updated',
+  ask_feedback_wo_closed: 'Ask for feedback when Work Order is closed',
+  ask_feedback_wo_closed_description:
+    'Users are asked to give feedback on the job done',
+  include_labor_in_total_cost: 'Include labor cost in the total cost',
+  include_labor_in_total_cost_description:
+    'Add labor costs to the total when a user logs time and has an hourly rate stored',
+  enable_wo_updates_requesters: 'Enable work order updates for Requesters',
+  enable_wo_updates_requesters_description:
+    'Users get updates for the work orders they requested',
+  language: 'Language',
+  date_format: 'Date format',
+  business_type: 'Business type',
+  general_asset_management: 'General asset management',
+  physical_asset_management: 'Physical asset management'
 };
 
 export default enJSON;
