@@ -80,9 +80,9 @@ function PrescriptionRequests() {
                 <Grid container spacing={3}>
                   <Grid item md={6}>
                     <FormControl fullWidth variant="outlined" size="small">
-                      <InputLabel>{t('Type')}</InputLabel>
+                      <InputLabel>{t('type')}</InputLabel>
                       <Select
-                        label={t('Type')}
+                        label={t('type')}
                         value={type}
                         onChange={handleType}
                       >

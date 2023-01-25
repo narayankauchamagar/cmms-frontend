@@ -28,7 +28,9 @@ interface PropsType {
 
 const AssetDetails = ({ asset }: PropsType) => {
   const { t }: { t: any } = useTranslation();
-  const { getFormattedDate } = useContext(CompanySettingsContext);
+  const { getFormattedDate, getFormattedCurrency } = useContext(
+    CompanySettingsContext
+  );
   const informationFields = [
     { label: t('name'), value: asset?.name },
     { label: t('description'), value: asset?.description },
@@ -38,6 +40,10 @@ const AssetDetails = ({ asset }: PropsType) => {
     {
       label: t('status'),
       value: asset?.status === 'OPERATIONAL' ? t('operational') : t('down')
+    },
+    {
+      label: t('acquisition_cost'),
+      value: getFormattedCurrency(asset?.acquisitionCost)
     },
     { label: t('area'), value: asset?.area },
     { label: t('barcode'), value: asset?.barCode }

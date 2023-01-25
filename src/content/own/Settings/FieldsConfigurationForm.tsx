@@ -77,9 +77,9 @@ const FieldsConfigurationForm: FC<FieldsConfigurationFormProps> = ({
               }
               name={field.name}
             >
-              <MenuItem value="OPTIONAL">Optional</MenuItem>
-              <MenuItem value="REQUIRED">Required</MenuItem>
-              <MenuItem value="HIDDEN">Hidden</MenuItem>
+              <MenuItem value="OPTIONAL">{t('optional')}</MenuItem>
+              <MenuItem value="REQUIRED">{t('required')}</MenuItem>
+              <MenuItem value="HIDDEN">{t('hidden')}</MenuItem>
             </Field>
           </Box>
         </Grid>
@@ -89,7 +89,7 @@ const FieldsConfigurationForm: FC<FieldsConfigurationFormProps> = ({
   return (
     <Box>
       <Typography variant="h5" sx={{ mb: 2 }}>
-        {t('You can mark fields as Optional, Hidden or Required')}
+        {t('field_configuration_description')}
       </Typography>
       <Formik initialValues={initialValues} onSubmit={() => null}>
         {({

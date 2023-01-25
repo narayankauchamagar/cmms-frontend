@@ -1,20 +1,20 @@
 import { useState } from 'react';
 
 import {
-  Typography,
   Accordion,
-  AccordionSummary,
   AccordionDetails,
-  Divider,
+  AccordionSummary,
   Card,
-  ListItemIcon,
-  Slider,
   Checkbox,
-  Rating,
+  Divider,
   List,
   ListItemButton,
+  ListItemIcon,
   ListItemText,
-  styled
+  Rating,
+  Slider,
+  styled,
+  Typography
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -149,7 +149,7 @@ function Sidebar() {
       <Divider />
       <Accordion defaultExpanded>
         <AccordionSummaryWrapper expandIcon={<ExpandMoreIcon />}>
-          <Typography variant="h5">{t('Categories')}</Typography>
+          <Typography variant="h5">{t('categories')}</Typography>
         </AccordionSummaryWrapper>
         <AccordionDetails
           sx={{

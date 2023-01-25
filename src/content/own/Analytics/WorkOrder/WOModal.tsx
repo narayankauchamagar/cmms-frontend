@@ -90,8 +90,8 @@ export default function WOModal({
 
     {
       field: 'priority',
-      headerName: t('Priority'),
-      description: t('Priority'),
+      headerName: t('priority'),
+      description: t('priority'),
       width: 150,
       renderCell: (params: GridRenderCellParams<string>) => (
         <PriorityWrapper priority={params.value} />

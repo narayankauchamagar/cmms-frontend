@@ -952,7 +952,51 @@ const frJSON = {
     "Appuyez sur le bouton '+' pour ajouter votre première catégorie.",
   confirm_delete_category: 'Voulez-vous vraiment supprimer cette catégorie ?',
   no_category_message:
-    "Il semble que vous n'ayez pas encore de catégories sur les {{categoryName}}."
+    "Il semble que vous n'ayez pas encore de catégories sur les {{categoryName}}.",
+  acquisition_cost: "Coût d'acquisition",
+  //settings
+  general_settings: 'Réglages généraux',
+  request_form_configuration: 'Configuration du formulaire de demande',
+  roles: 'Rôles',
+  checklists: 'Checklists',
+  field_configuration_description:
+    'Vous pouvez marquer les champs comme facultatifs, masqués ou obligatoires',
+  optional: 'Facultatif',
+  required: 'Obligatoire',
+  hidden: 'Caché',
+  creating_wo: "Création d'un bon de travail",
+  completing_wo: "Finition d'un bon de travail",
+  role_edit_failure: 'Impossible de modifier le rôle',
+  edit_role: 'Modifier le rôle',
+  edit_role_description:
+    'Remplissez les champs ci-dessous pour modifier le rôle',
+  external_id: 'ID externe',
+  permissions: 'Permissions',
+  create_role_description:
+    "Ce rôle peut faire tout ce qu'un administrateur peut faire dans Grash, mais vous pouvez personnaliser certaines permissions importantes ci-dessous.",
+  create_and_edit: 'Créer/Modifier',
+  to_access: 'Accéder',
+  role_delete_success: 'Le rôle a été supprimé avec succès',
+  role_delete_failure: "Le rôle n'a pas pu être supprimé",
+  confirm_delete_role:
+    'Êtes-vous sûr de vouloir supprimer définitivement ce rôle',
+  users: 'Utilisateurs',
+  paid: 'Payant',
+  free: 'Gratuit',
+  role_create_success: 'Le rôle a été créé avec succès',
+  role_create_failure: "Le rôle n'a pas pu être créé",
+  roles_management: 'Gestion des rôles',
+  roles_number: '{{count}} rôles',
+  create_role: 'Créer un rôle',
+  upgrade_role: 'Mettez à niveau pour créer un rôle',
+  add_role: 'Ajouter un nouveau rôle',
+  add_role_description:
+    'Remplissez les champs ci-dessous pour créer et ajouter un nouveau rôle',
+  parts_and_sets: 'Pièces',
+  upgrade_role_edit: 'Mettez à niveau pour modifier le rôle',
+  delete_role: 'Supprimer le rôle',
+  upgrade_role_delete: 'Mettez à niveau pour supprimer le rôle',
+  create: 'Créer'
 };
 
 export default frJSON;

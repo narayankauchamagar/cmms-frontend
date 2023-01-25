@@ -261,7 +261,7 @@ function SidebarDrawer() {
               </Typography>
               <Grid container spacing={1}>
                 <Grid item sm={3}>
-                  <Typography variant="subtitle2">{t('Type')}:</Typography>
+                  <Typography variant="subtitle2">{t('type')}:</Typography>
                 </Grid>
                 <Grid item sm={9}>
                   <Typography variant="subtitle2" color="text.primary">

@@ -821,7 +821,48 @@ const enJSON = {
   no_category_action: "Press the '+' button to add your first category.",
   confirm_delete_category: 'Are you sure you want to delete this Category?',
   no_category_message:
-    "Looks like you don't have any {{categoryName}} Categories yet."
+    "Looks like you don't have any {{categoryName}} Categories yet.",
+  acquisition_cost: 'Acquisition Cost',
+  //settings
+  general_settings: 'General Settings',
+  request_form_configuration: 'Request form configuration',
+  roles: 'Roles',
+  checklists: 'Checklists',
+  field_configuration_description:
+    'You can mark fields as Optional, Hidden or Required',
+  optional: 'Optional',
+  required: 'Required',
+  hidden: 'Hidden',
+  creating_wo: 'Creating a Work Order',
+  completing_wo: 'Completing a Work Order',
+  role_edit_failure: "The Role couldn't be edited",
+  edit_role: 'Edit role',
+  edit_role_description: 'Fill in the fields below to edit the role',
+  external_id: 'External ID',
+  permissions: 'Permissions',
+  create_role_description:
+    'This role can do everything an Administrator can do in Grash, but you can customize some important permissions below.',
+  create_and_edit: 'Create/Edit',
+  to_access: 'Access',
+  role_delete_success: 'The Role has been deleted successfully',
+  role_delete_failure: "The Role couldn't be deleted",
+  confirm_delete_role: 'Are you sure you want to permanently delete this role',
+  users: 'Users',
+  paid: 'Paid',
+  free: 'Free',
+  role_create_success: 'The Role has been created successfully',
+  role_create_failure: "The Role couldn't be created",
+  roles_management: 'Roles Management',
+  roles_number: '{{count}} roles',
+  create_role: 'Create Role',
+  upgrade_role: 'Upgrade to create role',
+  add_role: 'Add new role',
+  add_role_description: 'Fill in the fields below to create and add a new role',
+  parts_and_sets: 'Parts & Sets of Parts',
+  upgrade_role_edit: 'Upgrade to edit role',
+  delete_role: 'Delete Role',
+  upgrade_role_delete: 'Upgrade to delete role',
+  create: 'Create'
 };
 
 export default enJSON;

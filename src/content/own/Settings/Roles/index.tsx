@@ -277,10 +277,10 @@ function Roles() {
     return values;
   };
   const onDeleteSuccess = () => {
-    showSnackBar(t('The Role has been deleted successfully'), 'success');
+    showSnackBar(t('role_delete_success'), 'success');
   };
   const onDeleteFailure = (err) =>
-    showSnackBar(t("The Role couldn't be deleted"), 'error');
+    showSnackBar(t('role_delete_failure'), 'error');
 
   const handleOpenDetails = (id: number) => {
     const foundRole = roles.find((role) => role.id === id);
@@ -340,7 +340,7 @@ function Roles() {
           }}
           variant="h3"
         >
-          {t('Are you sure you want to permanently delete this role')}?
+          {t('confirm_delete_role')}?
         </Typography>
 
         <Box>
@@ -382,20 +382,20 @@ function Roles() {
     },
     {
       field: 'users',
-      headerName: t('Users'),
-      description: t('Users'),
+      headerName: t('users'),
+      description: t('users'),
       width: 150
     },
     {
       field: 'externalId',
-      headerName: t('External ID'),
-      description: t('External Id'),
+      headerName: t('external_id'),
+      description: t('external_id'),
       width: 150
     },
     {
       field: 'paid',
-      headerName: t('Type'),
-      description: t('Type'),
+      headerName: t('type'),
+      description: t('type'),
       width: 150,
       renderCell: (params: GridRenderCellParams<string>) => (
         <LabelWrapper
@@ -408,7 +408,7 @@ function Roles() {
             )}`
           }}
         >
-          {params.value ? t('Paid') : t('Free')}
+          {params.value ? t('paid') : t('free')}
         </LabelWrapper>
       )
     },
@@ -429,7 +429,7 @@ function Roles() {
               />
             }
             onClick={() => handleOpenUpdate(Number(params.id))}
-            label="Edit"
+            label={t('edit')}
           />,
           <GridActionsCellItem
             key="delete"
@@ -441,7 +441,7 @@ function Roles() {
               />
             }
             onClick={() => handleOpenDelete(Number(params.id))}
-            label="Delete"
+            label={t('to_delete')}
           />
         ];
         if (params.row.code !== 'USER_CREATED') actions = [];

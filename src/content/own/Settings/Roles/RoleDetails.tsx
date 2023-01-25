@@ -34,19 +34,19 @@ export default function RoleDetails(props: RoleDetailsProps) {
   } = {
     create: [
       {
-        label: t('Categories'),
+        label: t('categories'),
         condition: (role: Role) =>
           role.createPermissions.includes(PermissionEntity.CATEGORIES)
       },
       {
-        label: t('People And Teams'),
+        label: t('people_teams'),
         condition: (role: Role) =>
           role.createPermissions.includes(PermissionEntity.PEOPLE_AND_TEAMS)
       }
     ],
     delete: [
       {
-        label: t('People And Teams'),
+        label: t('people_teams'),
         condition: (role: Role) =>
           role.deleteOtherPermissions.includes(
             PermissionEntity.PEOPLE_AND_TEAMS
@@ -58,51 +58,51 @@ export default function RoleDetails(props: RoleDetailsProps) {
           role.deleteOtherPermissions.includes(PermissionEntity.FILES)
       },
       {
-        label: t('Categories'),
+        label: t('categories'),
         condition: (role: Role) =>
           role.deleteOtherPermissions.includes(PermissionEntity.CATEGORIES)
       },
       {
-        label: t('Meters'),
+        label: t('meters'),
         condition: (role: Role) =>
           role.deleteOtherPermissions.includes(PermissionEntity.METERS)
       },
       {
-        label: t('Locations'),
+        label: t('locations'),
         condition: (role: Role) =>
           role.deleteOtherPermissions.includes(PermissionEntity.LOCATIONS)
       },
       {
-        label: t('Assets'),
+        label: t('assets'),
         condition: (role: Role) =>
           role.deleteOtherPermissions.includes(PermissionEntity.ASSETS)
       },
       {
-        label: t('Purchase Orders'),
+        label: t('purchase_orders'),
         condition: (role: Role) =>
           role.deleteOtherPermissions.includes(PermissionEntity.PURCHASE_ORDERS)
       },
       {
-        label: t('Vendors & Customers'),
+        label: t('vendors_customers'),
         condition: (role: Role) =>
           role.deleteOtherPermissions.includes(
             PermissionEntity.VENDORS_AND_CUSTOMERS
           )
       },
       {
-        label: t('Parts & Sets of Parts'),
+        label: t('parts_and_sets'),
         condition: (role: Role) =>
           role.deleteOtherPermissions.includes(
             PermissionEntity.PARTS_AND_MULTIPARTS
           )
       },
       {
-        label: t('Work Orders'),
+        label: t('work_orders'),
         condition: (role: Role) =>
           role.deleteOtherPermissions.includes(PermissionEntity.WORK_ORDERS)
       },
       {
-        label: t('Preventive Maintenance'),
+        label: t('preventive_maintenance'),
         condition: (role: Role) =>
           role.deleteOtherPermissions.includes(
             PermissionEntity.PREVENTIVE_MAINTENANCES
@@ -111,7 +111,7 @@ export default function RoleDetails(props: RoleDetailsProps) {
     ],
     access: [
       {
-        label: t('Settings'),
+        label: t('settings'),
         condition: (role: Role) =>
           role.viewPermissions.includes(PermissionEntity.SETTINGS)
       }
@@ -165,8 +165,8 @@ export default function RoleDetails(props: RoleDetailsProps) {
             <Tooltip
               title={
                 hasFeature(PlanFeature.ROLE)
-                  ? t('Edit Role')
-                  : t('Upgrade to edit role')
+                  ? t('edit_role')
+                  : t('upgrade_role_edit')
               }
             >
               <span>
@@ -186,8 +186,8 @@ export default function RoleDetails(props: RoleDetailsProps) {
             <Tooltip
               title={
                 hasFeature(PlanFeature.ROLE)
-                  ? t('Delete Role')
-                  : t('Upgrade to delete role')
+                  ? t('delete_role')
+                  : t('upgrade_role_delete')
               }
             >
               <span>
@@ -212,9 +212,9 @@ export default function RoleDetails(props: RoleDetailsProps) {
             Permissions
           </Typography>
           <Grid container spacing={2}>
-            <PermissionsGroup name={'create'} title={t('Create')} />
+            <PermissionsGroup name={'create'} title={t('create')} />
             <PermissionsGroup name={'delete'} title={t('to_delete')} />
-            <PermissionsGroup name={'access'} title={t('Access')} />
+            <PermissionsGroup name={'access'} title={t('access')} />
           </Grid>
         </Box>
       </Grid>

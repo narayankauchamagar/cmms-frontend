@@ -333,7 +333,7 @@ function CategoriesLayout(props: CategoriesLayoutProps) {
         basePath="/app/categories"
         tabs={tabs}
         tabIndex={tabIndex}
-        title={`${tabs[tabIndex].label} Categories`}
+        title={t('categories')}
         action={
           hasCreatePermission(PermissionEntity.CATEGORIES)
             ? handleOpenAdd

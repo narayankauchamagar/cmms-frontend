@@ -8,8 +8,8 @@ function WorkOrderSettings() {
   const { t }: { t: any } = useTranslation();
   const [currentTab, setCurrentTab] = useState<string>('create');
   const tabs = [
-    { value: 'create', label: t('Creating a Work Order') },
-    { value: 'complete', label: t('Completing a Work Order') }
+    { value: 'create', label: t('creating_wo') },
+    { value: 'complete', label: t('completing_wo') }
   ];
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
@@ -18,29 +18,29 @@ function WorkOrderSettings() {
   const createFields = [
     { label: t('description'), name: 'description' },
     {
-      label: t('Priority'),
+      label: t('priority'),
       name: 'priority'
     },
     { label: t('images'), name: 'images' },
     { label: t('asset'), name: 'asset' },
-    { label: t('Primary User'), name: 'primaryUser' },
-    { label: t('Additional Workers'), name: 'assignedTo' },
-    { label: t('Team'), name: 'team' },
+    { label: t('primary_worker'), name: 'primaryUser' },
+    { label: t('additional_workers'), name: 'assignedTo' },
+    { label: t('team'), name: 'team' },
     { label: t('location'), name: 'location' },
     { label: t('due_date'), name: 'dueDate' },
     { label: t('category'), name: 'category' },
-    { label: t('Purchase Order'), name: 'purchaseOrder' },
+    { label: t('purchase_order'), name: 'purchaseOrder' },
     { label: t('files'), name: 'files' },
-    { label: t('Signature'), name: 'signature' }
+    { label: t('signature'), name: 'signature' }
   ];
 
   const completeFields = [
     { label: t('files'), name: 'completeFiles' },
     {
-      label: t('Tasks'),
+      label: t('tasks'),
       name: 'completeTasks'
     },
-    { label: t('Time'), name: 'completeTime' },
+    { label: t('time'), name: 'completeTime' },
     { label: t('parts'), name: 'completeParts' },
     { label: t('cost'), name: 'completeCost' }
   ];

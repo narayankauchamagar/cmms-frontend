@@ -38,7 +38,7 @@ export default function PriorityWrapper(props: {
         )}`
       }}
     >
-      {t(priority)} {withSuffix ? t('Priority') : null}
+      {t(priority)} {withSuffix ? t('priority') : null}
     </LabelWrapper>
   );
 }

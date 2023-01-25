@@ -229,7 +229,15 @@ function Assets() {
       type2: 'location',
       label: t('location'),
       placeholder: t('select_asset_location'),
-      required: true
+      required: true,
+      midWidth: true
+    },
+    {
+      name: 'acquisitionCost',
+      type: 'number',
+      label: t('acquisition_cost'),
+      placeholder: t('acquisition_cost'),
+      midWidth: true
     },
     {
       name: 'description',
@@ -536,7 +544,7 @@ function Assets() {
                 sx={{ mx: 6, my: 1 }}
                 variant="contained"
               >
-                Asset
+                {t('asset')}
               </Button>
             </Grid>
           )}

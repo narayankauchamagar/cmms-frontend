@@ -36,8 +36,7 @@ function EditRole({ role, open, onClose, formatValues }: EditRoleProps) {
     onClose();
     showSnackBar(t('changes_saved_success'), 'success');
   };
-  const onEditFailure = (err) =>
-    showSnackBar(t("The Role couldn't be edited"), 'error');
+  const onEditFailure = (err) => showSnackBar(t('role_edit_failure'), 'error');
 
   return (
     <Dialog fullWidth maxWidth="md" open={open} onClose={onClose}>
@@ -47,10 +46,10 @@ function EditRole({ role, open, onClose, formatValues }: EditRoleProps) {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          {t('Edit role')}
+          {t('edit_role')}
         </Typography>
         <Typography variant="subtitle2">
-          {t('Fill in the fields below to edit the role')}
+          {t('edit_role_description')}
         </Typography>
       </DialogTitle>
       <Formik
@@ -102,7 +101,7 @@ function EditRole({ role, open, onClose, formatValues }: EditRoleProps) {
           submit: null
         }}
         validationSchema={Yup.object().shape({
-          name: Yup.string().max(255).required(t('The name field is required')),
+          name: Yup.string().max(255).required(t('required_name')),
           description: Yup.string().max(255).nullable(),
           externalId: Yup.string().max(255).nullable()
         })}
@@ -170,7 +169,7 @@ function EditRole({ role, open, onClose, formatValues }: EditRoleProps) {
                         error={Boolean(touched.externalId && errors.externalId)}
                         fullWidth
                         helperText={touched.externalId && errors.externalId}
-                        label={t('External ID')}
+                        label={t('external_id')}
                         name="externalId"
                         onBlur={handleBlur}
                         onChange={handleChange}
@@ -188,12 +187,10 @@ function EditRole({ role, open, onClose, formatValues }: EditRoleProps) {
                   >
                     <Box>
                       <Typography variant="h2" sx={{ pb: 1 }}>
-                        {t('Permissions')}
+                        {t('permissions')}
                       </Typography>
                       <Typography variant="subtitle2">
-                        {t(
-                          'This role can do everything an Administrator can do in Grash, but you can customize some important permissions below.'
-                        )}
+                        {t('create_role_description')}
                       </Typography>
                     </Box>
 
@@ -206,7 +203,7 @@ function EditRole({ role, open, onClose, formatValues }: EditRoleProps) {
                       mb={3}
                     >
                       <Typography variant="h4" sx={{ pb: 1 }}>
-                        {t('Create/Edit')}
+                        {t('create_and_edit')}
                       </Typography>
                       <FormControlLabel
                         onChange={handleChange}
@@ -214,13 +211,13 @@ function EditRole({ role, open, onClose, formatValues }: EditRoleProps) {
                         control={
                           <Checkbox checked={values.createPeopleTeams} />
                         }
-                        label="People & teams"
+                        label={'people_teams'}
                       />
                       <FormControlLabel
                         onChange={handleChange}
                         name={'createCategories'}
                         control={<Checkbox checked={values.createCategories} />}
-                        label="Categories"
+                        label={t('categories')}
                       />
                     </Box>
 
@@ -237,7 +234,7 @@ function EditRole({ role, open, onClose, formatValues }: EditRoleProps) {
                         onChange={handleChange}
                         name={'deleteWorkOrders'}
                         control={<Checkbox checked={values.deleteWorkOrders} />}
-                        label="Work Orders"
+                        label={t('work_orders')}
                       />
                       <FormControlLabel
                         onChange={handleChange}
@@ -319,13 +316,13 @@ function EditRole({ role, open, onClose, formatValues }: EditRoleProps) {
                       justifyContent="space-between"
                     >
                       <Typography variant="h4" sx={{ pb: 1 }}>
-                        {t('Access')}
+                        {t('to_access')}
                       </Typography>
                       <FormControlLabel
                         onChange={handleChange}
                         name={'accessSettings'}
                         control={<Checkbox checked={values.accessSettings} />}
-                        label="Settings"
+                        label={t('settings')}
                       />
                     </Box>
                   </Box>

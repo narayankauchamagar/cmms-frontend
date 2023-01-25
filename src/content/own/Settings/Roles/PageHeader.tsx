@@ -52,20 +52,20 @@ function PageHeader({ rolesNumber, formatValues }: PageHeaderProps) {
   };
   const onCreationSuccess = () => {
     handleCreateRoleClose();
-    showSnackBar(t('The Role has been created successfully'), 'success');
+    showSnackBar(t('role_create_success'), 'success');
   };
   const onCreationFailure = (err) =>
-    showSnackBar(t("The Role couldn't be created"), 'error');
+    showSnackBar(t('role_create_failure'), 'error');
 
   return (
     <>
       <Grid container justifyContent="space-between" alignItems="center">
         <Grid item>
           <Typography variant="h3" component="h3" gutterBottom>
-            {t('Roles Management')}
+            {t('roles_management')}
           </Typography>
           <Typography variant="subtitle2">
-            {t(`${rolesNumber} roles`)}
+            {t('roles_number', { count: rolesNumber })}
           </Typography>
         </Grid>
 
@@ -73,8 +73,8 @@ function PageHeader({ rolesNumber, formatValues }: PageHeaderProps) {
           <Tooltip
             title={
               hasFeature(PlanFeature.ROLE)
-                ? t('Create Role')
-                : t('Upgrade to create role')
+                ? t('create_role')
+                : t('upgrade_role')
             }
           >
             <span>
@@ -87,7 +87,7 @@ function PageHeader({ rolesNumber, formatValues }: PageHeaderProps) {
                 variant="contained"
                 startIcon={<AddTwoToneIcon fontSize="small" />}
               >
-                {t('Create role')}
+                {t('create_role')}
               </Button>
             </span>
           </Tooltip>
@@ -106,10 +106,10 @@ function PageHeader({ rolesNumber, formatValues }: PageHeaderProps) {
           }}
         >
           <Typography variant="h4" gutterBottom>
-            {t('Add new role')}
+            {t('add_role')}
           </Typography>
           <Typography variant="subtitle2">
-            {t('Fill in the fields below to create and add a new role')}
+            {t('add_role_description')}
           </Typography>
         </DialogTitle>
         <Formik
@@ -120,9 +120,7 @@ function PageHeader({ rolesNumber, formatValues }: PageHeaderProps) {
             submit: null
           }}
           validationSchema={Yup.object().shape({
-            name: Yup.string()
-              .max(255)
-              .required(t('The name field is required')),
+            name: Yup.string().max(255).required(t('required_name')),
             description: Yup.string().max(255).nullable(),
             externalId: Yup.string().max(255).nullable()
           })}
@@ -192,7 +190,7 @@ function PageHeader({ rolesNumber, formatValues }: PageHeaderProps) {
                           )}
                           fullWidth
                           helperText={touched.externalId && errors.externalId}
-                          label={t('External ID')}
+                          label={t('external_id')}
                           name="externalId"
                           onBlur={handleBlur}
                           onChange={handleChange}
@@ -210,12 +208,10 @@ function PageHeader({ rolesNumber, formatValues }: PageHeaderProps) {
                     >
                       <Box>
                         <Typography variant="h2" sx={{ pb: 1 }}>
-                          {t('Permissions')}
+                          {t('permissions')}
                         </Typography>
                         <Typography variant="subtitle2">
-                          {t(
-                            'This role can do everything an Administrator can do in Grash, but you can customize some important permissions below.'
-                          )}
+                          {t('create_role_description')}
                         </Typography>
                       </Box>
 
@@ -228,19 +224,19 @@ function PageHeader({ rolesNumber, formatValues }: PageHeaderProps) {
                         mb={3}
                       >
                         <Typography variant="h4" sx={{ pb: 1 }}>
-                          {t('Create/Edit')}
+                          {t('create_and_edit')}
                         </Typography>
                         <FormControlLabel
                           onChange={handleChange}
                           name={'createPeopleTeams'}
                           control={<Checkbox />}
-                          label="People & teams"
+                          label={t"people_teams"}
                         />
                         <FormControlLabel
                           onChange={handleChange}
                           name={'createCategories'}
                           control={<Checkbox />}
-                          label="Categories"
+                          label={t("categories")}
                         />
                       </Box>
 
@@ -327,13 +323,13 @@ function PageHeader({ rolesNumber, formatValues }: PageHeaderProps) {
                         justifyContent="space-between"
                       >
                         <Typography variant="h4" sx={{ pb: 1 }}>
-                          {t('Access')}
+                          {t('access')}
                         </Typography>
                         <FormControlLabel
                           onChange={handleChange}
                           name={'accessSettings'}
                           control={<Checkbox />}
-                          label="Settings"
+                          label={t("settings")}
                         />
                       </Box>
                     </Box>
@@ -356,7 +352,7 @@ function PageHeader({ rolesNumber, formatValues }: PageHeaderProps) {
                   disabled={Boolean(errors.submit) || isSubmitting}
                   variant="contained"
                 >
-                  {t('Add new role')}
+                  {t('add_role')}
                 </Button>
               </DialogActions>
             </form>

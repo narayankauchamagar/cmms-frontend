@@ -288,7 +288,7 @@ const Results: FC<ResultsProps> = ({ products }) => {
                     <TableCell align="center">{t('Stock')}</TableCell>
                     <TableCell align="center">{t('Rating')}</TableCell>
                     <TableCell align="center">{t('Orders')}</TableCell>
-                    <TableCell>{t('Categories')}</TableCell>
+                    <TableCell>{t('categories')}</TableCell>
                     <TableCell align="center">{t('actions')}</TableCell>
                   </TableRow>
                 </TableHead>

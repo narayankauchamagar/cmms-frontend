@@ -280,7 +280,7 @@ function Sidebar() {
               {t('Add category')}
             </Button>
           }
-          title={t('Categories')}
+          title={t('categories')}
         />
         <Divider />
         <Box p={2}>

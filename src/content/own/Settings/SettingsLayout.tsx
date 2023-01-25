@@ -16,16 +16,16 @@ function SettingsLayout(props: SettingsLayoutProps) {
   const { t }: { t: any } = useTranslation();
   const { user } = useAuth();
   const tabs = [
-    { value: '', label: t('General Settings') },
-    { value: 'work-order', label: t('Work order configuration') },
-    { value: 'request', label: t('Request form configuration') },
-    { value: 'roles', label: t('Roles') },
-    { value: 'checklists', label: t('Checklists') }
+    { value: '', label: t('general_settings') },
+    { value: 'work-order', label: t('wo_configuration') },
+    { value: 'request', label: t('request_form_configuration') },
+    { value: 'roles', label: t('roles') },
+    { value: 'checklists', label: t('checklists') }
   ];
   const { setTitle } = useContext(TitleContext);
 
   useEffect(() => {
-    setTitle(t('Settings'));
+    setTitle(t('settings'));
   }, []);
 
   return user.role.viewPermissions.includes(PermissionEntity.SETTINGS) ? (
@@ -33,7 +33,7 @@ function SettingsLayout(props: SettingsLayoutProps) {
       basePath="/app/settings"
       tabs={tabs}
       tabIndex={tabIndex}
-      title="Settings"
+      title={t('settings')}
     >
       {children}
     </MultipleTabsLayout>
