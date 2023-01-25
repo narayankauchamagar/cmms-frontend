@@ -52,7 +52,7 @@ function TimeByWeek({ handleOpenModal }: WOStatusIncompleteProps) {
       filters: [{ key: 'range', value: data.date }]
     };
   });
-  const title = 'Time spent';
+  const title = t('time_spent');
   const lines: { label: string; dataKey: string; color: string }[] = [
     {
       label: t('Complete'),

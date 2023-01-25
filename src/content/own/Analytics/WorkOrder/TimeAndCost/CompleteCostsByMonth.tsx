@@ -68,7 +68,7 @@ function CompleteCostsByMonth({ handleOpenModal }: WOStatusIncompleteProps) {
       color: theme.colors.error.main
     }
   ];
-  const title = 'Cost trends';
+  const title = t('cost_trends');
   return (
     <AnalyticsCard title={title}>
       {loading.completeCostsByMonth ? (

@@ -38,7 +38,7 @@ function WOByCategory({ handleOpenModal }: WOByPrimaryUserProps) {
       filters: [{ key: 'category', value: category.id }]
     };
   });
-  const title = t('Grouped by Category');
+  const title = t('grouped_by_category');
   return (
     <AnalyticsCard title={title}>
       {loading.completeByCategory ? (

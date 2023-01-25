@@ -60,7 +60,7 @@ function RequestStatsByPriority({ handleOpenModal }: OwnProps) {
       filters: [{ key: 'fs', value: false }]
     }
   ];
-  const title = t('Requests by Priority');
+  const title = t('requests_by_priority');
   return (
     <AnalyticsCard title={title}>
       {loading.requestStatsByPriority ? (

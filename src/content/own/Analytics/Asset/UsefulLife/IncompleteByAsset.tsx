@@ -54,12 +54,9 @@ function IncompleteWOByAsset({ handleOpenModal }: WOStatusIncompleteProps) {
       filters: [{ key: 'asset', value: asset.id }]
     };
   });
-  const title = 'Assets';
+  const title = t('assets');
   return (
-    <AnalyticsCard
-      title={title}
-      description="Work order age is defined as the number of days between creation of the work order (or work request) and today."
-    >
+    <AnalyticsCard title={title} description="wo_age_description">
       {loading.incompleteByAsset ? (
         <Loading />
       ) : (

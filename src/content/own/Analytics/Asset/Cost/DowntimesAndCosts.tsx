@@ -55,7 +55,7 @@ function DowntimesAndCosts({ handleOpenModal }: WOByPrimaryUserProps) {
       filters: [{ key: 'user', value: asset.id }]
     };
   });
-  const title = t('Downtime and Costs');
+  const title = t('downtime_and_costs');
   return (
     <AnalyticsCard title={title}>
       {loading.downtimesAndCostsByAsset ? (

@@ -55,9 +55,9 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
   ];
   return (
     <AnalyticsCard
-      title="Cost Center"
+      title={t('cost_center')}
       height={200}
-      description="Total cost as % of RAV is equal to (cost of work orders on asset / purchase price)*100. Industry standard is a target value of 3% for this metric"
+      description="rav_description"
     >
       <Stack sx={{ height: '100%', justifyContent: 'center' }}>
         {loading.assetsCosts ? (

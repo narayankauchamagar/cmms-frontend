@@ -56,7 +56,7 @@ function DowntimesByMonth({ handleOpenModal }: DowntimesByMonthProps) {
       filters: [{ key: 'month', value: month.date }]
     };
   });
-  const title = t('Downtime and Costs trends');
+  const title = t('downtime_and_costs_trends');
   return (
     <AnalyticsCard title={title}>
       {loading.downtimesByMonth ? (

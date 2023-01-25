@@ -54,7 +54,7 @@ function MeantimesTrends({ handleOpenModal }: HoursWorkedProps) {
       color: theme.colors.primary.main
     }
   ];
-  const title = 'Downtimes trends';
+  const title = t('downtimes_trends');
   return (
     <AnalyticsCard title={title}>
       {loading.downtimesMeantimeByMonth ? (

@@ -47,7 +47,7 @@ function WOByWeek({ handleOpenModal }: WOStatusIncompleteProps) {
       filters: [{ key: 'range', value: data.date }]
     };
   });
-  const title = 'Completion comparison';
+  const title = t('completion_comparison');
   const lines: { label: string; dataKey: string; color: string }[] = [
     {
       label: t('Complete'),
@@ -73,7 +73,7 @@ function WOByWeek({ handleOpenModal }: WOStatusIncompleteProps) {
   return (
     <AnalyticsCard
       title={title}
-      description="Comparison of various types of completed work orders."
+      description="completion_comparison_description"
     >
       {loading.completeByWeek ? (
         <Stack

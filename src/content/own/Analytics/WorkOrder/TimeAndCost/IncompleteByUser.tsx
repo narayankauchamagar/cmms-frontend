@@ -54,12 +54,9 @@ function IncompleteWOByUser({ handleOpenModal }: WOStatusIncompleteProps) {
       filters: [{ key: 'user', value: user.id }]
     };
   });
-  const title = 'Workers';
+  const title = t('workers');
   return (
-    <AnalyticsCard
-      title={title}
-      description="Work order age is defined as the number of days between creation of the work order (or work request) and today."
-    >
+    <AnalyticsCard title={title}>
       {loading.incompleteByUser ? (
         <Loading />
       ) : (

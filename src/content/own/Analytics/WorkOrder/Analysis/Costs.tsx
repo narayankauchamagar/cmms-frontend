@@ -36,12 +36,12 @@ function Costs({ handleOpenModal }: HoursWorkedProps) {
       filters: []
     }
   ];
-  const title = t('Costs');
+  const title = t('costs');
   return (
     <AnalyticsCard
       title={title}
       height={200}
-      description="Total cost includes labor cost, additional cost, and parts cost in a work order"
+      description="total_cost_description"
     >
       <Stack sx={{ height: '100%', justifyContent: 'center' }}>
         <Stack direction="row" spacing={2}>

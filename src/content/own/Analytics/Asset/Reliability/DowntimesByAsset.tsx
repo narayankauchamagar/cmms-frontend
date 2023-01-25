@@ -56,7 +56,7 @@ function DowntimesByAsset({ handleOpenModal }: WOStatusIncompleteProps) {
     };
   });
 
-  const title = 'Downtime By Asset';
+  const title = t('downtime_by_asset');
   return (
     <AnalyticsCard title={title}>
       {loading.downtimesByAsset ? (

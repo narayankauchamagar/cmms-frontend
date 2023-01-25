@@ -76,7 +76,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
   ];
   return (
     <AnalyticsCard
-      title="Costs"
+      title={t('costs')}
       height={200}
       description="Associated costs and time relate to work orders that were completed within the time frame specified in the filters."
     >

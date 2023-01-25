@@ -54,7 +54,7 @@ function RequestsByMonth({ handleOpenModal }: OwnProps) {
       color: theme.colors.info.main
     }
   ];
-  const title = t('Requests trends');
+  const title = t('requests_trends');
   return (
     <AnalyticsCard title={title}>
       {loading.requestsByMonth ? (

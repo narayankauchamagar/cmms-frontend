@@ -38,7 +38,7 @@ function WOByPrimaryUser({ handleOpenModal }: WOByPrimaryUserProps) {
       filters: [{ key: 'primaryUser', value: user.id }]
     };
   });
-  const title = t('Grouped by Assigned to');
+  const title = t('grouped_by_assigned_to');
   return (
     <AnalyticsCard title={title}>
       {loading.completeByPrimaryUser ? (

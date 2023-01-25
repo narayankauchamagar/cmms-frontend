@@ -50,7 +50,7 @@ function RepairTimeByAsset({ handleOpenModal }: WOStatusPieProps) {
     };
   });
 
-  const title = 'Repair time By Asset';
+  const title = t('repair_time_by_asset');
   return (
     <AnalyticsCard title={title}>
       {loading.downtimesByAsset ? (

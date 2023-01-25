@@ -54,7 +54,7 @@ function WOStatusPie({ handleOpenModal }: WOStatusPieProps) {
       filters: [{ key: 'status', value: 'OPEN' }]
     }
   ];
-  const title = t('Work Order Status');
+  const title = t('wo_status');
   return (
     <AnalyticsCard title={title}>
       {loading.incompleteByStatus ? (

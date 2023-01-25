@@ -53,7 +53,7 @@ function PartConsumptionsByMonth({ handleOpenModal }: DowntimesByMonthProps) {
       filters: [{ key: 'month', value: month.date }]
     };
   });
-  const title = t('Consumed Parts Costs');
+  const title = t('consumed_parts_costs');
   return (
     <AnalyticsCard title={title}>
       {loading.partConsumptionsByMonth ? (

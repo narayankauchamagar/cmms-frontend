@@ -55,7 +55,7 @@ function TimeCostByAsset({ handleOpenModal }: WOStatusIncompleteProps) {
       filters: [{ key: 'asset', value: asset.id }]
     };
   });
-  const title = t('Hours and Cost By Asset');
+  const title = t('hours_and_cost_by_asset');
   return (
     <AnalyticsCard title={title}>
       {loading.completeTimeCostByAsset ? (

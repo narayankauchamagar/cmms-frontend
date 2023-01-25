@@ -62,9 +62,9 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
   ];
   return (
     <AnalyticsCard
-      title="The numbers"
+      title={t('the_numbers')}
       height={200}
-      description="Compliant work orders are defined as work orders that were completed before the due date. Cycle time refers to the number of days until a work order was completed."
+      description="compliant_wo_description"
     >
       <Stack sx={{ height: '100%', justifyContent: 'center' }}>
         {loading.overview ? (

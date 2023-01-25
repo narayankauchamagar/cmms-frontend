@@ -75,12 +75,9 @@ function IncompleteWO({ handleOpenModal }: WOStatusIncompleteProps) {
       filters: [{ key: 'fs', value: false }]
     }
   ];
-  const title = 'Work Remaining';
+  const title = t('work_remaining');
   return (
-    <AnalyticsCard
-      title={title}
-      description="This graph shows the number of incomplete work orders that are due in the date range specified in the filters. The estimated hours correspond to those individual work orders."
-    >
+    <AnalyticsCard title={title} description="work_remaining_description">
       {loading.incompleteByPriority ? (
         <Loading />
       ) : (

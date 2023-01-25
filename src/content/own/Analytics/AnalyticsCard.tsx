@@ -29,7 +29,7 @@ export default function AnalyticsCard({
     >
       <Stack direction="row" spacing={1} alignItems="center">
         <Typography variant="h4" textAlign="center">
-          {t(title)}
+          {title}
         </Typography>
         {description && (
           <TooltipMUI title={t(description)}>

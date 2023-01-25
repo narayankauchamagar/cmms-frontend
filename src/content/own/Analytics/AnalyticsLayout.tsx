@@ -12,5 +12,5 @@ export default function AnalyticsLayout(props) {
     if (hasViewPermission(PermissionEntity.ANALYTICS)) {
       return children;
     } else return <PermissionErrorMessage message={'no_access_analytics'} />;
-  } else return <FeatureErrorMessage message={'Upgrade to see Analytics...'} />;
+  } else return <FeatureErrorMessage message={'upgrade_analytics'} />;
 }

@@ -41,7 +41,7 @@ function WOByPriority({ handleOpenModal }: WOByPrimaryUserProps) {
       };
     }
   );
-  const title = t('Grouped by Priority');
+  const title = t('grouped_by_priority');
   return (
     <AnalyticsCard title={title}>
       {loading.completeByPriority ? (

@@ -921,7 +921,48 @@ const enJSON = {
   assign_tasks_description: 'Assign Custom Tasks for technicians to fill out',
   select_date: 'Select date',
   task: 'Task',
-  checklist: 'Checklist'
+  checklist: 'Checklist',
+  //analytics
+  upgrade_analytics: 'Upgrade to see Analytics',
+  grouped_by_category: 'Grouped by Category',
+  downtime_by_asset: 'Downtime By Asset',
+  downtime_and_costs: 'Downtime and Costs',
+  downtime_and_costs_trends: 'Downtime and Costs trends',
+  downtimes_trends: 'Downtimes trends',
+  repair_time_by_asset: 'Repair time By Asset',
+  consumed_parts_costs: 'Consumed Parts Costs',
+  requests_by_priority: 'Requests by Priority',
+  requests_trends: 'Requests trends',
+  time_spent: 'Time spent',
+  grouped_by_completed_by: 'Grouped by Completed By',
+  grouped_by_assigned_to: 'Grouped by Assigned To',
+  grouped_by_priority: 'Grouped by Priority',
+  completion_comparison: 'Completion comparison',
+  hours_worked: 'Hours Worked',
+  work_remaining: 'Work Remaining',
+  wo_status: 'Work Order Status',
+  cost_trends: 'Cost trends',
+  cost_center: 'Cost Center',
+  downtime_and_availability: 'Downtime and availability',
+  incomplete_wo: 'Incomplete Work Orders',
+  the_numbers: 'The numbers',
+  hours_and_cost_by_asset: 'Hours and Cost By Asset',
+  completion_comparison_description:
+    'Comparison of various types of completed work orders.',
+  wo_age_description:
+    'Work order age is defined as the number of days between creation of the work order (or work request) and today.',
+  rav_description:
+    'Total cost as % of RAV is equal to (cost of work orders on asset / purchase price)*100. Industry standard is a target value of 3% for this metric',
+  downtime_and_availability_description:
+    'Availability refers to the percentage that the assets were in an operational state since their placed in service date. Total downtimes refers to the number of downtime events that happened during the specified date range',
+  total_cost_description:
+    'Total cost includes labor cost, additional cost, and parts cost in a work order',
+  compliant_wo_description:
+    'Compliant work orders are defined as work orders that were completed before the due date. Cycle time refers to the number of days until a work order was completed.',
+  hours_worked_description:
+    'These hours correspond to work orders that have a due date within the range specified in the filters.',
+  work_remaining_description:
+    'This graph shows the number of incomplete work orders that are due in the date range specified in the filters. The estimated hours correspond to those individual work orders.'
 };
 
 export default enJSON;

@@ -38,7 +38,7 @@ function WOByCompletedBy({ handleOpenModal }: WOByPrimaryUserProps) {
       filters: [{ key: 'completedBy', value: user.id }]
     };
   });
-  const title = t('Grouped by Completed By');
+  const title = t('grouped_by_completed_by');
   return (
     <AnalyticsCard title={title}>
       {loading.completeByCompletedBy ? (

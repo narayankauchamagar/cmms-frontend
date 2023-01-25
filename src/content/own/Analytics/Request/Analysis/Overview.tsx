@@ -64,7 +64,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
     }
   ];
   return (
-    <AnalyticsCard title="The numbers" height={200}>
+    <AnalyticsCard title={t('the_numbers')} height={200}>
       <Stack sx={{ height: '100%', justifyContent: 'center' }}>
         {loading.overview ? (
           <Loading />

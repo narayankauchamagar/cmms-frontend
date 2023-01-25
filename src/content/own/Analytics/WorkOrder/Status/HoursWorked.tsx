@@ -32,12 +32,12 @@ function HoursWorked({ handleOpenModal }: HoursWorkedProps) {
       filters: []
     }
   ];
-  const title = t('Hours Worked');
+  const title = t('hours_worked');
   return (
     <AnalyticsCard
       title={title}
       height={200}
-      description="These hours correspond to work orders that have a due date within the range specified in the filters."
+      description="hours_worked_description"
     >
       <Stack sx={{ height: '100%', justifyContent: 'center' }}>
         {loading.hours ? (

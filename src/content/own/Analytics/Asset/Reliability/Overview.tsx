@@ -58,9 +58,9 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
   ];
   return (
     <AnalyticsCard
-      title="Downtime and availability"
+      title={t('downtime_and_availability')}
       height={200}
-      description="Availability refers to the percentage that the assets were in an operational state since their placed in service date. Total downtimes refers to the number of downtime events that happened during the specified date range"
+      description="downtime_and_availability_description"
     >
       <Stack sx={{ height: '100%', justifyContent: 'center' }}>
         {loading.overview ? (

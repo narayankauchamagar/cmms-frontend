@@ -861,7 +861,7 @@ const frJSON = {
     'Remplissez les champs ci-dessous pour créer et ajouter un nouveau fournisseur',
   confirm_delete_vendor: 'Voulez-vous vraiment supprimer ce fournisseur ?',
   'noRows.vendor.message':
-    'Les fournisseurs sont des organisations qui fournissent des actifs ou des pièces',
+    'Les fournisseurs sont des organisations qui fournissent des équipements ou des pièces',
   'noRows.vendor.action': "Appuyez sur le bouton '+' pour créer un fournisseur",
   vendor_type_description: 'ex. Plombier, Electricien',
   //people teams
@@ -903,7 +903,7 @@ const frJSON = {
     "L'administrateur a un accès complet; y compris l'édition, l'ajout, la suppression d'ordres de travail et de demandes",
   LIMITED_ADMIN_name: 'Administrateur limité',
   LIMITED_ADMIN_description:
-    "Les administrateurs limités ont le même accès que l'administrateur, sauf qu'ils ne peuvent pas afficher/modifier les paramètres ou ajouter/modifier des personnes et des équipes. Ils ne peuvent pas supprimer les ordres de travail, les emplacements des actifs, les compteurs et les bons de commande à moins d'avoir créé des déclencheurs d'ordre de travail, des catégories ou des prestataires.",
+    "Les administrateurs limités ont le même accès que l'administrateur, sauf qu'ils ne peuvent pas afficher/modifier les paramètres ou ajouter/modifier des personnes et des équipes. Ils ne peuvent pas supprimer les ordres de travail, les emplacements des équipements, les compteurs et les bons de commande à moins d'avoir créé des déclencheurs d'ordre de travail, des catégories ou des prestataires.",
   TECHNICIAN_name: 'Technicien',
   TECHNICIAN_description:
     "Les techniciens peuvent créer et clôturer des ordres de travail, des équipe et des emplacements. Capables de modifier et de supprimer uniquement ce qu'ils ont créé",
@@ -1023,8 +1023,8 @@ const frJSON = {
   language: 'Langue',
   date_format: 'Format de date',
   business_type: "Type d'entreprise",
-  general_asset_management: 'Gestion générale des actifs',
-  physical_asset_management: 'Gestion des actifs physiques',
+  general_asset_management: 'Gestion générale des équipements',
+  physical_asset_management: 'Gestion des équipements physiques',
   checklist_delete_success: 'La Checklist a été supprimée avec succès',
   checklist_delete_failure: "La Checklist n'a pas pu être supprimée",
   create_checklist: 'Créer une Checklist',
@@ -1058,7 +1058,47 @@ const frJSON = {
     'Attribuez des tâches personnalisées aux techniciens à remplir',
   select_date: 'Sélectionner une date',
   task: 'Tâche',
-  checklist: 'Checklist'
+  checklist: 'Checklist',
+  upgrade_analytics: 'Mettez à niveau pour voir les analytiques',
+  grouped_by_category: 'Regroupés par catégorie',
+  downtime_by_asset: "Temps d'arrêt par équipement",
+  downtime_and_costs: "Temps d'arrêt et coûts",
+  downtime_and_costs_trends: "Tendances des temps d'arrêt et des coûts",
+  downtimes_trends: "Tendances des temps d'arrêt",
+  repair_time_by_asset: 'Temps de réparation par équipement',
+  consumed_parts_costs: 'Coûts des pièces consommées',
+  requests_by_priority: 'Demandes par priorité',
+  requests_trends: 'Tendances des demandes',
+  time_spent: 'Temps passé',
+  grouped_by_completed_by: 'Regroupés par Complété par',
+  grouped_by_assigned_to: 'Regroupés par Attribué à',
+  grouped_by_priority: 'Regroupés par priorité',
+  completion_comparison: "Comparaison d'achèvement",
+  hours_worked: 'Heures travaillées',
+  work_remaining: 'Travail restant',
+  wo_status: "Statut de l'ordre de travail",
+  cost_trends: 'Tendances des coûts',
+  cost_center: 'Centre de coûts',
+  downtime_and_availability: "Temps d'arrêt et disponibilité",
+  incomplete_wo: 'Bons de travail incomplets',
+  the_numbers: 'Les chiffres',
+  hours_and_cost_by_asset: 'Heures et coût par équipement',
+  completion_comparison_description:
+    'Comparaison de divers types de bons de travail terminés.',
+  wo_age_description:
+    "L'âge du bon de travail est défini comme le nombre de jours entre la création du bon de travail (ou de la demande de travail) et aujourd'hui.",
+  rav_description:
+    "Le coût total en % de la RAV est égal à (coût des ordres de travail sur l'équipement / prix d'achat)*100. Le standard est une valeur de 3%",
+  downtime_and_availability_description:
+    'La disponibilité fait référence au pourcentage selon lequel les équipements étaient dans un état opérationnel depuis leur mise en service. ',
+  total_cost_description:
+    "Le coût total comprend le coût de la main-d'œuvre, le coût supplémentaire et le coût des pièces dans un bon de travail",
+  compliant_wo_description:
+    "Les bons de travail conformes sont définis comme des bons de travail terminés avant la date d'échéance. ",
+  hours_worked_description:
+    "Ces heures correspondent aux ordres de travail dont la date d'échéance se situe dans la plage spécifiée dans les filtres.",
+  work_remaining_description:
+    "Ce graphique montre le nombre d'ordres de travail incomplets qui sont dus dans la plage de dates spécifiée dans les filtres. "
 };
 
 export default frJSON;
