@@ -862,7 +862,8 @@ const enJSON = {
   upgrade_role_edit: 'Upgrade to edit role',
   delete_role: 'Delete Role',
   upgrade_role_delete: 'Upgrade to delete role',
-  create: 'Create'
+  create: 'Create',
+  pm_trigger: 'Preventative Maintenance Trigger'
 };
 
 export default enJSON;

@@ -230,13 +230,13 @@ function PageHeader({ rolesNumber, formatValues }: PageHeaderProps) {
                           onChange={handleChange}
                           name={'createPeopleTeams'}
                           control={<Checkbox />}
-                          label={t"people_teams"}
+                          label={t('people_teams')}
                         />
                         <FormControlLabel
                           onChange={handleChange}
                           name={'createCategories'}
                           control={<Checkbox />}
-                          label={t("categories")}
+                          label={t('categories')}
                         />
                       </Box>
 
@@ -253,67 +253,67 @@ function PageHeader({ rolesNumber, formatValues }: PageHeaderProps) {
                           onChange={handleChange}
                           name={'deleteWorkOrders'}
                           control={<Checkbox />}
-                          label="Work Orders"
+                          label={t('work_orders')}
                         />
                         <FormControlLabel
                           onChange={handleChange}
                           name={'deletePreventiveMaintenanceTrigger'}
                           control={<Checkbox />}
-                          label="Preventative Maintenance Trigger"
+                          label={t('pm_trigger')}
                         />
                         <FormControlLabel
                           onChange={handleChange}
                           name={'deleteLocations'}
                           control={<Checkbox />}
-                          label="Locations"
+                          label={t('locations')}
                         />
                         <FormControlLabel
                           onChange={handleChange}
                           name={'deleteAssets'}
                           control={<Checkbox />}
-                          label="Assets"
+                          label={t('assets')}
                         />
                         <FormControlLabel
                           onChange={handleChange}
                           name={'deletePartsAndSets'}
                           control={<Checkbox />}
-                          label="Parts and Sets of Parts"
+                          label={t('parts_and_sets')}
                         />
                         <FormControlLabel
                           onChange={handleChange}
                           name={'deletePurchaseOrders'}
                           control={<Checkbox />}
-                          label="Purchase Order"
+                          label={t('purchase_orders')}
                         />
                         <FormControlLabel
                           onChange={handleChange}
                           name={'deleteMeters'}
                           control={<Checkbox />}
-                          label="Meters"
+                          label={t('meters')}
                         />
                         <FormControlLabel
                           onChange={handleChange}
                           name={'deleteVendorsCustomers'}
                           control={<Checkbox />}
-                          label="Vendors & Customers"
+                          label={t('vendors_customers')}
                         />
                         <FormControlLabel
                           onChange={handleChange}
                           name={'deleteCategories'}
                           control={<Checkbox />}
-                          label="Categories"
+                          label={t('categories')}
                         />
                         <FormControlLabel
                           onChange={handleChange}
                           name={'deleteFiles'}
                           control={<Checkbox />}
-                          label="Files"
+                          label={t('files')}
                         />
                         <FormControlLabel
                           onChange={handleChange}
                           name={'deletePeopleTeams'}
                           control={<Checkbox />}
-                          label="People and Teams"
+                          label={t('people_teams')}
                         />
                       </Box>
 
@@ -323,13 +323,13 @@ function PageHeader({ rolesNumber, formatValues }: PageHeaderProps) {
                         justifyContent="space-between"
                       >
                         <Typography variant="h4" sx={{ pb: 1 }}>
-                          {t('access')}
+                          {t('to_access')}
                         </Typography>
                         <FormControlLabel
                           onChange={handleChange}
                           name={'accessSettings'}
                           control={<Checkbox />}
-                          label={t("settings")}
+                          label={t('settings')}
                         />
                       </Box>
                     </Box>

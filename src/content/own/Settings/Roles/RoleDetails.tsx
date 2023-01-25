@@ -214,7 +214,7 @@ export default function RoleDetails(props: RoleDetailsProps) {
           <Grid container spacing={2}>
             <PermissionsGroup name={'create'} title={t('create')} />
             <PermissionsGroup name={'delete'} title={t('to_delete')} />
-            <PermissionsGroup name={'access'} title={t('access')} />
+            <PermissionsGroup name={'access'} title={t('to_access')} />
           </Grid>
         </Box>
       </Grid>

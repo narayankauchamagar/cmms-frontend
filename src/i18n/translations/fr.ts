@@ -844,7 +844,7 @@ const frJSON = {
   'noRows.customer.message': 'Les prestataires sont des travailleurs externes',
   'noRows.customer.action':
     "Appuyez sur le bouton '+' pour créer un prestataire",
-  type: 'Taper',
+  type: 'Type',
   billing_currency: 'Devise de facturation',
   go_back: 'Retourner',
   confirm_delete_customer: 'Voulez-vous vraiment supprimer ce prestataire ?',
@@ -992,11 +992,12 @@ const frJSON = {
   add_role: 'Ajouter un nouveau rôle',
   add_role_description:
     'Remplissez les champs ci-dessous pour créer et ajouter un nouveau rôle',
-  parts_and_sets: 'Pièces',
+  parts_and_sets: 'Pièces & Jeux de pièces',
   upgrade_role_edit: 'Mettez à niveau pour modifier le rôle',
   delete_role: 'Supprimer le rôle',
   upgrade_role_delete: 'Mettez à niveau pour supprimer le rôle',
-  create: 'Créer'
+  create: 'Créer',
+  pm_trigger: 'Déclencheurs de Maintenance Préventive'
 };
 
 export default frJSON;
