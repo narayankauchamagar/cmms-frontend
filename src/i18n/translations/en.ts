@@ -886,7 +886,13 @@ const enJSON = {
   date_format: 'Date format',
   business_type: 'Business type',
   general_asset_management: 'General asset management',
-  physical_asset_management: 'Physical asset management'
+  physical_asset_management: 'Physical asset management',
+  //checklist
+  checklist_delete_success: 'The Checklist has been deleted successfully',
+  checklist_delete_failure: "The Checklist couldn't be deleted",
+  create_checklist: 'Create Checklist',
+  confirm_delete_checklist: 'Are you sure you want to delete this Checklist?',
+  upgrade_checklist: 'Please Upgrade to use Checklists'
 };
 
 export default enJSON;

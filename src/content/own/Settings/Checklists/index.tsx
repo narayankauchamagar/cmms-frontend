@@ -46,10 +46,10 @@ function Checklists() {
     if (hasFeature(PlanFeature.CHECKLIST)) dispatch(getChecklists());
   }, []);
   const onDeleteSuccess = () => {
-    showSnackBar(t('The Checklist has been deleted successfully'), 'success');
+    showSnackBar(t('checklist_delete_success'), 'success');
   };
   const onDeleteFailure = (err) =>
-    showSnackBar(t("The Checklist couldn't be deleted"), 'error');
+    showSnackBar(t('checklist_delete_failure'), 'error');
 
   const handleDelete = (id: number) => {
     dispatch(deleteChecklist(id)).then(onDeleteSuccess).catch(onDeleteFailure);
@@ -79,8 +79,8 @@ function Checklists() {
     },
     {
       field: 'tasks',
-      headerName: t('Tasks'),
-      description: t('Tasks'),
+      headerName: t('tasks'),
+      description: t('tasks'),
       valueGetter: (params: GridValueGetterParams<null, Checklist>) =>
         params.row.taskBases.length,
       width: 150
@@ -123,7 +123,7 @@ function Checklists() {
                 onClick={() => setOpenCreateChecklist(true)}
                 startIcon={<AddTwoToneIcon fontSize="small" />}
               >
-                {t('Create Checklist')}
+                {t('create_checklist')}
               </Button>
               <CustomDataGrid
                 columns={columns}
@@ -208,11 +208,11 @@ function Checklists() {
             }}
             onConfirm={() => handleDelete(currentChecklist?.id)}
             confirmText={t('to_delete')}
-            question={t('Are you sure you want to delete this Checklist?')}
+            question={t('confirm_delete_checklist')}
           />
         </>
       ) : (
-        <FeatureErrorMessage message="Please Upgrade to use Checklists" />
+        <FeatureErrorMessage message="upgrade_checklist" />
       )}
     </SettingsLayout>
   );

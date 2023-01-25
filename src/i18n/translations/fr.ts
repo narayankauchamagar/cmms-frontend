@@ -1024,7 +1024,12 @@ const frJSON = {
   date_format: 'Format de date',
   business_type: "Type d'entreprise",
   general_asset_management: 'Gestion générale des actifs',
-  physical_asset_management: 'Gestion des actifs physiques'
+  physical_asset_management: 'Gestion des actifs physiques',
+  checklist_delete_success: 'La Checklist a été supprimée avec succès',
+  checklist_delete_failure: "La Checklist n'a pas pu être supprimée",
+  create_checklist: 'Créer une Checklist',
+  confirm_delete_checklist: 'Voulez-vous vraiment supprimer cette Checklist?',
+  upgrade_checklist: 'Veuillez mettre à niveau pour utiliser les Checklists'
 };
 
 export default frJSON;
