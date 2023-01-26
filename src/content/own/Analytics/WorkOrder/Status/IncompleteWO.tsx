@@ -87,7 +87,7 @@ function IncompleteWO({ handleOpenModal }: WOStatusIncompleteProps) {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey="count" fill="#8884d8" name={t('Work Orders')}>
+          <Bar dataKey="count" fill="#8884d8" name={t('work_orders')}>
             {formattedData.map((entry, index) => (
               <Cell
                 key={index}
@@ -99,7 +99,7 @@ function IncompleteWO({ handleOpenModal }: WOStatusIncompleteProps) {
             ))}
           </Bar>
           <Line
-            name={t('Estimated duration')}
+            name={t('estimated_duration')}
             type="monotone"
             dataKey="estimatedHours"
             stroke="#ff7300"

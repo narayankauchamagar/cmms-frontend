@@ -36,25 +36,25 @@ function RequestStatsByPriority({ handleOpenModal }: OwnProps) {
     filters: Filter[];
   }[] = [
     {
-      label: 'High',
+      label: t('high_priority'),
       count: requestStatsByPriority.high.count,
       color: theme.colors.error.main,
       filters: [{ key: 'fs', value: false }]
     },
     {
-      label: 'Medium',
+      label: t('medium_priority'),
       count: requestStatsByPriority.medium.count,
       color: theme.colors.warning.main,
       filters: [{ key: 'fs', value: false }]
     },
     {
-      label: 'Low',
+      label: t('low_priority'),
       count: requestStatsByPriority.low.count,
       color: theme.colors.success.main,
       filters: [{ key: 'fs', value: false }]
     },
     {
-      label: 'None',
+      label: t('none_priority'),
       count: requestStatsByPriority.none.count,
       color: theme.colors.alpha.black[70],
       filters: [{ key: 'fs', value: false }]

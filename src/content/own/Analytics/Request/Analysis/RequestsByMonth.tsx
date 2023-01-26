@@ -49,7 +49,7 @@ function RequestsByMonth({ handleOpenModal }: OwnProps) {
   });
   const lines: { label: string; dataKey: string; color: string }[] = [
     {
-      label: t('Average Cycle Time (days)'),
+      label: t('average_cycle_time_in_days'),
       dataKey: 'cycleTime',
       color: theme.colors.info.main
     }

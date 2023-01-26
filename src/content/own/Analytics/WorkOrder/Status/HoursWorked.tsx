@@ -25,9 +25,9 @@ function HoursWorked({ handleOpenModal }: HoursWorkedProps) {
 
   const columns = ['id'];
   const formattedData: { label: string; value: number; filters: Filter[] }[] = [
-    { label: t('Estimated Hours'), value: hours.estimated, filters: [] },
+    { label: t('estimated_hours'), value: hours.estimated, filters: [] },
     {
-      label: t('Total time spent (Hours)'),
+      label: t('total_time_spent_in_hours'),
       value: hours.actual,
       filters: []
     }

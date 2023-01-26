@@ -34,21 +34,21 @@ function WOStatusPie({ handleOpenModal }: WOStatusPieProps) {
     //   value: data.complete,
     //   color: theme.colors.error.main,
     //   filters: [{ key: 'status', value: 'COMPLETE' }]
-    // },
+    // },ne
     {
-      label: 'On hold',
+      label: t('ON_HOLD'),
       value: incompleteByStatus.onHold,
       color: theme.colors.warning.main,
       filters: [{ key: 'status', value: 'ON_HOLD' }]
     },
     {
-      label: 'In Progress',
+      label: t('IN_PROGRESS'),
       value: incompleteByStatus.inProgress,
       color: theme.colors.success.main,
       filters: [{ key: 'status', value: 'IN_PROGRESS' }]
     },
     {
-      label: 'Open',
+      label: t('OPEN'),
       value: incompleteByStatus.open,
       color: theme.colors.alpha.black[70],
       filters: [{ key: 'status', value: 'OPEN' }]

@@ -20,13 +20,13 @@ function AssetCost({ handleOpenWOModal }: WOStatusStatsProps) {
   const { setTitle } = useContext(TitleContext);
 
   useEffect(() => {
-    setTitle(t('Total Maintenance Cost'));
+    setTitle(t('total_maintenance_cost'));
   }, []);
 
   return (
     <>
       <Helmet>
-        <title>{t('Total Maintenance Cost')}</title>
+        <title>{t('total_maintenance_cost')}</title>
       </Helmet>
       <Grid
         container

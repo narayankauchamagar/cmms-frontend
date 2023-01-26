@@ -58,7 +58,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
       }
     },
     {
-      label: t('additioal_costs'),
+      label: t('additional_costs'),
       value: getFormattedCurrency(completeCosts.additionalCost.toFixed(2)),
       config: {
         columns: ['id'],

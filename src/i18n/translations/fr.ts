@@ -1108,21 +1108,24 @@ const frJSON = {
   average_age: 'Âge moyen',
   count: 'Nombre',
   average_cost: 'Coût moyen',
-  compliant: 'Conforme',
-  average_cycle_time_in_days: 'Temps de cycle moyen (jours)',
+  compliant: 'Conformes',
+  average_cycle_time_in_days: 'Durée de cycle moyenne (jours)',
   total_consumption_cost: 'Coût total de consommation',
   parts_consumed: 'Pièces consommées',
   total_cost_as_pct_rav: 'Coût total en pourcentage de RAV',
   approved_requests: 'Demandes approuvées',
   pending_requests: 'Demandes en attente',
   cancelled_requests: 'Demandes rejetées',
-  average_cycle_time: 'Temps de cycle moyen',
+  average_cycle_time: 'Durée de cycle moyenne',
   compliance_rate: 'Taux de conformité',
-  complete: 'Terminé',
-  reactive: 'Réactif',
-  recurring: 'Récurrent',
+  complete: 'Terminés',
+  reactive: 'Réactifs',
+  recurring: 'Récurrents',
   part_costs: 'Coûts des pièces',
-  labor_costs: 'Coût du travail'
+  labor_costs: 'Coût du travail',
+  total_time_spent_in_hours: 'Temps total (Heures)',
+  estimated_hours: 'Heures estimées',
+  total_purchase_price: "Coût d'acquisition total"
 };
 
 export default frJSON;

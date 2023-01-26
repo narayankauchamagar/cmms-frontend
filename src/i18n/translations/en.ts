@@ -986,7 +986,10 @@ const enJSON = {
   reactive: 'Reactive',
   recurring: 'Recurring',
   part_costs: 'Part Costs',
-  labor_costs: 'Labor Cost'
+  labor_costs: 'Labor Cost',
+  total_time_spent_in_hours: 'Total time spent (Hours)',
+  estimated_hours: 'Estimated Hours',
+  total_purchase_price: 'Total Purchase Price'
 };
 
 export default enJSON;

@@ -41,7 +41,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
       }
     },
     {
-      label: t('Total Maintenance Cost'),
+      label: t('total_maintenance_cost'),
       value: getFormattedCurrency(assetsCosts.totalWOCosts),
       config: {
         columns: ['id'],
@@ -49,7 +49,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
       }
     },
     {
-      label: t('Total Purchase Price'),
+      label: t('total_purchase_price'),
       value: getFormattedCurrency(assetsCosts.totalAcquisitionCost)
     }
   ];
