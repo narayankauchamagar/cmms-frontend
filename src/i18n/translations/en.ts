@@ -989,7 +989,47 @@ const enJSON = {
   labor_costs: 'Labor Cost',
   total_time_spent_in_hours: 'Total time spent (Hours)',
   estimated_hours: 'Estimated Hours',
-  total_purchase_price: 'Total Purchase Price'
+  total_purchase_price: 'Total Purchase Price',
+  you_have: 'You have',
+  new_messages: 'new messages',
+  //company profile
+  company: 'Company',
+  change_cover: 'Change cover',
+  required_address: 'The address field is required',
+  company_details: 'Company Details',
+  company_details_description: 'Manage informations related to your company',
+  learn_more: 'Learn more',
+  //user profile
+  profile: 'Profile',
+  email_notifications: 'Email notifications',
+  email_updates_wo: 'Email Updates for Work Orders and Messages',
+  email_updates_requests: 'Email Updates for Requested Work Orders',
+  po_emails: 'Purchase Order Emails',
+  required_job_title: 'The Job title field is required',
+  required_old_password: 'Please provide the current password.',
+  invalid_password: 'Password is too short - should be 8 chars minimum.',
+  required_new_password: 'No password provided.',
+  passwords_must_match: 'Passwords must match',
+  password_change_success: 'Password changed successfully',
+  wrong_password: 'Wrong password provided',
+  current_password: 'Current password',
+  new_password: 'New password',
+  confirm_password: 'Confirm password',
+  personal_details: 'Personal Details',
+  personal_details_description:
+    'Manage informations related to your personal details',
+  change_password: 'Change password',
+  notification_settings: 'Notifications Settings',
+  notification_settings_description:
+    'Manage details related to your notifications',
+  recent_activity: 'Recent Activity',
+  created: 'Created',
+  completed: 'Completed',
+  my_account: 'My account',
+  my_company: 'My company',
+  you_are_using_plan:
+    'You are currently using {{planName}} plan. Upgrade now to get access to more features.',
+  upgrade_plan: 'Upgrade Plan'
 };
 
 export default enJSON;

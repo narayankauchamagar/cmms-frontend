@@ -58,7 +58,7 @@ function CompanyPlan(props: CompanyPlanProps) {
           }}
           variant="h3"
         >
-          Upgrade plan
+          {t('upgrade_plan')}
         </Typography>
         <Typography
           variant="subtitle2"
@@ -70,8 +70,7 @@ function CompanyPlan(props: CompanyPlanProps) {
             )}`
           }}
         >
-          {t(`You are currently using ${plan.name} plan. Upgrade now to get access to
-          more features.`)}
+          {t('you_are_using_plan', { planName: plan.name })}
         </Typography>
         <Box sx={{ mt: 2 }}>
           <Button
@@ -79,14 +78,14 @@ function CompanyPlan(props: CompanyPlanProps) {
             variant="contained"
             onClick={() => navigate('/app/subscription/plans')}
           >
-            {t('Upgrade now')}
+            {t('upgrade_now')}
           </Button>
           <Button
             onClick={() => navigate('/billing')}
             variant="contained"
             color="secondary"
           >
-            {t('Learn more')}
+            {t('learn_more')}
           </Button>
         </Box>
       </Box>

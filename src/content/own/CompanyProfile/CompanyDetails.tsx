@@ -35,10 +35,10 @@ function CompanyDetails(props: CompanyDetailsProps) {
   const handleCloseEditModal = () => setOpenEditModal(false);
 
   const companyDetails = {
-    name: { value: company.name, title: t(' Name') },
+    name: { value: company.name, title: t(' name') },
     address: { value: company.address, title: t('address') },
-    website: { value: company.website, title: 'Website', isLink: true },
-    phone: { value: company.phone, title: 'Phone' }
+    website: { value: company.website, title: t('website'), isLink: true },
+    phone: { value: company.phone, title: t('phone') }
   };
 
   const KeyAndValue = ({
@@ -97,15 +97,10 @@ function CompanyDetails(props: CompanyDetailsProps) {
           website: companyDetails.website.value
         }}
         validationSchema={Yup.object().shape({
-          name: Yup.string().max(100).required(t('The name field is required')),
-          address: Yup.string()
-            .max(100)
-            .required(t('The address field is required')),
-          phone: Yup.string().matches(
-            phoneRegExp,
-            t('The phone number is invalid')
-          ),
-          website: Yup.string().matches(websiteRegExp, t('Invalid website'))
+          name: Yup.string().max(100).required(t('required_name')),
+          address: Yup.string().max(100).required(t('required_address')),
+          phone: Yup.string().matches(phoneRegExp, t('invalid_phone')),
+          website: Yup.string().matches(websiteRegExp, t('invalid_website'))
         })}
         onSubmit={async (
           _values,
@@ -167,7 +162,7 @@ function CompanyDetails(props: CompanyDetailsProps) {
                         error={Boolean(touched.phone && errors.phone)}
                         fullWidth
                         helperText={touched.phone && errors.phone}
-                        label={t('Phone number')}
+                        label={t('phone')}
                         name="phone"
                         onBlur={handleBlur}
                         onChange={handleChange}
@@ -180,7 +175,7 @@ function CompanyDetails(props: CompanyDetailsProps) {
                         error={Boolean(touched.website && errors.website)}
                         fullWidth
                         helperText={touched.website && errors.website}
-                        label={t('Website')}
+                        label={t('website')}
                         name="website"
                         onBlur={handleBlur}
                         onChange={handleChange}
@@ -229,10 +224,10 @@ function CompanyDetails(props: CompanyDetailsProps) {
           >
             <Box>
               <Typography variant="h4" gutterBottom>
-                {t('Company Details')}
+                {t('company_details')}
               </Typography>
               <Typography variant="subtitle2">
-                {t('Manage informations related to your company')}
+                {t('company_details_description')}
               </Typography>
             </Box>
             {user.ownsCompany && (

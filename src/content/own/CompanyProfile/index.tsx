@@ -5,7 +5,6 @@ import { Helmet } from 'react-helmet-async';
 import { Box, Grid } from '@mui/material';
 import CompanyCover from './CompanyCover';
 import CompanyDetails from './CompanyDetails';
-import { Company } from '../../../models/owns/company';
 import CompanyPlan from './CompanyPlan';
 import { TitleContext } from '../../../contexts/TitleContext';
 import { useTranslation } from 'react-i18next';
@@ -17,7 +16,7 @@ function CompanyProfile() {
   const { setTitle } = useContext(TitleContext);
 
   useEffect(() => {
-    setTitle(t('Company'));
+    setTitle(t('company'));
   }, []);
   if (!company) {
     return null;

@@ -272,7 +272,7 @@ function HeaderNotifications() {
                 {t('Notifications')}
               </Typography>
               <Typography textAlign="center" variant="subtitle2">
-                You have{' '}
+                {t('you_have')}{' '}
                 <Text color="success">
                   <b>
                     {
@@ -281,7 +281,7 @@ function HeaderNotifications() {
                     }
                   </b>
                 </Text>{' '}
-                new messages
+                {t('new_messages')}
               </Typography>
             </BoxComposedContent>
           </BoxComposed>

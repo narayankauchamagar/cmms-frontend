@@ -47,27 +47,27 @@ function ProfileDetails() {
   }, []);
 
   const userConfig = {
-    firstName: { value: user.firstName, title: t('First Name') },
-    lastName: { value: user.lastName, title: t('Last Name') },
+    firstName: { value: user.firstName, title: t('first_name') },
+    lastName: { value: user.lastName, title: t('last_name') },
     phone: { value: user.phone, title: t('phone') },
-    jobTitle: { value: user.jobTitle, title: t('Job Title') },
+    jobTitle: { value: user.jobTitle, title: t('job_title') },
     settings: {
       emailNotified: {
         value: userSettings?.emailNotified,
-        title: t('Email notifications')
+        title: t('email_notifications')
       },
       emailUpdatesForWorkOrders: {
         value: userSettings?.emailUpdatesForWorkOrders,
-        title: t('Email Updates for Work Orders and Messages')
+        title: t('email_updates_wo')
       },
       emailUpdatesForRequests: {
         value: userSettings?.emailUpdatesForRequests,
-        title: t('Email Updates for Requested Work Orders')
+        title: t('email_updates_requests')
       },
       // dailyEmailSummary: { value: userSettings?., title: t('Daily Summary Emails') },
       emailUpdatesForPurchaseOrders: {
         value: userSettings?.emailUpdatesForPurchaseOrders,
-        title: t('Purchase Order Emails')
+        title: t('po_emails')
       }
     }
   };
@@ -125,19 +125,12 @@ function ProfileDetails() {
           jobTitle: userConfig.jobTitle.value
         }}
         validationSchema={Yup.object().shape({
-          firstName: Yup.string()
-            .max(100)
-            .required(t('The First Name field is required')),
-          lastName: Yup.string()
-            .max(100)
-            .required(t('The Last Name field is required')),
-          phone: Yup.string().matches(
-            phoneRegExp,
-            'The phone number is invalid'
-          ),
+          firstName: Yup.string().max(100).required(t('required_firstName')),
+          lastName: Yup.string().max(100).required(t('required_lastName')),
+          phone: Yup.string().matches(phoneRegExp, t('invalid_phone')),
           jobTitle: Yup.string()
             .max(100)
-            .required(t('The Job title field is required'))
+            .required(t('required_job_title'))
             .nullable()
         })}
         onSubmit={async (
@@ -174,7 +167,7 @@ function ProfileDetails() {
                         error={Boolean(touched.firstName && errors.firstName)}
                         fullWidth
                         helperText={touched.firstName && errors.firstName}
-                        label={t('First Name')}
+                        label={t('first_name')}
                         name="firstName"
                         onBlur={handleBlur}
                         onChange={handleChange}
@@ -187,7 +180,7 @@ function ProfileDetails() {
                         error={Boolean(touched.lastName && errors.lastName)}
                         fullWidth
                         helperText={touched.lastName && errors.lastName}
-                        label={t('Last Name')}
+                        label={t('last_name')}
                         name="lastName"
                         onBlur={handleBlur}
                         onChange={handleChange}
@@ -200,7 +193,7 @@ function ProfileDetails() {
                         error={Boolean(touched.phone && errors.phone)}
                         fullWidth
                         helperText={touched.phone && errors.phone}
-                        label={t('Phone number')}
+                        label={t('phone')}
                         name="phone"
                         onBlur={handleBlur}
                         onChange={handleChange}
@@ -213,7 +206,7 @@ function ProfileDetails() {
                         error={Boolean(touched.jobTitle && errors.jobTitle)}
                         fullWidth
                         helperText={touched.jobTitle && errors.jobTitle}
-                        label={t('Job Title')}
+                        label={t('job_title')}
                         name="jobTitle"
                         onBlur={handleBlur}
                         onChange={handleChange}
@@ -264,14 +257,14 @@ function ProfileDetails() {
         }}
         validationSchema={Yup.object().shape({
           oldPassword: Yup.string()
-            .required(t('Please provide the current password.'))
-            .min(8, t('Password is too short - should be 8 chars minimum.')),
+            .required(t('required_old_password'))
+            .min(8, t('invalid_password')),
           newPassword: Yup.string()
-            .required(t('No password provided.'))
-            .min(8, t('Password is too short - should be 8 chars minimum.')),
+            .required(t('required_new_password'))
+            .min(8, t('invalid_password')),
           confirmPassword: Yup.string().oneOf(
             [Yup.ref('newPassword'), null],
-            t('Passwords must match')
+            t('passwords_must_match')
           )
         })}
         onSubmit={async (
@@ -282,9 +275,9 @@ function ProfileDetails() {
           return updatePassword(_values)
             .then(() => {
               handleClosePasswordModal();
-              showSnackBar(t('Password changed successfully'), 'success');
+              showSnackBar(t('password_change_success'), 'success');
             })
-            .catch((err) => showSnackBar(t('Wrong password provided'), 'error'))
+            .catch((err) => showSnackBar(t('wrong_password'), 'error'))
             .finally(() => setSubmitting(false));
         }}
       >
@@ -314,7 +307,7 @@ function ProfileDetails() {
                         )}
                         fullWidth
                         helperText={touched.oldPassword && errors.oldPassword}
-                        label={t('Current password')}
+                        label={t('current_password')}
                         type="password"
                         name="oldPassword"
                         onBlur={handleBlur}
@@ -330,7 +323,7 @@ function ProfileDetails() {
                         )}
                         fullWidth
                         helperText={touched.newPassword && errors.newPassword}
-                        label={t('New password')}
+                        label={t('new_password')}
                         type="password"
                         name="newPassword"
                         onBlur={handleBlur}
@@ -349,7 +342,7 @@ function ProfileDetails() {
                           touched.confirmPassword && errors.confirmPassword
                         }
                         type="password"
-                        label={t('Confirm password')}
+                        label={t('confirm_password')}
                         name="confirmPassword"
                         onBlur={handleBlur}
                         onChange={handleChange}
@@ -399,10 +392,10 @@ function ProfileDetails() {
           >
             <Box>
               <Typography variant="h4" gutterBottom>
-                {t('Personal Details')}
+                {t('personal_details')}
               </Typography>
               <Typography variant="subtitle2">
-                {t('Manage informations related to your personal details')}
+                {t('personal_details_description')}
               </Typography>
             </Box>
             <Box>
@@ -418,7 +411,7 @@ function ProfileDetails() {
                 variant="text"
                 startIcon={<LockTwoToneIcon />}
               >
-                {t('Change password')}
+                {t('change_password')}
               </Button>
             </Box>
           </Box>
@@ -452,10 +445,10 @@ function ProfileDetails() {
           >
             <Box>
               <Typography variant="h4" gutterBottom>
-                {t('Notifications Settings')}
+                {t('notification_settings')}
               </Typography>
               <Typography variant="subtitle2">
-                {t('Manage details related to your notifications')}
+                {t('notification_settings_description')}
               </Typography>
             </Box>
           </Box>

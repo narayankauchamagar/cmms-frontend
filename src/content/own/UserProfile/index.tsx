@@ -18,7 +18,7 @@ function UserProfile() {
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
   useEffect(() => {
-    setTitle(t('Profile'));
+    setTitle(t('profile'));
   }, []);
 
   if (!user) {

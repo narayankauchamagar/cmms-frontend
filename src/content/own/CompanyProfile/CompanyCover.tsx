@@ -78,7 +78,7 @@ const CompanyCover: FC<CompanyCoverProps> = ({ image }) => {
               disabled={changingPicture}
               component="span"
             >
-              {t('Change cover')}
+              {t('change_cover')}
             </Button>
           </label>
         </CardCoverAction>

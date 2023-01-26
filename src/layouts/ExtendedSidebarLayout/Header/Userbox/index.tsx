@@ -261,7 +261,7 @@ function HeaderUserbox() {
               primaryTypographyProps={{
                 variant: 'h5'
               }}
-              primary={t('My account')}
+              primary={t('my_account')}
             />
             <ChevronRightTwoToneIcon
               sx={{
@@ -280,7 +280,7 @@ function HeaderUserbox() {
               primaryTypographyProps={{
                 variant: 'h5'
               }}
-              primary={t('My company')}
+              primary={t('my_company')}
             />
             <Box display="flex" alignItems="center">
               <ChevronRightTwoToneIcon

@@ -1125,7 +1125,48 @@ const frJSON = {
   labor_costs: 'Coût du travail',
   total_time_spent_in_hours: 'Temps total (Heures)',
   estimated_hours: 'Heures estimées',
-  total_purchase_price: "Coût d'acquisition total"
+  total_purchase_price: "Coût d'acquisition total",
+  company: 'Entreprise',
+  change_cover: 'Changer de couverture',
+  required_address: 'Le champ adresse est obligatoire',
+  company_details: "Détails de l'entreprise",
+  company_details_description:
+    'Gérer les informations relatives à votre entreprise',
+  learn_more: 'Voir plus',
+  you_have: 'Vous avez',
+  new_messages: 'nouveaux messages',
+  profile: 'Profil',
+  email_notifications: 'Notifications par email',
+  email_updates_wo:
+    'Notifications par e-mail pour les ordres de travail et les messages',
+  email_updates_requests: 'Notifications par e-mail pour les demandes',
+  po_emails: 'E-mails de bon de commande',
+  required_job_title: 'Le champ Intitulé du poste est obligatoire',
+  required_old_password: 'Veuillez fournir le mot de passe actuel.',
+  invalid_password:
+    'Le mot de passe est trop court - doit comporter au moins 8 caractères.',
+  required_new_password: 'Aucun mot de passe fourni.',
+  passwords_must_match: 'les mots de passe doivent correspondre',
+  password_change_success: 'Le mot de passe a été changé avec succès',
+  wrong_password: 'Mauvais mot de passe fourni',
+  current_password: 'Mot de passe actuel',
+  new_password: 'Nouveau mot de passe',
+  confirm_password: 'Confirmez le mot de passe',
+  personal_details: 'Détails personnels',
+  personal_details_description:
+    'Gérer les informations relatives à vos données personnelles',
+  change_password: 'Changer le mot de passe',
+  notification_settings: 'Paramètres de notifications',
+  notification_settings_description:
+    'Gérer les détails liés à vos notifications',
+  recent_activity: 'Activité récente',
+  created: 'Créés',
+  completed: 'Achevés',
+  my_account: 'Mon compte',
+  my_company: 'Mon entreprise',
+  you_are_using_plan:
+    'Vous utilisez actuellement le plan {{planName}}. Mettez à niveau maintenant pour accéder à plus de fonctionnalités.',
+  upgrade_plan: 'Changer de plan'
 };
 
 export default frJSON;
