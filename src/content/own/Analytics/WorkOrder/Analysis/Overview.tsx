@@ -32,7 +32,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
     };
   }[] = [
     {
-      label: t('Count'),
+      label: t('count'),
       value: overview.complete,
       config: {
         columns: ['id'],
@@ -40,7 +40,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
       }
     },
     {
-      label: t('Compliant'),
+      label: t('compliant'),
       value: overview.compliant,
       config: {
         columns: ['id'],
@@ -48,11 +48,11 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
       }
     },
     {
-      label: t('Average Cycle Time (Days)'),
+      label: t('average_cycle_time_in_days'),
       value: overview.avgCycleTime
     },
     {
-      label: t('Compliance rate'),
+      label: t('compliance_rate'),
       value: `${
         overview.complete
           ? ((overview.compliant * 100) / overview.complete).toFixed(0)
@@ -81,7 +81,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
                     handleOpenModal(
                       data.config.columns,
                       data.config.filters,
-                      t('The numbers')
+                      t('the_numbers')
                     )
                   }
                 >

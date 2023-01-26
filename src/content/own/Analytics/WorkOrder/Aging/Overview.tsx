@@ -34,7 +34,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
     };
   }[] = [
     {
-      label: t('Count'),
+      label: t('count'),
       value: incompleteOverview.total,
       config: {
         columns: ['id'],
@@ -42,7 +42,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
       }
     },
     {
-      label: t('Average age'),
+      label: t('average_age'),
       value: incompleteOverview.averageAge,
       config: {
         columns: ['id'],
@@ -71,7 +71,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
                     handleOpenModal(
                       data.config.columns,
                       data.config.filters,
-                      t('Incomplete Work Orders')
+                      t('incomplete_wo')
                     )
                   }
                 >

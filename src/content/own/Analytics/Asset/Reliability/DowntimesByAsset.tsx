@@ -68,7 +68,7 @@ function DowntimesByAsset({ handleOpenModal }: WOStatusIncompleteProps) {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey="count" fill="#8884d8" name={t('Downtime Events')}>
+          <Bar dataKey="count" fill="#8884d8" name={t('downtime_events')}>
             {formattedData.map((entry, index) => (
               <Cell
                 key={index}
@@ -80,7 +80,7 @@ function DowntimesByAsset({ handleOpenModal }: WOStatusIncompleteProps) {
             ))}
           </Bar>
           <Line
-            name={t('% Downtime')}
+            name={t('percent_downtime')}
             type="monotone"
             dataKey="percent"
             stroke="#ff7300"

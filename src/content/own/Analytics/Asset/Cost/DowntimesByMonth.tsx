@@ -68,7 +68,7 @@ function DowntimesByMonth({ handleOpenModal }: DowntimesByMonthProps) {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey="cost" fill="#8884d8" name={t('Total Maintenance Cost')}>
+          <Bar dataKey="cost" fill="#8884d8" name={t('total_maintenance_cost')}>
             {formattedData.map((entry, index) => (
               <Cell
                 key={index}
@@ -80,7 +80,7 @@ function DowntimesByMonth({ handleOpenModal }: DowntimesByMonthProps) {
             ))}
           </Bar>
           <Line
-            name={t('Total Downtime(hours)')}
+            name={t('total_downtime_in_hours')}
             type="monotone"
             dataKey="duration"
             stroke="#ff7300"

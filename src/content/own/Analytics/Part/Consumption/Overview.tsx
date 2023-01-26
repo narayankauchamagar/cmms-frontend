@@ -35,7 +35,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
     };
   }[] = [
     {
-      label: t('Total Consumption Cost'),
+      label: t('total_consumption_cost'),
       value: getFormattedCurrency(consumptionsOverview.totalConsumptionCost),
       config: {
         columns: ['id'],
@@ -43,7 +43,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
       }
     },
     {
-      label: t('Parts Consumed'),
+      label: t('parts_consumed'),
       value: consumptionsOverview.consumedCount,
       config: {
         columns: ['id'],
@@ -68,7 +68,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
                     handleOpenModal(
                       data.config.columns,
                       data.config.filters,
-                      t('The numbers')
+                      t('the_numbers')
                     )
                   }
                 >

@@ -20,13 +20,13 @@ function WOStatusStats({ handleOpenWOModal }: WOStatusStatsProps) {
   const { setTitle } = useContext(TitleContext);
 
   useEffect(() => {
-    setTitle(t('Work Order Aging'));
+    setTitle(t('wo_aging'));
   }, []);
 
   return (
     <>
       <Helmet>
-        <title>{t('Work Order Aging')}</title>
+        <title>{t('wo_aging')}</title>
       </Helmet>
       <Grid
         container

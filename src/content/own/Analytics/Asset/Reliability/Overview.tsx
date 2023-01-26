@@ -32,7 +32,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
     };
   }[] = [
     {
-      label: t('Total downtime (hours)'),
+      label: t('total_downtime_in_hours'),
       value: (overview.downtime / 3600).toFixed(1),
       config: {
         columns: ['id'],
@@ -40,7 +40,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
       }
     },
     {
-      label: t('Availability percentage'),
+      label: t('availability_percent'),
       value: overview.availability?.toFixed(1),
       config: {
         columns: ['id'],
@@ -48,7 +48,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
       }
     },
     {
-      label: t('Downtime Events'),
+      label: t('downtime_events'),
       value: overview.downtimeEvents,
       config: {
         columns: ['id'],
@@ -77,7 +77,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
                     handleOpenModal(
                       data.config.columns,
                       data.config.filters,
-                      t('The numbers')
+                      t('the_numbers')
                     )
                   }
                 >

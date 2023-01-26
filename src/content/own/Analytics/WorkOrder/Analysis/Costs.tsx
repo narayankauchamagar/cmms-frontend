@@ -31,7 +31,7 @@ function Costs({ handleOpenModal }: HoursWorkedProps) {
       filters: []
     },
     {
-      label: t('Average Cost'),
+      label: t('average_cost'),
       value: getFormattedCurrency(completeCosts.average.toFixed(2)),
       filters: []
     }

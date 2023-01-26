@@ -70,7 +70,7 @@ function DowntimesAndCosts({ handleOpenModal }: WOByPrimaryUserProps) {
           <Bar
             dataKey="duration"
             fill="#8884d8"
-            name={t('Total Downtime (hours)')}
+            name={t('total_downtime_in_hours')}
           >
             {formattedData.map((entry, index) => (
               <Cell

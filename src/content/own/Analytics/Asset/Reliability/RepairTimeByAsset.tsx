@@ -65,7 +65,7 @@ function RepairTimeByAsset({ handleOpenModal }: WOStatusPieProps) {
           <Bar
             dataKey="duration"
             fill="#8884d8"
-            name={t('Mean time to Repair(hours)')}
+            name={t('mean_time_to_repair_in_hours')}
           >
             {formattedData.map((entry, index) => (
               <Cell

@@ -19,13 +19,13 @@ function PartsConsumption({ handleOpenWOModal }: WOStatusStatsProps) {
   const { setTitle } = useContext(TitleContext);
 
   useEffect(() => {
-    setTitle(t('Parts Consumption'));
+    setTitle(t('parts_consumption'));
   }, []);
 
   return (
     <>
       <Helmet>
-        <title>{t('Parts Consumption')}</title>
+        <title>{t('parts_consumption')}</title>
       </Helmet>
       <Grid
         container

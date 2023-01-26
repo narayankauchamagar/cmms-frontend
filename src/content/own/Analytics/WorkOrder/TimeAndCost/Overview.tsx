@@ -42,7 +42,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
       }
     },
     {
-      label: t('Part cost'),
+      label: t('part_costs'),
       value: getFormattedCurrency(completeCosts.partCost.toFixed(2)),
       config: {
         columns: ['id'],
@@ -50,7 +50,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
       }
     },
     {
-      label: t('Labor cost'),
+      label: t('labor_costs'),
       value: getFormattedCurrency(completeCosts.laborCost.toFixed(2)),
       config: {
         columns: ['id'],
@@ -58,7 +58,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
       }
     },
     {
-      label: t('Additional cost'),
+      label: t('additioal_costs'),
       value: getFormattedCurrency(completeCosts.additionalCost.toFixed(2)),
       config: {
         columns: ['id'],
@@ -66,7 +66,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
       }
     },
     {
-      label: t('Hours worked'),
+      label: t('hours_worked'),
       value: (completeCosts.laborTime / 3600).toFixed(2),
       config: {
         columns: ['id'],
@@ -95,7 +95,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
                     handleOpenModal(
                       data.config.columns,
                       data.config.filters,
-                      t('Incomplete Work Orders')
+                      t('incomplete_wo')
                     )
                   }
                 >

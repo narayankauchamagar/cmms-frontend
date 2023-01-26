@@ -962,7 +962,31 @@ const enJSON = {
   hours_worked_description:
     'These hours correspond to work orders that have a due date within the range specified in the filters.',
   work_remaining_description:
-    'This graph shows the number of incomplete work orders that are due in the date range specified in the filters. The estimated hours correspond to those individual work orders.'
+    'This graph shows the number of incomplete work orders that are due in the date range specified in the filters. The estimated hours correspond to those individual work orders.',
+  total_downtime_in_hours: 'Total Downtime (hours)',
+  downtime_events: 'Downtime Events',
+  percent_downtime: '% Downtime',
+  meantime_between_failures_in_hours: 'Mean time between failures(hours)',
+  availability_percent: 'Availability percentage',
+  mean_time_to_repair_in_hours: 'Mean time to Repair(hours)',
+  average_age: 'Average Age',
+  count: 'Count',
+  average_cost: 'Average Cost',
+  compliant: 'Compliant',
+  average_cycle_time_in_days: 'Average Cycle Time (Days)',
+  total_consumption_cost: 'Total Consumption Cost',
+  parts_consumed: 'Parts Consumed',
+  total_cost_as_pct_rav: 'Total cost as Pct of RAV',
+  approved_requests: 'Approved Requests',
+  pending_requests: 'Pending Requests',
+  cancelled_requests: 'Cancelled Requests',
+  average_cycle_time: 'Average Cycle Time',
+  compliance_rate: 'Compliance rate',
+  complete: 'Complete',
+  reactive: 'Reactive',
+  recurring: 'Recurring',
+  part_costs: 'Part Costs',
+  labor_costs: 'Labor Cost'
 };
 
 export default enJSON;

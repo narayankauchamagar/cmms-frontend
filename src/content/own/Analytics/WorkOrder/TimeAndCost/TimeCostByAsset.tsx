@@ -70,7 +70,7 @@ function TimeCostByAsset({ handleOpenModal }: WOStatusIncompleteProps) {
           <Bar
             dataKey="time"
             fill={theme.colors.warning.main}
-            name={t('Hours')}
+            name={t('hours')}
           >
             {formattedData.map((entry, index) => (
               <Cell

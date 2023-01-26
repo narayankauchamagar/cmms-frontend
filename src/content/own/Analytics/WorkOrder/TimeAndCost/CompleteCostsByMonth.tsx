@@ -53,17 +53,17 @@ function CompleteCostsByMonth({ handleOpenModal }: WOStatusIncompleteProps) {
   });
   const lines: { label: string; dataKey: string; color: string }[] = [
     {
-      label: t('Part Costs'),
+      label: t('part_costs'),
       dataKey: 'partCost',
       color: theme.colors.primary.main
     },
     {
-      label: t('Additional Costs'),
+      label: t('additional_costs'),
       dataKey: 'additionalCost',
       color: theme.colors.warning.main
     },
     {
-      label: t('Labor Cost'),
+      label: t('labor_costs'),
       dataKey: 'laborCost',
       color: theme.colors.error.main
     }

@@ -33,7 +33,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
     };
   }[] = [
     {
-      label: t('Total cost as Pct of RAV'),
+      label: t('total_cost_as_pct_rav'),
       value: `${assetsCosts.rav}%`,
       config: {
         columns: ['id'],

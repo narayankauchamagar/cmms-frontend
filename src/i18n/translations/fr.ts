@@ -1098,7 +1098,31 @@ const frJSON = {
   hours_worked_description:
     "Ces heures correspondent aux ordres de travail dont la date d'échéance se situe dans la plage spécifiée dans les filtres.",
   work_remaining_description:
-    "Ce graphique montre le nombre d'ordres de travail incomplets qui sont dus dans la plage de dates spécifiée dans les filtres. "
+    "Ce graphique montre le nombre d'ordres de travail incomplets qui sont dus dans la plage de dates spécifiée dans les filtres. ",
+  total_downtime_in_hours: "Temps d'arrêt total (heures)",
+  downtime_events: "Événements d'indisponibilité",
+  percent_downtime: "% de temps d'arrêt",
+  meantime_between_failures_in_hours: 'Temps moyen entre les pannes (heures)',
+  availability_percent: 'Pourcentage de disponibilité',
+  mean_time_to_repair_in_hours: 'Temps moyen de réparation (heures)',
+  average_age: 'Âge moyen',
+  count: 'Nombre',
+  average_cost: 'Coût moyen',
+  compliant: 'Conforme',
+  average_cycle_time_in_days: 'Temps de cycle moyen (jours)',
+  total_consumption_cost: 'Coût total de consommation',
+  parts_consumed: 'Pièces consommées',
+  total_cost_as_pct_rav: 'Coût total en pourcentage de RAV',
+  approved_requests: 'Demandes approuvées',
+  pending_requests: 'Demandes en attente',
+  cancelled_requests: 'Demandes rejetées',
+  average_cycle_time: 'Temps de cycle moyen',
+  compliance_rate: 'Taux de conformité',
+  complete: 'Terminé',
+  reactive: 'Réactif',
+  recurring: 'Récurrent',
+  part_costs: 'Coûts des pièces',
+  labor_costs: 'Coût du travail'
 };
 
 export default frJSON;

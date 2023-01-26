@@ -186,8 +186,8 @@ export default function WOModal({
     },
     {
       field: 'updatedAt',
-      headerName: t('Updated At'),
-      description: t('Updated At'),
+      headerName: t('updated_at'),
+      description: t('updated_at'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<string>) =>
         getFormattedDate(params.value)

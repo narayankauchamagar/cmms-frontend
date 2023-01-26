@@ -49,7 +49,7 @@ function MeantimesTrends({ handleOpenModal }: HoursWorkedProps) {
   });
   const lines: { label: string; dataKey: string; color: string }[] = [
     {
-      label: t('Mean time between failures(hours)'),
+      label: t('meantime_between_failures_in_hours'),
       dataKey: 'meantime',
       color: theme.colors.primary.main
     }

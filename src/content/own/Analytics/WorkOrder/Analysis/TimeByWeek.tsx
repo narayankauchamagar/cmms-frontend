@@ -55,17 +55,17 @@ function TimeByWeek({ handleOpenModal }: WOStatusIncompleteProps) {
   const title = t('time_spent');
   const lines: { label: string; dataKey: string; color: string }[] = [
     {
-      label: t('Complete'),
+      label: t('complete'),
       dataKey: 'total',
       color: theme.colors.primary.main
     },
     {
-      label: t('Reactive'),
+      label: t('reactive'),
       dataKey: 'reactive',
       color: theme.colors.warning.main
     },
     {
-      label: t('Recurring'),
+      label: t('recurring'),
       dataKey: 'recurring',
       color: theme.colors.error.main
     }

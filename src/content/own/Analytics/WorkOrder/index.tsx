@@ -9,7 +9,7 @@ import TimeAndCost from './TimeAndCost';
 
 export default function Index() {
   const { t }: { t: any } = useTranslation();
-  const [woModalTitle, setWoModalTitle] = useState<string>(t('Work Orders'));
+  const [woModalTitle, setWoModalTitle] = useState<string>(t('work_orders'));
   const [openWOModal, setOpenWOModal] = useState<boolean>(false);
   const [columns, setColumns] = useState<string[]>([]);
   const [filters, setFilters] = useState<Filter[]>([]);

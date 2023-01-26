@@ -31,7 +31,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
     };
   }[] = [
     {
-      label: t('Approved Requests'),
+      label: t('approved_requests'),
       value: overview.approved,
       config: {
         columns: ['id'],
@@ -39,7 +39,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
       }
     },
     {
-      label: t('Pending Requests'),
+      label: t('pending_requests'),
       value: overview.pending,
       config: {
         columns: ['id'],
@@ -47,7 +47,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
       }
     },
     {
-      label: t('Cancelled Requests'),
+      label: t('cancelled_requests'),
       value: overview.cancelled,
       config: {
         columns: ['id'],
@@ -55,7 +55,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
       }
     },
     {
-      label: t('Average Cycle Time'),
+      label: t('average_cycle_time'),
       value: overview.cycleTime,
       config: {
         columns: ['id'],
@@ -80,7 +80,7 @@ function Overview({ handleOpenModal }: WOStatusNumbersProps) {
                     handleOpenModal(
                       data.config.columns,
                       data.config.filters,
-                      t('The numbers')
+                      t('the_numbers')
                     )
                   }
                 >
