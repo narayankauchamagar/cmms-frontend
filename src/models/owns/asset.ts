@@ -32,7 +32,7 @@ export interface AssetDTO extends Audit {
   teams: TeamMiniDTO[];
   vendors: VendorMiniDTO[];
   customers: CustomerMiniDTO[];
-  parentAsset: string;
+  parentAsset: AssetMiniDTO;
   openWorkOrders: number;
   additionalInfos: string;
   hasChildren?: boolean;
