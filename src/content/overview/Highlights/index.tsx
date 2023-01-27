@@ -279,7 +279,7 @@ const BoxWaveAlt = styled(Box)(
 `
 );
 
-const LayoutImgButton = styled(RouterLink)(
+const LayoutImgButton = styled(Box)(
   ({ theme }) => `
     overflow: hidden;
     border-radius: ${theme.general.borderRadiusXl};
@@ -350,7 +350,7 @@ function Highlights() {
         'work-orders.checks.3',
         'work-orders.checks.4'
       ],
-      image: '/static/images/overview/performance.png'
+      image: '/static/images/overview/work_order_screenshot.png'
     },
     request: {
       title: 'work-requests.title',
@@ -417,7 +417,7 @@ function Highlights() {
         'part.checks.6',
         'part.checks.7'
       ],
-      image: '/static/images/overview/performance.png'
+      image: '/static/images/overview/inventory_screenshot.png'
     },
     dashboard: {
       title: 'dashboard.title',
@@ -434,7 +434,7 @@ function Highlights() {
         'dashboard.checks.4',
         'dashboard.checks.5'
       ],
-      image: '/static/images/overview/performance.png'
+      image: '/static/images/overview/analytics_screenshot.png'
     }
   };
   const CheckItem = ({ description }: { description: string }) => {
@@ -566,41 +566,29 @@ function Highlights() {
               </TypographySubHeading>
             </Grid>
             <Grid item xs={12} md={6}>
-              <LayoutImgButton
-                target="_blank"
-                rel="noopener"
-                to="/accent-header/dashboards"
-              >
-                <Typography variant="h4">{t('Accent Header')}</Typography>
+              <LayoutImgButton>
+                <Typography variant="h4">{t('work_orders')}</Typography>
                 <img
-                  src="/static/images/overview/accent_header.png"
-                  alt="Accent Header"
+                  src="/static/images/overview/work_order_screenshot.png"
+                  alt={t('work_orders')}
                 />
               </LayoutImgButton>
             </Grid>
             <Grid item xs={12} md={6}>
-              <LayoutImgButton
-                target="_blank"
-                rel="noopener"
-                to="/extended-sidebar/dashboards"
-              >
-                <Typography variant="h4">{t('Extended Sidebar')}</Typography>
+              <LayoutImgButton>
+                <Typography variant="h4">{t('custom_dashboards')}</Typography>
                 <img
-                  src="/static/images/overview/extended_sidebar.png"
-                  alt="Extended Sidebar"
+                  src="/static/images/overview/analytics_screenshot.png"
+                  alt={t('custom_dashboards')}
                 />
               </LayoutImgButton>
             </Grid>
             <Grid item xs={12} md={6}>
-              <LayoutImgButton
-                target="_blank"
-                rel="noopener"
-                to="/extended-sidebar/dashboards"
-              >
-                <Typography variant="h4">{t('Extended Sidebar')}</Typography>
+              <LayoutImgButton>
+                <Typography variant="h4">{t('asset_management')}</Typography>
                 <img
                   src="/static/images/overview/extended_sidebar.png"
-                  alt="Extended Sidebar"
+                  alt={t('asset_management')}
                 />
               </LayoutImgButton>
             </Grid>

@@ -697,7 +697,7 @@ const enJSON = {
   customer_delete_failure: "The Contractor couldn't be deleted",
   customer_name: 'Contractor Name',
   website: 'Website',
-  customer_type: 'contractor_type',
+  customer_type: 'Contractor type',
   customer_type_description: 'ex. Plumbing, Electrical',
   customer_description_description:
     'Describe the purpose of this contractor in a few line...',

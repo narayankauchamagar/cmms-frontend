@@ -825,7 +825,7 @@ const frJSON = {
   customer_name: 'Nom du prestataire',
   website: 'Site Internet',
   customer_type: 'Type de prestataire',
-  customer_type_description: 'ex. ',
+  customer_type_description: 'ex. Electricien, Plombier',
   customer_description_description:
     'Décrivez le but de ce prestataire en quelques lignes...',
   rate: 'Fréquence',

@@ -178,7 +178,7 @@ function Hero() {
               <ImgWrapper>
                 <img
                   alt="Grash"
-                  src="/static/images/overview/hero-screenshot.png"
+                  src="/static/images/overview/work_orders_screenshot.png"
                 />
               </ImgWrapper>
             </RouterLink>
