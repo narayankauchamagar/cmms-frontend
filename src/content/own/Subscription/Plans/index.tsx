@@ -35,6 +35,7 @@ import PermissionErrorMessage from '../../components/PermissionErrorMessage';
 import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContext';
 import { SubscriptionPlan } from '../../../../models/owns/subscriptionPlan';
 import { useNavigate } from 'react-router-dom';
+import { CompanySettingsContext } from '../../../../contexts/CompanySettingsContext';
 
 function SubscriptionPlans() {
   const { t }: { t: any } = useTranslation();
@@ -52,16 +53,17 @@ function SubscriptionPlans() {
   const { subscriptionPlans } = useSelector((state) => state.subscriptionPlans);
   const { setTitle } = useContext(TitleContext);
   const { showSnackBar } = useContext(CustomSnackBarContext);
+  const { getFormattedCurrency } = useContext(CompanySettingsContext);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    setTitle(t('Plans'));
+    setTitle(t('plans'));
     if (user.ownsCompany) dispatch(getSubscriptionPlans());
   }, []);
   const periods = [
-    { name: 'Monthly', value: 'monthly' },
-    { name: 'Annually', value: 'annually' }
+    { name: t('monthly'), value: 'monthly' },
+    { name: t('annually'), value: 'annually' }
   ];
 
   useEffect(() => {
@@ -104,10 +106,7 @@ function SubscriptionPlans() {
     return yearOptions;
   };
   const onSubcriptionPatchSuccess = () => {
-    showSnackBar(
-      t('The Subscription has been changed successfully'),
-      'success'
-    );
+    showSnackBar(t('subscription_change_success'), 'success');
     handleCloseCheckoutModal();
     navigate('/app/work-orders');
   };
@@ -118,8 +117,8 @@ function SubscriptionPlans() {
     <CustomDialog
       onClose={handleCloseCheckoutModal}
       open={openCheckout}
-      title="Checkout"
-      subtitle="Fill in the fields below"
+      title={t('checkout')}
+      subtitle={t('checkout_description')}
       maxWidth="md"
     >
       <Formik
@@ -134,34 +133,34 @@ function SubscriptionPlans() {
           card: Yup.string()
             .test(
               'test-number', // this is used internally by yup
-              t('Credit Card number is invalid'), //validation message
+              t('invalid_credit_card'), //validation message
               (value) => valid.number(value?.toString()).isValid
             ) // return true false based on validation
-            .required(t('The card field is required')),
+            .required(t('required_credit_card')),
           expirationMonth: Yup.string()
             .test(
               'test-expirationMonth', // this is used internally by yup
-              t('Expiration month is invalid'), //validation message
+              t('invalid_expiration_month'), //validation message
               (value) => valid.expirationMonth(value).isValid
             ) // return true false based on validation
-            .required(t('The Expiration month is required')),
+            .required(t('required_expiration_month')),
           expirationYear: Yup.string()
             .test(
               'test-expirationYear', // this is used internally by yup
-              t('Expiration year is invalid'), //validation message
+              t('invalid_expiration_year'), //validation message
               (value) => valid.expirationYear(value).isValid
             ) // return true false based on validation
-            .required(t('The Expiration year is required')),
+            .required(t('required_expiration_year')),
           cvv: Yup.string()
             .test(
               'test-cvv', // this is used internally by yup
-              t('CVV is invalid'), //validation message
+              t('invalid_cvv'), //validation message
               (value) => valid.cvv(value?.toString()).isValid
             ) // return true false based on validation
-            .required(t('The CVV is required')),
+            .required(t('required_cvv')),
           cardholder: Yup.string()
             .min(5)
-            .required(t('The cardholder name is required'))
+            .required(t('required_cardholder_name'))
         })}
         onSubmit={async (
           _values,
@@ -203,7 +202,7 @@ function SubscriptionPlans() {
                         error={Boolean(touched.card && errors.card)}
                         fullWidth
                         helperText={touched.card && errors.card}
-                        label={t('Card')}
+                        label={t('card')}
                         type="number"
                         inputProps={{
                           min: '0'
@@ -217,7 +216,7 @@ function SubscriptionPlans() {
                     </Grid>
                     <Grid item xs={12} lg={6}>
                       <Typography variant="h6" gutterBottom>
-                        {t('Expiration Month')}
+                        {t('expiration_month')}
                       </Typography>
                       <Field
                         as={Select}
@@ -235,7 +234,7 @@ function SubscriptionPlans() {
                     </Grid>
                     <Grid item xs={12} lg={6}>
                       <Typography variant="h6" gutterBottom>
-                        {t('Expiration Year')}
+                        {t('expiration_year')}
                       </Typography>
                       <Field
                         as={Select}
@@ -273,7 +272,7 @@ function SubscriptionPlans() {
                         error={Boolean(touched.cardholder && errors.cardholder)}
                         fullWidth
                         helperText={touched.cardholder && errors.cardholder}
-                        label={t('Cardholder name')}
+                        label={t('cardholder_name')}
                         name="cardholder"
                         onBlur={handleBlur}
                         onChange={handleChange}
@@ -286,16 +285,28 @@ function SubscriptionPlans() {
                 <Grid item xs={12} lg={6}>
                   <Grid container spacing={2} justifyContent="center">
                     <Grid item xs={12} lg={6}>
-                      <Typography variant={'h4'}>{t('Seats')}</Typography>
+                      <Typography variant={'h4'}>{t('seats')}</Typography>
                       <Typography variant="h6">{usersCount}</Typography>
                     </Grid>
                     <Grid item xs={12} lg={6}>
                       <Typography variant={'h4'}>
-                        {t('Cost per seat')}
+                        {t('cost_per_seat')}
                       </Typography>
-                      <Typography variant="h6">
-                        {selectedPlanObject.monthlyCostPerUser} $ per month
-                      </Typography>
+                      {period === 'monthly' ? (
+                        <Typography variant="h6">
+                          {getFormattedCurrency(
+                            selectedPlanObject.monthlyCostPerUser
+                          )}{' '}
+                          {t('per_month')}
+                        </Typography>
+                      ) : (
+                        <Typography variant="h6">
+                          {getFormattedCurrency(
+                            selectedPlanObject.yearlyCostPerUser
+                          )}{' '}
+                          {t('per_year')}
+                        </Typography>
+                      )}
                     </Grid>
                     <Grid item xs={12} lg={12}>
                       <Typography variant={'h4'}>{t('total_cost')}</Typography>
@@ -303,7 +314,7 @@ function SubscriptionPlans() {
                     </Grid>
                     <Grid item xs={12} lg={12}>
                       <Typography variant={'h4'}>
-                        {t('Your payment data is encrypted and secure.')}
+                        {t('your_payment_secure')}
                       </Typography>
                     </Grid>
                   </Grid>
@@ -338,7 +349,7 @@ function SubscriptionPlans() {
     return (
       <>
         <Helmet>
-          <title>{t('Plan')}</title>
+          <title>{t('plan')}</title>
         </Helmet>
         {renderCheckoutModal()}
         <Grid
@@ -360,7 +371,7 @@ function SubscriptionPlans() {
             >
               <Stack direction="row" spacing={1}>
                 <Typography variant="h6" fontWeight="bold">
-                  {t('Current Plan')}
+                  {t('current_plan')}
                 </Typography>
                 <Typography variant="h6">
                   {subscription.subscriptionPlan.name}
@@ -378,13 +389,10 @@ function SubscriptionPlans() {
                 <Box>
                   <Box>
                     <Typography variant="h4" gutterBottom>
-                      {t('Number of users who will use Grash')}
+                      {t('number_users_who_will_use_grash')}
                     </Typography>
                     <Typography variant="subtitle2">
-                      {t('Pay only for')} <b>{t('Admin')}</b>,{' '}
-                      <b>{t('Technical')}</b> and{' '}
-                      <b>{t('Limited Technical')}</b> users, and use unlimited{' '}
-                      <b>{t('Requester')}</b>, <b>{t('View-Only')}</b> for free
+                      {t('pay_only_for_roles')}
                     </Typography>
                   </Box>
                   <Stack
@@ -414,13 +422,13 @@ function SubscriptionPlans() {
                       fontWeight={'bold'}
                       variant="h6"
                     >
-                      {usersCount}&nbsp;Users
+                      {t('users_count_display', { count: usersCount })}
                     </Typography>
                   </Stack>
                 </Box>
                 <Box>
                   <Typography variant="h4">
-                    {t('How would you like to be billed?')}
+                    {t('how_will_you_be_billed')}
                   </Typography>
                   <RadioGroup
                     sx={{ p: 2, my: 1 }}
@@ -465,11 +473,12 @@ function SubscriptionPlans() {
                 </Box>
                 <Box>
                   <Typography variant="h4" gutterBottom>
-                    {t('Which plan fits you best?')}
+                    {t('which_plan_fits_you')}
                   </Typography>
                   <Typography variant="h6">
-                    Check out our <Link href="/pricing">Pricing Page</Link> for
-                    more details
+                    {t('checkout_our')}{' '}
+                    <Link href="/pricing">{t('pricing_page')}</Link>{' '}
+                    {t('for_more_details')}
                   </Typography>
                   <RadioGroup
                     sx={{ p: 2, my: 1 }}
@@ -510,8 +519,8 @@ function SubscriptionPlans() {
                                     USD
                                   </b>{' '}
                                   {period == 'monthly'
-                                    ? t('per user/month')
-                                    : t('per user/year')}
+                                    ? t('per_user_month')
+                                    : t('per_user_year')}
                                 </Typography>
                               </Box>
                             }
@@ -523,7 +532,7 @@ function SubscriptionPlans() {
                 </Box>
                 <Box>
                   <Typography variant="h4" gutterBottom>
-                    Features
+                    {t('features')}
                   </Typography>
                   <PlanFeatures plan={selectedPlan.toLowerCase()} />
                 </Box>
@@ -536,8 +545,11 @@ function SubscriptionPlans() {
                   }}
                 >
                   <Typography sx={{ my: 2 }} variant="h4" gutterBottom>
-                    {t('You will be charged')} <b>${getCost()}</b>{' '}
-                    {period == 'monthly' ? t('monthly') : t('yearly')}
+                    {t('you_will_be_charged')}{' '}
+                    <b>{getFormattedCurrency(getCost())}</b>{' '}
+                    {period == 'monthly'
+                      ? t('monthly_adverb')
+                      : t('yearly_adverb')}
                   </Typography>
                   <Button
                     onClick={handleOpenCheckoutModal}
@@ -545,7 +557,7 @@ function SubscriptionPlans() {
                     variant="contained"
                     disabled={!selectedPlan}
                   >
-                    {t('Proceed to Payment')}
+                    {t('proceed_to_payment')}
                   </Button>
                 </Box>
               </Card>
