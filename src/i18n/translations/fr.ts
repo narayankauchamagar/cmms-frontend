@@ -1203,7 +1203,7 @@ const frJSON = {
   you_will_be_charged: 'Vous serez chargé',
   proceed_to_payment: 'Procéder au paiement',
   pay_only_for_roles:
-    'Payez uniquement pour les utilisateurs administrateurs, techniques et techniques limités, et utilisez gratuitement un nombre illimité de demandeurs, et utilisateurs en lecture seule',
+    'Payez uniquement pour les utilisateurs <strong>Administrateurs</strong>, <strong>Techniques</strong> et <strong>Techniques limités</strong>, et utilisez gratuitement un nombre illimité de <strong>Demandeurs</strong>, et utilisateurs en <strong>Lecture seule</strong>',
   checkout_our: 'Regardez notre',
   pricing_page: 'Page des tarifs',
   for_more_details: 'pour plus de détails',

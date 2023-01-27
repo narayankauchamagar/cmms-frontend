@@ -1066,7 +1066,7 @@ const enJSON = {
   you_will_be_charged: 'You will be charged',
   proceed_to_payment: 'Proceed to Payment',
   pay_only_for_roles:
-    'Pay only for Admin, Technical and Limited Technical users, and use unlimited Requester, View-Only for free',
+    'Pay only for <strong>Admin</strong>, <strong>Technical</strong> and <strong>Limited Technical</strong> users, and use unlimited <strong>Requester</strong>, <strong>View-Only</strong> for free',
   checkout_our: 'Check out our',
   pricing_page: 'Pricing Page',
   for_more_details: 'for more details',

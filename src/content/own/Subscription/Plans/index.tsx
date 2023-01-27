@@ -20,7 +20,7 @@ import {
   Typography,
   useTheme
 } from '@mui/material';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useContext, useEffect, useState } from 'react';
 import PlanFeatures from './PlanFeatures';
 import * as Yup from 'yup';
@@ -392,7 +392,10 @@ function SubscriptionPlans() {
                       {t('number_users_who_will_use_grash')}
                     </Typography>
                     <Typography variant="subtitle2">
-                      {t('pay_only_for_roles')}
+                      <Trans
+                        i18nKey={'pay_only_for_roles'}
+                        components={{ italic: <i />, bold: <strong /> }}
+                      />
                     </Typography>
                   </Box>
                   <Stack
