@@ -344,7 +344,13 @@ const ShowAsset = ({}: PropsType) => {
                     label: part.name,
                     value: part.id
                   };
-                }) ?? []
+                }) ?? [],
+              parentAsset: asset?.parentAsset
+                ? {
+                    label: asset.parentAsset.name,
+                    value: asset.parentAsset.id
+                  }
+                : null
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
