@@ -43,6 +43,7 @@ import {
   getLocationUrl,
   getMeterUrl,
   getPartUrl,
+  getPurchaseOrderUrl,
   getRequestUrl,
   getTeamUrl,
   getWorkOrderUrl
@@ -55,6 +56,7 @@ import LocationOnTwoToneIcon from '@mui/icons-material/LocationOnTwoTone';
 import HandymanTwoToneIcon from '@mui/icons-material/HandymanTwoTone';
 import SpeedTwoToneIcon from '@mui/icons-material/SpeedTwoTone';
 import { People } from '@mui/icons-material';
+import ReceiptTwoToneIcon from '@mui/icons-material/ReceiptTwoTone';
 
 const BoxComposed = styled(Box)(
   () => `
@@ -160,6 +162,9 @@ function HeaderNotifications() {
       case 'TEAM':
         url = getTeamUrl(id);
         break;
+      case 'PURCHASE_ORDER':
+        url = getPurchaseOrderUrl(id);
+        break;
       default:
         break;
     }
@@ -185,7 +190,8 @@ function HeaderNotifications() {
     REQUEST: <MoveToInboxTwoToneIcon />,
     TEAM: <People />,
     WORK_ORDER: <AssignmentTwoToneIcon />,
-    INFO: <NotificationsNoneTwoToneIcon />
+    INFO: <NotificationsNoneTwoToneIcon />,
+    PURCHASE_ORDER: <ReceiptTwoToneIcon />
   };
   return (
     <>

@@ -35,3 +35,6 @@ export const getCustomerUrl = (id) => {
 export const getVendorUrl = (id) => {
   return `/app/vendors-customers/vendors/${id}`;
 };
+export const getPurchaseOrderUrl = (id) => {
+  return `/app/purchase-orders/${id}`;
+};

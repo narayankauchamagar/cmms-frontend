@@ -8,7 +8,8 @@ export enum NotificationType {
   PART = 'PART',
   METER = 'METER',
   LOCATION = 'LOCATION',
-  TEAM = 'TEAM'
+  TEAM = 'TEAM',
+  PURCHASE_ORDER = 'PURCHASE_ORDER'
 }
 
 export default interface Notification extends Audit {

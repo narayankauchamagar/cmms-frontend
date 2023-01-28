@@ -268,7 +268,7 @@ const AssetDowntimes = ({ asset }: PropsType) => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Card sx={{ p: 2 }}>
-            <Box sx={{ height: 500, width: '95%' }}>
+            <Box sx={{ height: 550, width: '95%' }}>
               <Stack direction="row" justifyContent="space-between" py={3}>
                 <Select
                   value={asset?.status ?? 'OPERATIONAL'}
@@ -294,19 +294,21 @@ const AssetDowntimes = ({ asset }: PropsType) => {
                   </Button>
                 )}
               </Stack>
-              <CustomDataGrid
-                columns={columns}
-                rows={downtimes.filter((downtime) => downtime.duration)}
-                components={{
-                  Toolbar: GridToolbar
-                }}
-                onRowClick={(params) => null}
-                initialState={{
-                  columns: {
-                    columnVisibilityModel: {}
-                  }
-                }}
-              />
+              <div style={{ display: 'flex', height: '80%' }}>
+                <CustomDataGrid
+                  columns={columns}
+                  rows={downtimes.filter((downtime) => downtime.duration)}
+                  components={{
+                    Toolbar: GridToolbar
+                  }}
+                  onRowClick={(params) => null}
+                  initialState={{
+                    columns: {
+                      columnVisibilityModel: {}
+                    }
+                  }}
+                />
+              </div>
             </Box>
           </Card>
         </Grid>

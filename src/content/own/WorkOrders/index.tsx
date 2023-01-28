@@ -171,7 +171,7 @@ function WorkOrders() {
     values.asset = formatSelect(values.asset);
     values.assignedTo = formatSelectMultiple(values.assignedTo);
     values.customers = formatSelectMultiple(values.customers);
-    values.priority = values.priority?.value;
+    values.priority = values.priority ? values.priority.value : 'NONE';
     values.requiredSignature = Array.isArray(values.requiredSignature)
       ? values?.requiredSignature.includes('on')
       : values.requiredSignature;

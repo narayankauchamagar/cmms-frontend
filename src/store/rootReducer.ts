@@ -36,6 +36,7 @@ import { reducer as woAnalyticsReducer } from 'src/slices/analytics/workOrder';
 import { reducer as assetAnalyticsReducer } from 'src/slices/analytics/asset';
 import { reducer as partAnalyticsReducer } from 'src/slices/analytics/part';
 import { reducer as requestAnalyticsReducer } from 'src/slices/analytics/request';
+import { reducer as userAnalyticsReducer } from 'src/slices/analytics/user';
 
 const rootReducer = combineReducers({
   calendar: calendarReducer,
@@ -74,7 +75,8 @@ const rootReducer = combineReducers({
   woAnalytics: woAnalyticsReducer,
   assetAnalytics: assetAnalyticsReducer,
   partAnalytics: partAnalyticsReducer,
-  requestAnalytics: requestAnalyticsReducer
+  requestAnalytics: requestAnalyticsReducer,
+  userAnalytics: userAnalyticsReducer
 });
 
 export default rootReducer;
