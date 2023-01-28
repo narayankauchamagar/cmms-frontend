@@ -122,9 +122,7 @@ function RecoverPasswordBasic() {
                   mb: 3
                 }}
               >
-                {t(
-                  'Enter the email used for registration to reset your password.'
-                )}
+                {t('recover_password_description')}
               </Typography>
             </Box>
 
@@ -137,7 +135,7 @@ function RecoverPasswordBasic() {
                 email: Yup.string()
                   .matches(emailRegExp, t('invalid_email'))
                   .max(255)
-                  .required(t('The email field is required'))
+                  .required(t('required_email'))
               })}
               onSubmit={async (
                 values,
@@ -172,7 +170,7 @@ function RecoverPasswordBasic() {
                     error={Boolean(touched.email && errors.email)}
                     fullWidth
                     helperText={touched.email && errors.email}
-                    label={t('Email address')}
+                    label={t('email')}
                     margin="normal"
                     name="email"
                     onBlur={handleBlur}
@@ -198,7 +196,7 @@ function RecoverPasswordBasic() {
                       isSubmitting ? <CircularProgress size="1rem" /> : null
                     }
                   >
-                    {t('Send me a new password')}
+                    {t('send_me_new_password')}
                   </Button>
                 </form>
               )}
@@ -211,7 +209,7 @@ function RecoverPasswordBasic() {
               color="text.primary"
               fontWeight="bold"
             >
-              {t('Want to try to sign in again?')}
+              {t('want_to_sign_in_again')}
             </Typography>{' '}
             <Link component={RouterLink} to="/account/login-basic">
               <b>Click here</b>
@@ -269,7 +267,7 @@ function RecoverPasswordBasic() {
             }}
             variant="h3"
           >
-            {t('Check your email for further instructions')}
+            {t('check_mails_for_instructions')}
           </Typography>
 
           <Button
@@ -279,7 +277,7 @@ function RecoverPasswordBasic() {
             onClick={handleCloseDialog}
             href="/account/login"
           >
-            {t('Continue to login')}
+            {t('login')}
           </Button>
         </Box>
       </DialogWrapper>

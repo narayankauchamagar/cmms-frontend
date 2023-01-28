@@ -1077,7 +1077,12 @@ const enJSON = {
   checkout: 'Checkout',
   checkout_description: 'Fill in the fields below',
   per_month: 'per month',
-  per_year: 'per year'
+  per_year: 'per year',
+  recover_password_description:
+    'Enter the email used for registration to reset your password.',
+  send_me_new_password: 'Send me a new password',
+  want_to_sign_in_again: 'Want to try to sign in again?',
+  check_mails_for_instructions: 'Check your email for further instructions'
 };
 
 export default enJSON;

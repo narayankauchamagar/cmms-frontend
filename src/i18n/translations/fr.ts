@@ -1214,7 +1214,12 @@ const frJSON = {
   checkout: 'Checkout',
   checkout_description: 'Remplissez les champs ci-dessous',
   per_month: 'par mois',
-  per_year: 'par an'
+  per_year: 'par an',
+  recover_password_description:
+    'Entrez votre email afin de réinitialiser votre mot de passe.',
+  send_me_new_password: 'Envoyez-moi un nouveau mot de passe',
+  want_to_sign_in_again: 'Voulez-vous réessayer de vous connecter?',
+  check_mails_for_instructions: "Vérifiez votre e-mail pour plus d'instructions"
 };
 
 export default frJSON;
