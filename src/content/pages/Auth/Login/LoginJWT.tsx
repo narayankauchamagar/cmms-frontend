@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 import type { FC } from 'react';
 import { useContext } from 'react';
 import { Formik } from 'formik';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 
 import { Box, Button, CircularProgress, Link, TextField } from '@mui/material';
 import useAuth from 'src/hooks/useAuth';
@@ -15,11 +15,12 @@ const LoginJWT: FC = () => {
   const isMountedRef = useRefMounted();
   const { t }: { t: any } = useTranslation();
   const { showSnackBar } = useContext(CustomSnackBarContext);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   return (
     <Formik
       initialValues={{
-        email: '',
+        email: searchParams.get('email') ?? '',
         password: '',
         submit: null
       }}

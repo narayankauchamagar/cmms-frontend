@@ -1,22 +1,23 @@
-import { useState, ReactElement, forwardRef, Ref } from 'react';
+import { forwardRef, ReactElement, Ref, useContext, useState } from 'react';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import { Link as RouterLink } from 'react-router-dom';
 import {
-  Box,
-  Card,
-  Link,
-  TextField,
-  Typography,
-  Container,
   Alert,
-  Slide,
-  Dialog,
-  Collapse,
-  Button,
   Avatar,
+  Box,
+  Button,
+  Card,
+  CircularProgress,
+  Collapse,
+  Container,
+  Dialog,
   IconButton,
-  styled
+  Link,
+  Slide,
+  styled,
+  TextField,
+  Typography
 } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
 import { TransitionProps } from '@mui/material/transitions';
@@ -26,6 +27,9 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useTranslation } from 'react-i18next';
 import Logo from 'src/components/LogoSign';
 import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
+import useAuth from '../../../../hooks/useAuth';
+import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContext';
+import { emailRegExp } from '../../../../utils/validators';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & { children: ReactElement<any, any> },
@@ -74,9 +78,9 @@ const AvatarSuccess = styled(Avatar)(
 function RecoverPasswordBasic() {
   const { t }: { t: any } = useTranslation();
   const isMountedRef = useRefMounted();
-
+  const { resetPassword } = useAuth();
   const [openAlert, setOpenAlert] = useState(true);
-
+  const { showSnackBar } = useContext(CustomSnackBarContext);
   const [openDialog, setOpenDialog] = useState(false);
 
   const handleOpenDialog = () => {
@@ -90,7 +94,7 @@ function RecoverPasswordBasic() {
   return (
     <>
       <Helmet>
-        <title>Recover Password</title>
+        <title>{t('Recover Password')}</title>
       </Helmet>
       <MainContent>
         <Container maxWidth="sm">
@@ -126,14 +130,12 @@ function RecoverPasswordBasic() {
 
             <Formik
               initialValues={{
-                email: 'demo@example.com',
+                email: '',
                 submit: null
               }}
               validationSchema={Yup.object().shape({
                 email: Yup.string()
-                  .email(
-                    t('The email provided should be a valid email address')
-                  )
+                  .matches(emailRegExp, t('invalid_email'))
                   .max(255)
                   .required(t('The email field is required'))
               })}
@@ -141,19 +143,19 @@ function RecoverPasswordBasic() {
                 values,
                 { setErrors, setStatus, setSubmitting }
               ) => {
-                try {
-                  if (isMountedRef.current) {
-                    setStatus({ success: true });
-                    setSubmitting(false);
-                  }
-                } catch (err) {
-                  console.error(err);
-                  if (isMountedRef.current) {
-                    setStatus({ success: false });
-                    setErrors({ submit: err.message });
-                    setSubmitting(false);
-                  }
-                }
+                setSubmitting(true);
+                return resetPassword(values.email)
+                  .then((success) => {
+                    if (success) {
+                      handleOpenDialog();
+                    } else {
+                      showSnackBar(t("The operation didn't succeed"), 'error');
+                    }
+                  })
+                  .catch((err) =>
+                    showSnackBar(t("The operation didn't succeed"), 'error')
+                  )
+                  .finally(() => setSubmitting(false));
               }}
             >
               {({
@@ -162,7 +164,8 @@ function RecoverPasswordBasic() {
                 handleChange,
                 handleSubmit,
                 touched,
-                values
+                values,
+                isSubmitting
               }) => (
                 <form noValidate onSubmit={handleSubmit}>
                   <TextField
@@ -183,13 +186,17 @@ function RecoverPasswordBasic() {
                     sx={{
                       mt: 3
                     }}
-                    color="primary"
-                    disabled={Boolean(touched.email && errors.email)}
-                    onClick={handleOpenDialog}
+                    disabled={Boolean(
+                      (touched.email && errors.email) || isSubmitting
+                    )}
+                    //onClick={handleResetPassword}
                     type="submit"
                     fullWidth
                     size="large"
                     variant="contained"
+                    startIcon={
+                      isSubmitting ? <CircularProgress size="1rem" /> : null
+                    }
                   >
                     {t('Send me a new password')}
                   </Button>
@@ -270,7 +277,7 @@ function RecoverPasswordBasic() {
             size="large"
             variant="contained"
             onClick={handleCloseDialog}
-            href="/account/login-basic"
+            href="/account/login"
           >
             {t('Continue to login')}
           </Button>

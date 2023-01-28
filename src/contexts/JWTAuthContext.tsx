@@ -55,6 +55,7 @@ interface AuthContextValue extends AuthState {
     oldPassword: string;
     newPassword: string;
   }) => Promise<boolean>;
+  resetPassword: (email: string) => Promise<boolean>;
   fetchUserSettings: () => Promise<void>;
   fetchCompanySettings: () => Promise<void>;
   fetchCompany: () => Promise<void>;
@@ -372,6 +373,7 @@ const AuthContext = createContext<AuthContextValue>({
   fetchUserSettings: () => Promise.resolve(),
   fetchCompany: () => Promise.resolve(),
   updatePassword: () => Promise.resolve(false),
+  resetPassword: () => Promise.resolve(false),
   fetchCompanySettings: () => Promise.resolve(),
   patchGeneralPreferences: () => Promise.resolve(),
   patchFieldConfiguration: () => Promise.resolve(),
@@ -559,6 +561,13 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     const { success } = response;
     return success;
   };
+  const resetPassword = async (email: string): Promise<boolean> => {
+    const response = await api.get<{ success: boolean }>(
+      `auth/resetpwd?email=${email}`
+    );
+    const { success } = response;
+    return success;
+  };
   const fetchUserSettings = async (): Promise<void> => {
     const userSettings = await getUserSettings(state.user.userSettingsId);
     dispatch({
@@ -715,6 +724,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         patchSubscription,
         patchCompany,
         updatePassword,
+        resetPassword,
         patchUserSettings,
         fetchUserSettings,
         fetchCompanySettings,
