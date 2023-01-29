@@ -53,6 +53,7 @@ const slice = createSlice({
       action: PayloadAction<{ workOrder: WorkOrder; inContent: boolean }>
     ) {
       const { workOrder, inContent } = action.payload;
+      console.log('inContent', inContent);
       if (inContent) {
         state.workOrders.content = state.workOrders.content.map(
           (workOrder1) => {

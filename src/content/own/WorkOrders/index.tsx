@@ -168,12 +168,17 @@ function WorkOrders() {
 
   //see changes in ui on edit
   useEffect(() => {
-    if (singleWorkOrder && workOrders.content.length && !openDrawerFromUrl) {
+    if (singleWorkOrder && workOrders.content.length) {
       const workOrderInContent = workOrders.content.find(
         (workOrder) => workOrder.id === singleWorkOrder.id
       );
-      handleOpenDrawer(workOrderInContent ?? singleWorkOrder);
-      setOpenDrawerFromUrl(true);
+      const updatedWorkOrder = workOrderInContent ?? singleWorkOrder;
+      if (openDrawerFromUrl) {
+        setCurrentWorkOrder(updatedWorkOrder);
+      } else {
+        handleOpenDrawer(updatedWorkOrder);
+        setOpenDrawerFromUrl(true);
+      }
     }
   }, [singleWorkOrder, workOrders]);
 
