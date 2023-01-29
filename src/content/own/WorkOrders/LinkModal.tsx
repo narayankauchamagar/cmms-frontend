@@ -117,7 +117,7 @@ export default function LinkModal({
                         value={values.child}
                         variant="outlined"
                       >
-                        {workOrders
+                        {workOrders.content
                           .filter((workOrder) => workOrder.id !== workOrderId)
                           .map((child, index) => (
                             <MenuItem key={index} value={child.id}>

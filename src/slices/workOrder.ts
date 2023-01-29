@@ -4,17 +4,18 @@ import type { AppThunk } from 'src/store';
 import WorkOrder from '../models/owns/workOrder';
 import api from '../utils/api';
 import { Task } from '../models/owns/tasks';
+import { getInitialPage, Page, SearchCriteria } from '../models/owns/page';
 
 const basePath = 'work-orders';
 interface WorkOrderState {
-  workOrders: WorkOrder[];
+  workOrders: Page<WorkOrder>;
   workOrdersByLocation: { [key: number]: WorkOrder[] };
   workOrdersByPart: { [key: number]: WorkOrder[] };
   loadingGet: boolean;
 }
 
 const initialState: WorkOrderState = {
-  workOrders: [],
+  workOrders: getInitialPage<WorkOrder>(),
   workOrdersByLocation: {},
   workOrdersByPart: {},
   loadingGet: false
@@ -26,7 +27,7 @@ const slice = createSlice({
   reducers: {
     getWorkOrders(
       state: WorkOrderState,
-      action: PayloadAction<{ workOrders: WorkOrder[] }>
+      action: PayloadAction<{ workOrders: Page<WorkOrder> }>
     ) {
       const { workOrders } = action.payload;
       state.workOrders = workOrders;
@@ -36,14 +37,14 @@ const slice = createSlice({
       action: PayloadAction<{ workOrder: WorkOrder }>
     ) {
       const { workOrder } = action.payload;
-      state.workOrders = [...state.workOrders, workOrder];
+      state.workOrders.content = [...state.workOrders.content, workOrder];
     },
     editWorkOrder(
       state: WorkOrderState,
       action: PayloadAction<{ workOrder: WorkOrder }>
     ) {
       const { workOrder } = action.payload;
-      state.workOrders = state.workOrders.map((workOrder1) => {
+      state.workOrders.content = state.workOrders.content.map((workOrder1) => {
         if (workOrder1.id === workOrder.id) {
           return workOrder;
         }
@@ -55,10 +56,10 @@ const slice = createSlice({
       action: PayloadAction<{ id: number }>
     ) {
       const { id } = action.payload;
-      const workOrderIndex = state.workOrders.findIndex(
+      const workOrderIndex = state.workOrders.content.findIndex(
         (workOrder) => workOrder.id === id
       );
-      state.workOrders.splice(workOrderIndex, 1);
+      state.workOrders.content.splice(workOrderIndex, 1);
     },
     getWorkOrdersByLocation(
       state: WorkOrderState,
@@ -86,12 +87,18 @@ const slice = createSlice({
 
 export const reducer = slice.reducer;
 
-export const getWorkOrders = (): AppThunk => async (dispatch) => {
-  dispatch(slice.actions.setLoadingGet({ loading: true }));
-  const workOrders = await api.get<WorkOrder[]>(basePath);
-  dispatch(slice.actions.getWorkOrders({ workOrders }));
-  dispatch(slice.actions.setLoadingGet({ loading: false }));
-};
+export const getWorkOrders =
+  (criteria: Partial<SearchCriteria>): AppThunk =>
+  async (dispatch) => {
+    dispatch(slice.actions.setLoadingGet({ loading: true }));
+    const filters: SearchCriteria = { filterFields: [], ...criteria };
+    const workOrders = await api.post<Page<WorkOrder>>(
+      `${basePath}/search`,
+      filters
+    );
+    dispatch(slice.actions.getWorkOrders({ workOrders }));
+    dispatch(slice.actions.setLoadingGet({ loading: false }));
+  };
 
 export const addWorkOrder =
   (workOrder): AppThunk =>
