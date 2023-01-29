@@ -80,9 +80,10 @@ interface WorkOrderDetailsProps {
   onEdit: (id: number) => void;
   onDelete: (id: number) => void;
   tasks: Task[];
+  inContent: boolean;
 }
 export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
-  const { workOrder, onEdit, tasks, onDelete } = props;
+  const { workOrder, onEdit, tasks, onDelete, inContent } = props;
   const theme = useTheme();
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const { getFormattedDate, getUserNameById, getFormattedCurrency } =
@@ -154,7 +155,13 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const onArchive = () => {
     handleCloseMenu();
     if (window.confirm(t('wo_archive_confirm') + workOrder.title + ' ?')) {
-      dispatch(editWorkOrder(workOrder?.id, { ...workOrder, archived: true }))
+      dispatch(
+        editWorkOrder(
+          workOrder?.id,
+          { ...workOrder, archived: true },
+          inContent
+        )
+      )
         .then(onArchiveSuccess)
         .catch(onArchiveFailure);
     }
@@ -245,12 +252,16 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   ) => {
     setChangingStatus(true);
     return dispatch(
-      editWorkOrder(workOrder?.id, {
-        ...workOrder,
-        status: 'COMPLETE',
-        feedback: feedback ?? null,
-        signature: signatureId ? { id: signatureId } : null
-      })
+      editWorkOrder(
+        workOrder?.id,
+        {
+          ...workOrder,
+          status: 'COMPLETE',
+          feedback: feedback ?? null,
+          signature: signatureId ? { id: signatureId } : null
+        },
+        inContent
+      )
     ).finally(() => setChangingStatus(false));
   };
   const groupRelations = (
@@ -526,10 +537,14 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                         }
                         setChangingStatus(true);
                         dispatch(
-                          editWorkOrder(workOrder?.id, {
-                            ...workOrder,
-                            status: event.target.value
-                          })
+                          editWorkOrder(
+                            workOrder?.id,
+                            {
+                              ...workOrder,
+                              status: event.target.value
+                            },
+                            inContent
+                          )
                         ).finally(() => setChangingStatus(false));
                       }}
                       disabled={
@@ -1138,10 +1153,14 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                   files={workOrder.files}
                   onRemove={(id: number) => {
                     dispatch(
-                      editWorkOrder(workOrder.id, {
-                        ...workOrder,
-                        files: workOrder.files.filter((f) => f.id !== id)
-                      })
+                      editWorkOrder(
+                        workOrder.id,
+                        {
+                          ...workOrder,
+                          files: workOrder.files.filter((f) => f.id !== id)
+                        },
+                        inContent
+                      )
                     );
                   }}
                 />

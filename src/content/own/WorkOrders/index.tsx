@@ -42,6 +42,7 @@ import {
   addWorkOrder,
   deleteWorkOrder,
   editWorkOrder,
+  getSingleWorkOrder,
   getWorkOrders
 } from '../../../slices/workOrder';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
@@ -66,7 +67,9 @@ import { SearchCriteria } from '../../../models/owns/page';
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
   const [currentTab, setCurrentTab] = useState<string>('list');
-  const { workOrders, loadingGet } = useSelector((state) => state.workOrders);
+  const { workOrders, loadingGet, singleWorkOrder } = useSelector(
+    (state) => state.workOrders
+  );
   const [searchParams, setSearchParams] = useSearchParams();
   const locationParam = searchParams.get('location');
   const assetParam = searchParams.get('asset');
@@ -114,30 +117,38 @@ function WorkOrders() {
     setOpenDelete(false);
   };
   const handleOpenUpdate = (id: number) => {
-    setCurrentWorkOrder(
-      workOrders.content.find((workOrder) => workOrder.id === id)
-    );
+    // important if there were actions like edit
+    if (currentWorkOrder.id !== id) {
+      setCurrentWorkOrder(
+        workOrders.content.find((workOrder) => workOrder.id === id)
+      );
+    }
     setOpenUpdateModal(true);
   };
   const handleOpenDelete = (id: number) => {
-    setCurrentWorkOrder(
-      workOrders.content.find((workOrder) => workOrder.id === id)
-    );
+    if (currentWorkOrder.id !== id) {
+      setCurrentWorkOrder(
+        workOrders.content.find((workOrder) => workOrder.id === id)
+      );
+    }
     setOpenDelete(true);
     setOpenDrawer(false);
+  };
+  const handleOpenDrawer = (workOrder: WorkOrder) => {
+    setCurrentWorkOrder(workOrder);
+    window.history.replaceState(
+      null,
+      'WorkOrder details',
+      `/app/work-orders/${workOrder.id}`
+    );
+    setOpenDrawer(true);
   };
   const handleOpenDetails = (id: number) => {
     const foundWorkOrder = workOrders.content.find(
       (workOrder) => workOrder.id === id
     );
     if (foundWorkOrder) {
-      setCurrentWorkOrder(foundWorkOrder);
-      window.history.replaceState(
-        null,
-        'WorkOrder details',
-        `/app/work-orders/${id}`
-      );
-      setOpenDrawer(true);
+      handleOpenDrawer(foundWorkOrder);
     }
   };
   const handleCloseDetails = () => {
@@ -150,9 +161,19 @@ function WorkOrders() {
 
   useEffect(() => {
     if (workOrderId && isNumeric(workOrderId)) {
-      handleOpenDetails(Number(workOrderId));
+      dispatch(getSingleWorkOrder(Number(workOrderId)));
     }
-  }, [workOrders]);
+  }, [workOrderId]);
+
+  //see changes in ui on edit
+  useEffect(() => {
+    if (singleWorkOrder) {
+      const workOrderInContent = workOrders.content.find(
+        (workOrder) => workOrder.id === singleWorkOrder.id
+      );
+      handleOpenDrawer(workOrderInContent ?? singleWorkOrder);
+    }
+  }, [singleWorkOrder, workOrders]);
 
   useEffect(() => {
     if (locationParam || assetParam) {
@@ -764,6 +785,9 @@ function WorkOrders() {
             onEdit={handleOpenUpdate}
             tasks={tasks}
             onDelete={handleOpenDelete}
+            inContent={workOrders.content.some(
+              (workOrder) => workOrder.id === currentWorkOrder.id
+            )}
           />
         </Drawer>
         <ConfirmDialog
