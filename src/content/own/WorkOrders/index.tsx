@@ -763,7 +763,7 @@ function WorkOrders() {
                   paginationMode="server"
                   onPageSizeChange={onPageSizeChange}
                   onPageChange={onPageChange}
-                  rowsPerPageOptions={[5, 10, 20]}
+                  rowsPerPageOptions={[10, 20, 50]}
                   components={{
                     Toolbar: GridToolbar,
                     NoRowsOverlay: () => (

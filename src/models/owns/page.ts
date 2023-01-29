@@ -22,9 +22,6 @@ interface FilterField {
 type Direction = 'ASC' | 'DESC';
 export interface SearchCriteria {
   filterFields: FilterField[];
-  advancedSearch?: boolean;
-  searchTerm?: string;
-  sortedBy?: string;
   direction?: Direction;
   pageNum?: number;
   pageSize?: number;
