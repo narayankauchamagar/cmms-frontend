@@ -53,7 +53,6 @@ const slice = createSlice({
       action: PayloadAction<{ workOrder: WorkOrder; inContent: boolean }>
     ) {
       const { workOrder, inContent } = action.payload;
-      console.log('inContent', inContent);
       if (inContent) {
         state.workOrders.content = state.workOrders.content.map(
           (workOrder1) => {
@@ -143,7 +142,7 @@ export const addWorkOrder =
     }
   };
 export const editWorkOrder =
-  (id: number, workOrder, inContent: boolean = true): AppThunk =>
+  (id: number, workOrder, inContent: boolean): AppThunk =>
   async (dispatch) => {
     const workOrderResponse = await api.patch<WorkOrder>(
       `${basePath}/${id}`,
