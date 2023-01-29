@@ -107,6 +107,7 @@ function WorkOrders() {
   );
   const assetParamObject = assetInfos[assetParam]?.asset;
   const tasks = tasksByWorkOrder[currentWorkOrder?.id] ?? [];
+  const [openDrawerFromUrl, setOpenDrawerFromUrl] = useState<boolean>(false);
   const [criteria, setCriteria] = useState<SearchCriteria>({
     filterFields: [],
     pageSize: 10,
@@ -167,11 +168,12 @@ function WorkOrders() {
 
   //see changes in ui on edit
   useEffect(() => {
-    if (singleWorkOrder) {
+    if (singleWorkOrder && workOrders.content.length && !openDrawerFromUrl) {
       const workOrderInContent = workOrders.content.find(
         (workOrder) => workOrder.id === singleWorkOrder.id
       );
       handleOpenDrawer(workOrderInContent ?? singleWorkOrder);
+      setOpenDrawerFromUrl(true);
     }
   }, [singleWorkOrder, workOrders]);
 
@@ -786,7 +788,7 @@ function WorkOrders() {
             tasks={tasks}
             onDelete={handleOpenDelete}
             inContent={workOrders.content.some(
-              (workOrder) => workOrder.id === currentWorkOrder.id
+              (workOrder) => workOrder.id === currentWorkOrder?.id
             )}
           />
         </Drawer>
