@@ -18,12 +18,14 @@ import {
   deletePreventiveMaintenance,
   editPreventiveMaintenance,
   getPreventiveMaintenances,
+  getSinglePreventiveMaintenance,
   patchSchedule
 } from '../../../slices/preventiveMaintenance';
 import { useDispatch, useSelector } from '../../../store';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import CustomDataGrid from '../components/CustomDatagrid';
+import { SearchCriteria } from '../../../models/owns/page';
 import {
   GridRenderCellParams,
   GridToolbar,
@@ -73,26 +75,65 @@ function Files() {
   const { preventiveMaintenanceId } = useParams();
   const dispatch = useDispatch();
   const [openDelete, setOpenDelete] = useState<boolean>(false);
-  const { preventiveMaintenances, loadingGet } = useSelector(
-    (state) => state.preventiveMaintenances
-  );
+  const { preventiveMaintenances, loadingGet, singlePreventiveMaintenance } =
+    useSelector((state) => state.preventiveMaintenances);
+  const [openDrawerFromUrl, setOpenDrawerFromUrl] = useState<boolean>(false);
+  const [criteria, setCriteria] = useState<SearchCriteria>({
+    filterFields: [],
+    pageSize: 10,
+    pageNum: 0
+  });
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const navigate = useNavigate();
 
   useEffect(() => {
     setTitle(t('preventive_maintenance'));
-    if (hasViewPermission(PermissionEntity.PREVENTIVE_MAINTENANCES))
-      dispatch(getPreventiveMaintenances());
   }, []);
   useEffect(() => {
-    if (
-      preventiveMaintenances?.length &&
-      preventiveMaintenanceId &&
-      isNumeric(preventiveMaintenanceId)
-    ) {
-      handleOpenDetails(Number(preventiveMaintenanceId));
+    if (preventiveMaintenanceId && isNumeric(preventiveMaintenanceId)) {
+      dispatch(getSinglePreventiveMaintenance(Number(preventiveMaintenanceId)));
     }
-  }, [preventiveMaintenances]);
+  }, [preventiveMaintenanceId]);
+
+  useEffect(() => {
+    if (hasViewPermission(PermissionEntity.PREVENTIVE_MAINTENANCES))
+      dispatch(getPreventiveMaintenances(criteria));
+  }, [criteria]);
+
+  //see changes in ui on edit
+  useEffect(() => {
+    if (singlePreventiveMaintenance && preventiveMaintenances.content.length) {
+      const preventiveMaintenanceInContent =
+        preventiveMaintenances.content.find(
+          (preventiveMaintenance) =>
+            preventiveMaintenance.id === singlePreventiveMaintenance.id
+        );
+      const updatedPreventiveMaintenance =
+        preventiveMaintenanceInContent ?? singlePreventiveMaintenance;
+      if (openDrawerFromUrl) {
+        setCurrentPM(updatedPreventiveMaintenance);
+      } else {
+        handleOpenDrawer(updatedPreventiveMaintenance);
+        setOpenDrawerFromUrl(true);
+      }
+    }
+  }, [singlePreventiveMaintenance, preventiveMaintenances]);
+
+  const onPageSizeChange = (size: number) => {
+    setCriteria({ ...criteria, pageSize: size });
+  };
+  const onPageChange = (number: number) => {
+    setCriteria({ ...criteria, pageNum: number });
+  };
+  const handleOpenDrawer = (preventiveMaintenance: PreventiveMaintenance) => {
+    setCurrentPM(preventiveMaintenance);
+    window.history.replaceState(
+      null,
+      'PreventiveMaintenance details',
+      `/app/preventive-maintenances/${preventiveMaintenance.id}`
+    );
+    setOpenDrawer(true);
+  };
 
   const handleDelete = (id: number) => {
     handleCloseDetails();
@@ -123,17 +164,11 @@ function Files() {
     showSnackBar(t('wo_trigger_delete_failure'), 'error');
 
   const handleOpenDetails = (id: number) => {
-    const foundPreventiveMaintenance = preventiveMaintenances.find(
+    const foundPreventiveMaintenance = preventiveMaintenances.content.find(
       (preventiveMaintenance) => preventiveMaintenance.id === id
     );
     if (foundPreventiveMaintenance) {
-      setCurrentPM(foundPreventiveMaintenance);
-      window.history.replaceState(
-        null,
-        'PreventiveMaintenance details',
-        `/app/preventive-maintenances/${id}`
-      );
-      setOpenDrawer(true);
+      handleOpenDrawer(foundPreventiveMaintenance);
     }
   };
   const handleCloseDetails = () => {
@@ -487,7 +522,15 @@ function Files() {
                 <CustomDataGrid
                   columns={columns}
                   loading={loadingGet}
-                  rows={preventiveMaintenances}
+                  pageSize={criteria.pageSize}
+                  page={criteria.pageNum}
+                  rows={preventiveMaintenances.content}
+                  rowCount={preventiveMaintenances.totalElements}
+                  pagination
+                  paginationMode="server"
+                  onPageSizeChange={onPageSizeChange}
+                  onPageChange={onPageChange}
+                  rowsPerPageOptions={[10, 20, 50]}
                   onRowClick={({ id }) => handleOpenDetails(Number(id))}
                   components={{
                     Toolbar: GridToolbar,

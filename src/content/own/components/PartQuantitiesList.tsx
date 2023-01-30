@@ -7,14 +7,14 @@ import {
   TextField,
   Typography
 } from '@mui/material';
-import PartQuantity from '../../../models/owns/partQuantity';
+import { PartQuantityMiniDTO } from '../../../models/owns/partQuantity';
 import { useTranslation } from 'react-i18next';
 import { useContext } from 'react';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 
 interface PartQuantityListProps {
-  partQuantities: PartQuantity[];
-  onChange: (value: string, partQuantity: PartQuantity) => void;
+  partQuantities: PartQuantityMiniDTO[];
+  onChange: (value: string, partQuantity: PartQuantityMiniDTO) => void;
   disabled: boolean;
 }
 export default function PartQuantitiesList({

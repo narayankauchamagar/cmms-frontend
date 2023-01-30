@@ -22,7 +22,8 @@ import { useDispatch, useSelector } from '../../../store';
 import {
   deletePurchaseOrder,
   editPurchaseOrder,
-  getPurchaseOrders
+  getPurchaseOrders,
+  getSinglePurchaseOrder
 } from '../../../slices/purchaseOrder';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -45,6 +46,7 @@ import {
   getPartQuantitiesByPurchaseOrder
 } from '../../../slices/partQuantity';
 import Category from '../../../models/owns/category';
+import { SearchCriteria } from '../../../models/owns/page';
 
 function PurchaseOrders() {
   const { t }: { t: any } = useTranslation();
@@ -61,47 +63,80 @@ function PurchaseOrders() {
   const { hasViewPermission, hasCreatePermission, hasFeature } = useAuth();
   const dispatch = useDispatch();
   const [openDelete, setOpenDelete] = useState<boolean>(false);
-  const { purchaseOrders, loadingGet } = useSelector(
+  const { purchaseOrders, loadingGet, singlePurchaseOrder } = useSelector(
     (state) => state.purchaseOrders
   );
+  const [openDrawerFromUrl, setOpenDrawerFromUrl] = useState<boolean>(false);
+  const [criteria, setCriteria] = useState<SearchCriteria>({
+    filterFields: [],
+    pageSize: 10,
+    pageNum: 0
+  });
+
   const [currentPurchaseOrder, setCurrentPurchaseOrder] =
     useState<PurchaseOrder>();
   const partQuantities =
     partQuantitiesByPurchaseOrder[currentPurchaseOrder?.id] ?? [];
   const { showSnackBar } = useContext(CustomSnackBarContext);
 
+  const handleOpenDrawer = (purchaseOrder: PurchaseOrder) => {
+    setCurrentPurchaseOrder(purchaseOrder);
+    window.history.replaceState(
+      null,
+      'PurchaseOrder details',
+      `/app/purchase-orders/${purchaseOrder.id}`
+    );
+    setOpenDrawer(true);
+  };
   const handleOpenUpdate = () => {
     setOpenUpdateModal(true);
   };
   const handleOpenDetails = (id: number) => {
-    const foundPurchaseOrder = purchaseOrders.find(
+    const foundPurchaseOrder = purchaseOrders.content.find(
       (purchaseOrder) => purchaseOrder.id === id
     );
     if (foundPurchaseOrder) {
-      setCurrentPurchaseOrder(foundPurchaseOrder);
-      window.history.replaceState(
-        null,
-        'PurchaseOrder details',
-        `/app/purchase-orders/${id}`
-      );
-      setOpenDrawer(true);
+      handleOpenDrawer(foundPurchaseOrder);
     }
   };
   useEffect(() => {
     setTitle(t('purchase_orders'));
-    if (hasViewPermission(PermissionEntity.PURCHASE_ORDERS))
-      dispatch(getPurchaseOrders());
   }, []);
 
   useEffect(() => {
-    if (
-      purchaseOrders?.length &&
-      purchaseOrderId &&
-      isNumeric(purchaseOrderId)
-    ) {
-      handleOpenDetails(Number(purchaseOrderId));
+    if (purchaseOrderId && isNumeric(purchaseOrderId)) {
+      dispatch(getSinglePurchaseOrder(Number(purchaseOrderId)));
     }
-  }, [purchaseOrders]);
+  }, [purchaseOrderId]);
+
+  useEffect(() => {
+    if (hasViewPermission(PermissionEntity.PURCHASE_ORDERS))
+      dispatch(getPurchaseOrders(criteria));
+  }, [criteria]);
+
+  //see changes in ui on edit
+  useEffect(() => {
+    if (singlePurchaseOrder && purchaseOrders.content.length) {
+      const purchaseOrderInContent = purchaseOrders.content.find(
+        (purchaseOrder) => purchaseOrder.id === singlePurchaseOrder.id
+      );
+      const updatedPurchaseOrder =
+        purchaseOrderInContent ?? singlePurchaseOrder;
+      if (openDrawerFromUrl) {
+        setCurrentPurchaseOrder(updatedPurchaseOrder);
+      } else {
+        handleOpenDrawer(updatedPurchaseOrder);
+        setOpenDrawerFromUrl(true);
+      }
+    }
+  }, [singlePurchaseOrder, purchaseOrders]);
+
+  const onPageSizeChange = (size: number) => {
+    setCriteria({ ...criteria, pageSize: size });
+  };
+  const onPageChange = (number: number) => {
+    setCriteria({ ...criteria, pageNum: number });
+  };
 
   useEffect(() => {
     if (currentPurchaseOrder)
@@ -503,7 +538,15 @@ function PurchaseOrders() {
                 <Box sx={{ height: 500, width: '95%' }}>
                   <CustomDataGrid
                     columns={columns}
-                    rows={purchaseOrders}
+                    pageSize={criteria.pageSize}
+                    page={criteria.pageNum}
+                    rows={purchaseOrders.content}
+                    rowCount={purchaseOrders.totalElements}
+                    pagination
+                    paginationMode="server"
+                    onPageSizeChange={onPageSizeChange}
+                    onPageChange={onPageChange}
+                    rowsPerPageOptions={[10, 20, 50]}
                     loading={loadingGet}
                     components={{
                       Toolbar: GridToolbar,
