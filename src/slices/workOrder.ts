@@ -193,6 +193,15 @@ export const getWorkOrdersByPart =
       })
     );
   };
+export const getPDFReport =
+  (id: number): AppThunk =>
+  async (dispatch): Promise<string> => {
+    const response = await api.get<{ success: boolean; message: string }>(
+      `${basePath}/report/${id}`
+    );
+    const { message } = response;
+    return message;
+  };
 export const clearSingleWorkOrder = (): AppThunk => async (dispatch) => {
   dispatch(slice.actions.clearSingleWorkOrder({}));
 };

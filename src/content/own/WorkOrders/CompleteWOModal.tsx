@@ -13,7 +13,7 @@ interface SignatureProps {
   onComplete: (
     id: number | undefined,
     feedback: string
-  ) => Promise<void | number | number[]>;
+  ) => Promise<void | number | number[] | string>;
 }
 export default function CompleteWOModal({
   open,

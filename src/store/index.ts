@@ -18,7 +18,7 @@ export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
 export type AppThunk = ThunkAction<
-  Promise<void | number | number[]>,
+  Promise<void | number | number[] | string>,
   RootState,
   null,
   Action<string>

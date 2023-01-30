@@ -31,9 +31,10 @@ import AddCostModal from './AddCostModal';
 import Tasks from './Tasks';
 import LinkTwoToneIcon from '@mui/icons-material/LinkTwoTone';
 import ArchiveTwoToneIcon from '@mui/icons-material/ArchiveTwoTone';
+import PictureAsPdfTwoToneIcon from '@mui/icons-material/PictureAsPdfTwoTone';
 import PriorityWrapper from '../components/PriorityWrapper';
 import TimerTwoToneIcon from '@mui/icons-material/TimerTwoTone';
-import { editWorkOrder } from '../../../slices/workOrder';
+import { editWorkOrder, getPDFReport } from '../../../slices/workOrder';
 import { useDispatch, useSelector } from '../../../store';
 import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
 import SelectParts from '../components/form/SelectParts';
@@ -120,6 +121,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const openMenu = Boolean(anchorEl);
   const { companySettings, hasFeature } = useAuth();
   const { workOrderConfiguration, generalPreferences } = companySettings;
+  const [generatingReport, setGeneratingReport] = useState<boolean>(false);
   const [openEditPrimaryTime, setOpenEditPrimaryTime] =
     useState<boolean>(false);
   const [primaryTimeHours, setPrimaryTimeHours] = useState<number>();
@@ -158,6 +160,15 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
         .then(onArchiveSuccess)
         .catch(onArchiveFailure);
     }
+  };
+  const onGenerateReport = () => {
+    setGeneratingReport(true);
+    dispatch(getPDFReport(workOrder.id))
+      .then((url: string) => {
+        handleCloseMenu();
+        window.open(url);
+      })
+      .finally(() => setGeneratingReport(false));
   };
   useEffect(() => {
     dispatch(getPartQuantitiesByWorkOrder(workOrder.id));
@@ -1217,6 +1228,16 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
           <Stack spacing={2} direction="row">
             <LinkTwoToneIcon />
             <Typography variant="h6">{t('link')}</Typography>
+          </Stack>
+        </MenuItem>
+        <MenuItem onClick={onGenerateReport}>
+          <Stack spacing={2} direction="row">
+            {generatingReport ? (
+              <CircularProgress size="1rem" />
+            ) : (
+              <PictureAsPdfTwoToneIcon />
+            )}
+            <Typography variant="h6">{t('pdf_report')}</Typography>
           </Stack>
         </MenuItem>
         <MenuItem onClick={onArchive}>

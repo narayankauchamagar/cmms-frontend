@@ -1082,7 +1082,8 @@ const enJSON = {
     'Enter the email used for registration to reset your password.',
   send_me_new_password: 'Send me a new password',
   want_to_sign_in_again: 'Want to try to sign in again?',
-  check_mails_for_instructions: 'Check your email for further instructions'
+  check_mails_for_instructions: 'Check your email for further instructions',
+  pdf_report: 'PDF Report'
 };
 
 export default enJSON;
