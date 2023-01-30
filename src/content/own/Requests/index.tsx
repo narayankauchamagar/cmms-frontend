@@ -103,16 +103,18 @@ function Files() {
 
   //see changes in ui on edit
   useEffect(() => {
-    if (singleRequest && requests.content.length) {
-      const requestInContent = requests.content.find(
-        (request) => request.id === singleRequest.id
+    if (singleRequest || requests.content.length) {
+      const currentInContent = requests.content.find(
+        (request) => request.id === currentRequest?.id
       );
-      const updatedRequest = requestInContent ?? singleRequest;
-      if (openDrawerFromUrl) {
-        setCurrentRequest(updatedRequest);
-      } else {
-        handleOpenDrawer(updatedRequest);
-        setOpenDrawerFromUrl(true);
+      const updatedRequest = currentInContent ?? singleRequest;
+      if (updatedRequest) {
+        if (openDrawerFromUrl) {
+          setCurrentRequest(updatedRequest);
+        } else {
+          handleOpenDrawer(updatedRequest);
+          setOpenDrawerFromUrl(true);
+        }
       }
     }
   }, [singleRequest, requests]);

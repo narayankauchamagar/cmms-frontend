@@ -169,16 +169,18 @@ function WorkOrders() {
 
   //see changes in ui on edit
   useEffect(() => {
-    if (singleWorkOrder && workOrders.content.length) {
-      const workOrderInContent = workOrders.content.find(
-        (workOrder) => workOrder.id === singleWorkOrder.id
+    if (singleWorkOrder || workOrders.content.length) {
+      const currentInContent = workOrders.content.find(
+        (workOrder) => workOrder.id === currentWorkOrder?.id
       );
-      const updatedWorkOrder = workOrderInContent ?? singleWorkOrder;
-      if (openDrawerFromUrl) {
-        setCurrentWorkOrder(updatedWorkOrder);
-      } else {
-        handleOpenDrawer(updatedWorkOrder);
-        setOpenDrawerFromUrl(true);
+      const updatedWorkOrder = currentInContent ?? singleWorkOrder;
+      if (updatedWorkOrder) {
+        if (openDrawerFromUrl) {
+          setCurrentWorkOrder(updatedWorkOrder);
+        } else {
+          handleOpenDrawer(updatedWorkOrder);
+          setOpenDrawerFromUrl(true);
+        }
       }
     }
   }, [singleWorkOrder, workOrders]);

@@ -94,16 +94,18 @@ function Meters() {
 
   //see changes in ui on edit
   useEffect(() => {
-    if (singleMeter && meters.content.length) {
-      const meterInContent = meters.content.find(
-        (meter) => meter.id === singleMeter.id
+    if (singleMeter || meters.content.length) {
+      const currentInContent = meters.content.find(
+        (meter) => meter.id === currentMeter?.id
       );
-      const updatedMeter = meterInContent ?? singleMeter;
-      if (openDrawerFromUrl) {
-        setCurrentMeter(updatedMeter);
-      } else {
-        handleOpenDrawer(updatedMeter);
-        setOpenDrawerFromUrl(true);
+      const updatedMeter = currentInContent ?? singleMeter;
+      if (updatedMeter) {
+        if (openDrawerFromUrl) {
+          setCurrentMeter(updatedMeter);
+        } else {
+          handleOpenDrawer(updatedMeter);
+          setOpenDrawerFromUrl(true);
+        }
       }
     }
   }, [singleMeter, meters]);

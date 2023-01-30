@@ -102,19 +102,19 @@ function Files() {
 
   //see changes in ui on edit
   useEffect(() => {
-    if (singlePreventiveMaintenance && preventiveMaintenances.content.length) {
-      const preventiveMaintenanceInContent =
-        preventiveMaintenances.content.find(
-          (preventiveMaintenance) =>
-            preventiveMaintenance.id === singlePreventiveMaintenance.id
-        );
+    if (singlePreventiveMaintenance || preventiveMaintenances.content.length) {
+      const currentInContent = preventiveMaintenances.content.find(
+        (preventiveMaintenance) => preventiveMaintenance.id === currentPM?.id
+      );
       const updatedPreventiveMaintenance =
-        preventiveMaintenanceInContent ?? singlePreventiveMaintenance;
-      if (openDrawerFromUrl) {
-        setCurrentPM(updatedPreventiveMaintenance);
-      } else {
-        handleOpenDrawer(updatedPreventiveMaintenance);
-        setOpenDrawerFromUrl(true);
+        currentInContent ?? singlePreventiveMaintenance;
+      if (updatedPreventiveMaintenance) {
+        if (openDrawerFromUrl) {
+          setCurrentPM(updatedPreventiveMaintenance);
+        } else {
+          handleOpenDrawer(updatedPreventiveMaintenance);
+          setOpenDrawerFromUrl(true);
+        }
       }
     }
   }, [singlePreventiveMaintenance, preventiveMaintenances]);

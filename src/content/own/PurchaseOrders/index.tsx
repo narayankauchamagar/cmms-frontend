@@ -116,17 +116,18 @@ function PurchaseOrders() {
 
   //see changes in ui on edit
   useEffect(() => {
-    if (singlePurchaseOrder && purchaseOrders.content.length) {
-      const purchaseOrderInContent = purchaseOrders.content.find(
-        (purchaseOrder) => purchaseOrder.id === singlePurchaseOrder.id
+    if (singlePurchaseOrder || purchaseOrders.content.length) {
+      const currentInContent = purchaseOrders.content.find(
+        (purchaseOrder) => purchaseOrder.id === currentPurchaseOrder?.id
       );
-      const updatedPurchaseOrder =
-        purchaseOrderInContent ?? singlePurchaseOrder;
-      if (openDrawerFromUrl) {
-        setCurrentPurchaseOrder(updatedPurchaseOrder);
-      } else {
-        handleOpenDrawer(updatedPurchaseOrder);
-        setOpenDrawerFromUrl(true);
+      const updatedPurchaseOrder = currentInContent ?? singlePurchaseOrder;
+      if (updatedPurchaseOrder) {
+        if (openDrawerFromUrl) {
+          setCurrentPurchaseOrder(updatedPurchaseOrder);
+        } else {
+          handleOpenDrawer(updatedPurchaseOrder);
+          setOpenDrawerFromUrl(true);
+        }
       }
     }
   }, [singlePurchaseOrder, purchaseOrders]);

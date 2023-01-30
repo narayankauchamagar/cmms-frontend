@@ -201,16 +201,18 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
 
   //see changes in ui on edit
   useEffect(() => {
-    if (singleUser && users.content.length) {
-      const userInContent = users.content.find(
-        (user) => user.id === singleUser.id
+    if (singleUser || users.content.length) {
+      const currentInContent = users.content.find(
+        (user) => user.id === currentUser?.id
       );
-      const updatedUser = userInContent ?? singleUser;
-      if (openDrawerFromUrl) {
-        setCurrentUser(updatedUser);
-      } else {
-        handleOpenDrawer(updatedUser);
-        setOpenDrawerFromUrl(true);
+      const updatedUser = currentInContent ?? singleUser;
+      if (updatedUser) {
+        if (openDrawerFromUrl) {
+          setCurrentUser(updatedUser);
+        } else {
+          handleOpenDrawer(updatedUser);
+          setOpenDrawerFromUrl(true);
+        }
       }
     }
   }, [singleUser, users]);

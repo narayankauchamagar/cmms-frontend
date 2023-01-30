@@ -129,16 +129,18 @@ const Parts = ({ setAction }: PropsType) => {
 
   //see changes in ui on edit
   useEffect(() => {
-    if (singlePart && parts.content.length) {
-      const partInContent = parts.content.find(
-        (part) => part.id === singlePart.id
+    if (singlePart || parts.content.length) {
+      const currentInContent = parts.content.find(
+        (part) => part.id === currentPart?.id
       );
-      const updatedPart = partInContent ?? singlePart;
-      if (openDrawerFromUrl) {
-        setCurrentPart(updatedPart);
-      } else {
-        handleOpenDrawer(updatedPart);
-        setOpenDrawerFromUrl(true);
+      const updatedPart = currentInContent ?? singlePart;
+      if (updatedPart) {
+        if (openDrawerFromUrl) {
+          setCurrentPart(updatedPart);
+        } else {
+          handleOpenDrawer(updatedPart);
+          setOpenDrawerFromUrl(true);
+        }
       }
     }
   }, [singlePart, parts]);
