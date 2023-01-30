@@ -8,8 +8,10 @@ import {
 } from '@mui/material';
 import {
   addVendor,
+  clearSingleVendor,
   deleteVendor,
   editVendor,
+  getSingleVendor,
   getVendors
 } from '../../../slices/vendor';
 import { useDispatch, useSelector } from '../../../store';
@@ -38,6 +40,7 @@ import { useParams } from 'react-router-dom';
 import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
 import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
+import { SearchCriteria } from '../../../models/owns/page';
 
 interface PropsType {
   values?: any;
@@ -52,15 +55,19 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
   const { vendorId } = useParams();
   const dispatch = useDispatch();
   const [openDelete, setOpenDelete] = useState<boolean>(false);
-  const { vendors, loadingGet } = useSelector((state) => state.vendors);
+  const { vendors, loadingGet, singleVendor } = useSelector(
+    (state) => state.vendors
+  );
+  const [openDrawerFromUrl, setOpenDrawerFromUrl] = useState<boolean>(false);
+  const [criteria, setCriteria] = useState<SearchCriteria>({
+    filterFields: [],
+    pageSize: 10,
+    pageNum: 0
+  });
   const [currentVendor, setCurrentVendor] = useState<Vendor>();
   const [viewOrUpdate, setViewOrUpdate] = useState<'view' | 'update'>('view');
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const { hasEditPermission, hasDeletePermission } = useAuth();
-
-  useEffect(() => {
-    dispatch(getVendors());
-  }, []);
 
   const handleDelete = (id: number) => {
     handleCloseDetails();
@@ -84,16 +91,20 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
   };
   const onDeleteFailure = (err) =>
     showSnackBar(t('vendor_delete_failure'), 'error');
+
+  const handleOpenModal = (vendor: Vendor) => {
+    setCurrentVendor(vendor);
+    window.history.replaceState(
+      null,
+      'Vendor details',
+      `/app/vendors-customers/vendors/${vendor.id}`
+    );
+    setIsVendorDetailsOpen(true);
+  };
   const handleOpenDetails = (id: number) => {
-    const foundVendor = vendors.find((vendor) => vendor.id === id);
+    const foundVendor = vendors.content.find((vendor) => vendor.id === id);
     if (foundVendor) {
-      setCurrentVendor(foundVendor);
-      window.history.replaceState(
-        null,
-        'Vendor details',
-        `/app/vendors-customers/vendors/${id}`
-      );
-      setIsVendorDetailsOpen(true);
+      handleOpenModal(foundVendor);
     }
   };
   const handleCloseDetails = () => {
@@ -105,10 +116,42 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
     setIsVendorDetailsOpen(false);
   };
   useEffect(() => {
-    if (vendors?.length && vendorId && isNumeric(vendorId)) {
-      handleOpenDetails(Number(vendorId));
+    if (vendorId && isNumeric(vendorId)) {
+      dispatch(getSingleVendor(Number(vendorId)));
     }
-  }, [vendors]);
+  }, [vendorId]);
+
+  useEffect(() => {
+    dispatch(getVendors(criteria));
+  }, [criteria]);
+
+  //see changes in ui on edit
+  useEffect(() => {
+    if (singleVendor || vendors.content.length) {
+      const currentInContent = vendors.content.find(
+        (vendor) => vendor.id === currentVendor?.id
+      );
+      const updatedVendor = currentInContent ?? singleVendor;
+      if (updatedVendor) {
+        if (openDrawerFromUrl) {
+          setCurrentVendor(updatedVendor);
+        } else {
+          handleOpenModal(updatedVendor);
+          setOpenDrawerFromUrl(true);
+        }
+      }
+    }
+    return () => {
+      dispatch(clearSingleVendor());
+    };
+  }, [singleVendor, vendors]);
+
+  const onPageSizeChange = (size: number) => {
+    setCriteria({ ...criteria, pageSize: size });
+  };
+  const onPageChange = (number: number) => {
+    setCriteria({ ...criteria, pageNum: number });
+  };
 
   let fields: Array<IField> = [
     {
@@ -327,7 +370,15 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
       }}
     >
       <CustomDataGrid
-        rows={vendors}
+        pageSize={criteria.pageSize}
+        page={criteria.pageNum}
+        rows={vendors.content}
+        rowCount={vendors.totalElements}
+        pagination
+        paginationMode="server"
+        onPageSizeChange={onPageSizeChange}
+        onPageChange={onPageChange}
+        rowsPerPageOptions={[10, 20, 50]}
         columns={columns}
         loading={loadingGet}
         components={{

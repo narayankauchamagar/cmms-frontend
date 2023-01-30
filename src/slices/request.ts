@@ -97,6 +97,9 @@ const slice = createSlice({
     ) {
       const { loading } = action.payload;
       state.loadingGet = loading;
+    },
+    clearSingleRequest(state: RequestState, action: PayloadAction<{}>) {
+      state.singleRequest = null;
     }
   }
 });
@@ -166,4 +169,8 @@ export const cancelRequest =
     const request = await api.patch<WorkOrder>(`${basePath}/${id}/cancel`, {});
     dispatch(slice.actions.cancelRequest({ id }));
   };
+
+export const clearSingleRequest = (): AppThunk => async (dispatch) => {
+  dispatch(slice.actions.clearSingleRequest({}));
+};
 export default slice;

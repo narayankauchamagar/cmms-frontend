@@ -20,6 +20,7 @@ import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import PurchaseOrder from '../../../models/owns/purchaseOrder';
 import { useDispatch, useSelector } from '../../../store';
 import {
+  clearSinglePurchaseOrder,
   deletePurchaseOrder,
   editPurchaseOrder,
   getPurchaseOrders,
@@ -130,6 +131,9 @@ function PurchaseOrders() {
         }
       }
     }
+    return () => {
+      dispatch(clearSinglePurchaseOrder());
+    };
   }, [singlePurchaseOrder, purchaseOrders]);
 
   const onPageSizeChange = (size: number) => {

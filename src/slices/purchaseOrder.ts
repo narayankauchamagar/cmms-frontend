@@ -85,6 +85,12 @@ const slice = createSlice({
     ) {
       const { loading } = action.payload;
       state.loadingGet = loading;
+    },
+    clearSinglePurchaseOrder(
+      state: PurchaseOrderState,
+      action: PayloadAction<{}>
+    ) {
+      state.singlePurchaseOrder = null;
     }
   }
 });
@@ -161,5 +167,9 @@ export const deletePurchaseOrder =
       dispatch(slice.actions.deletePurchaseOrder({ id }));
     }
   };
+
+export const clearSinglePurchaseOrder = (): AppThunk => async (dispatch) => {
+  dispatch(slice.actions.clearSinglePurchaseOrder({}));
+};
 
 export default slice;

@@ -80,6 +80,9 @@ const slice = createSlice({
       if (workOrderIndex !== -1)
         state.workOrders.content.splice(workOrderIndex, 1);
     },
+    clearSingleWorkOrder(state: WorkOrderState, action: PayloadAction<{}>) {
+      state.singleWorkOrder = null;
+    },
     getWorkOrdersByLocation(
       state: WorkOrderState,
       action: PayloadAction<{ workOrders: WorkOrder[]; id: number }>
@@ -190,4 +193,7 @@ export const getWorkOrdersByPart =
       })
     );
   };
+export const clearSingleWorkOrder = (): AppThunk => async (dispatch) => {
+  dispatch(slice.actions.clearSingleWorkOrder({}));
+};
 export default slice;

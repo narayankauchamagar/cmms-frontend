@@ -87,6 +87,9 @@ const slice = createSlice({
     ) {
       const { loading } = action.payload;
       state.loadingGet = loading;
+    },
+    clearSingleCustomer(state: CustomerState, action: PayloadAction<{}>) {
+      state.singleCustomer = null;
     }
   }
 });
@@ -144,5 +147,7 @@ export const deleteCustomer =
       dispatch(slice.actions.deleteCustomer({ id }));
     }
   };
-
+export const clearSingleCustomer = (): AppThunk => async (dispatch) => {
+  dispatch(slice.actions.clearSingleCustomer({}));
+};
 export default slice;

@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import {
   addMeter,
+  clearSingleMeter,
   deleteMeter,
   editMeter,
   getMeters,
@@ -108,6 +109,9 @@ function Meters() {
         }
       }
     }
+    return () => {
+      dispatch(clearSingleMeter());
+    };
   }, [singleMeter, meters]);
 
   const onPageSizeChange = (size: number) => {

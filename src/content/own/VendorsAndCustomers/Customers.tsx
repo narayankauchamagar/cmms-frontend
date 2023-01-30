@@ -29,9 +29,11 @@ import { Customer } from '../../../models/owns/customer';
 import { useParams } from 'react-router-dom';
 import {
   addCustomer,
+  clearSingleCustomer,
   deleteCustomer,
   editCustomer,
-  getCustomers
+  getCustomers,
+  getSingleCustomer
 } from '../../../slices/customer';
 import { useDispatch, useSelector } from '../../../store';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -41,6 +43,7 @@ import { PermissionEntity } from '../../../models/owns/role';
 import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
 import { formatSelect } from '../../../utils/formatters';
 import Currency from '../../../models/owns/currency';
+import { SearchCriteria } from '../../../models/owns/page';
 
 interface PropsType {
   values?: any;
@@ -54,27 +57,36 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
     useState<boolean>(false);
   const { customerId } = useParams();
   const dispatch = useDispatch();
-  const { customers, loadingGet } = useSelector((state) => state.customers);
+  const { customers, loadingGet, singleCustomer } = useSelector(
+    (state) => state.customers
+  );
+  const [openDrawerFromUrl, setOpenDrawerFromUrl] = useState<boolean>(false);
+  const [criteria, setCriteria] = useState<SearchCriteria>({
+    filterFields: [],
+    pageSize: 10,
+    pageNum: 0
+  });
   const { hasEditPermission, hasDeletePermission } = useAuth();
   const [currentCustomer, setCurrentCustomer] = useState<Customer>();
   const [viewOrUpdate, setViewOrUpdate] = useState<'view' | 'update'>('view');
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const { showSnackBar } = useContext(CustomSnackBarContext);
 
-  useEffect(() => {
-    dispatch(getCustomers());
-  }, []);
-
+  const handleOpenModal = (customer: Customer) => {
+    setCurrentCustomer(customer);
+    window.history.replaceState(
+      null,
+      'Customer details',
+      `/app/vendors-customers/customers/${customer.id}`
+    );
+    setIsCustomerDetailsOpen(true);
+  };
   const handleOpenDetails = (id: number) => {
-    const foundCustomer = customers.find((customer) => customer.id === id);
+    const foundCustomer = customers.content.find(
+      (customer) => customer.id === id
+    );
     if (foundCustomer) {
-      setCurrentCustomer(foundCustomer);
-      window.history.replaceState(
-        null,
-        'Customer details',
-        `/app/vendors-customers/customers/${id}`
-      );
-      setIsCustomerDetailsOpen(true);
+      handleOpenModal(foundCustomer);
     }
   };
   const handleCloseDetails = () => {
@@ -110,10 +122,42 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
     showSnackBar(t('customer_delete_failure'), 'error');
 
   useEffect(() => {
-    if (customers?.length && customerId && isNumeric(customerId)) {
-      handleOpenDetails(Number(customerId));
+    if (customerId && isNumeric(customerId)) {
+      dispatch(getSingleCustomer(Number(customerId)));
     }
-  }, [customers]);
+  }, [customerId]);
+
+  useEffect(() => {
+    dispatch(getCustomers(criteria));
+  }, [criteria]);
+
+  //see changes in ui on edit
+  useEffect(() => {
+    if (singleCustomer || customers.content.length) {
+      const currentInContent = customers.content.find(
+        (customer) => customer.id === currentCustomer?.id
+      );
+      const updatedCustomer = currentInContent ?? singleCustomer;
+      if (updatedCustomer) {
+        if (openDrawerFromUrl) {
+          setCurrentCustomer(updatedCustomer);
+        } else {
+          handleOpenModal(updatedCustomer);
+          setOpenDrawerFromUrl(true);
+        }
+      }
+    }
+    return () => {
+      dispatch(clearSingleCustomer());
+    };
+  }, [singleCustomer, customers]);
+
+  const onPageSizeChange = (size: number) => {
+    setCriteria({ ...criteria, pageSize: size });
+  };
+  const onPageChange = (number: number) => {
+    setCriteria({ ...criteria, pageNum: number });
+  };
 
   const formatValues = (values) => {
     values.billingCurrency = formatSelect(values.billingCurrency);
@@ -343,7 +387,15 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
       }}
     >
       <CustomDataGrid
-        rows={customers}
+        pageSize={criteria.pageSize}
+        page={criteria.pageNum}
+        rows={customers.content}
+        rowCount={customers.totalElements}
+        pagination
+        paginationMode="server"
+        onPageSizeChange={onPageSizeChange}
+        onPageChange={onPageChange}
+        rowsPerPageOptions={[10, 20, 50]}
         columns={columns}
         loading={loadingGet}
         components={{

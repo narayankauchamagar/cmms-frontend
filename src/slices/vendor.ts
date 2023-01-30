@@ -78,6 +78,9 @@ const slice = createSlice({
     ) {
       const { loading } = action.payload;
       state.loadingGet = loading;
+    },
+    clearSingleVendor(state: VendorState, action: PayloadAction<{}>) {
+      state.singleVendor = null;
     }
   }
 });
@@ -132,5 +135,8 @@ export const deleteVendor =
       dispatch(slice.actions.deleteVendor({ id }));
     }
   };
+export const clearSingleVendor = (): AppThunk => async (dispatch) => {
+  dispatch(slice.actions.clearSingleVendor({}));
+};
 
 export default slice;

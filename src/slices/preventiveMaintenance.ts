@@ -107,6 +107,12 @@ const slice = createSlice({
     ) {
       const { loading } = action.payload;
       state.loadingGet = loading;
+    },
+    clearSinglePM(
+      state: PreventiveMaintenanceState,
+      action: PayloadAction<{}>
+    ) {
+      state.singlePreventiveMaintenance = null;
     }
   }
 });
@@ -191,5 +197,9 @@ export const deletePreventiveMaintenance =
       dispatch(slice.actions.deletePreventiveMaintenance({ id }));
     }
   };
+
+export const clearSinglePM = (): AppThunk => async (dispatch) => {
+  dispatch(slice.actions.clearSinglePM({}));
+};
 
 export default slice;

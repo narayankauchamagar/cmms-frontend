@@ -70,6 +70,9 @@ const slice = createSlice({
     ) {
       const { loading } = action.payload;
       state.loadingGet = loading;
+    },
+    clearSinglePart(state: PartState, action: PayloadAction<{}>) {
+      state.singlePart = null;
     }
   }
 });
@@ -121,5 +124,8 @@ export const deletePart =
       dispatch(slice.actions.deletePart({ id }));
     }
   };
+export const clearSinglePart = (): AppThunk => async (dispatch) => {
+  dispatch(slice.actions.clearSinglePart({}));
+};
 
 export default slice;

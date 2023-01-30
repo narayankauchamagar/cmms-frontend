@@ -20,7 +20,14 @@ import {
 import { Close } from '@mui/icons-material';
 import { isNumeric } from 'src/utils/validators';
 import { useParams } from 'react-router-dom';
-import { addTeam, deleteTeam, editTeam, getTeams } from '../../../slices/team';
+import {
+  addTeam,
+  clearSingleTeam,
+  deleteTeam,
+  editTeam,
+  getSingleTeam,
+  getTeams
+} from '../../../slices/team';
 import { useDispatch, useSelector } from '../../../store';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useContext, useEffect, useState } from 'react';
@@ -31,6 +38,7 @@ import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
 import NoRowsMessage from '../components/NoRowsMessage';
+import { SearchCriteria } from '../../../models/owns/page';
 
 interface PropsType {
   values?: any;
@@ -44,7 +52,13 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const [currentTeam, setCurrentTeam] = useState<Team>();
-  const { teams } = useSelector((state) => state.teams);
+  const { teams, loadingGet, singleTeam } = useSelector((state) => state.teams);
+  const [openDrawerFromUrl, setOpenDrawerFromUrl] = useState<boolean>(false);
+  const [criteria, setCriteria] = useState<SearchCriteria>({
+    filterFields: [],
+    pageSize: 10,
+    pageNum: 0
+  });
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const { hasEditPermission, hasDeletePermission } = useAuth();
   const [isTeamDetailsOpen, setIsTeamDetailsOpen] = useState(false);
@@ -52,8 +66,42 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
   const { teamId } = useParams();
 
   useEffect(() => {
-    dispatch(getTeams());
-  }, []);
+    if (teamId && isNumeric(teamId)) {
+      dispatch(getSingleTeam(Number(teamId)));
+    }
+  }, [teamId]);
+
+  useEffect(() => {
+    dispatch(getTeams(criteria));
+  }, [criteria]);
+
+  //see changes in ui on edit
+  useEffect(() => {
+    if (singleTeam || teams.content.length) {
+      const currentInContent = teams.content.find(
+        (team) => team.id === currentTeam?.id
+      );
+      const updatedTeam = currentInContent ?? singleTeam;
+      if (updatedTeam) {
+        if (openDrawerFromUrl) {
+          setCurrentTeam(updatedTeam);
+        } else {
+          handleOpenModal(updatedTeam);
+          setOpenDrawerFromUrl(true);
+        }
+      }
+    }
+    return () => {
+      dispatch(clearSingleTeam());
+    };
+  }, [singleTeam, teams]);
+
+  const onPageSizeChange = (size: number) => {
+    setCriteria({ ...criteria, pageSize: size });
+  };
+  const onPageChange = (number: number) => {
+    setCriteria({ ...criteria, pageNum: number });
+  };
 
   const handleDelete = (id: number) => {
     dispatch(deleteTeam(id)).then(onDeleteSuccess).catch(onDeleteFailure);
@@ -127,29 +175,25 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
       )
     }
   ];
+  const handleOpenModal = (team: Team) => {
+    setCurrentTeam(team);
+    window.history.replaceState(
+      null,
+      'Team details',
+      `/app/people-teams/teams/${team.id}`
+    );
+    setIsTeamDetailsOpen(true);
+  };
   const handleOpenDetails = (id: number) => {
-    const foundTeam = teams.find((team) => team.id === id);
+    const foundTeam = teams.content.find((team) => team.id === id);
     if (foundTeam) {
-      setCurrentTeam(foundTeam);
-      window.history.replaceState(
-        null,
-        'Team details',
-        `/app/people-teams/teams/${id}`
-      );
-      setIsTeamDetailsOpen(true);
+      handleOpenModal(foundTeam);
     }
   };
   const handleCloseDetails = () => {
     window.history.replaceState(null, 'Team', `/app/people-teams/teams`);
     setIsTeamDetailsOpen(false);
   };
-
-  // if reload with teamId
-  useEffect(() => {
-    if (teamId && isNumeric(teamId)) {
-      handleOpenDetails(Number(teamId));
-    }
-  }, [teams]);
 
   const RenderTeamsAddModal = () => (
     <Dialog fullWidth maxWidth="md" open={openModal} onClose={handleCloseModal}>
@@ -197,9 +241,17 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
         width: '95%'
       }}
     >
-      {teams.length !== 0 ? (
+      {teams.content.length !== 0 ? (
         <CustomDataGrid
-          rows={teams}
+          pageSize={criteria.pageSize}
+          page={criteria.pageNum}
+          rows={teams.content}
+          rowCount={teams.totalElements}
+          pagination
+          paginationMode="server"
+          onPageSizeChange={onPageSizeChange}
+          onPageChange={onPageChange}
+          rowsPerPageOptions={[10, 20, 50]}
           columns={columns}
           components={{
             Toolbar: GridToolbar

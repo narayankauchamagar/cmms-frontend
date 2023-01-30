@@ -15,6 +15,7 @@ import { useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
 import {
   addPreventiveMaintenance,
+  clearSinglePM,
   deletePreventiveMaintenance,
   editPreventiveMaintenance,
   getPreventiveMaintenances,
@@ -117,6 +118,9 @@ function Files() {
         }
       }
     }
+    return () => {
+      dispatch(clearSinglePM());
+    };
   }, [singlePreventiveMaintenance, preventiveMaintenances]);
 
   const onPageSizeChange = (size: number) => {

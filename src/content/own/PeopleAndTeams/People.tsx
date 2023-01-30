@@ -35,6 +35,7 @@ import { emailRegExp, isNumeric } from 'src/utils/validators';
 import { useDispatch, useSelector } from '../../../store';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import {
+  clearSingleUser,
   editUser,
   getSingleUser,
   getUsers,
@@ -215,6 +216,9 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
         }
       }
     }
+    return () => {
+      dispatch(clearSingleUser());
+    };
   }, [singleUser, users]);
 
   const onPageSizeChange = (size: number) => {

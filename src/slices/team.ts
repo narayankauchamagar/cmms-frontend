@@ -70,6 +70,9 @@ const slice = createSlice({
     ) {
       const { loading } = action.payload;
       state.loadingGet = loading;
+    },
+    clearSingleTeam(state: TeamState, action: PayloadAction<{}>) {
+      state.singleTeam = null;
     }
   }
 });
@@ -120,5 +123,8 @@ export const deleteTeam =
       dispatch(slice.actions.deleteTeam({ id }));
     }
   };
+export const clearSingleTeam = (): AppThunk => async (dispatch) => {
+  dispatch(slice.actions.clearSingleTeam({}));
+};
 
 export default slice;

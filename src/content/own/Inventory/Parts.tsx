@@ -24,6 +24,7 @@ import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import Part from '../../../models/owns/part';
 import {
   addPart,
+  clearSinglePart,
   deletePart,
   editPart,
   getParts,
@@ -143,6 +144,9 @@ const Parts = ({ setAction }: PropsType) => {
         }
       }
     }
+    return () => {
+      dispatch(clearSinglePart());
+    };
   }, [singlePart, parts]);
 
   const onPageSizeChange = (size: number) => {

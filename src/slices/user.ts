@@ -80,6 +80,9 @@ const slice = createSlice({
     ) {
       const { loading } = action.payload;
       state.loadingGet = loading;
+    },
+    clearSingleUser(state: UserState, action: PayloadAction<{}>) {
+      state.singleUser = null;
     }
   }
 });
@@ -147,4 +150,9 @@ export const inviteUsers =
       }
     );
   };
+
+export const clearSingleUser = (): AppThunk => async (dispatch) => {
+  dispatch(slice.actions.clearSingleUser({}));
+};
+
 export default slice;

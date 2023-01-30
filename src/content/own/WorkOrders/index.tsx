@@ -40,6 +40,7 @@ import { AssetMiniDTO } from '../../../models/owns/asset';
 import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
 import {
   addWorkOrder,
+  clearSingleWorkOrder,
   deleteWorkOrder,
   editWorkOrder,
   getSingleWorkOrder,
@@ -183,6 +184,9 @@ function WorkOrders() {
         }
       }
     }
+    return () => {
+      dispatch(clearSingleWorkOrder());
+    };
   }, [singleWorkOrder, workOrders]);
 
   useEffect(() => {

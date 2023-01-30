@@ -65,6 +65,9 @@ const slice = createSlice({
     ) {
       const { loading } = action.payload;
       state.loadingGet = loading;
+    },
+    clearSingleFile(state: FileState, action: PayloadAction<{}>) {
+      state.singleFile = null;
     }
   }
 });
@@ -130,5 +133,8 @@ export const deleteFile =
       dispatch(slice.actions.deleteFile({ id }));
     }
   };
+export const clearSingleFile = (): AppThunk => async (dispatch) => {
+  dispatch(slice.actions.clearSingleFile({}));
+};
 
 export default slice;

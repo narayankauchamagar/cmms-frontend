@@ -15,6 +15,7 @@ import { useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
 import {
   addRequest,
+  clearSingleRequest,
   deleteRequest,
   editRequest,
   getRequests,
@@ -117,6 +118,9 @@ function Files() {
         }
       }
     }
+    return () => {
+      dispatch(clearSingleRequest());
+    };
   }, [singleRequest, requests]);
 
   const onPageSizeChange = (size: number) => {

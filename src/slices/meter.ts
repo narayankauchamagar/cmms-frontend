@@ -76,6 +76,9 @@ const slice = createSlice({
     ) {
       const { loading } = action.payload;
       state.loadingGet = loading;
+    },
+    clearSingleMeter(state: MeterState, action: PayloadAction<{}>) {
+      state.singleMeter = null;
     }
   }
 });
@@ -132,5 +135,8 @@ export const getMetersByAsset =
     const meters = await api.get<Meter[]>(`${basePath}/asset/${id}`);
     dispatch(slice.actions.getMetersByAsset({ id, meters }));
   };
+export const clearSingleMeter = (): AppThunk => async (dispatch) => {
+  dispatch(slice.actions.clearSingleMeter({}));
+};
 
 export default slice;
