@@ -3,15 +3,19 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { AppThunk } from 'src/store';
 import { Vendor, VendorMiniDTO } from '../models/owns/vendor';
 import api from '../utils/api';
+import { getInitialPage, Page, SearchCriteria } from '../models/owns/page';
 
+const basePath = 'vendors';
 interface VendorState {
-  vendors: Vendor[];
+  vendors: Page<Vendor>;
+  singleVendor: Vendor;
   vendorsMini: VendorMiniDTO[];
   loadingGet: boolean;
 }
 
 const initialState: VendorState = {
-  vendors: [],
+  vendors: getInitialPage<Vendor>(),
+  singleVendor: null,
   vendorsMini: [],
   loadingGet: false
 };
@@ -22,10 +26,33 @@ const slice = createSlice({
   reducers: {
     getVendors(
       state: VendorState,
-      action: PayloadAction<{ vendors: Vendor[] }>
+      action: PayloadAction<{ vendors: Page<Vendor> }>
     ) {
       const { vendors } = action.payload;
       state.vendors = vendors;
+    },
+    getSingleVendor(
+      state: VendorState,
+      action: PayloadAction<{ vendor: Vendor }>
+    ) {
+      const { vendor } = action.payload;
+      state.singleVendor = vendor;
+    },
+    editVendor(state: VendorState, action: PayloadAction<{ vendor: Vendor }>) {
+      const { vendor } = action.payload;
+      const inContent = state.vendors.content.some(
+        (vendor1) => vendor1.id === vendor.id
+      );
+      if (inContent) {
+        state.vendors.content = state.vendors.content.map((vendor1) => {
+          if (vendor1.id === vendor.id) {
+            return vendor;
+          }
+          return vendor1;
+        });
+      } else {
+        state.singleVendor = vendor;
+      }
     },
     getVendorsMini(
       state: VendorState,
@@ -36,21 +63,14 @@ const slice = createSlice({
     },
     addVendor(state: VendorState, action: PayloadAction<{ vendor: Vendor }>) {
       const { vendor } = action.payload;
-      state.vendors = [...state.vendors, vendor];
-    },
-    editVendor(state: VendorState, action: PayloadAction<{ vendor: Vendor }>) {
-      const { vendor } = action.payload;
-      state.vendors = state.vendors.map((vendor1) => {
-        if (vendor1.id === vendor.id) {
-          return vendor;
-        }
-        return vendor1;
-      });
+      state.vendors.content = [...state.vendors.content, vendor];
     },
     deleteVendor(state: VendorState, action: PayloadAction<{ id: number }>) {
       const { id } = action.payload;
-      const vendorIndex = state.vendors.findIndex((vendor) => vendor.id === id);
-      state.vendors.splice(vendorIndex, 1);
+      const vendorIndex = state.vendors.content.findIndex(
+        (vendor) => vendor.id === id
+      );
+      state.vendors.content.splice(vendorIndex, 1);
     },
     setLoadingGet(
       state: VendorState,
@@ -64,12 +84,33 @@ const slice = createSlice({
 
 export const reducer = slice.reducer;
 
-export const getVendors = (): AppThunk => async (dispatch) => {
-  dispatch(slice.actions.setLoadingGet({ loading: true }));
-  const vendors = await api.get<Vendor[]>('vendors');
-  dispatch(slice.actions.getVendors({ vendors }));
-  dispatch(slice.actions.setLoadingGet({ loading: false }));
-};
+export const getVendors =
+  (criteria: SearchCriteria): AppThunk =>
+  async (dispatch) => {
+    dispatch(slice.actions.setLoadingGet({ loading: true }));
+    const vendors = await api.post<Page<Vendor>>(
+      `${basePath}/search`,
+      criteria
+    );
+    dispatch(slice.actions.getVendors({ vendors }));
+    dispatch(slice.actions.setLoadingGet({ loading: false }));
+  };
+
+export const getSingleVendor =
+  (id: number): AppThunk =>
+  async (dispatch) => {
+    dispatch(slice.actions.setLoadingGet({ loading: true }));
+    const vendor = await api.get<Vendor>(`${basePath}/${id}`);
+    dispatch(slice.actions.getSingleVendor({ vendor }));
+    dispatch(slice.actions.setLoadingGet({ loading: false }));
+  };
+
+export const editVendor =
+  (id: number, vendor): AppThunk =>
+  async (dispatch) => {
+    const vendorResponse = await api.patch<Vendor>(`${basePath}/${id}`, vendor);
+    dispatch(slice.actions.editVendor({ vendor: vendorResponse }));
+  };
 export const getVendorsMini = (): AppThunk => async (dispatch) => {
   const vendors = await api.get<Vendor[]>('vendors/mini');
   dispatch(slice.actions.getVendorsMini({ vendors }));
@@ -79,12 +120,6 @@ export const addVendor =
   async (dispatch) => {
     const vendorResponse = await api.post<Vendor>('vendors', vendor);
     dispatch(slice.actions.addVendor({ vendor: vendorResponse }));
-  };
-export const editVendor =
-  (id: number, vendor): AppThunk =>
-  async (dispatch) => {
-    const vendorResponse = await api.patch<Vendor>(`vendors/${id}`, vendor);
-    dispatch(slice.actions.editVendor({ vendor: vendorResponse }));
   };
 export const deleteVendor =
   (id: number): AppThunk =>
