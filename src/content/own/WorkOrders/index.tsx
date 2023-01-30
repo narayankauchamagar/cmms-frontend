@@ -113,9 +113,7 @@ function WorkOrders() {
     pageSize: 10,
     pageNum: 0
   });
-  const inContent = workOrders.content.some(
-    (workOrder) => workOrder.id === currentWorkOrder?.id
-  );
+
   const handleDelete = (id: number) => {
     dispatch(deleteWorkOrder(id)).then(onDeleteSuccess).catch(onDeleteFailure);
     setOpenDelete(false);
@@ -655,11 +653,7 @@ function WorkOrders() {
                     )
                       .then(() =>
                         dispatch(
-                          editWorkOrder(
-                            currentWorkOrder?.id,
-                            formattedValues,
-                            inContent
-                          )
+                          editWorkOrder(currentWorkOrder?.id, formattedValues)
                         )
                           .then(onEditSuccess)
                           .then(() => resolve())
@@ -799,7 +793,6 @@ function WorkOrders() {
             onEdit={handleOpenUpdate}
             tasks={tasks}
             onDelete={handleOpenDelete}
-            inContent={inContent}
           />
         </Drawer>
         <ConfirmDialog

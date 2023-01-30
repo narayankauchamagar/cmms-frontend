@@ -6,14 +6,17 @@ import PreventiveMaintenance, {
 } from '../models/owns/preventiveMaintenance';
 import api from '../utils/api';
 import Schedule from '../models/owns/schedule';
+import { getInitialPage, Page, SearchCriteria } from '../models/owns/page';
 
 interface PreventiveMaintenanceState {
-  preventiveMaintenances: PreventiveMaintenance[];
+  preventiveMaintenances: Page<PreventiveMaintenance>;
+  singlePreventiveMaintenance: PreventiveMaintenance;
   loadingGet: boolean;
 }
 
 const initialState: PreventiveMaintenanceState = {
-  preventiveMaintenances: [],
+  preventiveMaintenances: getInitialPage<PreventiveMaintenance>(),
+  singlePreventiveMaintenance: null,
   loadingGet: false
 };
 const basePath = 'preventive-maintenances';
@@ -23,58 +26,80 @@ const slice = createSlice({
   reducers: {
     getPreventiveMaintenances(
       state: PreventiveMaintenanceState,
-      action: PayloadAction<{ preventiveMaintenances: PreventiveMaintenance[] }>
+      action: PayloadAction<{
+        preventiveMaintenances: Page<PreventiveMaintenance>;
+      }>
     ) {
       const { preventiveMaintenances } = action.payload;
       state.preventiveMaintenances = preventiveMaintenances;
     },
+    getSinglePreventiveMaintenance(
+      state: PreventiveMaintenanceState,
+      action: PayloadAction<{ preventiveMaintenance: PreventiveMaintenance }>
+    ) {
+      const { preventiveMaintenance } = action.payload;
+      state.singlePreventiveMaintenance = preventiveMaintenance;
+    },
+
     addPreventiveMaintenance(
       state: PreventiveMaintenanceState,
       action: PayloadAction<{ preventiveMaintenance: PreventiveMaintenance }>
     ) {
       const { preventiveMaintenance } = action.payload;
-      state.preventiveMaintenances = [
-        ...state.preventiveMaintenances,
+      state.preventiveMaintenances.content = [
+        ...state.preventiveMaintenances.content,
         preventiveMaintenance
       ];
     },
     editPreventiveMaintenance(
       state: PreventiveMaintenanceState,
-      action: PayloadAction<{ preventiveMaintenance: PreventiveMaintenance }>
+      action: PayloadAction<{
+        preventiveMaintenance: PreventiveMaintenance;
+      }>
     ) {
       const { preventiveMaintenance } = action.payload;
-      state.preventiveMaintenances = state.preventiveMaintenances.map(
-        (preventiveMaintenance1) => {
-          if (preventiveMaintenance1.id === preventiveMaintenance.id) {
-            return preventiveMaintenance;
-          }
-          return preventiveMaintenance1;
-        }
+      const inContent = state.preventiveMaintenances.content.some(
+        (pm) => pm.id === preventiveMaintenance.id
       );
+      if (inContent) {
+        state.preventiveMaintenances.content =
+          state.preventiveMaintenances.content.map((preventiveMaintenance1) => {
+            if (preventiveMaintenance1.id === preventiveMaintenance.id) {
+              return preventiveMaintenance;
+            }
+            return preventiveMaintenance1;
+          });
+      } else {
+        state.singlePreventiveMaintenance = preventiveMaintenance;
+      }
     },
     patchSchedule(
       state: PreventiveMaintenanceState,
       action: PayloadAction<{ schedule: Schedule; pmId: number }>
     ) {
       const { schedule, pmId } = action.payload;
-      state.preventiveMaintenances = state.preventiveMaintenances.map(
-        (preventiveMaintenance) => {
+      state.preventiveMaintenances.content =
+        state.preventiveMaintenances.content.map((preventiveMaintenance) => {
           if (preventiveMaintenance.id === pmId) {
             return { ...preventiveMaintenance, schedule };
           }
           return preventiveMaintenance;
-        }
-      );
+        });
     },
     deletePreventiveMaintenance(
       state: PreventiveMaintenanceState,
       action: PayloadAction<{ id: number }>
     ) {
       const { id } = action.payload;
-      const preventiveMaintenanceIndex = state.preventiveMaintenances.findIndex(
-        (preventiveMaintenance) => preventiveMaintenance.id === id
-      );
-      state.preventiveMaintenances.splice(preventiveMaintenanceIndex, 1);
+      const preventiveMaintenanceIndex =
+        state.preventiveMaintenances.content.findIndex(
+          (preventiveMaintenance) => preventiveMaintenance.id === id
+        );
+      if (preventiveMaintenanceIndex !== -1)
+        state.preventiveMaintenances.content.splice(
+          preventiveMaintenanceIndex,
+          1
+        );
     },
     setLoadingGet(
       state: PreventiveMaintenanceState,
@@ -88,15 +113,32 @@ const slice = createSlice({
 
 export const reducer = slice.reducer;
 
-export const getPreventiveMaintenances = (): AppThunk => async (dispatch) => {
-  dispatch(slice.actions.setLoadingGet({ loading: true }));
-  const preventiveMaintenances = await api.get<PreventiveMaintenance[]>(
-    basePath
-  );
-  dispatch(slice.actions.getPreventiveMaintenances({ preventiveMaintenances }));
-  dispatch(slice.actions.setLoadingGet({ loading: false }));
-};
+export const getPreventiveMaintenances =
+  (criteria: SearchCriteria): AppThunk =>
+  async (dispatch) => {
+    dispatch(slice.actions.setLoadingGet({ loading: true }));
+    const preventiveMaintenances = await api.post<Page<PreventiveMaintenance>>(
+      `${basePath}/search`,
+      criteria
+    );
+    dispatch(
+      slice.actions.getPreventiveMaintenances({ preventiveMaintenances })
+    );
+    dispatch(slice.actions.setLoadingGet({ loading: false }));
+  };
 
+export const getSinglePreventiveMaintenance =
+  (id: number): AppThunk =>
+  async (dispatch) => {
+    dispatch(slice.actions.setLoadingGet({ loading: true }));
+    const preventiveMaintenance = await api.get<PreventiveMaintenance>(
+      `${basePath}/${id}`
+    );
+    dispatch(
+      slice.actions.getSinglePreventiveMaintenance({ preventiveMaintenance })
+    );
+    dispatch(slice.actions.setLoadingGet({ loading: false }));
+  };
 export const addPreventiveMaintenance =
   (preventiveMaintenance: Partial<PreventiveMaintenancePost>): AppThunk =>
   async (dispatch) => {

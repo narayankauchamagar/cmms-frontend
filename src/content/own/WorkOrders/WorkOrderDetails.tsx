@@ -70,7 +70,7 @@ import { getAssetUrl, getUserUrl } from '../../../utils/urlPaths';
 import CompleteWOModal from './CompleteWOModal';
 import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
-import { getSingleUser } from '../../../slices/user';
+import { getSingleUserMini } from '../../../slices/user';
 import FilesList from '../components/FilesList';
 import { PlanFeature } from '../../../models/owns/subscriptionPlan';
 import PartQuantitiesList from '../components/PartQuantitiesList';
@@ -80,10 +80,9 @@ interface WorkOrderDetailsProps {
   onEdit: (id: number) => void;
   onDelete: (id: number) => void;
   tasks: Task[];
-  inContent: boolean;
 }
 export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
-  const { workOrder, onEdit, tasks, onDelete, inContent } = props;
+  const { workOrder, onEdit, tasks, onDelete } = props;
   const theme = useTheme();
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const { getFormattedDate, getUserNameById, getFormattedCurrency } =
@@ -130,7 +129,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
     [workOrder.createdBy, workOrder.parentRequest?.createdBy].forEach(
       (createdBy) => {
         if (!usersMini.find((user) => user.id === createdBy) && createdBy) {
-          dispatch(getSingleUser(createdBy));
+          dispatch(getSingleUserMini(createdBy));
         }
       }
     );
@@ -155,13 +154,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const onArchive = () => {
     handleCloseMenu();
     if (window.confirm(t('wo_archive_confirm') + workOrder.title + ' ?')) {
-      dispatch(
-        editWorkOrder(
-          workOrder?.id,
-          { ...workOrder, archived: true },
-          inContent
-        )
-      )
+      dispatch(editWorkOrder(workOrder?.id, { ...workOrder, archived: true }))
         .then(onArchiveSuccess)
         .catch(onArchiveFailure);
     }
@@ -252,16 +245,12 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   ) => {
     setChangingStatus(true);
     return dispatch(
-      editWorkOrder(
-        workOrder?.id,
-        {
-          ...workOrder,
-          status: 'COMPLETE',
-          feedback: feedback ?? null,
-          signature: signatureId ? { id: signatureId } : null
-        },
-        inContent
-      )
+      editWorkOrder(workOrder?.id, {
+        ...workOrder,
+        status: 'COMPLETE',
+        feedback: feedback ?? null,
+        signature: signatureId ? { id: signatureId } : null
+      })
     ).finally(() => setChangingStatus(false));
   };
   const groupRelations = (
@@ -537,14 +526,10 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                         }
                         setChangingStatus(true);
                         dispatch(
-                          editWorkOrder(
-                            workOrder?.id,
-                            {
-                              ...workOrder,
-                              status: event.target.value
-                            },
-                            inContent
-                          )
+                          editWorkOrder(workOrder?.id, {
+                            ...workOrder,
+                            status: event.target.value
+                          })
                         ).finally(() => setChangingStatus(false));
                       }}
                       disabled={
@@ -1153,14 +1138,10 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                   files={workOrder.files}
                   onRemove={(id: number) => {
                     dispatch(
-                      editWorkOrder(
-                        workOrder.id,
-                        {
-                          ...workOrder,
-                          files: workOrder.files.filter((f) => f.id !== id)
-                        },
-                        inContent
-                      )
+                      editWorkOrder(workOrder.id, {
+                        ...workOrder,
+                        files: workOrder.files.filter((f) => f.id !== id)
+                      })
                     );
                   }}
                 />

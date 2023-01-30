@@ -4,15 +4,18 @@ import type { AppThunk } from 'src/store';
 import Request from '../models/owns/request';
 import api from '../utils/api';
 import WorkOrder from '../models/owns/workOrder';
+import { getInitialPage, Page, SearchCriteria } from 'src/models/owns/page';
 
 const basePath = 'requests';
 interface RequestState {
-  requests: Request[];
+  requests: Page<Request>;
+  singleRequest: Request;
   loadingGet: boolean;
 }
 
 const initialState: RequestState = {
-  requests: [],
+  requests: getInitialPage<Request>(),
+  singleRequest: null,
   loadingGet: false
 };
 
@@ -22,43 +25,57 @@ const slice = createSlice({
   reducers: {
     getRequests(
       state: RequestState,
-      action: PayloadAction<{ requests: Request[] }>
+      action: PayloadAction<{ requests: Page<Request> }>
     ) {
       const { requests } = action.payload;
       state.requests = requests;
+    },
+    getSingleRequest(
+      state: RequestState,
+      action: PayloadAction<{ request: Request }>
+    ) {
+      const { request } = action.payload;
+      state.singleRequest = request;
     },
     addRequest(
       state: RequestState,
       action: PayloadAction<{ request: Request }>
     ) {
       const { request } = action.payload;
-      state.requests = [...state.requests, request];
+      state.requests.content = [...state.requests.content, request];
     },
     editRequest(
       state: RequestState,
       action: PayloadAction<{ request: Request }>
     ) {
       const { request } = action.payload;
-      state.requests = state.requests.map((request1) => {
-        if (request1.id === request.id) {
-          return request;
-        }
-        return request1;
-      });
+      const inContent = state.requests.content.some(
+        (request1) => request1.id === request.id
+      );
+      if (inContent) {
+        state.requests.content = state.requests.content.map((request1) => {
+          if (request1.id === request.id) {
+            return request;
+          }
+          return request1;
+        });
+      } else {
+        state.singleRequest = request;
+      }
     },
     deleteRequest(state: RequestState, action: PayloadAction<{ id: number }>) {
       const { id } = action.payload;
-      const requestIndex = state.requests.findIndex(
+      const requestIndex = state.requests.content.findIndex(
         (request) => request.id === id
       );
-      state.requests.splice(requestIndex, 1);
+      if (requestIndex !== -1) state.requests.content.splice(requestIndex, 1);
     },
     approveRequest(
       state: RequestState,
       action: PayloadAction<{ id: number; workOrder: WorkOrder }>
     ) {
       const { id, workOrder } = action.payload;
-      state.requests = state.requests.map((request) => {
+      state.requests.content = state.requests.content.map((request) => {
         if (request.id === id) {
           return { ...request, workOrder };
         }
@@ -67,7 +84,7 @@ const slice = createSlice({
     },
     cancelRequest(state: RequestState, action: PayloadAction<{ id: number }>) {
       const { id } = action.payload;
-      state.requests = state.requests.map((request) => {
+      state.requests.content = state.requests.content.map((request) => {
         if (request.id === id) {
           return { ...request, cancelled: true };
         }
@@ -86,13 +103,26 @@ const slice = createSlice({
 
 export const reducer = slice.reducer;
 
-export const getRequests = (): AppThunk => async (dispatch) => {
-  dispatch(slice.actions.setLoadingGet({ loading: true }));
-  const requests = await api.get<Request[]>(basePath);
-  dispatch(slice.actions.getRequests({ requests }));
-  dispatch(slice.actions.setLoadingGet({ loading: false }));
-};
+export const getRequests =
+  (criteria: SearchCriteria): AppThunk =>
+  async (dispatch) => {
+    dispatch(slice.actions.setLoadingGet({ loading: true }));
+    const requests = await api.post<Page<Request>>(
+      `${basePath}/search`,
+      criteria
+    );
+    dispatch(slice.actions.getRequests({ requests }));
+    dispatch(slice.actions.setLoadingGet({ loading: false }));
+  };
 
+export const getSingleRequest =
+  (id: number): AppThunk =>
+  async (dispatch) => {
+    dispatch(slice.actions.setLoadingGet({ loading: true }));
+    const request = await api.get<Request>(`${basePath}/${id}`);
+    dispatch(slice.actions.getSingleRequest({ request }));
+    dispatch(slice.actions.setLoadingGet({ loading: false }));
+  };
 export const addRequest =
   (request): AppThunk =>
   async (dispatch) => {
