@@ -70,7 +70,7 @@ import { getAssetUrl, getUserUrl } from '../../../utils/urlPaths';
 import CompleteWOModal from './CompleteWOModal';
 import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
-import { getSingleUser } from '../../../slices/user';
+import { getSingleUserMini } from '../../../slices/user';
 import FilesList from '../components/FilesList';
 import { PlanFeature } from '../../../models/owns/subscriptionPlan';
 import PartQuantitiesList from '../components/PartQuantitiesList';
@@ -129,7 +129,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
     [workOrder.createdBy, workOrder.parentRequest?.createdBy].forEach(
       (createdBy) => {
         if (!usersMini.find((user) => user.id === createdBy) && createdBy) {
-          dispatch(getSingleUser(createdBy));
+          dispatch(getSingleUserMini(createdBy));
         }
       }
     );

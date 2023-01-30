@@ -17,24 +17,24 @@ import {
 } from '@mui/material';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import Part from 'src/models/owns/part';
+import { PartMiniDTO } from 'src/models/owns/part';
 import { useDispatch, useSelector } from '../../../../store';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import { getParts } from '../../../../slices/part';
+import { getPartsMini } from '../../../../slices/part';
 
 interface SelectPartsProps {
-  onChange: (parts: Part[]) => void;
+  onChange: (parts: PartMiniDTO[]) => void;
   selected: number[];
 }
 
 export default function SelectParts({ onChange, selected }: SelectPartsProps) {
   const { t }: { t: any } = useTranslation();
   const dispatch = useDispatch();
-  const { parts } = useSelector((state) => state.parts);
+  const { partsMini } = useSelector((state) => state.parts);
   const { multiParts } = useSelector((state) => state.multiParts);
   const [currentTab, setCurrentTab] = useState<string>('parts');
-  const [selectedParts, setSelectedParts] = useState<Part[]>([]);
+  const [selectedParts, setSelectedParts] = useState<PartMiniDTO[]>([]);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
@@ -46,22 +46,22 @@ export default function SelectParts({ onChange, selected }: SelectPartsProps) {
   ];
 
   useEffect(() => {
-    if (parts.length) {
+    if (partsMini.length) {
       const newSelectedParts = selectedIds
         .map((id) => {
-          return parts.find((part) => part.id == id);
+          return partsMini.find((part) => part.id == id);
         })
         .filter((part) => !!part);
       setSelectedParts(newSelectedParts);
     }
-  }, [selectedIds, parts]);
+  }, [selectedIds, partsMini]);
 
   useEffect(() => {
     if (!selectedIds.length) setSelectedIds(selected);
   }, [selected]);
 
   useEffect(() => {
-    dispatch(getParts());
+    dispatch(getPartsMini());
   }, []);
 
   const onSelect = (ids: number[]) => {
@@ -109,7 +109,7 @@ export default function SelectParts({ onChange, selected }: SelectPartsProps) {
           </Tabs>
           {currentTab === 'parts' && (
             <FormGroup>
-              {parts.map((part) => (
+              {partsMini.map((part) => (
                 <FormControlLabel
                   onChange={(event, checked) => {
                     if (checked) {

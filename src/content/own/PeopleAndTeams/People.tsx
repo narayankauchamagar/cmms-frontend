@@ -34,7 +34,13 @@ import { useParams } from 'react-router-dom';
 import { emailRegExp, isNumeric } from 'src/utils/validators';
 import { useDispatch, useSelector } from '../../../store';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
-import { editUser, getUsers, inviteUsers } from '../../../slices/user';
+import {
+  clearSingleUser,
+  editUser,
+  getSingleUser,
+  getUsers,
+  inviteUsers
+} from '../../../slices/user';
 import { OwnUser } from '../../../models/user';
 import { PermissionEntity, Role } from '../../../models/owns/role';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
@@ -44,6 +50,7 @@ import * as Yup from 'yup';
 import { IField } from '../type';
 import { formatSelect } from '../../../utils/formatters';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
+import { SearchCriteria } from '../../../models/owns/page';
 
 interface PropsType {
   values?: any;
@@ -58,7 +65,13 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
   const [detailDrawerOpen, setDetailDrawerOpen] = useState(false);
   const { peopleId } = useParams();
   const { hasEditPermission, user } = useAuth();
-  const { users, loadingGet } = useSelector((state) => state.users);
+  const { users, loadingGet, singleUser } = useSelector((state) => state.users);
+  const [openDrawerFromUrl, setOpenDrawerFromUrl] = useState<boolean>(false);
+  const [criteria, setCriteria] = useState<SearchCriteria>({
+    filterFields: [],
+    pageSize: 10,
+    pageNum: 0
+  });
   const dispatch = useDispatch();
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const { getFormattedCurrency } = useContext(CompanySettingsContext);
@@ -75,20 +88,23 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
   const onEditFailure = (err) =>
     showSnackBar(t("The User couldn't be edited"), 'error');
 
+  const handleOpenDrawer = (user: OwnUser) => {
+    setCurrentUser(user);
+    window.history.replaceState(
+      null,
+      'User details',
+      `/app/people-teams/people/${user.id}`
+    );
+    setDetailDrawerOpen(true);
+  };
   const handleOpenDetails = (id: number) => {
-    const foundUser = users.find((user) => user.id === id);
+    const foundUser = users.content.find((user) => user.id === id);
     if (foundUser) {
-      setCurrentUser(foundUser);
-      window.history.replaceState(
-        null,
-        'User details',
-        `/app/people-teams/people/${id}`
-      );
-      setDetailDrawerOpen(true);
+      handleOpenDrawer(foundUser);
     }
   };
   const handleOpenUpdate = (id: number) => {
-    const foundUser = users.find((user) => user.id === id);
+    const foundUser = users.content.find((user) => user.id === id);
     if (foundUser) {
       setCurrentUser(foundUser);
       setOpenUpdateModal(true);
@@ -176,13 +192,41 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
   // if reload with peopleId
   useEffect(() => {
     if (peopleId && isNumeric(peopleId)) {
-      handleOpenDetails(Number(peopleId));
+      dispatch(getSingleUser(Number(peopleId)));
     }
-  }, [users]);
+  }, [peopleId]);
 
   useEffect(() => {
-    dispatch(getUsers());
-  }, []);
+    dispatch(getUsers(criteria));
+  }, [criteria]);
+
+  //see changes in ui on edit
+  useEffect(() => {
+    if (singleUser || users.content.length) {
+      const currentInContent = users.content.find(
+        (user) => user.id === currentUser?.id
+      );
+      const updatedUser = currentInContent ?? singleUser;
+      if (updatedUser) {
+        if (openDrawerFromUrl) {
+          setCurrentUser(updatedUser);
+        } else {
+          handleOpenDrawer(updatedUser);
+          setOpenDrawerFromUrl(true);
+        }
+      }
+    }
+    return () => {
+      dispatch(clearSingleUser());
+    };
+  }, [singleUser, users]);
+
+  const onPageSizeChange = (size: number) => {
+    setCriteria({ ...criteria, pageSize: size });
+  };
+  const onPageChange = (number: number) => {
+    setCriteria({ ...criteria, pageNum: number });
+  };
 
   const verifyCurrentEmail = (): boolean => {
     if (currentEmail) {
@@ -192,7 +236,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
         if (emailsClone.includes(currentEmail)) {
           error = 'This email is already selected';
         } else {
-          if (users.map((user) => user.email).includes(currentEmail)) {
+          if (users.content.map((user) => user.email).includes(currentEmail)) {
             error = 'A user with this email is already in this company';
           } else {
             if (!currentEmail.match(emailRegExp)) {
@@ -278,7 +322,15 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
       }}
     >
       <CustomDataGrid
-        rows={users}
+        pageSize={criteria.pageSize}
+        page={criteria.pageNum}
+        rows={users.content}
+        rowCount={users.totalElements}
+        pagination
+        paginationMode="server"
+        onPageSizeChange={onPageSizeChange}
+        onPageChange={onPageChange}
+        rowsPerPageOptions={[10, 20, 50]}
         loading={loadingGet}
         columns={columns}
         components={{

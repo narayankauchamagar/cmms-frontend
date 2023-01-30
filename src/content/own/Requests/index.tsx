@@ -15,9 +15,11 @@ import { useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
 import {
   addRequest,
+  clearSingleRequest,
   deleteRequest,
   editRequest,
-  getRequests
+  getRequests,
+  getSingleRequest
 } from '../../../slices/request';
 import { useDispatch, useSelector } from '../../../store';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -46,6 +48,7 @@ import { PermissionEntity } from '../../../models/owns/role';
 import PermissionErrorMessage from '../components/PermissionErrorMessage';
 import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
 import { getImageAndFiles } from '../../../utils/overall';
+import { SearchCriteria } from '../../../models/owns/page';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
@@ -65,19 +68,67 @@ function Files() {
   const { requestId } = useParams();
   const dispatch = useDispatch();
   const [openDelete, setOpenDelete] = useState<boolean>(false);
-  const { requests, loadingGet } = useSelector((state) => state.requests);
+  const { requests, loadingGet, singleRequest } = useSelector(
+    (state) => state.requests
+  );
+  const [openDrawerFromUrl, setOpenDrawerFromUrl] = useState<boolean>(false);
+  const [criteria, setCriteria] = useState<SearchCriteria>({
+    filterFields: [],
+    pageSize: 10,
+    pageNum: 0
+  });
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const navigate = useNavigate();
-
+  const handleOpenDrawer = (request: Request) => {
+    setCurrentRequest(request);
+    window.history.replaceState(
+      null,
+      'Request details',
+      `/app/requests/${request.id}`
+    );
+    setOpenDrawer(true);
+  };
   useEffect(() => {
     setTitle(t('requests'));
-    if (hasViewPermission(PermissionEntity.REQUESTS)) dispatch(getRequests());
   }, []);
   useEffect(() => {
-    if (requests?.length && requestId && isNumeric(requestId)) {
-      handleOpenDetails(Number(requestId));
+    if (requestId && isNumeric(requestId)) {
+      dispatch(getSingleRequest(Number(requestId)));
     }
-  }, [requests]);
+  }, [requestId]);
+
+  useEffect(() => {
+    if (hasViewPermission(PermissionEntity.REQUESTS))
+      dispatch(getRequests(criteria));
+  }, [criteria]);
+
+  //see changes in ui on edit
+  useEffect(() => {
+    if (singleRequest || requests.content.length) {
+      const currentInContent = requests.content.find(
+        (request) => request.id === currentRequest?.id
+      );
+      const updatedRequest = currentInContent ?? singleRequest;
+      if (updatedRequest) {
+        if (openDrawerFromUrl) {
+          setCurrentRequest(updatedRequest);
+        } else {
+          handleOpenDrawer(updatedRequest);
+          setOpenDrawerFromUrl(true);
+        }
+      }
+    }
+    return () => {
+      dispatch(clearSingleRequest());
+    };
+  }, [singleRequest, requests]);
+
+  const onPageSizeChange = (size: number) => {
+    setCriteria({ ...criteria, pageSize: size });
+  };
+  const onPageChange = (number: number) => {
+    setCriteria({ ...criteria, pageNum: number });
+  };
 
   const handleDelete = (id: number) => {
     handleCloseDetails();
@@ -106,18 +157,12 @@ function Files() {
     showSnackBar(t('request_delete_failure'), 'error');
 
   const handleOpenDetails = (id: number) => {
-    const foundRequest = requests.find((request) => request.id === id);
+    const foundRequest = requests.content.find((request) => request.id === id);
     if (foundRequest) {
       if (foundRequest.workOrder) {
         navigate(`/app/work-orders/${foundRequest.workOrder.id}`);
       } else {
-        setCurrentRequest(foundRequest);
-        window.history.replaceState(
-          null,
-          'Request details',
-          `/app/requests/${id}`
-        );
-        setOpenDrawer(true);
+        handleOpenDrawer(foundRequest);
       }
     }
   };
@@ -400,7 +445,15 @@ function Files() {
                 <CustomDataGrid
                   columns={columns}
                   loading={loadingGet}
-                  rows={requests}
+                  pageSize={criteria.pageSize}
+                  page={criteria.pageNum}
+                  rows={requests.content}
+                  rowCount={requests.totalElements}
+                  pagination
+                  paginationMode="server"
+                  onPageSizeChange={onPageSizeChange}
+                  onPageChange={onPageChange}
+                  rowsPerPageOptions={[10, 20, 50]}
                   onRowClick={({ id }) => handleOpenDetails(Number(id))}
                   components={{
                     Toolbar: GridToolbar,

@@ -25,7 +25,14 @@ import {
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 import { useDispatch, useSelector } from '../../../store';
-import { addFiles, deleteFile, editFile, getFiles } from '../../../slices/file';
+import {
+  addFiles,
+  clearSingleFile,
+  deleteFile,
+  editFile,
+  getFiles,
+  getSingleFile
+} from '../../../slices/file';
 import { IField } from '../type';
 import Form from '../components/form';
 import * as Yup from 'yup';
@@ -38,6 +45,9 @@ import FeatureErrorMessage from '../components/FeatureErrorMessage';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
+import { useParams } from 'react-router-dom';
+import { SearchCriteria } from '../../../models/owns/page';
+import { isNumeric } from '../../../utils/validators';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
@@ -46,13 +56,20 @@ function Files() {
     CompanySettingsContext
   );
   const { showSnackBar } = useContext(CustomSnackBarContext);
-  const { files, loadingGet } = useSelector((state) => state.files);
+  const { files, loadingGet, singleFile } = useSelector((state) => state.files);
+  const [openDrawerFromUrl, setOpenDrawerFromUrl] = useState<boolean>(false);
+  const [criteria, setCriteria] = useState<SearchCriteria>({
+    filterFields: [],
+    pageSize: 10,
+    pageNum: 0
+  });
+  const { fileId } = useParams();
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const [currentFile, setCurrentFile] = useState<File>();
   const handleOpenDelete = (id: number) => {
-    setCurrentFile(files.find((file) => file.id === id));
+    setCurrentFile(files.content.find((file) => file.id === id));
     setOpenDelete(true);
   };
   const handleDelete = (id: number) => {
@@ -61,7 +78,7 @@ function Files() {
   };
 
   const handleRename = (id: number) => {
-    setCurrentFile(files.find((file) => file.id === id));
+    setCurrentFile(files.content.find((file) => file.id === id));
     setOpenUpdateModal(true);
   };
   const onDeleteSuccess = () => {
@@ -80,8 +97,46 @@ function Files() {
   const dispatch = useDispatch();
   useEffect(() => {
     setTitle(t('files'));
-    if (hasViewPermission(PermissionEntity.FILES)) dispatch(getFiles());
   }, []);
+
+  useEffect(() => {
+    if (fileId && isNumeric(fileId)) {
+      dispatch(getSingleFile(Number(fileId)));
+    }
+  }, [fileId]);
+
+  useEffect(() => {
+    if (hasViewPermission(PermissionEntity.FILES)) dispatch(getFiles(criteria));
+  }, [criteria]);
+
+  //see changes in ui on edit
+  useEffect(() => {
+    if (singleFile || files.content.length) {
+      const currentInContent = files.content.find(
+        (file) => file.id === currentFile?.id
+      );
+      const updatedFile = currentInContent ?? singleFile;
+      if (updatedFile) {
+        if (openDrawerFromUrl) {
+          setCurrentFile(updatedFile);
+        } else {
+          //TODO
+          // handleOpenDrawer(updatedFile);
+          setOpenDrawerFromUrl(true);
+        }
+      }
+    }
+    return () => {
+      dispatch(clearSingleFile());
+    };
+  }, [singleFile, files]);
+
+  const onPageSizeChange = (size: number) => {
+    setCriteria({ ...criteria, pageSize: size });
+  };
+  const onPageChange = (number: number) => {
+    setCriteria({ ...criteria, pageNum: number });
+  };
 
   const fields: Array<IField> = [
     {
@@ -290,7 +345,15 @@ function Files() {
                 <Box sx={{ height: 500, width: '95%' }}>
                   <CustomDataGrid
                     columns={columns}
-                    rows={files}
+                    pageSize={criteria.pageSize}
+                    page={criteria.pageNum}
+                    rows={files.content}
+                    rowCount={files.totalElements}
+                    pagination
+                    paginationMode="server"
+                    onPageSizeChange={onPageSizeChange}
+                    onPageChange={onPageChange}
+                    rowsPerPageOptions={[10, 20, 50]}
                     loading={loadingGet}
                     components={{
                       Toolbar: GridToolbar,

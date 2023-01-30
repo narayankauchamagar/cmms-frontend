@@ -1,18 +1,21 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
+import { getInitialPage, Page, SearchCriteria } from 'src/models/owns/page';
 import type { AppThunk } from 'src/store';
 import Meter from '../models/owns/meter';
 import api from '../utils/api';
 
 const basePath = 'meters';
 interface MeterState {
-  meters: Meter[];
+  meters: Page<Meter>;
+  singleMeter: Meter;
   metersByAsset: { [id: number]: Meter[] };
   loadingGet: boolean;
 }
 
 const initialState: MeterState = {
-  meters: [],
+  meters: getInitialPage<Meter>(),
+  singleMeter: null,
   metersByAsset: {},
   loadingGet: false
 };
@@ -21,7 +24,10 @@ const slice = createSlice({
   name: 'meters',
   initialState,
   reducers: {
-    getMeters(state: MeterState, action: PayloadAction<{ meters: Meter[] }>) {
+    getMeters(
+      state: MeterState,
+      action: PayloadAction<{ meters: Page<Meter> }>
+    ) {
       const { meters } = action.payload;
       state.meters = meters;
     },
@@ -34,21 +40,35 @@ const slice = createSlice({
     },
     addMeter(state: MeterState, action: PayloadAction<{ meter: Meter }>) {
       const { meter } = action.payload;
-      state.meters = [...state.meters, meter];
+      state.meters.content = [...state.meters.content, meter];
     },
+    getSingleMeter(state: MeterState, action: PayloadAction<{ meter: Meter }>) {
+      const { meter } = action.payload;
+      state.singleMeter = meter;
+    },
+
     editMeter(state: MeterState, action: PayloadAction<{ meter: Meter }>) {
       const { meter } = action.payload;
-      state.meters = state.meters.map((meter1) => {
-        if (meter1.id === meter.id) {
-          return meter;
-        }
-        return meter1;
-      });
+      const inContent = state.meters.content.some(
+        (meter1) => meter1.id === meter.id
+      );
+      if (inContent) {
+        state.meters.content = state.meters.content.map((meter1) => {
+          if (meter1.id === meter.id) {
+            return meter;
+          }
+          return meter1;
+        });
+      } else {
+        state.singleMeter = meter;
+      }
     },
     deleteMeter(state: MeterState, action: PayloadAction<{ id: number }>) {
       const { id } = action.payload;
-      const meterIndex = state.meters.findIndex((meter) => meter.id === id);
-      state.meters.splice(meterIndex, 1);
+      const meterIndex = state.meters.content.findIndex(
+        (meter) => meter.id === id
+      );
+      state.meters.content.splice(meterIndex, 1);
     },
     setLoadingGet(
       state: MeterState,
@@ -56,18 +76,39 @@ const slice = createSlice({
     ) {
       const { loading } = action.payload;
       state.loadingGet = loading;
+    },
+    clearSingleMeter(state: MeterState, action: PayloadAction<{}>) {
+      state.singleMeter = null;
     }
   }
 });
 
 export const reducer = slice.reducer;
 
-export const getMeters = (): AppThunk => async (dispatch) => {
-  dispatch(slice.actions.setLoadingGet({ loading: true }));
-  const meters = await api.get<Meter[]>(basePath);
-  dispatch(slice.actions.getMeters({ meters }));
-  dispatch(slice.actions.setLoadingGet({ loading: false }));
-};
+export const getMeters =
+  (criteria: SearchCriteria): AppThunk =>
+  async (dispatch) => {
+    dispatch(slice.actions.setLoadingGet({ loading: true }));
+    const meters = await api.post<Page<Meter>>(`${basePath}/search`, criteria);
+    dispatch(slice.actions.getMeters({ meters }));
+    dispatch(slice.actions.setLoadingGet({ loading: false }));
+  };
+
+export const getSingleMeter =
+  (id: number): AppThunk =>
+  async (dispatch) => {
+    dispatch(slice.actions.setLoadingGet({ loading: true }));
+    const meter = await api.get<Meter>(`${basePath}/${id}`);
+    dispatch(slice.actions.getSingleMeter({ meter }));
+    dispatch(slice.actions.setLoadingGet({ loading: false }));
+  };
+
+export const editMeter =
+  (id: number, meter): AppThunk =>
+  async (dispatch) => {
+    const meterResponse = await api.patch<Meter>(`${basePath}/${id}`, meter);
+    dispatch(slice.actions.editMeter({ meter: meterResponse }));
+  };
 
 export const addMeter =
   (meter): AppThunk =>
@@ -75,18 +116,7 @@ export const addMeter =
     const meterResponse = await api.post<Meter>(basePath, meter);
     dispatch(slice.actions.addMeter({ meter: meterResponse }));
   };
-export const editMeter =
-  (id: number, meter): AppThunk =>
-  async (dispatch) => {
-    const meterResponse = await api.patch<Meter>(`${basePath}/${id}`, meter);
-    dispatch(slice.actions.editMeter({ meter: meterResponse }));
-  };
-export const getSingleMeter =
-  (id: number): AppThunk =>
-  async (dispatch) => {
-    const meterResponse = await api.get<Meter>(`${basePath}/${id}`);
-    dispatch(slice.actions.editMeter({ meter: meterResponse }));
-  };
+
 export const deleteMeter =
   (id: number): AppThunk =>
   async (dispatch) => {
@@ -105,5 +135,8 @@ export const getMetersByAsset =
     const meters = await api.get<Meter[]>(`${basePath}/asset/${id}`);
     dispatch(slice.actions.getMetersByAsset({ id, meters }));
   };
+export const clearSingleMeter = (): AppThunk => async (dispatch) => {
+  dispatch(slice.actions.clearSingleMeter({}));
+};
 
 export default slice;

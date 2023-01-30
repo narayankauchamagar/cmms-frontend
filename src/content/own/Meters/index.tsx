@@ -12,9 +12,11 @@ import {
 } from '@mui/material';
 import {
   addMeter,
+  clearSingleMeter,
   deleteMeter,
   editMeter,
-  getMeters
+  getMeters,
+  getSingleMeter
 } from '../../../slices/meter';
 import { useDispatch, useSelector } from '../../../store';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -23,6 +25,7 @@ import { useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import CustomDataGrid from '../components/CustomDatagrid';
+import { SearchCriteria } from '../../../models/owns/page';
 import {
   GridRenderCellParams,
   GridToolbar,
@@ -66,17 +69,57 @@ function Meters() {
     CompanySettingsContext
   );
   const [openDelete, setOpenDelete] = useState<boolean>(false);
-  const { meters, loadingGet } = useSelector((state) => state.meters);
+  const { meters, loadingGet, singleMeter } = useSelector(
+    (state) => state.meters
+  );
+  const [openDrawerFromUrl, setOpenDrawerFromUrl] = useState<boolean>(false);
+  const [criteria, setCriteria] = useState<SearchCriteria>({
+    filterFields: [],
+    pageSize: 10,
+    pageNum: 0
+  });
 
   useEffect(() => {
     setTitle(t('meters'));
-    if (hasViewPermission(PermissionEntity.METERS)) dispatch(getMeters());
   }, []);
   useEffect(() => {
-    if (meters.length && meterId && isNumeric(meterId)) {
-      handleOpenDetails(Number(meterId));
+    if (meterId && isNumeric(meterId)) {
+      dispatch(getSingleMeter(Number(meterId)));
     }
-  }, [meters]);
+  }, [meterId]);
+
+  useEffect(() => {
+    if (hasViewPermission(PermissionEntity.METERS))
+      dispatch(getMeters(criteria));
+  }, [criteria]);
+
+  //see changes in ui on edit
+  useEffect(() => {
+    if (singleMeter || meters.content.length) {
+      const currentInContent = meters.content.find(
+        (meter) => meter.id === currentMeter?.id
+      );
+      const updatedMeter = currentInContent ?? singleMeter;
+      if (updatedMeter) {
+        if (openDrawerFromUrl) {
+          setCurrentMeter(updatedMeter);
+        } else {
+          handleOpenDrawer(updatedMeter);
+          setOpenDrawerFromUrl(true);
+        }
+      }
+    }
+    return () => {
+      dispatch(clearSingleMeter());
+    };
+  }, [singleMeter, meters]);
+
+  const onPageSizeChange = (size: number) => {
+    setCriteria({ ...criteria, pageSize: size });
+  };
+  const onPageChange = (number: number) => {
+    setCriteria({ ...criteria, pageNum: number });
+  };
 
   const formatValues = (values) => {
     values.users = formatSelectMultiple(values.users);
@@ -94,12 +137,19 @@ function Meters() {
   const handleOpenUpdate = () => {
     setOpenUpdateModal(true);
   };
+  const handleOpenDrawer = (meter: Meter) => {
+    setCurrentMeter(meter);
+    window.history.replaceState(
+      null,
+      'Meter details',
+      `/app/meters/${meter.id}`
+    );
+    setOpenDrawer(true);
+  };
   const handleOpenDetails = (id: number) => {
-    const foundMeter = meters.find((meter) => meter.id === id);
+    const foundMeter = meters.content.find((meter) => meter.id === id);
     if (foundMeter) {
-      setCurrentMeter(foundMeter);
-      window.history.replaceState(null, 'Meter details', `/app/meters/${id}`);
-      setOpenDrawer(true);
+      handleOpenDrawer(foundMeter);
     }
   };
   const handleCloseDetails = () => {
@@ -429,7 +479,15 @@ function Meters() {
                   <CustomDataGrid
                     columns={columns}
                     loading={loadingGet}
-                    rows={meters}
+                    pageSize={criteria.pageSize}
+                    page={criteria.pageNum}
+                    rows={meters.content}
+                    rowCount={meters.totalElements}
+                    pagination
+                    paginationMode="server"
+                    onPageSizeChange={onPageSizeChange}
+                    onPageChange={onPageChange}
+                    rowsPerPageOptions={[10, 20, 50]}
                     onRowClick={({ id }) => handleOpenDetails(Number(id))}
                     components={{
                       Toolbar: GridToolbar,

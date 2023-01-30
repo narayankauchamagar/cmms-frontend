@@ -40,8 +40,10 @@ import { AssetMiniDTO } from '../../../models/owns/asset';
 import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
 import {
   addWorkOrder,
+  clearSingleWorkOrder,
   deleteWorkOrder,
   editWorkOrder,
+  getSingleWorkOrder,
   getWorkOrders
 } from '../../../slices/workOrder';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
@@ -61,11 +63,14 @@ import { getSingleAsset } from '../../../slices/asset';
 import Category from '../../../models/owns/category';
 import File from '../../../models/owns/file';
 import { dayDiff } from '../../../utils/dates';
+import { SearchCriteria } from '../../../models/owns/page';
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
   const [currentTab, setCurrentTab] = useState<string>('list');
-  const { workOrders, loadingGet } = useSelector((state) => state.workOrders);
+  const { workOrders, loadingGet, singleWorkOrder } = useSelector(
+    (state) => state.workOrders
+  );
   const [searchParams, setSearchParams] = useSearchParams();
   const locationParam = searchParams.get('location');
   const assetParam = searchParams.get('asset');
@@ -73,8 +78,7 @@ function WorkOrders() {
   const { uploadFiles, getWOFieldsAndShapes } = useContext(
     CompanySettingsContext
   );
-  const { companySettings, getFilteredFields } = useAuth();
-  const { workOrderConfiguration } = companySettings;
+  const { companySettings } = useAuth();
   const { getFormattedDate, getUserNameById } = useContext(
     CompanySettingsContext
   );
@@ -104,29 +108,50 @@ function WorkOrders() {
   );
   const assetParamObject = assetInfos[assetParam]?.asset;
   const tasks = tasksByWorkOrder[currentWorkOrder?.id] ?? [];
+  const [openDrawerFromUrl, setOpenDrawerFromUrl] = useState<boolean>(false);
+  const [criteria, setCriteria] = useState<SearchCriteria>({
+    filterFields: [],
+    pageSize: 10,
+    pageNum: 0
+  });
+
   const handleDelete = (id: number) => {
     dispatch(deleteWorkOrder(id)).then(onDeleteSuccess).catch(onDeleteFailure);
     setOpenDelete(false);
   };
   const handleOpenUpdate = (id: number) => {
-    setCurrentWorkOrder(workOrders.find((workOrder) => workOrder.id === id));
+    // important if there were actions like edit
+    if (currentWorkOrder.id !== id) {
+      setCurrentWorkOrder(
+        workOrders.content.find((workOrder) => workOrder.id === id)
+      );
+    }
     setOpenUpdateModal(true);
   };
   const handleOpenDelete = (id: number) => {
-    setCurrentWorkOrder(workOrders.find((workOrder) => workOrder.id === id));
+    if (currentWorkOrder.id !== id) {
+      setCurrentWorkOrder(
+        workOrders.content.find((workOrder) => workOrder.id === id)
+      );
+    }
     setOpenDelete(true);
     setOpenDrawer(false);
   };
+  const handleOpenDrawer = (workOrder: WorkOrder) => {
+    setCurrentWorkOrder(workOrder);
+    window.history.replaceState(
+      null,
+      'WorkOrder details',
+      `/app/work-orders/${workOrder.id}`
+    );
+    setOpenDrawer(true);
+  };
   const handleOpenDetails = (id: number) => {
-    const foundWorkOrder = workOrders.find((workOrder) => workOrder.id === id);
+    const foundWorkOrder = workOrders.content.find(
+      (workOrder) => workOrder.id === id
+    );
     if (foundWorkOrder) {
-      setCurrentWorkOrder(foundWorkOrder);
-      window.history.replaceState(
-        null,
-        'WorkOrder details',
-        `/app/work-orders/${id}`
-      );
-      setOpenDrawer(true);
+      handleOpenDrawer(foundWorkOrder);
     }
   };
   const handleCloseDetails = () => {
@@ -135,15 +160,34 @@ function WorkOrders() {
   };
   useEffect(() => {
     setTitle(t('work_orders'));
-    if (hasViewPermission(PermissionEntity.WORK_ORDERS))
-      dispatch(getWorkOrders());
   }, []);
 
   useEffect(() => {
     if (workOrderId && isNumeric(workOrderId)) {
-      handleOpenDetails(Number(workOrderId));
+      dispatch(getSingleWorkOrder(Number(workOrderId)));
     }
-  }, [workOrders]);
+  }, [workOrderId]);
+
+  //see changes in ui on edit
+  useEffect(() => {
+    if (singleWorkOrder || workOrders.content.length) {
+      const currentInContent = workOrders.content.find(
+        (workOrder) => workOrder.id === currentWorkOrder?.id
+      );
+      const updatedWorkOrder = currentInContent ?? singleWorkOrder;
+      if (updatedWorkOrder) {
+        if (openDrawerFromUrl) {
+          setCurrentWorkOrder(updatedWorkOrder);
+        } else {
+          handleOpenDrawer(updatedWorkOrder);
+          setOpenDrawerFromUrl(true);
+        }
+      }
+    }
+    return () => {
+      dispatch(clearSingleWorkOrder());
+    };
+  }, [singleWorkOrder, workOrders]);
 
   useEffect(() => {
     if (locationParam || assetParam) {
@@ -194,6 +238,18 @@ function WorkOrders() {
   };
   const onDeleteFailure = (err) =>
     showSnackBar(t('wo_delete_failure'), 'error');
+
+  const onPageSizeChange = (size: number) => {
+    setCriteria({ ...criteria, pageSize: size });
+  };
+  const onPageChange = (number: number) => {
+    setCriteria({ ...criteria, pageNum: number });
+  };
+
+  useEffect(() => {
+    if (hasViewPermission(PermissionEntity.WORK_ORDERS))
+      dispatch(getWorkOrders(criteria));
+  }, [criteria]);
 
   const columns: GridEnrichedColDef[] = [
     {
@@ -459,7 +515,6 @@ function WorkOrders() {
   const getFieldsAndShapes = (): [Array<IField>, { [key: string]: any }] => {
     return getWOFieldsAndShapes(defaultFields, defaultShape);
   };
-
   const renderWorkOrderAddModal = () => (
     <Dialog
       fullWidth
@@ -698,9 +753,17 @@ function WorkOrders() {
             >
               <Box sx={{ height: 500, width: '95%' }}>
                 <CustomDataGrid
+                  pageSize={criteria.pageSize}
+                  page={criteria.pageNum}
                   columns={columns}
-                  rows={workOrders}
+                  rows={workOrders.content}
+                  rowCount={workOrders.totalElements}
                   loading={loadingGet}
+                  pagination
+                  paginationMode="server"
+                  onPageSizeChange={onPageSizeChange}
+                  onPageChange={onPageChange}
+                  rowsPerPageOptions={[10, 20, 50]}
                   components={{
                     Toolbar: GridToolbar,
                     NoRowsOverlay: () => (

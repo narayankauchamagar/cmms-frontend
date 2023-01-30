@@ -1,5 +1,5 @@
 import { Audit } from './audit';
-import Part, { parts } from './part';
+import Part, { PartMiniDTO, parts } from './part';
 
 export default interface PartQuantity extends Audit {
   id: number;
@@ -8,8 +8,9 @@ export default interface PartQuantity extends Audit {
 }
 
 export interface PartQuantityMiniDTO {
+  id: number;
   quantity: number;
-  part: Part;
+  part: PartMiniDTO;
 }
 export const partQuantities: PartQuantity[] = [
   {

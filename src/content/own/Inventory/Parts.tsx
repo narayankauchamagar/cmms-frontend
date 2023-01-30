@@ -22,7 +22,14 @@ import {
 } from '@mui/x-data-grid';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import Part from '../../../models/owns/part';
-import { addPart, deletePart, editPart, getParts } from '../../../slices/part';
+import {
+  addPart,
+  clearSinglePart,
+  deletePart,
+  editPart,
+  getParts,
+  getSinglePart
+} from '../../../slices/part';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useDispatch, useSelector } from '../../../store';
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
@@ -40,6 +47,7 @@ import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext
 import useAuth from '../../../hooks/useAuth';
 import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
 import { getImageAndFiles } from '../../../utils/overall';
+import { SearchCriteria } from '../../../models/owns/page';
 
 interface PropsType {
   setAction: (p: () => () => void) => void;
@@ -51,7 +59,13 @@ const Parts = ({ setAction }: PropsType) => {
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
   const { getFormattedDate, uploadFiles } = useContext(CompanySettingsContext);
-  const { parts, loadingGet } = useSelector((state) => state.parts);
+  const { parts, loadingGet, singlePart } = useSelector((state) => state.parts);
+  const [openDrawerFromUrl, setOpenDrawerFromUrl] = useState<boolean>(false);
+  const [criteria, setCriteria] = useState<SearchCriteria>({
+    filterFields: [],
+    pageSize: 10,
+    pageNum: 0
+  });
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [currentPart, setCurrentPart] = useState<Part>();
@@ -91,30 +105,64 @@ const Parts = ({ setAction }: PropsType) => {
   const onDeleteFailure = (err) =>
     showSnackBar(t('part_delete_failure'), 'error');
   useEffect(() => {
-    dispatch(getParts());
     const handleOpenModal = () => setOpenAddModal(true);
     setAction(() => handleOpenModal);
   }, []);
 
+  const handleOpenDrawer = (part: Part) => {
+    setCurrentPart(part);
+    window.history.replaceState(
+      null,
+      'Part details',
+      `/app/inventory/parts/${part.id}`
+    );
+    setOpenDrawer(true);
+  };
   useEffect(() => {
-    if (parts.length && partId && isNumeric(partId)) {
-      handleOpenDetails(Number(partId));
+    if (partId && isNumeric(partId)) {
+      dispatch(getSinglePart(Number(partId)));
     }
-  }, [parts]);
+  }, [partId]);
+
+  useEffect(() => {
+    dispatch(getParts(criteria));
+  }, [criteria]);
+
+  //see changes in ui on edit
+  useEffect(() => {
+    if (singlePart || parts.content.length) {
+      const currentInContent = parts.content.find(
+        (part) => part.id === currentPart?.id
+      );
+      const updatedPart = currentInContent ?? singlePart;
+      if (updatedPart) {
+        if (openDrawerFromUrl) {
+          setCurrentPart(updatedPart);
+        } else {
+          handleOpenDrawer(updatedPart);
+          setOpenDrawerFromUrl(true);
+        }
+      }
+    }
+    return () => {
+      dispatch(clearSinglePart());
+    };
+  }, [singlePart, parts]);
+
+  const onPageSizeChange = (size: number) => {
+    setCriteria({ ...criteria, pageSize: size });
+  };
+  const onPageChange = (number: number) => {
+    setCriteria({ ...criteria, pageNum: number });
+  };
 
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
   const handleOpenDetails = (id: number) => {
-    const foundPart = parts.find((part) => part.id === id);
+    const foundPart = parts.content.find((part) => part.id === id);
     if (foundPart) {
-      setCurrentPart(foundPart);
-      window.history.replaceState(
-        null,
-        'Part details',
-        `/app/inventory/parts/${id}`
-      );
-      setOpenDrawer(true);
+      handleOpenDrawer(foundPart);
     }
   };
   const handleCloseDetails = () => {
@@ -530,7 +578,15 @@ const Parts = ({ setAction }: PropsType) => {
         <Box sx={{ height: 500, width: '95%' }}>
           <CustomDataGrid
             columns={columns}
-            rows={parts}
+            pageSize={criteria.pageSize}
+            page={criteria.pageNum}
+            rows={parts.content}
+            rowCount={parts.totalElements}
+            pagination
+            paginationMode="server"
+            onPageSizeChange={onPageSizeChange}
+            onPageChange={onPageChange}
+            rowsPerPageOptions={[10, 20, 50]}
             loading={loadingGet}
             components={{
               Toolbar: GridToolbar,
@@ -555,7 +611,7 @@ const Parts = ({ setAction }: PropsType) => {
       {currentTab === 'card' && (
         <Grid item xs={12}>
           <Grid container spacing={2}>
-            {parts.map((part) => (
+            {parts.content.map((part) => (
               <Grid item xs={12} lg={3} key={part.id}>
                 <Card
                   style={{ cursor: 'pointer' }}

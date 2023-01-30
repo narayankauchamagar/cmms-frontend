@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from '../../../../store';
-import PartQuantity from '../../../../models/owns/partQuantity';
+import PartQuantity, {
+  PartQuantityMiniDTO
+} from '../../../../models/owns/partQuantity';
 import SelectParts from './SelectParts';
 import { randomInt } from 'src/utils/generators';
 import PartQuantitiesList from '../PartQuantitiesList';
 
 interface SelectPartQuantitiesProps {
-  onChange: (partQuantities: PartQuantity[]) => void;
+  onChange: (partQuantities: PartQuantityMiniDTO[]) => void;
   selected: PartQuantity[];
 }
 
@@ -15,7 +17,9 @@ export default function SelectPartQuantities({
   onChange,
   selected
 }: SelectPartQuantitiesProps) {
-  const [partQuantities, setPartQuantities] = useState<PartQuantity[]>([]);
+  const [partQuantities, setPartQuantities] = useState<PartQuantityMiniDTO[]>(
+    []
+  );
 
   const { t }: { t: any } = useTranslation();
   const dispatch = useDispatch();
