@@ -26,22 +26,28 @@ import { TitleContext } from 'src/contexts/TitleContext';
 import { read, utils } from 'xlsx';
 
 interface OwnProps {}
+interface HeaderKey {
+  label: string;
+  keyName: string;
+}
+type EntityType = 'work-orders' | 'locations' | 'assets' | 'parts' | 'meters';
 
 const Import = ({}: OwnProps) => {
   const { hasViewPermission } = useAuth();
   const { t }: { t: any } = useTranslation();
-  const [entity, setEntity] = useState<string>('work-orders');
+  const [entity, setEntity] = useState<EntityType>('work-orders');
   const [openModal, setOpenModal] = useState<boolean>(false);
   const { setTitle } = useContext(TitleContext);
-  const steps = [
-    t('upload'),
-    t('set_header'),
-    t('match_columns'),
-    t('review'),
-    t('done')
-  ];
+  const [userHeaders, setUserHeaders] = useState<string[]>([]);
+  const headerKeysConfig: { [key: string]: HeaderKey[] } = {
+    'work-orders': [{ label: t('Work Order ID'), keyName: 'id' }]
+  };
+  const [headersMatching, setHeadersMatching] = useState<
+    { headerKey: HeaderKey; userHeader: string }[]
+  >([]);
+  const steps = [t('upload'), t('match_columns'), t('review'), t('done')];
   const [activeStep, setActiveStep] = useState<number>(0);
-  const options = [
+  const options: { label: string; value: EntityType }[] = [
     { label: t('work_orders'), value: 'work-orders' },
     { label: t('assets'), value: 'assets' },
     { label: t('locations'), value: 'locations' },
@@ -53,6 +59,57 @@ const Import = ({}: OwnProps) => {
   }, []);
   const onStartProcess = () => {
     setOpenModal(true);
+  };
+
+  const getMatchingLabel = (userHeader: string) => {
+    return headersMatching.find(
+      (headerMatching) => headerMatching.userHeader === userHeader
+    )?.headerKey?.label;
+  };
+
+  const SingleHeader = ({ userHeader }: { userHeader: string }) => {
+    return (
+      <Card sx={{ display: 'flex', flexDirection: 'row' }}>
+        <Box>
+          <Typography>{userHeader}</Typography>
+        </Box>
+        <Select
+          value={
+            headersMatching.find(
+              (headerMatching) => headerMatching.userHeader === userHeader
+            )?.headerKey.keyName
+          }
+          onChange={(event) => {
+            let result = [...headersMatching];
+            const newHeaderKey = headerKeysConfig[entity].find(
+              (headerKey) => headerKey.keyName === event.target.value
+            );
+            const inheadersMatching = headersMatching.find(
+              (headerMatching) => headerMatching.userHeader === userHeader
+            );
+            if (inheadersMatching) {
+              inheadersMatching.headerKey = newHeaderKey;
+            } else {
+              result.push({ headerKey: newHeaderKey, userHeader });
+            }
+            setHeadersMatching(result);
+          }}
+        >
+          {headerKeysConfig[entity].map((header) => (
+            <MenuItem key={header.keyName} value={header.keyName}>
+              {header.label}
+            </MenuItem>
+          ))}
+        </Select>
+        <Box>
+          <Typography>
+            {getMatchingLabel(userHeader)
+              ? t(`Matched To ${getMatchingLabel(userHeader)}`)
+              : t('no_match_yet')}
+          </Typography>
+        </Box>
+      </Card>
+    );
   };
   const renderModal = () => (
     <Dialog
@@ -96,14 +153,25 @@ const Import = ({}: OwnProps) => {
                   const data = e.target.result;
                   const file = read(data, { type: 'binary' });
                   const sheet = file.Sheets[file.SheetNames[0]];
-                  console.log(utils.sheet_to_json(sheet));
-                  setActiveStep(1);
-
+                  const jsonArray = utils.sheet_to_json(sheet);
+                  if (jsonArray.length > 2) {
+                    const localHeaders = Object.keys(jsonArray[0]);
+                    setUserHeaders(localHeaders);
+                    setActiveStep(1);
+                  } else {
+                    //TODO
+                  }
                   /* DO SOMETHING WITH workbook HERE */
                 };
                 reader.readAsBinaryString(files[0]);
               }}
             />
+          ) : activeStep === 1 ? (
+            <Box>
+              {userHeaders.map((userHeader, index) => (
+                <SingleHeader key={index} userHeader={userHeader} />
+              ))}
+            </Box>
           ) : null}
         </Box>
       </DialogContent>
@@ -162,7 +230,7 @@ const Import = ({}: OwnProps) => {
                   <Select
                     value={entity}
                     onChange={(event) => {
-                      setEntity(event.target.value);
+                      setEntity(event.target.value as EntityType);
                     }}
                   >
                     {options.map((option) => (
