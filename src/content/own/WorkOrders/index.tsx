@@ -104,6 +104,7 @@ function WorkOrders() {
   const { tasksByWorkOrder } = useSelector((state) => state.tasks);
   const { locations } = useSelector((state) => state.locations);
   const { assetInfos } = useSelector((state) => state.assets);
+  const [initialDueDate, setInitialDueDate] = useState<Date>(null);
   const locationParamObject = locations.find(
     (location) => location.id === Number(locationParam)
   );
@@ -153,6 +154,9 @@ function WorkOrders() {
     );
     if (foundWorkOrder) {
       handleOpenDrawer(foundWorkOrder);
+    } else {
+      setOpenDrawerFromUrl(false);
+      dispatch(getSingleWorkOrder(id));
     }
   };
   const handleCloseDetails = () => {
@@ -546,7 +550,7 @@ function WorkOrders() {
             submitText={t('add')}
             values={{
               requiredSignature: false,
-              dueDate: null,
+              dueDate: initialDueDate,
               asset: assetParamObject
                 ? { label: assetParamObject.name, value: assetParamObject.id }
                 : null,
@@ -787,7 +791,10 @@ function WorkOrders() {
                 </Box>
               ) : (
                 <WorkOrderCalendar
-                  handleAddWorkOrder={(date: Date) => setOpenAddModal(true)}
+                  handleAddWorkOrder={(date: Date) => {
+                    setInitialDueDate(date);
+                    setOpenAddModal(true);
+                  }}
                   handleOpenDetails={handleOpenDetails}
                 />
               )}

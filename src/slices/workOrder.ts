@@ -217,10 +217,11 @@ export const getPDFReport =
   };
 
 export const getWorkOrderEvents =
-  (date: Date): AppThunk =>
+  (start: Date, end: Date): AppThunk =>
   async (dispatch) => {
     const response = await api.post<WorkOrder[]>(`${basePath}/events`, {
-      date
+     start,
+      end
     });
     dispatch(
       slice.actions.getEvents({

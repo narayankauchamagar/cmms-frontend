@@ -32,12 +32,14 @@ import WorkOrder from 'src/models/owns/workOrder';
 const FullCalendarWrapper = styled(Box)(
   ({ theme }) => `
     padding: ${theme.spacing(3)};
- 
+   
     & .fc-license-message {
       display: none;
     }
     .fc {
-
+      .fc-daygrid-day,.fc-timegrid-slot{
+        cursor: pointer;
+      }
       .fc-col-header-cell {
         padding: ${theme.spacing(1)};
         background: ${theme.colors.alpha.black[5]};
@@ -133,9 +135,6 @@ function ApplicationsCalendar({
   const calendarRef = useRef<FullCalendar | null>(null);
   const mobile = useMediaQuery(theme.breakpoints.down('md'));
   const dispatch = useDispatch();
-  const { events, isDrawerOpen, selectedRange } = useSelector(
-    (state) => state.calendar
-  );
   const { calendar } = useSelector((state) => state.workOrders);
   const [date, setDate] = useState<Date>(new Date());
   const [view, setView] = useState<View>(mobile ? 'listWeek' : 'dayGridMonth');
@@ -176,7 +175,11 @@ function ApplicationsCalendar({
     }
   };
   useEffect(() => {
-    dispatch(getWorkOrderEvents(date));
+    const calItem = calendarRef.current;
+    const view = calItem.getApi().view;
+    const start = view.currentStart;
+    const end = view.currentEnd;
+    dispatch(getWorkOrderEvents(start, end));
   }, [date]);
   const changeView = (changedView: View): void => {
     const calItem = calendarRef.current;

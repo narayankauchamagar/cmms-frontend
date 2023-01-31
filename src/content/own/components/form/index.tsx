@@ -19,7 +19,7 @@ import CheckBoxForm from './CheckBoxForm';
 import Field from './Field';
 import SelectForm from './SelectForm';
 import FileUpload from '../FileUpload';
-import DatePicker from '@mui/lab/DatePicker';
+import DateTimePicker from '@mui/lab/DateTimePicker';
 import SelectParts from './SelectParts';
 import { useDispatch, useSelector } from '../../../../store';
 import CustomSwitch from './CustomSwitch';
@@ -399,7 +399,7 @@ export default (props: PropsType) => {
                       <Box pb={1}>
                         <b>{field.label}:</b>
                       </Box>
-                      <DatePicker
+                      <DateTimePicker
                         value={formik.values[field.name]}
                         onChange={(newValue) => {
                           handleChange(formik, field.name, newValue);
