@@ -1232,7 +1232,8 @@ const frJSON = {
   set_header: 'Entêtes',
   match_columns: 'Faire correspondre les colonnes',
   review: 'Evaluer',
-  done: 'Finaliser'
+  done: 'Finaliser',
+  no_match_yet: 'Aucune correspondance pour le moment'
 };
 
 export default frJSON;

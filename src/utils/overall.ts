@@ -1,5 +1,6 @@
 import { FileType } from '../models/owns/file';
 import Meter from '../models/owns/meter';
+import check from 'check-types';
 
 export const canAddReading = (meter: Meter): boolean => {
   if (!meter) {
@@ -47,4 +48,29 @@ export const getRandomColor = () => {
     color += letters[Math.floor(Math.random() * 16)];
   }
   return color;
+};
+
+export const getType = (
+  object: Object
+): 'boolean' | 'string' | 'date' | 'number' | 'array' => {
+  if (check.boolean(object)) return 'boolean';
+  if (check.string(object)) return 'string';
+  if (check.date(object)) return 'date';
+  if (check.number(object)) return 'number';
+  if (check.array(object)) return 'array';
+};
+
+export type SpreadsheetData = {
+  [key: string]: Array<Array<{ [key: string]: string }>>;
+};
+export const arrayToAoA = (array: string[][]): SpreadsheetData => {
+  const headers = array[0];
+  array.shift();
+  const result = {};
+  headers.forEach((header, index) => {
+    const values = [];
+    array.forEach((arr) => values.push(arr[index]));
+    result[header] = [values.map((value) => [{ value }])];
+  });
+  return result;
 };

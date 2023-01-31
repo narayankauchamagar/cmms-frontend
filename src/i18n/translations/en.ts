@@ -1094,7 +1094,8 @@ const enJSON = {
   set_header: 'Set Header',
   match_columns: 'Match Columns',
   review: 'Review',
-  done: 'Done'
+  done: 'Done',
+  no_match_yet: 'No Match Yet'
 };
 
 export default enJSON;

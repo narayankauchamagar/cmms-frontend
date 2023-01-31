@@ -17,13 +17,16 @@ import {
   Stepper,
   Step,
   StepLabel,
-  DialogActions
+  DialogActions,
+  Stack
 } from '@mui/material';
 import PermissionErrorMessage from '../components/PermissionErrorMessage';
 import { useContext, useEffect, useState } from 'react';
 import FileUpload from '../components/FileUpload';
 import { TitleContext } from 'src/contexts/TitleContext';
 import { read, utils } from 'xlsx';
+import Spreadsheet from 'react-spreadsheet';
+import { SpreadsheetData, arrayToAoA } from 'src/utils/overall';
 
 interface OwnProps {}
 interface HeaderKey {
@@ -45,6 +48,9 @@ const Import = ({}: OwnProps) => {
   const [headersMatching, setHeadersMatching] = useState<
     { headerKey: HeaderKey; userHeader: string }[]
   >([]);
+  const [spreadSheetsConfig, setSpreadSheetsConfig] = useState<{
+    [key: string]: any[][];
+  }>({});
   const steps = [t('upload'), t('match_columns'), t('review'), t('done')];
   const [activeStep, setActiveStep] = useState<number>(0);
   const options: { label: string; value: EntityType }[] = [
@@ -68,47 +74,58 @@ const Import = ({}: OwnProps) => {
   };
 
   const SingleHeader = ({ userHeader }: { userHeader: string }) => {
+    const onChange = (event) => {
+      let result = [...headersMatching];
+      const newHeaderKey = headerKeysConfig[entity].find(
+        (headerKey) => headerKey.keyName === event.target.value
+      );
+      const inheadersMatching = headersMatching.find(
+        (headerMatching) => headerMatching.userHeader === userHeader
+      );
+      if (inheadersMatching) {
+        inheadersMatching.headerKey = newHeaderKey;
+      } else {
+        result.push({ headerKey: newHeaderKey, userHeader });
+      }
+      setHeadersMatching(result);
+    };
     return (
-      <Card sx={{ display: 'flex', flexDirection: 'row' }}>
-        <Box>
-          <Typography>{userHeader}</Typography>
-        </Box>
-        <Select
-          value={
-            headersMatching.find(
-              (headerMatching) => headerMatching.userHeader === userHeader
-            )?.headerKey.keyName
-          }
-          onChange={(event) => {
-            let result = [...headersMatching];
-            const newHeaderKey = headerKeysConfig[entity].find(
-              (headerKey) => headerKey.keyName === event.target.value
-            );
-            const inheadersMatching = headersMatching.find(
-              (headerMatching) => headerMatching.userHeader === userHeader
-            );
-            if (inheadersMatching) {
-              inheadersMatching.headerKey = newHeaderKey;
-            } else {
-              result.push({ headerKey: newHeaderKey, userHeader });
-            }
-            setHeadersMatching(result);
-          }}
-        >
-          {headerKeysConfig[entity].map((header) => (
-            <MenuItem key={header.keyName} value={header.keyName}>
-              {header.label}
-            </MenuItem>
-          ))}
-        </Select>
-        <Box>
-          <Typography>
-            {getMatchingLabel(userHeader)
-              ? t(`Matched To ${getMatchingLabel(userHeader)}`)
-              : t('no_match_yet')}
-          </Typography>
-        </Box>
-      </Card>
+      <Grid item xs={12}>
+        <Card sx={{ display: 'flex', flexDirection: 'row', p: 2 }}>
+          <Box>
+            <Stack direction="row" spacing={1}>
+              <Box>
+                <Typography>{userHeader}</Typography>
+              </Box>
+              <Select
+                value={
+                  headersMatching.find(
+                    (headerMatching) => headerMatching.userHeader === userHeader
+                  )?.headerKey.keyName ?? ''
+                }
+                onChange={onChange}
+              >
+                <MenuItem disabled value={''}>
+                  <em>{t('select')}</em>
+                </MenuItem>
+                {headerKeysConfig[entity].map((header) => (
+                  <MenuItem key={header.keyName} value={header.keyName}>
+                    {header.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Stack>
+            <Spreadsheet data={spreadSheetsConfig[userHeader][0]} />;
+          </Box>
+          <Box>
+            <Typography>
+              {getMatchingLabel(userHeader)
+                ? t(`Matched To ${getMatchingLabel(userHeader)}`)
+                : t('no_match_yet')}
+            </Typography>
+          </Box>
+        </Card>
+      </Grid>
     );
   };
   const renderModal = () => (
@@ -153,10 +170,23 @@ const Import = ({}: OwnProps) => {
                   const data = e.target.result;
                   const file = read(data, { type: 'binary' });
                   const sheet = file.Sheets[file.SheetNames[0]];
-                  const jsonArray = utils.sheet_to_json(sheet);
-                  if (jsonArray.length > 2) {
-                    const localHeaders = Object.keys(jsonArray[0]);
-                    setUserHeaders(localHeaders);
+                  const localJsonArray: { [key: string]: string }[] =
+                    utils.sheet_to_json(sheet);
+                  if (localJsonArray.length > 1) {
+                    let fullKeys = [];
+                    localJsonArray.forEach((json) => {
+                      const keys = Object.keys(json);
+                      keys.forEach((key) => {
+                        if (!fullKeys.includes(key)) {
+                          fullKeys.push(key);
+                        }
+                      });
+                    });
+                    setUserHeaders(fullKeys);
+                    const localObjectOfArrayOfArrays = arrayToAoA(
+                      utils.sheet_to_json(sheet, { header: 1 })
+                    );
+                    setSpreadSheetsConfig(localObjectOfArrayOfArrays);
                     setActiveStep(1);
                   } else {
                     //TODO
@@ -168,9 +198,11 @@ const Import = ({}: OwnProps) => {
             />
           ) : activeStep === 1 ? (
             <Box>
-              {userHeaders.map((userHeader, index) => (
-                <SingleHeader key={index} userHeader={userHeader} />
-              ))}
+              <Grid container spacing={1}>
+                {userHeaders.map((userHeader, index) => (
+                  <SingleHeader key={index} userHeader={userHeader} />
+                ))}
+              </Grid>
             </Box>
           ) : null}
         </Box>
