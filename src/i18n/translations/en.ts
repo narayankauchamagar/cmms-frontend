@@ -1092,7 +1092,9 @@ const enJSON = {
   start_import_process: 'Start Import Process',
   import_data: 'Import Data',
   set_header: 'Set Header',
-  match_columns: 'Match Columns'
+  match_columns: 'Match Columns',
+  review: 'Review',
+  done: 'Done'
 };
 
 export default enJSON;

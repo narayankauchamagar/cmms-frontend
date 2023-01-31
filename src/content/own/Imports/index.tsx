@@ -16,12 +16,14 @@ import {
   Box,
   Stepper,
   Step,
-  StepLabel
+  StepLabel,
+  DialogActions
 } from '@mui/material';
 import PermissionErrorMessage from '../components/PermissionErrorMessage';
 import { useContext, useEffect, useState } from 'react';
 import FileUpload from '../components/FileUpload';
 import { TitleContext } from 'src/contexts/TitleContext';
+import { read, utils } from 'xlsx';
 
 interface OwnProps {}
 
@@ -86,15 +88,38 @@ const Import = ({}: OwnProps) => {
             <FileUpload
               multiple={false}
               title={t('upload')}
-              type={'file'}
+              type={'spreadsheet'}
               description={t('upload')}
               onDrop={(files: any) => {
-                setActiveStep(1);
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                  const data = e.target.result;
+                  const file = read(data, { type: 'binary' });
+                  const sheet = file.Sheets[file.SheetNames[0]];
+                  console.log(utils.sheet_to_json(sheet));
+                  setActiveStep(1);
+
+                  /* DO SOMETHING WITH workbook HERE */
+                };
+                reader.readAsBinaryString(files[0]);
               }}
             />
           ) : null}
         </Box>
       </DialogContent>
+      <DialogActions>
+        {activeStep > 0 && (
+          <Button
+            variant="outlined"
+            onClick={() => setActiveStep((step) => step - 1)}
+          >
+            {t('go_back')}
+          </Button>
+        )}
+        {activeStep === steps.length - 1 && (
+          <Button variant="contained">{t('finish')}</Button>
+        )}
+      </DialogActions>
     </Dialog>
   );
   if (hasViewPermission(PermissionEntity.SETTINGS))

@@ -1228,7 +1228,11 @@ const frJSON = {
   None: 'Aucune',
   import: 'Importation',
   start_import_process: "Commencer le processus d'importation",
-  import_data: 'Importer'
+  import_data: 'Importer',
+  set_header: 'Entêtes',
+  match_columns: 'Faire correspondre les colonnes',
+  review: 'Evaluer',
+  done: 'Finaliser'
 };
 
 export default frJSON;

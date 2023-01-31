@@ -110,7 +110,7 @@ const AvatarDanger = styled(Avatar)(
 
 interface FileUploadProps {
   title: string;
-  type: 'image' | 'file';
+  type: 'image' | 'file' | 'spreadsheet';
   multiple: boolean;
   description: string;
   onDrop: (files: any) => void;
@@ -132,6 +132,10 @@ function FileUpload(props: FileUploadProps) {
       type === 'image'
         ? {
             'image/*': []
+          }
+        : type === 'spreadsheet'
+        ? {
+            'text/csv': ['.csv', '.xls', '.xlsx', '.tsv']
           }
         : {},
     maxFiles: multiple ? 10 : 1,
