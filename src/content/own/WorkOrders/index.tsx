@@ -64,6 +64,7 @@ import Category from '../../../models/owns/category';
 import File from '../../../models/owns/file';
 import { dayDiff } from '../../../utils/dates';
 import { SearchCriteria } from '../../../models/owns/page';
+import WorkOrderCalendar from './Calendar';
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
@@ -84,7 +85,7 @@ function WorkOrders() {
   );
   const tabs = [
     { value: 'list', label: t('list_view'), disabled: false },
-    { value: 'calendar', label: t('calendar_view'), disabled: true },
+    { value: 'calendar', label: t('calendar_view'), disabled: false },
     { value: 'column', label: t('column_view'), disabled: true }
   ];
   const theme = useTheme();
@@ -751,36 +752,45 @@ function WorkOrders() {
                 justifyContent: 'space-between'
               }}
             >
-              <Box sx={{ height: 500, width: '95%' }}>
-                <CustomDataGrid
-                  pageSize={criteria.pageSize}
-                  page={criteria.pageNum}
-                  columns={columns}
-                  rows={workOrders.content}
-                  rowCount={workOrders.totalElements}
-                  loading={loadingGet}
-                  pagination
-                  paginationMode="server"
-                  onPageSizeChange={onPageSizeChange}
-                  onPageChange={onPageChange}
-                  rowsPerPageOptions={[10, 20, 50]}
-                  components={{
-                    Toolbar: GridToolbar,
-                    NoRowsOverlay: () => (
-                      <NoRowsMessageWrapper
-                        message={t('noRows.wo.message')}
-                        action={t('noRows.wo.action')}
-                      />
-                    )
-                  }}
-                  onRowClick={(params) => handleOpenDetails(Number(params.id))}
-                  initialState={{
-                    columns: {
-                      columnVisibilityModel: {}
+              {currentTab === 'list' ? (
+                <Box sx={{ height: 600, width: '95%' }}>
+                  <CustomDataGrid
+                    pageSize={criteria.pageSize}
+                    page={criteria.pageNum}
+                    columns={columns}
+                    rows={workOrders.content}
+                    rowCount={workOrders.totalElements}
+                    loading={loadingGet}
+                    pagination
+                    paginationMode="server"
+                    onPageSizeChange={onPageSizeChange}
+                    onPageChange={onPageChange}
+                    rowsPerPageOptions={[10, 20, 50]}
+                    components={{
+                      Toolbar: GridToolbar,
+                      NoRowsOverlay: () => (
+                        <NoRowsMessageWrapper
+                          message={t('noRows.wo.message')}
+                          action={t('noRows.wo.action')}
+                        />
+                      )
+                    }}
+                    onRowClick={(params) =>
+                      handleOpenDetails(Number(params.id))
                     }
-                  }}
+                    initialState={{
+                      columns: {
+                        columnVisibilityModel: {}
+                      }
+                    }}
+                  />
+                </Box>
+              ) : (
+                <WorkOrderCalendar
+                  handleAddWorkOrder={(date: Date) => setOpenAddModal(true)}
+                  handleOpenDetails={handleOpenDetails}
                 />
-              </Box>
+              )}
             </Card>
           </Grid>
         </Grid>

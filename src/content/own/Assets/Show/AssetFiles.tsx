@@ -65,7 +65,7 @@ const AssetFiles = ({ asset }: PropsType) => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Card sx={{ p: 2 }}>
-            <Box sx={{ height: 500, width: '95%' }}>
+            <Box sx={{ height: 570, width: '95%' }}>
               <div style={{ display: 'flex', height: '80%' }}>
                 <CustomDataGrid
                   columns={columns}

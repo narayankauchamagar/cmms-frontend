@@ -8,10 +8,11 @@ import Category, { categories } from './category';
 import { OwnUser, UserMiniDTO } from '../user';
 import { CustomerMiniDTO, customers } from './customer';
 
+export type Priority = 'HIGH' | 'MEDIUM' | 'LOW' | 'NONE';
 interface WorkOrderBase extends Audit {
   dueDate: string;
   status: string;
-  priority: string;
+  priority: Priority;
   estimatedDuration: number;
   description: string;
   title: string;

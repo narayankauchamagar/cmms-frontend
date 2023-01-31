@@ -324,7 +324,7 @@ const Sets = ({ setAction }: PropsType) => {
         ))}
       </Tabs>
       {currentTab === 'list' && (
-        <Box sx={{ height: 500, width: '95%' }}>
+        <Box sx={{ height: 570, width: '95%' }}>
           <CustomDataGrid
             columns={columns}
             rows={multiParts}

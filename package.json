@@ -89,7 +89,7 @@
     "yup": "0.32.11"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts start --max_old_space_size=6096",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
     "lint": "eslint .",

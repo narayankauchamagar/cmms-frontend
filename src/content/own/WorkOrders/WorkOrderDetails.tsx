@@ -634,17 +634,21 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                   id={field.id}
                 />
               ))}
-              <Grid item xs={12} lg={6}>
-                <Typography
-                  variant="h6"
-                  sx={{ color: theme.colors.alpha.black[70] }}
-                >
-                  {workOrder.parentRequest ? t('approved_by') : t('created_by')}
-                </Typography>
-                <Link variant="h6" href={getUserUrl(workOrder.createdBy)}>
-                  {getUserNameById(workOrder.createdBy)}
-                </Link>
-              </Grid>
+              {(workOrder.parentRequest || workOrder.createdBy) && (
+                <Grid item xs={12} lg={6}>
+                  <Typography
+                    variant="h6"
+                    sx={{ color: theme.colors.alpha.black[70] }}
+                  >
+                    {workOrder.parentRequest
+                      ? t('approved_by')
+                      : t('created_by')}
+                  </Typography>
+                  <Link variant="h6" href={getUserUrl(workOrder.createdBy)}>
+                    {getUserNameById(workOrder.createdBy)}
+                  </Link>
+                </Grid>
+              )}
               {workOrder.status === 'COMPLETE' && (
                 <>
                   <Grid item xs={12} lg={6}>

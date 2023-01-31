@@ -342,7 +342,7 @@ function Files() {
                   justifyContent: 'space-between'
                 }}
               >
-                <Box sx={{ height: 500, width: '95%' }}>
+                <Box sx={{ height: 570, width: '95%' }}>
                   <CustomDataGrid
                     columns={columns}
                     pageSize={criteria.pageSize}

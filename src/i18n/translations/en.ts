@@ -1083,7 +1083,11 @@ const enJSON = {
   send_me_new_password: 'Send me a new password',
   want_to_sign_in_again: 'Want to try to sign in again?',
   check_mails_for_instructions: 'Check your email for further instructions',
-  pdf_report: 'PDF Report'
+  pdf_report: 'PDF Report',
+  HIGH: 'High',
+  MEDIUM: 'Medium',
+  LOW: 'Low',
+  None: 'None'
 };
 
 export default enJSON;

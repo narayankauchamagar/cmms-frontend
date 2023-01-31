@@ -224,7 +224,7 @@ export default function WOModal({
           p: 3
         }}
       >
-        <Box sx={{ height: 500, width: '95%' }}>
+        <Box sx={{ height: 570, width: '95%' }}>
           <CustomDataGrid
             columns={getColumns()}
             notClickable

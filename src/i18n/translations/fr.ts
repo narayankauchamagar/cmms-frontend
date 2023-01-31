@@ -1221,7 +1221,11 @@ const frJSON = {
   want_to_sign_in_again: 'Voulez-vous réessayer de vous connecter?',
   check_mails_for_instructions:
     "Vérifiez votre e-mail pour plus d'instructions",
-  pdf_report: 'Rapport PDF'
+  pdf_report: 'Rapport PDF',
+  HIGH: 'Haute',
+  MEDIUM: 'Moyenne',
+  LOW: 'Basse',
+  None: 'Aucune'
 };
 
 export default frJSON;

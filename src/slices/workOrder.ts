@@ -13,6 +13,9 @@ interface WorkOrderState {
   workOrdersByPart: { [key: number]: WorkOrder[] };
   singleWorkOrder: WorkOrder;
   loadingGet: boolean;
+  calendar: {
+    events: WorkOrder[];
+  };
 }
 
 const initialState: WorkOrderState = {
@@ -20,7 +23,10 @@ const initialState: WorkOrderState = {
   workOrdersByLocation: {},
   workOrdersByPart: {},
   singleWorkOrder: null,
-  loadingGet: false
+  loadingGet: false,
+  calendar: {
+    events: []
+  }
 };
 
 const slice = createSlice({
@@ -96,6 +102,13 @@ const slice = createSlice({
     ) {
       const { workOrders, id } = action.payload;
       state.workOrdersByPart[id] = workOrders;
+    },
+    getEvents(
+      state: WorkOrderState,
+      action: PayloadAction<{ events: WorkOrder[] }>
+    ) {
+      const { events } = action.payload;
+      state.calendar.events = events;
     },
     setLoadingGet(
       state: WorkOrderState,
@@ -201,6 +214,19 @@ export const getPDFReport =
     );
     const { message } = response;
     return message;
+  };
+
+export const getWorkOrderEvents =
+  (date: Date): AppThunk =>
+  async (dispatch) => {
+    const response = await api.post<WorkOrder[]>(`${basePath}/events`, {
+      date
+    });
+    dispatch(
+      slice.actions.getEvents({
+        events: response
+      })
+    );
   };
 export const clearSingleWorkOrder = (): AppThunk => async (dispatch) => {
   dispatch(slice.actions.clearSingleWorkOrder({}));

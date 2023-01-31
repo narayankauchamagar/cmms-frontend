@@ -591,7 +591,7 @@ function Locations() {
                   justifyContent: 'space-between'
                 }}
               >
-                <Box sx={{ height: 500, width: '95%' }}>
+                <Box sx={{ height: 570, width: '95%' }}>
                   <CustomDataGrid
                     treeData
                     columns={columns}
