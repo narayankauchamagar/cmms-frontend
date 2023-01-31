@@ -389,7 +389,7 @@ export default (props: PropsType) => {
                         title={field.label}
                         type={field.fileType || 'file'}
                         description={t('upload')}
-                        setFieldValue={(files) => {
+                        onDrop={(files) => {
                           formik.setFieldValue(field.name, files);
                         }}
                       />

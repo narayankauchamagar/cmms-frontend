@@ -77,6 +77,8 @@ const PeopleAndTeams = Loader(
   lazy(() => import('../content/own/PeopleAndTeams'))
 );
 
+const Imports = Loader(lazy(() => import('../content/own/Imports')));
+
 const appRoutes = [
   {
     path: 'settings',
@@ -305,6 +307,16 @@ const appRoutes = [
         ]
         // element: <PeopleAndTeams />
       }
+    ]
+  },
+  {
+    path: 'imports',
+    children: [
+      { path: 'work-orders', element: <Imports /> },
+      { path: 'assets', element: <Imports /> },
+      { path: 'locations', element: <Imports /> },
+      { path: 'parts', element: <Imports /> },
+      { path: 'meters', element: <Imports /> }
     ]
   }
 ];

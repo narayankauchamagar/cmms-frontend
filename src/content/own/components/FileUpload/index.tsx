@@ -113,13 +113,13 @@ interface FileUploadProps {
   type: 'image' | 'file';
   multiple: boolean;
   description: string;
-  setFieldValue: (files: any) => void;
+  onDrop: (files: any) => void;
 }
 function FileUpload(props: FileUploadProps) {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
-  const { title, description, setFieldValue, type, multiple } = props;
+  const { title, description, onDrop: setFieldValue, type, multiple } = props;
   const {
     acceptedFiles,
     isDragActive,

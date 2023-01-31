@@ -1087,7 +1087,12 @@ const enJSON = {
   HIGH: 'High',
   MEDIUM: 'Medium',
   LOW: 'Low',
-  None: 'None'
+  None: 'None',
+  import: 'Import',
+  start_import_process: 'Start Import Process',
+  import_data: 'Import Data',
+  set_header: 'Set Header',
+  match_columns: 'Match Columns'
 };
 
 export default enJSON;
