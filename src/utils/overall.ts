@@ -70,7 +70,7 @@ export const arrayToAoA = (array: string[][]): SpreadsheetData => {
   headers.forEach((header, index) => {
     const values = [];
     array.forEach((arr) => values.push(arr[index]));
-    result[header] = [values.map((value) => [{ value }])];
+    result[header] = [values.map((value) => [{ value, readOnly: true }])];
   });
   return result;
 };

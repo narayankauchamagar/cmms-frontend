@@ -18,22 +18,32 @@ import {
   Step,
   StepLabel,
   DialogActions,
-  Stack
+  Stack,
+  CircularProgress
 } from '@mui/material';
 import PermissionErrorMessage from '../components/PermissionErrorMessage';
 import { useContext, useEffect, useState } from 'react';
 import FileUpload from '../components/FileUpload';
 import { TitleContext } from 'src/contexts/TitleContext';
 import { read, utils } from 'xlsx';
-import Spreadsheet from 'react-spreadsheet';
-import { SpreadsheetData, arrayToAoA } from 'src/utils/overall';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import Spreadsheet, { ColumnIndicatorComponent } from 'react-spreadsheet';
+import { arrayToAoA } from 'src/utils/overall';
+import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
+import { getImportsConfig } from 'src/utils/states';
+import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
 
 interface OwnProps {}
-interface HeaderKey {
+export interface HeaderKey {
   label: string;
   keyName: string;
 }
-type EntityType = 'work-orders' | 'locations' | 'assets' | 'parts' | 'meters';
+export type EntityType =
+  | 'work-orders'
+  | 'locations'
+  | 'assets'
+  | 'parts'
+  | 'meters';
 
 const Import = ({}: OwnProps) => {
   const { hasViewPermission } = useAuth();
@@ -42,9 +52,10 @@ const Import = ({}: OwnProps) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const { setTitle } = useContext(TitleContext);
   const [userHeaders, setUserHeaders] = useState<string[]>([]);
-  const headerKeysConfig: { [key: string]: HeaderKey[] } = {
-    'work-orders': [{ label: t('Work Order ID'), keyName: 'id' }]
-  };
+  const [loading, setLoading] = useState<boolean>(false);
+  const { showSnackBar } = useContext(CustomSnackBarContext);
+  const [jsonData, setJsonData] = useState<{}[]>();
+  const headerKeysConfig = getImportsConfig(t);
   const [headersMatching, setHeadersMatching] = useState<
     { headerKey: HeaderKey; userHeader: string }[]
   >([]);
@@ -67,12 +78,54 @@ const Import = ({}: OwnProps) => {
     setOpenModal(true);
   };
 
+  const handleNext = () => {
+    if (activeStep === 1) {
+      let duplicates = [];
+      headerKeysConfig[entity].forEach(({ keyName, label }) => {
+        let count = 0;
+        headersMatching.forEach((match) => {
+          if (match.headerKey.keyName === keyName) {
+            count = count + 1;
+          }
+        });
+        if (count > 1) {
+          duplicates.push(label);
+        }
+      });
+      if (duplicates.length) {
+        showSnackBar(
+          t('there_are_duplicates', { duplicates: duplicates.join(', ') }),
+          'error'
+        );
+        return;
+      }
+    }
+    setActiveStep((step) => step + 1);
+  };
   const getMatchingLabel = (userHeader: string) => {
     return headersMatching.find(
       (headerMatching) => headerMatching.userHeader === userHeader
     )?.headerKey?.label;
   };
-
+  const getFormattedData = (): { value: any }[][] => {
+    let result = [];
+    const rowsToShow = 10;
+    const data = [...jsonData].slice(0, rowsToShow);
+    data.forEach((userElement) => {
+      const row = headerKeysConfig[entity].map((column) => {
+        const equivalent = headersMatching.find(
+          (headerMatching) =>
+            headerMatching.headerKey.keyName === column.keyName
+        );
+        return {
+          value: equivalent ? userElement[equivalent.userHeader] : null,
+          readOnly: true
+        };
+      });
+      result.push(row);
+    });
+    return result;
+  };
   const SingleHeader = ({ userHeader }: { userHeader: string }) => {
     const onChange = (event) => {
       let result = [...headersMatching];
@@ -89,41 +142,72 @@ const Import = ({}: OwnProps) => {
       }
       setHeadersMatching(result);
     };
+    const getPercent = () => {
+      const rows = spreadSheetsConfig[userHeader][0];
+      return (rows.filter((row) => row).length * 100) / rows.length;
+    };
     return (
       <Grid item xs={12}>
         <Card sx={{ display: 'flex', flexDirection: 'row', p: 2 }}>
-          <Box>
-            <Stack direction="row" spacing={1}>
-              <Box>
-                <Typography>{userHeader}</Typography>
-              </Box>
-              <Select
-                value={
-                  headersMatching.find(
-                    (headerMatching) => headerMatching.userHeader === userHeader
-                  )?.headerKey.keyName ?? ''
-                }
-                onChange={onChange}
-              >
-                <MenuItem disabled value={''}>
-                  <em>{t('select')}</em>
-                </MenuItem>
-                {headerKeysConfig[entity].map((header) => (
-                  <MenuItem key={header.keyName} value={header.keyName}>
-                    {header.label}
+          <Grid container spacing={1}>
+            <Grid item xs={6}>
+              <Stack direction="row" spacing={1} alignItems="center">
+                <Box>
+                  <Typography variant={'h5'}>{userHeader}</Typography>
+                </Box>
+                <Select
+                  value={
+                    headersMatching.find(
+                      (headerMatching) =>
+                        headerMatching.userHeader === userHeader
+                    )?.headerKey.keyName ?? ''
+                  }
+                  onChange={onChange}
+                >
+                  <MenuItem disabled value={''}>
+                    <em>{t('select')}</em>
                   </MenuItem>
-                ))}
-              </Select>
-            </Stack>
-            <Spreadsheet data={spreadSheetsConfig[userHeader][0]} />;
-          </Box>
-          <Box>
-            <Typography>
-              {getMatchingLabel(userHeader)
-                ? t(`Matched To ${getMatchingLabel(userHeader)}`)
-                : t('no_match_yet')}
-            </Typography>
-          </Box>
+                  {headerKeysConfig[entity].map((header) => (
+                    <MenuItem key={header.keyName} value={header.keyName}>
+                      {header.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Stack>
+              <Box sx={{ mt: 1 }}>
+                <Spreadsheet
+                  data={spreadSheetsConfig[userHeader][0].slice(0, 4)}
+                />
+              </Box>
+            </Grid>
+            <Grid item xs={6} sx={{ p: 2 }}>
+              <Stack
+                width={'100%'}
+                height={'100%'}
+                justifyContent={'center'}
+                alignItems={'center'}
+              >
+                {!getMatchingLabel(userHeader) && (
+                  <WarningAmberIcon color="warning" />
+                )}
+                <Typography>
+                  {getMatchingLabel(userHeader)
+                    ? t(`matched_to_field`, {
+                        field: getMatchingLabel(userHeader)
+                      })
+                    : t('no_match_yet')}
+                </Typography>
+                <Stack direction="row" spacing={1}>
+                  <InfoTwoToneIcon />
+                  <Typography>
+                    {t('percent_rows_have_value', {
+                      percent: getPercent().toFixed(0)
+                    })}
+                  </Typography>
+                </Stack>
+              </Stack>
+            </Grid>
+          </Grid>
         </Card>
       </Grid>
     );
@@ -159,43 +243,51 @@ const Import = ({}: OwnProps) => {
             ))}
           </Stepper>
           {activeStep == 0 ? (
-            <FileUpload
-              multiple={false}
-              title={t('upload')}
-              type={'spreadsheet'}
-              description={t('upload')}
-              onDrop={(files: any) => {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                  const data = e.target.result;
-                  const file = read(data, { type: 'binary' });
-                  const sheet = file.Sheets[file.SheetNames[0]];
-                  const localJsonArray: { [key: string]: string }[] =
-                    utils.sheet_to_json(sheet);
-                  if (localJsonArray.length > 1) {
-                    let fullKeys = [];
-                    localJsonArray.forEach((json) => {
-                      const keys = Object.keys(json);
-                      keys.forEach((key) => {
-                        if (!fullKeys.includes(key)) {
-                          fullKeys.push(key);
-                        }
-                      });
-                    });
-                    setUserHeaders(fullKeys);
-                    const localObjectOfArrayOfArrays = arrayToAoA(
-                      utils.sheet_to_json(sheet, { header: 1 })
+            loading ? (
+              <Stack
+                direction="row"
+                width={'100%'}
+                height="100%"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <CircularProgress />
+              </Stack>
+            ) : (
+              <FileUpload
+                multiple={false}
+                title={t('upload')}
+                type={'spreadsheet'}
+                description={t('upload')}
+                onDrop={(files: any) => {
+                  setLoading(true);
+                  var reader = new FileReader();
+                  reader.onload = function (e) {
+                    const data = e.target.result;
+                    const file = read(data, { type: 'binary' });
+                    const sheet = file.Sheets[file.SheetNames[0]];
+                    const localJsonArray: string[][] = utils.sheet_to_json(
+                      sheet,
+                      { header: 1 }
                     );
-                    setSpreadSheetsConfig(localObjectOfArrayOfArrays);
-                    setActiveStep(1);
-                  } else {
-                    //TODO
-                  }
-                  /* DO SOMETHING WITH workbook HERE */
-                };
-                reader.readAsBinaryString(files[0]);
-              }}
-            />
+                    const localJson = utils.sheet_to_json(sheet);
+                    setJsonData(localJson);
+                    if (localJsonArray.length > 1) {
+                      setUserHeaders(localJsonArray[0]);
+                      const localObjectOfArrayOfArrays =
+                        arrayToAoA(localJsonArray);
+                      setSpreadSheetsConfig(localObjectOfArrayOfArrays);
+                      setLoading(false);
+                      setActiveStep(1);
+                    } else {
+                      showSnackBar(t('not_enough_rows'), 'error');
+                    }
+                    /* DO SOMETHING WITH workbook HERE */
+                  };
+                  reader.readAsBinaryString(files[0]);
+                }}
+              />
+            )
           ) : activeStep === 1 ? (
             <Box>
               <Grid container spacing={1}>
@@ -203,6 +295,15 @@ const Import = ({}: OwnProps) => {
                   <SingleHeader key={index} userHeader={userHeader} />
                 ))}
               </Grid>
+            </Box>
+          ) : activeStep === 2 ? (
+            <Box>
+              <Spreadsheet
+                data={getFormattedData()}
+                columnLabels={headerKeysConfig[entity].map(
+                  ({ label }) => label
+                )}
+              />
             </Box>
           ) : null}
         </Box>
@@ -214,6 +315,11 @@ const Import = ({}: OwnProps) => {
             onClick={() => setActiveStep((step) => step - 1)}
           >
             {t('go_back')}
+          </Button>
+        )}
+        {!!activeStep && activeStep < steps.length - 1 && (
+          <Button variant="contained" onClick={handleNext}>
+            {t('next')}
           </Button>
         )}
         {activeStep === steps.length - 1 && (

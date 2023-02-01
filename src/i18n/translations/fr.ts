@@ -1233,7 +1233,14 @@ const frJSON = {
   match_columns: 'Faire correspondre les colonnes',
   review: 'Evaluer',
   done: 'Finaliser',
-  no_match_yet: 'Aucune correspondance pour le moment'
+  no_match_yet: 'Aucune correspondance pour le moment',
+  select: 'Sélectionnez...',
+  matched_to_field: 'Correspond à {{field}}',
+  next: 'Suivant',
+  not_enough_rows: 'Pas assez de lignes dans le fichier',
+  there_are_duplicates: 'Il y a des doublons: {{duplicates}}',
+  assigned_by: 'Assigné Par',
+  percent_rows_have_value: '{{percent}}% des lignes ont une valeur'
 };
 
 export default frJSON;

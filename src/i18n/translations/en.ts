@@ -1095,7 +1095,14 @@ const enJSON = {
   match_columns: 'Match Columns',
   review: 'Review',
   done: 'Done',
-  no_match_yet: 'No Match Yet'
+  no_match_yet: 'No Match Yet',
+  select: 'Select...',
+  matched_to_field: 'Matched to {{field}}',
+  next: 'Next',
+  not_enough_rows: 'Not enough rows in the file',
+  there_are_duplicates: 'There are duplicates: {{duplicates}}',
+  assigned_by: 'Assigned By',
+  percent_rows_have_value: '{{percent}}% of rows have value'
 };
 
 export default enJSON;
