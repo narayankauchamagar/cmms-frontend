@@ -1102,7 +1102,9 @@ const enJSON = {
   not_enough_rows: 'Not enough rows in the file',
   there_are_duplicates: 'There are duplicates: {{duplicates}}',
   assigned_by: 'Assigned By',
-  percent_rows_have_value: '{{percent}}% of rows have value'
+  percent_rows_have_value: '{{percent}}% of rows have value',
+  match_at_least_column: 'Match at least a column',
+  to_import: 'Import'
 };
 
 export default enJSON;

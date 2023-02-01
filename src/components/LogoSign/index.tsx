@@ -94,8 +94,10 @@ const TooltipWrapper = styled(({ className, ...props }: TooltipProps) => (
     color: theme.colors.alpha.trueWhite[100]
   }
 }));
-
-function Logo() {
+interface OwnProps {
+  white?: boolean;
+}
+function Logo({ white }: OwnProps) {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
   const width = 104;
@@ -106,7 +108,7 @@ function Logo() {
       <LogoWrapper to="/overview">
         <LogoSignWrapper>
           <img
-            src={'/static/images/logo/logo.png'}
+            src={`/static/images/logo/logo${white ? '-white' : ''}.png`}
             width={`${width * (mobile ? 0.5 : 1)}px`}
             height={`${height * (mobile ? 0.5 : 1)}px`}
           />

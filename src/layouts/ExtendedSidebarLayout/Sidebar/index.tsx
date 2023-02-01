@@ -12,8 +12,6 @@ import {
   styled,
   useTheme
 } from '@mui/material';
-
-import SidebarTopSection from './SidebarTopSection';
 import SidebarMenu from './SidebarMenu';
 import SidebarFooter from './SidebarFooter';
 import Logo from 'src/components/LogoSign';
@@ -62,7 +60,7 @@ function Sidebar() {
                 width: 52
               }}
             >
-              <Logo />
+              <Logo white />
             </Box>
           </Box>
           <Divider

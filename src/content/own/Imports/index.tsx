@@ -1,25 +1,24 @@
-import { t } from 'i18next';
 import { Helmet } from 'react-helmet-async';
 import useAuth from 'src/hooks/useAuth';
 import { useTranslation } from 'react-i18next';
 import { PermissionEntity } from 'src/models/owns/role';
 import {
-  Grid,
-  Card,
-  Typography,
-  Select,
-  MenuItem,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
   Box,
-  Stepper,
+  Button,
+  Card,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  MenuItem,
+  Select,
+  Stack,
   Step,
   StepLabel,
-  DialogActions,
-  Stack,
-  CircularProgress
+  Stepper,
+  Typography
 } from '@mui/material';
 import PermissionErrorMessage from '../components/PermissionErrorMessage';
 import { useContext, useEffect, useState } from 'react';
@@ -27,7 +26,7 @@ import FileUpload from '../components/FileUpload';
 import { TitleContext } from 'src/contexts/TitleContext';
 import { read, utils } from 'xlsx';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
-import Spreadsheet, { ColumnIndicatorComponent } from 'react-spreadsheet';
+import Spreadsheet from 'react-spreadsheet';
 import { arrayToAoA } from 'src/utils/overall';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import { getImportsConfig } from 'src/utils/states';
@@ -37,6 +36,7 @@ interface OwnProps {}
 export interface HeaderKey {
   label: string;
   keyName: string;
+  required?: boolean;
 }
 export type EntityType =
   | 'work-orders'
@@ -56,7 +56,7 @@ const Import = ({}: OwnProps) => {
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const [jsonData, setJsonData] = useState<{}[]>();
   const headerKeysConfig = getImportsConfig(t);
-  const [headersMatching, setHeadersMatching] = useState<
+  const [matches, setMatches] = useState<
     { headerKey: HeaderKey; userHeader: string }[]
   >([]);
   const [spreadSheetsConfig, setSpreadSheetsConfig] = useState<{
@@ -80,10 +80,14 @@ const Import = ({}: OwnProps) => {
 
   const handleNext = () => {
     if (activeStep === 1) {
+      if (!matches.length) {
+        showSnackBar(t('match_at_least_column'), 'error');
+        return;
+      }
       let duplicates = [];
       headerKeysConfig[entity].forEach(({ keyName, label }) => {
         let count = 0;
-        headersMatching.forEach((match) => {
+        matches.forEach((match) => {
           if (match.headerKey.keyName === keyName) {
             count = count + 1;
           }
@@ -102,8 +106,8 @@ const Import = ({}: OwnProps) => {
     }
     setActiveStep((step) => step + 1);
   };
-  const getMatchingLabel = (userHeader: string) => {
-    return headersMatching.find(
+  const getMatchLabel = (userHeader: string) => {
+    return matches.find(
       (headerMatching) => headerMatching.userHeader === userHeader
     )?.headerKey?.label;
   };
@@ -113,7 +117,7 @@ const Import = ({}: OwnProps) => {
     const data = [...jsonData].slice(0, rowsToShow);
     data.forEach((userElement) => {
       const row = headerKeysConfig[entity].map((column) => {
-        const equivalent = headersMatching.find(
+        const equivalent = matches.find(
           (headerMatching) =>
             headerMatching.headerKey.keyName === column.keyName
         );
@@ -126,13 +130,28 @@ const Import = ({}: OwnProps) => {
     });
     return result;
   };
+  const onImport = () => {
+    const data = [...jsonData];
+    const payload = data.map((userElement) => {
+      const obj = {};
+      headerKeysConfig[entity].forEach(({ keyName }) => {
+        obj[keyName] =
+          userElement[
+            matches.find(
+              (headerMatching) => headerMatching.headerKey.keyName === keyName
+            )?.userHeader
+          ];
+      });
+      return obj;
+    });
+  };
   const SingleHeader = ({ userHeader }: { userHeader: string }) => {
     const onChange = (event) => {
-      let result = [...headersMatching];
+      let result = [...matches];
       const newHeaderKey = headerKeysConfig[entity].find(
         (headerKey) => headerKey.keyName === event.target.value
       );
-      const inheadersMatching = headersMatching.find(
+      const inheadersMatching = matches.find(
         (headerMatching) => headerMatching.userHeader === userHeader
       );
       if (inheadersMatching) {
@@ -140,7 +159,7 @@ const Import = ({}: OwnProps) => {
       } else {
         result.push({ headerKey: newHeaderKey, userHeader });
       }
-      setHeadersMatching(result);
+      setMatches(result);
     };
     const getPercent = () => {
       const rows = spreadSheetsConfig[userHeader][0];
@@ -157,7 +176,7 @@ const Import = ({}: OwnProps) => {
                 </Box>
                 <Select
                   value={
-                    headersMatching.find(
+                    matches.find(
                       (headerMatching) =>
                         headerMatching.userHeader === userHeader
                     )?.headerKey.keyName ?? ''
@@ -187,13 +206,13 @@ const Import = ({}: OwnProps) => {
                 justifyContent={'center'}
                 alignItems={'center'}
               >
-                {!getMatchingLabel(userHeader) && (
+                {!getMatchLabel(userHeader) && (
                   <WarningAmberIcon color="warning" />
                 )}
                 <Typography>
-                  {getMatchingLabel(userHeader)
+                  {getMatchLabel(userHeader)
                     ? t(`matched_to_field`, {
-                        field: getMatchingLabel(userHeader)
+                        field: getMatchLabel(userHeader)
                       })
                     : t('no_match_yet')}
                 </Typography>
@@ -317,13 +336,15 @@ const Import = ({}: OwnProps) => {
             {t('go_back')}
           </Button>
         )}
-        {!!activeStep && activeStep < steps.length - 1 && (
+        {!!activeStep && activeStep < steps.length - 2 && (
           <Button variant="contained" onClick={handleNext}>
             {t('next')}
           </Button>
         )}
-        {activeStep === steps.length - 1 && (
-          <Button variant="contained">{t('finish')}</Button>
+        {activeStep === steps.length - 2 && (
+          <Button variant="contained" onClick={onImport}>
+            {t('to_import')}
+          </Button>
         )}
       </DialogActions>
     </Dialog>

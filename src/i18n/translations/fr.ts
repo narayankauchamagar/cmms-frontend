@@ -1240,7 +1240,9 @@ const frJSON = {
   not_enough_rows: 'Pas assez de lignes dans le fichier',
   there_are_duplicates: 'Il y a des doublons: {{duplicates}}',
   assigned_by: 'Assigné Par',
-  percent_rows_have_value: '{{percent}}% des lignes ont une valeur'
+  percent_rows_have_value: '{{percent}}% des lignes ont une valeur',
+  select_at_least_column: 'Faites correspondre au moins une colonne',
+  to_import: 'Importer'
 };
 
 export default frJSON;
