@@ -1242,7 +1242,8 @@ const frJSON = {
   assigned_by: 'Assigné Par',
   percent_rows_have_value: '{{percent}}% des lignes ont une valeur',
   select_at_least_column: 'Faites correspondre au moins une colonne',
-  to_import: 'Importer'
+  to_import: 'Importer',
+  required_match: 'La correspondance à {{field}} est requise'
 };
 
 export default frJSON;

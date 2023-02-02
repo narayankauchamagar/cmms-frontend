@@ -19,13 +19,13 @@ function post<T>(
   data,
   options?,
   withoutCompany?: boolean,
-  isFormData?: boolean
+  isNotJson?: boolean
 ) {
   const companyId = localStorage.getItem('companyId');
   return api<T>(apiUrl + url, {
     ...options,
     method: 'POST',
-    body: isFormData
+    body: isNotJson
       ? data
       : JSON.stringify(
           withoutCompany ? data : { ...data, company: { id: companyId } }

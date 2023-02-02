@@ -31,12 +31,16 @@ import { arrayToAoA } from 'src/utils/overall';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import { getImportsConfig } from 'src/utils/states';
 import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
+import { ImportDTO, ImportKeys } from '../../../models/owns/imports';
+import { useDispatch, useSelector } from '../../../store';
+import { importEntity } from '../../../slices/imports';
 
 interface OwnProps {}
 export interface HeaderKey {
   label: string;
-  keyName: string;
+  keyName: ImportKeys;
   required?: boolean;
+  formatter?: (value: any) => any;
 }
 export type EntityType =
   | 'work-orders'
@@ -56,6 +60,8 @@ const Import = ({}: OwnProps) => {
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const [jsonData, setJsonData] = useState<{}[]>();
   const headerKeysConfig = getImportsConfig(t);
+  const dispatch = useDispatch();
+  const [loadingImport, setLoadingImport] = useState<boolean>(false);
   const [matches, setMatches] = useState<
     { headerKey: HeaderKey; userHeader: string }[]
   >([]);
@@ -63,6 +69,7 @@ const Import = ({}: OwnProps) => {
     [key: string]: any[][];
   }>({});
   const steps = [t('upload'), t('match_columns'), t('review'), t('done')];
+  const { responses } = useSelector((state) => state.imports);
   const [activeStep, setActiveStep] = useState<number>(0);
   const options: { label: string; value: EntityType }[] = [
     { label: t('work_orders'), value: 'work-orders' },
@@ -84,8 +91,10 @@ const Import = ({}: OwnProps) => {
         showSnackBar(t('match_at_least_column'), 'error');
         return;
       }
+      const config = headerKeysConfig[entity];
+      //check duplicates
       let duplicates = [];
-      headerKeysConfig[entity].forEach(({ keyName, label }) => {
+      config.forEach(({ keyName, label }) => {
         let count = 0;
         matches.forEach((match) => {
           if (match.headerKey.keyName === keyName) {
@@ -102,6 +111,16 @@ const Import = ({}: OwnProps) => {
           'error'
         );
         return;
+      }
+      // check if required
+      for (const header of config) {
+        if (
+          header.required &&
+          !matches.find((match) => match.headerKey.keyName === header.keyName)
+        ) {
+          showSnackBar(t('required_match', { field: header.label }), 'error');
+          return;
+        }
       }
     }
     setActiveStep((step) => step + 1);
@@ -131,19 +150,34 @@ const Import = ({}: OwnProps) => {
     return result;
   };
   const onImport = () => {
+    setLoadingImport(true);
     const data = [...jsonData];
-    const payload = data.map((userElement) => {
-      const obj = {};
-      headerKeysConfig[entity].forEach(({ keyName }) => {
-        obj[keyName] =
+    const payload: ImportDTO[] = data.map((userElement) => {
+      let result = {} as ImportDTO;
+      headerKeysConfig[entity].forEach(({ keyName, formatter }) => {
+        let value =
           userElement[
             matches.find(
               (headerMatching) => headerMatching.headerKey.keyName === keyName
             )?.userHeader
           ];
+        if (formatter) {
+          value = formatter(value);
+        }
+        result = {
+          ...result,
+          [keyName]: value
+        };
       });
-      return obj;
+      return result;
     });
+    dispatch(importEntity(payload, entity))
+      .then(() => {
+        setOpenModal(false);
+      })
+      .finally(() => {
+        setLoadingImport(false);
+      });
   };
   const SingleHeader = ({ userHeader }: { userHeader: string }) => {
     const onChange = (event) => {
@@ -342,7 +376,12 @@ const Import = ({}: OwnProps) => {
           </Button>
         )}
         {activeStep === steps.length - 2 && (
-          <Button variant="contained" onClick={onImport}>
+          <Button
+            variant="contained"
+            onClick={onImport}
+            disabled={loadingImport}
+            startIcon={loadingImport ? <CircularProgress size="1rem" /> : null}
+          >
             {t('to_import')}
           </Button>
         )}

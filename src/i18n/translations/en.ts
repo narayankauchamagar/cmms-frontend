@@ -1104,7 +1104,8 @@ const enJSON = {
   assigned_by: 'Assigned By',
   percent_rows_have_value: '{{percent}}% of rows have value',
   match_at_least_column: 'Match at least a column',
-  to_import: 'Import'
+  to_import: 'Import',
+  required_match: '{{field}} matching is required'
 };
 
 export default enJSON;

@@ -55,9 +55,10 @@ function Sidebar() {
         <Scrollbar>
           <Box mt={3}>
             <Box
-              mx={2}
               sx={{
-                width: 52
+                display: 'flex',
+                justifyContent: 'center',
+                flexDirection: 'row'
               }}
             >
               <Logo white />

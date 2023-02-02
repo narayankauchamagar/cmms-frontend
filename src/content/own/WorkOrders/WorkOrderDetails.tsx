@@ -649,70 +649,75 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                   </Link>
                 </Grid>
               )}
-              {workOrder.status === 'COMPLETE' && (
-                <>
-                  <Grid item xs={12} lg={6}>
-                    <Typography
-                      variant="h6"
-                      sx={{ color: theme.colors.alpha.black[70] }}
-                    >
-                      {t('completed_by')}
-                    </Typography>
-                    <Link
-                      variant="h6"
-                      href={getUserUrl(workOrder.completedBy.id)}
-                    >
-                      {`${workOrder.completedBy.firstName} ${workOrder.completedBy.lastName}`}
-                    </Link>
-                  </Grid>
-                  <Grid item xs={12} lg={6}>
-                    <Typography
-                      variant="h6"
-                      sx={{ color: theme.colors.alpha.black[70] }}
-                    >
-                      {t('completed_on')}
-                    </Typography>
-                    <Typography variant="h6">
-                      {getFormattedDate(workOrder.completedOn)}
-                    </Typography>
-                  </Grid>
-                  {workOrder.feedback && (
+              {workOrder.status ===
+                'COMPLETE'(
+                  <>
+                    {workOrder.completedBy && (
+                      <Grid item xs={12} lg={6}>
+                        <Typography
+                          variant="h6"
+                          sx={{ color: theme.colors.alpha.black[70] }}
+                        >
+                          {t('completed_by')}
+                        </Typography>
+                        <Link
+                          variant="h6"
+                          href={getUserUrl(workOrder.completedBy.id)}
+                        >
+                          {`${workOrder.completedBy.firstName} ${workOrder.completedBy.lastName}`}
+                        </Link>
+                      </Grid>
+                    )}
                     <Grid item xs={12} lg={6}>
                       <Typography
                         variant="h6"
                         sx={{ color: theme.colors.alpha.black[70] }}
                       >
-                        {t('feedback')}
+                        {t('completed_on')}
                       </Typography>
-                      <Typography variant="h6">{workOrder.feedback}</Typography>
-                    </Grid>
-                  )}
-                  {workOrder.signature && (
-                    <Grid item xs={12} lg={6}>
-                      <Typography
-                        variant="h6"
-                        sx={{ color: theme.colors.alpha.black[70] }}
-                      >
-                        {t('signature')}
+                      <Typography variant="h6">
+                        {getFormattedDate(workOrder.completedOn)}
                       </Typography>
-                      <img
-                        src={workOrder.signature.url}
-                        style={{
-                          borderRadius: 5,
-                          height: 100,
-                          cursor: 'pointer'
-                        }}
-                        onClick={() => {
-                          setImageState(
-                            [workOrder.signature.url],
-                            workOrder.signature.url
-                          );
-                        }}
-                      />
                     </Grid>
-                  )}
-                </>
-              )}
+                    {workOrder.feedback && (
+                      <Grid item xs={12} lg={6}>
+                        <Typography
+                          variant="h6"
+                          sx={{ color: theme.colors.alpha.black[70] }}
+                        >
+                          {t('feedback')}
+                        </Typography>
+                        <Typography variant="h6">
+                          {workOrder.feedback}
+                        </Typography>
+                      </Grid>
+                    )}
+                    {workOrder.signature && (
+                      <Grid item xs={12} lg={6}>
+                        <Typography
+                          variant="h6"
+                          sx={{ color: theme.colors.alpha.black[70] }}
+                        >
+                          {t('signature')}
+                        </Typography>
+                        <img
+                          src={workOrder.signature.url}
+                          style={{
+                            borderRadius: 5,
+                            height: 100,
+                            cursor: 'pointer'
+                          }}
+                          onClick={() => {
+                            setImageState(
+                              [workOrder.signature.url],
+                              workOrder.signature.url
+                            );
+                          }}
+                        />
+                      </Grid>
+                    )}
+                  </>
+                )}
               {workOrder.parentRequest && (
                 <Grid item xs={12} lg={6}>
                   <Typography

@@ -3,21 +3,31 @@ import { EntityType, HeaderKey } from 'src/content/own/Imports';
 export const getImportsConfig = (t: any): Record<EntityType, HeaderKey[]> => {
   return {
     'work-orders': [
-      { label: t('id'), keyName: 'id' },
-      { label: t('title'), keyName: 'title' },
+      {
+        label: t('id'),
+        keyName: 'id',
+        formatter: (value) => (isNaN(value) ? null : value)
+      },
+      { label: t('title'), keyName: 'title', required: true },
       { label: t('description'), keyName: 'description' },
       { label: t('due_date'), keyName: 'dueDate' },
       { label: t('completed_on'), keyName: 'completedOn' },
       { label: t('status'), keyName: 'status' },
-      { label: t('estimated_hours'), keyName: 'estimatedHours' },
+      { label: t('estimated_hours'), keyName: 'estimatedDuration' },
       { label: t('priority'), keyName: 'priority' },
       { label: t('category'), keyName: 'category' },
-      { label: t('completed_by'), keyName: 'completedBy' },
-      { label: t('assigned_by'), keyName: 'assignedBy' },
-      { label: t('primary_worker'), keyName: 'primaryUser' },
+      { label: t('completed_by'), keyName: 'completedByEmail' },
+      {
+        label: t('assigned_to'),
+        keyName: 'assignedToEmails',
+        formatter: (value) => value?.split(',') ?? []
+      },
+      //TODO
+      // { label: t('assigned_by'), keyName: 'assignedBy' },
+      { label: t('primary_worker'), keyName: 'primaryUserEmail' },
       { label: t('asset_name'), keyName: 'assetName' },
-      { label: t('parts'), keyName: 'parts' },
-      { label: t('requires_signature'), keyName: 'requiresSignature' },
+      // { label: t('parts'), keyName: 'parts' },
+      { label: t('requires_signature'), keyName: 'requiredSignature' },
       { label: t('archived'), keyName: 'archived' }
     ],
     locations: [
@@ -27,15 +37,16 @@ export const getImportsConfig = (t: any): Record<EntityType, HeaderKey[]> => {
       { label: t('due_date'), keyName: 'dueDate' },
       { label: t('completed_on'), keyName: 'completedOn' },
       { label: t('status'), keyName: 'status' },
-      { label: t('estimated_hours'), keyName: 'estimatedHours' },
+      { label: t('estimated_hours'), keyName: 'estimatedDuration' },
       { label: t('priority'), keyName: 'priority' },
       { label: t('category'), keyName: 'category' },
-      { label: t('completed_by'), keyName: 'completedBy' },
-      { label: t('assigned_by'), keyName: 'assignedBy' },
-      { label: t('primary_worker'), keyName: 'primaryUser' },
+      { label: t('completed_by'), keyName: 'completedByEmail' },
+      //TODO
+      // { label: t('assigned_by'), keyName: 'assignedBy' },
+      { label: t('primary_worker'), keyName: 'primaryUserEmail' },
       { label: t('asset_name'), keyName: 'assetName' },
-      { label: t('parts'), keyName: 'parts' },
-      { label: t('requires_signature'), keyName: 'requiresSignature' },
+      // { label: t('parts'), keyName: 'parts' },
+      { label: t('requires_signature'), keyName: 'requiredSignature' },
       { label: t('archived'), keyName: 'archived' }
     ],
     assets: [
@@ -45,15 +56,16 @@ export const getImportsConfig = (t: any): Record<EntityType, HeaderKey[]> => {
       { label: t('due_date'), keyName: 'dueDate' },
       { label: t('completed_on'), keyName: 'completedOn' },
       { label: t('status'), keyName: 'status' },
-      { label: t('estimated_hours'), keyName: 'estimatedHours' },
+      { label: t('estimated_hours'), keyName: 'estimatedDuration' },
       { label: t('priority'), keyName: 'priority' },
       { label: t('category'), keyName: 'category' },
-      { label: t('completed_by'), keyName: 'completedBy' },
-      { label: t('assigned_by'), keyName: 'assignedBy' },
-      { label: t('primary_worker'), keyName: 'primaryUser' },
+      { label: t('completed_by'), keyName: 'completedByEmail' },
+      //TODO
+      // { label: t('assigned_by'), keyName: 'assignedBy' },
+      { label: t('primary_worker'), keyName: 'primaryUserEmail' },
       { label: t('asset_name'), keyName: 'assetName' },
-      { label: t('parts'), keyName: 'parts' },
-      { label: t('requires_signature'), keyName: 'requiresSignature' },
+      // { label: t('parts'), keyName: 'parts' },
+      { label: t('requires_signature'), keyName: 'requiredSignature' },
       { label: t('archived'), keyName: 'archived' }
     ],
     parts: [
@@ -63,15 +75,16 @@ export const getImportsConfig = (t: any): Record<EntityType, HeaderKey[]> => {
       { label: t('due_date'), keyName: 'dueDate' },
       { label: t('completed_on'), keyName: 'completedOn' },
       { label: t('status'), keyName: 'status' },
-      { label: t('estimated_hours'), keyName: 'estimatedHours' },
+      { label: t('estimated_hours'), keyName: 'estimatedDuration' },
       { label: t('priority'), keyName: 'priority' },
       { label: t('category'), keyName: 'category' },
-      { label: t('completed_by'), keyName: 'completedBy' },
-      { label: t('assigned_by'), keyName: 'assignedBy' },
-      { label: t('primary_worker'), keyName: 'primaryUser' },
+      { label: t('completed_by'), keyName: 'completedByEmail' },
+      //TODO
+      // { label: t('assigned_by'), keyName: 'assignedBy' },
+      { label: t('primary_worker'), keyName: 'primaryUserEmail' },
       { label: t('asset_name'), keyName: 'assetName' },
-      { label: t('parts'), keyName: 'parts' },
-      { label: t('requires_signature'), keyName: 'requiresSignature' },
+      // { label: t('parts'), keyName: 'parts' },
+      { label: t('requires_signature'), keyName: 'requiredSignature' },
       { label: t('archived'), keyName: 'archived' }
     ],
     meters: [
@@ -81,15 +94,16 @@ export const getImportsConfig = (t: any): Record<EntityType, HeaderKey[]> => {
       { label: t('due_date'), keyName: 'dueDate' },
       { label: t('completed_on'), keyName: 'completedOn' },
       { label: t('status'), keyName: 'status' },
-      { label: t('estimated_hours'), keyName: 'estimatedHours' },
+      { label: t('estimated_hours'), keyName: 'estimatedDuration' },
       { label: t('priority'), keyName: 'priority' },
       { label: t('category'), keyName: 'category' },
-      { label: t('completed_by'), keyName: 'completedBy' },
-      { label: t('assigned_by'), keyName: 'assignedBy' },
-      { label: t('primary_worker'), keyName: 'primaryUser' },
+      { label: t('completed_by'), keyName: 'completedByEmail' },
+      //TODO
+      // { label: t('assigned_by'), keyName: 'assignedBy' },
+      { label: t('primary_worker'), keyName: 'primaryUserEmail' },
       { label: t('asset_name'), keyName: 'assetName' },
-      { label: t('parts'), keyName: 'parts' },
-      { label: t('requires_signature'), keyName: 'requiresSignature' },
+      // { label: t('parts'), keyName: 'parts' },
+      { label: t('requires_signature'), keyName: 'requiredSignature' },
       { label: t('archived'), keyName: 'archived' }
     ]
   };
