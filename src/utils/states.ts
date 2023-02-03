@@ -26,6 +26,8 @@ export const getImportsConfig = (t: any): Record<EntityType, HeaderKey[]> => {
       // { label: t('assigned_by'), keyName: 'assignedBy' },
       { label: t('primary_worker'), keyName: 'primaryUserEmail' },
       { label: t('asset_name'), keyName: 'assetName' },
+      { label: t('location_name'), keyName: 'locationName' },
+      { label: t('team_name'), keyName: 'teamName' },
       // { label: t('parts'), keyName: 'parts' },
       { label: t('requires_signature'), keyName: 'requiredSignature' },
       { label: t('archived'), keyName: 'archived' }

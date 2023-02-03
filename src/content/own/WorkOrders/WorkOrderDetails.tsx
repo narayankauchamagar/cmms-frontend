@@ -634,6 +634,22 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                   id={field.id}
                 />
               ))}
+              {workOrder.primaryUser && (
+                <Grid item xs={12} lg={6}>
+                  <Typography
+                    variant="h6"
+                    sx={{ color: theme.colors.alpha.black[70] }}
+                  >
+                    {t('primary_worker')}
+                  </Typography>
+                  <Link
+                    variant="h6"
+                    href={getUserUrl(workOrder.primaryUser.id)}
+                  >
+                    {getUserNameById(workOrder.primaryUser.id)}
+                  </Link>
+                </Grid>
+              )}
               {(workOrder.parentRequest || workOrder.createdBy) && (
                 <Grid item xs={12} lg={6}>
                   <Typography

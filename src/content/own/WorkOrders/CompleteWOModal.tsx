@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import { IField } from '../type';
 import { useContext } from 'react';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
+import { StoreReturnType } from '../../../store';
 
 interface SignatureProps {
   open: boolean;
@@ -13,7 +14,7 @@ interface SignatureProps {
   onComplete: (
     id: number | undefined,
     feedback: string
-  ) => Promise<void | number | number[] | string>;
+  ) => Promise<StoreReturnType>;
 }
 export default function CompleteWOModal({
   open,

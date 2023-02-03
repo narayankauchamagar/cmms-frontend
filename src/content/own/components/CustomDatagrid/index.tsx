@@ -44,6 +44,7 @@ function CustomDataGrid(props: CustomDatagridProps) {
         )
       }}
       {...props}
+      disableSelectionOnClick
       localeText={translatedGridLocaleText}
     />
   );

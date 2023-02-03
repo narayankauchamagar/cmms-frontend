@@ -1,6 +1,7 @@
 import { FileType } from '../models/owns/file';
 import Meter from '../models/owns/meter';
 import check from 'check-types';
+import { CellBase, Matrix } from 'react-spreadsheet';
 
 export const canAddReading = (meter: Meter): boolean => {
   if (!meter) {
@@ -61,7 +62,7 @@ export const getType = (
 };
 
 export type SpreadsheetData = {
-  [key: string]: Array<Array<{ [key: string]: string }>>;
+  [key: string]: Matrix<CellBase<any>>[];
 };
 export const arrayToAoA = (array: string[][]): SpreadsheetData => {
   const headers = array[0];

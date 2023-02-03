@@ -1105,7 +1105,10 @@ const enJSON = {
   percent_rows_have_value: '{{percent}}% of rows have value',
   match_at_least_column: 'Match at least a column',
   to_import: 'Import',
-  required_match: '{{field}} matching is required'
+  required_match: '{{field}} matching is required',
+  archived: 'Archived',
+  import_wo_success:
+    '{{created}} Work Orders have been created and {{updated}} have been updated'
 };
 
 export default enJSON;

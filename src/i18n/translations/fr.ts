@@ -371,13 +371,13 @@ const frJSON = {
   priority: 'Priorité',
   description: 'Description',
   worker: 'Travailleur',
-  location_name: 'Nom de la localisation',
+  location_name: "Nom de l'emplacement",
   location_address: "Adresse de l'emplacement",
   asset_name: "Nom de l'équipement",
   days_since_creation: 'Jours depuis la création',
   files: 'Fichiers',
   requested_by: 'Demandé par',
-  completed_on: 'Completé le',
+  completed_on: 'Terminé le',
   updated_at: 'Modifié le',
   work_order: 'Ordre de travail',
   timer_running: "Minuterie en cours d'exécution",
@@ -1243,7 +1243,10 @@ const frJSON = {
   percent_rows_have_value: '{{percent}}% des lignes ont une valeur',
   select_at_least_column: 'Faites correspondre au moins une colonne',
   to_import: 'Importer',
-  required_match: 'La correspondance à {{field}} est requise'
+  required_match: 'La correspondance à {{field}} est requise',
+  archived: 'Archivé',
+  import_wo_success:
+    '{{created}} bons de travail ont été créés et {{updated}} ont été mis à jour'
 };
 
 export default frJSON;

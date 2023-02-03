@@ -26,12 +26,16 @@ import FileUpload from '../components/FileUpload';
 import { TitleContext } from 'src/contexts/TitleContext';
 import { read, utils } from 'xlsx';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
-import Spreadsheet from 'react-spreadsheet';
+import Spreadsheet, { CellBase, Matrix } from 'react-spreadsheet';
 import { arrayToAoA } from 'src/utils/overall';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import { getImportsConfig } from 'src/utils/states';
 import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
-import { ImportDTO, ImportKeys } from '../../../models/owns/imports';
+import {
+  ImportDTO,
+  ImportKeys,
+  ImportResponse
+} from '../../../models/owns/imports';
 import { useDispatch, useSelector } from '../../../store';
 import { importEntity } from '../../../slices/imports';
 
@@ -66,7 +70,7 @@ const Import = ({}: OwnProps) => {
     { headerKey: HeaderKey; userHeader: string }[]
   >([]);
   const [spreadSheetsConfig, setSpreadSheetsConfig] = useState<{
-    [key: string]: any[][];
+    [key: string]: Matrix<CellBase<any>>[];
   }>({});
   const steps = [t('upload'), t('match_columns'), t('review'), t('done')];
   const { responses } = useSelector((state) => state.imports);
@@ -172,7 +176,8 @@ const Import = ({}: OwnProps) => {
       return result;
     });
     dispatch(importEntity(payload, entity))
-      .then(() => {
+      .then(({ created, updated }: ImportResponse) => {
+        showSnackBar(t('import_wo_success', { created, updated }), 'success');
         setOpenModal(false);
       })
       .finally(() => {
@@ -197,7 +202,7 @@ const Import = ({}: OwnProps) => {
     };
     const getPercent = () => {
       const rows = spreadSheetsConfig[userHeader][0];
-      return (rows.filter((row) => row).length * 100) / rows.length;
+      return (rows.filter((row) => row[0].value).length * 100) / rows.length;
     };
     return (
       <Grid item xs={12}>

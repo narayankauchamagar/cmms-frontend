@@ -59,7 +59,20 @@ function SubscriptionPlans() {
 
   useEffect(() => {
     setTitle(t('plans'));
-    if (user.ownsCompany) dispatch(getSubscriptionPlans());
+    if (user.ownsCompany) {
+      dispatch(getSubscriptionPlans());
+      const script = document.createElement('script');
+      script.id = 'fsc-api';
+      script.type = 'text/javascript';
+      script.src =
+        'https://d1f8f9xcsvx3ha.cloudfront.net/sbl/0.9.3/fastspring-builder.js';
+      script.setAttribute('data-storefront', 'grash.test.onfastspring.com');
+      script.async = true;
+      document.head.appendChild(script);
+      return () => {
+        document.head.removeChild(script);
+      };
+    }
   }, []);
   const periods = [
     { name: t('monthly'), value: 'monthly' },
@@ -562,6 +575,13 @@ function SubscriptionPlans() {
                   >
                     {t('proceed_to_payment')}
                   </Button>
+                  <span
+                    data-fsc-item-path="product1"
+                    data-fsc-item-display
+                  ></span>
+                  <button data-fsc-item-path="product1" data-fsc-action="Add">
+                    Add to cart
+                  </button>
                 </Box>
               </Card>
             </Grid>
