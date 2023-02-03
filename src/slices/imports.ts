@@ -47,7 +47,6 @@ export const importEntity =
       true
     );
     dispatch(slice.actions.importEntity({ response, entity }));
-    return response;
   };
 
 export default slice;

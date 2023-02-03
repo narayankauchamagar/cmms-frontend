@@ -328,7 +328,7 @@ const frJSON = {
   add_time: 'Ajouter du temps',
   add_time_description:
     'Remplissez les champs ci-dessous pour créer et ajouter du temps',
-  feedback: 'Retour',
+  feedback: 'Feedback',
   feedback_description: 'Donnez votre avis',
   required_feedback: "L'avis est requis",
   signature: 'Signature',

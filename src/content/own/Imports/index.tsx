@@ -29,18 +29,15 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import Spreadsheet, { CellBase, Matrix } from 'react-spreadsheet';
 import { arrayToAoA } from 'src/utils/overall';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
-import { getImportsConfig } from 'src/utils/states';
+import { getOwnHeadersConfig } from 'src/utils/states';
 import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
-import {
-  ImportDTO,
-  ImportKeys,
-  ImportResponse
-} from '../../../models/owns/imports';
+import { closestMatch, distance } from 'closest-match';
+import { ImportDTO, ImportKeys } from '../../../models/owns/imports';
 import { useDispatch, useSelector } from '../../../store';
 import { importEntity } from '../../../slices/imports';
 
 interface OwnProps {}
-export interface HeaderKey {
+export interface OwnHeader {
   label: string;
   keyName: ImportKeys;
   required?: boolean;
@@ -56,18 +53,21 @@ export type EntityType =
 const Import = ({}: OwnProps) => {
   const { hasViewPermission } = useAuth();
   const { t }: { t: any } = useTranslation();
-  const [entity, setEntity] = useState<EntityType>('work-orders');
+  const entityFromUrl = window.location.href.substring(
+    window.location.href.lastIndexOf('/') + 1
+  );
+  const [entity, setEntity] = useState<EntityType>(entityFromUrl as EntityType);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const { setTitle } = useContext(TitleContext);
   const [userHeaders, setUserHeaders] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const [jsonData, setJsonData] = useState<{}[]>();
-  const headerKeysConfig = getImportsConfig(t);
+  const headerKeysConfig = getOwnHeadersConfig(t);
   const dispatch = useDispatch();
   const [loadingImport, setLoadingImport] = useState<boolean>(false);
   const [matches, setMatches] = useState<
-    { headerKey: HeaderKey; userHeader: string }[]
+    { ownHeader: OwnHeader; userHeader: string }[]
   >([]);
   const [spreadSheetsConfig, setSpreadSheetsConfig] = useState<{
     [key: string]: Matrix<CellBase<any>>[];
@@ -89,6 +89,30 @@ const Import = ({}: OwnProps) => {
     setOpenModal(true);
   };
 
+  useEffect(() => {
+    if (userHeaders.length) {
+      let result: { userHeader: string; keyName: string }[] = [];
+      headerKeysConfig[entity].forEach((ownHeader) => {
+        const closestMatchInUserHeaders = closestMatch(
+          ownHeader.label,
+          userHeaders
+        );
+        let closest = closestMatchInUserHeaders;
+        if (Array.isArray(closestMatchInUserHeaders))
+          closest = closestMatchInUserHeaders[0];
+        if (closest && distance(closest as string, ownHeader.label) < 5) {
+          result.push({
+            userHeader: userHeaders.find(
+              (userHeader) => userHeader === closest
+            ),
+            keyName: ownHeader.keyName
+          });
+        }
+      });
+      match(result);
+    }
+  }, [userHeaders]);
+
   const handleNext = () => {
     if (activeStep === 1) {
       if (!matches.length) {
@@ -101,7 +125,7 @@ const Import = ({}: OwnProps) => {
       config.forEach(({ keyName, label }) => {
         let count = 0;
         matches.forEach((match) => {
-          if (match.headerKey.keyName === keyName) {
+          if (match.ownHeader.keyName === keyName) {
             count = count + 1;
           }
         });
@@ -120,7 +144,7 @@ const Import = ({}: OwnProps) => {
       for (const header of config) {
         if (
           header.required &&
-          !matches.find((match) => match.headerKey.keyName === header.keyName)
+          !matches.find((match) => match.ownHeader.keyName === header.keyName)
         ) {
           showSnackBar(t('required_match', { field: header.label }), 'error');
           return;
@@ -132,7 +156,7 @@ const Import = ({}: OwnProps) => {
   const getMatchLabel = (userHeader: string) => {
     return matches.find(
       (headerMatching) => headerMatching.userHeader === userHeader
-    )?.headerKey?.label;
+    )?.ownHeader?.label;
   };
   const getFormattedData = (): { value: any }[][] => {
     let result = [];
@@ -142,7 +166,7 @@ const Import = ({}: OwnProps) => {
       const row = headerKeysConfig[entity].map((column) => {
         const equivalent = matches.find(
           (headerMatching) =>
-            headerMatching.headerKey.keyName === column.keyName
+            headerMatching.ownHeader.keyName === column.keyName
         );
         return {
           value: equivalent ? userElement[equivalent.userHeader] : null,
@@ -162,7 +186,7 @@ const Import = ({}: OwnProps) => {
         let value =
           userElement[
             matches.find(
-              (headerMatching) => headerMatching.headerKey.keyName === keyName
+              (headerMatching) => headerMatching.ownHeader.keyName === keyName
             )?.userHeader
           ];
         if (formatter) {
@@ -176,29 +200,40 @@ const Import = ({}: OwnProps) => {
       return result;
     });
     dispatch(importEntity(payload, entity))
-      .then(({ created, updated }: ImportResponse) => {
-        showSnackBar(t('import_wo_success', { created, updated }), 'success');
+      .then(() => {
+        showSnackBar(
+          t('import_wo_success', {
+            created: responses[entity].created,
+            updated: responses[entity].updated
+          }),
+          'success'
+        );
         setOpenModal(false);
       })
       .finally(() => {
         setLoadingImport(false);
       });
   };
-  const SingleHeader = ({ userHeader }: { userHeader: string }) => {
-    const onChange = (event) => {
-      let result = [...matches];
+  const match = (data: { userHeader: string; keyName: string }[]) => {
+    let result = [...matches];
+    data.forEach(({ userHeader, keyName }) => {
       const newHeaderKey = headerKeysConfig[entity].find(
-        (headerKey) => headerKey.keyName === event.target.value
+        (headerKey) => headerKey.keyName === keyName
       );
       const inheadersMatching = matches.find(
         (headerMatching) => headerMatching.userHeader === userHeader
       );
       if (inheadersMatching) {
-        inheadersMatching.headerKey = newHeaderKey;
+        inheadersMatching.ownHeader = newHeaderKey;
       } else {
-        result.push({ headerKey: newHeaderKey, userHeader });
+        result.push({ ownHeader: newHeaderKey, userHeader });
       }
-      setMatches(result);
+    });
+    setMatches(result);
+  };
+  const SingleHeader = ({ userHeader }: { userHeader: string }) => {
+    const onChange = (event) => {
+      match([{ userHeader, keyName: event.target.value }]);
     };
     const getPercent = () => {
       const rows = spreadSheetsConfig[userHeader][0];
@@ -218,7 +253,7 @@ const Import = ({}: OwnProps) => {
                     matches.find(
                       (headerMatching) =>
                         headerMatching.userHeader === userHeader
-                    )?.headerKey.keyName ?? ''
+                    )?.ownHeader.keyName ?? ''
                   }
                   onChange={onChange}
                 >
@@ -336,7 +371,7 @@ const Import = ({}: OwnProps) => {
                         arrayToAoA(localJsonArray);
                       setSpreadSheetsConfig(localObjectOfArrayOfArrays);
                       setLoading(false);
-                      setActiveStep(1);
+                      handleNext();
                     } else {
                       showSnackBar(t('not_enough_rows'), 'error');
                     }
@@ -434,6 +469,11 @@ const Import = ({}: OwnProps) => {
                     value={entity}
                     onChange={(event) => {
                       setEntity(event.target.value as EntityType);
+                      window.history.replaceState(
+                        null,
+                        '',
+                        `/app/imports/${event.target.value}`
+                      );
                     }}
                   >
                     {options.map((option) => (

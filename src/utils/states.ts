@@ -1,6 +1,8 @@
-import { EntityType, HeaderKey } from 'src/content/own/Imports';
+import { EntityType, OwnHeader } from 'src/content/own/Imports';
 
-export const getImportsConfig = (t: any): Record<EntityType, HeaderKey[]> => {
+export const getOwnHeadersConfig = (
+  t: any
+): Record<EntityType, OwnHeader[]> => {
   return {
     'work-orders': [
       {
@@ -28,6 +30,7 @@ export const getImportsConfig = (t: any): Record<EntityType, HeaderKey[]> => {
       { label: t('asset_name'), keyName: 'assetName' },
       { label: t('location_name'), keyName: 'locationName' },
       { label: t('team_name'), keyName: 'teamName' },
+      { label: t('feedback'), keyName: 'feedback' },
       // { label: t('parts'), keyName: 'parts' },
       { label: t('requires_signature'), keyName: 'requiredSignature' },
       { label: t('archived'), keyName: 'archived' }
