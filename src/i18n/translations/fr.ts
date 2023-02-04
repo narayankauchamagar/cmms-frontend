@@ -1246,7 +1246,8 @@ const frJSON = {
   required_match: 'La correspondance à {{field}} est requise',
   archived: 'Archivé',
   import_wo_success:
-    '{{created}} bons de travail ont été créés et {{updated}} ont été mis à jour'
+    '{{created}} bons de travail ont été créés et {{updated}} ont été mis à jour',
+  to_export: 'Exporter'
 };
 
 export default frJSON;

@@ -3,11 +3,16 @@ import {
   Box,
   Button,
   Card,
+  CircularProgress,
   Dialog,
   DialogContent,
   DialogTitle,
   Drawer,
   Grid,
+  IconButton,
+  Menu,
+  MenuItem,
+  Stack,
   Tab,
   Tabs,
   Tooltip,
@@ -18,6 +23,7 @@ import { useTranslation } from 'react-i18next';
 import CircleTwoToneIcon from '@mui/icons-material/CircleTwoTone';
 import { IField } from '../type';
 import WorkOrder from '../../../models/owns/workOrder';
+import * as React from 'react';
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
@@ -34,7 +40,7 @@ import * as Yup from 'yup';
 import { isNumeric } from '../../../utils/validators';
 import { UserMiniDTO } from '../../../models/user';
 import WorkOrderDetails from './WorkOrderDetails';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { LocationMiniDTO } from '../../../models/owns/location';
 import { AssetMiniDTO } from '../../../models/owns/asset';
 import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
@@ -65,6 +71,8 @@ import File from '../../../models/owns/file';
 import { dayDiff } from '../../../utils/dates';
 import { SearchCriteria } from '../../../models/owns/page';
 import WorkOrderCalendar from './Calendar';
+import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
+import { exportEntity } from '../../../slices/exports';
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
@@ -72,6 +80,7 @@ function WorkOrders() {
   const { workOrders, loadingGet, singleWorkOrder } = useSelector(
     (state) => state.workOrders
   );
+  const { responses, loadingExport } = useSelector((state) => state.exports);
   const [searchParams, setSearchParams] = useSearchParams();
   const locationParam = searchParams.get('location');
   const assetParam = searchParams.get('asset');
@@ -116,7 +125,16 @@ function WorkOrders() {
     pageSize: 10,
     pageNum: 0
   });
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const openMenu = Boolean(anchorEl);
+  const navigate = useNavigate();
 
+  const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
   const handleDelete = (id: number) => {
     dispatch(deleteWorkOrder(id)).then(onDeleteSuccess).catch(onDeleteFailure);
     setOpenDelete(false);
@@ -689,6 +707,34 @@ function WorkOrders() {
       </DialogContent>
     </Dialog>
   );
+  const renderMenu = () => (
+    <Menu
+      id="basic-menu"
+      anchorEl={anchorEl}
+      open={openMenu}
+      onClose={handleCloseMenu}
+      MenuListProps={{
+        'aria-labelledby': 'basic-button'
+      }}
+    >
+      <MenuItem
+        disabled={loadingExport}
+        onClick={() => {
+          dispatch(exportEntity('work-orders')).then(() => {
+            window.open(responses['work-orders'].url);
+          });
+        }}
+      >
+        <Stack spacing={2} direction="row">
+          {loadingExport && <CircularProgress size="1rem" />}
+          <Typography>{t('to_export')}</Typography>
+        </Stack>
+      </MenuItem>
+      <MenuItem onClick={() => navigate('/app/imports/work-orders')}>
+        {t('to_import')}
+      </MenuItem>
+    </Menu>
+  );
   if (hasViewPermission(PermissionEntity.WORK_ORDERS))
     return (
       <>
@@ -735,16 +781,21 @@ function WorkOrders() {
                 )
               )}
             </Tabs>
-            {hasCreatePermission(PermissionEntity.WORK_ORDERS) && (
-              <Button
-                onClick={() => setOpenAddModal(true)}
-                startIcon={<AddTwoToneIcon />}
-                sx={{ mx: 6, my: 1 }}
-                variant="contained"
-              >
-                {t('work_order')}
-              </Button>
-            )}
+            <Stack direction={'row'} alignItems="center" spacing={1}>
+              <IconButton onClick={handleOpenMenu}>
+                <MoreVertTwoToneIcon />
+              </IconButton>
+              {hasCreatePermission(PermissionEntity.WORK_ORDERS) && (
+                <Button
+                  onClick={() => setOpenAddModal(true)}
+                  startIcon={<AddTwoToneIcon />}
+                  sx={{ mx: 6, my: 1 }}
+                  variant="contained"
+                >
+                  {t('work_order')}
+                </Button>
+              )}
+            </Stack>
           </Grid>
           <Grid item xs={12}>
             <Card
@@ -828,6 +879,7 @@ function WorkOrders() {
           confirmText={t('to_delete')}
           question={t('confirm_delete_wo')}
         />
+        {renderMenu()}
       </>
     );
   else return <PermissionErrorMessage message={'no_access_wo'} />;

@@ -1108,7 +1108,8 @@ const enJSON = {
   required_match: '{{field}} matching is required',
   archived: 'Archived',
   import_wo_success:
-    '{{created}} Work Orders have been created and {{updated}} have been updated'
+    '{{created}} Work Orders have been created and {{updated}} have been updated',
+  to_export: 'Export'
 };
 
 export default enJSON;
