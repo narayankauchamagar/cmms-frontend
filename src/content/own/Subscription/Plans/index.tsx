@@ -1,32 +1,23 @@
 import { Helmet } from 'react-helmet-async';
 import PersonTwoToneIcon from '@mui/icons-material/PersonTwoTone';
+import { randomInt } from '../../../../utils/generators';
 import {
   Box,
   Button,
   Card,
-  CircularProgress,
-  DialogActions,
-  DialogContent,
   FormControlLabel,
   Grid,
   Link,
-  MenuItem,
   Radio,
   RadioGroup,
-  Select,
   Slider,
   Stack,
-  TextField,
   Typography,
   useTheme
 } from '@mui/material';
 import { Trans, useTranslation } from 'react-i18next';
 import { useContext, useEffect, useState } from 'react';
 import PlanFeatures from './PlanFeatures';
-import * as Yup from 'yup';
-import CustomDialog from '../../components/CustomDialog';
-import { Field, Formik } from 'formik';
-import valid from 'card-validator';
 import { TitleContext } from '../../../../contexts/TitleContext';
 import { useDispatch, useSelector } from '../../../../store';
 import { getSubscriptionPlans } from '../../../../slices/subscriptionPlan';
@@ -36,16 +27,15 @@ import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContex
 import { SubscriptionPlan } from '../../../../models/owns/subscriptionPlan';
 import { useNavigate } from 'react-router-dom';
 import { CompanySettingsContext } from '../../../../contexts/CompanySettingsContext';
+import { Order } from '../../../../models/owns/fastspring';
 
 function SubscriptionPlans() {
   const { t }: { t: any } = useTranslation();
   const { company, user, patchSubscription } = useAuth();
   const subscription = company.subscription;
   const theme = useTheme();
+  const [item, setItem] = useState(null);
   const [usersCount, setUsersCount] = useState<number>(3);
-  const [openCheckout, setOpenCheckout] = useState<boolean>(false);
-  const handleCloseCheckoutModal = () => setOpenCheckout(false);
-  const handleOpenCheckoutModal = () => setOpenCheckout(true);
   const [period, setPeriod] = useState<string>('monthly');
   const [selectedPlan, setSelectedPlan] = useState<string>('STARTER');
   const [selectedPlanObject, setSelectedPlanObject] =
@@ -61,19 +51,82 @@ function SubscriptionPlans() {
     setTitle(t('plans'));
     if (user.ownsCompany) {
       dispatch(getSubscriptionPlans());
-      const script = document.createElement('script');
-      script.id = 'fsc-api';
-      script.type = 'text/javascript';
-      script.src =
-        'https://d1f8f9xcsvx3ha.cloudfront.net/sbl/0.9.3/fastspring-builder.js';
-      script.setAttribute('data-storefront', 'grash.test.onfastspring.com');
-      script.async = true;
-      document.head.appendChild(script);
-      return () => {
-        document.head.removeChild(script);
-      };
     }
   }, []);
+  const [country, setCountry] = useState('US');
+  const buyProduct = () => {
+    let path;
+    switch (selectedPlanObject.code) {
+      case 'STARTER':
+        path = 'starter';
+        break;
+      case 'BUS':
+        path = 'business';
+        break;
+      case 'PRO':
+        path = 'professional';
+        break;
+      default:
+        break;
+    }
+    path = `${path}-${period === 'monthly' ? 'monthly' : 'annually'}`;
+    // @ts-ignore
+    window.fastspring.builder.push({
+      products: [
+        {
+          path,
+          quantity: usersCount
+        }
+      ],
+      checkout: true
+    });
+  };
+
+  useEffect(() => {
+    const onNewOrder = (order: Order) => {
+      setUsersCount(order.items[0].quantity);
+    };
+    // Add SBL script programatically
+    const scriptId = 'fsc-api';
+    const existingScript = document.getElementById(scriptId);
+    if (!existingScript) {
+      const storeFrontToUse = 'grash.test.onfastspring.com/popup-grash';
+      const script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.id = scriptId;
+      script.src =
+        'https://d1f8f9xcsvx3ha.cloudfront.net/sbl/0.9.3/fastspring-builder.js';
+      script.dataset.storefront = storeFrontToUse;
+      // Make sure to add callback function to window so that the DOM is aware of it
+      // @ts-ignore
+      window.onNewOrder = onNewOrder;
+      script.setAttribute('data-data-callback', 'fastSpringCallBack');
+      script.setAttribute('data-popup-webhook-received', 'onNewOrder');
+      document.body.appendChild(script);
+    }
+    return () => {
+      document.body.removeChild(existingScript);
+    };
+  }, []);
+
+  useEffect(() => {
+    // @ts-ignore
+    window.onPopupClosed = (data: { id: string | null }) => {
+      if (data?.id) {
+        patchSubscription({
+          id: randomInt(),
+          usersCount,
+          monthly: period === 'monthly',
+          subscriptionPlan: selectedPlanObject
+        }).then(onSubcriptionPatchSuccess);
+      } else {
+        onSubcriptionPatchFailure();
+      }
+    };
+    const script = document.getElementById('fsc-api');
+    if (script) script.setAttribute('data-popup-closed', 'onPopupClosed');
+  }, [selectedPlanObject]);
+
   const periods = [
     { name: t('monthly'), value: 'monthly' },
     { name: t('annually'), value: 'annually' }
@@ -95,276 +148,21 @@ function SubscriptionPlans() {
         ] * usersCount
       : 0;
   };
-  const monthOptions = [
-    '01',
-    '02',
-    '03',
-    '04',
-    '05',
-    '06',
-    '07',
-    '08',
-    '09',
-    '10',
-    '11',
-    '12'
-  ];
 
-  const getYearOptions = (): number[] => {
-    const currentYear = new Date().getFullYear();
-    let yearOptions = [];
-    for (let i = 0; i < 10; i++) {
-      yearOptions.push(currentYear + i);
-    }
-    return yearOptions;
-  };
   const onSubcriptionPatchSuccess = () => {
     showSnackBar(t('subscription_change_success'), 'success');
-    handleCloseCheckoutModal();
     navigate('/app/work-orders');
   };
   const onSubcriptionPatchFailure = () => {
     showSnackBar(t("The Subscription couldn't be changed"), 'error');
   };
-  const renderCheckoutModal = () => (
-    <CustomDialog
-      onClose={handleCloseCheckoutModal}
-      open={openCheckout}
-      title={t('checkout')}
-      subtitle={t('checkout_description')}
-      maxWidth="md"
-    >
-      <Formik
-        initialValues={{
-          card: '',
-          expirationMonth: '01',
-          expirationYear: '2022',
-          cvv: '',
-          cardholder: ''
-        }}
-        validationSchema={Yup.object().shape({
-          card: Yup.string()
-            .test(
-              'test-number', // this is used internally by yup
-              t('invalid_credit_card'), //validation message
-              (value) => valid.number(value?.toString()).isValid
-            ) // return true false based on validation
-            .required(t('required_credit_card')),
-          expirationMonth: Yup.string()
-            .test(
-              'test-expirationMonth', // this is used internally by yup
-              t('invalid_expiration_month'), //validation message
-              (value) => valid.expirationMonth(value).isValid
-            ) // return true false based on validation
-            .required(t('required_expiration_month')),
-          expirationYear: Yup.string()
-            .test(
-              'test-expirationYear', // this is used internally by yup
-              t('invalid_expiration_year'), //validation message
-              (value) => valid.expirationYear(value).isValid
-            ) // return true false based on validation
-            .required(t('required_expiration_year')),
-          cvv: Yup.string()
-            .test(
-              'test-cvv', // this is used internally by yup
-              t('invalid_cvv'), //validation message
-              (value) => valid.cvv(value?.toString()).isValid
-            ) // return true false based on validation
-            .required(t('required_cvv')),
-          cardholder: Yup.string()
-            .min(5)
-            .required(t('required_cardholder_name'))
-        })}
-        onSubmit={async (
-          _values,
-          { resetForm, setErrors, setStatus, setSubmitting }
-        ) => {
-          // console.log(_values);
-          setSubmitting(true);
-          return patchSubscription({
-            usersCount,
-            monthly: period === 'monthly',
-            subscriptionPlan: selectedPlanObject
-          })
-            .then(onSubcriptionPatchSuccess)
-            .catch(onSubcriptionPatchFailure)
-            .finally(() => setSubmitting(false));
-        }}
-      >
-        {({
-          errors,
-          handleBlur,
-          handleChange,
-          handleSubmit,
-          isSubmitting,
-          touched,
-          values
-        }) => (
-          <form onSubmit={handleSubmit}>
-            <DialogContent
-              dividers
-              sx={{
-                p: 3
-              }}
-            >
-              <Grid container spacing={3}>
-                <Grid item xs={12} lg={6}>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                      <TextField
-                        error={Boolean(touched.card && errors.card)}
-                        fullWidth
-                        helperText={touched.card && errors.card}
-                        label={t('card')}
-                        type="number"
-                        inputProps={{
-                          min: '0'
-                        }}
-                        name="card"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        value={values.card}
-                        variant="outlined"
-                      />
-                    </Grid>
-                    <Grid item xs={12} lg={6}>
-                      <Typography variant="h6" gutterBottom>
-                        {t('expiration_month')}
-                      </Typography>
-                      <Field
-                        as={Select}
-                        fullWidth
-                        name="expirationMonth"
-                        onChange={handleChange}
-                        value={values.expirationMonth}
-                      >
-                        {monthOptions.map((option, index) => (
-                          <MenuItem key={index} value={option}>
-                            {option}
-                          </MenuItem>
-                        ))}
-                      </Field>
-                    </Grid>
-                    <Grid item xs={12} lg={6}>
-                      <Typography variant="h6" gutterBottom>
-                        {t('expiration_year')}
-                      </Typography>
-                      <Field
-                        as={Select}
-                        fullWidth
-                        name="expirationYear"
-                        onChange={handleChange}
-                        value={values.expirationYear}
-                      >
-                        {getYearOptions().map((option, index) => (
-                          <MenuItem key={index} value={option}>
-                            {option}
-                          </MenuItem>
-                        ))}
-                      </Field>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        error={Boolean(touched.cvv && errors.cvv)}
-                        fullWidth
-                        helperText={touched.cvv && errors.cvv}
-                        label={t('CVV')}
-                        type="number"
-                        inputProps={{
-                          min: '0'
-                        }}
-                        name="cvv"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        value={values.cvv}
-                        variant="outlined"
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        error={Boolean(touched.cardholder && errors.cardholder)}
-                        fullWidth
-                        helperText={touched.cardholder && errors.cardholder}
-                        label={t('cardholder_name')}
-                        name="cardholder"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        value={values.cardholder}
-                        variant="outlined"
-                      />
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item xs={12} lg={6}>
-                  <Grid container spacing={2} justifyContent="center">
-                    <Grid item xs={12} lg={6}>
-                      <Typography variant={'h4'}>{t('seats')}</Typography>
-                      <Typography variant="h6">{usersCount}</Typography>
-                    </Grid>
-                    <Grid item xs={12} lg={6}>
-                      <Typography variant={'h4'}>
-                        {t('cost_per_seat')}
-                      </Typography>
-                      {period === 'monthly' ? (
-                        <Typography variant="h6">
-                          {getFormattedCurrency(
-                            selectedPlanObject.monthlyCostPerUser
-                          )}{' '}
-                          {t('per_month')}
-                        </Typography>
-                      ) : (
-                        <Typography variant="h6">
-                          {getFormattedCurrency(
-                            selectedPlanObject.yearlyCostPerUser
-                          )}{' '}
-                          {t('per_year')}
-                        </Typography>
-                      )}
-                    </Grid>
-                    <Grid item xs={12} lg={12}>
-                      <Typography variant={'h4'}>{t('total_cost')}</Typography>
-                      <Typography variant="h6">{getCost()} $</Typography>
-                    </Grid>
-                    <Grid item xs={12} lg={12}>
-                      <Typography variant={'h4'}>
-                        {t('your_payment_secure')}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </DialogContent>
-            <DialogActions
-              sx={{
-                p: 3
-              }}
-            >
-              <Button color="secondary" onClick={handleCloseCheckoutModal}>
-                {t('cancel')}
-              </Button>
-              <Button
-                type="submit"
-                startIcon={
-                  isSubmitting ? <CircularProgress size="1rem" /> : null
-                }
-                disabled={isSubmitting}
-                variant="contained"
-              >
-                {t('save')}
-              </Button>
-            </DialogActions>
-          </form>
-        )}
-      </Formik>
-    </CustomDialog>
-  );
+
   if (user.ownsCompany)
     return (
       <>
         <Helmet>
           <title>{t('plan')}</title>
         </Helmet>
-        {renderCheckoutModal()}
         <Grid
           container
           justifyContent="center"
@@ -568,20 +366,13 @@ function SubscriptionPlans() {
                       : t('yearly_adverb')}
                   </Typography>
                   <Button
-                    onClick={handleOpenCheckoutModal}
+                    onClick={buyProduct}
                     size="large"
                     variant="contained"
                     disabled={!selectedPlan}
                   >
                     {t('proceed_to_payment')}
                   </Button>
-                  <span
-                    data-fsc-item-path="product1"
-                    data-fsc-item-display
-                  ></span>
-                  <button data-fsc-item-path="product1" data-fsc-action="Add">
-                    Add to cart
-                  </button>
                 </Box>
               </Card>
             </Grid>

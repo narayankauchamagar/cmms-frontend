@@ -536,17 +536,11 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
       }
     });
   };
-  const patchSubscription = async (
-    values: Partial<OwnSubscription>
-  ): Promise<void> => {
-    const subscription = await api.patch<OwnSubscription>(
-      `subscriptions/${state.company.subscription.id}`,
-      values
-    );
+  const patchSubscription = async (values: OwnSubscription): Promise<void> => {
     dispatch({
       type: 'PATCH_SUBSCRIPTION',
       payload: {
-        subscription
+        subscription: values
       }
     });
   };
