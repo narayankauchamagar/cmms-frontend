@@ -40,7 +40,7 @@ import UserAvatars from '../components/UserAvatars';
 import * as Yup from 'yup';
 import { isNumeric } from '../../../utils/validators';
 import { UserMiniDTO } from '../../../models/user';
-import WorkOrderDetails from './WorkOrderDetails';
+import WorkOrderDetails from './Details/WorkOrderDetails';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { LocationMiniDTO } from '../../../models/owns/location';
 import { AssetMiniDTO } from '../../../models/owns/asset';
@@ -75,8 +75,8 @@ import WorkOrderCalendar from './Calendar';
 import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
 import { exportEntity } from '../../../slices/exports';
 import FilterAltTwoToneIcon from '@mui/icons-material/FilterAltTwoTone';
-import Filters from './Filters';
-import PrioritySelector from './PrioritySelecter';
+import MoreFilters from './Filters/MoreFilters';
+import PriorityFilter from './Filters/PriorityFilter';
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
@@ -839,7 +839,7 @@ function WorkOrders() {
                   variant={'outlined'}
                   startIcon={<FilterAltTwoToneIcon />}
                 />
-                <PrioritySelector
+                <PriorityFilter
                   criteria={criteria}
                   onChange={(newCriteria) => {
                     setCriteria(newCriteria);
@@ -918,7 +918,7 @@ function WorkOrders() {
             sx: { width: '30%' }
           }}
         >
-          <Filters
+          <MoreFilters
             criteria={criteria}
             onCriteriaChange={(newCriteria) => {
               setCriteria(newCriteria);

@@ -12,15 +12,15 @@ import {
 import { useTranslation } from 'react-i18next';
 import TaskAltTwoToneIcon from '@mui/icons-material/TaskAltTwoTone';
 import { useContext, useEffect, useState } from 'react';
-import SingleTask from '../components/form/SelectTasks/SingleTask';
-import { Task } from '../../../models/owns/tasks';
-import { getTasks, patchTask } from '../../../slices/task';
-import { useDispatch } from '../../../store';
-import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
-import Form from '../components/form';
+import SingleTask from '../../components/form/SelectTasks/SingleTask';
+import { Task } from '../../../../models/owns/tasks';
+import { getTasks, patchTask } from '../../../../slices/task';
+import { useDispatch } from '../../../../store';
+import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContext';
+import Form from '../../components/form';
 import * as Yup from 'yup';
-import { addFiles } from '../../../slices/file';
-import { IField } from '../type';
+import { addFiles } from '../../../../slices/file';
+import { IField } from '../../type';
 
 interface TasksProps {
   tasksProps: Task[];

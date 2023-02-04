@@ -1,11 +1,11 @@
 import { Dialog, DialogContent, DialogTitle, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import Form from '../components/form';
+import Form from '../../components/form';
 import * as Yup from 'yup';
-import { IField } from '../type';
+import { IField } from '../../type';
 import { useContext } from 'react';
-import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
-import { StoreReturnType } from '../../../store';
+import { CompanySettingsContext } from '../../../../contexts/CompanySettingsContext';
+import { StoreReturnType } from '../../../../store';
 
 interface SignatureProps {
   open: boolean;

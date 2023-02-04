@@ -15,8 +15,8 @@ import { useTranslation } from 'react-i18next';
 import { Formik } from 'formik';
 
 import * as Yup from 'yup';
-import { useDispatch, useSelector } from '../../../store';
-import { createRelation } from '../../../slices/relation';
+import { useDispatch, useSelector } from '../../../../store';
+import { createRelation } from '../../../../slices/relation';
 import { relationTypes } from 'src/models/owns/relation';
 
 interface LinkModalProps {

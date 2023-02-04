@@ -21,7 +21,7 @@ import {
   Typography,
   useTheme
 } from '@mui/material';
-import WorkOrder from '../../../models/owns/workOrder';
+import WorkOrder from '../../../../models/owns/workOrder';
 import { ChangeEvent, useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
@@ -32,49 +32,49 @@ import Tasks from './Tasks';
 import LinkTwoToneIcon from '@mui/icons-material/LinkTwoTone';
 import ArchiveTwoToneIcon from '@mui/icons-material/ArchiveTwoTone';
 import PictureAsPdfTwoToneIcon from '@mui/icons-material/PictureAsPdfTwoTone';
-import PriorityWrapper from '../components/PriorityWrapper';
+import PriorityWrapper from '../../components/PriorityWrapper';
 import TimerTwoToneIcon from '@mui/icons-material/TimerTwoTone';
-import { editWorkOrder, getPDFReport } from '../../../slices/workOrder';
-import { useDispatch, useSelector } from '../../../store';
+import { editWorkOrder, getPDFReport } from '../../../../slices/workOrder';
+import { useDispatch, useSelector } from '../../../../store';
 import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
-import SelectParts from '../components/form/SelectParts';
+import SelectParts from '../../components/form/SelectParts';
 import ImageViewer from 'react-simple-image-viewer';
 import {
   editPartQuantity,
   editWOPartQuantities,
   getPartQuantitiesByWorkOrder
-} from '../../../slices/partQuantity';
-import Labor from '../../../models/owns/labor';
+} from '../../../../slices/partQuantity';
+import Labor from '../../../../models/owns/labor';
 import {
   controlTimer,
   deleteLabor,
   editLabor,
   getLabors
-} from '../../../slices/labor';
+} from '../../../../slices/labor';
 import {
   durationToHours,
   getHoursAndMinutesAndSeconds
-} from '../../../utils/formatters';
+} from '../../../../utils/formatters';
 import {
   deleteAdditionalCost,
   getAdditionalCosts
-} from '../../../slices/additionalCost';
-import { getTasks } from '../../../slices/task';
-import { Task } from '../../../models/owns/tasks';
-import { getWorkOrderHistories } from '../../../slices/workOrderHistory';
+} from '../../../../slices/additionalCost';
+import { getTasks } from '../../../../slices/task';
+import { Task } from '../../../../models/owns/tasks';
+import { getWorkOrderHistories } from '../../../../slices/workOrderHistory';
 import LinkModal from './LinkModal';
-import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
-import { deleteRelation, getRelations } from '../../../slices/relation';
-import Relation, { relationTypes } from '../../../models/owns/relation';
-import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
-import { getAssetUrl, getUserUrl } from '../../../utils/urlPaths';
+import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContext';
+import { deleteRelation, getRelations } from '../../../../slices/relation';
+import Relation, { relationTypes } from '../../../../models/owns/relation';
+import { CompanySettingsContext } from '../../../../contexts/CompanySettingsContext';
+import { getAssetUrl, getUserUrl } from '../../../../utils/urlPaths';
 import CompleteWOModal from './CompleteWOModal';
-import useAuth from '../../../hooks/useAuth';
-import { PermissionEntity } from '../../../models/owns/role';
-import { getSingleUserMini } from '../../../slices/user';
-import FilesList from '../components/FilesList';
-import { PlanFeature } from '../../../models/owns/subscriptionPlan';
-import PartQuantitiesList from '../components/PartQuantitiesList';
+import useAuth from '../../../../hooks/useAuth';
+import { PermissionEntity } from '../../../../models/owns/role';
+import { getSingleUserMini } from '../../../../slices/user';
+import FilesList from '../../components/FilesList';
+import { PlanFeature } from '../../../../models/owns/subscriptionPlan';
+import PartQuantitiesList from '../../components/PartQuantitiesList';
 
 interface WorkOrderDetailsProps {
   workOrder: WorkOrder;

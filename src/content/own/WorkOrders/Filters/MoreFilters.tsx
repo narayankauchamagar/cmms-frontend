@@ -1,7 +1,7 @@
-import { SearchCriteria } from '../../../models/owns/page';
+import { SearchCriteria } from '../../../../models/owns/page';
 import * as Yup from 'yup';
-import Form from '../components/form';
-import { IField } from '../type';
+import Form from '../../components/form';
+import { IField } from '../../type';
 import { useTranslation } from 'react-i18next';
 import { Grid, Typography } from '@mui/material';
 
@@ -11,7 +11,7 @@ interface OwnProps {
   onClose: () => void;
 }
 
-function Filters({ criteria, onCriteriaChange, onClose }: OwnProps) {
+function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
   const { t }: { t: any } = useTranslation();
   const fields: Array<IField> = [
     {
@@ -52,4 +52,4 @@ function Filters({ criteria, onCriteriaChange, onClose }: OwnProps) {
   );
 }
 
-export default Filters;
+export default MoreFilters;

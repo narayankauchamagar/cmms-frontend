@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { enumerate } from '../../../utils/displayers';
+import { enumerate } from '../../../../utils/displayers';
 import { Button, Checkbox, ListItemText, Menu, MenuItem } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { SearchCriteria } from '../../../models/owns/page';
-import { pushOrRemove } from '../../../utils/overall';
+import { SearchCriteria } from '../../../../models/owns/page';
+import { pushOrRemove } from '../../../../utils/overall';
 import SignalCellularAltTwoToneIcon from '@mui/icons-material/SignalCellularAltTwoTone';
 
 interface OwnProps {
   criteria: SearchCriteria;
   onChange: (criteria: SearchCriteria) => void;
 }
-function PrioritySelector({ criteria, onChange }: OwnProps) {
+function PriorityFilter({ criteria, onChange }: OwnProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);
   const navigate = useNavigate();
@@ -81,4 +81,4 @@ function PrioritySelector({ criteria, onChange }: OwnProps) {
     </>
   );
 }
-export default PrioritySelector;
+export default PriorityFilter;

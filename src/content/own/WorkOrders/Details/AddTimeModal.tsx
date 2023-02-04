@@ -1,14 +1,14 @@
 import { Dialog, DialogContent, DialogTitle, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import Form from '../components/form';
+import Form from '../../components/form';
 import * as Yup from 'yup';
-import { IField } from '../type';
-import { formatSelect } from '../../../utils/formatters';
-import { useDispatch } from '../../../store';
-import { createLabor } from '../../../slices/labor';
-import useAuth from '../../../hooks/useAuth';
-import FeatureErrorMessage from '../components/FeatureErrorMessage';
-import { PlanFeature } from '../../../models/owns/subscriptionPlan';
+import { IField } from '../../type';
+import { formatSelect } from '../../../../utils/formatters';
+import { useDispatch } from '../../../../store';
+import { createLabor } from '../../../../slices/labor';
+import useAuth from '../../../../hooks/useAuth';
+import FeatureErrorMessage from '../../components/FeatureErrorMessage';
+import { PlanFeature } from '../../../../models/owns/subscriptionPlan';
 
 interface AddTimeProps {
   open: boolean;
