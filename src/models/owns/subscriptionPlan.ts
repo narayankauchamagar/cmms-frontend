@@ -17,6 +17,6 @@ export interface SubscriptionPlan {
   name: string;
   monthlyCostPerUser: number;
   yearlyCostPerUser: number;
-  code: string;
+  code: 'FREE' | 'STARTER' | 'BUSINESS' | 'PROFESSIONAL';
   features: PlanFeature[];
 }

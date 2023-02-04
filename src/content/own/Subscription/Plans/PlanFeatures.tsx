@@ -16,13 +16,13 @@ function PlanFeatures(props: PlanFeatureProps) {
       { name: 'In app messaging', value: false },
       { name: 'Photo capture', value: true }
     ],
-    pro: [
+    professional: [
       { name: 'Work Orders', value: true },
       { name: 'Parts management', value: false },
       { name: 'In app messaging', value: true },
       { name: 'Photo capture', value: true }
     ],
-    bus: [
+    business: [
       { name: 'Work Orders', value: true },
       { name: 'Parts management', value: true },
       { name: 'In app messaging', value: true },

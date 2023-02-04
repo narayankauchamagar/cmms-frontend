@@ -60,10 +60,10 @@ function SubscriptionPlans() {
       case 'STARTER':
         path = 'starter';
         break;
-      case 'BUS':
+      case 'BUSINESS':
         path = 'business';
         break;
-      case 'PRO':
+      case 'PROFESSIONAL':
         path = 'professional';
         break;
       default:
@@ -78,6 +78,15 @@ function SubscriptionPlans() {
           quantity: usersCount
         }
       ],
+      paymentContact: {
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        phoneNumber: user?.phone ?? null
+      },
+      tags: {
+        userId: user.id
+      },
       checkout: true
     });
   };
