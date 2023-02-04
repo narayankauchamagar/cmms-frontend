@@ -1109,7 +1109,8 @@ const enJSON = {
   archived: 'Archived',
   import_wo_success:
     '{{created}} Work Orders have been created and {{updated}} have been updated',
-  to_export: 'Export'
+  to_export: 'Export',
+  filters: 'Filters'
 };
 
 export default enJSON;

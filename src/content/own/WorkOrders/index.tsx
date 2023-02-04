@@ -7,6 +7,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  Divider,
   Drawer,
   Grid,
   IconButton,
@@ -73,6 +74,8 @@ import { SearchCriteria } from '../../../models/owns/page';
 import WorkOrderCalendar from './Calendar';
 import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
 import { exportEntity } from '../../../slices/exports';
+import FilterAltTwoToneIcon from '@mui/icons-material/FilterAltTwoTone';
+import Filters from './Filters';
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
@@ -104,6 +107,7 @@ function WorkOrders() {
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
+  const [openFilterDrawer, setOpenFilterDrawer] = useState<boolean>(false);
   const { setTitle } = useContext(TitleContext);
   const { workOrderId } = useParams();
   const { showSnackBar } = useContext(CustomSnackBarContext);
@@ -181,6 +185,7 @@ function WorkOrders() {
     window.history.replaceState(null, 'WorkOrder', `/app/work-orders`);
     setOpenDrawer(false);
   };
+  const handleCloseFilterDrawer = () => setOpenFilterDrawer(false);
   useEffect(() => {
     setTitle(t('work_orders'));
   }, []);
@@ -802,11 +807,28 @@ function WorkOrders() {
               sx={{
                 p: 2,
                 display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between'
+                flexDirection: 'column',
+                alignItems: 'center'
               }}
             >
+              <Stack
+                sx={{ ml: 1 }}
+                direction="row"
+                spacing={1}
+                justifyContent={'flex-start'}
+                width={'95%'}
+              >
+                <Button
+                  onClick={() => setOpenFilterDrawer(true)}
+                  sx={{
+                    '& .MuiButton-startIcon': { margin: '0px' },
+                    minWidth: 0
+                  }}
+                  variant={'outlined'}
+                  startIcon={<FilterAltTwoToneIcon />}
+                />
+              </Stack>
+              <Divider sx={{ mt: 1 }} />
               {currentTab === 'list' ? (
                 <Box sx={{ height: 600, width: '95%' }}>
                   <CustomDataGrid
@@ -817,6 +839,7 @@ function WorkOrders() {
                     rowCount={workOrders.totalElements}
                     loading={loadingGet}
                     pagination
+                    disableColumnFilter
                     paginationMode="server"
                     onPageSizeChange={onPageSizeChange}
                     onPageChange={onPageChange}
@@ -867,6 +890,22 @@ function WorkOrders() {
             onEdit={handleOpenUpdate}
             tasks={tasks}
             onDelete={handleOpenDelete}
+          />
+        </Drawer>
+        <Drawer
+          anchor="left"
+          open={openFilterDrawer}
+          onClose={handleCloseFilterDrawer}
+          PaperProps={{
+            sx: { width: '30%' }
+          }}
+        >
+          <Filters
+            criteria={criteria}
+            onCriteriaChange={(newCriteria) => {
+              setCriteria(newCriteria);
+            }}
+            onClose={handleCloseFilterDrawer}
           />
         </Drawer>
         <ConfirmDialog
