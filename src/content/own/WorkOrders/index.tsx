@@ -76,6 +76,7 @@ import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
 import { exportEntity } from '../../../slices/exports';
 import FilterAltTwoToneIcon from '@mui/icons-material/FilterAltTwoTone';
 import Filters from './Filters';
+import PrioritySelector from './PrioritySelecter';
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
@@ -125,7 +126,15 @@ function WorkOrders() {
   const tasks = tasksByWorkOrder[currentWorkOrder?.id] ?? [];
   const [openDrawerFromUrl, setOpenDrawerFromUrl] = useState<boolean>(false);
   const [criteria, setCriteria] = useState<SearchCriteria>({
-    filterFields: [],
+    filterFields: [
+      {
+        field: 'priority',
+        operation: 'in',
+        values: ['NONE', 'LOW', 'MEDIUM', 'HIGH'],
+        value: '',
+        enumName: 'PRIORITY'
+      }
+    ],
     pageSize: 10,
     pageNum: 0
   });
@@ -133,6 +142,9 @@ function WorkOrders() {
   const openMenu = Boolean(anchorEl);
   const navigate = useNavigate();
 
+  /*  useEffect(() => {
+    console.log(criteria);
+  }, [criteria]);*/
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -826,6 +838,12 @@ function WorkOrders() {
                   }}
                   variant={'outlined'}
                   startIcon={<FilterAltTwoToneIcon />}
+                />
+                <PrioritySelector
+                  criteria={criteria}
+                  onChange={(newCriteria) => {
+                    setCriteria(newCriteria);
+                  }}
                 />
               </Stack>
               <Divider sx={{ mt: 1 }} />

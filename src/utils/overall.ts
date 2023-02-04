@@ -75,3 +75,13 @@ export const arrayToAoA = (array: string[][]): SpreadsheetData => {
   });
   return result;
 };
+
+export const pushOrRemove = (array: string[], push: boolean, value: string) => {
+  if (push) {
+    array.push(value);
+  } else {
+    const index = array.findIndex((element) => element === value);
+    if (index !== -1) array.splice(index, 1);
+  }
+  return array;
+};

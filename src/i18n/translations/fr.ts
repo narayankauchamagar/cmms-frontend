@@ -1225,7 +1225,7 @@ const frJSON = {
   HIGH: 'Haute',
   MEDIUM: 'Moyenne',
   LOW: 'Basse',
-  None: 'Aucune',
+  NONE: 'Aucune',
   import: 'Importation',
   start_import_process: "Commencer le processus d'importation",
   import_data: 'Importer',

@@ -11,13 +11,15 @@ export interface Page<T> {
   sort: { empty: boolean; sorted: boolean; unsorted: boolean };
 }
 type JoinType = 'INNER' | 'LEFT' | 'RIGHT';
+type EnumName = 'STATUS' | 'PRIORITY';
 interface FilterField {
   field: string;
-  joinType: JoinType;
+  joinType?: JoinType;
   value: any;
   operation: string;
+  enumName: EnumName;
   values: any[];
-  alternatives: FilterField[];
+  alternatives?: FilterField[];
 }
 type Direction = 'ASC' | 'DESC';
 export interface SearchCriteria {

@@ -1087,7 +1087,7 @@ const enJSON = {
   HIGH: 'High',
   MEDIUM: 'Medium',
   LOW: 'Low',
-  None: 'None',
+  NONE: 'None',
   import: 'Import',
   start_import_process: 'Start Import Process',
   import_data: 'Import Data',
