@@ -11,12 +11,29 @@ export interface Page<T> {
   sort: { empty: boolean; sorted: boolean; unsorted: boolean };
 }
 type JoinType = 'INNER' | 'LEFT' | 'RIGHT';
+export type SearchOperator =
+  | 'cn'
+  | 'nc'
+  | 'eq'
+  | 'ne'
+  | 'bw'
+  | 'bn'
+  | 'ew'
+  | 'en'
+  | 'nu'
+  | 'nn'
+  | 'gt'
+  | 'ge'
+  | 'lt'
+  | 'le'
+  | 'in'
+  | 'inm';
 type EnumName = 'STATUS' | 'PRIORITY';
 interface FilterField {
   field: string;
   joinType?: JoinType;
   value: any;
-  operation: string;
+  operation: SearchOperator;
   enumName?: EnumName;
   values?: any[];
   alternatives?: FilterField[];

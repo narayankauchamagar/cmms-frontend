@@ -1,9 +1,13 @@
-import { SearchCriteria } from '../../../../models/owns/page';
+import { SearchCriteria, SearchOperator } from '../../../../models/owns/page';
 import * as Yup from 'yup';
 import Form from '../../components/form';
 import { IField } from '../../type';
 import { useTranslation } from 'react-i18next';
 import { Grid, Typography } from '@mui/material';
+import { useContext } from 'react';
+import { useDispatch, useSelector } from '../../../../store';
+import { UserMiniDTO } from '../../../../models/user';
+import { CompanySettingsContext } from '../../../../contexts/CompanySettingsContext';
 
 interface OwnProps {
   onCriteriaChange: (criteria: SearchCriteria) => void;
@@ -13,14 +17,31 @@ interface OwnProps {
 
 function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
   const { t }: { t: any } = useTranslation();
-  const filtersConfig: { accessor: string; fieldName: string }[] = [
+  const dispatch = useDispatch();
+  const { customersMini } = useSelector((state) => state.customers);
+  const { getUserNameById } = useContext(CompanySettingsContext);
+  const { locationsMini } = useSelector((state) => state.locations);
+  const { categories } = useSelector((state) => state.categories);
+  const { usersMini } = useSelector((state) => state.users);
+  const { assetsMini } = useSelector((state) => state.assets);
+  const { teamsMini } = useSelector((state) => state.teams);
+
+  const filtersConfig: {
+    accessor: string;
+    fieldName: string;
+    operator?: SearchOperator;
+    isSingle?: boolean;
+  }[] = [
     { accessor: 'assets', fieldName: 'asset' },
     { accessor: 'categories', fieldName: 'category' },
     { accessor: 'teams', fieldName: 'team' },
     { accessor: 'primaryUsers', fieldName: 'primaryUser' },
     { accessor: 'locations', fieldName: 'location' },
     { accessor: 'createdBy', fieldName: 'createdBy' },
-    { accessor: 'completedBy', fieldName: 'completedBy' }
+    { accessor: 'completedBy', fieldName: 'completedBy' },
+    { accessor: 'customers', fieldName: 'customer' },
+    { accessor: 'assignedTo', fieldName: 'assignedTo', operator: 'inm' },
+    { accessor: 'archived', fieldName: 'archived', isSingle: true }
   ];
   const fields: Array<IField> = [
     {
@@ -83,49 +104,140 @@ function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
       multiple: true
     },
     {
+      name: 'assignedTo',
+      type: 'select',
+      label: t('additional_workers'),
+      type2: 'user',
+      multiple: true
+    },
+    {
+      name: 'customers',
+      type: 'select',
+      label: t('customer'),
+      type2: 'customer',
+      multiple: true
+    },
+    {
       name: 'archived',
       type: 'checkbox',
       label: t('archived')
     }
     //TODO dates
   ];
-  const getValuesFromCriteria = () => {
-    return criteria;
+  const getLabelAndValue = <T extends { id: number }>(
+    minis: T[],
+    fieldName: string,
+    labelAccessor: string,
+    formatter?: (value: any) => string
+  ): { label: string; value: number }[] => {
+    const filterFields = criteria.filterFields;
+    return (
+      filterFields
+        .find((filterField) => filterField.field === fieldName)
+        ?.values.map((id) => ({
+          label: formatter
+            ? formatter(minis.find((mini) => mini.id === id))
+            : minis.find((mini) => mini.id === id)[labelAccessor],
+          value: id
+        })) ?? null
+    );
+  };
+  const getValuesFromCriteria = (): {
+    [key: string]: { label: string; value: number }[] | boolean;
+  } => {
+    return {
+      archived: criteria.filterFields.find(
+        (filterField) => filterField.field === 'archived'
+      ).value,
+      assets: getLabelAndValue(assetsMini, 'asset', 'name'),
+      teams: getLabelAndValue(teamsMini, 'team', 'name'),
+      categories: getLabelAndValue(
+        categories['work-orders'],
+        'category',
+        'name'
+      ),
+      primaryUsers: getLabelAndValue(
+        usersMini,
+        'primaryUser',
+        '',
+        (user: UserMiniDTO) => `${user.firstName} ${user.lastName}`
+      ),
+      locations: getLabelAndValue(locationsMini, 'location', 'name'),
+      completedBy: getLabelAndValue(
+        usersMini,
+        'completedBy',
+        '',
+        (user: UserMiniDTO) => `${user.firstName} ${user.lastName}`
+      ),
+      assignedTo: getLabelAndValue(
+        usersMini,
+        'assignedTo',
+        '',
+        (user: UserMiniDTO) => `${user.firstName} ${user.lastName}`
+      ),
+      customers: getLabelAndValue(customersMini, 'customer', 'name'),
+      createdBy: getLabelAndValue(
+        usersMini,
+        'createdBy',
+        '',
+        (user: UserMiniDTO) => `${user.firstName} ${user.lastName}`
+      )
+    };
   };
   const shape = {};
-  const filterMultiple = (
+  const filterSingleField = (
     criteria: SearchCriteria,
     values: { [key: string]: { label: string; value: number }[] },
     accessor: string,
-    fieldName: string
+    fieldName: string,
+    isSingle: boolean,
+    operator: SearchOperator = 'in'
   ) => {
-    if (values[accessor]?.length) {
-      const filterFields = criteria.filterFields;
-      const ids = values[accessor].map((element) => element.value);
+    let filterFields = criteria.filterFields;
+    if (
+      (isSingle && values[accessor] === undefined) ||
+      (!isSingle && !values[accessor]?.length)
+    ) {
+      filterFields = filterFields.filter(
+        (filterField) => filterField.field !== fieldName
+      );
+    } else {
       let elementFilterFieldIndex = filterFields.findIndex(
         (filterField) => filterField.field === fieldName
       );
-      const simpleOperation = (id: number) => ({
-        field: fieldName,
-        operation: 'eq',
-        value: id
-      });
-      if (elementFilterFieldIndex !== -1) {
-        filterFields[elementFilterFieldIndex] = {
-          ...filterFields[elementFilterFieldIndex],
-          value: ids[0],
-          alternatives: ids.slice(1).map(simpleOperation)
-        };
-      } else {
-        filterFields.push({
-          field: fieldName,
-          operation: 'eq',
-          value: ids[0],
-          alternatives: ids.slice(1).map(simpleOperation)
-        });
+      if (isSingle) {
+        if (elementFilterFieldIndex !== -1) {
+          filterFields[elementFilterFieldIndex] = {
+            ...filterFields[elementFilterFieldIndex],
+            value: values[accessor]
+          };
+        } else {
+          filterFields.push({
+            field: fieldName,
+            operation: 'eq',
+            value: values[accessor]
+          });
+        }
+      } else if (values[accessor]?.length) {
+        const ids = values[accessor].map((element) => element.value);
+        if (elementFilterFieldIndex !== -1) {
+          filterFields[elementFilterFieldIndex] = {
+            ...filterFields[elementFilterFieldIndex],
+            value: '',
+            values: ids
+          };
+        } else {
+          filterFields.push({
+            field: fieldName,
+            operation: operator,
+            joinType: operator === 'inm' ? 'LEFT' : null,
+            value: '',
+            values: ids
+          });
+        }
       }
-      criteria.filterFields = filterFields;
     }
+    criteria.filterFields = filterFields;
   };
   return (
     <Grid
@@ -148,11 +260,13 @@ function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
           onSubmit={async (values) => {
             const newCriteria = { ...criteria };
             filtersConfig.forEach((filterConfig) => {
-              filterMultiple(
+              filterSingleField(
                 newCriteria,
                 values,
                 filterConfig.accessor,
-                filterConfig.fieldName
+                filterConfig.fieldName,
+                filterConfig.isSingle,
+                filterConfig.operator
               );
             });
             onCriteriaChange(newCriteria);

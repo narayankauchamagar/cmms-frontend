@@ -1111,7 +1111,8 @@ const enJSON = {
     '{{created}} Work Orders have been created and {{updated}} have been updated',
   to_export: 'Export',
   filters: 'Filters',
-  more_filters: 'More Filters'
+  more_filters: 'More Filters',
+  customer: 'Contractor'
 };
 
 export default enJSON;

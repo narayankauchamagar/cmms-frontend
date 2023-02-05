@@ -1249,7 +1249,8 @@ const frJSON = {
     '{{created}} bons de travail ont été créés et {{updated}} ont été mis à jour',
   to_export: 'Exporter',
   filters: 'Filtres',
-  more_filters: 'Plus de Filtres'
+  more_filters: 'Plus de Filtres',
+  customer: 'Prestataire'
 };
 
 export default frJSON;

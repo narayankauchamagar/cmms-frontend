@@ -78,6 +78,7 @@ import MoreFilters from './Filters/MoreFilters';
 import EnumFilter from './Filters/EnumFilter';
 import SignalCellularAltTwoToneIcon from '@mui/icons-material/SignalCellularAltTwoTone';
 import CircleTwoToneIcon from '@mui/icons-material/CircleTwoTone';
+import _ from 'lodash';
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
@@ -126,7 +127,7 @@ function WorkOrders() {
   const assetParamObject = assetInfos[assetParam]?.asset;
   const tasks = tasksByWorkOrder[currentWorkOrder?.id] ?? [];
   const [openDrawerFromUrl, setOpenDrawerFromUrl] = useState<boolean>(false);
-  const [criteria, setCriteria] = useState<SearchCriteria>({
+  const initialCriteria: SearchCriteria = {
     filterFields: [
       {
         field: 'priority',
@@ -141,11 +142,17 @@ function WorkOrders() {
         values: ['OPEN', 'IN_PROGRESS', 'ON_HOLD'],
         value: '',
         enumName: 'STATUS'
+      },
+      {
+        field: 'archived',
+        operation: 'eq',
+        value: false
       }
     ],
     pageSize: 10,
     pageNum: 0
-  });
+  };
+  const [criteria, setCriteria] = useState<SearchCriteria>(initialCriteria);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);
   const navigate = useNavigate();
@@ -844,7 +851,11 @@ function WorkOrders() {
                     '& .MuiButton-startIcon': { margin: '0px' },
                     minWidth: 0
                   }}
-                  variant={'outlined'}
+                  variant={
+                    _.isEqual(criteria, initialCriteria)
+                      ? 'outlined'
+                      : 'contained'
+                  }
                   startIcon={<FilterAltTwoToneIcon />}
                 />
                 <EnumFilter
