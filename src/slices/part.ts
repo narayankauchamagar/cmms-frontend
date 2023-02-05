@@ -82,10 +82,13 @@ export const reducer = slice.reducer;
 export const getParts =
   (criteria: SearchCriteria): AppThunk =>
   async (dispatch) => {
-    dispatch(slice.actions.setLoadingGet({ loading: true }));
-    const parts = await api.post<Page<Part>>(`${basePath}/search`, criteria);
-    dispatch(slice.actions.getParts({ parts }));
-    dispatch(slice.actions.setLoadingGet({ loading: false }));
+    try {
+      dispatch(slice.actions.setLoadingGet({ loading: true }));
+      const parts = await api.post<Page<Part>>(`${basePath}/search`, criteria);
+      dispatch(slice.actions.getParts({ parts }));
+    } finally {
+      dispatch(slice.actions.setLoadingGet({ loading: false }));
+    }
   };
 
 export const getSinglePart =

@@ -90,13 +90,16 @@ export const reducer = slice.reducer;
 export const getVendors =
   (criteria: SearchCriteria): AppThunk =>
   async (dispatch) => {
-    dispatch(slice.actions.setLoadingGet({ loading: true }));
-    const vendors = await api.post<Page<Vendor>>(
-      `${basePath}/search`,
-      criteria
-    );
-    dispatch(slice.actions.getVendors({ vendors }));
-    dispatch(slice.actions.setLoadingGet({ loading: false }));
+    try {
+      dispatch(slice.actions.setLoadingGet({ loading: true }));
+      const vendors = await api.post<Page<Vendor>>(
+        `${basePath}/search`,
+        criteria
+      );
+      dispatch(slice.actions.getVendors({ vendors }));
+    } finally {
+      dispatch(slice.actions.setLoadingGet({ loading: false }));
+    }
   };
 
 export const getSingleVendor =

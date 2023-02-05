@@ -122,15 +122,17 @@ export const reducer = slice.reducer;
 export const getPreventiveMaintenances =
   (criteria: SearchCriteria): AppThunk =>
   async (dispatch) => {
-    dispatch(slice.actions.setLoadingGet({ loading: true }));
-    const preventiveMaintenances = await api.post<Page<PreventiveMaintenance>>(
-      `${basePath}/search`,
-      criteria
-    );
-    dispatch(
-      slice.actions.getPreventiveMaintenances({ preventiveMaintenances })
-    );
-    dispatch(slice.actions.setLoadingGet({ loading: false }));
+    try {
+      dispatch(slice.actions.setLoadingGet({ loading: true }));
+      const preventiveMaintenances = await api.post<
+        Page<PreventiveMaintenance>
+      >(`${basePath}/search`, criteria);
+      dispatch(
+        slice.actions.getPreventiveMaintenances({ preventiveMaintenances })
+      );
+    } finally {
+      dispatch(slice.actions.setLoadingGet({ loading: false }));
+    }
   };
 
 export const getSinglePreventiveMaintenance =

@@ -998,10 +998,10 @@ const frJSON = {
   upgrade_role_delete: 'Mettez à niveau pour supprimer le rôle',
   create: 'Créer',
   pm_trigger: 'Déclencheurs de Maintenance Préventive',
-  auto_assign_wo: 'Affecter automatiquement des bons de travail',
+  auto_assign_wo: 'Affecter automatiquement les bons de travail',
   auto_assign_wo_description:
     'Affecter automatiquement de nouveaux bons de travail à la personne qui les crée',
-  auto_assign_requests: 'Attribu automatiquement les demandes',
+  auto_assign_requests: 'Attribuer automatiquement les demandes',
   auto_assign_requests_description:
     'Attribuer automatiquement de nouveaux ordres de travail à la personne qui approuve la demande',
   disable_closed_wo_notification:

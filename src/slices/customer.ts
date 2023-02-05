@@ -99,13 +99,16 @@ export const reducer = slice.reducer;
 export const getCustomers =
   (criteria: SearchCriteria): AppThunk =>
   async (dispatch) => {
-    dispatch(slice.actions.setLoadingGet({ loading: true }));
-    const customers = await api.post<Page<Customer>>(
-      `${basePath}/search`,
-      criteria
-    );
-    dispatch(slice.actions.getCustomers({ customers }));
-    dispatch(slice.actions.setLoadingGet({ loading: false }));
+    try {
+      dispatch(slice.actions.setLoadingGet({ loading: true }));
+      const customers = await api.post<Page<Customer>>(
+        `${basePath}/search`,
+        criteria
+      );
+      dispatch(slice.actions.getCustomers({ customers }));
+    } finally {
+      dispatch(slice.actions.setLoadingGet({ loading: false }));
+    }
   };
 
 export const getSingleCustomer =

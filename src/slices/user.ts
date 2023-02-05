@@ -92,10 +92,13 @@ export const reducer = slice.reducer;
 export const getUsers =
   (criteria: SearchCriteria): AppThunk =>
   async (dispatch) => {
-    dispatch(slice.actions.setLoadingGet({ loading: true }));
-    const users = await api.post<Page<User>>(`${basePath}/search`, criteria);
-    dispatch(slice.actions.getUsers({ users }));
-    dispatch(slice.actions.setLoadingGet({ loading: false }));
+    try {
+      dispatch(slice.actions.setLoadingGet({ loading: true }));
+      const users = await api.post<Page<User>>(`${basePath}/search`, criteria);
+      dispatch(slice.actions.getUsers({ users }));
+    } finally {
+      dispatch(slice.actions.setLoadingGet({ loading: false }));
+    }
   };
 
 export const getSingleUser =

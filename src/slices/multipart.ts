@@ -68,10 +68,13 @@ const slice = createSlice({
 export const reducer = slice.reducer;
 
 export const getMultiParts = (): AppThunk => async (dispatch) => {
-  dispatch(slice.actions.setLoadingGet({ loading: true }));
-  const multiParts = await api.get<SetType[]>(basePath);
-  dispatch(slice.actions.getMultiParts({ multiParts }));
-  dispatch(slice.actions.setLoadingGet({ loading: false }));
+  try {
+    dispatch(slice.actions.setLoadingGet({ loading: true }));
+    const multiParts = await api.get<SetType[]>(basePath);
+    dispatch(slice.actions.getMultiParts({ multiParts }));
+  } finally {
+    dispatch(slice.actions.setLoadingGet({ loading: false }));
+  }
 };
 
 export const addMultiParts =

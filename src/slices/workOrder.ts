@@ -125,13 +125,16 @@ export const reducer = slice.reducer;
 export const getWorkOrders =
   (criteria: SearchCriteria): AppThunk =>
   async (dispatch) => {
-    dispatch(slice.actions.setLoadingGet({ loading: true }));
-    const workOrders = await api.post<Page<WorkOrder>>(
-      `${basePath}/search`,
-      criteria
-    );
-    dispatch(slice.actions.getWorkOrders({ workOrders }));
-    dispatch(slice.actions.setLoadingGet({ loading: false }));
+    try {
+      dispatch(slice.actions.setLoadingGet({ loading: true }));
+      const workOrders = await api.post<Page<WorkOrder>>(
+        `${basePath}/search`,
+        criteria
+      );
+      dispatch(slice.actions.getWorkOrders({ workOrders }));
+    } finally {
+      dispatch(slice.actions.setLoadingGet({ loading: false }));
+    }
   };
 export const getSingleWorkOrder =
   (id: number): AppThunk =>
@@ -220,7 +223,7 @@ export const getWorkOrderEvents =
   (start: Date, end: Date): AppThunk =>
   async (dispatch) => {
     const response = await api.post<WorkOrder[]>(`${basePath}/events`, {
-     start,
+      start,
       end
     });
     dispatch(

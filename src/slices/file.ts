@@ -77,10 +77,13 @@ export const reducer = slice.reducer;
 export const getFiles =
   (criteria: SearchCriteria): AppThunk =>
   async (dispatch) => {
-    dispatch(slice.actions.setLoadingGet({ loading: true }));
-    const files = await api.post<Page<File>>(`${basePath}/search`, criteria);
-    dispatch(slice.actions.getFiles({ files }));
-    dispatch(slice.actions.setLoadingGet({ loading: false }));
+    try {
+      dispatch(slice.actions.setLoadingGet({ loading: true }));
+      const files = await api.post<Page<File>>(`${basePath}/search`, criteria);
+      dispatch(slice.actions.getFiles({ files }));
+    } finally {
+      dispatch(slice.actions.setLoadingGet({ loading: false }));
+    }
   };
 
 export const getSingleFile =

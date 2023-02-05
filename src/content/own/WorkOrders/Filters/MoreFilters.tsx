@@ -4,10 +4,8 @@ import Form from '../../components/form';
 import { IField } from '../../type';
 import { useTranslation } from 'react-i18next';
 import { Grid, Typography } from '@mui/material';
-import { useContext } from 'react';
-import { useDispatch, useSelector } from '../../../../store';
+import { useSelector } from '../../../../store';
 import { UserMiniDTO } from '../../../../models/user';
-import { CompanySettingsContext } from '../../../../contexts/CompanySettingsContext';
 
 interface OwnProps {
   onCriteriaChange: (criteria: SearchCriteria) => void;
@@ -17,9 +15,7 @@ interface OwnProps {
 
 function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
   const { t }: { t: any } = useTranslation();
-  const dispatch = useDispatch();
   const { customersMini } = useSelector((state) => state.customers);
-  const { getUserNameById } = useContext(CompanySettingsContext);
   const { locationsMini } = useSelector((state) => state.locations);
   const { categories } = useSelector((state) => state.categories);
   const { usersMini } = useSelector((state) => state.users);

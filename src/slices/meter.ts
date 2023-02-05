@@ -88,10 +88,16 @@ export const reducer = slice.reducer;
 export const getMeters =
   (criteria: SearchCriteria): AppThunk =>
   async (dispatch) => {
-    dispatch(slice.actions.setLoadingGet({ loading: true }));
-    const meters = await api.post<Page<Meter>>(`${basePath}/search`, criteria);
-    dispatch(slice.actions.getMeters({ meters }));
-    dispatch(slice.actions.setLoadingGet({ loading: false }));
+    try {
+      dispatch(slice.actions.setLoadingGet({ loading: true }));
+      const meters = await api.post<Page<Meter>>(
+        `${basePath}/search`,
+        criteria
+      );
+      dispatch(slice.actions.getMeters({ meters }));
+    } finally {
+      dispatch(slice.actions.setLoadingGet({ loading: false }));
+    }
   };
 
 export const getSingleMeter =

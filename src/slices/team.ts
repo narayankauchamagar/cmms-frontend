@@ -82,10 +82,13 @@ export const reducer = slice.reducer;
 export const getTeams =
   (criteria: SearchCriteria): AppThunk =>
   async (dispatch) => {
-    dispatch(slice.actions.setLoadingGet({ loading: true }));
-    const teams = await api.post<Page<Team>>(`${basePath}/search`, criteria);
-    dispatch(slice.actions.getTeams({ teams }));
-    dispatch(slice.actions.setLoadingGet({ loading: false }));
+    try {
+      dispatch(slice.actions.setLoadingGet({ loading: true }));
+      const teams = await api.post<Page<Team>>(`${basePath}/search`, criteria);
+      dispatch(slice.actions.getTeams({ teams }));
+    } finally {
+      dispatch(slice.actions.setLoadingGet({ loading: false }));
+    }
   };
 
 export const getSingleTeam =

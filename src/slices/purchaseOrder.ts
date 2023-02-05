@@ -100,13 +100,16 @@ export const reducer = slice.reducer;
 export const getPurchaseOrders =
   (criteria: SearchCriteria): AppThunk =>
   async (dispatch) => {
-    dispatch(slice.actions.setLoadingGet({ loading: true }));
-    const purchaseOrders = await api.post<Page<PurchaseOrder>>(
-      `${basePath}/search`,
-      criteria
-    );
-    dispatch(slice.actions.getPurchaseOrders({ purchaseOrders }));
-    dispatch(slice.actions.setLoadingGet({ loading: false }));
+    try {
+      dispatch(slice.actions.setLoadingGet({ loading: true }));
+      const purchaseOrders = await api.post<Page<PurchaseOrder>>(
+        `${basePath}/search`,
+        criteria
+      );
+      dispatch(slice.actions.getPurchaseOrders({ purchaseOrders }));
+    } finally {
+      dispatch(slice.actions.setLoadingGet({ loading: false }));
+    }
   };
 
 export const getSinglePurchaseOrder =
