@@ -39,7 +39,7 @@ function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
     { accessor: 'locations', fieldName: 'location' },
     { accessor: 'createdBy', fieldName: 'createdBy' },
     { accessor: 'completedBy', fieldName: 'completedBy' },
-    { accessor: 'customers', fieldName: 'customer' },
+    { accessor: 'customers', fieldName: 'customer', operator: 'inm' },
     { accessor: 'assignedTo', fieldName: 'assignedTo', operator: 'inm' },
     { accessor: 'archived', fieldName: 'archived', isSingle: true }
   ];
@@ -127,8 +127,8 @@ function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
   const getLabelAndValue = <T extends { id: number }>(
     minis: T[],
     fieldName: string,
-    labelAccessor: string,
-    formatter?: (value: any) => string
+    labelAccessor?: keyof T,
+    formatter?: (value: T) => string
   ): { label: string; value: number }[] => {
     const filterFields = criteria.filterFields;
     return (
@@ -137,7 +137,7 @@ function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
         ?.values.map((id) => ({
           label: formatter
             ? formatter(minis.find((mini) => mini.id === id))
-            : minis.find((mini) => mini.id === id)[labelAccessor],
+            : minis.find((mini) => mini.id === id)[labelAccessor].toString(),
           value: id
         })) ?? null
     );
@@ -159,27 +159,27 @@ function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
       primaryUsers: getLabelAndValue(
         usersMini,
         'primaryUser',
-        '',
+        null,
         (user: UserMiniDTO) => `${user.firstName} ${user.lastName}`
       ),
       locations: getLabelAndValue(locationsMini, 'location', 'name'),
       completedBy: getLabelAndValue(
         usersMini,
         'completedBy',
-        '',
+        null,
         (user: UserMiniDTO) => `${user.firstName} ${user.lastName}`
       ),
       assignedTo: getLabelAndValue(
         usersMini,
         'assignedTo',
-        '',
+        null,
         (user: UserMiniDTO) => `${user.firstName} ${user.lastName}`
       ),
       customers: getLabelAndValue(customersMini, 'customer', 'name'),
       createdBy: getLabelAndValue(
         usersMini,
         'createdBy',
-        '',
+        null,
         (user: UserMiniDTO) => `${user.firstName} ${user.lastName}`
       )
     };
