@@ -21,7 +21,6 @@ import {
   useTheme
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import CircleTwoToneIcon from '@mui/icons-material/CircleTwoTone';
 import { IField } from '../type';
 import WorkOrder from '../../../models/owns/workOrder';
 import * as React from 'react';
@@ -76,7 +75,9 @@ import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
 import { exportEntity } from '../../../slices/exports';
 import FilterAltTwoToneIcon from '@mui/icons-material/FilterAltTwoTone';
 import MoreFilters from './Filters/MoreFilters';
-import PriorityFilter from './Filters/PriorityFilter';
+import EnumFilter from './Filters/EnumFilter';
+import SignalCellularAltTwoToneIcon from '@mui/icons-material/SignalCellularAltTwoTone';
+import CircleTwoToneIcon from '@mui/icons-material/CircleTwoTone';
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
@@ -133,6 +134,13 @@ function WorkOrders() {
         values: ['NONE', 'LOW', 'MEDIUM', 'HIGH'],
         value: '',
         enumName: 'PRIORITY'
+      },
+      {
+        field: 'status',
+        operation: 'in',
+        values: ['OPEN', 'IN_PROGRESS', 'ON_HOLD'],
+        value: '',
+        enumName: 'STATUS'
       }
     ],
     pageSize: 10,
@@ -839,11 +847,28 @@ function WorkOrders() {
                   variant={'outlined'}
                   startIcon={<FilterAltTwoToneIcon />}
                 />
-                <PriorityFilter
+                <EnumFilter
                   criteria={criteria}
                   onChange={(newCriteria) => {
                     setCriteria(newCriteria);
                   }}
+                  completeOptions={['NONE', 'LOW', 'MEDIUM', 'HIGH']}
+                  fieldName="priority"
+                  icon={<SignalCellularAltTwoToneIcon />}
+                />
+                <EnumFilter
+                  criteria={criteria}
+                  onChange={(newCriteria) => {
+                    setCriteria(newCriteria);
+                  }}
+                  completeOptions={[
+                    'OPEN',
+                    'IN_PROGRESS',
+                    'ON_HOLD',
+                    'COMPLETE'
+                  ]}
+                  fieldName="status"
+                  icon={<CircleTwoToneIcon />}
                 />
               </Stack>
               <Divider sx={{ mt: 1 }} />
