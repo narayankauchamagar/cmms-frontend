@@ -28,7 +28,7 @@ export type SearchOperator =
   | 'le'
   | 'in'
   | 'inm';
-type EnumName = 'STATUS' | 'PRIORITY';
+type EnumName = 'STATUS' | 'PRIORITY' | 'JS_DATE';
 interface FilterField {
   field: string;
   joinType?: JoinType;

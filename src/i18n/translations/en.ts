@@ -1112,7 +1112,11 @@ const enJSON = {
   to_export: 'Export',
   filters: 'Filters',
   more_filters: 'More Filters',
-  customer: 'Contractor'
+  customer: 'Contractor',
+  to: 'to',
+  dates: 'Dates',
+  start: 'Start',
+  end: 'End'
 };
 
 export default enJSON;

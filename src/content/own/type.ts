@@ -24,7 +24,8 @@ export interface IField {
     | 'date'
     | 'switch'
     | 'partQuantity'
-    | 'coordinates';
+    | 'coordinates'
+    | 'dateRange';
   type2?:
     | 'customer'
     | 'vendor'

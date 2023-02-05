@@ -26,22 +26,40 @@ function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
   const { assetsMini } = useSelector((state) => state.assets);
   const { teamsMini } = useSelector((state) => state.teams);
 
+  type FieldType = 'simple' | 'array' | 'date';
   const filtersConfig: {
     accessor: string;
     fieldName: string;
     operator?: SearchOperator;
-    isSingle?: boolean;
+    type: FieldType;
   }[] = [
-    { accessor: 'assets', fieldName: 'asset' },
-    { accessor: 'categories', fieldName: 'category' },
-    { accessor: 'teams', fieldName: 'team' },
-    { accessor: 'primaryUsers', fieldName: 'primaryUser' },
-    { accessor: 'locations', fieldName: 'location' },
-    { accessor: 'createdBy', fieldName: 'createdBy' },
-    { accessor: 'completedBy', fieldName: 'completedBy' },
-    { accessor: 'customers', fieldName: 'customer', operator: 'inm' },
-    { accessor: 'assignedTo', fieldName: 'assignedTo', operator: 'inm' },
-    { accessor: 'archived', fieldName: 'archived', isSingle: true }
+    { accessor: 'assets', fieldName: 'asset', type: 'array' },
+    { accessor: 'categories', fieldName: 'category', type: 'array' },
+    { accessor: 'teams', fieldName: 'team', type: 'array' },
+    { accessor: 'primaryUsers', fieldName: 'primaryUser', type: 'array' },
+    { accessor: 'locations', fieldName: 'location', type: 'array' },
+    { accessor: 'createdBy', fieldName: 'createdBy', type: 'array' },
+    { accessor: 'completedBy', fieldName: 'completedBy', type: 'array' },
+    {
+      accessor: 'customers',
+      fieldName: 'customer',
+      operator: 'inm',
+      type: 'array'
+    },
+    {
+      accessor: 'assignedTo',
+      fieldName: 'assignedTo',
+      operator: 'inm',
+      type: 'array'
+    },
+    {
+      accessor: 'archived',
+      fieldName: 'archived',
+      type: 'simple'
+    },
+    { accessor: 'createdAt', fieldName: 'createdAt', type: 'date' },
+    { accessor: 'updatedAt', fieldName: 'updatedAt', type: 'date' },
+    { accessor: 'completedOn', fieldName: 'completedOn', type: 'date' }
   ];
   const fields: Array<IField> = [
     {
@@ -121,8 +139,23 @@ function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
       name: 'archived',
       type: 'checkbox',
       label: t('archived')
+    },
+    { name: 'datesGroup', type: 'titleGroupField', label: t('dates') },
+    {
+      name: 'createdAt',
+      type: 'dateRange',
+      label: t('created_at')
+    },
+    {
+      name: 'completedOn',
+      type: 'dateRange',
+      label: t('completed_on')
+    },
+    {
+      name: 'updatedAt',
+      type: 'dateRange',
+      label: t('updated_at')
     }
-    //TODO dates
   ];
   const getLabelAndValue = <T extends { id: number }>(
     minis: T[],
@@ -142,8 +175,23 @@ function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
         })) ?? null
     );
   };
+  const getDateValue = (fieldName: string): [string, string] => {
+    return [
+      criteria.filterFields.find(
+        (filterField) =>
+          filterField.field === fieldName && filterField.operation === 'ge'
+      )?.value ?? null,
+      criteria.filterFields.find(
+        (filterField) =>
+          filterField.field === fieldName && filterField.operation === 'le'
+      )?.value ?? null
+    ];
+  };
   const getValuesFromCriteria = (): {
-    [key: string]: { label: string; value: number }[] | boolean;
+    [key: string]:
+      | { label: string; value: number }[]
+      | boolean
+      | [string, string];
   } => {
     return {
       archived: criteria.filterFields.find(
@@ -181,7 +229,10 @@ function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
         'createdBy',
         null,
         (user: UserMiniDTO) => `${user.firstName} ${user.lastName}`
-      )
+      ),
+      createdAt: getDateValue('createdAt'),
+      updatedAt: getDateValue('updatedAt'),
+      completedOn: getDateValue('completedOn')
     };
   };
   const shape = {};
@@ -190,13 +241,14 @@ function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
     values: { [key: string]: { label: string; value: number }[] },
     accessor: string,
     fieldName: string,
-    isSingle: boolean,
+    type: FieldType,
     operator: SearchOperator = 'in'
   ) => {
     let filterFields = criteria.filterFields;
     if (
-      (isSingle && values[accessor] === undefined) ||
-      (!isSingle && !values[accessor]?.length)
+      (type === 'simple' && values[accessor] === undefined) ||
+      (type === 'array' && !values[accessor]?.length) ||
+      (type === 'date' && values[accessor] == [null, null])
     ) {
       filterFields = filterFields.filter(
         (filterField) => filterField.field !== fieldName
@@ -205,7 +257,8 @@ function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
       let elementFilterFieldIndex = filterFields.findIndex(
         (filterField) => filterField.field === fieldName
       );
-      if (isSingle) {
+
+      if (type === 'simple') {
         if (elementFilterFieldIndex !== -1) {
           filterFields[elementFilterFieldIndex] = {
             ...filterFields[elementFilterFieldIndex],
@@ -218,7 +271,7 @@ function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
             value: values[accessor]
           });
         }
-      } else if (values[accessor]?.length) {
+      } else if (type === 'array' && values[accessor]?.length) {
         const ids = values[accessor].map((element) => element.value);
         if (elementFilterFieldIndex !== -1) {
           filterFields[elementFilterFieldIndex] = {
@@ -235,6 +288,21 @@ function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
             values: ids
           });
         }
+      } else if (type === 'date' && values[accessor]?.every((date) => !!date)) {
+        const [start, end] = values[accessor];
+        filterFields = filterFields.filter(
+          (filterField) => filterField.field !== fieldName
+        );
+        filterFields = [
+          ...filterFields,
+          {
+            field: fieldName,
+            operation: 'ge',
+            value: start,
+            enumName: 'JS_DATE'
+          },
+          { field: fieldName, operation: 'le', value: end, enumName: 'JS_DATE' }
+        ];
       }
     }
     criteria.filterFields = filterFields;
@@ -265,7 +333,7 @@ function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
                 values,
                 filterConfig.accessor,
                 filterConfig.fieldName,
-                filterConfig.isSingle,
+                filterConfig.type,
                 filterConfig.operator
               );
             });

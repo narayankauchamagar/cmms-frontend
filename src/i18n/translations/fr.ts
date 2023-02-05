@@ -1250,7 +1250,11 @@ const frJSON = {
   to_export: 'Exporter',
   filters: 'Filtres',
   more_filters: 'Plus de Filtres',
-  customer: 'Prestataire'
+  customer: 'Prestataire',
+  to: 'au',
+  dates: 'Dates',
+  start: 'Début',
+  end: 'Fin'
 };
 
 export default frJSON;
