@@ -1248,7 +1248,8 @@ const frJSON = {
   import_wo_success:
     '{{created}} bons de travail ont été créés et {{updated}} ont été mis à jour',
   to_export: 'Exporter',
-  filters: 'Filtres'
+  filters: 'Filtres',
+  more_filters: 'Plus de Filtres'
 };
 
 export default frJSON;

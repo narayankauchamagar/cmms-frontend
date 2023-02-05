@@ -17,8 +17,8 @@ interface FilterField {
   joinType?: JoinType;
   value: any;
   operation: string;
-  enumName: EnumName;
-  values: any[];
+  enumName?: EnumName;
+  values?: any[];
   alternatives?: FilterField[];
 }
 type Direction = 'ASC' | 'DESC';
