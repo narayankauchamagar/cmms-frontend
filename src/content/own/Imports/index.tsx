@@ -209,6 +209,7 @@ const Import = ({}: OwnProps) => {
           'success'
         );
         setOpenModal(false);
+        setActiveStep(0);
       })
       .finally(() => {
         setLoadingImport(false);
@@ -358,8 +359,7 @@ const Import = ({}: OwnProps) => {
                   reader.onload = function (e) {
                     const data = e.target.result;
                     const file = read(data, {
-                      type: 'binary',
-                      cellDates: true
+                      type: 'binary'
                     });
                     const sheet = file.Sheets[file.SheetNames[0]];
                     const localJsonArray: string[][] = utils.sheet_to_json(

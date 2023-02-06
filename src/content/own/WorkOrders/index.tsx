@@ -853,7 +853,10 @@ function WorkOrders() {
                     minWidth: 0
                   }}
                   variant={
-                    _.isEqual(criteria, initialCriteria)
+                    _.isEqual(
+                      criteria.filterFields,
+                      initialCriteria.filterFields
+                    )
                       ? 'outlined'
                       : 'contained'
                   }
