@@ -75,7 +75,8 @@ function Files() {
   const [criteria, setCriteria] = useState<SearchCriteria>({
     filterFields: [],
     pageSize: 10,
-    pageNum: 0
+    pageNum: 0,
+    direction: 'DESC'
   });
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const navigate = useNavigate();

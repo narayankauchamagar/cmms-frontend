@@ -61,7 +61,8 @@ function Files() {
   const [criteria, setCriteria] = useState<SearchCriteria>({
     filterFields: [],
     pageSize: 10,
-    pageNum: 0
+    pageNum: 0,
+    direction: 'DESC'
   });
   const { fileId } = useParams();
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);

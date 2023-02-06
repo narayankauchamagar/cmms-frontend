@@ -62,7 +62,8 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
   const [criteria, setCriteria] = useState<SearchCriteria>({
     filterFields: [],
     pageSize: 10,
-    pageNum: 0
+    pageNum: 0,
+    direction: 'DESC'
   });
   const [currentVendor, setCurrentVendor] = useState<Vendor>();
   const [viewOrUpdate, setViewOrUpdate] = useState<'view' | 'update'>('view');

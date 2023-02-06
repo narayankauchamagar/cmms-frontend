@@ -64,7 +64,8 @@ const Parts = ({ setAction }: PropsType) => {
   const [criteria, setCriteria] = useState<SearchCriteria>({
     filterFields: [],
     pageSize: 10,
-    pageNum: 0
+    pageNum: 0,
+    direction: 'DESC'
   });
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);

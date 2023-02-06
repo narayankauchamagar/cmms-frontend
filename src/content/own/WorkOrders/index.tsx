@@ -150,7 +150,8 @@ function WorkOrders() {
       }
     ],
     pageSize: 10,
-    pageNum: 0
+    pageNum: 0,
+    direction: 'DESC'
   };
   const [criteria, setCriteria] = useState<SearchCriteria>(initialCriteria);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

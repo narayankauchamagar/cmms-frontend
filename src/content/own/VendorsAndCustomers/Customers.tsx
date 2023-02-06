@@ -64,7 +64,8 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
   const [criteria, setCriteria] = useState<SearchCriteria>({
     filterFields: [],
     pageSize: 10,
-    pageNum: 0
+    pageNum: 0,
+    direction: 'DESC'
   });
   const { hasEditPermission, hasDeletePermission } = useAuth();
   const [currentCustomer, setCurrentCustomer] = useState<Customer>();

@@ -357,7 +357,10 @@ const Import = ({}: OwnProps) => {
                   var reader = new FileReader();
                   reader.onload = function (e) {
                     const data = e.target.result;
-                    const file = read(data, { type: 'binary' });
+                    const file = read(data, {
+                      type: 'binary',
+                      cellDates: true
+                    });
                     const sheet = file.Sheets[file.SheetNames[0]];
                     const localJsonArray: string[][] = utils.sheet_to_json(
                       sheet,
