@@ -1116,7 +1116,9 @@ const enJSON = {
   to: 'to',
   dates: 'Dates',
   start: 'Start',
-  end: 'End'
+  end: 'End',
+  longitude: 'Longitude',
+  latitude: 'Latitude'
 };
 
 export default enJSON;

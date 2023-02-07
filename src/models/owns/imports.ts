@@ -1,13 +1,23 @@
-export type ImportKeys = keyof WorkOrderImportDTO;
-export type ImportDTO = WorkOrderImportDTO;
-export interface WorkOrderImportDTO {
+export type ImportKeys =
+  | keyof WorkOrderImportDTO
+  | keyof AssetImportDTO
+  | keyof MeterImportDTO
+  | keyof PartImportDTO
+  | keyof LocationImportDTO;
+export type ImportDTO =
+  | WorkOrderImportDTO
+  | AssetImportDTO
+  | LocationImportDTO
+  | PartImportDTO
+  | MeterImportDTO;
+interface WorkOrderImportDTO {
   id: number;
-  dueDate: string;
+  dueDate: number;
   priority: string;
   estimatedDuration: string;
   description: string;
   title: string;
-  requiredSignature: boolean;
+  requiredSignature: string;
   category: string;
   locationName: string;
   teamName: string;
@@ -15,10 +25,63 @@ export interface WorkOrderImportDTO {
   assignedToEmails: string[];
   assetName: string;
   completedByEmail: string;
-  completedOn: string;
-  archived: boolean;
+  completedOn: number;
+  archived: string;
   status: string;
   feedback: string;
+}
+interface AssetImportDTO {
+  id: number;
+  archived: string;
+  locationName: string;
+  parentAssetName: string;
+  area: string;
+  barCode: string;
+  category: string;
+  name: string;
+  primaryUserEmail: string;
+  warrantyExpirationDate: number;
+  additionalInfos: string;
+  serialNumber: string;
+  assignedToEmails: string[];
+  teamsNames: string[];
+  status: string;
+  acquisitionCost: number;
+}
+interface LocationImportDTO {
+  id: number;
+  name: string;
+  address: string;
+  longitude: number;
+  latitude: number;
+  parentLocationName: string;
+  workersEmails: string[];
+  teamsNames: string[];
+}
+interface MeterImportDTO {
+  id: string;
+  name: string;
+  unit: string;
+  updateFrequency: number;
+  meterCategory: string;
+  locationName: string;
+  usersEmails: string[];
+}
+interface PartImportDTO {
+  id: number;
+  name: string;
+  cost: number;
+  category: string;
+  nonStock: string;
+  barcode: string;
+  description: string;
+  quantity: number;
+  additionalInfos: string;
+  area: string;
+  minQuantity: number;
+  locationName: string;
+  assignedToEmails: string[];
+  teamsNames: string[];
 }
 export interface ImportResponse {
   created: number;

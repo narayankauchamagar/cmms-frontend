@@ -1254,7 +1254,9 @@ const frJSON = {
   to: 'au',
   dates: 'Dates',
   start: 'Début',
-  end: 'Fin'
+  end: 'Fin',
+  longitude: 'Longitude',
+  latitude: 'Latitude'
 };
 
 export default frJSON;

@@ -88,7 +88,18 @@ const Import = ({}: OwnProps) => {
   const onStartProcess = () => {
     setOpenModal(true);
   };
+  useEffect(() => {
+    console.log(matches);
+  }, [matches]);
 
+  const reset = () => {
+    setMatches([]);
+    setJsonData(null);
+    setSpreadSheetsConfig({});
+    setUserHeaders([]);
+    setLoading(false);
+    setActiveStep(0);
+  };
   useEffect(() => {
     if (userHeaders.length) {
       let result: { userHeader: string; keyName: string }[] = [];
@@ -97,13 +108,17 @@ const Import = ({}: OwnProps) => {
           ownHeader.label,
           userHeaders
         );
-        let closest = closestMatchInUserHeaders;
+        let closestUserHeader = closestMatchInUserHeaders;
         if (Array.isArray(closestMatchInUserHeaders))
-          closest = closestMatchInUserHeaders[0];
-        if (closest && distance(closest as string, ownHeader.label) < 5) {
+          closestUserHeader = closestMatchInUserHeaders[0];
+        if (
+          closestUserHeader &&
+          distance(closestUserHeader as string, ownHeader.label) < 5 &&
+          result.every(({ userHeader }) => userHeader !== closestUserHeader)
+        ) {
           result.push({
             userHeader: userHeaders.find(
-              (userHeader) => userHeader === closest
+              (userHeader) => userHeader === closestUserHeader
             ),
             keyName: ownHeader.keyName
           });
@@ -209,7 +224,7 @@ const Import = ({}: OwnProps) => {
           'success'
         );
         setOpenModal(false);
-        setActiveStep(0);
+        reset();
       })
       .finally(() => {
         setLoadingImport(false);
@@ -311,7 +326,10 @@ const Import = ({}: OwnProps) => {
       fullWidth
       maxWidth="md"
       open={openModal}
-      onClose={() => setOpenModal(false)}
+      onClose={() => {
+        setOpenModal(false);
+        reset();
+      }}
     >
       <DialogTitle
         sx={{
