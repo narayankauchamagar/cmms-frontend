@@ -1118,7 +1118,10 @@ const enJSON = {
   start: 'Start',
   end: 'End',
   longitude: 'Longitude',
-  latitude: 'Latitude'
+  latitude: 'Latitude',
+  ALL: 'All',
+  REACTIVE: 'Reactive',
+  REPEATING: 'Repeating'
 };
 
 export default enJSON;

@@ -88,9 +88,6 @@ const Import = ({}: OwnProps) => {
   const onStartProcess = () => {
     setOpenModal(true);
   };
-  useEffect(() => {
-    console.log(matches);
-  }, [matches]);
 
   const reset = () => {
     setMatches([]);

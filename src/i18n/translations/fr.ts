@@ -1256,7 +1256,10 @@ const frJSON = {
   start: 'Début',
   end: 'Fin',
   longitude: 'Longitude',
-  latitude: 'Latitude'
+  latitude: 'Latitude',
+  ALL: 'Tous',
+  REACTIVE: 'Réactif',
+  REPEATING: 'Répétitif'
 };
 
 export default frJSON;

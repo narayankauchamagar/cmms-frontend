@@ -59,6 +59,16 @@ function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
   ];
   const fields: Array<IField> = [
     {
+      name: 'type',
+      type: 'select',
+      label: t('type'),
+      items: [
+        { label: t('ALL'), value: 'ALL' },
+        { label: t('REACTIVE'), value: 'REACTIVE' },
+        { label: t('REPEATING'), value: 'REPEATING' }
+      ]
+    },
+    {
       name: 'assets',
       type: 'select',
       label: t('asset'),
@@ -183,13 +193,36 @@ function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
       )?.value ?? null
     ];
   };
+
+  const getTypeLabelAndValue = (
+    operation: SearchOperator
+  ): { label: string; value: string } => {
+    switch (operation) {
+      case 'nu':
+        return { label: t('REACTIVE'), value: 'REACTIVE' };
+      case 'nn':
+        return { label: t('REPEATING'), value: 'REPEATING' };
+      default:
+        break;
+    }
+  };
   const getValuesFromCriteria = (): {
     [key: string]:
+      | { label: string; value: string }
       | { label: string; value: number }[]
       | boolean
       | [string, string];
   } => {
+    const typeValue = criteria.filterFields.find(
+      (filterField) => filterField.field === 'parentPreventiveMaintenance'
+    );
     return {
+      type: typeValue
+        ? {
+            label: getTypeLabelAndValue(typeValue.operation).label,
+            value: getTypeLabelAndValue(typeValue.operation).value
+          }
+        : { label: t('ALL'), value: 'ALL' },
       archived: criteria.filterFields.find(
         (filterField) => filterField.field === 'archived'
       ).value,
@@ -241,65 +274,36 @@ function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
     operator: SearchOperator = 'in'
   ) => {
     let filterFields = criteria.filterFields;
-    if (
-      (type === 'simple' && values[accessor] === undefined) ||
-      (type === 'array' && !values[accessor]?.length) ||
-      (type === 'date' && values[accessor] == [null, null])
-    ) {
-      filterFields = filterFields.filter(
-        (filterField) => filterField.field !== fieldName
-      );
-    } else {
-      let elementFilterFieldIndex = filterFields.findIndex(
-        (filterField) => filterField.field === fieldName
-      );
-
-      if (type === 'simple') {
-        if (elementFilterFieldIndex !== -1) {
-          filterFields[elementFilterFieldIndex] = {
-            ...filterFields[elementFilterFieldIndex],
-            value: values[accessor]
-          };
-        } else {
-          filterFields.push({
-            field: fieldName,
-            operation: 'eq',
-            value: values[accessor]
-          });
-        }
-      } else if (type === 'array' && values[accessor]?.length) {
-        const ids = values[accessor].map((element) => element.value);
-        if (elementFilterFieldIndex !== -1) {
-          filterFields[elementFilterFieldIndex] = {
-            ...filterFields[elementFilterFieldIndex],
-            value: '',
-            values: ids
-          };
-        } else {
-          filterFields.push({
-            field: fieldName,
-            operation: operator,
-            joinType: operator === 'inm' ? 'LEFT' : null,
-            value: '',
-            values: ids
-          });
-        }
-      } else if (type === 'date' && values[accessor]?.every((date) => !!date)) {
-        const [start, end] = values[accessor];
-        filterFields = filterFields.filter(
-          (filterField) => filterField.field !== fieldName
-        );
-        filterFields = [
-          ...filterFields,
-          {
-            field: fieldName,
-            operation: 'ge',
-            value: start,
-            enumName: 'JS_DATE'
-          },
-          { field: fieldName, operation: 'le', value: end, enumName: 'JS_DATE' }
-        ];
-      }
+    filterFields = filterFields.filter(
+      (filterField) => filterField.field !== fieldName
+    );
+    if (type === 'simple') {
+      filterFields.push({
+        field: fieldName,
+        operation: 'eq',
+        value: values[accessor]
+      });
+    } else if (type === 'array' && values[accessor]?.length) {
+      const ids = values[accessor].map((element) => element.value);
+      filterFields.push({
+        field: fieldName,
+        operation: operator,
+        joinType: operator === 'inm' ? 'LEFT' : null,
+        value: '',
+        values: ids
+      });
+    } else if (type === 'date' && values[accessor]?.every((date) => !!date)) {
+      const [start, end] = values[accessor];
+      filterFields = [
+        ...filterFields,
+        {
+          field: fieldName,
+          operation: 'ge',
+          value: start,
+          enumName: 'JS_DATE'
+        },
+        { field: fieldName, operation: 'le', value: end, enumName: 'JS_DATE' }
+      ];
     }
     criteria.filterFields = filterFields;
   };
@@ -333,6 +337,33 @@ function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
                 filterConfig.operator
               );
             });
+            // type filter
+            const type = values?.type ?? { value: 'ALL' };
+
+            let filterFields = [
+              ...newCriteria.filterFields.filter(
+                ({ field }) => field !== 'parentPreventiveMaintenance'
+              )
+            ];
+            switch (type.value) {
+              case 'REACTIVE':
+                filterFields.push({
+                  field: 'parentPreventiveMaintenance',
+                  operation: 'nu',
+                  value: ''
+                });
+                break;
+              case 'REPEATING':
+                filterFields.push({
+                  field: 'parentPreventiveMaintenance',
+                  operation: 'nn',
+                  value: ''
+                });
+                break;
+              default:
+                break;
+            }
+            newCriteria.filterFields = filterFields;
             onCriteriaChange(newCriteria);
             onClose();
           }}
