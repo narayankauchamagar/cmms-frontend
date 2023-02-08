@@ -1,21 +1,20 @@
 import * as React from 'react';
 import { ReactNode } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { enumerate } from '../../../../utils/displayers';
 import { Button, Checkbox, ListItemText, Menu, MenuItem } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { SearchCriteria } from '../../../../models/owns/page';
+import { FilterField } from '../../../../models/owns/page';
 import { pushOrRemove } from '../../../../utils/overall';
 
 interface OwnProps {
-  criteria: SearchCriteria;
-  onChange: (criteria: SearchCriteria) => void;
+  filterFields: FilterField[];
+  onChange: (filterFields: FilterField[]) => void;
   completeOptions: string[];
   fieldName: string;
   icon: ReactNode;
 }
 function EnumFilter({
-  criteria,
+  filterFields,
   onChange,
   completeOptions,
   fieldName,
@@ -23,7 +22,6 @@ function EnumFilter({
 }: OwnProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);
-  const navigate = useNavigate();
   const { t }: { t: any } = useTranslation();
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -44,7 +42,7 @@ function EnumFilter({
         startIcon={icon}
       >
         {enumerate(
-          criteria.filterFields
+          filterFields
             .find(({ field }) => field === fieldName)
             .values.map((priority) => t(priority))
         )}
@@ -62,21 +60,21 @@ function EnumFilter({
           <MenuItem key={index}>
             <Checkbox
               onChange={(event) => {
-                const newCriteria = { ...criteria };
-                const filterFieldIndex = newCriteria.filterFields.findIndex(
+                const newFilterFields = [...filterFields];
+                const filterFieldIndex = newFilterFields.findIndex(
                   (filterField) => filterField.field === fieldName
                 );
-                newCriteria.filterFields[filterFieldIndex] = {
-                  ...newCriteria.filterFields[filterFieldIndex],
+                newFilterFields[filterFieldIndex] = {
+                  ...newFilterFields[filterFieldIndex],
                   values: pushOrRemove(
-                    newCriteria.filterFields[filterFieldIndex].values,
+                    newFilterFields[filterFieldIndex].values,
                     event.target.checked,
                     option
                   )
                 };
-                onChange(newCriteria);
+                onChange(newFilterFields);
               }}
-              checked={criteria.filterFields.some(
+              checked={filterFields.some(
                 (filterField) =>
                   filterField.field === fieldName &&
                   filterField.values.includes(option)

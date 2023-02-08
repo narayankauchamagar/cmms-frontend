@@ -69,7 +69,7 @@ import { getSingleAsset } from '../../../slices/asset';
 import Category from '../../../models/owns/category';
 import File from '../../../models/owns/file';
 import { dayDiff } from '../../../utils/dates';
-import { SearchCriteria } from '../../../models/owns/page';
+import { FilterField, SearchCriteria } from '../../../models/owns/page';
 import WorkOrderCalendar from './Calendar';
 import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
 import { exportEntity } from '../../../slices/exports';
@@ -218,6 +218,11 @@ function WorkOrders() {
     setTitle(t('work_orders'));
   }, []);
 
+  const onFilterChange = (newFilters: FilterField[]) => {
+    const newCriteria = { ...criteria };
+    newCriteria.filterFields = newFilters;
+    setCriteria(newCriteria);
+  };
   useEffect(() => {
     if (workOrderId && isNumeric(workOrderId)) {
       dispatch(getSingleWorkOrder(Number(workOrderId)));
@@ -863,19 +868,15 @@ function WorkOrders() {
                   startIcon={<FilterAltTwoToneIcon />}
                 />
                 <EnumFilter
-                  criteria={criteria}
-                  onChange={(newCriteria) => {
-                    setCriteria(newCriteria);
-                  }}
+                  filterFields={criteria.filterFields}
+                  onChange={onFilterChange}
                   completeOptions={['NONE', 'LOW', 'MEDIUM', 'HIGH']}
                   fieldName="priority"
                   icon={<SignalCellularAltTwoToneIcon />}
                 />
                 <EnumFilter
-                  criteria={criteria}
-                  onChange={(newCriteria) => {
-                    setCriteria(newCriteria);
-                  }}
+                  filterFields={criteria.filterFields}
+                  onChange={onFilterChange}
                   completeOptions={[
                     'OPEN',
                     'IN_PROGRESS',
@@ -961,10 +962,8 @@ function WorkOrders() {
           }}
         >
           <MoreFilters
-            criteria={criteria}
-            onCriteriaChange={(newCriteria) => {
-              setCriteria(newCriteria);
-            }}
+            filterFields={criteria.filterFields}
+            onFilterChange={onFilterChange}
             onClose={handleCloseFilterDrawer}
           />
         </Drawer>

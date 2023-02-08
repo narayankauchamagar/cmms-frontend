@@ -1,4 +1,4 @@
-import { SearchCriteria, SearchOperator } from '../../../../models/owns/page';
+import { FilterField, SearchOperator } from '../../../../models/owns/page';
 import * as Yup from 'yup';
 import Form from '../../components/form';
 import { IField } from '../../type';
@@ -8,12 +8,12 @@ import { useSelector } from '../../../../store';
 import { UserMiniDTO } from '../../../../models/user';
 
 interface OwnProps {
-  onCriteriaChange: (criteria: SearchCriteria) => void;
-  criteria: SearchCriteria;
+  onFilterChange: (filterFields: FilterField[]) => void;
+  filterFields: FilterField[];
   onClose: () => void;
 }
 
-function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
+function MoreFilters({ filterFields, onFilterChange, onClose }: OwnProps) {
   const { t }: { t: any } = useTranslation();
   const { customersMini } = useSelector((state) => state.customers);
   const { locationsMini } = useSelector((state) => state.locations);
@@ -169,7 +169,6 @@ function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
     labelAccessor?: keyof T,
     formatter?: (value: T) => string
   ): { label: string; value: number }[] => {
-    const filterFields = criteria.filterFields;
     return (
       filterFields
         .find((filterField) => filterField.field === fieldName)
@@ -183,11 +182,11 @@ function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
   };
   const getDateValue = (fieldName: string): [string, string] => {
     return [
-      criteria.filterFields.find(
+      filterFields.find(
         (filterField) =>
           filterField.field === fieldName && filterField.operation === 'ge'
       )?.value ?? null,
-      criteria.filterFields.find(
+      filterFields.find(
         (filterField) =>
           filterField.field === fieldName && filterField.operation === 'le'
       )?.value ?? null
@@ -206,14 +205,14 @@ function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
         break;
     }
   };
-  const getValuesFromCriteria = (): {
+  const getValuesFromfilterFields = (): {
     [key: string]:
       | { label: string; value: string }
       | { label: string; value: number }[]
       | boolean
       | [string, string];
   } => {
-    const typeValue = criteria.filterFields.find(
+    const typeValue = filterFields.find(
       (filterField) => filterField.field === 'parentPreventiveMaintenance'
     );
     return {
@@ -223,7 +222,7 @@ function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
             value: getTypeLabelAndValue(typeValue.operation).value
           }
         : { label: t('ALL'), value: 'ALL' },
-      archived: criteria.filterFields.find(
+      archived: filterFields.find(
         (filterField) => filterField.field === 'archived'
       ).value,
       assets: getLabelAndValue(assetsMini, 'asset', 'name'),
@@ -266,26 +265,23 @@ function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
   };
   const shape = {};
   const filterSingleField = (
-    criteria: SearchCriteria,
+    filters: FilterField[],
     values: { [key: string]: { label: string; value: number }[] },
     accessor: string,
     fieldName: string,
     type: FieldType,
     operator: SearchOperator = 'in'
-  ) => {
-    let filterFields = criteria.filterFields;
-    filterFields = filterFields.filter(
-      (filterField) => filterField.field !== fieldName
-    );
+  ): FilterField[] => {
+    filters = filters.filter((filterField) => filterField.field !== fieldName);
     if (type === 'simple') {
-      filterFields.push({
+      filters.push({
         field: fieldName,
         operation: 'eq',
         value: values[accessor]
       });
     } else if (type === 'array' && values[accessor]?.length) {
       const ids = values[accessor].map((element) => element.value);
-      filterFields.push({
+      filters.push({
         field: fieldName,
         operation: operator,
         joinType: operator === 'inm' ? 'LEFT' : null,
@@ -294,8 +290,8 @@ function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
       });
     } else if (type === 'date' && values[accessor]?.every((date) => !!date)) {
       const [start, end] = values[accessor];
-      filterFields = [
-        ...filterFields,
+      filters = [
+        ...filters,
         {
           field: fieldName,
           operation: 'ge',
@@ -305,7 +301,7 @@ function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
         { field: fieldName, operation: 'le', value: end, enumName: 'JS_DATE' }
       ];
     }
-    criteria.filterFields = filterFields;
+    return filters;
   };
   return (
     <Grid
@@ -323,13 +319,13 @@ function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
           fields={fields}
           validation={Yup.object().shape(shape)}
           submitText={t('save')}
-          values={getValuesFromCriteria()}
+          values={getValuesFromfilterFields()}
           onChange={({ field, e }) => {}}
           onSubmit={async (values) => {
-            const newCriteria = { ...criteria };
+            let newFilters = [...filterFields];
             filtersConfig.forEach((filterConfig) => {
-              filterSingleField(
-                newCriteria,
+              newFilters = filterSingleField(
+                newFilters,
                 values,
                 filterConfig.accessor,
                 filterConfig.fieldName,
@@ -340,21 +336,19 @@ function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
             // type filter
             const type = values?.type ?? { value: 'ALL' };
 
-            let filterFields = [
-              ...newCriteria.filterFields.filter(
-                ({ field }) => field !== 'parentPreventiveMaintenance'
-              )
-            ];
+            newFilters = newFilters.filter(
+              ({ field }) => field !== 'parentPreventiveMaintenance'
+            );
             switch (type.value) {
               case 'REACTIVE':
-                filterFields.push({
+                newFilters.push({
                   field: 'parentPreventiveMaintenance',
                   operation: 'nu',
                   value: ''
                 });
                 break;
               case 'REPEATING':
-                filterFields.push({
+                newFilters.push({
                   field: 'parentPreventiveMaintenance',
                   operation: 'nn',
                   value: ''
@@ -363,8 +357,7 @@ function MoreFilters({ criteria, onCriteriaChange, onClose }: OwnProps) {
               default:
                 break;
             }
-            newCriteria.filterFields = filterFields;
-            onCriteriaChange(newCriteria);
+            onFilterChange(newFilters);
             onClose();
           }}
         />
