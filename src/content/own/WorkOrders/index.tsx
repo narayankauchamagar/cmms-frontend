@@ -114,7 +114,8 @@ function WorkOrders() {
   const { setTitle } = useContext(TitleContext);
   const { workOrderId } = useParams();
   const { showSnackBar } = useContext(CustomSnackBarContext);
-  const { hasViewPermission, hasCreatePermission } = useAuth();
+  const { hasViewPermission, hasViewOtherPermission, hasCreatePermission } =
+    useAuth();
   const [currentWorkOrder, setCurrentWorkOrder] = useState<WorkOrder>();
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const { tasksByWorkOrder } = useSelector((state) => state.tasks);
@@ -752,22 +753,26 @@ function WorkOrders() {
         'aria-labelledby': 'basic-button'
       }}
     >
-      <MenuItem
-        disabled={loadingExport['work-orders']}
-        onClick={() => {
-          dispatch(exportEntity('work-orders')).then((url: string) => {
-            window.open(url);
-          });
-        }}
-      >
-        <Stack spacing={2} direction="row">
-          {loadingExport['work-orders'] && <CircularProgress size="1rem" />}
-          <Typography>{t('to_export')}</Typography>
-        </Stack>
-      </MenuItem>
-      <MenuItem onClick={() => navigate('/app/imports/work-orders')}>
-        {t('to_import')}
-      </MenuItem>
+      {hasViewOtherPermission(PermissionEntity.WORK_ORDERS) && (
+        <MenuItem
+          disabled={loadingExport['work-orders']}
+          onClick={() => {
+            dispatch(exportEntity('work-orders')).then((url: string) => {
+              window.open(url);
+            });
+          }}
+        >
+          <Stack spacing={2} direction="row">
+            {loadingExport['work-orders'] && <CircularProgress size="1rem" />}
+            <Typography>{t('to_export')}</Typography>
+          </Stack>
+        </MenuItem>
+      )}
+      {hasViewPermission(PermissionEntity.SETTINGS) && (
+        <MenuItem onClick={() => navigate('/app/imports/work-orders')}>
+          {t('to_import')}
+        </MenuItem>
+      )}
     </Menu>
   );
   if (hasViewPermission(PermissionEntity.WORK_ORDERS))

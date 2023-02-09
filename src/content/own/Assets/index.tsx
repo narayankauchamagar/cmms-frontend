@@ -63,8 +63,12 @@ function Assets() {
   const [searchParams, setSearchParams] = useSearchParams();
   const locationParam = searchParams.get('location');
   const navigate = useNavigate();
-  const { hasViewPermission, hasCreatePermission, getFilteredFields } =
-    useAuth();
+  const {
+    hasViewPermission,
+    hasCreatePermission,
+    hasViewOtherPermission,
+    getFilteredFields
+  } = useAuth();
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const dispatch = useDispatch();
   const { assetsHierarchy, loadingGet } = useSelector((state) => state.assets);
@@ -123,22 +127,26 @@ function Assets() {
         'aria-labelledby': 'basic-button'
       }}
     >
-      <MenuItem
-        disabled={loadingExport['assets']}
-        onClick={() => {
-          dispatch(exportEntity('assets')).then((url: string) => {
-            window.open(url);
-          });
-        }}
-      >
-        <Stack spacing={2} direction="row">
-          {loadingExport['assets'] && <CircularProgress size="1rem" />}
-          <Typography>{t('to_export')}</Typography>
-        </Stack>
-      </MenuItem>
-      <MenuItem onClick={() => navigate('/app/imports/assets')}>
-        {t('to_import')}
-      </MenuItem>
+      {hasViewOtherPermission(PermissionEntity.ASSETS) && (
+        <MenuItem
+          disabled={loadingExport['assets']}
+          onClick={() => {
+            dispatch(exportEntity('assets')).then((url: string) => {
+              window.open(url);
+            });
+          }}
+        >
+          <Stack spacing={2} direction="row">
+            {loadingExport['assets'] && <CircularProgress size="1rem" />}
+            <Typography>{t('to_export')}</Typography>
+          </Stack>
+        </MenuItem>
+      )}
+      {hasViewPermission(PermissionEntity.SETTINGS) && (
+        <MenuItem onClick={() => navigate('/app/imports/assets')}>
+          {t('to_import')}
+        </MenuItem>
+      )}
     </Menu>
   );
   const columns: GridEnrichedColDef[] = [

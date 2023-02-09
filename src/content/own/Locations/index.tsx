@@ -93,6 +93,7 @@ function Locations() {
   const { uploadFiles } = useContext(CompanySettingsContext);
   const {
     hasViewPermission,
+    hasViewOtherPermission,
     hasEditPermission,
     hasCreatePermission,
     hasDeletePermission
@@ -460,22 +461,26 @@ function Locations() {
         'aria-labelledby': 'basic-button'
       }}
     >
-      <MenuItem
-        disabled={loadingExport['locations']}
-        onClick={() => {
-          dispatch(exportEntity('locations')).then((url: string) => {
-            window.open(url);
-          });
-        }}
-      >
-        <Stack spacing={2} direction="row">
-          {loadingExport['locations'] && <CircularProgress size="1rem" />}
-          <Typography>{t('to_export')}</Typography>
-        </Stack>
-      </MenuItem>
-      <MenuItem onClick={() => navigate('/app/imports/locations')}>
-        {t('to_import')}
-      </MenuItem>
+      {hasViewOtherPermission(PermissionEntity.LOCATIONS) && (
+        <MenuItem
+          disabled={loadingExport['locations']}
+          onClick={() => {
+            dispatch(exportEntity('locations')).then((url: string) => {
+              window.open(url);
+            });
+          }}
+        >
+          <Stack spacing={2} direction="row">
+            {loadingExport['locations'] && <CircularProgress size="1rem" />}
+            <Typography>{t('to_export')}</Typography>
+          </Stack>
+        </MenuItem>
+      )}
+      {hasViewPermission(PermissionEntity.SETTINGS) && (
+        <MenuItem onClick={() => navigate('/app/imports/locations')}>
+          {t('to_import')}
+        </MenuItem>
+      )}
     </Menu>
   );
   const renderLocationUpdateModal = () => (

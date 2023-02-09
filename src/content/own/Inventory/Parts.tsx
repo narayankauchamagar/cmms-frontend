@@ -55,6 +55,7 @@ import { getImageAndFiles } from '../../../utils/overall';
 import { SearchCriteria } from '../../../models/owns/page';
 import { exportEntity } from '../../../slices/exports';
 import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
+import { PermissionEntity } from '../../../models/owns/role';
 
 interface PropsType {
   setAction: (p: () => () => void) => void;
@@ -77,7 +78,8 @@ const Parts = ({ setAction }: PropsType) => {
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [currentPart, setCurrentPart] = useState<Part>();
-  const { getFilteredFields } = useAuth();
+  const { getFilteredFields, hasViewPermission, hasViewOtherPermission } =
+    useAuth();
   const { partId } = useParams();
   const dispatch = useDispatch();
   const { showSnackBar } = useContext(CustomSnackBarContext);
@@ -586,22 +588,26 @@ const Parts = ({ setAction }: PropsType) => {
         'aria-labelledby': 'basic-button'
       }}
     >
-      <MenuItem
-        disabled={loadingExport['parts']}
-        onClick={() => {
-          dispatch(exportEntity('parts')).then((url: string) => {
-            window.open(url);
-          });
-        }}
-      >
-        <Stack spacing={2} direction="row">
-          {loadingExport['parts'] && <CircularProgress size="1rem" />}
-          <Typography>{t('to_export')}</Typography>
-        </Stack>
-      </MenuItem>
-      <MenuItem onClick={() => navigate('/app/imports/parts')}>
-        {t('to_import')}
-      </MenuItem>
+      {hasViewOtherPermission(PermissionEntity.PARTS_AND_MULTIPARTS) && (
+        <MenuItem
+          disabled={loadingExport['parts']}
+          onClick={() => {
+            dispatch(exportEntity('parts')).then((url: string) => {
+              window.open(url);
+            });
+          }}
+        >
+          <Stack spacing={2} direction="row">
+            {loadingExport['parts'] && <CircularProgress size="1rem" />}
+            <Typography>{t('to_export')}</Typography>
+          </Stack>
+        </MenuItem>
+      )}
+      {hasViewPermission(PermissionEntity.SETTINGS) && (
+        <MenuItem onClick={() => navigate('/app/imports/parts')}>
+          {t('to_import')}
+        </MenuItem>
+      )}
     </Menu>
   );
   return (

@@ -68,6 +68,7 @@ function Meters() {
   const {
     hasViewPermission,
     hasCreatePermission,
+    hasViewOtherPermission,
     getFilteredFields,
     hasFeature
   } = useAuth();
@@ -459,22 +460,26 @@ function Meters() {
         'aria-labelledby': 'basic-button'
       }}
     >
-      <MenuItem
-        disabled={loadingExport['meters']}
-        onClick={() => {
-          dispatch(exportEntity('meters')).then((url: string) => {
-            window.open(url);
-          });
-        }}
-      >
-        <Stack spacing={2} direction="row">
-          {loadingExport['meters'] && <CircularProgress size="1rem" />}
-          <Typography>{t('to_export')}</Typography>
-        </Stack>
-      </MenuItem>
-      <MenuItem onClick={() => navigate('/app/imports/meters')}>
-        {t('to_import')}
-      </MenuItem>
+      {hasViewOtherPermission(PermissionEntity.METERS) && (
+        <MenuItem
+          disabled={loadingExport['meters']}
+          onClick={() => {
+            dispatch(exportEntity('meters')).then((url: string) => {
+              window.open(url);
+            });
+          }}
+        >
+          <Stack spacing={2} direction="row">
+            {loadingExport['meters'] && <CircularProgress size="1rem" />}
+            <Typography>{t('to_export')}</Typography>
+          </Stack>
+        </MenuItem>
+      )}
+      {hasViewPermission(PermissionEntity.SETTINGS) && (
+        <MenuItem onClick={() => navigate('/app/imports/meters')}>
+          {t('to_import')}
+        </MenuItem>
+      )}
     </Menu>
   );
   if (hasFeature(PlanFeature.METER)) {
