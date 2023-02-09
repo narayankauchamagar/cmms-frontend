@@ -32,8 +32,12 @@ import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import { getOwnHeadersConfig } from 'src/utils/states';
 import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
 import { closestMatch, distance } from 'closest-match';
-import { ImportDTO, ImportKeys } from '../../../models/owns/imports';
-import { useDispatch, useSelector } from '../../../store';
+import {
+  ImportDTO,
+  ImportKeys,
+  ImportResponse
+} from '../../../models/owns/imports';
+import { useDispatch } from '../../../store';
 import { importEntity } from '../../../slices/imports';
 
 interface OwnProps {}
@@ -73,7 +77,6 @@ const Import = ({}: OwnProps) => {
     [key: string]: Matrix<CellBase<any>>[];
   }>({});
   const steps = [t('upload'), t('match_columns'), t('review'), t('done')];
-  const { responses } = useSelector((state) => state.imports);
   const [activeStep, setActiveStep] = useState<number>(0);
   const options: { label: string; value: EntityType }[] = [
     { label: t('work_orders'), value: 'work-orders' },
@@ -90,12 +93,12 @@ const Import = ({}: OwnProps) => {
   };
 
   const reset = () => {
+    setActiveStep(0);
     setMatches([]);
     setJsonData(null);
     setSpreadSheetsConfig({});
     setUserHeaders([]);
     setLoading(false);
-    setActiveStep(0);
   };
   useEffect(() => {
     if (userHeaders.length) {
@@ -165,6 +168,20 @@ const Import = ({}: OwnProps) => {
     }
     setActiveStep((step) => step + 1);
   };
+  const getResponseMessage = (entity: EntityType) => {
+    switch (entity) {
+      case 'work-orders':
+        return 'import_wo_success';
+      case 'assets':
+        return 'import_asset_success';
+      case 'locations':
+        return 'import_location_success';
+      case 'parts':
+        return 'import_part_success';
+      case 'meters':
+        return 'import_meter_success';
+    }
+  };
   const getMatchLabel = (userHeader: string) => {
     return matches.find(
       (headerMatching) => headerMatching.userHeader === userHeader
@@ -212,11 +229,11 @@ const Import = ({}: OwnProps) => {
       return result;
     });
     dispatch(importEntity(payload, entity))
-      .then(() => {
+      .then((response: ImportResponse) => {
         showSnackBar(
-          t('import_wo_success', {
-            created: responses[entity].created,
-            updated: responses[entity].updated
+          t(getResponseMessage(entity), {
+            created: response.created,
+            updated: response.updated
           }),
           'success'
         );

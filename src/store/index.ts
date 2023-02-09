@@ -7,6 +7,7 @@ import type { ThunkAction } from 'redux-thunk';
 import type { Action } from '@reduxjs/toolkit';
 import { configureStore } from '@reduxjs/toolkit';
 import rootReducer from './rootReducer';
+import { ImportResponse } from '../models/owns/imports';
 
 const store = configureStore({
   reducer: rootReducer,
@@ -17,7 +18,12 @@ export type RootState = ReturnType<typeof store.getState>;
 
 export type AppDispatch = typeof store.dispatch;
 
-export type StoreReturnType = void | number | number[] | string;
+export type StoreReturnType =
+  | void
+  | number
+  | number[]
+  | string
+  | ImportResponse;
 export type AppThunk = ThunkAction<
   Promise<StoreReturnType>,
   RootState,

@@ -1121,7 +1121,15 @@ const enJSON = {
   latitude: 'Latitude',
   ALL: 'All',
   REACTIVE: 'Reactive',
-  REPEATING: 'Repeating'
+  REPEATING: 'Repeating',
+  import_location_success:
+    '{{created}} Locations have been created and {{updated}} have been updated',
+  import_part_success:
+    '{{created}} Parts have been created and {{updated}} have been updated',
+  import_meter_success:
+    '{{created}} Meters have been created and {{updated}} have been updated',
+  import_asset_success:
+    '{{created}} Assets have been created and {{updated}} have been updated'
 };
 
 export default enJSON;

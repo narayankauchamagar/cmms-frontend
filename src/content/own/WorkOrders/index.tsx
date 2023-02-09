@@ -86,7 +86,7 @@ function WorkOrders() {
   const { workOrders, loadingGet, singleWorkOrder } = useSelector(
     (state) => state.workOrders
   );
-  const { responses, loadingExport } = useSelector((state) => state.exports);
+  const { loadingExport } = useSelector((state) => state.exports);
   const [searchParams, setSearchParams] = useSearchParams();
   const locationParam = searchParams.get('location');
   const assetParam = searchParams.get('asset');

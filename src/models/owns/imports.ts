@@ -29,6 +29,7 @@ interface WorkOrderImportDTO {
   archived: string;
   status: string;
   feedback: string;
+  customersNames: string[];
 }
 interface AssetImportDTO {
   id: number;
@@ -47,6 +48,8 @@ interface AssetImportDTO {
   teamsNames: string[];
   status: string;
   acquisitionCost: number;
+  customersNames: string[];
+  vendorsNames: string[];
 }
 interface LocationImportDTO {
   id: number;
@@ -57,6 +60,8 @@ interface LocationImportDTO {
   parentLocationName: string;
   workersEmails: string[];
   teamsNames: string[];
+  customersNames: string[];
+  vendorsNames: string[];
 }
 interface MeterImportDTO {
   id: string;
@@ -82,6 +87,8 @@ interface PartImportDTO {
   locationName: string;
   assignedToEmails: string[];
   teamsNames: string[];
+  customersNames: string[];
+  vendorsNames: string[];
 }
 export interface ImportResponse {
   created: number;

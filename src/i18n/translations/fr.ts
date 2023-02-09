@@ -1259,7 +1259,15 @@ const frJSON = {
   latitude: 'Latitude',
   ALL: 'Tous',
   REACTIVE: 'Réactif',
-  REPEATING: 'Répétitif'
+  REPEATING: 'Répétitif',
+  import_location_success:
+    '{{created}} emplacements ont été créés et {{updated}} ont été mis à jour',
+  import_part_success:
+    '{{created}} Pièces ont été créées et {{updated}} ont été mises à jour',
+  import_meter_success:
+    '{{created}} Compteurs ont été créés et {{updated}} ont été mis à jour',
+  import_asset_success:
+    '{{created}} Equipements ont été créés et {{updated}} ont été mis à jour'
 };
 
 export default frJSON;

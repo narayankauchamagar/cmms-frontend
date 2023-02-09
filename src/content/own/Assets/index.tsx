@@ -68,7 +68,7 @@ function Assets() {
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const dispatch = useDispatch();
   const { assetsHierarchy, loadingGet } = useSelector((state) => state.assets);
-  const { responses, loadingExport } = useSelector((state) => state.exports);
+  const { loadingExport } = useSelector((state) => state.exports);
   const apiRef = useGridApiRef();
   const { getFormattedDate } = useContext(CompanySettingsContext);
   const { showSnackBar } = useContext(CustomSnackBarContext);
