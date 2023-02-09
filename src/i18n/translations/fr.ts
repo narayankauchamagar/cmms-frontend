@@ -1267,7 +1267,8 @@ const frJSON = {
   import_meter_success:
     '{{created}} Compteurs ont été créés et {{updated}} ont été mis à jour',
   import_asset_success:
-    '{{created}} Equipements ont été créés et {{updated}} ont été mis à jour'
+    '{{created}} Equipements ont été créés et {{updated}} ont été mis à jour',
+  wo_calendar: 'Calendrier des ordres de travail'
 };
 
 export default frJSON;

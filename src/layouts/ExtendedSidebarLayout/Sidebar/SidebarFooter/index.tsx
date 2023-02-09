@@ -53,7 +53,7 @@ function SidebarFooter() {
       alignItems="center"
       justifyContent="center"
     >
-      <LightTooltip placement="top" arrow title={t('Work Orders Calendar')}>
+      <LightTooltip placement="top" arrow title={t('wo_calendar')}>
         <IconButton
           sx={{
             background: `${theme.colors.alpha.trueWhite[10]}`,
@@ -65,7 +65,7 @@ function SidebarFooter() {
               color: `${theme.colors.alpha.trueWhite[100]}`
             }
           }}
-          to="/extended-sidebar/applications/calendar"
+          to="/app/work-orders?view=calendar"
           component={RouterLink}
         >
           <EventTwoToneIcon fontSize="small" />

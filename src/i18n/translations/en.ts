@@ -1129,7 +1129,8 @@ const enJSON = {
   import_meter_success:
     '{{created}} Meters have been created and {{updated}} have been updated',
   import_asset_success:
-    '{{created}} Assets have been created and {{updated}} have been updated'
+    '{{created}} Assets have been created and {{updated}} have been updated',
+  wo_calendar: 'Work Orders Calendar'
 };
 
 export default enJSON;

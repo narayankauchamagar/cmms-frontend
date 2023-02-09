@@ -89,6 +89,7 @@ function WorkOrders() {
   const { loadingExport } = useSelector((state) => state.exports);
   const [searchParams, setSearchParams] = useSearchParams();
   const locationParam = searchParams.get('location');
+  const viewParam = searchParams.get('view');
   const assetParam = searchParams.get('asset');
   const dispatch = useDispatch();
   const { uploadFiles, getWOFieldsAndShapes } = useContext(
@@ -256,6 +257,9 @@ function WorkOrders() {
       if (assetParam && isNumeric(assetParam)) {
         dispatch(getSingleAsset(Number(assetParam)));
       }
+    }
+    if (viewParam === 'calendar') {
+      setCurrentTab('calendar');
     }
   }, []);
 
