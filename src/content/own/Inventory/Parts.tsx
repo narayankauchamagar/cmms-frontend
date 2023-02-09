@@ -2,11 +2,15 @@ import {
   Box,
   Card,
   CardMedia,
+  CircularProgress,
   Dialog,
   DialogContent,
   DialogTitle,
   Drawer,
   Grid,
+  IconButton,
+  Menu,
+  MenuItem,
   Stack,
   Tab,
   Tabs,
@@ -32,12 +36,13 @@ import {
 } from '../../../slices/part';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useDispatch, useSelector } from '../../../store';
+import * as React from 'react';
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import Form from '../components/form';
 import { IField } from '../type';
 import PartDetails from './PartDetails';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { isNumeric } from '../../../utils/validators';
 import { formatSelectMultiple } from '../../../utils/formatters';
 import { UserMiniDTO } from '../../../models/user';
@@ -48,6 +53,8 @@ import useAuth from '../../../hooks/useAuth';
 import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
 import { getImageAndFiles } from '../../../utils/overall';
 import { SearchCriteria } from '../../../models/owns/page';
+import { exportEntity } from '../../../slices/exports';
+import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
 
 interface PropsType {
   setAction: (p: () => () => void) => void;
@@ -74,6 +81,17 @@ const Parts = ({ setAction }: PropsType) => {
   const { partId } = useParams();
   const dispatch = useDispatch();
   const { showSnackBar } = useContext(CustomSnackBarContext);
+  const { loadingExport } = useSelector((state) => state.exports);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const openMenu = Boolean(anchorEl);
+  const navigate = useNavigate();
+
+  const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
 
   const handleOpenUpdate = () => {
     setOpenUpdateModal(true);
@@ -558,23 +576,64 @@ const Parts = ({ setAction }: PropsType) => {
       </DialogContent>
     </Dialog>
   );
+  const renderMenu = () => (
+    <Menu
+      id="basic-menu"
+      anchorEl={anchorEl}
+      open={openMenu}
+      onClose={handleCloseMenu}
+      MenuListProps={{
+        'aria-labelledby': 'basic-button'
+      }}
+    >
+      <MenuItem
+        disabled={loadingExport['parts']}
+        onClick={() => {
+          dispatch(exportEntity('parts')).then((url: string) => {
+            window.open(url);
+          });
+        }}
+      >
+        <Stack spacing={2} direction="row">
+          {loadingExport['parts'] && <CircularProgress size="1rem" />}
+          <Typography>{t('to_export')}</Typography>
+        </Stack>
+      </MenuItem>
+      <MenuItem onClick={() => navigate('/app/imports/parts')}>
+        {t('to_import')}
+      </MenuItem>
+    </Menu>
+  );
   return (
     <Box sx={{ p: 2 }}>
       {renderPartAddModal()}
       {renderPartUpdateModal()}
-      <Tabs
-        sx={{ mb: 2 }}
-        onChange={handleTabsChange}
-        value={currentTab}
-        variant="scrollable"
-        scrollButtons="auto"
-        textColor="primary"
-        indicatorColor="primary"
+      {renderMenu()}
+      <Grid
+        item
+        xs={12}
+        display="flex"
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="center"
       >
-        {tabs.map((tab) => (
-          <Tab key={tab.value} label={tab.label} value={tab.value} />
-        ))}
-      </Tabs>
+        <Tabs
+          sx={{ mb: 2 }}
+          onChange={handleTabsChange}
+          value={currentTab}
+          variant="scrollable"
+          scrollButtons="auto"
+          textColor="primary"
+          indicatorColor="primary"
+        >
+          {tabs.map((tab) => (
+            <Tab key={tab.value} label={tab.label} value={tab.value} />
+          ))}
+        </Tabs>
+        <IconButton sx={{ mr: 2 }} onClick={handleOpenMenu} color="primary">
+          <MoreVertTwoToneIcon />
+        </IconButton>
+      </Grid>
       {currentTab === 'list' && (
         <Box sx={{ height: 570, width: '95%' }}>
           <CustomDataGrid

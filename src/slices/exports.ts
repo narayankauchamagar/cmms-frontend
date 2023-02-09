@@ -4,7 +4,7 @@ import type { AppThunk } from 'src/store';
 import api from '../utils/api';
 
 const basePath = 'export';
-type EntityType = 'work-orders' | 'assets';
+type EntityType = 'work-orders' | 'assets' | 'locations' | 'parts' | 'meters';
 interface ExportsState {
   responses: Record<EntityType, { url: string }>;
   loadingExport: Record<EntityType, boolean>;
@@ -14,9 +14,18 @@ const initialExportResponse = { url: '' };
 const initialState: ExportsState = {
   responses: {
     'work-orders': initialExportResponse,
-    assets: initialExportResponse
+    assets: initialExportResponse,
+    locations: initialExportResponse,
+    parts: initialExportResponse,
+    meters: initialExportResponse
   },
-  loadingExport: { 'work-orders': false, assets: false }
+  loadingExport: {
+    'work-orders': false,
+    assets: false,
+    locations: false,
+    parts: false,
+    meters: false
+  }
 };
 
 const slice = createSlice({

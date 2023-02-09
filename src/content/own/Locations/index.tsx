@@ -3,11 +3,16 @@ import {
   Box,
   Button,
   Card,
+  CircularProgress,
   Dialog,
   DialogContent,
   DialogTitle,
   Drawer,
   Grid,
+  IconButton,
+  Menu,
+  MenuItem,
+  Stack,
   Tab,
   Tabs,
   Typography
@@ -15,6 +20,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { IField } from '../type';
 import Location from '../../../models/owns/location';
+import * as React from 'react';
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
 import {
@@ -43,7 +49,7 @@ import Form from '../components/form';
 import * as Yup from 'yup';
 import { isNumeric } from '../../../utils/validators';
 import LocationDetails from './LocationDetails';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Map from '../components/Map';
 import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
 import { CustomSnackBarContext } from 'src/contexts/CustomSnackBarContext';
@@ -57,6 +63,8 @@ import PermissionErrorMessage from '../components/PermissionErrorMessage';
 import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
 import { getImageAndFiles } from '../../../utils/overall';
 import { getLocationUrl } from '../../../utils/urlPaths';
+import { exportEntity } from '../../../slices/exports';
+import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
 
 function Locations() {
   const { t }: { t: any } = useTranslation();
@@ -68,6 +76,7 @@ function Locations() {
   const { locationsHierarchy, locations, loadingGet } = useSelector(
     (state) => state.locations
   );
+  const { loadingExport } = useSelector((state) => state.exports);
   const apiRef = useGridApiRef();
   const tabs = [
     { value: 'list', label: t('list_view') },
@@ -89,6 +98,16 @@ function Locations() {
     hasDeletePermission
   } = useAuth();
   const [currentLocation, setCurrentLocation] = useState<Location>();
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const openMenu = Boolean(anchorEl);
+  const navigate = useNavigate();
+
+  const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
   const handleOpenUpdate = () => {
     setOpenUpdateModal(true);
   };
@@ -431,7 +450,34 @@ function Locations() {
     headerName: t('hierarchy'),
     renderCell: (params) => <GroupingCellWithLazyLoading {...params} />
   };
-
+  const renderMenu = () => (
+    <Menu
+      id="basic-menu"
+      anchorEl={anchorEl}
+      open={openMenu}
+      onClose={handleCloseMenu}
+      MenuListProps={{
+        'aria-labelledby': 'basic-button'
+      }}
+    >
+      <MenuItem
+        disabled={loadingExport['locations']}
+        onClick={() => {
+          dispatch(exportEntity('locations')).then((url: string) => {
+            window.open(url);
+          });
+        }}
+      >
+        <Stack spacing={2} direction="row">
+          {loadingExport['locations'] && <CircularProgress size="1rem" />}
+          <Typography>{t('to_export')}</Typography>
+        </Stack>
+      </MenuItem>
+      <MenuItem onClick={() => navigate('/app/imports/locations')}>
+        {t('to_import')}
+      </MenuItem>
+    </Menu>
+  );
   const renderLocationUpdateModal = () => (
     <Dialog
       fullWidth
@@ -569,16 +615,21 @@ function Locations() {
                 <Tab key={tab.value} label={tab.label} value={tab.value} />
               ))}
             </Tabs>
-            {hasCreatePermission(PermissionEntity.LOCATIONS) && (
-              <Button
-                onClick={() => setOpenAddModal(true)}
-                startIcon={<AddTwoToneIcon />}
-                sx={{ mx: 6, my: 1 }}
-                variant="contained"
-              >
-                {t('location')}
-              </Button>
-            )}
+            <Stack direction={'row'} alignItems="center" spacing={1}>
+              <IconButton onClick={handleOpenMenu} color="primary">
+                <MoreVertTwoToneIcon />
+              </IconButton>
+              {hasCreatePermission(PermissionEntity.LOCATIONS) && (
+                <Button
+                  onClick={() => setOpenAddModal(true)}
+                  startIcon={<AddTwoToneIcon />}
+                  sx={{ mx: 6, my: 1 }}
+                  variant="contained"
+                >
+                  {t('location')}
+                </Button>
+              )}
+            </Stack>
           </Grid>
           {currentTab === 'list' && (
             <Grid item xs={12}>
@@ -677,6 +728,7 @@ function Locations() {
           confirmText={t('to_delete')}
           question={t('confirm_delete_location')}
         />
+        {renderMenu()}
       </>
     );
   else return <PermissionErrorMessage message={'no_access_location'} />;

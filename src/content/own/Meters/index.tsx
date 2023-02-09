@@ -3,11 +3,16 @@ import {
   Box,
   Button,
   Card,
+  CircularProgress,
   Dialog,
   DialogContent,
   DialogTitle,
   Drawer,
   Grid,
+  IconButton,
+  Menu,
+  MenuItem,
+  Stack,
   Typography
 } from '@mui/material';
 import {
@@ -21,6 +26,7 @@ import {
 import { useDispatch, useSelector } from '../../../store';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useTranslation } from 'react-i18next';
+import * as React from 'react';
 import { useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
@@ -37,7 +43,7 @@ import Form from '../components/form';
 import * as Yup from 'yup';
 import { IField } from '../type';
 import MeterDetails from './MeterDetails';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { isNumeric } from '../../../utils/validators';
 import { formatSelect, formatSelectMultiple } from '../../../utils/formatters';
 import { CustomSnackBarContext } from 'src/contexts/CustomSnackBarContext';
@@ -48,6 +54,8 @@ import PermissionErrorMessage from '../components/PermissionErrorMessage';
 import FeatureErrorMessage from '../components/FeatureErrorMessage';
 import { PlanFeature } from '../../../models/owns/subscriptionPlan';
 import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
+import { exportEntity } from '../../../slices/exports';
+import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
 
 function Meters() {
   const { t }: { t: any } = useTranslation();
@@ -79,7 +87,17 @@ function Meters() {
     pageNum: 0,
     direction: 'DESC'
   });
+  const { loadingExport } = useSelector((state) => state.exports);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const openMenu = Boolean(anchorEl);
+  const navigate = useNavigate();
 
+  const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
   useEffect(() => {
     setTitle(t('meters'));
   }, []);
@@ -431,6 +449,34 @@ function Meters() {
       </DialogContent>
     </Dialog>
   );
+  const renderMenu = () => (
+    <Menu
+      id="basic-menu"
+      anchorEl={anchorEl}
+      open={openMenu}
+      onClose={handleCloseMenu}
+      MenuListProps={{
+        'aria-labelledby': 'basic-button'
+      }}
+    >
+      <MenuItem
+        disabled={loadingExport['meters']}
+        onClick={() => {
+          dispatch(exportEntity('meters')).then((url: string) => {
+            window.open(url);
+          });
+        }}
+      >
+        <Stack spacing={2} direction="row">
+          {loadingExport['meters'] && <CircularProgress size="1rem" />}
+          <Typography>{t('to_export')}</Typography>
+        </Stack>
+      </MenuItem>
+      <MenuItem onClick={() => navigate('/app/imports/meters')}>
+        {t('to_import')}
+      </MenuItem>
+    </Menu>
+  );
   if (hasFeature(PlanFeature.METER)) {
     if (hasViewPermission(PermissionEntity.METERS))
       return (
@@ -440,6 +486,7 @@ function Meters() {
           </Helmet>
           {renderAddModal()}
           {renderUpdateModal()}
+          {renderMenu()}
           <Grid
             container
             justifyContent="center"
@@ -447,25 +494,31 @@ function Meters() {
             spacing={1}
             paddingX={4}
           >
-            {hasCreatePermission(PermissionEntity.METERS) && (
-              <Grid
-                item
-                xs={12}
-                display="flex"
-                flexDirection="row"
-                justifyContent="right"
-                alignItems="center"
-              >
-                <Button
-                  startIcon={<AddTwoToneIcon />}
-                  sx={{ mx: 6, my: 1 }}
-                  variant="contained"
-                  onClick={() => setOpenAddModal(true)}
-                >
-                  {t('meter')}
-                </Button>
-              </Grid>
-            )}
+            <Grid
+              item
+              xs={12}
+              display="flex"
+              flexDirection="row"
+              justifyContent="right"
+              alignItems="center"
+            >
+              <Stack direction={'row'} alignItems="center" spacing={1}>
+                <IconButton onClick={handleOpenMenu} color="primary">
+                  <MoreVertTwoToneIcon />
+                </IconButton>
+                {hasCreatePermission(PermissionEntity.METERS) && (
+                  <Button
+                    startIcon={<AddTwoToneIcon />}
+                    sx={{ mx: 6, my: 1 }}
+                    variant="contained"
+                    onClick={() => setOpenAddModal(true)}
+                  >
+                    {t('meter')}
+                  </Button>
+                )}
+              </Stack>
+            </Grid>
+
             <Grid item xs={12}>
               <Card
                 sx={{

@@ -11,7 +11,7 @@ import { PermissionEntity } from '../../../models/owns/role';
 
 interface PropsType {}
 
-const VendorsAndCustomers = ({}: PropsType) => {
+const Inventory = ({}: PropsType) => {
   const { t }: { t: any } = useTranslation();
   const [action, setAction] = useState<() => void>();
   const { setTitle } = useContext(TitleContext);
@@ -55,4 +55,4 @@ const VendorsAndCustomers = ({}: PropsType) => {
   else return <PermissionErrorMessage message={'no_access_inventory'} />;
 };
 
-export default VendorsAndCustomers;
+export default Inventory;
