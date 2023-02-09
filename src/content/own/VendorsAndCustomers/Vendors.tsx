@@ -172,8 +172,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
       name: 'phone',
       type: 'text',
       label: t('phone'),
-      placeholder: '+00212611223344',
-      required: true
+      placeholder: '+00212611223344'
     },
     {
       name: 'website',
@@ -185,7 +184,8 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
       name: 'name',
       type: 'text',
       label: t('name'),
-      placeholder: 'John Doe'
+      placeholder: 'John Doe',
+      required: true
     },
     {
       name: 'email',
@@ -218,9 +218,8 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
   const shape = {
     companyName: Yup.string().required(t('required_company_name')),
     rate: Yup.number(),
-    phone: Yup.string()
-      .matches(phoneRegExp, t('invalid_phone'))
-      .required(t('required_phone')),
+    phone: Yup.string().matches(phoneRegExp, t('invalid_phone')).nullable(),
+    name: Yup.string().required(t('required_name')),
     website: Yup.string()
       .matches(websiteRegExp, t('invalid_website'))
       .nullable(),

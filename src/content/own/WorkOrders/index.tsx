@@ -158,9 +158,6 @@ function WorkOrders() {
   const openMenu = Boolean(anchorEl);
   const navigate = useNavigate();
 
-  /*  useEffect(() => {
-    console.log(criteria);
-  }, [criteria]);*/
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -756,15 +753,15 @@ function WorkOrders() {
       }}
     >
       <MenuItem
-        disabled={loadingExport}
+        disabled={loadingExport['work-orders']}
         onClick={() => {
-          dispatch(exportEntity('work-orders')).then(() => {
-            window.open(responses['work-orders'].url);
+          dispatch(exportEntity('work-orders')).then((url: string) => {
+            window.open(url);
           });
         }}
       >
         <Stack spacing={2} direction="row">
-          {loadingExport && <CircularProgress size="1rem" />}
+          {loadingExport['work-orders'] && <CircularProgress size="1rem" />}
           <Typography>{t('to_export')}</Typography>
         </Stack>
       </MenuItem>
@@ -820,7 +817,7 @@ function WorkOrders() {
               )}
             </Tabs>
             <Stack direction={'row'} alignItems="center" spacing={1}>
-              <IconButton onClick={handleOpenMenu}>
+              <IconButton onClick={handleOpenMenu} color="primary">
                 <MoreVertTwoToneIcon />
               </IconButton>
               {hasCreatePermission(PermissionEntity.WORK_ORDERS) && (

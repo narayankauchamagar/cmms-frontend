@@ -3,16 +3,22 @@ import {
   Box,
   Button,
   Card,
+  CircularProgress,
   Dialog,
   DialogContent,
   DialogTitle,
   Grid,
+  IconButton,
+  Menu,
+  MenuItem,
+  Stack,
   Typography
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { IField } from '../type';
 import { addAsset, getAssetChildren } from '../../../slices/asset';
 import { useDispatch, useSelector } from '../../../store';
+import * as React from 'react';
 import { useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
@@ -47,6 +53,8 @@ import { LocationMiniDTO } from '../../../models/owns/location';
 import { TeamMiniDTO } from '../../../models/owns/team';
 import { VendorMiniDTO } from '../../../models/owns/vendor';
 import Category from '../../../models/owns/category';
+import { exportEntity } from '../../../slices/exports';
+import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
 
 function Assets() {
   const { t }: { t: any } = useTranslation();
@@ -60,6 +68,7 @@ function Assets() {
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const dispatch = useDispatch();
   const { assetsHierarchy, loadingGet } = useSelector((state) => state.assets);
+  const { responses, loadingExport } = useSelector((state) => state.exports);
   const apiRef = useGridApiRef();
   const { getFormattedDate } = useContext(CompanySettingsContext);
   const { showSnackBar } = useContext(CustomSnackBarContext);
@@ -67,6 +76,15 @@ function Assets() {
   const locationParamObject = locations.find(
     (location) => location.id === Number(locationParam)
   );
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const openMenu = Boolean(anchorEl);
+
+  const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
   useEffect(() => {
     setTitle(t('assets'));
     if (hasViewPermission(PermissionEntity.ASSETS)) {
@@ -95,6 +113,34 @@ function Assets() {
   const onCreationFailure = (err) =>
     showSnackBar(t('asset_create_failure'), 'error');
 
+  const renderMenu = () => (
+    <Menu
+      id="basic-menu"
+      anchorEl={anchorEl}
+      open={openMenu}
+      onClose={handleCloseMenu}
+      MenuListProps={{
+        'aria-labelledby': 'basic-button'
+      }}
+    >
+      <MenuItem
+        disabled={loadingExport['assets']}
+        onClick={() => {
+          dispatch(exportEntity('assets')).then((url: string) => {
+            window.open(url);
+          });
+        }}
+      >
+        <Stack spacing={2} direction="row">
+          {loadingExport['assets'] && <CircularProgress size="1rem" />}
+          <Typography>{t('to_export')}</Typography>
+        </Stack>
+      </MenuItem>
+      <MenuItem onClick={() => navigate('/app/imports/assets')}>
+        {t('to_import')}
+      </MenuItem>
+    </Menu>
+  );
   const columns: GridEnrichedColDef[] = [
     {
       field: 'id',
@@ -529,25 +575,30 @@ function Assets() {
           spacing={1}
           paddingX={4}
         >
-          {hasCreatePermission(PermissionEntity.ASSETS) && (
-            <Grid
-              item
-              xs={12}
-              display="flex"
-              flexDirection="row"
-              justifyContent="right"
-              alignItems="center"
-            >
-              <Button
-                onClick={() => setOpenAddModal(true)}
-                startIcon={<AddTwoToneIcon />}
-                sx={{ mx: 6, my: 1 }}
-                variant="contained"
-              >
-                {t('asset')}
-              </Button>
-            </Grid>
-          )}
+          <Grid
+            item
+            xs={12}
+            display="flex"
+            flexDirection="row"
+            justifyContent="right"
+            alignItems="center"
+          >
+            <Stack direction="row" spacing={1}>
+              <IconButton onClick={handleOpenMenu} color="primary">
+                <MoreVertTwoToneIcon />
+              </IconButton>
+              {hasCreatePermission(PermissionEntity.ASSETS) && (
+                <Button
+                  onClick={() => setOpenAddModal(true)}
+                  startIcon={<AddTwoToneIcon />}
+                  sx={{ mx: 6, my: 1 }}
+                  variant="contained"
+                >
+                  {t('asset')}
+                </Button>
+              )}
+            </Stack>
+          </Grid>
           <Grid item xs={12}>
             <Card
               sx={{
@@ -595,6 +646,7 @@ function Assets() {
             </Card>
           </Grid>
         </Grid>
+        {renderMenu()}
       </>
     );
   else return <PermissionErrorMessage message={'no_access_assets'} />;

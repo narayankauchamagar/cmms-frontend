@@ -4,22 +4,23 @@ import type { AppThunk } from 'src/store';
 import api from '../utils/api';
 
 const basePath = 'export';
-type EntityType = 'work-orders';
+type EntityType = 'work-orders' | 'assets';
 interface ExportsState {
   responses: Record<EntityType, { url: string }>;
-  loadingExport: boolean;
+  loadingExport: Record<EntityType, boolean>;
 }
 const initialExportResponse = { url: '' };
 
 const initialState: ExportsState = {
   responses: {
-    'work-orders': initialExportResponse
+    'work-orders': initialExportResponse,
+    assets: initialExportResponse
   },
-  loadingExport: false
+  loadingExport: { 'work-orders': false, assets: false }
 };
 
 const slice = createSlice({
-  name: 'parts',
+  name: 'exports',
   initialState,
   reducers: {
     exportEntity(
@@ -31,10 +32,10 @@ const slice = createSlice({
     },
     setLoading(
       state: ExportsState,
-      action: PayloadAction<{ loading: boolean }>
+      action: PayloadAction<{ entity: EntityType; loading: boolean }>
     ) {
-      const { loading } = action.payload;
-      state.loadingExport = loading;
+      const { loading, entity } = action.payload;
+      state.loadingExport[entity] = loading;
     }
   }
 });
@@ -44,14 +45,15 @@ export const reducer = slice.reducer;
 export const exportEntity =
   (entity: EntityType): AppThunk =>
   async (dispatch) => {
-    dispatch(slice.actions.setLoading({ loading: true }));
+    dispatch(slice.actions.setLoading({ entity, loading: true }));
     try {
       const response = await api.get<{ success: boolean; message: string }>(
         `${basePath}/${entity}`
       );
+      return response.message;
       dispatch(slice.actions.exportEntity({ url: response.message, entity }));
     } finally {
-      dispatch(slice.actions.setLoading({ loading: false }));
+      dispatch(slice.actions.setLoading({ entity, loading: false }));
     }
   };
 
