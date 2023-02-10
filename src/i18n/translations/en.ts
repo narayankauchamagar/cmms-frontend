@@ -1028,7 +1028,7 @@ const enJSON = {
   my_account: 'My account',
   my_company: 'My company',
   you_are_using_plan:
-    'You are currently using {{planName}} plan. Upgrade now to get access to more features.',
+    'You are currently using {{planName}} plan. It will expire on {{expiration}}. Upgrade now to get access to more features.',
   upgrade_plan: 'Upgrade Plan',
   //subscription
   plans: 'Plans',

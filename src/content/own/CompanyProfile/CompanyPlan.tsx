@@ -11,15 +11,19 @@ import { useTranslation } from 'react-i18next';
 import { SubscriptionPlan } from '../../../models/owns/subscriptionPlan';
 import CardMembershipTwoToneIcon from '@mui/icons-material/CardMembershipTwoTone';
 import { useNavigate } from 'react-router-dom';
+import useAuth from '../../../hooks/useAuth';
+import i18n from 'i18next';
 
 interface CompanyPlanProps {
   plan: SubscriptionPlan;
 }
 function CompanyPlan(props: CompanyPlanProps) {
   const { plan } = props;
+  const { company } = useAuth();
   const navigate = useNavigate();
   const theme = useTheme();
   const { t }: { t: any } = useTranslation();
+  const getLanguage = i18n.language;
   return (
     <Card
       sx={{
@@ -70,7 +74,12 @@ function CompanyPlan(props: CompanyPlanProps) {
             )}`
           }}
         >
-          {t('you_are_using_plan', { planName: plan.name })}
+          {t('you_are_using_plan', {
+            planName: plan.name,
+            expiration: new Date(company.subscription.endsOn).toLocaleString(
+              getLanguage === 'fr' ? 'fr-FR' : undefined
+            )
+          })}
         </Typography>
         <Box sx={{ mt: 2 }}>
           <Button

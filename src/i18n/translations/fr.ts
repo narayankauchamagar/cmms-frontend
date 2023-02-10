@@ -1165,7 +1165,7 @@ const frJSON = {
   my_account: 'Mon compte',
   my_company: 'Mon entreprise',
   you_are_using_plan:
-    'Vous utilisez actuellement le plan {{planName}}. Mettez à niveau maintenant pour accéder à plus de fonctionnalités.',
+    'Vous utilisez actuellement le plan {{planName}}. Il expirera le {{expiration}}. Mettez à niveau maintenant pour accéder à plus de fonctionnalités.',
   upgrade_plan: 'Changer de plan',
   plans: 'Plans',
   monthly: 'Mensuel',
