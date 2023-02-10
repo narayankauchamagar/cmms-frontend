@@ -1268,7 +1268,14 @@ const frJSON = {
     '{{created}} Compteurs ont été créés et {{updated}} ont été mis à jour',
   import_asset_success:
     '{{created}} Equipements ont été créés et {{updated}} ont été mis à jour',
-  wo_calendar: 'Calendrier des ordres de travail'
+  wo_calendar: 'Calendrier des ordres de travail',
+  month: 'Mois',
+  week: 'Semaine',
+  day: 'Jour',
+  agenda: 'Agenda',
+  next_day: 'Jour suivant',
+  previous_day: 'Jour précédant',
+  today: "Aujourd'hui"
 };
 
 export default frJSON;

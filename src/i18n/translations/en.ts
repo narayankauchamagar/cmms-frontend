@@ -1130,7 +1130,14 @@ const enJSON = {
     '{{created}} Meters have been created and {{updated}} have been updated',
   import_asset_success:
     '{{created}} Assets have been created and {{updated}} have been updated',
-  wo_calendar: 'Work Orders Calendar'
+  wo_calendar: 'Work Orders Calendar',
+  month: 'Month',
+  week: 'Week',
+  day: 'Day',
+  agenda: 'Agenda',
+  next_day: 'Next Day',
+  previous_day: 'Previous Day',
+  today: 'Today'
 };
 
 export default enJSON;

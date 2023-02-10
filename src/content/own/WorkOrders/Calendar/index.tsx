@@ -1,33 +1,28 @@
-import { useState, useRef, useEffect } from 'react';
-import PageTitleWrapper from 'src/components/PageTitleWrapper';
-import { Helmet } from 'react-helmet-async';
-import PageHeader from './PageHeader';
-import Footer from 'src/components/Footer';
+import { useEffect, useRef, useState } from 'react';
+import frLocale from '@fullcalendar/core/locales/fr';
+import enLocale from '@fullcalendar/core/locales/en-gb';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
 import {
-  Grid,
-  Drawer,
   Box,
   Card,
   Divider,
-  useMediaQuery,
+  Grid,
   styled,
+  useMediaQuery,
   useTheme
 } from '@mui/material';
 
 import type { View } from 'src/models/calendar';
 import { useDispatch, useSelector } from 'src/store';
-import type { RootState } from 'src/store';
-import { getEvents, updateEvent, selectEvent } from 'src/slices/calendar';
-import { Priority } from 'src/models/owns/workOrder';
+import { selectEvent, updateEvent } from 'src/slices/calendar';
+import WorkOrder, { Priority } from 'src/models/owns/workOrder';
 import { getWorkOrderEvents } from 'src/slices/workOrder';
 import Actions from './Actions';
-import EventDrawer from './EventDrawer';
-import WorkOrder from 'src/models/owns/workOrder';
+import i18n from 'i18next';
 
 const FullCalendarWrapper = styled(Box)(
   ({ theme }) => `
@@ -138,6 +133,7 @@ function ApplicationsCalendar({
   const { calendar } = useSelector((state) => state.workOrders);
   const [date, setDate] = useState<Date>(new Date());
   const [view, setView] = useState<View>(mobile ? 'listWeek' : 'dayGridMonth');
+  const getLanguage = i18n.language;
 
   const getColor = (priority: Priority) => {
     switch (priority) {
@@ -263,6 +259,7 @@ function ApplicationsCalendar({
             allDayMaintainDuration
             initialDate={date}
             initialView={view}
+            locale={getLanguage === 'fr' ? frLocale : enLocale}
             droppable
             eventDisplay="block"
             eventClick={(arg) => handleOpenDetails(Number(arg.event.id))}

@@ -2,6 +2,7 @@ import type { ElementType, FC, ReactNode } from 'react';
 import { format } from 'date-fns';
 import PropTypes from 'prop-types';
 import { Grid, IconButton, Tooltip, Typography } from '@mui/material';
+import { enUS, fr } from 'date-fns/locale';
 
 import ViewAgendaTwoToneIcon from '@mui/icons-material/ViewAgendaTwoTone';
 
@@ -13,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import TodayTwoToneIcon from '@mui/icons-material/TodayTwoTone';
 import ArrowForwardTwoToneIcon from '@mui/icons-material/ArrowForwardTwoTone';
 import ArrowBackTwoToneIcon from '@mui/icons-material/ArrowBackTwoTone';
+import i18n from 'i18next';
 
 interface ActionsProps {
   children?: ReactNode;
@@ -34,22 +36,22 @@ interface ViewOption {
 
 const viewOptions: ViewOption[] = [
   {
-    label: 'Month',
+    label: 'month',
     value: 'dayGridMonth',
     icon: CalendarViewMonthTwoToneIcon
   },
   {
-    label: 'Week',
+    label: 'week',
     value: 'timeGridWeek',
     icon: ViewWeekTwoToneIcon
   },
   {
-    label: 'Day',
+    label: 'day',
     value: 'timeGridDay',
     icon: ViewDayTwoToneIcon
   },
   {
-    label: 'Agenda',
+    label: 'agenda',
     value: 'listWeek',
     icon: ViewAgendaTwoToneIcon
   }
@@ -64,6 +66,7 @@ const Actions: FC<ActionsProps> = ({
   view
 }) => {
   const { t }: { t: any } = useTranslation();
+  const getLanguage = i18n.language;
 
   return (
     <Grid
@@ -73,12 +76,12 @@ const Actions: FC<ActionsProps> = ({
       justifyContent="space-between"
     >
       <Grid item>
-        <Tooltip arrow placement="top" title={t('Previous Day')}>
+        <Tooltip arrow placement="top" title={t('previous_day')}>
           <IconButton color="primary" onClick={onPrevious}>
             <ArrowBackTwoToneIcon />
           </IconButton>
         </Tooltip>
-        <Tooltip arrow placement="top" title={t('Today')}>
+        <Tooltip arrow placement="top" title={t('today')}>
           <IconButton
             color="primary"
             sx={{
@@ -89,7 +92,7 @@ const Actions: FC<ActionsProps> = ({
             <TodayTwoToneIcon />
           </IconButton>
         </Tooltip>
-        <Tooltip arrow placement="top" title={t('Next Day')}>
+        <Tooltip arrow placement="top" title={t('next_day')}>
           <IconButton color="primary" onClick={onNext}>
             <ArrowForwardTwoToneIcon />
           </IconButton>
@@ -102,7 +105,9 @@ const Actions: FC<ActionsProps> = ({
         }}
       >
         <Typography variant="h3" color="text.primary">
-          {format(date, 'MMMM yyyy')}
+          {format(date, 'MMMM yyyy', {
+            locale: getLanguage === 'fr' ? fr : enUS
+          })}
         </Typography>
       </Grid>
       <Grid
