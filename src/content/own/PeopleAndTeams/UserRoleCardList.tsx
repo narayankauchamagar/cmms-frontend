@@ -20,7 +20,7 @@ import { Engineering } from '@mui/icons-material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from '../../../store';
 import { getRoles } from '../../../slices/role';
-import { RoleCode } from '../../../models/owns/role';
+import { Role, RoleCode } from '../../../models/owns/role';
 
 const AvatarWrapperSuccess = styled(Avatar)(
   ({ theme }) => `
@@ -79,6 +79,15 @@ function UserRoleCardList({ onChange }: Props) {
     }
   };
 
+  const getOrderedRoles = (): Role[] => {
+    if (roles.length) {
+      const defaultRolesOnly: Role[] = Object.keys(defaultRoles).map((code) => {
+        return roles.find((role) => role.code === code);
+      });
+      const customRoles = roles.filter((role) => role.code === 'USER_CREATED');
+      return [...defaultRolesOnly, ...customRoles];
+    } else return [];
+  };
   return (
     <Card>
       <CardHeader title={t('select_user_role')} />
@@ -95,7 +104,7 @@ function UserRoleCardList({ onChange }: Props) {
         </Stack>
       ) : (
         <List disablePadding>
-          {roles.map((role, index) => (
+          {getOrderedRoles().map((role, index) => (
             <Box
               key={role.id}
               style={{ cursor: 'pointer' }}

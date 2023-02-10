@@ -376,8 +376,12 @@ function Roles() {
       headerName: t('name'),
       description: t('name'),
       width: 150,
-      renderCell: (params: GridRenderCellParams<string>) => (
-        <Box sx={{ fontWeight: 'bold' }}>{params.value}</Box>
+      renderCell: (params: GridRenderCellParams<string, Role>) => (
+        <Box sx={{ fontWeight: 'bold' }}>
+          {params.row.code === 'USER_CREATED'
+            ? params.value
+            : t(`${params.row.code}_name`)}
+        </Box>
       )
     },
     {
