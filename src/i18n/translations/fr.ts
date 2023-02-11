@@ -1275,7 +1275,12 @@ const frJSON = {
   agenda: 'Agenda',
   next_day: 'Jour suivant',
   previous_day: 'Jour précédant',
-  today: "Aujourd'hui"
+  today: "Aujourd'hui",
+  to_filter: 'Filtrer',
+  'noRows.asset.message':
+    'Les équipements sont des ressources sur lesquelles votre entreprise peut intervenir',
+  'noRows.asset.action':
+    "Appuyez sur le bouton '+' pour créer un nouvel équipement."
 };
 
 export default frJSON;

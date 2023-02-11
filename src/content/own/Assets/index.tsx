@@ -7,6 +7,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  Drawer,
   Grid,
   IconButton,
   Menu,
@@ -16,7 +17,7 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { IField } from '../type';
-import { addAsset, getAssetChildren } from '../../../slices/asset';
+import { addAsset, getAssetChildren, getAssets } from '../../../slices/asset';
 import { useDispatch, useSelector } from '../../../store';
 import * as React from 'react';
 import { useContext, useEffect, useState } from 'react';
@@ -55,6 +56,8 @@ import { VendorMiniDTO } from '../../../models/owns/vendor';
 import Category from '../../../models/owns/category';
 import { exportEntity } from '../../../slices/exports';
 import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
+import { FilterField, SearchCriteria } from '../../../models/owns/page';
+import Filters from './Filters';
 
 function Assets() {
   const { t }: { t: any } = useTranslation();
@@ -71,7 +74,9 @@ function Assets() {
   } = useAuth();
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const { assetsHierarchy, loadingGet } = useSelector((state) => state.assets);
+  const { assetsHierarchy, loadingGet, assets } = useSelector(
+    (state) => state.assets
+  );
   const { loadingExport } = useSelector((state) => state.exports);
   const apiRef = useGridApiRef();
   const { getFormattedDate } = useContext(CompanySettingsContext);
@@ -82,13 +87,33 @@ function Assets() {
   );
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);
-
+  type ViewType = 'hierarchy' | 'list';
+  const [view, setView] = useState<ViewType>('hierarchy');
+  const initialCriteria: SearchCriteria = {
+    filterFields: [
+      {
+        field: 'archived',
+        operation: 'eq',
+        value: false
+      }
+    ],
+    pageSize: 10,
+    pageNum: 0,
+    direction: 'DESC'
+  };
+  const [criteria, setCriteria] = useState<SearchCriteria>(initialCriteria);
+  const onFilterChange = (newFilters: FilterField[]) => {
+    const newCriteria = { ...criteria };
+    newCriteria.filterFields = newFilters;
+    setCriteria(newCriteria);
+  };
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleCloseMenu = () => {
     setAnchorEl(null);
   };
+  const [openFilterDrawer, setOpenFilterDrawer] = useState<boolean>(false);
   useEffect(() => {
     setTitle(t('assets'));
     if (hasViewPermission(PermissionEntity.ASSETS)) {
@@ -110,13 +135,24 @@ function Assets() {
     }
   }, [locationParamObject]);
 
+  useEffect(() => {
+    if (hasViewPermission(PermissionEntity.ASSETS))
+      dispatch(getAssets(criteria));
+  }, [criteria]);
+
   const onCreationSuccess = () => {
     setOpenAddModal(false);
     showSnackBar(t('asset_create_success'), 'success');
   };
   const onCreationFailure = (err) =>
     showSnackBar(t('asset_create_failure'), 'error');
-
+  const handleCloseFilterDrawer = () => setOpenFilterDrawer(false);
+  const onPageSizeChange = (size: number) => {
+    setCriteria({ ...criteria, pageSize: size });
+  };
+  const onPageChange = (number: number) => {
+    setCriteria({ ...criteria, pageNum: number });
+  };
   const renderMenu = () => (
     <Menu
       id="basic-menu"
@@ -147,6 +183,14 @@ function Assets() {
           {t('to_import')}
         </MenuItem>
       )}
+      <MenuItem
+        onClick={() => {
+          setOpenFilterDrawer(true);
+          handleCloseMenu();
+        }}
+      >
+        {t('to_filter')}
+      </MenuItem>
     </Menu>
   );
   const columns: GridEnrichedColDef[] = [
@@ -444,18 +488,6 @@ function Assets() {
           }
         ]);
         dispatch(getAssetChildren(row.id, row.hierarchy));
-        // const childrenRows = assetsHierarchy1;
-        // apiRef.current.updateRows([
-        //   ...childrenRows.map((childRow) => {
-        //     return { ...childRow, hierarchy: [...row.hierarchy, childRow.id] };
-        //   }),
-        //   { id: node.id, childrenFetched: true },
-        //   { id: `placeholder-children-${node.id}`, _action: 'delete' }
-        // ]);
-        //
-        // if (childrenRows.length) {
-        //   apiRef.current.setRowChildrenExpansion(node.id, true);
-        // }
       };
       /**
        * By default, the grid does not toggle the expansion of rows with 0 children
@@ -619,25 +651,31 @@ function Assets() {
             >
               <Box sx={{ height: 570, width: '95%' }}>
                 <CustomDataGrid
-                  treeData
+                  treeData={view === 'hierarchy'}
                   columns={columns}
-                  rows={assetsHierarchy}
+                  rows={view === 'hierarchy' ? assetsHierarchy : assets.content}
                   apiRef={apiRef}
                   getTreeDataPath={(row) =>
-                    row.hierarchy.map((id) => id.toString())
+                    view === 'hierarchy'
+                      ? row.hierarchy.map((id) => id.toString())
+                      : [row.id.toString()]
                   }
                   loading={loadingGet}
-                  groupingColDef={groupingColDef}
+                  groupingColDef={
+                    view === 'hierarchy' ? groupingColDef : undefined
+                  }
+                  paginationMode={view === 'hierarchy' ? undefined : 'server'}
+                  onPageSizeChange={onPageSizeChange}
+                  onPageChange={onPageChange}
+                  rowsPerPageOptions={
+                    view === 'list' ? [10, 20, 50] : undefined
+                  }
                   components={{
                     Toolbar: GridToolbar,
                     NoRowsOverlay: () => (
                       <NoRowsMessageWrapper
-                        message={t(
-                          'Assets are resources on which your company can intervene'
-                        )}
-                        action={t(
-                          "Press the '+' button to create a new Asset."
-                        )}
+                        message={t('noRows.asset.message')}
+                        action={t('noRows.asset.action')}
                       />
                     )
                   }}
@@ -655,6 +693,23 @@ function Assets() {
           </Grid>
         </Grid>
         {renderMenu()}
+        <Drawer
+          anchor="left"
+          open={openFilterDrawer}
+          onClose={handleCloseFilterDrawer}
+          PaperProps={{
+            sx: { width: '30%' }
+          }}
+        >
+          <Filters
+            filterFields={criteria.filterFields}
+            onFilterChange={onFilterChange}
+            onSave={() => {
+              handleCloseFilterDrawer();
+              setView('list');
+            }}
+          />
+        </Drawer>
       </>
     );
   else return <PermissionErrorMessage message={'no_access_assets'} />;

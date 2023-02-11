@@ -1137,7 +1137,11 @@ const enJSON = {
   agenda: 'Agenda',
   next_day: 'Next Day',
   previous_day: 'Previous Day',
-  today: 'Today'
+  today: 'Today',
+  to_filter: 'Filter',
+  'noRows.asset.message':
+    'Assets are resources on which your company can intervene',
+  'noRows.asset.action': "Press the '+' button to create a new Asset."
 };
 
 export default enJSON;

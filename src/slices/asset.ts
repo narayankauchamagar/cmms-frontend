@@ -4,10 +4,11 @@ import type { AppThunk } from 'src/store';
 import { AssetDTO, AssetMiniDTO, AssetRow } from '../models/owns/asset';
 import api from '../utils/api';
 import WorkOrder from '../models/owns/workOrder';
+import { getInitialPage, Page, SearchCriteria } from 'src/models/owns/page';
 
 const basePath = 'assets';
 interface AssetState {
-  assets: AssetDTO[];
+  assets: Page<AssetDTO>;
   assetsHierarchy: AssetRow[];
   assetInfos: { [key: number]: { asset?: AssetDTO; workOrders: WorkOrder[] } };
   assetsByLocation: { [key: number]: AssetDTO[] };
@@ -17,7 +18,7 @@ interface AssetState {
 }
 
 const initialState: AssetState = {
-  assets: [],
+  assets: getInitialPage<AssetDTO>(),
   assetsHierarchy: [],
   assetInfos: {},
   assetsByLocation: {},
@@ -32,7 +33,7 @@ const slice = createSlice({
   reducers: {
     getAssets(
       state: AssetState,
-      action: PayloadAction<{ assets: AssetDTO[] }>
+      action: PayloadAction<{ assets: Page<AssetDTO> }>
     ) {
       const { assets } = action.payload;
       state.assets = assets;
@@ -46,7 +47,7 @@ const slice = createSlice({
     },
     addAsset(state: AssetState, action: PayloadAction<{ asset: AssetDTO }>) {
       const { asset } = action.payload;
-      state.assets = [...state.assets, asset];
+      state.assets.content = [...state.assets.content, asset];
     },
     editAsset(state: AssetState, action: PayloadAction<{ asset: AssetDTO }>) {
       const { asset } = action.payload;
@@ -56,8 +57,10 @@ const slice = createSlice({
     },
     deleteAsset(state: AssetState, action: PayloadAction<{ id: number }>) {
       const { id } = action.payload;
-      const assetIndex = state.assets.findIndex((asset) => asset.id === id);
-      state.assets.splice(assetIndex, 1);
+      const assetIndex = state.assets.content.findIndex(
+        (asset) => asset.id === id
+      );
+      state.assets.content.splice(assetIndex, 1);
     },
     setLoadingGet(
       state: AssetState,
@@ -125,10 +128,20 @@ const slice = createSlice({
 
 export const reducer = slice.reducer;
 
-export const getAssets = (): AppThunk => async (dispatch) => {
-  const assets = await api.get<AssetDTO[]>(basePath);
-  dispatch(slice.actions.getAssets({ assets }));
-};
+export const getAssets =
+  (criteria: SearchCriteria): AppThunk =>
+  async (dispatch) => {
+    try {
+      dispatch(slice.actions.setLoadingGet({ loading: true }));
+      const assets = await api.post<Page<AssetDTO>>(
+        `${basePath}/search`,
+        criteria
+      );
+      dispatch(slice.actions.getAssets({ assets }));
+    } finally {
+      dispatch(slice.actions.setLoadingGet({ loading: false }));
+    }
+  };
 export const getAssetsMini = (): AppThunk => async (dispatch) => {
   const assets = await api.get<AssetMiniDTO[]>(`${basePath}/mini`);
   dispatch(slice.actions.getAssetsMini({ assets }));
