@@ -1252,7 +1252,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
             <Typography variant="h6">{t('link')}</Typography>
           </Stack>
         </MenuItem>
-        <MenuItem onClick={onGenerateReport}>
+        <MenuItem disabled={generatingReport} onClick={onGenerateReport}>
           <Stack spacing={2} direction="row">
             {generatingReport ? (
               <CircularProgress size="1rem" />
