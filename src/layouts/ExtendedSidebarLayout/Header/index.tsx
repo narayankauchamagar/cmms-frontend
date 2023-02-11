@@ -1,16 +1,16 @@
 import { useContext } from 'react';
 
 import {
-  Box,
   alpha,
-  Stack,
-  lighten,
+  Box,
   Divider,
   IconButton,
-  Tooltip,
+  lighten,
+  Stack,
   styled,
-  useTheme,
-  Typography
+  Tooltip,
+  Typography,
+  useTheme
 } from '@mui/material';
 import MenuTwoToneIcon from '@mui/icons-material/MenuTwoTone';
 import { SidebarContext } from 'src/contexts/SidebarContext';
@@ -18,8 +18,6 @@ import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone';
 
 import HeaderButtons from './Buttons';
 import HeaderUserbox from './Userbox';
-import HeaderSearch from './Search';
-import HeaderMenu from './Menu';
 import { useTranslation } from 'react-i18next';
 import { TitleContext } from '../../../contexts/TitleContext';
 
@@ -86,7 +84,7 @@ function Header() {
             display: { lg: 'none', xs: 'inline-block' }
           }}
         >
-          <Tooltip arrow title="Toggle Menu">
+          <Tooltip arrow title={t('toggle_menu')}>
             <IconButton color="primary" onClick={toggleSidebar}>
               {!sidebarToggle ? (
                 <MenuTwoToneIcon fontSize="small" />

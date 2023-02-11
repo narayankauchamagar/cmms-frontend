@@ -2,93 +2,93 @@ import { GridLocaleText } from '@mui/x-data-grid';
 
 const gridLocaleText: GridLocaleText = {
   // Root
-  noRowsLabel: 'No Content',
-  noResultsOverlayLabel: 'No results found.',
-  errorOverlayDefaultLabel: 'An error occurred.',
+  noRowsLabel: 'no_content',
+  noResultsOverlayLabel: 'no_results',
+  errorOverlayDefaultLabel: 'an_error_occured',
 
   // Density selector toolbar button text
-  toolbarDensity: 'Density',
-  toolbarDensityLabel: 'Density',
-  toolbarDensityCompact: 'Compact',
-  toolbarDensityStandard: 'Standard',
-  toolbarDensityComfortable: 'Comfortable',
+  toolbarDensity: 'density',
+  toolbarDensityLabel: 'censity',
+  toolbarDensityCompact: 'compact',
+  toolbarDensityStandard: 'standard',
+  toolbarDensityComfortable: 'comfortable',
 
   // Columns selector toolbar button text
-  toolbarColumns: 'Columns',
-  toolbarColumnsLabel: 'Select columns',
+  toolbarColumns: 'columns',
+  toolbarColumnsLabel: 'select_columns',
 
   // Filters toolbar button text
-  toolbarFilters: 'Filters',
-  toolbarFiltersLabel: 'Show filters',
-  toolbarFiltersTooltipHide: 'Hide filters',
-  toolbarFiltersTooltipShow: 'Show filters',
+  toolbarFilters: 'filters',
+  toolbarFiltersLabel: 'show_filters',
+  toolbarFiltersTooltipHide: 'hide_filters',
+  toolbarFiltersTooltipShow: 'show_filters',
   toolbarFiltersTooltipActive: (count) =>
     count !== 1 ? `${count} active filters` : `${count} active filter`,
 
   // Quick filter toolbar field
   toolbarQuickFilterPlaceholder: 'Search…',
-  toolbarQuickFilterLabel: 'Search',
-  toolbarQuickFilterDeleteIconLabel: 'Clear',
+  toolbarQuickFilterLabel: 'search',
+  toolbarQuickFilterDeleteIconLabel: 'clear',
 
   // Export selector toolbar button text
-  toolbarExport: 'Export',
-  toolbarExportLabel: 'Export',
-  toolbarExportCSV: 'Download as CSV',
-  toolbarExportPrint: 'Print',
-  toolbarExportExcel: 'Download as Excel',
+  toolbarExport: 'to_export',
+  toolbarExportLabel: 'to_export',
+  toolbarExportCSV: 'download_as_csv',
+  toolbarExportPrint: 'print',
+  toolbarExportExcel: 'download_as_excel',
 
   // Columns panel text
-  columnsPanelTextFieldLabel: 'Find column',
-  columnsPanelTextFieldPlaceholder: 'Column title',
-  columnsPanelDragIconLabel: 'Reorder column',
-  columnsPanelShowAllButton: 'Show all',
-  columnsPanelHideAllButton: 'Hide all',
+  columnsPanelTextFieldLabel: 'find_column',
+  columnsPanelTextFieldPlaceholder: 'column_title',
+  columnsPanelDragIconLabel: 'reorder_column',
+  columnsPanelShowAllButton: 'show_all',
+  columnsPanelHideAllButton: 'hide_all',
 
   // Filter panel text
-  filterPanelAddFilter: 'Add filter',
-  filterPanelDeleteIconLabel: 'Delete',
-  filterPanelLinkOperator: 'Logic operator',
-  filterPanelOperators: 'Operator', // TODO v6: rename to filterPanelOperator
-  filterPanelOperatorAnd: 'And',
-  filterPanelOperatorOr: 'Or',
-  filterPanelColumns: 'Columns',
-  filterPanelInputLabel: 'Value',
-  filterPanelInputPlaceholder: 'Filter value',
+  filterPanelAddFilter: 'add_filter',
+  filterPanelDeleteIconLabel: 'to_delete',
+  filterPanelLinkOperator: 'logic_operator',
+  filterPanelOperators: 'operator', // TODO v6: rename to filterPanelOperator
+  filterPanelOperatorAnd: 'and',
+  filterPanelOperatorOr: 'or',
+  filterPanelColumns: 'columns',
+  filterPanelInputLabel: 'value',
+  filterPanelInputPlaceholder: 'filter_value',
 
   // Filter operators text
   filterOperatorContains: 'contains',
   filterOperatorEquals: 'equals',
-  filterOperatorStartsWith: 'starts with',
-  filterOperatorEndsWith: 'ends with',
+  filterOperatorStartsWith: 'starts_with',
+  filterOperatorEndsWith: 'ends_with',
   filterOperatorIs: 'is',
-  filterOperatorNot: 'is not',
-  filterOperatorAfter: 'is after',
-  filterOperatorOnOrAfter: 'is on or after',
-  filterOperatorBefore: 'is before',
-  filterOperatorOnOrBefore: 'is on or before',
-  filterOperatorIsEmpty: 'is empty',
-  filterOperatorIsNotEmpty: 'is not empty',
-  filterOperatorIsAnyOf: 'is any of',
+  filterOperatorNot: 'is_not',
+  filterOperatorAfter: 'is_after',
+  filterOperatorOnOrAfter: 'is_on_or_after',
+  filterOperatorBefore: 'is_before',
+  filterOperatorOnOrBefore: 'is_on_or_before',
+  filterOperatorIsEmpty: 'is_empty',
+  filterOperatorIsNotEmpty: 'is_not_empty',
+  filterOperatorIsAnyOf: 'is_any_of',
 
   // Filter values text
   filterValueAny: 'any',
-  filterValueTrue: 'true',
-  filterValueFalse: 'false',
+  filterValueTrue: 'true_text',
+  filterValueFalse: 'false_text',
 
   // Column menu text
-  columnMenuLabel: 'Menu',
-  columnMenuShowColumns: 'Show columns',
-  columnMenuFilter: 'Filter',
-  columnMenuHideColumn: 'Hide',
-  columnMenuUnsort: 'Unsort',
-  columnMenuSortAsc: 'Sort by ASC',
-  columnMenuSortDesc: 'Sort by DESC',
+  columnMenuLabel: 'menu',
+  columnMenuShowColumns: 'show_columns',
+  columnMenuFilter: 'filter',
+  columnMenuHideColumn: 'hide',
+  columnMenuUnsort: 'unsort',
+  columnMenuSortAsc: 'sort_by_ASC',
+  columnMenuSortDesc: 'sort_by_DESC',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
     count !== 1 ? `${count} active filters` : `${count} active filter`,
-  columnHeaderFiltersLabel: 'Show filters',
-  columnHeaderSortIconLabel: 'Sort',
+  columnHeaderFiltersLabel: 'show_filters',
+  columnHeaderSortIconLabel: 'sort',
 
   // Rows selected footer text
   footerRowSelected: (count) =>
@@ -97,7 +97,7 @@ const gridLocaleText: GridLocaleText = {
       : `${count.toLocaleString()} row selected`,
 
   // Total row amount footer text
-  footerTotalRows: 'Total Rows:',
+  footerTotalRows: 'total_rows',
 
   // Total visible row amount footer text
   footerTotalVisibleRows: (visibleCount, totalCount) =>
@@ -123,19 +123,19 @@ const gridLocaleText: GridLocaleText = {
   unpin: 'Unpin',
 
   // Tree Data
-  treeDataGroupingHeaderName: 'Group',
-  treeDataExpand: 'see children',
-  treeDataCollapse: 'hide children',
+  treeDataGroupingHeaderName: 'to_group',
+  treeDataExpand: 'see_children',
+  treeDataCollapse: 'hide_children',
 
   // Grouping columns
-  groupingColumnHeaderName: 'Group',
+  groupingColumnHeaderName: 'to_group',
   groupColumn: (name) => `Group by ${name}`,
   unGroupColumn: (name) => `Stop grouping by ${name}`,
 
   // Master/detail
-  detailPanelToggle: 'Detail panel toggle',
-  expandDetailPanel: 'Expand',
-  collapseDetailPanel: 'Collapse',
+  detailPanelToggle: 'detail_panel_toggle',
+  expandDetailPanel: 'expand',
+  collapseDetailPanel: 'collapse',
 
   // Used core components translation keys
   MuiTablePagination: {},
