@@ -1141,7 +1141,8 @@ const enJSON = {
   to_filter: 'Filter',
   'noRows.asset.message':
     'Assets are resources on which your company can intervene',
-  'noRows.asset.action': "Press the '+' button to create a new Asset."
+  'noRows.asset.action': "Press the '+' button to create a new Asset.",
+  reset_filters: 'Reset Filters'
 };
 
 export default enJSON;

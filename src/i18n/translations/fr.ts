@@ -1280,7 +1280,8 @@ const frJSON = {
   'noRows.asset.message':
     'Les équipements sont des ressources sur lesquelles votre entreprise peut intervenir',
   'noRows.asset.action':
-    "Appuyez sur le bouton '+' pour créer un nouvel équipement."
+    "Appuyez sur le bouton '+' pour créer un nouvel équipement.",
+  reset_filters: 'Réinitialiser les filtres'
 };
 
 export default frJSON;

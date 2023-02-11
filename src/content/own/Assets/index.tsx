@@ -308,6 +308,10 @@ function Assets() {
         getFormattedDate(params.value)
     }
   ];
+  const onResetFilters = () => {
+    setCriteria(initialCriteria);
+    setView('hierarchy');
+  };
   const defaultFields: Array<IField> = [
     {
       name: 'assetInfo',
@@ -627,6 +631,11 @@ function Assets() {
               <IconButton onClick={handleOpenMenu} color="primary">
                 <MoreVertTwoToneIcon />
               </IconButton>
+              {view === 'list' && (
+                <Button variant={'outlined'} onClick={onResetFilters}>
+                  {t('reset_filters')}
+                </Button>
+              )}
               {hasCreatePermission(PermissionEntity.ASSETS) && (
                 <Button
                   onClick={() => setOpenAddModal(true)}
@@ -660,6 +669,7 @@ function Assets() {
                       ? row.hierarchy.map((id) => id.toString())
                       : [row.id.toString()]
                   }
+                  disableColumnFilter
                   loading={loadingGet}
                   groupingColDef={
                     view === 'hierarchy' ? groupingColDef : undefined
