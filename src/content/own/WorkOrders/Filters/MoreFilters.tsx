@@ -6,6 +6,12 @@ import { useTranslation } from 'react-i18next';
 import { Grid, Typography } from '@mui/material';
 import { useSelector } from '../../../../store';
 import { UserMiniDTO } from '../../../../models/user';
+import {
+  FilterFieldType,
+  filterSingleField,
+  getDateValue,
+  getLabelAndValue
+} from '../../../../utils/filter';
 
 interface OwnProps {
   onFilterChange: (filterFields: FilterField[]) => void;
@@ -22,12 +28,11 @@ function MoreFilters({ filterFields, onFilterChange, onClose }: OwnProps) {
   const { assetsMini } = useSelector((state) => state.assets);
   const { teamsMini } = useSelector((state) => state.teams);
 
-  type FieldType = 'simple' | 'array' | 'date';
   const filtersConfig: {
     accessor: string;
     fieldName: string;
     operator?: SearchOperator;
-    type: FieldType;
+    type: FilterFieldType;
   }[] = [
     { accessor: 'assets', fieldName: 'asset', type: 'array' },
     { accessor: 'categories', fieldName: 'category', type: 'array' },
@@ -163,35 +168,6 @@ function MoreFilters({ filterFields, onFilterChange, onClose }: OwnProps) {
       label: t('updated_at')
     }
   ];
-  const getLabelAndValue = <T extends { id: number }>(
-    minis: T[],
-    fieldName: string,
-    labelAccessor?: keyof T,
-    formatter?: (value: T) => string
-  ): { label: string; value: number }[] => {
-    return (
-      filterFields
-        .find((filterField) => filterField.field === fieldName)
-        ?.values.map((id) => ({
-          label: formatter
-            ? formatter(minis.find((mini) => mini.id === id))
-            : minis.find((mini) => mini.id === id)[labelAccessor].toString(),
-          value: id
-        })) ?? null
-    );
-  };
-  const getDateValue = (fieldName: string): [string, string] => {
-    return [
-      filterFields.find(
-        (filterField) =>
-          filterField.field === fieldName && filterField.operation === 'ge'
-      )?.value ?? null,
-      filterFields.find(
-        (filterField) =>
-          filterField.field === fieldName && filterField.operation === 'le'
-      )?.value ?? null
-    ];
-  };
 
   const getTypeLabelAndValue = (
     operation: SearchOperator
@@ -225,84 +201,60 @@ function MoreFilters({ filterFields, onFilterChange, onClose }: OwnProps) {
       archived: filterFields.find(
         (filterField) => filterField.field === 'archived'
       ).value,
-      assets: getLabelAndValue(assetsMini, 'asset', 'name'),
-      teams: getLabelAndValue(teamsMini, 'team', 'name'),
+      assets: getLabelAndValue(filterFields, assetsMini, 'asset', 'name'),
+      teams: getLabelAndValue(filterFields, teamsMini, 'team', 'name'),
       categories: getLabelAndValue(
+        filterFields,
         categories['work-orders'],
         'category',
         'name'
       ),
       primaryUsers: getLabelAndValue(
+        filterFields,
         usersMini,
         'primaryUser',
         null,
         (user: UserMiniDTO) => `${user.firstName} ${user.lastName}`
       ),
-      locations: getLabelAndValue(locationsMini, 'location', 'name'),
+      locations: getLabelAndValue(
+        filterFields,
+        locationsMini,
+        'location',
+        'name'
+      ),
       completedBy: getLabelAndValue(
+        filterFields,
         usersMini,
         'completedBy',
         null,
         (user: UserMiniDTO) => `${user.firstName} ${user.lastName}`
       ),
       assignedTo: getLabelAndValue(
+        filterFields,
         usersMini,
         'assignedTo',
         null,
         (user: UserMiniDTO) => `${user.firstName} ${user.lastName}`
       ),
-      customers: getLabelAndValue(customersMini, 'customer', 'name'),
+      customers: getLabelAndValue(
+        filterFields,
+        customersMini,
+        'customer',
+        'name'
+      ),
       createdBy: getLabelAndValue(
+        filterFields,
         usersMini,
         'createdBy',
         null,
         (user: UserMiniDTO) => `${user.firstName} ${user.lastName}`
       ),
-      createdAt: getDateValue('createdAt'),
-      updatedAt: getDateValue('updatedAt'),
-      completedOn: getDateValue('completedOn')
+      createdAt: getDateValue(filterFields, 'createdAt'),
+      updatedAt: getDateValue(filterFields, 'updatedAt'),
+      completedOn: getDateValue(filterFields, 'completedOn')
     };
   };
   const shape = {};
-  const filterSingleField = (
-    filters: FilterField[],
-    values: { [key: string]: { label: string; value: number }[] },
-    accessor: string,
-    fieldName: string,
-    type: FieldType,
-    operator: SearchOperator = 'in'
-  ): FilterField[] => {
-    filters = filters.filter((filterField) => filterField.field !== fieldName);
-    if (type === 'simple') {
-      filters.push({
-        field: fieldName,
-        operation: 'eq',
-        value: values[accessor]
-      });
-    } else if (type === 'array' && values[accessor]?.length) {
-      const ids = values[accessor].map((element) => element.value);
-      filters.push({
-        field: fieldName,
-        operation: operator,
-        joinType: operator === 'inm' ? 'LEFT' : null,
-        value: '',
-        values: ids
-      });
-    } else if (type === 'date' && values[accessor]?.every((date) => !!date)) {
-      const [start, end] = values[accessor];
-      filters = [
-        ...filters,
-        {
-          field: fieldName,
-          operation: 'ge',
-          value: start,
-          enumName: 'JS_DATE'
-        },
-        { field: fieldName, operation: 'le', value: end, enumName: 'JS_DATE' }
-      ];
-    }
-    return filters;
-  };
   return (
     <Grid
       container
