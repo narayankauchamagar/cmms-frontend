@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Card,
+  CircularProgress,
   Typography,
   useTheme
 } from '@mui/material';
@@ -13,15 +14,18 @@ import CardMembershipTwoToneIcon from '@mui/icons-material/CardMembershipTwoTone
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../../../hooks/useAuth';
 import i18n from 'i18next';
+import { useState } from 'react';
 
 interface CompanyPlanProps {
   plan: SubscriptionPlan;
 }
 function CompanyPlan(props: CompanyPlanProps) {
   const { plan } = props;
-  const { company } = useAuth();
+  const { company, cancelSubscription, resumeSubscription } = useAuth();
   const navigate = useNavigate();
   const theme = useTheme();
+  const [loadingCancel, setLoadingCancel] = useState<boolean>(false);
+  const [loadingResume, setLoadingResume] = useState<boolean>(false);
   const { t }: { t: any } = useTranslation();
   const getLanguage = i18n.language;
   return (
@@ -93,9 +97,46 @@ function CompanyPlan(props: CompanyPlanProps) {
             onClick={() => navigate('/billing')}
             variant="contained"
             color="secondary"
+            sx={{ mr: 2 }}
           >
             {t('learn_more')}
           </Button>
+          {company.subscription.activated &&
+            (company.subscription.cancelled ? (
+              <Button
+                onClick={() => {
+                  setLoadingResume(true);
+                  resumeSubscription().finally(() => setLoadingResume(false));
+                }}
+                variant="contained"
+                color="success"
+                disabled={loadingResume}
+                startIcon={
+                  loadingResume ? (
+                    <CircularProgress color="success" size={'1rem'} />
+                  ) : null
+                }
+              >
+                {t('resume_subscription')}
+              </Button>
+            ) : (
+              <Button
+                onClick={() => {
+                  setLoadingCancel(true);
+                  cancelSubscription().finally(() => setLoadingCancel(false));
+                }}
+                variant="contained"
+                color="error"
+                disabled={loadingCancel}
+                startIcon={
+                  loadingCancel ? (
+                    <CircularProgress color="error" size={'1rem'} />
+                  ) : null
+                }
+              >
+                {t('cancel_subscription')}
+              </Button>
+            ))}
         </Box>
       </Box>
     </Card>

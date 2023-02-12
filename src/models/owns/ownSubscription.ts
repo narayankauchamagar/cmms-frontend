@@ -8,4 +8,6 @@ export default interface OwnSubscription extends Audit {
   subscriptionPlan: SubscriptionPlan;
   startsOn: string;
   endsOn: string;
+  cancelled: boolean;
+  activated: boolean;
 }

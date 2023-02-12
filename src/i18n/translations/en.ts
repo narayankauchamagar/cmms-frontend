@@ -1203,7 +1203,9 @@ const enJSON = {
   hide_children: 'hide children',
   expand: 'Expand',
   collapse: 'Collapse',
-  detail_panel_toggle: 'Detail panel toggle'
+  detail_panel_toggle: 'Detail panel toggle',
+  cancel_subscription: 'Cancel Subscription',
+  resume_subscription: 'Resume Subscription'
 };
 
 export default enJSON;

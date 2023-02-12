@@ -49,6 +49,8 @@ interface AuthContextValue extends AuthState {
   getInfos: () => void;
   patchUserSettings: (values: Partial<UserSettings>) => Promise<void>;
   patchUser: (values: Partial<OwnUser>) => Promise<void>;
+  cancelSubscription: () => Promise<void>;
+  resumeSubscription: () => Promise<void>;
   patchSubscription: (values: Partial<OwnSubscription>) => Promise<void>;
   patchCompany: (values: Partial<Company>) => Promise<void>;
   updatePassword: (values: {
@@ -135,6 +137,14 @@ type PatchSubscriptionAction = {
     subscription: OwnSubscription;
   };
 };
+type CancelSubscriptionAction = {
+  type: 'CANCEL_SUBSCRIPTION';
+  payload: {};
+};
+type ResumeSubscriptionAction = {
+  type: 'RESUME_SUBSCRIPTION';
+  payload: {};
+};
 type PatchCompanyAction = {
   type: 'PATCH_COMPANY';
   payload: {
@@ -185,7 +195,9 @@ type Action =
   | PatchFieldConfigurationAction
   | FetchCompanyAction
   | PatchCompanyAction
-  | PatchSubscriptionAction;
+  | PatchSubscriptionAction
+  | CancelSubscriptionAction
+  | ResumeSubscriptionAction;
 
 const initialAuthState: AuthState = {
   isAuthenticated: false,
@@ -277,6 +289,30 @@ const handlers: Record<
     return {
       ...state,
       company: { ...state.company, subscription }
+    };
+  },
+  CANCEL_SUBSCRIPTION: (
+    state: AuthState,
+    action: CancelSubscriptionAction
+  ): AuthState => {
+    return {
+      ...state,
+      company: {
+        ...state.company,
+        subscription: { ...state.company.subscription, cancelled: true }
+      }
+    };
+  },
+  RESUME_SUBSCRIPTION: (
+    state: AuthState,
+    action: CancelSubscriptionAction
+  ): AuthState => {
+    return {
+      ...state,
+      company: {
+        ...state.company,
+        subscription: { ...state.company.subscription, cancelled: false }
+      }
     };
   },
   PATCH_COMPANY: (state: AuthState, action: PatchCompanyAction): AuthState => {
@@ -371,6 +407,8 @@ const AuthContext = createContext<AuthContextValue>({
   patchCompany: () => Promise.resolve(),
   patchUser: () => Promise.resolve(),
   patchSubscription: () => Promise.resolve(),
+  cancelSubscription: () => Promise.resolve(),
+  resumeSubscription: () => Promise.resolve(),
   fetchUserSettings: () => Promise.resolve(),
   fetchCompany: () => Promise.resolve(),
   updatePassword: () => Promise.resolve(false),
@@ -545,6 +583,26 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         subscription: values
       }
     });
+  };
+  const cancelSubscription = async (): Promise<void> => {
+    const response = await api.get<{ success: boolean }>(`fast-spring/cancel`);
+    const { success } = response;
+    if (success) {
+      dispatch({
+        type: 'CANCEL_SUBSCRIPTION',
+        payload: {}
+      });
+    }
+  };
+  const resumeSubscription = async (): Promise<void> => {
+    const response = await api.get<{ success: boolean }>(`fast-spring/resume`);
+    const { success } = response;
+    if (success) {
+      dispatch({
+        type: 'RESUME_SUBSCRIPTION',
+        payload: {}
+      });
+    }
   };
   const updatePassword = async (values: {
     oldPassword: string;
@@ -721,6 +779,8 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         getInfos,
         patchUser,
         patchSubscription,
+        cancelSubscription,
+        resumeSubscription,
         patchCompany,
         updatePassword,
         resetPassword,

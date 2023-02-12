@@ -1342,7 +1342,9 @@ const frJSON = {
   hide_children: 'cacher les enfants',
   expand: 'Développer',
   collapse: 'Plier',
-  detail_panel_toggle: 'Bascule du panneau de détails'
+  detail_panel_toggle: 'Bascule du panneau de détails',
+  cancel_subscription: 'Annuler la souscription',
+  resume_subscription: 'Reprendre la souscription'
 };
 
 export default frJSON;
