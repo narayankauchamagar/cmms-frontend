@@ -1344,7 +1344,14 @@ const frJSON = {
   collapse: 'Plier',
   detail_panel_toggle: 'Bascule du panneau de détails',
   cancel_subscription: 'Annuler la souscription',
-  resume_subscription: 'Reprendre la souscription'
+  resume_subscription: 'Reprendre la souscription',
+  confirm_cancel_subscription:
+    'Etes-vous surs de vouloir annuler la souscription?',
+  workflows: 'Flux de travail',
+  create_workflow: 'Créer Un flux de travail',
+  if: 'Si',
+  and_optional: 'Et(Optionnel)',
+  then: 'Alors'
 };
 
 export default frJSON;

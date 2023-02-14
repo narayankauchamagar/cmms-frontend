@@ -6,11 +6,11 @@ import api from '../utils/api';
 
 const basePath = 'floor-plans';
 interface FloorPlanState {
-  locationRoot: { [id: number]: FloorPlan[] };
+  floorPlansByLocation: { [id: number]: FloorPlan[] };
 }
 
 const initialState: FloorPlanState = {
-  locationRoot: {}
+  floorPlansByLocation: {}
 };
 
 const slice = createSlice({
@@ -22,7 +22,7 @@ const slice = createSlice({
       action: PayloadAction<{ id: number; floorPlans: FloorPlan[] }>
     ) {
       const { floorPlans, id } = action.payload;
-      state.locationRoot[id] = floorPlans;
+      state.floorPlansByLocation[id] = floorPlans;
     },
     createFloorPlan(
       state: FloorPlanState,
@@ -32,7 +32,7 @@ const slice = createSlice({
       }>
     ) {
       const { floorPlan, locationId } = action.payload;
-      state.locationRoot[locationId].push(floorPlan);
+      state.floorPlansByLocation[locationId].push(floorPlan);
     },
     deleteFloorPlan(
       state: FloorPlanState,
@@ -42,9 +42,9 @@ const slice = createSlice({
       }>
     ) {
       const { id, locationId } = action.payload;
-      state.locationRoot[locationId] = state.locationRoot[locationId].filter(
-        (floorPlan) => floorPlan.id !== id
-      );
+      state.floorPlansByLocation[locationId] = state.floorPlansByLocation[
+        locationId
+      ].filter((floorPlan) => floorPlan.id !== id);
     }
   }
 });

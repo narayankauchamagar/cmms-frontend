@@ -3,8 +3,9 @@ import { Vendor } from './vendor';
 import { PartQuantityMiniDTO } from './partQuantity';
 import Category from './category';
 
+export type PurchaseOrderStatus = 'APPROVED' | 'PENDING' | 'REJECTED';
 export default interface PurchaseOrder extends Audit {
-  status: 'APPROVED' | 'PENDING' | 'REJECTED';
+  status: PurchaseOrderStatus;
   name: string;
   id: number;
   category: Category;

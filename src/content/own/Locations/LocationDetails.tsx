@@ -57,7 +57,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
   const [currentTab, setCurrentTab] = useState<string>('assets');
   const { assetsByLocation } = useSelector((state) => state.assets);
   const { workOrdersByLocation } = useSelector((state) => state.workOrders);
-  const { locationRoot } = useSelector((state) => state.floorPlans);
+  const { floorPlansByLocation } = useSelector((state) => state.floorPlans);
   const {
     hasEditPermission,
     hasDeletePermission,
@@ -67,7 +67,7 @@ export default function LocationDetails(props: LocationDetailsProps) {
   } = useAuth();
   const locationAssets = assetsByLocation[location.id] ?? [];
   const locationWorkOrders = workOrdersByLocation[location.id] ?? [];
-  const floorPlans = locationRoot[location.id] ?? [];
+  const floorPlans = floorPlansByLocation[location.id] ?? [];
   const theme = useTheme();
   const navigate = useNavigate();
   const tabs = [

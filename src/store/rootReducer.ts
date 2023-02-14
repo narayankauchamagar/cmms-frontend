@@ -39,6 +39,7 @@ import { reducer as requestAnalyticsReducer } from 'src/slices/analytics/request
 import { reducer as userAnalyticsReducer } from 'src/slices/analytics/user';
 import { reducer as importsReducer } from 'src/slices/imports';
 import { reducer as exportsReducer } from 'src/slices/exports';
+import { reducer as workflowReducer } from 'src/slices/workflow';
 
 const rootReducer = combineReducers({
   calendar: calendarReducer,
@@ -80,7 +81,8 @@ const rootReducer = combineReducers({
   requestAnalytics: requestAnalyticsReducer,
   userAnalytics: userAnalyticsReducer,
   imports: importsReducer,
-  exports: exportsReducer
+  exports: exportsReducer,
+  workflows: workflowReducer
 });
 
 export default rootReducer;

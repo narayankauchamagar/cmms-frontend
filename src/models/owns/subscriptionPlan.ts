@@ -10,7 +10,8 @@ export enum PlanFeature {
   ANALYTICS = 'ANALYTICS',
   REQUEST_PORTAL = 'REQUEST_PORTAL',
   SIGNATURE = 'SIGNATURE',
-  ROLE = 'ROLE'
+  ROLE = 'ROLE',
+  WORKFLOW = 'WORKFLOW'
 }
 export interface SubscriptionPlan {
   id: number;

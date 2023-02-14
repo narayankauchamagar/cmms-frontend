@@ -122,8 +122,10 @@ function CompanyPlan(props: CompanyPlanProps) {
             ) : (
               <Button
                 onClick={() => {
-                  setLoadingCancel(true);
-                  cancelSubscription().finally(() => setLoadingCancel(false));
+                  if (window.confirm(t('confirm_cancel_subscription'))) {
+                    setLoadingCancel(true);
+                    cancelSubscription().finally(() => setLoadingCancel(false));
+                  }
                 }}
                 variant="contained"
                 color="error"

@@ -1205,7 +1205,14 @@ const enJSON = {
   collapse: 'Collapse',
   detail_panel_toggle: 'Detail panel toggle',
   cancel_subscription: 'Cancel Subscription',
-  resume_subscription: 'Resume Subscription'
+  resume_subscription: 'Resume Subscription',
+  confirm_cancel_subscription:
+    'Are you sure you want to cancel the subscription?',
+  workflows: 'Workflows',
+  create_workflow: 'Create Workflow',
+  if: 'If',
+  and_optional: 'And(Optional)',
+  then: 'Then'
 };
 
 export default enJSON;
