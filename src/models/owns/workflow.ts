@@ -10,8 +10,8 @@ import { PartMiniDTO } from './part';
 import { PurchaseOrderStatus } from './purchaseOrder';
 
 export const partActions = ['CREATE_PURCHASE_ORDER'] as const;
-type PartAction = typeof partActions[number];
 export const partConditions = ['PART_IS', 'QUANTITY_INFERIOR'] as const;
+type PartAction = typeof partActions[number];
 type PartCondition = typeof partConditions[number];
 export const purchaseOrderActions = [
   'ASSIGN_VENDOR',
@@ -149,7 +149,7 @@ export interface WorkflowCondition {
   location: LocationMiniDTO;
   user: UserMiniDTO;
   team: TeamMiniDTO;
-  category: Category;
+  workOrderCategory: Category;
   checklist: Checklist;
   createdTimeStart: number;
   createdTimeEnd: number;
