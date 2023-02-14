@@ -32,6 +32,7 @@ import {
   taskActions,
   taskConditions,
   WFMainCondition,
+  WorkflowAction,
   WorkflowActionType,
   WorkflowCondition,
   WorkflowConditionType,
@@ -44,7 +45,6 @@ import { getLocationsMini } from '../../../../slices/location';
 import { getCategories } from '../../../../slices/category';
 import { getAssetsMini } from '../../../../slices/asset';
 import { getTeamsMini } from '../../../../slices/team';
-import { getCurrencies } from '../../../../slices/currency';
 import { AssetMiniDTO } from '../../../../models/owns/asset';
 import { LocationMiniDTO } from '../../../../models/owns/location';
 import { PartMiniDTO } from '../../../../models/owns/part';
@@ -53,23 +53,92 @@ import { UserMiniDTO } from '../../../../models/user';
 import { VendorMiniDTO } from '../../../../models/owns/vendor';
 import { TeamMiniDTO } from '../../../../models/owns/team';
 import Category from '../../../../models/owns/category';
+import DateTimePicker from '@mui/lab/DateTimePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers-pro';
+import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 
+interface UICondition {
+  type: WorkflowConditionType;
+  value: string | number;
+  values?: (string | number)[];
+}
+interface UIAction {
+  type: WorkflowActionType;
+  value: string | number;
+  values?: (string | number)[];
+}
+type FieldType = 'simple' | 'text' | 'number' | 'select' | 'date' | 'dateRange';
+
+interface Field<T, C> {
+  type: FieldType;
+  items?: T[];
+  accessor?: keyof C;
+  accessors?: (keyof C)[];
+  formatter?: (value: T) => { label: string; value: string | number };
+  onOpen?: () => void;
+}
 function Workflows() {
   const { t }: { t: any } = useTranslation();
-  const [openCreateChecklist, setOpenCreateChecklist] = useState(false);
-  const [openEditChecklist, setOpenEditChecklist] = useState(false);
   const [view, setView] = useState<'list' | 'create' | 'update'>('list');
   const [currentChecklist, setCurrentChecklist] = useState<Checklist>();
   const [currentMainCondition, setCurrentMainCondition] =
     useState<WFMainCondition>(mainConditions[0]);
 
-  interface UICondition {
-    conditionType: WorkflowConditionType;
-    value: string | number;
-    values?: string | number[];
-  }
-
   const [currentConditions, setCurrentConditions] = useState<UICondition[]>([]);
+  // @ts-ignore
+  const mainConfig: Record<
+    WFMainCondition,
+    {
+      conditions: WorkflowConditionType[];
+      actions: WorkflowActionType[];
+    }
+  > = {
+    WORK_ORDER_CREATED: {
+      conditions: workOrderConditions,
+      actions: workOrderActions
+    },
+    WORK_ORDER_CLOSED: {
+      conditions: workOrderConditions,
+      actions: workOrderActions
+    },
+    WORK_ORDER_ARCHIVED: {
+      conditions: workOrderConditions,
+      actions: workOrderActions
+    },
+    REQUEST_CREATED: {
+      conditions: requestConditions,
+      actions: requestActions
+    },
+    REQUEST_APPROVED: {
+      conditions: requestConditions,
+      actions: requestActions
+    },
+    REQUEST_REJECTED: {
+      conditions: workOrderConditions,
+      actions: requestActions
+    },
+    PURCHASE_ORDER_CREATED: {
+      conditions: purchaseOrderConditions,
+      actions: purchaseOrderActions
+    },
+    PURCHASE_ORDER_UPDATED: {
+      conditions: purchaseOrderConditions,
+      actions: purchaseOrderActions
+    },
+    TASK_UPDATED: {
+      conditions: taskConditions,
+      actions: taskActions
+    },
+    PART_UPDATED: {
+      conditions: partConditions,
+      actions: partActions
+    }
+  } as const;
+  const [currentAction, setCurrentAction] = useState<UIAction>({
+    type: mainConfig[mainConditions[0]].actions[0],
+    value: null
+  });
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const { hasFeature } = useAuth();
   const dispatch = useDispatch();
@@ -85,7 +154,6 @@ function Workflows() {
   const { usersMini } = useSelector((state) => state.users);
   const { assetsMini } = useSelector((state) => state.assets);
   const { teamsMini } = useSelector((state) => state.teams);
-  const { currencies } = useSelector((state) => state.currencies);
   const { partsMini } = useSelector((state) => state.parts);
 
   const fetchVendors = async () => {
@@ -109,23 +177,9 @@ function Workflows() {
   const fetchTeams = async () => {
     if (!teamsMini.length) dispatch(getTeamsMini());
   };
-  const fetchCurrencies = async () => {
-    if (!currencies.length) dispatch(getCurrencies());
-  };
-  type FieldType = 'text' | 'number' | 'select' | 'date' | 'dateRange';
-
-  interface ConditionField<T> {
-    type: FieldType;
-    items?: T[];
-    accessor: keyof WorkflowCondition;
-    accessors?: (keyof WorkflowCondition)[];
-    formatter?: (value: T) => { label: string; value: string | number };
-    onOpen?: () => void;
-  }
-
   const conditionsConfig: Record<
     WorkflowConditionType,
-    ConditionField<
+    Field<
       | AssetMiniDTO
       | LocationMiniDTO
       | PartMiniDTO
@@ -133,7 +187,8 @@ function Workflows() {
       | UserMiniDTO
       | VendorMiniDTO
       | TeamMiniDTO
-      | Category
+      | Category,
+      WorkflowCondition
     >
   > = {
     ASSET_IS: {
@@ -170,13 +225,11 @@ function Workflows() {
     },
     CREATED_AT_BETWEEN: {
       type: 'dateRange',
-      accessor: null,
       accessors: ['startDate', 'endDate']
     },
     DUE_DATE_AFTER: { type: 'date', accessor: 'endDate' },
     DUE_DATE_BETWEEN: {
       type: 'dateRange',
-      accessor: null,
       accessors: ['startDate', 'endDate']
     },
     LOCATION_IS: {
@@ -244,55 +297,113 @@ function Workflows() {
       })
     }
   };
-  // @ts-ignore
-  const mainConditionsConfig: Record<
-    WFMainCondition,
-    {
-      conditions: WorkflowConditionType[];
-      actions: WorkflowActionType[];
-    }
+  const actionsConfig: Record<
+    WorkflowActionType,
+    Field<
+      | AssetMiniDTO
+      | LocationMiniDTO
+      | string
+      | UserMiniDTO
+      | VendorMiniDTO
+      | TeamMiniDTO
+      | Category,
+      WorkflowAction
+    >
   > = {
-    WORK_ORDER_CREATED: {
-      conditions: workOrderConditions,
-      actions: workOrderActions
+    //TODO
+    ADD_CHECKLIST: { type: 'simple' },
+    APPROVE: { type: 'simple' },
+    ASSIGN_ASSET: {
+      type: 'select',
+      items: assetsMini,
+      accessor: 'asset',
+      onOpen: fetchAssets,
+      formatter: (asset: AssetMiniDTO) => ({
+        label: asset.name,
+        value: asset.id
+      })
     },
-    WORK_ORDER_CLOSED: {
-      conditions: workOrderConditions,
-      actions: workOrderActions
+    ASSIGN_CATEGORY: {
+      type: 'select',
+      accessor: currentMainCondition.startsWith('WORK_ORDER')
+        ? 'workOrderCategory'
+        : 'purchaseOrderCategory',
+      items:
+        categories[
+          currentMainCondition.startsWith('WORK_ORDER')
+            ? 'work-order-categories'
+            : 'purchase-order-categories'
+        ] ?? [],
+      onOpen: () =>
+        fetchCategories(
+          currentMainCondition.startsWith('WORK_ORDER')
+            ? 'work-order-categories'
+            : 'purchase-order-categories'
+        ),
+      formatter: (category: Category) => ({
+        label: category.name,
+        value: category.id
+      })
     },
-    WORK_ORDER_ARCHIVED: {
-      conditions: workOrderConditions,
-      actions: workOrderActions
+    ASSIGN_LOCATION: {
+      type: 'select',
+      items: locationsMini,
+      accessor: 'location',
+      onOpen: fetchLocations,
+      formatter: (location: LocationMiniDTO) => ({
+        label: location.name,
+        value: location.id
+      })
     },
-    REQUEST_CREATED: {
-      conditions: requestConditions,
-      actions: requestActions
+    ASSIGN_PRIORITY: {
+      type: 'select',
+      items: ['NONE', 'LOW', 'MEDIUM', 'HIGH'],
+      accessor: 'priority',
+      formatter: (priority: string) => ({ label: t(priority), value: priority })
     },
-    REQUEST_APPROVED: {
-      conditions: requestConditions,
-      actions: requestActions
+    ASSIGN_TEAM: {
+      type: 'select',
+      items: teamsMini,
+      accessor: 'team',
+      onOpen: fetchTeams,
+      formatter: (team: TeamMiniDTO) => ({ label: team.name, value: team.id })
     },
-    REQUEST_REJECTED: {
-      conditions: workOrderConditions,
-      actions: requestActions
+    ASSIGN_USER: {
+      type: 'select',
+      items: usersMini,
+      accessor: 'user',
+      onOpen: fetchUsers,
+      formatter: (user: UserMiniDTO) => ({
+        label: `${user.firstName} ${user.lastName}`,
+        value: user.id
+      })
     },
-    PURCHASE_ORDER_CREATED: {
-      conditions: purchaseOrderConditions,
-      actions: purchaseOrderActions
+    ASSIGN_VENDOR: {
+      type: 'select',
+      items: vendorsMini,
+      accessor: 'vendor',
+      onOpen: fetchVendors,
+      formatter: (vendor: VendorMiniDTO) => ({
+        label: vendor.companyName,
+        value: vendor.id
+      })
     },
-    PURCHASE_ORDER_UPDATED: {
-      conditions: purchaseOrderConditions,
-      actions: purchaseOrderActions
-    },
-    TASK_UPDATED: {
-      conditions: taskConditions,
-      actions: taskActions
-    },
-    PART_UPDATED: {
-      conditions: partConditions,
-      actions: partActions
+    CREATE_PURCHASE_ORDER: { type: 'simple' },
+    CREATE_REQUEST: { type: 'simple' },
+    CREATE_WORK_ORDER: { type: 'simple' },
+    REJECT: { type: 'simple' },
+    SEND_REMINDER_EMAIL: { type: 'simple' },
+    SET_ASSET_STATUS: {
+      type: 'select',
+      items: ['OPERATIONAL', 'DOWN'],
+      accessor: 'assetStatus',
+      formatter: (assetStatus: string) => ({
+        label: t(assetStatus),
+        value: assetStatus
+      })
     }
-  } as const;
+  };
+
   useEffect(() => {
     if (hasFeature(PlanFeature.CHECKLIST)) dispatch(getWorkflows());
   }, []);
@@ -311,7 +422,7 @@ function Workflows() {
     index: number
   ) => {
     const newConditions = [...currentConditions];
-    newConditions[index].conditionType = value;
+    newConditions[index].type = value;
     setCurrentConditions(newConditions);
   };
   const handleConditionValueChange = (
@@ -322,21 +433,44 @@ function Workflows() {
     newConditions[index].value = value;
     setCurrentConditions(newConditions);
   };
+  const handleConditionValuesChange = (values: string[], index: number) => {
+    const newConditions = [...currentConditions];
+    newConditions[index].values = values;
+    setCurrentConditions(newConditions);
+  };
   const onNewCondition = () => {
     setCurrentConditions((conditions) => [
       ...conditions,
       {
-        conditionType: mainConditionsConfig[currentMainCondition].conditions[0],
+        type: mainConfig[currentMainCondition].conditions[0],
         value: null
       }
     ]);
   };
+  const handleActionTypeChange = (value: WorkflowActionType) => {
+    setCurrentAction((action) => ({
+      type: value,
+      value: null
+    }));
+  };
+  const handleActionValueChange = (value: string | number) => {
+    setCurrentAction((action) => ({
+      ...action,
+      value
+    }));
+  };
+  const handleActionValuesChange = (values: string[]) => {
+    setCurrentAction((action) => ({
+      ...action,
+      values
+    }));
+  };
   const renderSingleCondition = (condition: UICondition, index: number) => {
-    const config = conditionsConfig[condition.conditionType];
+    const config = conditionsConfig[condition.type];
     return (
       <Box>
         <Select
-          value={condition.conditionType}
+          value={condition.type}
           onChange={(event) =>
             handleConditionTypeChange(
               event.target.value as WorkflowConditionType,
@@ -344,7 +478,7 @@ function Workflows() {
             )
           }
         >
-          {mainConditionsConfig[currentMainCondition].conditions.map(
+          {mainConfig[currentMainCondition].conditions.map(
             (condition, index) => (
               <MenuItem key={index} value={condition}>
                 {t(condition)}
@@ -375,6 +509,108 @@ function Workflows() {
                 </MenuItem>
               ))}
             </Select>
+          ) : config.type === 'date' ? (
+            <DateTimePicker
+              value={condition.value}
+              onChange={(newValue) =>
+                handleConditionValueChange(newValue, index)
+              }
+              renderInput={(params) => (
+                <TextField
+                  fullWidth
+                  placeholder={t('select_date')}
+                  required={true}
+                  {...params}
+                />
+              )}
+            />
+          ) : config.type === 'dateRange' ? (
+            <LocalizationProvider
+              localeText={{ start: t('start'), end: t('end') }}
+              dateAdapter={AdapterDayjs}
+            >
+              <DateRangePicker
+                value={
+                  condition.values?.length > 1
+                    ? [condition.values[0], condition.values[1]]
+                    : [null, null]
+                }
+                onChange={(newValues) => {
+                  handleConditionValuesChange(newValues as string[], index);
+                }}
+                renderInput={(startProps, endProps) => (
+                  <>
+                    <TextField {...startProps} />
+                    <Box sx={{ mx: 2 }}> {t('to')} </Box>
+                    <TextField {...endProps} />
+                  </>
+                )}
+              />
+            </LocalizationProvider>
+          ) : null}
+        </Box>
+      </Box>
+    );
+  };
+  const renderActionField = (action: UIAction) => {
+    const config = actionsConfig[action.type];
+    return (
+      <Box>
+        <Box sx={{ mt: 1 }}>
+          {['text', 'number'].includes(config.type) ? (
+            <TextField
+              value={action.value}
+              onChange={(event) => handleActionValueChange(event.target.value)}
+              type={config.type}
+            />
+          ) : config.type === 'select' ? (
+            <Select
+              value={action.value}
+              onChange={(event) => handleActionValueChange(event.target.value)}
+              onOpen={config.onOpen}
+            >
+              {config.items.map((item, index) => (
+                <MenuItem key={index} value={config.formatter(item).value}>
+                  {config.formatter(item).label}
+                </MenuItem>
+              ))}
+            </Select>
+          ) : config.type === 'date' ? (
+            <DateTimePicker
+              value={action.value}
+              onChange={(newValue) => handleActionValueChange(newValue)}
+              renderInput={(params) => (
+                <TextField
+                  fullWidth
+                  placeholder={t('select_date')}
+                  required={true}
+                  {...params}
+                />
+              )}
+            />
+          ) : config.type === 'dateRange' ? (
+            <LocalizationProvider
+              localeText={{ start: t('start'), end: t('end') }}
+              dateAdapter={AdapterDayjs}
+            >
+              <DateRangePicker
+                value={
+                  action.values?.length > 1
+                    ? [action.values[0], action.values[1]]
+                    : [null, null]
+                }
+                onChange={(newValues) => {
+                  handleActionValuesChange(newValues as string[]);
+                }}
+                renderInput={(startProps, endProps) => (
+                  <>
+                    <TextField {...startProps} />
+                    <Box sx={{ mx: 2 }}> {t('to')} </Box>
+                    <TextField {...endProps} />
+                  </>
+                )}
+              />
+            </LocalizationProvider>
           ) : null}
         </Box>
       </Box>
@@ -442,8 +678,15 @@ function Workflows() {
                   </Grid>
                   <Grid item xs={4}>
                     <Typography variant="h6">{t('then')}</Typography>
-                    <Select>
-                      {mainConditionsConfig[currentMainCondition].actions.map(
+                    <Select
+                      value={currentAction?.type}
+                      onChange={(event) =>
+                        handleActionTypeChange(
+                          event.target.value as WorkflowActionType
+                        )
+                      }
+                    >
+                      {mainConfig[currentMainCondition].actions.map(
                         (action, index) => (
                           <MenuItem key={index} value={action}>
                             {t(action)}
@@ -451,6 +694,7 @@ function Workflows() {
                         )
                       )}
                     </Select>
+                    {renderActionField(currentAction)}
                   </Grid>
                   <Grid item xs={12}>
                     <Stack direction="row" spacing={1}>
