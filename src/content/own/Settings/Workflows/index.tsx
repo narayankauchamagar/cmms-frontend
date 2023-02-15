@@ -77,6 +77,7 @@ interface Field<T, C> {
   accessor?: keyof C;
   accessors?: (keyof C)[];
   formatter?: (value: T) => { label: string; value: string | number };
+  apiFormatter?: (value: string | number) => string | number | { id: number };
   onOpen?: () => void;
 }
 function Workflows() {
@@ -179,6 +180,7 @@ function Workflows() {
   const fetchTeams = async () => {
     if (!teamsMini.length) dispatch(getTeamsMini());
   };
+  const objectFormatter = (value) => ({ id: Number(value) });
   const conditionsConfig: Record<
     WorkflowConditionType,
     Field<
@@ -201,7 +203,8 @@ function Workflows() {
       formatter: (asset: AssetMiniDTO) => ({
         label: asset.name,
         value: asset.id
-      })
+      }),
+      apiFormatter: objectFormatter
     },
     CATEGORY_IS: {
       type: 'select',
@@ -223,7 +226,8 @@ function Workflows() {
       formatter: (category: Category) => ({
         label: category.name,
         value: category.id
-      })
+      }),
+      apiFormatter: objectFormatter
     },
     CREATED_AT_BETWEEN: {
       type: 'dateRange',
@@ -242,7 +246,8 @@ function Workflows() {
       formatter: (location: LocationMiniDTO) => ({
         label: location.name,
         value: location.id
-      })
+      }),
+      apiFormatter: objectFormatter
     },
     NAME_CONTAINS: { type: 'text', accessor: 'label' },
     NAME_IS: { type: 'text', accessor: 'label' },
@@ -253,7 +258,8 @@ function Workflows() {
       items: partsMini,
       accessor: 'part',
       onOpen: fetchParts,
-      formatter: (part: PartMiniDTO) => ({ label: part.name, value: part.id })
+      formatter: (part: PartMiniDTO) => ({ label: part.name, value: part.id }),
+      apiFormatter: objectFormatter
     },
     PRIORITY_IS: {
       type: 'select',
@@ -273,7 +279,8 @@ function Workflows() {
       items: teamsMini,
       accessor: 'team',
       onOpen: fetchTeams,
-      formatter: (team: TeamMiniDTO) => ({ label: team.name, value: team.id })
+      formatter: (team: TeamMiniDTO) => ({ label: team.name, value: team.id }),
+      apiFormatter: objectFormatter
     },
     TITLE_CONTAINS: { type: 'text', accessor: 'value' },
     USER_IS: {
@@ -284,7 +291,8 @@ function Workflows() {
       formatter: (user: UserMiniDTO) => ({
         label: `${user.firstName} ${user.lastName}`,
         value: user.id
-      })
+      }),
+      apiFormatter: objectFormatter
     },
     VALUE_CONTAINS: { type: 'text', accessor: 'value' },
     VALUE_IS: { type: 'text', accessor: 'value' },
@@ -296,7 +304,8 @@ function Workflows() {
       formatter: (vendor: VendorMiniDTO) => ({
         label: vendor.companyName,
         value: vendor.id
-      })
+      }),
+      apiFormatter: objectFormatter
     }
   };
   const actionsConfig: Record<
@@ -323,7 +332,8 @@ function Workflows() {
       formatter: (asset: AssetMiniDTO) => ({
         label: asset.name,
         value: asset.id
-      })
+      }),
+      apiFormatter: objectFormatter
     },
     ASSIGN_CATEGORY: {
       type: 'select',
@@ -345,7 +355,8 @@ function Workflows() {
       formatter: (category: Category) => ({
         label: category.name,
         value: category.id
-      })
+      }),
+      apiFormatter: objectFormatter
     },
     ASSIGN_LOCATION: {
       type: 'select',
@@ -355,7 +366,8 @@ function Workflows() {
       formatter: (location: LocationMiniDTO) => ({
         label: location.name,
         value: location.id
-      })
+      }),
+      apiFormatter: objectFormatter
     },
     ASSIGN_PRIORITY: {
       type: 'select',
@@ -368,7 +380,8 @@ function Workflows() {
       items: teamsMini,
       accessor: 'team',
       onOpen: fetchTeams,
-      formatter: (team: TeamMiniDTO) => ({ label: team.name, value: team.id })
+      formatter: (team: TeamMiniDTO) => ({ label: team.name, value: team.id }),
+      apiFormatter: objectFormatter
     },
     ASSIGN_USER: {
       type: 'select',
@@ -378,7 +391,8 @@ function Workflows() {
       formatter: (user: UserMiniDTO) => ({
         label: `${user.firstName} ${user.lastName}`,
         value: user.id
-      })
+      }),
+      apiFormatter: objectFormatter
     },
     ASSIGN_VENDOR: {
       type: 'select',
@@ -388,7 +402,8 @@ function Workflows() {
       formatter: (vendor: VendorMiniDTO) => ({
         label: vendor.companyName,
         value: vendor.id
-      })
+      }),
+      apiFormatter: objectFormatter
     },
     CREATE_PURCHASE_ORDER: { type: 'number', accessor: 'numberValue' },
     CREATE_REQUEST: { type: 'simple' },
@@ -510,18 +525,25 @@ function Workflows() {
           if (currentMainCondition.startsWith('PART')) return 'part';
           if (currentMainCondition.startsWith('TASK')) return 'task';
         };
+        const actionConfig = actionsConfig[currentAction.type];
         const workflow = {
           title: 'ds',
           mainCondition: currentMainCondition,
-          secondaryConditions: currentConditions.map((condition) => ({
-            [`${getTypeAccessor()}Condition`]: condition.type,
-            [conditionsConfig[condition.type].accessor]:
-              condition.value ?? condition.values
-          })),
+          secondaryConditions: currentConditions.map((condition) => {
+            const config = conditionsConfig[condition.type];
+            const formattedValue = config.apiFormatter
+              ? config.apiFormatter(condition.value)
+              : condition.value ?? condition.values;
+            return {
+              [`${getTypeAccessor()}Condition`]: condition.type,
+              [config.accessor]: formattedValue
+            };
+          }),
           action: {
             [`${getTypeAccessor()}Action`]: currentAction.type,
-            [actionsConfig[currentAction.type].accessor]:
-              currentAction.value ?? currentAction.values
+            [actionConfig.accessor]: actionConfig.apiFormatter
+              ? actionConfig.apiFormatter(currentAction.value)
+              : currentAction.value ?? currentAction.values
           }
         };
         dispatch(addWorkflow(workflow))
