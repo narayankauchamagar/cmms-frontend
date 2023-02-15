@@ -43,7 +43,9 @@ const AssetDetails = ({ asset }: PropsType) => {
     },
     {
       label: t('acquisition_cost'),
-      value: getFormattedCurrency(asset?.acquisitionCost)
+      value: asset?.acquisitionCost
+        ? getFormattedCurrency(asset?.acquisitionCost)
+        : null
     },
     { label: t('area'), value: asset?.area },
     { label: t('barcode'), value: asset?.barCode }

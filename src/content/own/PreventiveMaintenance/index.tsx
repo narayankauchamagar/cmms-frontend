@@ -248,7 +248,7 @@ function Files() {
       field: 'primaryUser',
       headerName: t('worker'),
       description: t('worker'),
-      width: 150,
+      width: 170,
       renderCell: (params: GridRenderCellParams<UserMiniDTO>) =>
         params.value ? <UserAvatars users={[params.value]} /> : null
     },

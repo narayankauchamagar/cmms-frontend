@@ -30,7 +30,6 @@ import { IField } from '../type';
 import { useDispatch, useSelector } from '../../../store';
 import { getAssetsByLocation } from '../../../slices/asset';
 import { useNavigate } from 'react-router-dom';
-import { workOrders } from '../../../models/owns/workOrder';
 import { getWorkOrdersByLocation } from '../../../slices/workOrder';
 import {
   createFloorPlan,

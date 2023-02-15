@@ -1,5 +1,12 @@
 import { UserMiniDTO as User } from '../../../models/user';
-import { Avatar, Box, styled, Tooltip, Typography } from '@mui/material';
+import {
+  Avatar,
+  AvatarGroup,
+  Box,
+  styled,
+  Tooltip,
+  Typography
+} from '@mui/material';
 
 const AvatarPrimary = styled(Avatar)(
   ({ theme }) => `
@@ -16,7 +23,8 @@ const renderSingleUser = (user: User) => (
         my: 2,
         mr: 1
       }}
-      variant="rounded"
+      variant="circular"
+      src={user.image?.url}
     >
       <Typography variant="h1">
         {Array.from(user.firstName)[0].toUpperCase()}
@@ -27,7 +35,9 @@ const renderSingleUser = (user: User) => (
 export default function UserAvatarsRow({ users }: { users: User[] }) {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'row', p: 1 }}>
-      {users.map((user) => renderSingleUser(user))}
+      <AvatarGroup max={3}>
+        {users.map((user) => renderSingleUser(user))}
+      </AvatarGroup>
     </Box>
   );
 }

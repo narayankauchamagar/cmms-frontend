@@ -1,12 +1,12 @@
 import { Audit } from './audit';
-import Request, { requests } from './request';
-import Team, { teams } from './team';
-import Asset, { assets } from './asset';
-import File, { files } from './file';
-import Location, { locations } from './location';
-import Category, { categories } from './category';
+import Request from './request';
+import Team from './team';
+import Asset from './asset';
+import File from './file';
+import Location from './location';
+import Category from './category';
 import { OwnUser, UserMiniDTO } from '../user';
-import { CustomerMiniDTO, customers } from './customer';
+import { CustomerMiniDTO } from './customer';
 
 export type Priority = 'HIGH' | 'MEDIUM' | 'LOW' | 'NONE';
 interface WorkOrderBase extends Audit {
@@ -37,36 +37,3 @@ export default interface WorkOrder extends WorkOrderBase {
   feedback: string;
   //parentPreventiveMaintenance:
 }
-
-export const workOrders: WorkOrder[] = [
-  {
-    completedBy: null,
-    completedOn: 'string',
-    category: categories[0],
-    archived: true,
-    parentRequest: requests[0],
-    files,
-    dueDate: 'string',
-    status: 'string',
-    priority: 'HIGH',
-    estimatedDuration: 7,
-    image: null,
-    description: 'description',
-    requiredSignature: true,
-    location: locations[0],
-    team: teams[0],
-    feedback: null,
-    primaryUser: null,
-    assignedTo: [],
-    asset: assets[0],
-    //parentPreventiveMaintenance:
-    title: 'Work Order1',
-    id: 54,
-    createdAt: 'fghb',
-    createdBy: 1,
-    updatedAt: 'string',
-    updatedBy: 1,
-    customers,
-    signature: null
-  }
-];

@@ -255,7 +255,7 @@ const Parts = ({ setAction }: PropsType) => {
       field: 'assignedTo',
       headerName: t('assigned_to'),
       description: t('assigned_to'),
-      width: 150,
+      width: 170,
       renderCell: (params: GridRenderCellParams<UserMiniDTO[]>) => (
         <UserAvatars users={params.value} />
       )

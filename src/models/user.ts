@@ -36,6 +36,7 @@ export interface OwnUser extends Audit {
 export interface UserMiniDTO {
   firstName: string;
   lastName: string;
+  image: File;
   id: number;
 }
 
