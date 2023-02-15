@@ -36,15 +36,15 @@ import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
 import ImageViewer from 'react-simple-image-viewer';
 import { canAddReading } from '../../../utils/overall';
-import { getSingleMeter } from '../../../slices/meter';
 
 interface MeterDetailsProps {
   meter: Meter;
   handleOpenUpdate: () => void;
   handleOpenDelete: () => void;
+  onNewReading: () => void;
 }
 export default function MeterDetails(props: MeterDetailsProps) {
-  const { meter, handleOpenUpdate, handleOpenDelete } = props;
+  const { meter, handleOpenUpdate, handleOpenDelete, onNewReading } = props;
   const { t }: { t: any } = useTranslation();
   const dispatch = useDispatch();
   const { hasEditPermission, hasDeletePermission } = useAuth();
@@ -185,8 +185,8 @@ export default function MeterDetails(props: MeterDetailsProps) {
                 submitText={t('add_reading')}
                 values={{ value: 0 }}
                 onSubmit={async (values) => {
-                  return dispatch(createReading(meter.id, values)).then(() =>
-                    dispatch(getSingleMeter(meter.id))
+                  return dispatch(createReading(meter.id, values)).then(
+                    onNewReading
                   );
                 }}
               />
@@ -293,7 +293,7 @@ export default function MeterDetails(props: MeterDetailsProps) {
         )}
         {currentTab === 'history' && (
           <List>
-            {currentMeterReadings.map((reading) => (
+            {[...currentMeterReadings].reverse().map((reading) => (
               <ListItem key={reading.id} divider>
                 <ListItemText
                   primary={`${reading.value} ${meter.unit}`}

@@ -113,6 +113,9 @@ function Meters() {
       dispatch(getMeters(criteria));
   }, [criteria]);
 
+  const onNewReading = () => {
+    dispatch(getMeters(criteria));
+  };
   //see changes in ui on edit
   useEffect(() => {
     if (singleMeter || meters.content.length) {
@@ -579,6 +582,7 @@ function Meters() {
               meter={currentMeter}
               handleOpenUpdate={handleOpenUpdate}
               handleOpenDelete={() => setOpenDelete(true)}
+              onNewReading={onNewReading}
             />
           </Drawer>
           <ConfirmDialog
