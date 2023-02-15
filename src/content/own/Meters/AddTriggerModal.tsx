@@ -39,8 +39,8 @@ export default function AddTriggerModal({
       type: 'select',
       label: t('when_reading_is'),
       items: [
-        { label: 'greater_than', value: 'MORE_THAN' },
-        { label: 'lower_than', value: 'LESS_THAN' }
+        { label: t('greater_than'), value: 'MORE_THAN' },
+        { label: t('lower_than'), value: 'LESS_THAN' }
       ],
       midWidth: true,
       required: true

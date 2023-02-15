@@ -965,7 +965,7 @@ const frJSON = {
   required: 'Obligatoire',
   hidden: 'Masqué',
   creating_wo: "Création d'un bon de travail",
-  completing_wo: "Finition d'un bon de travail",
+  completing_wo: "Clôture d'un bon de travail",
   role_edit_failure: 'Impossible de modifier le rôle',
   edit_role: 'Modifier le rôle',
   edit_role_description:
@@ -1259,7 +1259,7 @@ const frJSON = {
   latitude: 'Latitude',
   ALL: 'Tous',
   REACTIVE: 'Réactif',
-  REPEATING: 'Répétitif',
+  REPEATING: 'Préventif',
   import_location_success:
     '{{created}} emplacements ont été créés et {{updated}} ont été mis à jour',
   import_part_success:
@@ -1399,7 +1399,11 @@ const frJSON = {
   PURCHASE_ORDER_UPDATED: 'Un bon de commande est mis à jour',
   TASK_UPDATED: 'Une tâche est mise à jour',
   PART_UPDATED: 'Une pièce est mise à jour',
-  add_condition: 'Ajouter une condition'
+  add_condition: 'Ajouter une condition',
+  workflow_creation_success: 'Le flux de travail a été créé avec succès',
+  workflow_creation_failure: 'La création du workflow a échoué',
+  action_value_missing: "La valeur de l'action est manquante",
+  condition_value_missing: "La valeur d'une condition est manquante"
 };
 
 export default frJSON;

@@ -135,8 +135,9 @@ export interface WorkflowAction {
   checklist: Checklist;
   vendor: VendorMiniDTO;
   purchaseOrderCategory: Category;
-  email: string;
+  value: string;
   assetStatus: AssetStatus;
+  numberValue: number;
 }
 export interface WorkflowCondition {
   workOrderCondition: WorkOrderCondition;

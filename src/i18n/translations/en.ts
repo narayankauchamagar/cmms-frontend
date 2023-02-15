@@ -1121,7 +1121,7 @@ const enJSON = {
   latitude: 'Latitude',
   ALL: 'All',
   REACTIVE: 'Reactive',
-  REPEATING: 'Repeating',
+  REPEATING: 'Preventive',
   import_location_success:
     '{{created}} Locations have been created and {{updated}} have been updated',
   import_part_success:
@@ -1260,7 +1260,11 @@ const enJSON = {
   PURCHASE_ORDER_UPDATED: 'A purchase order is updated',
   TASK_UPDATED: 'A task is updated',
   PART_UPDATED: 'A part is updated',
-  add_condition: 'Add condition'
+  add_condition: 'Add condition',
+  workflow_creation_success: 'Workflow created successfully',
+  workflow_creation_failure: "Workflow creation didn't succeed",
+  action_value_missing: 'The action value is missing',
+  condition_value_missing: 'A condition value is missing'
 };
 
 export default enJSON;

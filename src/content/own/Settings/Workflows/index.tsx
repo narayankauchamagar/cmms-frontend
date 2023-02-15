@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   Grid,
   MenuItem,
   Select,
@@ -20,7 +21,7 @@ import ConfirmDialog from '../../components/ConfirmDialog';
 import useAuth from '../../../../hooks/useAuth';
 import { PlanFeature } from '../../../../models/owns/subscriptionPlan';
 import FeatureErrorMessage from '../../components/FeatureErrorMessage';
-import { getWorkflows } from '../../../../slices/workflow';
+import { addWorkflow, getWorkflows } from '../../../../slices/workflow';
 import {
   mainConditions,
   partActions,
@@ -86,6 +87,7 @@ function Workflows() {
     useState<WFMainCondition>(mainConditions[0]);
 
   const [currentConditions, setCurrentConditions] = useState<UICondition[]>([]);
+  const [saving, setSaving] = useState<boolean>(false);
   // @ts-ignore
   const mainConfig: Record<
     WFMainCondition,
@@ -388,7 +390,7 @@ function Workflows() {
         value: vendor.id
       })
     },
-    CREATE_PURCHASE_ORDER: { type: 'simple' },
+    CREATE_PURCHASE_ORDER: { type: 'number', accessor: 'numberValue' },
     CREATE_REQUEST: { type: 'simple' },
     CREATE_WORK_ORDER: { type: 'simple' },
     REJECT: { type: 'simple' },
@@ -464,6 +466,78 @@ function Workflows() {
       ...action,
       values
     }));
+  };
+  const onWorkflowCreationSuccess = () => {
+    showSnackBar(t('workflow_creation_success'), 'success');
+    setView('list');
+    //TODO reset state
+  };
+  const checkFieldTypeValue = <
+    T extends { values?: (string | number)[]; value: string | number }
+  >(
+    fieldType: FieldType,
+    field: T
+  ): boolean => {
+    switch (fieldType) {
+      case 'dateRange':
+        return (
+          field.values?.length == 2 && field.values.every((value) => !!value)
+        );
+      case 'simple':
+        return true;
+      default:
+        return !!field.value;
+    }
+  };
+  const onSave = () => {
+    setSaving(true);
+    if (
+      currentConditions.every((condition) =>
+        checkFieldTypeValue(conditionsConfig[condition.type].type, condition)
+      )
+    ) {
+      if (
+        checkFieldTypeValue(
+          actionsConfig[currentAction.type].type,
+          currentAction
+        )
+      ) {
+        const getTypeAccessor = () => {
+          if (currentMainCondition.startsWith('WORK_ORDER')) return 'workOrder';
+          if (currentMainCondition.startsWith('REQUEST')) return 'request';
+          if (currentMainCondition.startsWith('PURCHASE_ORDER'))
+            return 'purchaseOrder';
+          if (currentMainCondition.startsWith('PART')) return 'part';
+          if (currentMainCondition.startsWith('TASK')) return 'task';
+        };
+        const workflow = {
+          title: 'ds',
+          mainCondition: currentMainCondition,
+          secondaryConditions: currentConditions.map((condition) => ({
+            [`${getTypeAccessor()}Condition`]: condition.type,
+            [conditionsConfig[condition.type].accessor]:
+              condition.value ?? condition.values
+          })),
+          action: {
+            [`${getTypeAccessor()}Action`]: currentAction.type,
+            [actionsConfig[currentAction.type].accessor]:
+              currentAction.value ?? currentAction.values
+          }
+        };
+        dispatch(addWorkflow(workflow))
+          .then(onWorkflowCreationSuccess)
+          .catch(() => showSnackBar(t('workflow_creation_failure'), 'error'))
+          .finally(() => {
+            setSaving(false);
+          });
+      } else {
+        setSaving(false);
+        showSnackBar(t('action_value_missing'), 'error');
+      }
+    } else {
+      setSaving(false);
+      showSnackBar(t('condition_value_missing'), 'error');
+    }
   };
   const renderSingleCondition = (condition: UICondition, index: number) => {
     const config = conditionsConfig[condition.type];
@@ -704,7 +778,16 @@ function Workflows() {
                       >
                         {t('cancel')}
                       </Button>
-                      <Button variant="contained">{t('save')}</Button>
+                      <Button
+                        disabled={saving}
+                        startIcon={
+                          saving ? <CircularProgress size="1rem" /> : null
+                        }
+                        onClick={onSave}
+                        variant="contained"
+                      >
+                        {t('save')}
+                      </Button>
                     </Stack>
                   </Grid>
                 </Grid>
