@@ -1264,7 +1264,9 @@ const enJSON = {
   workflow_creation_success: 'Workflow created successfully',
   workflow_creation_failure: "Workflow creation didn't succeed",
   action_value_missing: 'The action value is missing',
-  condition_value_missing: 'A condition value is missing'
+  condition_value_missing: 'A condition value is missing',
+  workflow_edit_success: 'The workflow has been updated successfully',
+  workflow_edit_failure: "The workflow could'nt be edited"
 };
 
 export default enJSON;

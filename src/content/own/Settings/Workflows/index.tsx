@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Card,
   CircularProgress,
   Grid,
   MenuItem,
@@ -21,7 +22,11 @@ import ConfirmDialog from '../../components/ConfirmDialog';
 import useAuth from '../../../../hooks/useAuth';
 import { PlanFeature } from '../../../../models/owns/subscriptionPlan';
 import FeatureErrorMessage from '../../components/FeatureErrorMessage';
-import { addWorkflow, getWorkflows } from '../../../../slices/workflow';
+import {
+  addWorkflow,
+  editWorkflow,
+  getWorkflows
+} from '../../../../slices/workflow';
 import {
   mainConditions,
   partActions,
@@ -33,6 +38,7 @@ import {
   taskActions,
   taskConditions,
   WFMainCondition,
+  Workflow,
   WorkflowAction,
   WorkflowActionType,
   WorkflowCondition,
@@ -89,6 +95,8 @@ function Workflows() {
 
   const [currentConditions, setCurrentConditions] = useState<UICondition[]>([]);
   const [saving, setSaving] = useState<boolean>(false);
+  const [currentTitle, setCurrentTitle] = useState<string>('');
+  const [currentWorkflowId, setCurrentWorkflowId] = useState<number>();
   // @ts-ignore
   const mainConfig: Record<
     WFMainCondition,
@@ -158,7 +166,6 @@ function Workflows() {
   const { assetsMini } = useSelector((state) => state.assets);
   const { teamsMini } = useSelector((state) => state.teams);
   const { partsMini } = useSelector((state) => state.parts);
-
   const fetchVendors = async () => {
     if (!vendorsMini.length) dispatch(getVendorsMini());
   };
@@ -337,18 +344,22 @@ function Workflows() {
     },
     ASSIGN_CATEGORY: {
       type: 'select',
-      accessor: currentMainCondition.startsWith('WORK_ORDER')
-        ? 'workOrderCategory'
-        : 'purchaseOrderCategory',
+      accessor:
+        currentMainCondition.startsWith('WORK_ORDER') ||
+        currentMainCondition.startsWith('REQUEST')
+          ? 'workOrderCategory'
+          : 'purchaseOrderCategory',
       items:
         categories[
-          currentMainCondition.startsWith('WORK_ORDER')
+          currentMainCondition.startsWith('WORK_ORDER') ||
+          currentMainCondition.startsWith('REQUEST')
             ? 'work-order-categories'
             : 'purchase-order-categories'
         ] ?? [],
       onOpen: () =>
         fetchCategories(
-          currentMainCondition.startsWith('WORK_ORDER')
+          currentMainCondition.startsWith('WORK_ORDER') ||
+            currentMainCondition.startsWith('REQUEST')
             ? 'work-order-categories'
             : 'purchase-order-categories'
         ),
@@ -415,7 +426,7 @@ function Workflows() {
       items: ['OPERATIONAL', 'DOWN'],
       accessor: 'assetStatus',
       formatter: (assetStatus: string) => ({
-        label: t(assetStatus),
+        label: t(assetStatus.toLowerCase()),
         value: assetStatus
       })
     }
@@ -487,6 +498,137 @@ function Workflows() {
     setView('list');
     //TODO reset state
   };
+  const onWorkflowEditSuccess = () => {
+    showSnackBar(t('workflow_edit_success'), 'success');
+    setView('list');
+    //TODO reset state
+  };
+  const onEdit = (workflow: Workflow) => {
+    fetchCategories('work-order-categories');
+    fetchCategories('purchase-order-categories');
+    fetchVendors();
+    fetchLocations();
+    fetchParts();
+    fetchAssets();
+    fetchTeams();
+    const getTypeFromCondition = (
+      condition: WorkflowCondition
+    ): WorkflowConditionType => {
+      if (condition.workOrderCondition) return condition.workOrderCondition;
+      if (condition.requestCondition) return condition.requestCondition;
+      if (condition.purchaseOrderCondition)
+        return condition.purchaseOrderCondition;
+      if (condition.partCondition) return condition.partCondition;
+      if (condition.taskCondition) return condition.taskCondition;
+    };
+    const getTypeFromAction = (action: WorkflowAction): WorkflowActionType => {
+      if (action.workOrderAction) return action.workOrderAction;
+      if (action.requestAction) return action.requestAction;
+      if (action.purchaseOrderAction) return action.purchaseOrderAction;
+      if (action.partAction) return action.partAction;
+      if (action.taskAction) return action.taskAction;
+    };
+    const getValueFromCondition = (
+      condition: WorkflowCondition
+    ): string | number => {
+      const basicKeys: (keyof WorkflowCondition)[] = [
+        'priority',
+        'workOrderStatus',
+        'purchaseOrderStatus',
+        'label',
+        'value',
+        'numberValue'
+      ];
+      const objectKeys: (keyof WorkflowCondition)[] = [
+        'asset',
+        'location',
+        'user',
+        'team',
+        'workOrderCategory',
+        'purchaseOrderCategory',
+        'checklist',
+        'vendor',
+        'part'
+      ];
+      let result;
+      for (let key of basicKeys) {
+        if (condition[key]) {
+          result = condition[key];
+          break;
+        }
+      }
+      if (result) return result;
+      for (let key of objectKeys) {
+        if (condition[key]) {
+          //@ts-ignore
+          result = condition[key].id;
+          break;
+        }
+      }
+      if (result) return result;
+    };
+    const getValuesFromCondition = (
+      condition: WorkflowCondition
+    ): (string | number)[] => {
+      let result = [];
+      if (condition.startDate && condition.endDate) {
+        result = [condition.startDate, condition.endDate];
+      }
+      return result;
+    };
+    const getValueFromAction = (action: WorkflowAction): string | number => {
+      const basicKeys: (keyof WorkflowAction)[] = [
+        'priority',
+        'value',
+        'numberValue',
+        'assetStatus'
+      ];
+      const objectKeys: (keyof WorkflowAction)[] = [
+        'asset',
+        'location',
+        'user',
+        'team',
+        'workOrderCategory',
+        'purchaseOrderCategory',
+        'checklist',
+        'vendor'
+      ];
+      let result;
+      for (let key of basicKeys) {
+        if (action[key]) {
+          result = action[key];
+          break;
+        }
+      }
+      if (result) return result;
+      for (let key of objectKeys) {
+        if (action[key]) {
+          //@ts-ignore
+          result = action[key].id;
+          break;
+        }
+      }
+      if (result) return result;
+    };
+    setCurrentTitle(workflow.title);
+    setCurrentMainCondition(workflow.mainCondition);
+    setCurrentConditions(
+      workflow.secondaryConditions.map((condition) => {
+        return {
+          type: getTypeFromCondition(condition),
+          value: getValueFromCondition(condition),
+          values: getValuesFromCondition(condition)
+        };
+      })
+    );
+    setCurrentAction({
+      type: getTypeFromAction(workflow.action),
+      value: getValueFromAction(workflow.action),
+      values: []
+    });
+    setCurrentWorkflowId(workflow.id);
+    setView('update');
+  };
   const checkFieldTypeValue = <
     T extends { values?: (string | number)[]; value: string | number }
   >(
@@ -527,17 +669,21 @@ function Workflows() {
         };
         const actionConfig = actionsConfig[currentAction.type];
         const workflow = {
-          title: 'ds',
+          title: currentTitle,
           mainCondition: currentMainCondition,
           secondaryConditions: currentConditions.map((condition) => {
             const config = conditionsConfig[condition.type];
             const formattedValue = config.apiFormatter
               ? config.apiFormatter(condition.value)
               : condition.value ?? condition.values;
-            return {
+            const result = {
               [`${getTypeAccessor()}Condition`]: condition.type,
               [config.accessor]: formattedValue
             };
+            config.accessors?.forEach((accessor, index) => {
+              result[accessor] = condition.values[index];
+            });
+            return result;
           }),
           action: {
             [`${getTypeAccessor()}Action`]: currentAction.type,
@@ -546,9 +692,26 @@ function Workflows() {
               : currentAction.value ?? currentAction.values
           }
         };
-        dispatch(addWorkflow(workflow))
-          .then(onWorkflowCreationSuccess)
-          .catch(() => showSnackBar(t('workflow_creation_failure'), 'error'))
+        dispatch(
+          view === 'create'
+            ? addWorkflow(workflow)
+            : editWorkflow(currentWorkflowId, workflow)
+        )
+          .then(
+            view === 'create'
+              ? onWorkflowCreationSuccess
+              : onWorkflowEditSuccess
+          )
+          .catch(() =>
+            showSnackBar(
+              t(
+                view === 'create'
+                  ? 'workflow_creation_failure'
+                  : 'workflow_edit_failure'
+              ),
+              'error'
+            )
+          )
           .finally(() => {
             setSaving(false);
           });
@@ -726,19 +889,46 @@ function Workflows() {
             </Grid>
             <Grid item xs={12}>
               {view === 'list' && (
-                <Button
-                  sx={{
-                    mb: 2
-                  }}
-                  variant="contained"
-                  onClick={() => setView('create')}
-                  startIcon={<AddTwoToneIcon fontSize="small" />}
-                >
-                  {t('create_workflow')}
-                </Button>
-              )}
-              {view === 'create' && (
                 <Grid container spacing={2}>
+                  <Grid item xs={4}>
+                    <Button
+                      sx={{
+                        mb: 2
+                      }}
+                      variant="contained"
+                      onClick={() => setView('create')}
+                      startIcon={<AddTwoToneIcon fontSize="small" />}
+                    >
+                      {t('create_workflow')}
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12}>
+                    {workflows.map((workflow) => (
+                      <Card
+                        sx={{ p: 2, mt: 1 }}
+                        style={{ cursor: 'pointer' }}
+                        key={workflow.id}
+                        onClick={() => onEdit(workflow)}
+                      >
+                        <Stack direction="row" justifyContent="space-between">
+                          <Typography>{workflow.title}</Typography>
+                          <Button color="error">{t('to_delete')}</Button>
+                        </Stack>
+                      </Card>
+                    ))}
+                  </Grid>
+                </Grid>
+              )}
+              {['create', 'update'].includes(view) && (
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <Typography variant="h6">{t('title')}</Typography>
+                    <TextField
+                      value={currentTitle}
+                      onChange={(event) => setCurrentTitle(event.target.value)}
+                      placeholder={t('title')}
+                    />
+                  </Grid>
                   <Grid item xs={4}>
                     <Typography variant="h6">{t('if')}</Typography>
                     <Select
