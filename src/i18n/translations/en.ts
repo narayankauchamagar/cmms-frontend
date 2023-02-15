@@ -1266,7 +1266,10 @@ const enJSON = {
   action_value_missing: 'The action value is missing',
   condition_value_missing: 'A condition value is missing',
   workflow_edit_success: 'The workflow has been updated successfully',
-  workflow_edit_failure: "The workflow could'nt be edited"
+  workflow_edit_failure: "The workflow couldn't be edited",
+  workflow_delete_success: 'The workflow has been deleted successfully',
+  workflow_delete_failure: "The workflow couldn't be deleted",
+  confirm_delete_workflow: 'Are you sure you want to delete this workflow'
 };
 
 export default enJSON;

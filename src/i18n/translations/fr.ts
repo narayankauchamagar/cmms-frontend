@@ -1405,7 +1405,10 @@ const frJSON = {
   action_value_missing: "La valeur de l'action est manquante",
   condition_value_missing: "La valeur d'une condition est manquante",
   workflow_edit_success: 'Le flux de travail a été mis à jour avec succès',
-  workflow_edit_failure: "Le flux de travail n'a pas pu être mis à jour"
+  workflow_edit_failure: "Le flux de travail n'a pas pu être mis à jour",
+  workflow_delete_success: 'Le workflow a été supprimé',
+  workflow_delete_failure: "Le workflow n'a pas pu être supprimé",
+  confirm_delete_workflow: 'Etes-vous sûr de vouloir supprimer ce workflow'
 };
 
 export default frJSON;

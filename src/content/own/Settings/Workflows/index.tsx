@@ -12,18 +12,16 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import SettingsLayout from '../SettingsLayout';
-import { Checklist } from '../../../../models/owns/checklists';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from '../../../../store';
 import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContext';
-import { deleteChecklist } from '../../../../slices/checklist';
 import ConfirmDialog from '../../components/ConfirmDialog';
 import useAuth from '../../../../hooks/useAuth';
 import { PlanFeature } from '../../../../models/owns/subscriptionPlan';
-import FeatureErrorMessage from '../../components/FeatureErrorMessage';
 import {
   addWorkflow,
+  deleteWorkflow,
   editWorkflow,
   getWorkflows
 } from '../../../../slices/workflow';
@@ -89,7 +87,6 @@ interface Field<T, C> {
 function Workflows() {
   const { t }: { t: any } = useTranslation();
   const [view, setView] = useState<'list' | 'create' | 'update'>('list');
-  const [currentChecklist, setCurrentChecklist] = useState<Checklist>();
   const [currentMainCondition, setCurrentMainCondition] =
     useState<WFMainCondition>(mainConditions[0]);
 
@@ -433,16 +430,16 @@ function Workflows() {
   };
 
   useEffect(() => {
-    if (hasFeature(PlanFeature.CHECKLIST)) dispatch(getWorkflows());
+    dispatch(getWorkflows());
   }, []);
   const onDeleteSuccess = () => {
-    showSnackBar(t('checklist_delete_success'), 'success');
+    showSnackBar(t('workflow_delete_success'), 'success');
   };
   const onDeleteFailure = (err) =>
-    showSnackBar(t('checklist_delete_failure'), 'error');
+    showSnackBar(t('workflow_delete_failure'), 'error');
 
   const handleDelete = (id: number) => {
-    dispatch(deleteChecklist(id)).then(onDeleteSuccess).catch(onDeleteFailure);
+    dispatch(deleteWorkflow(id)).then(onDeleteSuccess).catch(onDeleteFailure);
     setOpenDelete(false);
   };
   const handleConditionTypeChange = (
@@ -877,149 +874,154 @@ function Workflows() {
   };
   return (
     <SettingsLayout tabIndex={5}>
-      {hasFeature(PlanFeature.CHECKLIST) ? (
-        <Box
-          sx={{
-            p: 4
-          }}
-        >
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Typography variant="h6">{t('workflow_description')}</Typography>
-            </Grid>
-            <Grid item xs={12}>
-              {view === 'list' && (
-                <Grid container spacing={2}>
-                  <Grid item xs={4}>
-                    <Button
-                      sx={{
-                        mb: 2
-                      }}
-                      variant="contained"
-                      onClick={() => setView('create')}
-                      startIcon={<AddTwoToneIcon fontSize="small" />}
-                    >
-                      {t('create_workflow')}
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12}>
-                    {workflows.map((workflow) => (
-                      <Card
-                        sx={{ p: 2, mt: 1 }}
-                        style={{ cursor: 'pointer' }}
-                        key={workflow.id}
-                        onClick={() => onEdit(workflow)}
-                      >
-                        <Stack direction="row" justifyContent="space-between">
-                          <Typography>{workflow.title}</Typography>
-                          <Button color="error">{t('to_delete')}</Button>
-                        </Stack>
-                      </Card>
-                    ))}
-                  </Grid>
-                </Grid>
-              )}
-              {['create', 'update'].includes(view) && (
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <Typography variant="h6">{t('title')}</Typography>
-                    <TextField
-                      value={currentTitle}
-                      onChange={(event) => setCurrentTitle(event.target.value)}
-                      placeholder={t('title')}
-                    />
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Typography variant="h6">{t('if')}</Typography>
-                    <Select
-                      value={currentMainCondition}
-                      onChange={(event) => {
-                        setCurrentMainCondition(
-                          event.target.value as WFMainCondition
-                        );
-                        setCurrentConditions([]);
-                      }}
-                    >
-                      {mainConditions.map((mainCondition, index) => (
-                        <MenuItem key={index} value={mainCondition}>
-                          {t(mainCondition)}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Typography variant="h6">{t('and_optional')}</Typography>
-                    <Stack direction="column" spacing={2}>
-                      {currentConditions.map((condition, index) =>
-                        renderSingleCondition(condition, index)
-                      )}
-                      <Button
-                        onClick={onNewCondition}
-                        color="success"
-                        variant="outlined"
-                      >
-                        {t('add_condition')}
-                      </Button>
-                    </Stack>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <Typography variant="h6">{t('then')}</Typography>
-                    <Select
-                      value={currentAction?.type}
-                      onChange={(event) =>
-                        handleActionTypeChange(
-                          event.target.value as WorkflowActionType
-                        )
-                      }
-                    >
-                      {mainConfig[currentMainCondition].actions.map(
-                        (action, index) => (
-                          <MenuItem key={index} value={action}>
-                            {t(action)}
-                          </MenuItem>
-                        )
-                      )}
-                    </Select>
-                    {renderActionField(currentAction)}
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Stack direction="row" spacing={1}>
-                      <Button
-                        variant="outlined"
-                        onClick={() => setView('list')}
-                      >
-                        {t('cancel')}
-                      </Button>
-                      <Button
-                        disabled={saving}
-                        startIcon={
-                          saving ? <CircularProgress size="1rem" /> : null
-                        }
-                        onClick={onSave}
-                        variant="contained"
-                      >
-                        {t('save')}
-                      </Button>
-                    </Stack>
-                  </Grid>
-                </Grid>
-              )}
-            </Grid>
-
-            <ConfirmDialog
-              open={openDelete}
-              onCancel={() => {
-                setOpenDelete(false);
-              }}
-              onConfirm={() => handleDelete(currentChecklist?.id)}
-              confirmText={t('to_delete')}
-              question={t('confirm_delete_checklist')}
-            />
+      <Box
+        sx={{
+          p: 4
+        }}
+      >
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Typography variant="h6">{t('workflow_description')}</Typography>
           </Grid>
-        </Box>
-      ) : (
-        <FeatureErrorMessage message="upgrade_checklist" />
-      )}
+          <Grid item xs={12}>
+            {view === 'list' && (
+              <Grid container spacing={2}>
+                <Grid item xs={4}>
+                  <Button
+                    sx={{
+                      mb: 2
+                    }}
+                    variant="contained"
+                    onClick={() => setView('create')}
+                    disabled={
+                      !hasFeature(PlanFeature.WORKFLOW) && workflows.length > 0
+                    }
+                    startIcon={<AddTwoToneIcon fontSize="small" />}
+                  >
+                    {t('create_workflow')}
+                  </Button>
+                </Grid>
+                <Grid item xs={12}>
+                  {workflows.map((workflow) => (
+                    <Card
+                      sx={{ p: 2, mt: 1 }}
+                      style={{ cursor: 'pointer' }}
+                      key={workflow.id}
+                      onClick={() => onEdit(workflow)}
+                    >
+                      <Stack direction="row" justifyContent="space-between">
+                        <Typography variant="h4">{workflow.title}</Typography>
+                        <Button
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            setCurrentWorkflowId(workflow.id);
+                            setOpenDelete(true);
+                          }}
+                          color="error"
+                        >
+                          {t('to_delete')}
+                        </Button>
+                      </Stack>
+                    </Card>
+                  ))}
+                </Grid>
+              </Grid>
+            )}
+            {['create', 'update'].includes(view) && (
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Typography variant="h6">{t('title')}</Typography>
+                  <TextField
+                    value={currentTitle}
+                    onChange={(event) => setCurrentTitle(event.target.value)}
+                    placeholder={t('title')}
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="h6">{t('if')}</Typography>
+                  <Select
+                    value={currentMainCondition}
+                    onChange={(event) => {
+                      setCurrentMainCondition(
+                        event.target.value as WFMainCondition
+                      );
+                      setCurrentConditions([]);
+                    }}
+                  >
+                    {mainConditions.map((mainCondition, index) => (
+                      <MenuItem key={index} value={mainCondition}>
+                        {t(mainCondition)}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="h6">{t('and_optional')}</Typography>
+                  <Stack direction="column" spacing={2}>
+                    {currentConditions.map((condition, index) =>
+                      renderSingleCondition(condition, index)
+                    )}
+                    <Button
+                      onClick={onNewCondition}
+                      color="success"
+                      variant="outlined"
+                    >
+                      {t('add_condition')}
+                    </Button>
+                  </Stack>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography variant="h6">{t('then')}</Typography>
+                  <Select
+                    value={currentAction?.type}
+                    onChange={(event) =>
+                      handleActionTypeChange(
+                        event.target.value as WorkflowActionType
+                      )
+                    }
+                  >
+                    {mainConfig[currentMainCondition].actions.map(
+                      (action, index) => (
+                        <MenuItem key={index} value={action}>
+                          {t(action)}
+                        </MenuItem>
+                      )
+                    )}
+                  </Select>
+                  {renderActionField(currentAction)}
+                </Grid>
+                <Grid item xs={12}>
+                  <Stack direction="row" spacing={1}>
+                    <Button variant="outlined" onClick={() => setView('list')}>
+                      {t('cancel')}
+                    </Button>
+                    <Button
+                      disabled={saving}
+                      startIcon={
+                        saving ? <CircularProgress size="1rem" /> : null
+                      }
+                      onClick={onSave}
+                      variant="contained"
+                    >
+                      {t('save')}
+                    </Button>
+                  </Stack>
+                </Grid>
+              </Grid>
+            )}
+          </Grid>
+
+          <ConfirmDialog
+            open={openDelete}
+            onCancel={() => {
+              setOpenDelete(false);
+            }}
+            onConfirm={() => handleDelete(currentWorkflowId)}
+            confirmText={t('to_delete')}
+            question={t('confirm_delete_workflow')}
+          />
+        </Grid>
+      </Box>
     </SettingsLayout>
   );
 }
