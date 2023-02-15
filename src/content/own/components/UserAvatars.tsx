@@ -2,7 +2,6 @@ import { UserMiniDTO as User } from '../../../models/user';
 import {
   Avatar,
   AvatarGroup,
-  Box,
   styled,
   Tooltip,
   Typography
@@ -20,8 +19,7 @@ const renderSingleUser = (user: User) => (
   <Tooltip key={user.id} title={`${user.firstName} ${user.lastName}`} arrow>
     <AvatarPrimary
       sx={{
-        my: 2,
-        mr: 1
+        my: 2
       }}
       variant="circular"
       src={user.image?.url}
@@ -34,10 +32,8 @@ const renderSingleUser = (user: User) => (
 );
 export default function UserAvatarsRow({ users }: { users: User[] }) {
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'row', p: 1 }}>
-      <AvatarGroup max={3}>
-        {users.map((user) => renderSingleUser(user))}
-      </AvatarGroup>
-    </Box>
+    <AvatarGroup max={3}>
+      {users.map((user) => renderSingleUser(user))}
+    </AvatarGroup>
   );
 }
