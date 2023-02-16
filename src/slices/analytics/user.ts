@@ -2,11 +2,12 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 import type { AppThunk } from 'src/store';
 import api from '../../utils/api';
-import { UserWOStats } from '../../models/owns/analytics/user';
+import { UserWOStats, WOStatsByDay } from '../../models/owns/analytics/user';
 
 const basePath = 'analytics/users';
 interface UserStatstate {
   workOrdersOverview: UserWOStats;
+  twoWeeksWorkOrders: WOStatsByDay[];
   loading: Omit<Record<keyof UserStatstate, boolean>, 'loading'>;
 }
 type Operation = keyof UserStatstate;
@@ -16,8 +17,10 @@ const initialState: UserStatstate = {
     created: 0,
     completed: 0
   },
+  twoWeeksWorkOrders: [],
   loading: {
-    workOrdersOverview: false
+    workOrdersOverview: false,
+    twoWeeksWorkOrders: false
   }
 };
 
@@ -31,6 +34,13 @@ const slice = createSlice({
     ) {
       const { stats } = action.payload;
       state.workOrdersOverview = stats;
+    },
+    getTwoWeeksWorkOrders(
+      state: UserStatstate,
+      action: PayloadAction<{ stats: WOStatsByDay[] }>
+    ) {
+      const { stats } = action.payload;
+      state.twoWeeksWorkOrders = stats;
     },
     setLoading(
       state: UserStatstate,
@@ -62,5 +72,26 @@ export const getUserWorkOrdersOverview = (): AppThunk => async (dispatch) => {
     })
   );
 };
+
+export const getTwoWeeksWorkOrders =
+  (userId: number): AppThunk =>
+  async (dispatch) => {
+    dispatch(
+      slice.actions.setLoading({
+        operation: 'twoWeeksWorkOrders',
+        loading: true
+      })
+    );
+    const stats = await api.get<WOStatsByDay[]>(
+      `${basePath}/two-weeks/work-orders/${userId}`
+    );
+    dispatch(slice.actions.getTwoWeeksWorkOrders({ stats }));
+    dispatch(
+      slice.actions.setLoading({
+        operation: 'twoWeeksWorkOrders',
+        loading: false
+      })
+    );
+  };
 
 export default slice;

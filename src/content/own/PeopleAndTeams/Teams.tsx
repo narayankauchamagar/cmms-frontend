@@ -5,6 +5,7 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
+  Link,
   Stack,
   Typography
 } from '@mui/material';
@@ -44,6 +45,7 @@ import NoRowsMessage from '../components/NoRowsMessage';
 import { SearchCriteria } from '../../../models/owns/page';
 import { onSearchQueryChange } from '../../../utils/overall';
 import SearchInput from '../components/SearchInput';
+import { getUserUrl } from '../../../utils/urlPaths';
 
 interface PropsType {
   values?: any;
@@ -369,12 +371,22 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
             <Typography variant="h5" sx={{ mb: 1 }}>
               {currentTeam?.name}
             </Typography>
-            <Typography variant="subtitle1">{t('description')}</Typography>
-            <Typography variant="h5" sx={{ mb: 1 }}>
-              {currentTeam?.description}
-            </Typography>
-
-            {/* people in the team */}
+            {currentTeam?.description && (
+              <>
+                <Typography variant="subtitle1">{t('description')}</Typography>
+                <Typography variant="h5" sx={{ mb: 1 }}>
+                  {currentTeam.description}
+                </Typography>
+              </>
+            )}
+            <Typography variant="subtitle1">{t('users')}</Typography>
+            {currentTeam?.users.map((user) => (
+              <Link
+                key={user.id}
+                href={getUserUrl(user.id)}
+                variant="h6"
+              >{`${user.firstName} ${user.lastName}`}</Link>
+            ))}
           </Box>
         ) : (
           <Box>

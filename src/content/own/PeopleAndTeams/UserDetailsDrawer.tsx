@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import {
   alpha,
   Avatar,
@@ -16,6 +16,9 @@ import Scrollbar from 'src/components/Scrollbar';
 import Chart from 'react-apexcharts';
 import type { ApexOptions } from 'apexcharts';
 import { OwnUser } from '../../../models/user';
+import { useDispatch, useSelector } from '../../../store';
+import { getTwoWeeksWorkOrders } from '../../../slices/analytics/user';
+import { getDayAndMonthAndYear } from '../../../utils/dates';
 
 const AvatarPrimary = styled(Avatar)(
   ({ theme }) => `
@@ -43,14 +46,21 @@ interface PropsType {
 function UserDetailsDrawer({ user }: PropsType) {
   const { t }: { t: any } = useTranslation();
   const theme = useTheme();
+  const dispatch = useDispatch();
 
   const [currentTab, setCurrentTab] = useState<string>('overview');
-
+  const { twoWeeksWorkOrders } = useSelector((state) => state.userAnalytics);
+  const completedWorkOrdersCount = twoWeeksWorkOrders.reduce(
+    (acc, day) => day.completed + acc,
+    0
+  );
   const tabs = [
     { value: 'overview', label: t('overview') },
     { value: 'activity', label: t('activity') }
   ];
-
+  useEffect(() => {
+    if (user.id) dispatch(getTwoWeeksWorkOrders(user.id));
+  }, [user.id]);
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
@@ -110,20 +120,7 @@ function UserDetailsDrawer({ user }: PropsType) {
     fill: {
       opacity: 1
     },
-    labels: [
-      '01 Aug 2021',
-      '02 Aug 2021',
-      '03 Aug 2021',
-      '04 Aug 2021',
-      '05 Aug 2021',
-      '06 Aug 2021',
-      '07 Aug 2021',
-      '08 Aug 2021',
-      '09 Aug 2021',
-      '10 Aug 2021',
-      '11 Aug 2021',
-      '12 Aug 2021'
-    ],
+    labels: twoWeeksWorkOrders.map((day) => getDayAndMonthAndYear(day.date)),
     xaxis: {
       type: 'datetime'
     },
@@ -135,23 +132,22 @@ function UserDetailsDrawer({ user }: PropsType) {
       borderColor: theme.palette.divider
     },
     legend: {
-      show: false
+      show: true
     }
   };
 
   const chart3Data = [
     {
-      name: 'Income',
+      name: t('created'),
       type: 'column',
-      data: [440, 505, 414, 671, 227, 413, 201, 352, 752, 320, 257, 160]
+      data: twoWeeksWorkOrders.map((day) => day.created)
     },
     {
-      name: 'Expenses',
+      name: t('completed'),
       type: 'line',
-      data: [231, 442, 335, 227, 433, 222, 117, 316, 242, 252, 162, 176]
+      data: twoWeeksWorkOrders.map((day) => day.completed)
     }
   ];
-  //////////////////////////////////////////////////////////////////////////////////////////////
 
   return (
     <Box
@@ -235,12 +231,12 @@ function UserDetailsDrawer({ user }: PropsType) {
             <Typography variant="subtitle2">
               {t('wo_complete_last_14_days')}
             </Typography>
-            <Typography variant="h2">{t('0')}</Typography>
-            <Typography variant="subtitle2" color="green">
-              {t('no_wo_complete_last_14_days')}
-            </Typography>
-
-            {/* ////////////////////////////////////////////////////////////////////////// */}
+            <Typography variant="h2">{completedWorkOrdersCount}</Typography>
+            {completedWorkOrdersCount === 0 && (
+              <Typography variant="subtitle2" color="green">
+                {t('no_wo_complete_last_14_days')}
+              </Typography>
+            )}
             <Box flexGrow={1} px={2} pb={2}>
               <Chart
                 options={chart3Options}
@@ -249,7 +245,6 @@ function UserDetailsDrawer({ user }: PropsType) {
                 height={'100%'}
               />
             </Box>
-            {/* ////////////////////////////////////////////////////////////////////////// */}
           </Box>
         )}
       </Scrollbar>

@@ -895,9 +895,9 @@ const frJSON = {
   overview: 'Aperçu',
   activity: 'Activité',
   wo_complete_last_14_days:
-    'Ordres de travail terminés au cours des 14 derniers jours',
+    'Ordres de travail clôturés au cours des 14 derniers jours',
   no_wo_complete_last_14_days:
-    "Vous n'avez exécuté aucun bon de travail au cours des deux dernières semaines",
+    "Vous n'avez clôturé aucun bon de travail au cours des deux dernières semaines",
   ADMIN_name: 'Administrateur',
   ADMIN_description:
     "L'administrateur a un accès complet; y compris l'édition, l'ajout, la suppression d'ordres de travail et de demandes",
