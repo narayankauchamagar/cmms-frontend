@@ -4,6 +4,7 @@ import {
   Button,
   Card,
   CircularProgress,
+  debounce,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -11,11 +12,13 @@ import {
   Drawer,
   Grid,
   IconButton,
+  InputAdornment,
   Menu,
   MenuItem,
   Stack,
   Tab,
   Tabs,
+  TextField,
   Tooltip,
   Typography,
   useTheme
@@ -24,7 +27,7 @@ import { useTranslation } from 'react-i18next';
 import { IField } from '../type';
 import WorkOrder from '../../../models/owns/workOrder';
 import * as React from 'react';
-import { ChangeEvent, useContext, useEffect, useState } from 'react';
+import { ChangeEvent, useContext, useEffect, useMemo, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import CustomDataGrid from '../components/CustomDatagrid';
@@ -69,7 +72,11 @@ import { getSingleAsset } from '../../../slices/asset';
 import Category from '../../../models/owns/category';
 import File from '../../../models/owns/file';
 import { dayDiff } from '../../../utils/dates';
-import { FilterField, SearchCriteria } from '../../../models/owns/page';
+import {
+  FilterField,
+  SearchCriteria,
+  SearchOperator
+} from '../../../models/owns/page';
 import WorkOrderCalendar from './Calendar';
 import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
 import { exportEntity } from '../../../slices/exports';
@@ -79,6 +86,7 @@ import EnumFilter from './Filters/EnumFilter';
 import SignalCellularAltTwoToneIcon from '@mui/icons-material/SignalCellularAltTwoTone';
 import CircleTwoToneIcon from '@mui/icons-material/CircleTwoTone';
 import _ from 'lodash';
+import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
@@ -308,7 +316,31 @@ function WorkOrders() {
   const onPageChange = (number: number) => {
     setCriteria({ ...criteria, pageNum: number });
   };
-
+  const onQueryChange = (event) => {
+    const query = event.target.value;
+    let newFilterFields: FilterField[] = [...criteria.filterFields];
+    const fieldsToSearch = ['title', 'description'];
+    const firstField = fieldsToSearch.shift();
+    newFilterFields = newFilterFields.filter(
+      (filterField) => !fieldsToSearch.includes(filterField.field)
+    );
+    if (query)
+      newFilterFields = [
+        ...newFilterFields,
+        {
+          field: firstField,
+          value: query,
+          operation: 'cn' as SearchOperator,
+          alternatives: fieldsToSearch.map((field) => ({
+            field,
+            operation: 'cn' as SearchOperator,
+            value: query
+          }))
+        }
+      ];
+    setCriteria({ ...criteria, filterFields: newFilterFields });
+  };
+  const debouncedQueryChange = useMemo(() => debounce(onQueryChange, 1300), []);
   useEffect(() => {
     if (hasViewPermission(PermissionEntity.WORK_ORDERS))
       dispatch(getWorkOrders(criteria));
@@ -891,6 +923,21 @@ function WorkOrders() {
                   ]}
                   fieldName="status"
                   icon={<CircleTwoToneIcon />}
+                />
+                <TextField
+                  sx={{
+                    m: 0
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchTwoToneIcon color="primary" />
+                      </InputAdornment>
+                    )
+                  }}
+                  placeholder={t('search')}
+                  variant="outlined"
+                  onChange={debouncedQueryChange}
                 />
               </Stack>
               <Divider sx={{ mt: 1 }} />
