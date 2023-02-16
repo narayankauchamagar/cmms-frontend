@@ -4,6 +4,7 @@ import {
   Button,
   Card,
   CircularProgress,
+  debounce,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -20,7 +21,7 @@ import { IField } from '../type';
 import { addAsset, getAssetChildren, getAssets } from '../../../slices/asset';
 import { useDispatch, useSelector } from '../../../store';
 import * as React from 'react';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import CustomDataGrid from '../components/CustomDatagrid';
@@ -31,7 +32,7 @@ import {
   GridValueGetterParams
 } from '@mui/x-data-grid';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
-import { AssetMiniDTO, AssetRow } from '../../../models/owns/asset';
+import { AssetDTO, AssetMiniDTO, AssetRow } from '../../../models/owns/asset';
 import Form from '../components/form';
 import * as Yup from 'yup';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -58,6 +59,8 @@ import { exportEntity } from '../../../slices/exports';
 import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
 import { FilterField, SearchCriteria } from '../../../models/owns/page';
 import Filters from './Filters';
+import { onSearchQueryChange } from '../../../utils/overall';
+import SearchInput from '../components/SearchInput';
 
 function Assets() {
   const { t }: { t: any } = useTranslation();
@@ -102,6 +105,18 @@ function Assets() {
     direction: 'DESC'
   };
   const [criteria, setCriteria] = useState<SearchCriteria>(initialCriteria);
+  const onQueryChange = (event) => {
+    setView(event.target.value ? 'list' : 'hierarchy');
+    onSearchQueryChange<AssetDTO>(event, criteria, setCriteria, [
+      'name',
+      'description',
+      'model',
+      'additionalInfos',
+      'barCode',
+      'area'
+    ]);
+  };
+  const debouncedQueryChange = useMemo(() => debounce(onQueryChange, 1300), []);
   const onFilterChange = (newFilters: FilterField[]) => {
     const newCriteria = { ...criteria };
     newCriteria.filterFields = newFilters;
@@ -624,9 +639,10 @@ function Assets() {
             xs={12}
             display="flex"
             flexDirection="row"
-            justifyContent="right"
+            justifyContent="space-between"
             alignItems="center"
           >
+            <SearchInput onChange={debouncedQueryChange} />
             <Stack direction="row" spacing={1}>
               <IconButton onClick={handleOpenMenu} color="primary">
                 <MoreVertTwoToneIcon />

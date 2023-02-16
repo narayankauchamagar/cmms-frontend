@@ -103,6 +103,10 @@ export default function PartDetails(props: PartDetailsProps) {
       value: part.description
     },
     {
+      label: t('additional_information'),
+      value: part.additionalInfos
+    },
+    {
       label: t('cost'),
       value: part.cost
     },

@@ -1,16 +1,19 @@
 import {
   Box,
+  debounce,
   Dialog,
   DialogContent,
   DialogTitle,
   IconButton,
+  Stack,
   Typography
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import Form from '../components/form';
 import * as Yup from 'yup';
 import { IField } from '../type';
-import { useContext, useEffect, useState } from 'react';
+import * as React from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import CustomDataGrid from '../components/CustomDatagrid';
 import {
   GridEnrichedColDef,
@@ -44,6 +47,8 @@ import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
 import { formatSelect } from '../../../utils/formatters';
 import Currency from '../../../models/owns/currency';
 import { SearchCriteria } from '../../../models/owns/page';
+import { onSearchQueryChange } from '../../../utils/overall';
+import SearchInput from '../components/SearchInput';
 
 interface PropsType {
   values?: any;
@@ -72,6 +77,17 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
   const [viewOrUpdate, setViewOrUpdate] = useState<'view' | 'update'>('view');
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const { showSnackBar } = useContext(CustomSnackBarContext);
+
+  const onQueryChange = (event) => {
+    onSearchQueryChange<Customer>(event, criteria, setCriteria, [
+      'name',
+      'customerType',
+      'billingName',
+      'billingAddress',
+      'billingAddress2'
+    ]);
+  };
+  const debouncedQueryChange = useMemo(() => debounce(onQueryChange, 1300), []);
 
   const handleOpenModal = (customer: Customer) => {
     setCurrentCustomer(customer);
@@ -594,6 +610,11 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
     >
       <ModalCustomerDetails />
       <RenderCustomersAddModal />
+      <Stack direction="row" width="95%">
+        <Box sx={{ my: 0.5 }}>
+          <SearchInput onChange={debouncedQueryChange} />
+        </Box>
+      </Stack>
       <RenderCustomersList />
       <ConfirmDialog
         open={openDelete}

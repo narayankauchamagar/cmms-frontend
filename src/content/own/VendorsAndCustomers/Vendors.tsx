@@ -1,9 +1,11 @@
 import {
   Box,
+  debounce,
   Dialog,
   DialogContent,
   DialogTitle,
   IconButton,
+  Stack,
   Typography
 } from '@mui/material';
 import {
@@ -20,7 +22,8 @@ import Form from '../components/form';
 import * as Yup from 'yup';
 import { IField } from '../type';
 import ConfirmDialog from '../components/ConfirmDialog';
-import { useContext, useEffect, useState } from 'react';
+import * as React from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import CustomDataGrid from '../components/CustomDatagrid';
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import {
@@ -41,6 +44,8 @@ import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
 import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
 import { SearchCriteria } from '../../../models/owns/page';
+import { onSearchQueryChange } from '../../../utils/overall';
+import SearchInput from '../components/SearchInput';
 
 interface PropsType {
   values?: any;
@@ -69,6 +74,16 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
   const [viewOrUpdate, setViewOrUpdate] = useState<'view' | 'update'>('view');
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const { hasEditPermission, hasDeletePermission } = useAuth();
+
+  const onQueryChange = (event) => {
+    onSearchQueryChange<Vendor>(event, criteria, setCriteria, [
+      'name',
+      'vendorType',
+      'companyName',
+      'description'
+    ]);
+  };
+  const debouncedQueryChange = useMemo(() => debounce(onQueryChange, 1300), []);
 
   const handleDelete = (id: number) => {
     handleCloseDetails();
@@ -536,6 +551,11 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
     >
       <ModalVendorDetails />
       <RenderVendorsAddModal />
+      <Stack direction="row" width="95%">
+        <Box sx={{ my: 0.5 }}>
+          <SearchInput onChange={debouncedQueryChange} />
+        </Box>
+      </Stack>
       <RenderVendorsList />
       <ConfirmDialog
         open={openDelete}

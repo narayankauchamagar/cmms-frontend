@@ -3,6 +3,7 @@ import {
   Button,
   Chip,
   CircularProgress,
+  debounce,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -10,6 +11,7 @@ import {
   Grid,
   InputAdornment,
   Paper,
+  Stack,
   TextField,
   Typography,
   useTheme
@@ -24,7 +26,8 @@ import {
   GridToolbar,
   GridValueGetterParams
 } from '@mui/x-data-grid';
-import { useContext, useEffect, useState } from 'react';
+import * as React from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import UserDetailsDrawer from './UserDetailsDrawer';
 import User from '../../../models/owns/user';
 import UserRoleCardList from './UserRoleCardList';
@@ -51,6 +54,8 @@ import { IField } from '../type';
 import { formatSelect } from '../../../utils/formatters';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 import { SearchCriteria } from '../../../models/owns/page';
+import { onSearchQueryChange } from '../../../utils/overall';
+import SearchInput from '../components/SearchInput';
 
 interface PropsType {
   values?: any;
@@ -81,6 +86,17 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
   const [currentEmail, setCurrentEmail] = useState<string>('');
   const [isInviteSubmitting, setIsInviteSubmitting] = useState(false);
   const [roleId, setRoleId] = useState<number>();
+
+  const onQueryChange = (event) => {
+    onSearchQueryChange<User>(event, criteria, setCriteria, [
+      'firstName',
+      'lastName',
+      'email',
+      'phone',
+      'jobTitle'
+    ]);
+  };
+  const debouncedQueryChange = useMemo(() => debounce(onQueryChange, 1300), []);
 
   const onEditSuccess = () => {
     setOpenUpdateModal(false);
@@ -353,14 +369,18 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
   return (
     <Box
       sx={{
-        p: 4,
+        p: 2,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         width: '100%'
       }}
     >
-      {/* <RenderPeopleAddModal /> */}
+      <Stack direction="row" width="95%">
+        <Box sx={{ my: 0.5 }}>
+          <SearchInput onChange={debouncedQueryChange} />
+        </Box>
+      </Stack>
       <RenderPeopleList />
 
       <Drawer

@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Card,
+  debounce,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -11,7 +12,8 @@ import {
   Typography
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { useContext, useEffect, useState } from 'react';
+import * as React from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import CustomDataGrid from '../components/CustomDatagrid';
@@ -48,6 +50,8 @@ import {
 } from '../../../slices/partQuantity';
 import Category from '../../../models/owns/category';
 import { SearchCriteria } from '../../../models/owns/page';
+import { onSearchQueryChange } from '../../../utils/overall';
+import SearchInput from '../components/SearchInput';
 
 function PurchaseOrders() {
   const { t }: { t: any } = useTranslation();
@@ -80,6 +84,22 @@ function PurchaseOrders() {
   const partQuantities =
     partQuantitiesByPurchaseOrder[currentPurchaseOrder?.id] ?? [];
   const { showSnackBar } = useContext(CustomSnackBarContext);
+  const onQueryChange = (event) => {
+    onSearchQueryChange<PurchaseOrder>(event, criteria, setCriteria, [
+      'name',
+      'shippingAdditionalDetail',
+      'shippingShipToName',
+      'shippingCompanyName',
+      'shippingAddress',
+      'shippingCity',
+      'shippingState',
+      'additionalInfoRequisitionedName',
+      'additionalInfoShippingOrderCategory',
+      'additionalInfoTerm',
+      'additionalInfoNotes'
+    ]);
+  };
+  const debouncedQueryChange = useMemo(() => debounce(onQueryChange, 1300), []);
 
   const handleOpenDrawer = (purchaseOrder: PurchaseOrder) => {
     setCurrentPurchaseOrder(purchaseOrder);
@@ -518,9 +538,12 @@ function PurchaseOrders() {
                 xs={12}
                 display="flex"
                 flexDirection="row"
-                justifyContent="right"
+                justifyContent="space-between"
                 alignItems="center"
               >
+                <Box sx={{ my: 0.5 }}>
+                  <SearchInput onChange={debouncedQueryChange} />
+                </Box>
                 <Button
                   onClick={() => navigate('/app/purchase-orders/create')}
                   startIcon={<AddTwoToneIcon />}

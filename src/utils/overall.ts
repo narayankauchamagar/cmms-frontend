@@ -2,6 +2,12 @@ import { FileType } from '../models/owns/file';
 import Meter from '../models/owns/meter';
 import check from 'check-types';
 import { CellBase, Matrix } from 'react-spreadsheet';
+import {
+  FilterField,
+  SearchCriteria,
+  SearchOperator
+} from '../models/owns/page';
+import React from 'react';
 
 export const canAddReading = (meter: Meter): boolean => {
   if (!meter) {
@@ -84,4 +90,35 @@ export const pushOrRemove = (array: string[], push: boolean, value: string) => {
     if (index !== -1) array.splice(index, 1);
   }
   return array;
+};
+
+export const onSearchQueryChange = <T>(
+  event,
+  criteria: SearchCriteria,
+  setCriteria: React.Dispatch<React.SetStateAction<SearchCriteria>>,
+  fieldsToSearch: Extract<keyof T, string>[]
+) => {
+  const query = event.target.value;
+  let newFilterFields: FilterField[] = [...criteria.filterFields];
+
+  const firstField = fieldsToSearch.shift();
+  newFilterFields = newFilterFields.filter(
+    // @ts-ignore
+    (filterField) => !fieldsToSearch.includes(filterField.field)
+  );
+  if (query)
+    newFilterFields = [
+      ...newFilterFields,
+      {
+        field: firstField,
+        value: query,
+        operation: 'cn' as SearchOperator,
+        alternatives: fieldsToSearch.map((field) => ({
+          field,
+          operation: 'cn' as SearchOperator,
+          value: query
+        }))
+      }
+    ];
+  setCriteria({ ...criteria, filterFields: newFilterFields });
 };

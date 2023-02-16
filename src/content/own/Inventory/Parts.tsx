@@ -3,6 +3,7 @@ import {
   Card,
   CardMedia,
   CircularProgress,
+  debounce,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -37,7 +38,7 @@ import {
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useDispatch, useSelector } from '../../../store';
 import * as React from 'react';
-import { ChangeEvent, useContext, useEffect, useState } from 'react';
+import { ChangeEvent, useContext, useEffect, useMemo, useState } from 'react';
 import * as Yup from 'yup';
 import Form from '../components/form';
 import { IField } from '../type';
@@ -51,11 +52,12 @@ import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 import useAuth from '../../../hooks/useAuth';
 import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
-import { getImageAndFiles } from '../../../utils/overall';
+import { getImageAndFiles, onSearchQueryChange } from '../../../utils/overall';
 import { SearchCriteria } from '../../../models/owns/page';
 import { exportEntity } from '../../../slices/exports';
 import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
 import { PermissionEntity } from '../../../models/owns/role';
+import SearchInput from '../components/SearchInput';
 
 interface PropsType {
   setAction: (p: () => () => void) => void;
@@ -87,6 +89,14 @@ const Parts = ({ setAction }: PropsType) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);
   const navigate = useNavigate();
+  const onQueryChange = (event) => {
+    onSearchQueryChange<Part>(event, criteria, setCriteria, [
+      'name',
+      'description',
+      'additionalInfos'
+    ]);
+  };
+  const debouncedQueryChange = useMemo(() => debounce(onQueryChange, 1300), []);
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -636,12 +646,15 @@ const Parts = ({ setAction }: PropsType) => {
             <Tab key={tab.value} label={tab.label} value={tab.value} />
           ))}
         </Tabs>
+        <Box sx={{ my: 0.5 }}>
+          <SearchInput onChange={debouncedQueryChange} />
+        </Box>
         <IconButton sx={{ mr: 2 }} onClick={handleOpenMenu} color="primary">
           <MoreVertTwoToneIcon />
         </IconButton>
       </Grid>
       {currentTab === 'list' && (
-        <Box sx={{ height: 570, width: '95%' }}>
+        <Box sx={{ height: 570, width: '100%' }}>
           <CustomDataGrid
             columns={columns}
             pageSize={criteria.pageSize}

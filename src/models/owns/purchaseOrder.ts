@@ -23,6 +23,7 @@ export default interface PurchaseOrder extends Audit {
   shippingFax: string;
   additionalInfoRequisitionedName: string;
   additionalInfoShippingMethod: string;
+  additionalInfoShippingOrderCategory: string;
   additionalInfoTerm: string;
   additionalInfoNotes: string;
   partQuantities: PartQuantityMiniDTO[];

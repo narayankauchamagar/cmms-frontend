@@ -1,9 +1,11 @@
 import {
   Box,
+  debounce,
   Dialog,
   DialogContent,
   DialogTitle,
   IconButton,
+  Stack,
   Typography
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -30,7 +32,8 @@ import {
 } from '../../../slices/team';
 import { useDispatch, useSelector } from '../../../store';
 import ConfirmDialog from '../components/ConfirmDialog';
-import { useContext, useEffect, useState } from 'react';
+import * as React from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { formatSelectMultiple } from '../../../utils/formatters';
 import { UserMiniDTO } from '../../../models/user';
 import UserAvatars from '../components/UserAvatars';
@@ -39,6 +42,8 @@ import useAuth from '../../../hooks/useAuth';
 import { PermissionEntity } from '../../../models/owns/role';
 import NoRowsMessage from '../components/NoRowsMessage';
 import { SearchCriteria } from '../../../models/owns/page';
+import { onSearchQueryChange } from '../../../utils/overall';
+import SearchInput from '../components/SearchInput';
 
 interface PropsType {
   values?: any;
@@ -64,6 +69,14 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
   const [isTeamDetailsOpen, setIsTeamDetailsOpen] = useState(false);
   const [viewOrUpdate, setViewOrUpdate] = useState<'view' | 'update'>('view');
   const { teamId } = useParams();
+
+  const onQueryChange = (event) => {
+    onSearchQueryChange<Team>(event, criteria, setCriteria, [
+      'name',
+      'description'
+    ]);
+  };
+  const debouncedQueryChange = useMemo(() => debounce(onQueryChange, 1300), []);
 
   useEffect(() => {
     if (teamId && isNumeric(teamId)) {
@@ -400,7 +413,7 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
   return (
     <Box
       sx={{
-        p: 4,
+        p: 2,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -409,6 +422,11 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
     >
       <RenderTeamsAddModal />
       <ModalTeamDetails />
+      <Stack direction="row" width="95%">
+        <Box sx={{ my: 0.5 }}>
+          <SearchInput onChange={debouncedQueryChange} />
+        </Box>
+      </Stack>
       <Renderteams />
       <ConfirmDialog
         open={openDelete}

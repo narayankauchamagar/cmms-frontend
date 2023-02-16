@@ -4,6 +4,7 @@ import {
   Button,
   Card,
   CircularProgress,
+  debounce,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -27,7 +28,7 @@ import { useDispatch, useSelector } from '../../../store';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useTranslation } from 'react-i18next';
 import * as React from 'react';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { TitleContext } from '../../../contexts/TitleContext';
 import { GridEnrichedColDef } from '@mui/x-data-grid/models/colDef/gridColDef';
 import CustomDataGrid from '../components/CustomDatagrid';
@@ -56,6 +57,8 @@ import { PlanFeature } from '../../../models/owns/subscriptionPlan';
 import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
 import { exportEntity } from '../../../slices/exports';
 import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
+import { onSearchQueryChange } from '../../../utils/overall';
+import SearchInput from '../components/SearchInput';
 
 function Meters() {
   const { t }: { t: any } = useTranslation();
@@ -92,6 +95,11 @@ function Meters() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);
   const navigate = useNavigate();
+
+  const onQueryChange = (event) => {
+    onSearchQueryChange<Meter>(event, criteria, setCriteria, ['name', 'unit']);
+  };
+  const debouncedQueryChange = useMemo(() => debounce(onQueryChange, 1300), []);
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -507,9 +515,12 @@ function Meters() {
               xs={12}
               display="flex"
               flexDirection="row"
-              justifyContent="right"
+              justifyContent="space-between"
               alignItems="center"
             >
+              <Box sx={{ my: 0.5 }}>
+                <SearchInput onChange={debouncedQueryChange} />
+              </Box>
               <Stack direction={'row'} alignItems="center" spacing={1}>
                 <IconButton onClick={handleOpenMenu} color="primary">
                   <MoreVertTwoToneIcon />

@@ -16,6 +16,7 @@ export default interface Part extends Audit {
   area: string;
   category: string;
   nonStock: boolean;
+  additionalInfos: string;
   image: File | null;
   description: string;
   assignedTo: UserMiniDTO[];
@@ -30,51 +31,3 @@ export interface PartMiniDTO {
   cost: number;
   description: string;
 }
-export const parts: Part[] = [
-  {
-    id: 212,
-    name: 'Foil Tape',
-    createdAt: 'dfggj',
-    cost: 52,
-    quantity: 9,
-    barcode: 'dfsad',
-    files: [],
-    area: 'fafcax',
-    nonStock: false,
-    category: 'facacaa ',
-    description: 'string',
-    assignedTo: [],
-    image: null,
-    minQuantity: 4,
-    vendors: [],
-    customers: [],
-    teams: [],
-    openWorkOrders: 2,
-    createdBy: 1,
-    updatedAt: 'ghfgj',
-    updatedBy: 1
-  },
-  {
-    id: 44,
-    name: 'HVAC Filter',
-    createdAt: 'dfggj',
-    cost: 52,
-    quantity: 9,
-    minQuantity: 4,
-    barcode: 'dfsad',
-    nonStock: true,
-    area: 'fafcax',
-    category: 'facacaa ',
-    files: [],
-    image: null,
-    description: 'string',
-    assignedTo: [],
-    vendors: [],
-    customers: [],
-    teams: [],
-    openWorkOrders: 2,
-    createdBy: 1,
-    updatedAt: 'ghfgj',
-    updatedBy: 1
-  }
-];
