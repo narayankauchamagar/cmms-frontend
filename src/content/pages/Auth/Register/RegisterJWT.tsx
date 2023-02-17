@@ -82,7 +82,7 @@ function RegisterJWT({
           .then(() => {
             if (!IS_LOCALHOST) {
               showSnackBar(t('verify_email'), 'success');
-              navigate('/account/login');
+              navigate('/account/verify');
             }
           })
           .catch((err) => showSnackBar(t('registration_error'), 'error'))

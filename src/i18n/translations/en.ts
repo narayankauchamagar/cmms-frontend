@@ -166,7 +166,7 @@ const enJSON = {
   invalid_phone: 'The phone number is invalid',
   required_password: 'The password field is required',
   required_terms: 'You must agree to our terms and conditions',
-  verify_email: 'Please check your email to verify your account',
+  verify_email: 'Please check your email to activate your account',
   registration_error: "The registration didn't succeed",
   first_name: 'First Name',
   last_name: 'Last Name',
@@ -1269,7 +1269,11 @@ const enJSON = {
   workflow_edit_failure: "The workflow couldn't be edited",
   workflow_delete_success: 'The workflow has been deleted successfully',
   workflow_delete_failure: "The workflow couldn't be deleted",
-  confirm_delete_workflow: 'Are you sure you want to delete this workflow'
+  confirm_delete_workflow: 'Are you sure you want to delete this workflow',
+  click_here: 'Click here',
+  verify_email_title: 'Verify Email',
+  verify_email_description:
+    "A verification email has been sent to you. Check the spams if you don't see it in your inbox."
 };
 
 export default enJSON;

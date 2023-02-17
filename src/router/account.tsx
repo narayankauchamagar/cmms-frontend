@@ -32,7 +32,9 @@ const RegisterWizard = Loader(
 const RecoverPassword = Loader(
   lazy(() => import('../content/pages/Auth/RecoverPassword'))
 );
-
+const VerifyEmail = Loader(
+  lazy(() => import('../content/pages/Auth/VerifyEmail'))
+);
 const accountRoutes = [
   {
     path: 'login',
@@ -43,16 +45,12 @@ const accountRoutes = [
     )
   },
   {
-    path: 'register',
-    element: (
-      <Guest>
-        <RegisterCover />
-      </Guest>
-    )
-  },
-  {
     path: 'recover-password',
     element: <RecoverPassword />
+  },
+  {
+    path: 'verify',
+    element: <VerifyEmail />
   },
   {
     path: 'register',

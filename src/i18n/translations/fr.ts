@@ -274,7 +274,7 @@ const frJSON = {
   invalid_phone: 'Le numéro de téléphone est invalide',
   required_password: 'Le champ mot de passe est obligatoire',
   required_terms: 'Vous devez accepter nos termes et conditions',
-  verify_email: 'Veuillez vérifier votre e-mail pour vérifier votre compte',
+  verify_email: 'Un email vous a été envoyé pour activer votre compte',
   registration_error: "L'inscription n'a pas réussi",
   first_name: 'Prénom',
   last_name: 'Nom de famille',
@@ -1408,7 +1408,11 @@ const frJSON = {
   workflow_edit_failure: "Le flux de travail n'a pas pu être mis à jour",
   workflow_delete_success: 'Le workflow a été supprimé',
   workflow_delete_failure: "Le workflow n'a pas pu être supprimé",
-  confirm_delete_workflow: 'Etes-vous sûr de vouloir supprimer ce workflow'
+  confirm_delete_workflow: 'Etes-vous sûr de vouloir supprimer ce workflow',
+  click_here: 'Cliquez ici',
+  verify_email_title: "Vérifier l'e-mail",
+  verify_email_description:
+    'Un e-mail de vérification vous a été envoyé. Vérifiez les spams si vous ne le voyez pas dans votre boîte de réception.'
 };
 
 export default frJSON;

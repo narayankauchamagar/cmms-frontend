@@ -211,8 +211,8 @@ function RecoverPasswordBasic() {
             >
               {t('want_to_sign_in_again')}
             </Typography>{' '}
-            <Link component={RouterLink} to="/account/login-basic">
-              <b>Click here</b>
+            <Link component={RouterLink} to="/account/login">
+              <b>{t('click_here')}</b>
             </Link>
           </Box>
         </Container>
