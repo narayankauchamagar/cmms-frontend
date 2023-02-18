@@ -1273,7 +1273,13 @@ const enJSON = {
   click_here: 'Click here',
   verify_email_title: 'Verify Email',
   verify_email_description:
-    "A verification email has been sent to you. Check the spams if you don't see it in your inbox."
+    "A verification email has been sent to you. Check the spams if you don't see it in your inbox.",
+  upgrade: 'Upgrade',
+  downgrade: 'Downgrade',
+  upgrade_description:
+    'You just upgraded your subscription plan. You need to enable the disabled users who might use Grash. You can only do this once for the current subscription. Please choose carefully',
+  enable_users: 'Enable users',
+  max_users_description: 'You can enable up to {{maxUsers}} users'
 };
 
 export default enJSON;

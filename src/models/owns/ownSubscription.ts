@@ -10,4 +10,6 @@ export default interface OwnSubscription extends Audit {
   endsOn: string;
   cancelled: boolean;
   activated: boolean;
+  upgradeNeeded: boolean;
+  downgradeNeeded: boolean;
 }

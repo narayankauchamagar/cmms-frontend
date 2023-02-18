@@ -1,4 +1,4 @@
-import { useLocation, useRoutes } from 'react-router-dom';
+import { useLocation, useNavigate, useRoutes } from 'react-router-dom';
 import router from 'src/router';
 
 import { SnackbarProvider } from 'notistack';
@@ -17,11 +17,26 @@ import { useEffect } from 'react';
 ReactGA.initialize(googleTrackingId);
 function App() {
   const content = useRoutes(router);
-  const auth = useAuth();
+  const navigate = useNavigate();
+  const { isInitialized, company, isAuthenticated, user } = useAuth();
   let location = useLocation();
   useEffect(() => {
     if (!IS_LOCALHOST) ReactGA.pageview(location.pathname + location.search);
   }, [location]);
+  useEffect(() => {
+    const arr = location.pathname.split('/');
+    if (
+      !['downgrade', 'upgrade'].includes(arr[arr.length - 1]) &&
+      isInitialized &&
+      isAuthenticated
+    )
+      if (company.subscription.downgradeNeeded) {
+        navigate('/app/downgrade');
+      } else if (user.ownsCompany && company.subscription.upgradeNeeded) {
+        navigate('/app/upgrade');
+      }
+  }, [company, isInitialized, isAuthenticated, location]);
+
   return (
     <ThemeProvider>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -34,7 +49,7 @@ function App() {
         >
           <CustomSnackBarProvider>
             <CssBaseline />
-            {auth.isInitialized ? content : <AppInit />}
+            {isInitialized ? content : <AppInit />}
           </CustomSnackBarProvider>
         </SnackbarProvider>
       </LocalizationProvider>

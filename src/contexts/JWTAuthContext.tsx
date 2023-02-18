@@ -57,6 +57,8 @@ interface AuthContextValue extends AuthState {
     oldPassword: string;
     newPassword: string;
   }) => Promise<boolean>;
+  downgrade: (users: number[]) => Promise<boolean>;
+  upgrade: (users: number[]) => Promise<boolean>;
   resetPassword: (email: string) => Promise<boolean>;
   fetchUserSettings: () => Promise<void>;
   fetchCompanySettings: () => Promise<void>;
@@ -145,6 +147,14 @@ type ResumeSubscriptionAction = {
   type: 'RESUME_SUBSCRIPTION';
   payload: {};
 };
+type UpgradeAction = {
+  type: 'UPGRADE';
+  payload: {};
+};
+type DowngradeAction = {
+  type: 'DOWNGRADE';
+  payload: {};
+};
 type PatchCompanyAction = {
   type: 'PATCH_COMPANY';
   payload: {
@@ -197,7 +207,9 @@ type Action =
   | PatchCompanyAction
   | PatchSubscriptionAction
   | CancelSubscriptionAction
-  | ResumeSubscriptionAction;
+  | ResumeSubscriptionAction
+  | UpgradeAction
+  | DowngradeAction;
 
 const initialAuthState: AuthState = {
   isAuthenticated: false,
@@ -362,6 +374,24 @@ const handlers: Record<
       }
     };
   },
+  UPGRADE: (state: AuthState, action: FetchCompanyAction): AuthState => {
+    return {
+      ...state,
+      company: {
+        ...state.company,
+        subscription: { ...state.company.subscription, upgradeNeeded: false }
+      }
+    };
+  },
+  DOWNGRADE: (state: AuthState, action: FetchCompanyAction): AuthState => {
+    return {
+      ...state,
+      company: {
+        ...state.company,
+        subscription: { ...state.company.subscription, downgradeNeeded: false }
+      }
+    };
+  },
   PATCH_FIELD_CONFIGURATION: (
     state: AuthState,
     action: PatchFieldConfigurationAction
@@ -422,7 +452,9 @@ const AuthContext = createContext<AuthContextValue>({
   hasFeature: () => false,
   hasCreatePermission: () => false,
   hasEditPermission: () => false,
-  hasDeletePermission: () => false
+  hasDeletePermission: () => false,
+  downgrade: () => Promise.resolve(false),
+  upgrade: () => Promise.resolve(false)
 });
 
 export const AuthProvider: FC<AuthProviderProps> = (props) => {
@@ -764,6 +796,42 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     }
     return fields;
   };
+  const upgrade = async (users: number[]) => {
+    try {
+      const { success } = await api.post<{ success: boolean }>(
+        'subscriptions/upgrade',
+        users,
+        {},
+        true
+      );
+      if (success)
+        dispatch({
+          type: 'UPGRADE',
+          payload: {}
+        });
+      return success;
+    } catch (err) {
+      return false;
+    }
+  };
+  const downgrade = async (users: number[]) => {
+    try {
+      const { success } = await api.post<{ success: boolean }>(
+        'subscriptions/downgrade',
+        users,
+        {},
+        true
+      );
+      if (success)
+        dispatch({
+          type: 'DOWNGRADE',
+          payload: {}
+        });
+      return success;
+    } catch (err) {
+      return false;
+    }
+  };
   useEffect(() => {
     getInfos();
   }, []);
@@ -796,7 +864,9 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         getFilteredFields,
         hasEditPermission,
         hasDeletePermission,
-        hasCreatePermission
+        hasCreatePermission,
+        upgrade,
+        downgrade
       }}
     >
       {children}

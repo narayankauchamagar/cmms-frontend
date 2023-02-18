@@ -10,6 +10,7 @@ interface UserState {
   users: Page<User>;
   singleUser: User;
   usersMini: UserMiniDTO[];
+  disabledUsersMini: UserMiniDTO[];
   loadingGet: boolean;
 }
 
@@ -17,6 +18,7 @@ const initialState: UserState = {
   users: getInitialPage<User>(),
   singleUser: null,
   usersMini: [],
+  disabledUsersMini: [],
   loadingGet: false
 };
 
@@ -64,6 +66,13 @@ const slice = createSlice({
     ) {
       const { users } = action.payload;
       state.usersMini = users;
+    },
+    getDisabledUsersMini(
+      state: UserState,
+      action: PayloadAction<{ users: UserMiniDTO[] }>
+    ) {
+      const { users } = action.payload;
+      state.disabledUsersMini = users;
     },
     addUser(state: UserState, action: PayloadAction<{ user: User }>) {
       const { user } = action.payload;
@@ -125,6 +134,10 @@ export const getSingleUserMini =
 export const getUsersMini = (): AppThunk => async (dispatch) => {
   const users = await api.get<UserMiniDTO[]>('users/mini');
   dispatch(slice.actions.getUsersMini({ users }));
+};
+export const getDisabledUsersMini = (): AppThunk => async (dispatch) => {
+  const users = await api.get<UserMiniDTO[]>('users/mini/disabled');
+  dispatch(slice.actions.getDisabledUsersMini({ users }));
 };
 export const addUser =
   (user): AppThunk =>

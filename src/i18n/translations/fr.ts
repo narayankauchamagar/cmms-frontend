@@ -1412,7 +1412,13 @@ const frJSON = {
   click_here: 'Cliquez ici',
   verify_email_title: "Vérifier l'e-mail",
   verify_email_description:
-    'Un e-mail de vérification vous a été envoyé. Vérifiez les spams si vous ne le voyez pas dans votre boîte de réception.'
+    'Un e-mail de vérification vous a été envoyé. Vérifiez les spams si vous ne le voyez pas dans votre boîte de réception.',
+  upgrade: 'Mise à niveau',
+  downgrade: 'Rétrograder',
+  upgrade_description:
+    "Vous venez de mettre à jour votre plan d'abonnement. Vous devez activer les utilisateurs désactivés susceptibles d'utiliser Grash. Vous ne pouvez le faire qu'une seule fois pour l'abonnement en cours. Veuillez choisir avec soin",
+  enable_users: 'Activer les utilisateurs',
+  max_users_description: "Vous pouvez activer jusqu'à {{maxUsers}} utilisateurs"
 };
 
 export default frJSON;

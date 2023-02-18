@@ -81,6 +81,12 @@ const PeopleAndTeams = Loader(
 );
 
 const Imports = Loader(lazy(() => import('../content/own/Imports')));
+const Upgrade = Loader(
+  lazy(() => import('../content/own/UpgradeAndDowngrade/Upgrade'))
+);
+const Downgrade = Loader(
+  lazy(() => import('../content/own/UpgradeAndDowngrade/Downgrade'))
+);
 
 const appRoutes = [
   {
@@ -322,7 +328,9 @@ const appRoutes = [
       { path: 'parts', element: <Imports /> },
       { path: 'meters', element: <Imports /> }
     ]
-  }
+  },
+  { path: 'upgrade', element: <Upgrade /> },
+  { path: 'downgrade', element: <Downgrade /> }
 ];
 
 export default appRoutes;

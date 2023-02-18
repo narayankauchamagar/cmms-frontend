@@ -47,7 +47,9 @@ export default function PartDetails(props: PartDetailsProps) {
   const { part, handleOpenUpdate, handleOpenDelete } = props;
   const { hasEditPermission, hasDeletePermission } = useAuth();
   const { t }: { t: any } = useTranslation();
-  const { getFormattedDate } = useContext(CompanySettingsContext);
+  const { getFormattedDate, getFormattedCurrency } = useContext(
+    CompanySettingsContext
+  );
   const dispatch = useDispatch();
   const [currentTab, setCurrentTab] = useState<string>('details');
   const [isImageViewerOpen, setIsImageViewerOpen] = useState<boolean>(false);
@@ -108,7 +110,7 @@ export default function PartDetails(props: PartDetailsProps) {
     },
     {
       label: t('cost'),
-      value: part.cost
+      value: getFormattedCurrency(part.cost)
     },
     {
       label: t('quantity'),
