@@ -1428,7 +1428,10 @@ const frJSON = {
   downgrade_description_no_owner:
     "Votre entreprise vient de diminuer le nombre d'utilisateurs dans son plan d'abonnement. Le propriétaire de l'entreprise doit désactiver certains utilisateurs avant que vous puissiez continuer",
   past_due: 'En retard',
-  already_read: 'Relevé'
+  already_read: 'Relevé',
+  due_date_delay: "Jours avant l'échéance",
+  due_date_delay_description: 'Nombre de jours',
+  days_count: '{{days}} jours'
 };
 
 export default frJSON;

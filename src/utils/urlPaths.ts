@@ -38,3 +38,6 @@ export const getVendorUrl = (id) => {
 export const getPurchaseOrderUrl = (id) => {
   return `/app/purchase-orders/${id}`;
 };
+export const getPreventiveMaintenanceUrl = (id) => {
+  return `/app/preventive-maintenances/${id}`;
+};

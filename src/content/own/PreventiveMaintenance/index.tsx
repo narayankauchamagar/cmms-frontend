@@ -323,7 +323,7 @@ function Files() {
       type: 'titleGroupField',
       label: 'wo_configuration'
     },
-    ...getWOBaseFields(t)
+    ...getWOBaseFields(t, { delay: true })
   ];
   const defaultShape = {
     name: Yup.string().required(t('required_trigger_name')),
@@ -433,7 +433,8 @@ function Files() {
               ...getWOBaseValues(t, currentPM),
               startsOn: currentPM?.schedule.startsOn,
               endsOn: currentPM?.schedule.endsOn,
-              frequency: currentPM?.schedule.frequency
+              frequency: currentPM?.schedule.frequency,
+              dueDateDelay: currentPM?.schedule.dueDateDelay
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {

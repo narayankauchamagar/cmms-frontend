@@ -1,8 +1,12 @@
 import { WorkOrderBase } from 'src/models/owns/workOrderBase';
 import { getPriorityLabel } from './formatters';
+import { IField } from '../content/own/type';
 
-export const getWOBaseFields = (t: any) => {
-  return [
+export const getWOBaseFields = (
+  t: any,
+  options?: { delay?: boolean }
+): Array<IField> => {
+  let result: IField[] = [
     {
       name: 'title',
       type: 'text',
@@ -77,7 +81,17 @@ export const getWOBaseFields = (t: any) => {
       label: t('files'),
       fileType: 'file'
     }
-  ] as const;
+  ];
+  if (options?.delay) {
+    result = result.filter((field) => field.name !== 'dueDate');
+    result.splice(3, 0, {
+      name: 'dueDateDelay',
+      type: 'number',
+      label: t('due_date_delay'),
+      placeholder: t('due_date_delay_description')
+    });
+  }
+  return result;
 };
 
 export const getWOBaseValues = <T extends WorkOrderBase>(t: any, entity: T) => {

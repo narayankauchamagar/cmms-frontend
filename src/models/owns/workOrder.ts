@@ -7,6 +7,7 @@ import Location from './location';
 import Category from './category';
 import { OwnUser, UserMiniDTO } from '../user';
 import { CustomerMiniDTO } from './customer';
+import PreventiveMaintenance from './preventiveMaintenance';
 
 export type Priority = 'HIGH' | 'MEDIUM' | 'LOW' | 'NONE';
 interface WorkOrderBase extends Audit {
@@ -33,6 +34,7 @@ export default interface WorkOrder extends WorkOrderBase {
   completedOn: string;
   archived: boolean;
   parentRequest: Request;
+  parentPreventiveMaintenance: PreventiveMaintenance;
   signature: File;
   feedback: string;
   //parentPreventiveMaintenance:

@@ -87,8 +87,13 @@ export default function PMDetails({
       value: preventiveMaintenance.priority
     },
     {
-      label: t('due_date'),
-      value: getFormattedDate(preventiveMaintenance?.dueDate)
+      label: t('due_date_delay'),
+      value:
+        preventiveMaintenance.schedule.dueDateDelay === null
+          ? null
+          : t('days_count', {
+              days: preventiveMaintenance.schedule.dueDateDelay
+            })
     },
     {
       label: t('category'),

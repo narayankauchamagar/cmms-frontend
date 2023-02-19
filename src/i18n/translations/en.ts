@@ -1286,7 +1286,10 @@ const enJSON = {
   min_users_description: 'You must disable a minimum of {{minUsers}} users',
   downgrade_description_no_owner:
     'Your company just downgraded its subscription plan. The company owner needs to disable some users before you can proceed',
-  past_due: 'Past due'
+  past_due: 'Past due',
+  due_date_delay: 'Due Date delay',
+  due_date_delay_description: 'Due Date delay in days',
+  days_count: '{{days}} days'
 };
 
 export default enJSON;

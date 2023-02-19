@@ -67,7 +67,11 @@ import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContex
 import { deleteRelation, getRelations } from '../../../../slices/relation';
 import Relation, { relationTypes } from '../../../../models/owns/relation';
 import { CompanySettingsContext } from '../../../../contexts/CompanySettingsContext';
-import { getAssetUrl, getUserUrl } from '../../../../utils/urlPaths';
+import {
+  getAssetUrl,
+  getPreventiveMaintenanceUrl,
+  getUserUrl
+} from '../../../../utils/urlPaths';
 import CompleteWOModal from './CompleteWOModal';
 import useAuth from '../../../../hooks/useAuth';
 import { PermissionEntity } from '../../../../models/owns/role';
@@ -662,6 +666,24 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                   </Typography>
                   <Link variant="h6" href={getUserUrl(workOrder.createdBy)}>
                     {getUserNameById(workOrder.createdBy)}
+                  </Link>
+                </Grid>
+              )}
+              {workOrder.parentPreventiveMaintenance && (
+                <Grid item xs={12} lg={6}>
+                  <Typography
+                    variant="h6"
+                    sx={{ color: theme.colors.alpha.black[70] }}
+                  >
+                    {t('preventive_maintenance')}
+                  </Typography>
+                  <Link
+                    variant="h6"
+                    href={getPreventiveMaintenanceUrl(
+                      workOrder.parentPreventiveMaintenance.id
+                    )}
+                  >
+                    {workOrder.parentPreventiveMaintenance.name}
                   </Link>
                 </Grid>
               )}

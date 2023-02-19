@@ -6,4 +6,5 @@ export default interface Schedule extends Audit {
   startsOn: string;
   endsOn: string;
   frequency: number;
+  dueDateDelay: number;
 }
