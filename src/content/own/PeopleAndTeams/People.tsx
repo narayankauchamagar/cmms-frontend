@@ -185,7 +185,13 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
             values={{
               rate: currentUser?.rate,
               role: currentUser
-                ? { label: currentUser.role.name, value: currentUser.role.id }
+                ? {
+                    label:
+                      currentUser.role.code === 'USER_CREATED'
+                        ? currentUser.role.name
+                        : t(`${currentUser.role.code}_name`),
+                    value: currentUser.role.id
+                  }
                 : null
             }}
             onChange={({ field, e }) => {}}
@@ -302,7 +308,10 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
       field: 'role',
       headerName: t('role'),
       width: 150,
-      valueGetter: (params: GridValueGetterParams<Role>) => params.value.name
+      valueGetter: (params: GridValueGetterParams<Role>) =>
+        params.value.code === 'USER_CREATED'
+          ? params.value.name
+          : t(`${params.value.code}_name`)
     },
     {
       field: 'rate',

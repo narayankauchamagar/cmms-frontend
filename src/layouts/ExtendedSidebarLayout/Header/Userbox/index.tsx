@@ -241,7 +241,9 @@ function HeaderUserbox() {
           <UserBoxText>
             <UserBoxLabel variant="body1">{user.firstName}</UserBoxLabel>
             <UserBoxDescription variant="body2">
-              {user.jobTitle ?? user.role.name}
+              {user.jobTitle ?? user.role.code === 'USER_CREATED'
+                ? user.role.name
+                : t(`${user.role.code}_name`)}
             </UserBoxDescription>
           </UserBoxText>
         </MenuUserBox>

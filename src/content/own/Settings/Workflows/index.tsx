@@ -902,7 +902,7 @@ function Workflows() {
                     <Card
                       sx={{ p: 2, mt: 1 }}
                       style={{
-                        cursor: workflow.enabled ? 'pointer' : 'default'
+                        cursor: workflow.enabled ? 'pointer' : 'not-allowed'
                       }}
                       key={workflow.id}
                       onClick={() => {
