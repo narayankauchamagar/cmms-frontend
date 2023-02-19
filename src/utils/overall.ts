@@ -8,13 +8,17 @@ import {
   SearchOperator
 } from '../models/owns/page';
 import React from 'react';
+import { sameDay } from './dates';
 
 export const canAddReading = (meter: Meter): boolean => {
   if (!meter) {
     return false;
   }
   if (!meter.nextReading) return true;
-  return new Date() > new Date(meter.nextReading);
+  return (
+    sameDay(new Date(), new Date(meter.nextReading)) &&
+    !sameDay(new Date(), new Date(meter.lastReading))
+  );
 };
 
 export const getImageAndFiles = (

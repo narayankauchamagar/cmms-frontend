@@ -1426,7 +1426,9 @@ const frJSON = {
   min_users_description:
     'Vous devez désactiver un minimum de {{minUsers}} utilisateurs',
   downgrade_description_no_owner:
-    "Votre entreprise vient de diminuer le nombre d'utilisateurs dans son plan d'abonnement. Le propriétaire de l'entreprise doit désactiver certains utilisateurs avant que vous puissiez continuer"
+    "Votre entreprise vient de diminuer le nombre d'utilisateurs dans son plan d'abonnement. Le propriétaire de l'entreprise doit désactiver certains utilisateurs avant que vous puissiez continuer",
+  past_due: 'En retard',
+  already_read: 'Relevé'
 };
 
 export default frJSON;

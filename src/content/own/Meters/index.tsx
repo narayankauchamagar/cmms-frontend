@@ -14,7 +14,9 @@ import {
   Menu,
   MenuItem,
   Stack,
-  Typography
+  styled,
+  Typography,
+  useTheme
 } from '@mui/material';
 import {
   addMeter,
@@ -57,9 +59,19 @@ import { PlanFeature } from '../../../models/owns/subscriptionPlan';
 import NoRowsMessageWrapper from '../components/NoRowsMessageWrapper';
 import { exportEntity } from '../../../slices/exports';
 import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
-import { onSearchQueryChange } from '../../../utils/overall';
+import { canAddReading, onSearchQueryChange } from '../../../utils/overall';
 import SearchInput from '../components/SearchInput';
 
+const LabelWrapper = styled(Box)(
+  ({ theme }) => `
+    font-size: ${theme.typography.pxToRem(10)};
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: ${theme.general.borderRadiusSm};
+    padding: ${theme.spacing(0.9, 1.5, 0.7)};
+    line-height: 1;
+  `
+);
 function Meters() {
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
@@ -76,6 +88,7 @@ function Meters() {
     hasFeature
   } = useAuth();
   const dispatch = useDispatch();
+  const theme = useTheme();
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const { getFormattedDate, uploadFiles, getUserNameById } = useContext(
     CompanySettingsContext
@@ -218,8 +231,19 @@ function Meters() {
       headerName: t('next_reading_due'),
       description: t('next_reading_due'),
       width: 150,
-      valueGetter: (params: GridValueGetterParams<string>) =>
-        getFormattedDate(params.value)
+      renderCell: (params: GridRenderCellParams<string, Meter>) =>
+        canAddReading(params.row) ? (
+          <LabelWrapper
+            sx={{
+              background: theme.colors.error.main,
+              color: theme.palette.getContrastText(theme.colors.info.dark)
+            }}
+          >
+            {t('past_due')}
+          </LabelWrapper>
+        ) : (
+          <Typography>{getFormattedDate(params.value)}</Typography>
+        )
     },
     {
       field: 'unit',

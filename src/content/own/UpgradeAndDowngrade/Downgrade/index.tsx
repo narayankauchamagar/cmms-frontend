@@ -134,20 +134,22 @@ function Downgrade() {
                       {t('min_users_description', { minUsers })}
                     </Typography>
                     <FormGroup>
-                      {usersMini.map((user) => (
-                        <FormControlLabel
-                          key={user.id}
-                          control={
-                            <Checkbox
-                              checked={selectedUsers[user.id]}
-                              onChange={(event) => {
-                                onChange(event.target.checked, user.id);
-                              }}
-                            />
-                          }
-                          label={`${user.firstName} ${user.lastName}`}
-                        />
-                      ))}
+                      {usersMini
+                        .filter((userMini) => userMini.id !== user.id)
+                        .map((user) => (
+                          <FormControlLabel
+                            key={user.id}
+                            control={
+                              <Checkbox
+                                checked={selectedUsers[user.id]}
+                                onChange={(event) => {
+                                  onChange(event.target.checked, user.id);
+                                }}
+                              />
+                            }
+                            label={`${user.firstName} ${user.lastName}`}
+                          />
+                        ))}
                     </FormGroup>
                   </FormControl>
                   <Divider />
