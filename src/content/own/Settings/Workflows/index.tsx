@@ -150,14 +150,10 @@ function Workflows() {
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const { hasFeature } = useAuth();
   const dispatch = useDispatch();
-  const { user } = useAuth();
-  const { companySettingsId } = user;
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const { workflows } = useSelector((state) => state.workflows);
   const { vendorsMini } = useSelector((state) => state.vendors);
-  const { locationsMini, locationsHierarchy } = useSelector(
-    (state) => state.locations
-  );
+  const { locationsMini } = useSelector((state) => state.locations);
   const { categories } = useSelector((state) => state.categories);
   const { usersMini } = useSelector((state) => state.users);
   const { assetsMini } = useSelector((state) => state.assets);
@@ -905,12 +901,19 @@ function Workflows() {
                   {workflows.map((workflow) => (
                     <Card
                       sx={{ p: 2, mt: 1 }}
-                      style={{ cursor: 'pointer' }}
+                      style={{
+                        cursor: workflow.enabled ? 'pointer' : 'default'
+                      }}
                       key={workflow.id}
-                      onClick={() => onEdit(workflow)}
+                      onClick={() => {
+                        if (workflow.enabled) onEdit(workflow);
+                      }}
                     >
                       <Stack direction="row" justifyContent="space-between">
                         <Typography variant="h4">{workflow.title}</Typography>
+                        {workflow.enabled || (
+                          <Typography variant="h6">{t('disabled')}</Typography>
+                        )}
                         <Button
                           onClick={(event) => {
                             event.stopPropagation();

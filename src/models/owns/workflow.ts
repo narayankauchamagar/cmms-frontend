@@ -171,4 +171,5 @@ export interface Workflow {
   mainCondition: WFMainCondition;
   secondaryConditions: WorkflowCondition[];
   action: WorkflowAction;
+  enabled: boolean;
 }
