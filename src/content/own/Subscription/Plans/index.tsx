@@ -55,6 +55,12 @@ function SubscriptionPlans() {
       dispatch(getSubscriptionPlans());
     }
   }, []);
+  useEffect(() => {
+    if (subscriptionPlans.length) {
+      setSelectedPlan(company.subscription.subscriptionPlan.code);
+    }
+  }, [subscriptionPlans]);
+
   const [country, setCountry] = useState('US');
   const buyProduct = () => {
     let path;

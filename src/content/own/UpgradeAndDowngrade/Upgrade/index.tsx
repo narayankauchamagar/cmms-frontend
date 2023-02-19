@@ -83,7 +83,7 @@ function Upgrade() {
     newSelectedUsers[id] = value;
     setSelectedUsers(newSelectedUsers);
   };
-  if (company.subscription.upgradeNeeded)
+  if (company.subscription.upgradeNeeded && user.ownsCompany)
     return (
       <>
         <Helmet>
@@ -111,54 +111,52 @@ function Upgrade() {
                 {t('upgrade_description')}
               </Typography>
             </Box>
-            {user.ownsCompany && (
-              <Container maxWidth="sm">
-                <Card
-                  sx={{
-                    textAlign: 'center',
-                    mt: 3,
-                    p: 4
-                  }}
-                >
-                  <FormControl variant="outlined" fullWidth>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        mb: 1
-                      }}
-                    >
-                      {t('max_users_description', { maxUsers })}
-                    </Typography>
-                    <FormGroup>
-                      {disabledUsersMini.map((user) => (
-                        <FormControlLabel
-                          key={user.id}
-                          control={
-                            <Checkbox
-                              checked={selectedUsers[user.id]}
-                              onChange={(event) => {
-                                onChange(event.target.checked, user.id);
-                              }}
-                            />
-                          }
-                          label={`${user.firstName} ${user.lastName}`}
-                        />
-                      ))}
-                    </FormGroup>
-                  </FormControl>
-                  <Divider />
-                  <Button
-                    disabled={upgrading}
-                    startIcon={upgrading && <CircularProgress size={'1rem'} />}
-                    sx={{ mt: 2 }}
-                    onClick={onUpgrade}
-                    variant="contained"
+            <Container maxWidth="sm">
+              <Card
+                sx={{
+                  textAlign: 'center',
+                  mt: 3,
+                  p: 4
+                }}
+              >
+                <FormControl variant="outlined" fullWidth>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      mb: 1
+                    }}
                   >
-                    {t('enable_users')}
-                  </Button>
-                </Card>
-              </Container>
-            )}
+                    {t('max_users_description', { maxUsers })}
+                  </Typography>
+                  <FormGroup>
+                    {disabledUsersMini.map((user) => (
+                      <FormControlLabel
+                        key={user.id}
+                        control={
+                          <Checkbox
+                            checked={selectedUsers[user.id]}
+                            onChange={(event) => {
+                              onChange(event.target.checked, user.id);
+                            }}
+                          />
+                        }
+                        label={`${user.firstName} ${user.lastName}`}
+                      />
+                    ))}
+                  </FormGroup>
+                </FormControl>
+                <Divider />
+                <Button
+                  disabled={upgrading}
+                  startIcon={upgrading && <CircularProgress size={'1rem'} />}
+                  sx={{ mt: 2 }}
+                  onClick={onUpgrade}
+                  variant="contained"
+                >
+                  {t('enable_users')}
+                </Button>
+              </Card>
+            </Container>
           </Container>
         </MainContent>
       </>

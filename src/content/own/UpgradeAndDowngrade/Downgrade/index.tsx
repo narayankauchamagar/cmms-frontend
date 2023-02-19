@@ -2,20 +2,27 @@ import {
   Box,
   Button,
   Card,
+  Checkbox,
+  CircularProgress,
   Container,
   Divider,
   FormControl,
-  InputAdornment,
-  OutlinedInput,
+  FormControlLabel,
+  FormGroup,
   styled,
   Typography
 } from '@mui/material';
 import { Helmet } from 'react-helmet-async';
-import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 
 import { useTranslation } from 'react-i18next';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { TitleContext } from '../../../../contexts/TitleContext';
+import { getUsersMini } from '../../../../slices/user';
+import useAuth from '../../../../hooks/useAuth';
+import { useDispatch, useSelector } from '../../../../store';
+import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContext';
+import { useNavigate } from 'react-router-dom';
+import PermissionErrorMessage from '../../components/PermissionErrorMessage';
 
 const MainContent = styled(Box)(
   () => `
@@ -29,97 +36,140 @@ const MainContent = styled(Box)(
 `
 );
 
-const OutlinedInputWrapper = styled(OutlinedInput)(
-  ({ theme }) => `
-    background-color: ${theme.colors.alpha.white[100]};
-`
-);
-
-const ButtonSearch = styled(Button)(
-  ({ theme }) => `
-    margin-right: -${theme.spacing(1)};
-`
-);
-
 function Downgrade() {
   const { t }: { t: any } = useTranslation();
   const { setTitle } = useContext(TitleContext);
+  const { user, company, downgrade } = useAuth();
+  const dispatch = useDispatch();
+  const { usersMini } = useSelector((state) => state.users);
+  const [selectedUsers, setSelectedUsers] = useState<{
+    [key: number]: boolean;
+  }>([]);
+  const { showSnackBar } = useContext(CustomSnackBarContext);
+  const [downgrading, setDowngrading] = useState<boolean>(false);
+  const [minUsers, setMinUsers] = useState<number>(0);
+  const navigate = useNavigate();
+
   useEffect(() => {
     setTitle(t('downgrade'));
+    if (user.ownsCompany) dispatch(getUsersMini());
   }, []);
 
-  return (
-    <>
-      <Helmet>
-        <title>Status - 404</title>
-      </Helmet>
-      <MainContent>
-        <Container maxWidth="md">
-          <Box textAlign="center">
-            <img alt="404" height={180} src="/static/images/status/404.svg" />
-            <Typography
-              variant="h2"
-              sx={{
-                my: 2
-              }}
-            >
-              {t("The page you were looking for doesn't exist.")}
-            </Typography>
-            <Typography
-              variant="h4"
-              color="text.secondary"
-              fontWeight="normal"
-              sx={{
-                mb: 4
-              }}
-            >
-              {t(
-                "It's on us, we moved the content to a different page. The search below should help!"
-              )}
-            </Typography>
-          </Box>
-          <Container maxWidth="sm">
-            <Card
-              sx={{
-                textAlign: 'center',
-                mt: 3,
-                p: 4
-              }}
-            >
-              <FormControl variant="outlined" fullWidth>
-                <OutlinedInputWrapper
-                  type="text"
-                  placeholder={t('Search terms here...')}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <ButtonSearch variant="contained" size="small">
-                        {t('Search')}
-                      </ButtonSearch>
-                    </InputAdornment>
-                  }
-                  startAdornment={
-                    <InputAdornment position="start">
-                      <SearchTwoToneIcon />
-                    </InputAdornment>
-                  }
-                />
-              </FormControl>
-              <Divider
+  useEffect(() => {
+    setMinUsers(usersMini.length - company.subscription.usersCount);
+  }, [usersMini]);
+
+  const onDowngrade = () => {
+    setDowngrading(true);
+    let usersIds: number[] = [];
+    Object.entries(selectedUsers).forEach(([key, value]) => {
+      if (value) {
+        usersIds.push(Number(key));
+      }
+    });
+    if (usersIds.length < minUsers) {
+      showSnackBar(t('min_users_description', { minUsers }), 'error');
+      setDowngrading(false);
+      return;
+    }
+    downgrade(usersIds)
+      .then((success) => {
+        if (success) navigate('/app/work-orders');
+      })
+      .finally(() => setDowngrading(false));
+  };
+  const onChange = (value: boolean, id: number) => {
+    const newSelectedUsers = { ...selectedUsers };
+    newSelectedUsers[id] = value;
+    setSelectedUsers(newSelectedUsers);
+  };
+  if (company.subscription.downgradeNeeded)
+    return (
+      <>
+        <Helmet>
+          <title>{t('downgrade')}</title>
+        </Helmet>
+        <MainContent>
+          <Container maxWidth="md">
+            <Box textAlign="center">
+              <Typography
+                variant="h2"
                 sx={{
-                  my: 4
+                  my: 2
                 }}
               >
-                OR
-              </Divider>
-              <Button href="/overview" variant="outlined">
-                {t('Go to homepage')}
-              </Button>
-            </Card>
+                {t('disable_users')}
+              </Typography>
+              <Typography
+                variant="h4"
+                color="text.secondary"
+                fontWeight="normal"
+                sx={{
+                  mb: 4
+                }}
+              >
+                {t(
+                  user.ownsCompany
+                    ? 'downgrade_description'
+                    : 'downgrade_description_no_owner'
+                )}
+              </Typography>
+            </Box>
+            {user.ownsCompany && (
+              <Container maxWidth="sm">
+                <Card
+                  sx={{
+                    textAlign: 'center',
+                    mt: 3,
+                    p: 4
+                  }}
+                >
+                  <FormControl variant="outlined" fullWidth>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        mb: 1
+                      }}
+                    >
+                      {t('min_users_description', { minUsers })}
+                    </Typography>
+                    <FormGroup>
+                      {usersMini.map((user) => (
+                        <FormControlLabel
+                          key={user.id}
+                          control={
+                            <Checkbox
+                              checked={selectedUsers[user.id]}
+                              onChange={(event) => {
+                                onChange(event.target.checked, user.id);
+                              }}
+                            />
+                          }
+                          label={`${user.firstName} ${user.lastName}`}
+                        />
+                      ))}
+                    </FormGroup>
+                  </FormControl>
+                  <Divider />
+                  <Button
+                    disabled={downgrading}
+                    startIcon={
+                      downgrading && <CircularProgress size={'1rem'} />
+                    }
+                    sx={{ mt: 2 }}
+                    onClick={onDowngrade}
+                    variant="contained"
+                  >
+                    {t('disable_users')}
+                  </Button>
+                </Card>
+              </Container>
+            )}
           </Container>
-        </Container>
-      </MainContent>
-    </>
-  );
+        </MainContent>
+      </>
+    );
+  else return <PermissionErrorMessage message={'no_access_page'} />;
 }
 
 export default Downgrade;

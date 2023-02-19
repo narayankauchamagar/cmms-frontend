@@ -1418,7 +1418,15 @@ const frJSON = {
   upgrade_description:
     "Vous venez de mettre à jour votre plan d'abonnement. Vous devez activer les utilisateurs désactivés susceptibles d'utiliser Grash. Vous ne pouvez le faire qu'une seule fois pour l'abonnement en cours. Veuillez choisir avec soin",
   enable_users: 'Activer les utilisateurs',
-  max_users_description: "Vous pouvez activer jusqu'à {{maxUsers}} utilisateurs"
+  max_users_description:
+    "Vous pouvez activer jusqu'à {{maxUsers}} utilisateurs",
+  downgrade_description:
+    "Vous venez de rétrograder votre plan d'abonnement. Vous devez désactiver certains utilisateurs pour continuer. Vous ne pouvez le faire qu'une seule fois pour l'abonnement en cours. Veuillez choisir avec soin",
+  disable_users: 'Désactiver les utilisateurs',
+  min_users_description:
+    'Vous devez désactiver un minimum de {{minUsers}} utilisateurs',
+  downgrade_description_no_owner:
+    "Votre entreprise vient de diminuer le nombre d'utilisateurs dans son plan d'abonnement. Le propriétaire de l'entreprise doit désactiver certains utilisateurs avant que vous puissiez continuer"
 };
 
 export default frJSON;

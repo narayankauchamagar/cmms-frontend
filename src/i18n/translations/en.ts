@@ -1279,7 +1279,13 @@ const enJSON = {
   upgrade_description:
     'You just upgraded your subscription plan. You need to enable the disabled users who might use Grash. You can only do this once for the current subscription. Please choose carefully',
   enable_users: 'Enable users',
-  max_users_description: 'You can enable up to {{maxUsers}} users'
+  max_users_description: 'You can enable up to {{maxUsers}} users',
+  downgrade_description:
+    'You just downgraded your subscription plan. You need to disable some users in order to proceed. You can only do this once for the current subscription. Please choose carefully',
+  disable_users: 'Disable users',
+  min_users_description: 'You must disable a minimum of {{minUsers}} users',
+  downgrade_description_no_owner:
+    'Your company just downgraded its subscription plan. The company owner needs to disable some users before you can proceed'
 };
 
 export default enJSON;
