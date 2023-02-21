@@ -35,7 +35,7 @@ function CompanyDetails(props: CompanyDetailsProps) {
   const handleCloseEditModal = () => setOpenEditModal(false);
 
   const companyDetails = {
-    name: { value: company.name, title: t(' name') },
+    name: { value: company.name, title: t('name') },
     address: { value: company.address, title: t('address') },
     website: { value: company.website, title: t('website'), isLink: true },
     phone: { value: company.phone, title: t('phone') }
@@ -98,9 +98,13 @@ function CompanyDetails(props: CompanyDetailsProps) {
         }}
         validationSchema={Yup.object().shape({
           name: Yup.string().max(100).required(t('required_name')),
-          address: Yup.string().max(100).required(t('required_address')),
-          phone: Yup.string().matches(phoneRegExp, t('invalid_phone')),
-          website: Yup.string().matches(websiteRegExp, t('invalid_website'))
+          address: Yup.string().max(100).nullable(),
+          phone: Yup.string()
+            .matches(phoneRegExp, t('invalid_phone'))
+            .nullable(),
+          website: Yup.string()
+            .matches(websiteRegExp, t('invalid_website'))
+            .nullable()
         })}
         onSubmit={async (
           _values,
