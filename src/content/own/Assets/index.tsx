@@ -61,6 +61,7 @@ import { FilterField, SearchCriteria } from '../../../models/owns/page';
 import Filters from './Filters';
 import { onSearchQueryChange } from '../../../utils/overall';
 import SearchInput from '../components/SearchInput';
+import File from '../../../models/owns/file';
 
 function Assets() {
   const { t }: { t: any } = useTranslation();
@@ -237,7 +238,10 @@ function Assets() {
       headerName: t('image'),
       description: t('image'),
       width: 150,
-      renderCell: (params) => <img src={params.row.image?.url} />
+      renderCell: (params: GridRenderCellParams<any, any, File>) =>
+        params.value && (
+          <img width="100%" height="100%" src={params.value.url} />
+        )
     },
     {
       field: 'area',
@@ -680,6 +684,7 @@ function Assets() {
                   columns={columns}
                   rows={view === 'hierarchy' ? assetsHierarchy : assets.content}
                   apiRef={apiRef}
+                  getRowHeight={() => 'auto'}
                   getTreeDataPath={(row) =>
                     view === 'hierarchy'
                       ? row.hierarchy.map((id) => id.toString())

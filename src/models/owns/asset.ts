@@ -5,7 +5,7 @@ import { TeamMiniDTO } from './team';
 import { VendorMiniDTO } from './vendor';
 import Location from './location';
 import { CustomerMiniDTO } from './customer';
-import { FileMiniDTO } from './file';
+import File, { FileMiniDTO } from './file';
 import Category from './category';
 
 export default interface Asset extends Audit {
@@ -18,7 +18,7 @@ export type AssetStatus = 'OPERATIONAL' | 'DOWN';
 export interface AssetDTO extends Audit {
   id: number;
   name: string;
-  image: string;
+  image: File;
   location: Location;
   area: string;
   model: string;

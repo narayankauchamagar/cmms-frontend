@@ -121,6 +121,11 @@ const AssetDetails = ({ asset }: PropsType) => {
         <Grid item xs={12}>
           <Card sx={{ p: 2 }}>
             <Grid container spacing={2} padding={2}>
+              {asset?.image && (
+                <Grid item xs={12}>
+                  <img width="auto" height="300px" src={asset.image.url} />
+                </Grid>
+              )}
               <Grid item xs={12}>
                 <Typography variant="h3">{t('asset_information')}</Typography>
               </Grid>
