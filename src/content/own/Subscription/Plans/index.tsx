@@ -38,7 +38,7 @@ function SubscriptionPlans() {
   const [usersCount, setUsersCount] = useState<number>(
     company.subscription.usersCount
   );
-  const [period, setPeriod] = useState<string>('monthly');
+  const [period, setPeriod] = useState<'monthly' | 'annually'>('monthly');
   const [selectedPlan, setSelectedPlan] = useState<string>('STARTER');
   const [selectedPlanObject, setSelectedPlanObject] =
     useState<SubscriptionPlan>();
@@ -53,6 +53,7 @@ function SubscriptionPlans() {
     setTitle(t('plans'));
     if (user.ownsCompany) {
       dispatch(getSubscriptionPlans());
+      setPeriod(company.subscription.monthly ? 'monthly' : 'annually');
     }
   }, []);
   useEffect(() => {
@@ -265,7 +266,7 @@ function SubscriptionPlans() {
                     sx={{ p: 2, my: 1 }}
                     value={period}
                     onChange={(event) => {
-                      setPeriod(event.target.value);
+                      setPeriod(event.target.value as 'monthly' | 'annually');
                     }}
                     name="period"
                   >
@@ -365,7 +366,7 @@ function SubscriptionPlans() {
                   <Typography variant="h4" gutterBottom>
                     {t('features')}
                   </Typography>
-                  <PlanFeatures plan={selectedPlan.toLowerCase()} />
+                  <PlanFeatures features={selectedPlanObject?.features ?? []} />
                 </Box>
                 <Box
                   sx={{
@@ -376,8 +377,7 @@ function SubscriptionPlans() {
                   }}
                 >
                   <Typography sx={{ my: 2 }} variant="h4" gutterBottom>
-                    {t('you_will_be_charged')}{' '}
-                    <b>{getFormattedCurrency(getCost())}</b>{' '}
+                    {t('you_will_be_charged')} <b>{`$ ${getCost()}`}</b>{' '}
                     {period == 'monthly'
                       ? t('monthly_adverb')
                       : t('yearly_adverb')}

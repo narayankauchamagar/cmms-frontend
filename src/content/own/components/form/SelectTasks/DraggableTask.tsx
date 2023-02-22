@@ -280,7 +280,7 @@ const DraggableListItem = ({
                         startIcon={<AddTwoToneIcon />}
                         sx={{ mt: 1 }}
                       >
-                        Add New Option
+                        {t('add_new_option')}
                       </Button>
                     </Box>
                   )}

@@ -290,7 +290,7 @@ function Files() {
     {
       name: 'triggerConfiguration',
       type: 'titleGroupField',
-      label: 'Trigger Configuration'
+      label: t('trigger_configuration')
     },
     {
       name: 'name',

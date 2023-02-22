@@ -1289,7 +1289,30 @@ const enJSON = {
   past_due: 'Past due',
   due_date_delay: 'Due Date delay',
   due_date_delay_description: 'Due Date delay in days',
-  days_count: '{{days}} days'
+  days_count: '{{days}} days',
+  trigger_configuration: 'Trigger Configuration',
+  WORK_ORDER_feature: 'Work Orders',
+  REQUEST_feature: 'Work Requests',
+  PART_feature: 'Parts Management',
+  MOBILE_APP_feature: 'Mobile App',
+  WORK_ORDER_HISTORY_feature: 'Work Orders History',
+  CSV_IMPORTING_feature: 'CSV Importing',
+  PREVENTIVE_MAINTENANCE_feature: 'Preventive Maintenance',
+  CHECKLIST_feature: 'Checklists',
+  FILE_feature: 'File Uploads',
+  PURCHASE_ORDER_feature: 'Purchase Orders',
+  METER_feature: 'Meter Readings',
+  REQUEST_CONFIGURATION_feature: 'Request Form configuration',
+  ADDITIONAL_TIME_feature: 'Advanced Time tracking',
+  ADDITIONAL_COST_feature: 'Advanced Cost tracking',
+  ANALYTICS_feature: 'Analytics & Reporting',
+  REQUEST_PORTAL_feature: 'Request Portal',
+  SIGNATURE_feature: 'Signatures',
+  ROLE_feature: 'Custom roles',
+  WORKFLOW_feature: 'Workflow automation',
+  API_ACCESS_feature: 'API Access',
+  WEBHOOK_feature: 'Webhooks',
+  add_new_option: 'Add new Option'
 };
 
 export default enJSON;

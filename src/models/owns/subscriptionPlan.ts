@@ -11,7 +11,9 @@ export enum PlanFeature {
   REQUEST_PORTAL = 'REQUEST_PORTAL',
   SIGNATURE = 'SIGNATURE',
   ROLE = 'ROLE',
-  WORKFLOW = 'WORKFLOW'
+  WORKFLOW = 'WORKFLOW',
+  API_ACCESS = 'API_ACCESS',
+  WEBHOOK = 'WEBHOOK'
 }
 export interface SubscriptionPlan {
   id: number;

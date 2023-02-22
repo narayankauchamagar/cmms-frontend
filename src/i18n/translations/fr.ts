@@ -1431,7 +1431,30 @@ const frJSON = {
   already_read: 'Relevé',
   due_date_delay: "Jours avant l'échéance",
   due_date_delay_description: 'Nombre de jours',
-  days_count: '{{days}} jours'
+  days_count: '{{days}} jours',
+  trigger_configuration: 'Configuration du déclencheur',
+  WORK_ORDER_feature: 'Bons de travail',
+  REQUEST_feature: 'Demandes de travail',
+  PART_feature: 'Gestion des pièces',
+  MOBILE_APP_feature: 'Application mobile',
+  WORK_ORDER_HISTORY_feature: 'Historique des bons de travail',
+  CSV_IMPORTING_feature: 'Importation CSV',
+  PREVENTIVE_MAINTENANCE_feature: 'Maintenance préventive',
+  CHECKLIST_feature: 'Listes de contrôle',
+  FILE_feature: 'Téléchargements de fichiers',
+  PURCHASE_ORDER_feature: 'Bons de commande',
+  METER_feature: 'Relevés de compteurs',
+  REQUEST_CONFIGURATION_feature: 'Configuration du formulaire de demande',
+  ADDITIONAL_TIME_feature: 'Suivi du temps avancé',
+  ADDITIONAL_COST_feature: 'Suivi avancé des coûts',
+  ANALYTICS_feature: 'Analytique',
+  REQUEST_PORTAL_feature: 'Portail de demande',
+  SIGNATURE_feature: 'Signatures',
+  ROLE_feature: 'Rôles personnalisés',
+  WORKFLOW_feature: 'Flux de travail automatisés',
+  API_ACCESS_feature: "Accès à l'API",
+  WEBHOOK_feature: 'Webhooks',
+  add_new_option: 'Ajouter une option'
 };
 
 export default frJSON;

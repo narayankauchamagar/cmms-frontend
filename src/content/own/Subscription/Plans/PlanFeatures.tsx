@@ -2,33 +2,34 @@ import { Card, Grid, Stack, Typography, useTheme } from '@mui/material';
 import CheckTwoToneIcon from '@mui/icons-material/CheckTwoTone';
 import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone';
 import { splitToChunks } from '../../../../utils/arrayChunk';
+import { PlanFeature } from '../../../../models/owns/subscriptionPlan';
+import { useTranslation } from 'react-i18next';
 
 interface PlanFeatureProps {
-  plan: string;
+  features: PlanFeature[];
 }
 function PlanFeatures(props: PlanFeatureProps) {
-  const { plan } = props;
+  const { features } = props;
+  const { t }: { t: any } = useTranslation();
   const theme = useTheme();
-  const features = {
-    starter: [
-      { name: 'Work Orders', value: true },
-      { name: 'Parts management', value: false },
-      { name: 'In app messaging', value: false },
-      { name: 'Photo capture', value: true }
-    ],
-    professional: [
-      { name: 'Work Orders', value: true },
-      { name: 'Parts management', value: false },
-      { name: 'In app messaging', value: true },
-      { name: 'Photo capture', value: true }
-    ],
-    business: [
-      { name: 'Work Orders', value: true },
-      { name: 'Parts management', value: true },
-      { name: 'In app messaging', value: true },
-      { name: 'Photo capture', value: true }
-    ]
-  };
+  const basicFeatures = [
+    'WORK_ORDER',
+    'REQUEST',
+    'PART',
+    'MOBILE_APP',
+    'WORK_ORDER_HISTORY',
+    'CSV_IMPORTING'
+  ].map((feature) => ({
+    name: feature,
+    isBasic: true
+  }));
+  const completeFeatures = [
+    ...basicFeatures,
+    ...Object.values(PlanFeature).map((feature) => ({
+      name: feature,
+      isBasic: false
+    }))
+  ];
   return (
     <Card
       sx={{
@@ -42,21 +43,21 @@ function PlanFeatures(props: PlanFeatureProps) {
       }}
     >
       <Grid container>
-        {splitToChunks(features[plan], 3).map((featuresColumn, index) => (
+        {splitToChunks(completeFeatures, 3).map((featuresColumn, index) => (
           <Grid key={index} item xs={12} md={4}>
-            {featuresColumn.map((feature) => (
+            {featuresColumn.map((feature, index) => (
               <Stack
-                key={feature.name}
+                key={index}
                 spacing={1}
                 direction="row"
                 alignItems="center"
               >
-                {feature.value ? (
+                {features.includes(feature.name) || feature.isBasic ? (
                   <CheckTwoToneIcon />
                 ) : (
                   <CloseTwoToneIcon color="error" />
                 )}
-                <Typography>{feature.name}</Typography>
+                <Typography>{t(`${feature.name}_feature`)}</Typography>
               </Stack>
             ))}
           </Grid>
