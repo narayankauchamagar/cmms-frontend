@@ -1312,7 +1312,9 @@ const enJSON = {
   WORKFLOW_feature: 'Workflow automation',
   API_ACCESS_feature: 'API Access',
   WEBHOOK_feature: 'Webhooks',
-  add_new_option: 'Add new Option'
+  add_new_option: 'Add new Option',
+  edit_company: 'Edit company',
+  fill_fields_below: 'Fill in the fields below'
 };
 
 export default enJSON;

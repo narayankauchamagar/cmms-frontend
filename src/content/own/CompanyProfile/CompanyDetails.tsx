@@ -86,8 +86,8 @@ function CompanyDetails(props: CompanyDetailsProps) {
     <CustomDialog
       onClose={handleCloseEditModal}
       open={openEditModal}
-      title="Edit company"
-      subtitle="Fill in the fields below"
+      title={t('edit_company')}
+      subtitle={t('fill_fields_below')}
     >
       <Formik
         initialValues={{

@@ -1454,7 +1454,9 @@ const frJSON = {
   WORKFLOW_feature: 'Flux de travail automatisés',
   API_ACCESS_feature: "Accès à l'API",
   WEBHOOK_feature: 'Webhooks',
-  add_new_option: 'Ajouter une option'
+  add_new_option: 'Ajouter une option',
+  edit_company: "Modifier les informations sur l'entreprise",
+  fill_fields_below: 'Remplissez les champs ci-dessous'
 };
 
 export default frJSON;
