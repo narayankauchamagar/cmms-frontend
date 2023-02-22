@@ -649,7 +649,8 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
   };
   const resetPassword = async (email: string): Promise<boolean> => {
     const response = await api.get<{ success: boolean }>(
-      `auth/resetpwd?email=${email}`
+      `auth/resetpwd?email=${email}`,
+      { headers: authHeader(true) }
     );
     const { success } = response;
     return success;
