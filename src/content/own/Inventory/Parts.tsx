@@ -58,6 +58,7 @@ import { exportEntity } from '../../../slices/exports';
 import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
 import { PermissionEntity } from '../../../models/owns/role';
 import SearchInput from '../components/SearchInput';
+import { PlanFeature } from '../../../models/owns/subscriptionPlan';
 
 interface PropsType {
   setAction: (p: () => () => void) => void;
@@ -80,8 +81,12 @@ const Parts = ({ setAction }: PropsType) => {
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [currentPart, setCurrentPart] = useState<Part>();
-  const { getFilteredFields, hasViewPermission, hasViewOtherPermission } =
-    useAuth();
+  const {
+    getFilteredFields,
+    hasViewPermission,
+    hasViewOtherPermission,
+    hasFeature
+  } = useAuth();
   const { partId } = useParams();
   const dispatch = useDispatch();
   const { showSnackBar } = useContext(CustomSnackBarContext);
@@ -614,7 +619,10 @@ const Parts = ({ setAction }: PropsType) => {
         </MenuItem>
       )}
       {hasViewPermission(PermissionEntity.SETTINGS) && (
-        <MenuItem onClick={() => navigate('/app/imports/parts')}>
+        <MenuItem
+          onClick={() => navigate('/app/imports/parts')}
+          disabled={!hasFeature(PlanFeature.IMPORT_CSV)}
+        >
           {t('to_import')}
         </MenuItem>
       )}

@@ -13,7 +13,8 @@ export enum PlanFeature {
   ROLE = 'ROLE',
   WORKFLOW = 'WORKFLOW',
   API_ACCESS = 'API_ACCESS',
-  WEBHOOK = 'WEBHOOK'
+  WEBHOOK = 'WEBHOOK',
+  IMPORT_CSV = 'IMPORT_CSV'
 }
 export interface SubscriptionPlan {
   id: number;

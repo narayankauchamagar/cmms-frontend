@@ -39,6 +39,8 @@ import {
 } from '../../../models/owns/imports';
 import { useDispatch } from '../../../store';
 import { importEntity } from '../../../slices/imports';
+import { PlanFeature } from '../../../models/owns/subscriptionPlan';
+import FeatureErrorMessage from '../components/FeatureErrorMessage';
 
 interface OwnProps {}
 export interface OwnHeader {
@@ -55,7 +57,7 @@ export type EntityType =
   | 'meters';
 
 const Import = ({}: OwnProps) => {
-  const { hasViewPermission } = useAuth();
+  const { hasViewPermission, hasFeature } = useAuth();
   const { t }: { t: any } = useTranslation();
   const entityFromUrl = window.location.href.substring(
     window.location.href.lastIndexOf('/') + 1
@@ -463,78 +465,80 @@ const Import = ({}: OwnProps) => {
       </DialogActions>
     </Dialog>
   );
-  if (hasViewPermission(PermissionEntity.SETTINGS))
-    return (
-      <>
-        <Helmet>
-          <title>{t('import')}</title>
-        </Helmet>
-        <Grid
-          container
-          justifyContent="center"
-          alignItems="stretch"
-          spacing={2}
-          padding={4}
-        >
-          <Grid item xs={12}>
-            <Card
-              sx={{
-                p: 2
-              }}
-            >
-              <Grid container spacing={2}>
-                <Grid
-                  item
-                  xs={12}
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  <Typography variant="h4">{t('import_data')}</Typography>
-                </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  display="flex"
-                  justifyContent="center"
-                  flexDirection="column"
-                  alignItems="center"
-                >
-                  <Select
-                    value={entity}
-                    onChange={(event) => {
-                      setEntity(event.target.value as EntityType);
-                      window.history.replaceState(
-                        null,
-                        '',
-                        `/app/imports/${event.target.value}`
-                      );
-                    }}
+  if (hasFeature(PlanFeature.IMPORT_CSV)) {
+    if (hasViewPermission(PermissionEntity.SETTINGS))
+      return (
+        <>
+          <Helmet>
+            <title>{t('import')}</title>
+          </Helmet>
+          <Grid
+            container
+            justifyContent="center"
+            alignItems="stretch"
+            spacing={2}
+            padding={4}
+          >
+            <Grid item xs={12}>
+              <Card
+                sx={{
+                  p: 2
+                }}
+              >
+                <Grid container spacing={2}>
+                  <Grid
+                    item
+                    xs={12}
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
                   >
-                    {options.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
+                    <Typography variant="h4">{t('import_data')}</Typography>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={12}
+                    display="flex"
+                    justifyContent="center"
+                    flexDirection="column"
+                    alignItems="center"
+                  >
+                    <Select
+                      value={entity}
+                      onChange={(event) => {
+                        setEntity(event.target.value as EntityType);
+                        window.history.replaceState(
+                          null,
+                          '',
+                          `/app/imports/${event.target.value}`
+                        );
+                      }}
+                    >
+                      {options.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
 
-                  <Button
-                    sx={{ mt: 1 }}
-                    variant="contained"
-                    size="medium"
-                    onClick={onStartProcess}
-                  >
-                    {t('start_import_process')}
-                  </Button>
+                    <Button
+                      sx={{ mt: 1 }}
+                      variant="contained"
+                      size="medium"
+                      onClick={onStartProcess}
+                    >
+                      {t('start_import_process')}
+                    </Button>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </Card>
+              </Card>
+            </Grid>
           </Grid>
-        </Grid>
-        {renderModal()}
-      </>
-    );
-  else return <PermissionErrorMessage message={'no_access_page'} />;
+          {renderModal()}
+        </>
+      );
+    else return <PermissionErrorMessage message={'no_access_page'} />;
+  } else return <FeatureErrorMessage message={'no_import_access'} />;
 };
 
 export default Import;

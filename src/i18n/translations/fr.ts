@@ -1200,7 +1200,7 @@ const frJSON = {
   which_plan_fits_you: 'Quel plan vous convient le mieux?',
   per_user_month: 'par utilisateur/mois',
   per_user_year: 'par utilisateur/an',
-  you_will_be_charged: 'Vous serez chargé',
+  you_will_be_charged: 'Vous serez facturé',
   proceed_to_payment: 'Procéder au paiement',
   pay_only_for_roles:
     'Payez uniquement pour les utilisateurs <strong>Administrateurs</strong>, <strong>Techniques</strong> et <strong>Techniques limités</strong>, et utilisez gratuitement un nombre illimité de <strong>Demandeurs</strong>, et utilisateurs en <strong>Lecture seule</strong>',
@@ -1438,7 +1438,6 @@ const frJSON = {
   PART_feature: 'Gestion des pièces',
   MOBILE_APP_feature: 'Application mobile',
   WORK_ORDER_HISTORY_feature: 'Historique des bons de travail',
-  CSV_IMPORTING_feature: 'Importation CSV',
   PREVENTIVE_MAINTENANCE_feature: 'Maintenance préventive',
   CHECKLIST_feature: 'Listes de contrôle',
   FILE_feature: 'Téléchargements de fichiers',
@@ -1456,7 +1455,10 @@ const frJSON = {
   WEBHOOK_feature: 'Webhooks',
   add_new_option: 'Ajouter une option',
   edit_company: "Modifier les informations sur l'entreprise",
-  fill_fields_below: 'Remplissez les champs ci-dessous'
+  fill_fields_below: 'Remplissez les champs ci-dessous',
+  IMPORT_CSV_feature: 'Importation CSV',
+  no_import_access:
+    'Mettez à jour votre plan pour importer depuis des fichiers CSV ou Excel'
 };
 
 export default frJSON;

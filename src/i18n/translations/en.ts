@@ -1296,7 +1296,6 @@ const enJSON = {
   PART_feature: 'Parts Management',
   MOBILE_APP_feature: 'Mobile App',
   WORK_ORDER_HISTORY_feature: 'Work Orders History',
-  CSV_IMPORTING_feature: 'CSV Importing',
   PREVENTIVE_MAINTENANCE_feature: 'Preventive Maintenance',
   CHECKLIST_feature: 'Checklists',
   FILE_feature: 'File Uploads',
@@ -1314,7 +1313,9 @@ const enJSON = {
   WEBHOOK_feature: 'Webhooks',
   add_new_option: 'Add new Option',
   edit_company: 'Edit company',
-  fill_fields_below: 'Fill in the fields below'
+  fill_fields_below: 'Fill in the fields below',
+  IMPORT_CSV_feature: 'CSV Importing',
+  no_import_access: 'Upgrade your plan to import from CSV, Excel files'
 };
 
 export default enJSON;

@@ -511,7 +511,10 @@ function Meters() {
         </MenuItem>
       )}
       {hasViewPermission(PermissionEntity.SETTINGS) && (
-        <MenuItem onClick={() => navigate('/app/imports/meters')}>
+        <MenuItem
+          onClick={() => navigate('/app/imports/meters')}
+          disabled={!hasFeature(PlanFeature.IMPORT_CSV)}
+        >
           {t('to_import')}
         </MenuItem>
       )}

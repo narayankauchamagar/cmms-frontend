@@ -62,6 +62,7 @@ import Filters from './Filters';
 import { onSearchQueryChange } from '../../../utils/overall';
 import SearchInput from '../components/SearchInput';
 import File from '../../../models/owns/file';
+import { PlanFeature } from '../../../models/owns/subscriptionPlan';
 
 function Assets() {
   const { t }: { t: any } = useTranslation();
@@ -74,7 +75,8 @@ function Assets() {
     hasViewPermission,
     hasCreatePermission,
     hasViewOtherPermission,
-    getFilteredFields
+    getFilteredFields,
+    hasFeature
   } = useAuth();
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const dispatch = useDispatch();
@@ -195,7 +197,10 @@ function Assets() {
         </MenuItem>
       )}
       {hasViewPermission(PermissionEntity.SETTINGS) && (
-        <MenuItem onClick={() => navigate('/app/imports/assets')}>
+        <MenuItem
+          onClick={() => navigate('/app/imports/assets')}
+          disabled={!hasFeature(PlanFeature.IMPORT_CSV)}
+        >
           {t('to_import')}
         </MenuItem>
       )}

@@ -17,8 +17,7 @@ function PlanFeatures(props: PlanFeatureProps) {
     'REQUEST',
     'PART',
     'MOBILE_APP',
-    'WORK_ORDER_HISTORY',
-    'CSV_IMPORTING'
+    'WORK_ORDER_HISTORY'
   ].map((feature) => ({
     name: feature,
     isBasic: true

@@ -81,6 +81,7 @@ import SignalCellularAltTwoToneIcon from '@mui/icons-material/SignalCellularAltT
 import CircleTwoToneIcon from '@mui/icons-material/CircleTwoTone';
 import _ from 'lodash';
 import SearchInput from '../components/SearchInput';
+import { PlanFeature } from '../../../models/owns/subscriptionPlan';
 
 function WorkOrders() {
   const { t }: { t: any } = useTranslation();
@@ -117,8 +118,12 @@ function WorkOrders() {
   const { setTitle } = useContext(TitleContext);
   const { workOrderId } = useParams();
   const { showSnackBar } = useContext(CustomSnackBarContext);
-  const { hasViewPermission, hasViewOtherPermission, hasCreatePermission } =
-    useAuth();
+  const {
+    hasViewPermission,
+    hasViewOtherPermission,
+    hasCreatePermission,
+    hasFeature
+  } = useAuth();
   const [currentWorkOrder, setCurrentWorkOrder] = useState<WorkOrder>();
   const [openDelete, setOpenDelete] = useState<boolean>(false);
   const { tasksByWorkOrder } = useSelector((state) => state.tasks);
@@ -789,7 +794,10 @@ function WorkOrders() {
         </MenuItem>
       )}
       {hasViewPermission(PermissionEntity.SETTINGS) && (
-        <MenuItem onClick={() => navigate('/app/imports/work-orders')}>
+        <MenuItem
+          onClick={() => navigate('/app/imports/work-orders')}
+          disabled={!hasFeature(PlanFeature.IMPORT_CSV)}
+        >
           {t('to_import')}
         </MenuItem>
       )}

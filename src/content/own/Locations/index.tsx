@@ -65,6 +65,7 @@ import { getImageAndFiles } from '../../../utils/overall';
 import { getLocationUrl } from '../../../utils/urlPaths';
 import { exportEntity } from '../../../slices/exports';
 import MoreVertTwoToneIcon from '@mui/icons-material/MoreVertTwoTone';
+import { PlanFeature } from '../../../models/owns/subscriptionPlan';
 
 function Locations() {
   const { t }: { t: any } = useTranslation();
@@ -96,7 +97,8 @@ function Locations() {
     hasViewOtherPermission,
     hasEditPermission,
     hasCreatePermission,
-    hasDeletePermission
+    hasDeletePermission,
+    hasFeature
   } = useAuth();
   const [currentLocation, setCurrentLocation] = useState<Location>();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -477,7 +479,10 @@ function Locations() {
         </MenuItem>
       )}
       {hasViewPermission(PermissionEntity.SETTINGS) && (
-        <MenuItem onClick={() => navigate('/app/imports/locations')}>
+        <MenuItem
+          onClick={() => navigate('/app/imports/locations')}
+          disabled={!hasFeature(PlanFeature.IMPORT_CSV)}
+        >
           {t('to_import')}
         </MenuItem>
       )}

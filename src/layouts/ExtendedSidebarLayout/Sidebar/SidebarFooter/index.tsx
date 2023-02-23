@@ -13,6 +13,7 @@ import EventTwoToneIcon from '@mui/icons-material/EventTwoTone';
 import PowerSettingsNewTwoToneIcon from '@mui/icons-material/PowerSettingsNewTwoTone';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import useAuth from 'src/hooks/useAuth';
+import UpgradeTwoToneIcon from '@mui/icons-material/UpgradeTwoTone';
 
 const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -53,6 +54,24 @@ function SidebarFooter() {
       alignItems="center"
       justifyContent="center"
     >
+      <LightTooltip placement="top" arrow title={t('upgrade_now')}>
+        <IconButton
+          sx={{
+            background: `${theme.colors.alpha.trueWhite[10]}`,
+            color: `${theme.colors.alpha.trueWhite[70]}`,
+            transition: `${theme.transitions.create(['all'])}`,
+
+            '&:hover': {
+              background: `${alpha(theme.colors.alpha.trueWhite[100], 0.2)}`,
+              color: `${theme.colors.alpha.trueWhite[100]}`
+            }
+          }}
+          to="/app/subscription/plans"
+          component={RouterLink}
+        >
+          <UpgradeTwoToneIcon fontSize="small" />
+        </IconButton>
+      </LightTooltip>
       <LightTooltip placement="top" arrow title={t('wo_calendar')}>
         <IconButton
           sx={{
