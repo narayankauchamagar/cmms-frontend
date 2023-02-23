@@ -1161,7 +1161,7 @@ const frJSON = {
     'Gérer les détails liés à vos notifications',
   recent_activity: 'Activité récente',
   created: 'Créés',
-  completed: 'Achevés',
+  completed: 'Clôturés',
   my_account: 'Mon compte',
   my_company: 'Mon entreprise',
   you_are_using_plan:

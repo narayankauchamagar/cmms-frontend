@@ -407,6 +407,7 @@ export default (props: PropsType) => {
                         onChange={(newValue) => {
                           handleChange(formik, field.name, newValue);
                         }}
+                        ampm={false}
                         renderInput={(params) => (
                           <TextField
                             fullWidth
