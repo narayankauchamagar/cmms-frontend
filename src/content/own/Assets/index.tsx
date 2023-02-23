@@ -300,7 +300,7 @@ function Assets() {
       description: t('teams'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<TeamMiniDTO[]>) =>
-        enumerate(params.value.map((team) => team.name))
+        enumerate(params.value?.map((team) => team.name) ?? [])
     },
     {
       field: 'vendors',
@@ -308,7 +308,7 @@ function Assets() {
       description: t('vendors'),
       width: 150,
       valueGetter: (params: GridValueGetterParams<VendorMiniDTO[]>) =>
-        enumerate(params.value.map((vendor) => vendor.companyName))
+        enumerate(params.value?.map((vendor) => vendor.companyName) ?? [])
     },
     {
       field: 'parentAsset',

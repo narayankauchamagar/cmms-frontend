@@ -18,7 +18,7 @@ import {
 
 import type { View } from 'src/models/calendar';
 import { useDispatch, useSelector } from 'src/store';
-import { selectEvent, updateEvent } from 'src/slices/calendar';
+import { selectEvent } from 'src/slices/calendar';
 import WorkOrder, { Priority } from 'src/models/owns/workOrder';
 import { getWorkOrderEvents } from 'src/slices/workOrder';
 import Actions from './Actions';
@@ -214,20 +214,6 @@ function ApplicationsCalendar({
     dispatch(selectEvent(arg.event.id));
   };
 
-  const handleEventDrop = async ({ event }: any): Promise<void> => {
-    try {
-      dispatch(
-        updateEvent(event.id, {
-          allDay: event.allDay,
-          start: event.start,
-          end: event.end
-        })
-      );
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   useEffect(() => {
     const calItem = calendarRef.current;
 
@@ -264,7 +250,6 @@ function ApplicationsCalendar({
             eventDisplay="block"
             eventClick={(arg) => handleOpenDetails(Number(arg.event.id))}
             dateClick={(event) => handleAddWorkOrder(event.date)}
-            eventDrop={handleEventDrop}
             dayMaxEventRows={4}
             events={calendar.events.map((wo) => getEventFromWO(wo))}
             headerToolbar={false}

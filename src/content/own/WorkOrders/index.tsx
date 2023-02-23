@@ -131,6 +131,8 @@ function WorkOrders() {
   const assetParamObject = assetInfos[assetParam]?.asset;
   const tasks = tasksByWorkOrder[currentWorkOrder?.id] ?? [];
   const [openDrawerFromUrl, setOpenDrawerFromUrl] = useState<boolean>(false);
+  const [openDrawerForSingleWO, setOpenDrawerForSingleWO] =
+    useState<boolean>(false);
   const initialCriteria: SearchCriteria = {
     filterFields: [
       {
@@ -207,12 +209,14 @@ function WorkOrders() {
       handleOpenDrawer(foundWorkOrder);
     } else {
       setOpenDrawerFromUrl(false);
+      setOpenDrawerForSingleWO(true);
       dispatch(getSingleWorkOrder(id));
     }
   };
   const handleCloseDetails = () => {
     window.history.replaceState(null, 'WorkOrder', `/app/work-orders`);
     setOpenDrawer(false);
+    setOpenDrawerForSingleWO(false);
   };
   const handleCloseFilterDrawer = () => setOpenFilterDrawer(false);
   useEffect(() => {
@@ -226,6 +230,7 @@ function WorkOrders() {
   };
   useEffect(() => {
     if (workOrderId && isNumeric(workOrderId)) {
+      setOpenDrawerForSingleWO(true);
       dispatch(getSingleWorkOrder(Number(workOrderId)));
     }
   }, [workOrderId]);
@@ -236,7 +241,9 @@ function WorkOrders() {
       const currentInContent = workOrders.content.find(
         (workOrder) => workOrder.id === currentWorkOrder?.id
       );
-      const updatedWorkOrder = currentInContent ?? singleWorkOrder;
+      const updatedWorkOrder = openDrawerForSingleWO
+        ? singleWorkOrder
+        : currentInContent;
       if (updatedWorkOrder) {
         if (openDrawerFromUrl) {
           setCurrentWorkOrder(updatedWorkOrder);
