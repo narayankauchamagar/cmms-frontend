@@ -28,7 +28,7 @@ export const CompanySettingsContext = createContext<CompanySettingsContext>(
 );
 
 export const CompanySettingsProvider: FC = ({ children }) => {
-  const { companySettings, getFilteredFields } = useAuth();
+  const { companySettings, getFilteredFields, isAuthenticated } = useAuth();
   const dispatch = useDispatch();
   const { generalPreferences } = companySettings ?? {
     dateFormat: 'DDMMYY',
@@ -165,7 +165,7 @@ export const CompanySettingsProvider: FC = ({ children }) => {
     return [fields, shape];
   };
   useEffect(() => {
-    dispatch(getUsersMini());
+    if (isAuthenticated) dispatch(getUsersMini());
   }, []);
   return (
     <CompanySettingsContext.Provider

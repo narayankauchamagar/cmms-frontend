@@ -1458,7 +1458,8 @@ const frJSON = {
   fill_fields_below: 'Remplissez les champs ci-dessous',
   IMPORT_CSV_feature: 'Importation CSV',
   no_import_access:
-    'Mettez à jour votre plan pour importer depuis des fichiers CSV ou Excel'
+    'Mettez à jour votre plan pour importer depuis des fichiers CSV ou Excel',
+  members: 'Membres'
 };
 
 export default frJSON;

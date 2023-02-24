@@ -827,7 +827,7 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                     variant="h6"
                     sx={{ color: theme.colors.alpha.black[70] }}
                   >
-                    Assigned To
+                    {t('assigned_to')}
                   </Typography>
                   {workOrder.assignedTo.map((user, index) => (
                     <Box key={user.id}>

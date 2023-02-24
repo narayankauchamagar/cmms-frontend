@@ -290,7 +290,7 @@ export default (props: PropsType) => {
                 <AssignmentTwoToneIcon />
                 <Box>
                   <Typography variant="h4" color="primary">
-                    {values ? values.length : null} Tasks
+                    {values ? values.length : null} {t('tasks')}
                   </Typography>
                   <Typography variant="subtitle1">
                     {t('assign_tasks_description')}
