@@ -105,11 +105,11 @@ export const onSearchQueryChange = <T>(
   const query = event.target.value;
   let newFilterFields: FilterField[] = [...criteria.filterFields];
 
-  const firstField = fieldsToSearch.shift();
   newFilterFields = newFilterFields.filter(
     // @ts-ignore
     (filterField) => !fieldsToSearch.includes(filterField.field)
   );
+  const firstField = fieldsToSearch.shift();
   if (query)
     newFilterFields = [
       ...newFilterFields,

@@ -18,8 +18,7 @@ import {
   Tab,
   Tabs,
   Tooltip,
-  Typography,
-  useTheme
+  Typography
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { IField } from '../type';
@@ -107,7 +106,6 @@ function WorkOrders() {
     { value: 'calendar', label: t('calendar_view'), disabled: false },
     { value: 'column', label: t('column_view'), disabled: true }
   ];
-  const theme = useTheme();
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
