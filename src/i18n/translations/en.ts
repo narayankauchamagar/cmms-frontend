@@ -1316,7 +1316,9 @@ const enJSON = {
   fill_fields_below: 'Fill in the fields below',
   IMPORT_CSV_feature: 'CSV Importing',
   no_import_access: 'Upgrade your plan to import from CSV, Excel files',
-  members: 'Members'
+  members: 'Members',
+  assign_user: 'Assign User',
+  assign_asset: 'Assign Asset'
 };
 
 export default enJSON;

@@ -1459,7 +1459,9 @@ const frJSON = {
   IMPORT_CSV_feature: 'Importation CSV',
   no_import_access:
     'Mettez à jour votre plan pour importer depuis des fichiers CSV ou Excel',
-  members: 'Membres'
+  members: 'Membres',
+  assign_user: 'Assigner un utilisateur',
+  assign_asset: 'Assigner un équipement'
 };
 
 export default frJSON;

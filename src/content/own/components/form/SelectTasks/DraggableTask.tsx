@@ -123,11 +123,11 @@ const DraggableListItem = ({
     >
       <MenuItem onClick={() => setOpenAssignUser(!openAssignUser)}>
         {openAssignUser && <CheckTwoToneIcon />}
-        Assign User
+        {t('assign_user')}
       </MenuItem>
       <MenuItem onClick={() => setOpenAssignAsset(!openAssignAsset)}>
         {openAssignAsset && <CheckTwoToneIcon />}
-        Assign Asset
+        {t('assign_asset')}
       </MenuItem>{' '}
     </Menu>
   );
