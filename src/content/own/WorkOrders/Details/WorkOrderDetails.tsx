@@ -200,29 +200,29 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
       {
         name: 'completeFiles',
         condition: !workOrder.files.length,
-        message: 'Files are required on Work Order Completion'
+        message: 'required_files_on_completion'
       },
       {
         name: 'completeTasks',
         condition: tasks.some((task) => !task.value),
-        message: 'Tasks must be completed'
+        message: 'required_tasks_on_completion'
       },
       {
         name: 'completeTime',
         condition: labors
           .filter((labor) => labor.logged)
           .some((labor) => !labor.duration),
-        message: 'You must log time'
+        message: 'required_labor_on_completion'
       },
       {
         name: 'completeParts',
         condition: !partQuantities.length,
-        message: 'No Part has been used in this Work Order'
+        message: 'required_part_on_completion'
       },
       {
         name: 'completeCost',
         condition: !additionalCosts.length,
-        message: 'No Cost information provided in this Work Order'
+        message: 'required_cost_on_completion'
       }
     ];
     fieldsToTest.every((field) => {

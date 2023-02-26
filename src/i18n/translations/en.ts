@@ -1318,7 +1318,12 @@ const enJSON = {
   no_import_access: 'Upgrade your plan to import from CSV, Excel files',
   members: 'Members',
   assign_user: 'Assign User',
-  assign_asset: 'Assign Asset'
+  assign_asset: 'Assign Asset',
+  required_files_on_completion: 'Files are required on Work Order Completion',
+  required_tasks_on_completion: 'Tasks must be completed',
+  required_labor_on_completion: 'You must log time',
+  required_part_on_completion: 'No Part has been used in this Work Order',
+  required_cost_on_completion: 'No Cost information provided in this Work Order'
 };
 
 export default enJSON;
