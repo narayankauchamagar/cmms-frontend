@@ -381,9 +381,8 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
             )}
             <Typography variant="subtitle1">{t('members')}</Typography>
             {currentTeam?.users.map((user) => (
-              <Box>
+              <Box key={user.id}>
                 <Link
-                  key={user.id}
                   href={getUserUrl(user.id)}
                   variant="h6"
                 >{`${user.firstName} ${user.lastName}`}</Link>
