@@ -66,14 +66,15 @@ export default function AddTriggerModal({
     triggerCondition: Yup.object().required(t('required_trigger_condition'))
   };
   const formatValues = (values) => {
-    values.primaryUser = formatSelect(values.primaryUser);
-    values.location = formatSelect(values.location);
-    values.team = formatSelect(values.team);
-    values.asset = formatSelect(values.asset);
-    values.assignedTo = formatSelectMultiple(values.assignedTo);
-    values.priority = values.priority?.value;
-    values.triggerCondition = values.triggerCondition.value;
-    return values;
+    const newValues = { ...values };
+    newValues.primaryUser = formatSelect(newValues.primaryUser);
+    newValues.location = formatSelect(newValues.location);
+    newValues.team = formatSelect(newValues.team);
+    newValues.asset = formatSelect(newValues.asset);
+    newValues.assignedTo = formatSelectMultiple(newValues.assignedTo);
+    newValues.priority = newValues.priority?.value;
+    newValues.triggerCondition = newValues.triggerCondition.value;
+    return newValues;
   };
   const onCreationSuccess = () => {
     onClose();

@@ -222,14 +222,15 @@ function Locations() {
   }, [locations]);
 
   const formatValues = (values) => {
-    values.customers = formatSelectMultiple(values.customers);
-    values.vendors = formatSelectMultiple(values.vendors);
-    values.workers = formatSelectMultiple(values.workers);
-    values.teams = formatSelectMultiple(values.teams);
-    values.parentLocation = formatSelect(values.parentLocation);
-    values.longitude = values.coordinates?.lng;
-    values.latitude = values.coordinates?.lat;
-    return values;
+    const newValues = { ...values };
+    newValues.customers = formatSelectMultiple(newValues.customers);
+    newValues.vendors = formatSelectMultiple(newValues.vendors);
+    newValues.workers = formatSelectMultiple(newValues.workers);
+    newValues.teams = formatSelectMultiple(newValues.teams);
+    newValues.parentLocation = formatSelect(newValues.parentLocation);
+    newValues.longitude = newValues.coordinates?.lng;
+    newValues.latitude = newValues.coordinates?.lat;
+    return newValues;
   };
   const columns: GridEnrichedColDef[] = [
     {

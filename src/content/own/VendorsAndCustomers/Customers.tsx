@@ -177,9 +177,10 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
   };
 
   const formatValues = (values) => {
-    values.billingCurrency = formatSelect(values.billingCurrency);
-    values.rate = values.rate ? Number(values.rate) : null;
-    return values;
+    const newValues = { ...values };
+    newValues.billingCurrency = formatSelect(newValues.billingCurrency);
+    newValues.rate = newValues.rate ? Number(newValues.rate) : null;
+    return newValues;
   };
   let fields: Array<IField> = [
     {

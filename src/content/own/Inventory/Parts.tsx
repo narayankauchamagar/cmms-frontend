@@ -206,13 +206,14 @@ const Parts = ({ setAction }: PropsType) => {
     setOpenDrawer(false);
   };
   const formatValues = (values) => {
-    values.assignedTo = formatSelectMultiple(values.assignedTo);
-    values.teams = formatSelectMultiple(values.teams);
-    values.customers = formatSelectMultiple(values.customers);
-    values.vendors = formatSelectMultiple(values.vendors);
+    const newValues = { ...values };
+    newValues.assignedTo = formatSelectMultiple(newValues.assignedTo);
+    newValues.teams = formatSelectMultiple(newValues.teams);
+    newValues.customers = formatSelectMultiple(newValues.customers);
+    newValues.vendors = formatSelectMultiple(newValues.vendors);
     // values.image = formatSelect(values.image);
     // values.files = formatSelect(values.files);
-    return values;
+    return newValues;
   };
   const columns: GridEnrichedColDef[] = [
     {

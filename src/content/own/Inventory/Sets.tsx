@@ -77,8 +77,9 @@ const Sets = ({ setAction }: PropsType) => {
     setOpenDelete(false);
   };
   const formatValues = (values) => {
-    values.parts = formatSelectMultiple(values.parts);
-    return values;
+    const newValues = { ...values };
+    newValues.parts = formatSelectMultiple(values.parts);
+    return newValues;
   };
   const onCreationSuccess = () => {
     setOpenAddModal(false);

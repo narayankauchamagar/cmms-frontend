@@ -166,12 +166,13 @@ function Meters() {
   };
 
   const formatValues = (values) => {
-    values.users = formatSelectMultiple(values.users);
+    const newValues = { ...values };
+    newValues.users = formatSelectMultiple(newValues.users);
     //values.teams = formatSelectMultiple(values.teams);
-    values.location = formatSelect(values.location);
-    values.asset = formatSelect(values.asset);
-    values.updateFrequency = Number(values.updateFrequency);
-    return values;
+    newValues.location = formatSelect(newValues.location);
+    newValues.asset = formatSelect(newValues.asset);
+    newValues.updateFrequency = Number(newValues.updateFrequency);
+    return newValues;
   };
   const handleDelete = (id: number) => {
     handleCloseDetails();

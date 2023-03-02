@@ -256,25 +256,30 @@ function Roles() {
   ]);
 
   const formatValues = (values, useDefaultPermissions: boolean) => {
-    values.companySettings = { id: companySettings.id };
-    values.roleType = 'ROLE_CLIENT';
-    values = useDefaultPermissions
-      ? { ...values, ...defaultPermissions }
-      : values;
+    let newValues = { ...values };
+
+    newValues.companySettings = { id: companySettings.id };
+    newValues.roleType = 'ROLE_CLIENT';
+    newValues = useDefaultPermissions
+      ? { ...newValues, ...defaultPermissions }
+      : newValues;
     permissionsMapping.forEach((configs, name) => {
       configs.forEach((config) => {
-        if ((values[name] && values[name][0] === 'on') || values[name]) {
-          values[config.permissionsRoot] = values[
+        if (
+          (newValues[name] && newValues[name][0] === 'on') ||
+          newValues[name]
+        ) {
+          newValues[config.permissionsRoot] = newValues[
             config.permissionsRoot
           ].concat(config.permissions);
-        } else if (!values[name] || values[name][0] === 'off') {
-          values[config.permissionsRoot] = values[
+        } else if (!newValues[name] || newValues[name][0] === 'off') {
+          newValues[config.permissionsRoot] = newValues[
             config.permissionsRoot
           ].filter((permission) => !config.permissions.includes(permission));
         }
       });
     });
-    return values;
+    return newValues;
   };
   const onDeleteSuccess = () => {
     showSnackBar(t('role_delete_success'), 'success');

@@ -284,18 +284,19 @@ function WorkOrders() {
   }, [locationParamObject, assetParamObject]);
 
   const formatValues = (values) => {
-    values.primaryUser = formatSelect(values.primaryUser);
-    values.location = formatSelect(values.location);
-    values.team = formatSelect(values.team);
-    values.asset = formatSelect(values.asset);
-    values.assignedTo = formatSelectMultiple(values.assignedTo);
-    values.customers = formatSelectMultiple(values.customers);
-    values.priority = values.priority ? values.priority.value : 'NONE';
-    values.requiredSignature = Array.isArray(values.requiredSignature)
-      ? values?.requiredSignature.includes('on')
-      : values.requiredSignature;
-    values.category = formatSelect(values.category);
-    return values;
+    const newValues = { ...values };
+    newValues.primaryUser = formatSelect(newValues.primaryUser);
+    newValues.location = formatSelect(newValues.location);
+    newValues.team = formatSelect(newValues.team);
+    newValues.asset = formatSelect(newValues.asset);
+    newValues.assignedTo = formatSelectMultiple(newValues.assignedTo);
+    newValues.customers = formatSelectMultiple(newValues.customers);
+    newValues.priority = newValues.priority ? newValues.priority.value : 'NONE';
+    newValues.requiredSignature = Array.isArray(newValues.requiredSignature)
+      ? newValues?.requiredSignature.includes('on')
+      : newValues.requiredSignature;
+    newValues.category = formatSelect(newValues.category);
+    return newValues;
   };
   const onCreationSuccess = () => {
     setOpenAddModal(false);

@@ -410,6 +410,12 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
       value: getFormattedDate(workOrder.dueDate)
     },
     {
+      label: t('estimated_duration'),
+      value: !!workOrder.estimatedDuration
+        ? t('estimated_hours_in_text', { hours: workOrder.estimatedDuration })
+        : null
+    },
+    {
       label: t('category'),
       value: workOrder.category?.name
     },
