@@ -6,14 +6,17 @@ import PartQuantity from '../models/owns/partQuantity';
 import api from '../utils/api';
 
 const basePath = 'part-quantities';
+
 interface PartQuantityState {
   partQuantitiesByWorkOrder: { [id: number]: PartQuantity[] };
   partQuantitiesByPurchaseOrder: { [id: number]: PartQuantity[] };
+  loadingPartQuantities: { [id: number]: boolean };
 }
 
 const initialState: PartQuantityState = {
   partQuantitiesByWorkOrder: {},
-  partQuantitiesByPurchaseOrder: {}
+  partQuantitiesByPurchaseOrder: {},
+  loadingPartQuantities: {}
 };
 
 const slice = createSlice({
@@ -65,6 +68,16 @@ const slice = createSlice({
             return partQuantity;
           } else return pq;
         });
+    },
+    setLoadingByWorkOrder(
+      state: PartQuantityState,
+      action: PayloadAction<{ loading: boolean; id: number }>
+    ) {
+      const { loading, id } = action.payload;
+      state.loadingPartQuantities = {
+        ...state.loadingPartQuantities,
+        [id]: loading
+      };
     }
   }
 });
@@ -74,12 +87,18 @@ export const reducer = slice.reducer;
 export const getPartQuantitiesByWorkOrder =
   (id: number): AppThunk =>
   async (dispatch) => {
-    const partQuantities = await api.get<PartQuantity[]>(
-      `${basePath}/work-order/${id}`
-    );
-    dispatch(
-      slice.actions.getPartQuantitiesByWorkOrder({ id, partQuantities })
-    );
+    dispatch(slice.actions.setLoadingByWorkOrder({ id, loading: true }));
+    try {
+      const partQuantities = await api.get<PartQuantity[]>(
+        `${basePath}/work-order/${id}`
+      );
+      dispatch(
+        slice.actions.getPartQuantitiesByWorkOrder({ id, partQuantities })
+      );
+    } catch {
+    } finally {
+      dispatch(slice.actions.setLoadingByWorkOrder({ id, loading: false }));
+    }
   };
 
 export const getPartQuantitiesByPurchaseOrder =

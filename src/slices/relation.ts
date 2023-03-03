@@ -5,12 +5,15 @@ import Relation from '../models/owns/relation';
 import api from '../utils/api';
 
 const basePath = 'relations';
+
 interface RelationState {
   relationsByWorkOrder: { [id: number]: Relation[] };
+  loadingRelations: { [id: number]: boolean };
 }
 
 const initialState: RelationState = {
-  relationsByWorkOrder: {}
+  relationsByWorkOrder: {},
+  loadingRelations: {}
 };
 
 const slice = createSlice({
@@ -47,6 +50,13 @@ const slice = createSlice({
       state.relationsByWorkOrder[workOrderId] = state.relationsByWorkOrder[
         workOrderId
       ].filter((relation) => relation.id !== id);
+    },
+    setLoadingByWorkOrder(
+      state: RelationState,
+      action: PayloadAction<{ loading: boolean; id: number }>
+    ) {
+      const { loading, id } = action.payload;
+      state.loadingRelations = { ...state.loadingRelations, [id]: loading };
     }
   }
 });
@@ -56,8 +66,16 @@ export const reducer = slice.reducer;
 export const getRelations =
   (id: number): AppThunk =>
   async (dispatch) => {
-    const relations = await api.get<Relation[]>(`${basePath}/work-order/${id}`);
-    dispatch(slice.actions.getRelations({ id, relations }));
+    dispatch(slice.actions.setLoadingByWorkOrder({ id, loading: true }));
+    try {
+      const relations = await api.get<Relation[]>(
+        `${basePath}/work-order/${id}`
+      );
+      dispatch(slice.actions.getRelations({ id, relations }));
+    } catch {
+    } finally {
+      dispatch(slice.actions.setLoadingByWorkOrder({ id, loading: false }));
+    }
   };
 
 export const createRelation =

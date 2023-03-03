@@ -18,16 +18,17 @@ export const formatSelect = (
 };
 
 export const formatAssetValues = (values) => {
-  values.primaryUser = formatSelect(values.primaryUser);
-  values.location = formatSelect(values.location);
-  values.category = formatSelect(values.category);
-  values.parentAsset = formatSelect(values.parentAsset);
-  values.customers = formatSelectMultiple(values.customers);
-  values.vendors = formatSelectMultiple(values.vendors);
-  values.assignedTo = formatSelectMultiple(values.assignedTo);
-  values.teams = formatSelectMultiple(values.teams);
-  values.parts = formatSelectMultiple(values.parts);
-  return values;
+  const newValues = { ...values };
+  newValues.primaryUser = formatSelect(newValues.primaryUser);
+  newValues.location = formatSelect(newValues.location);
+  newValues.category = formatSelect(newValues.category);
+  newValues.parentAsset = formatSelect(newValues.parentAsset);
+  newValues.customers = formatSelectMultiple(newValues.customers);
+  newValues.vendors = formatSelectMultiple(newValues.vendors);
+  newValues.assignedTo = formatSelectMultiple(newValues.assignedTo);
+  newValues.teams = formatSelectMultiple(newValues.teams);
+  newValues.parts = formatSelectMultiple(newValues.parts);
+  return newValues;
 };
 
 export const formatSwitch = (values: {}, key: string) => {

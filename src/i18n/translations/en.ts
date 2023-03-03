@@ -1325,7 +1325,8 @@ const enJSON = {
   required_part_on_completion: 'No Part has been used in this Work Order',
   required_cost_on_completion:
     'No Cost information provided in this Work Order',
-  estimated_hours_in_text: '{{hours}} estimated hours'
+  estimated_hours_in_text: '{{hours}} estimated hours',
+  required_part_name: 'Part name is required'
 };
 
 export default enJSON;

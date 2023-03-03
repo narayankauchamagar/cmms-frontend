@@ -400,7 +400,7 @@ const Parts = ({ setAction }: PropsType) => {
     }
   ];
   const shape = {
-    name: Yup.string().required(t('Part name is required'))
+    name: Yup.string().required(t('required_part_name'))
   };
   const renderPartAddModal = () => (
     <Dialog

@@ -5,12 +5,15 @@ import api from '../utils/api';
 import { Task } from '../models/owns/tasks';
 
 const basePath = 'tasks';
+
 interface TaskState {
   tasksByWorkOrder: { [id: number]: Task[] };
+  loadingTasks: { [id: number]: boolean };
 }
 
 const initialState: TaskState = {
-  tasksByWorkOrder: {}
+  tasksByWorkOrder: {},
+  loadingTasks: {}
 };
 
 const slice = createSlice({
@@ -62,17 +65,29 @@ const slice = createSlice({
       state.tasksByWorkOrder[workOrderId] = state.tasksByWorkOrder[
         workOrderId
       ].filter((task) => task.id !== id);
+    },
+    setLoadingByTask(
+      state: TaskState,
+      action: PayloadAction<{ loading: boolean; id: number }>
+    ) {
+      const { loading, id } = action.payload;
+      state.loadingTasks = { ...state.loadingTasks, [id]: loading };
     }
   }
 });
-
 export const reducer = slice.reducer;
 
 export const getTasks =
   (id: number): AppThunk =>
   async (dispatch) => {
-    const tasks = await api.get<Task[]>(`${basePath}/work-order/${id}`);
-    dispatch(slice.actions.getTasks({ id, tasks }));
+    dispatch(slice.actions.setLoadingByTask({ id, loading: true }));
+    try {
+      const tasks = await api.get<Task[]>(`${basePath}/work-order/${id}`);
+      dispatch(slice.actions.getTasks({ id, tasks }));
+    } catch {
+    } finally {
+      dispatch(slice.actions.setLoadingByTask({ id, loading: false }));
+    }
   };
 
 export const patchTasks =

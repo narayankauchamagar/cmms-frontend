@@ -1471,7 +1471,8 @@ const frJSON = {
     "Aucune pièce n'a été utilisée dans ce bon de travail",
   required_cost_on_completion:
     'Aucune information de coût fournie dans ce bon de travail',
-  estimated_hours_in_text: '{{hours}} heures estimées'
+  estimated_hours_in_text: '{{hours}} heures estimées',
+  required_part_name: 'Le nom de la pièce est requis'
 };
 
 export default frJSON;

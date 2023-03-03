@@ -5,12 +5,15 @@ import AdditionalCost from '../models/owns/additionalCost';
 import api from '../utils/api';
 
 const basePath = 'additional-costs';
+
 interface AdditionalCostState {
   costsByWorkOrder: { [id: number]: AdditionalCost[] };
+  loadingCosts: { [id: number]: boolean };
 }
 
 const initialState: AdditionalCostState = {
-  costsByWorkOrder: {}
+  costsByWorkOrder: {},
+  loadingCosts: {}
 };
 
 const slice = createSlice({
@@ -47,6 +50,13 @@ const slice = createSlice({
       state.costsByWorkOrder[workOrderId] = state.costsByWorkOrder[
         workOrderId
       ].filter((additionalCost) => additionalCost.id !== id);
+    },
+    setLoadingByWorkOrder(
+      state: AdditionalCostState,
+      action: PayloadAction<{ loading: boolean; id: number }>
+    ) {
+      const { loading, id } = action.payload;
+      state.loadingCosts = { ...state.loadingCosts, [id]: loading };
     }
   }
 });
@@ -56,10 +66,16 @@ export const reducer = slice.reducer;
 export const getAdditionalCosts =
   (id: number): AppThunk =>
   async (dispatch) => {
-    const additionalCosts = await api.get<AdditionalCost[]>(
-      `${basePath}/work-order/${id}`
-    );
-    dispatch(slice.actions.getAdditionalCosts({ id, additionalCosts }));
+    dispatch(slice.actions.setLoadingByWorkOrder({ id, loading: true }));
+    try {
+      const additionalCosts = await api.get<AdditionalCost[]>(
+        `${basePath}/work-order/${id}`
+      );
+      dispatch(slice.actions.getAdditionalCosts({ id, additionalCosts }));
+    } catch {
+    } finally {
+      dispatch(slice.actions.setLoadingByWorkOrder({ id, loading: false }));
+    }
   };
 
 export const createAdditionalCost =

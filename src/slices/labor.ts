@@ -5,12 +5,15 @@ import Labor from '../models/owns/labor';
 import api from '../utils/api';
 
 const basePath = 'labors';
+
 interface LaborState {
   timesByWorkOrder: { [id: number]: Labor[] };
+  loadingLabors: { [id: number]: boolean };
 }
 
 const initialState: LaborState = {
-  timesByWorkOrder: {}
+  timesByWorkOrder: {},
+  loadingLabors: {}
 };
 
 const slice = createSlice({
@@ -79,6 +82,13 @@ const slice = createSlice({
       );
       filteredLabors.push(labor);
       state.timesByWorkOrder[workOrderId] = filteredLabors;
+    },
+    setLoadingByWorkOrder(
+      state: LaborState,
+      action: PayloadAction<{ loading: boolean; id: number }>
+    ) {
+      const { loading, id } = action.payload;
+      state.loadingLabors = { ...state.loadingLabors, [id]: loading };
     }
   }
 });
@@ -88,8 +98,14 @@ export const reducer = slice.reducer;
 export const getLabors =
   (id: number): AppThunk =>
   async (dispatch) => {
-    const labors = await api.get<Labor[]>(`${basePath}/work-order/${id}`);
-    dispatch(slice.actions.getLabors({ id, labors }));
+    dispatch(slice.actions.setLoadingByWorkOrder({ id, loading: true }));
+    try {
+      const labors = await api.get<Labor[]>(`${basePath}/work-order/${id}`);
+      dispatch(slice.actions.getLabors({ id, labors }));
+    } catch {
+    } finally {
+      dispatch(slice.actions.setLoadingByWorkOrder({ id, loading: false }));
+    }
   };
 
 export const createLabor =
