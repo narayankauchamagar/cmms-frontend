@@ -1474,7 +1474,9 @@ const frJSON = {
   estimated_hours_in_text: '{{hours}} heures estimées',
   required_part_name: 'Le nom de la pièce est requis',
   asset_update_failure:
-    "La modification de l'équipement ne s'est pas bien passée"
+    "La modification de l'équipement ne s'est pas bien passée",
+  terms_of_service: "Conditions d'utilisation",
+  privacy_policy: 'Politique de confidentialité'
 };
 
 export default frJSON;

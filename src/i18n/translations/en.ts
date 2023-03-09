@@ -1327,7 +1327,9 @@ const enJSON = {
     'No Cost information provided in this Work Order',
   estimated_hours_in_text: '{{hours}} estimated hours',
   required_part_name: 'Part name is required',
-  asset_update_failure: "The Asset couldn't be edited"
+  asset_update_failure: "The Asset couldn't be edited",
+  terms_of_service: 'Terms of service',
+  privacy_policy: 'Privacy policy'
 };
 
 export default enJSON;

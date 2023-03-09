@@ -28,11 +28,15 @@ const StatusComingSoon = Loader(
 const StatusMaintenance = Loader(
   lazy(() => import('../content/pages/Status/Maintenance'))
 );
-
+const PrivacyPolicy = Loader(lazy(() => import('../content/privacyPolicy')));
 const baseRoutes = [
   {
     path: '/',
     element: <Overview />
+  },
+  {
+    path: 'privacy-policy',
+    element: <PrivacyPolicy />
   },
   {
     path: 'overview',
