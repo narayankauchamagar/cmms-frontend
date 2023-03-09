@@ -99,10 +99,10 @@ function ProfileDetails() {
         <Grid item xs={12} sm={8} md={9}>
           <Switch
             checked={value}
-            onChange={(event) => {
+            onChange={(event, value) => {
               patchUserSettings({
                 ...userSettings,
-                [setting]: event.target.value === 'on'
+                [setting]: value
               });
             }}
           />

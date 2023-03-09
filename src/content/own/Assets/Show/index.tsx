@@ -255,14 +255,14 @@ const ShowAsset = ({}: PropsType) => {
   ];
 
   const shape = {
-    name: Yup.string().required(t('Asset name is required'))
+    name: Yup.string().required(t('required_asset_name'))
   };
   const onEditSuccess = () => {
     setOpenUpdateModal(false);
     showSnackBar(t('changes_saved_success'), 'success');
   };
   const onEditFailure = (err) =>
-    showSnackBar(t("The Asset couldn't be edited"), 'error');
+    showSnackBar(t('asset_update_failure'), 'error');
 
   const renderAssetUpdateModal = () => (
     <Dialog

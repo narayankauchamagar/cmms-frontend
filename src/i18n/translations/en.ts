@@ -1326,7 +1326,8 @@ const enJSON = {
   required_cost_on_completion:
     'No Cost information provided in this Work Order',
   estimated_hours_in_text: '{{hours}} estimated hours',
-  required_part_name: 'Part name is required'
+  required_part_name: 'Part name is required',
+  asset_update_failure: "The Asset couldn't be edited"
 };
 
 export default enJSON;

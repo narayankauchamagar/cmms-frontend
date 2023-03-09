@@ -238,8 +238,9 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
             submitText={t('submit')}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
-              values.users = formatSelectMultiple(values.users);
-              return dispatch(addTeam(values))
+              const newValues = { ...values };
+              newValues.users = formatSelectMultiple(newValues.users);
+              return dispatch(addTeam(newValues))
                 .then(onCreationSuccess)
                 .catch(onCreationFailure);
             }}

@@ -453,7 +453,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
     },
     {
       label: t('billing_currency'),
-      value: currentCustomer?.billingCurrency.name
+      value: currentCustomer?.billingCurrency?.name
     }
   ];
   const renderKeyAndValue = (key: string, value: string) => {
