@@ -952,16 +952,17 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                     secondaryAction={
                       <Box>
                         <Typography variant="h6" fontWeight="bold">
-                          {labors
-                            .filter((labor) => !labor.logged)
-                            .reduce(
-                              (acc, labor) =>
-                                labor.includeToTotalTime
-                                  ? acc + getLaborCost(labor)
-                                  : acc,
-                              0
-                            )}{' '}
-                          $
+                          {getFormattedCurrency(
+                            labors
+                              .filter((labor) => !labor.logged)
+                              .reduce(
+                                (acc, labor) =>
+                                  labor.includeToTotalTime
+                                    ? acc + getLaborCost(labor)
+                                    : acc,
+                                0
+                              )
+                          )}
                         </Typography>
                       </Box>
                     }
