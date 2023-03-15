@@ -32,6 +32,7 @@ export interface OwnUser extends Audit {
   role: Role;
   companyId: number;
   image: File;
+  lastLogin: string;
 }
 export interface UserMiniDTO {
   firstName: string;

@@ -80,7 +80,9 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
   });
   const dispatch = useDispatch();
   const { showSnackBar } = useContext(CustomSnackBarContext);
-  const { getFormattedCurrency } = useContext(CompanySettingsContext);
+  const { getFormattedCurrency, getFormattedDate } = useContext(
+    CompanySettingsContext
+  );
   const [emails, setEmails] = useState<string[]>([]);
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
   const [currentEmail, setCurrentEmail] = useState<string>('');
@@ -319,6 +321,13 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
       width: 150,
       valueGetter: (params: GridValueGetterParams<number>) =>
         getFormattedCurrency(params.value)
+    },
+    {
+      field: 'lastLogin',
+      headerName: t('last_login'),
+      width: 150,
+      valueGetter: (params: GridValueGetterParams<string>) =>
+        getFormattedDate(params.value)
     },
     {
       field: 'actions',

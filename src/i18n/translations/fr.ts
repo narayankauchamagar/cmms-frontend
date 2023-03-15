@@ -1476,7 +1476,8 @@ const frJSON = {
   asset_update_failure:
     "La modification de l'équipement ne s'est pas bien passée",
   terms_of_service: "Conditions d'utilisation",
-  privacy_policy: 'Politique de confidentialité'
+  privacy_policy: 'Politique de confidentialité',
+  last_login: 'Dernière connexion'
 };
 
 export default frJSON;

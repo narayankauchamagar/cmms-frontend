@@ -1329,7 +1329,8 @@ const enJSON = {
   required_part_name: 'Part name is required',
   asset_update_failure: "The Asset couldn't be edited",
   terms_of_service: 'Terms of service',
-  privacy_policy: 'Privacy policy'
+  privacy_policy: 'Privacy policy',
+  last_login: 'Last Login'
 };
 
 export default enJSON;
