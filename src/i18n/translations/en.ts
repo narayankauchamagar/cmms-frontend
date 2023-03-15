@@ -1330,7 +1330,8 @@ const enJSON = {
   asset_update_failure: "The Asset couldn't be edited",
   terms_of_service: 'Terms of service',
   privacy_policy: 'Privacy policy',
-  last_login: 'Last Login'
+  last_login: 'Last Login',
+  not_enough_part: 'There is not enough of this part'
 };
 
 export default enJSON;

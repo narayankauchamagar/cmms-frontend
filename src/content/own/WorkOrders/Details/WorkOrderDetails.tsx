@@ -1105,6 +1105,8 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                         workOrder.id,
                         selectedParts.map((part) => part.id)
                       )
+                    ).catch((error) =>
+                      showSnackBar(t('not_enough_part'), 'error')
                     );
                   }}
                 />
