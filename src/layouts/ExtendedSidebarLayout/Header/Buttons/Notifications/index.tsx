@@ -33,6 +33,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from '../../../../../store';
 import {
   editNotification,
+  getMoreNotifications,
   getNotifications
 } from '../../../../../slices/notification';
 import Notification, {
@@ -57,6 +58,7 @@ import HandymanTwoToneIcon from '@mui/icons-material/HandymanTwoTone';
 import SpeedTwoToneIcon from '@mui/icons-material/SpeedTwoTone';
 import { People } from '@mui/icons-material';
 import ReceiptTwoToneIcon from '@mui/icons-material/ReceiptTwoTone';
+import { SearchCriteria } from '../../../../../models/owns/page';
 
 const BoxComposed = styled(Box)(
   () => `
@@ -121,11 +123,20 @@ function HeaderNotifications() {
   const theme = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { notifications } = useSelector((state) => state.notifications);
+  const { notifications, currentPageNum, lastPage, loadingGet } = useSelector(
+    (state) => state.notifications
+  );
   const { getFormattedDate } = useContext(CompanySettingsContext);
+  const initialCriteria: SearchCriteria = {
+    filterFields: [],
+    pageSize: 15,
+    pageNum: 0,
+    direction: 'DESC'
+  };
+  const [criteria, setCriteria] = useState<SearchCriteria>(initialCriteria);
 
   useEffect(() => {
-    dispatch(getNotifications());
+    dispatch(getNotifications(criteria));
   }, []);
 
   const handleOpen = (): void => {
@@ -193,6 +204,13 @@ function HeaderNotifications() {
     INFO: <NotificationsNoneTwoToneIcon />,
     PURCHASE_ORDER: <ReceiptTwoToneIcon />
   };
+  const onScroll = (e) => {
+    const bottom =
+      e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
+    if (bottom && !loadingGet && !lastPage) {
+      dispatch(getMoreNotifications(criteria, currentPageNum + 1));
+    }
+  };
   return (
     <>
       <Tooltip arrow title={t('Notifications')}>
@@ -203,7 +221,8 @@ function HeaderNotifications() {
             horizontal: 'right'
           }}
           sx={
-            notifications.filter((notification) => !notification.seen).length
+            notifications.content.filter((notification) => !notification.seen)
+              .length
               ? {
                   '.MuiBadge-badge': {
                     background: theme.colors.success.main,
@@ -282,8 +301,9 @@ function HeaderNotifications() {
                 <Text color="success">
                   <b>
                     {
-                      notifications.filter((notification) => !notification.seen)
-                        .length
+                      notifications.content.filter(
+                        (notification) => !notification.seen
+                      ).length
                     }
                   </b>
                 </Text>{' '}
@@ -293,15 +313,15 @@ function HeaderNotifications() {
           </BoxComposed>
         </Box>
         <Divider />
-        {!!notifications.length && (
+        {!!notifications.content.length && (
           <Box
             sx={{
               height: 220
             }}
           >
             <Scrollbar>
-              <List>
-                {[...notifications].reverse().map((notification) => (
+              <List onScroll={onScroll}>
+                {notifications.content.map((notification) => (
                   <ListItemButton
                     selected={!notification.seen}
                     key={notification.id}
