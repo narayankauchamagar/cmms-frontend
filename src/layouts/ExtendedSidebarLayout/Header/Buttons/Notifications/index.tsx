@@ -11,6 +11,7 @@ import {
   alpha,
   Badge,
   Box,
+  CircularProgress,
   Divider,
   IconButton,
   List,
@@ -129,7 +130,7 @@ function HeaderNotifications() {
   const { getFormattedDate } = useContext(CompanySettingsContext);
   const initialCriteria: SearchCriteria = {
     filterFields: [],
-    pageSize: 15,
+    pageSize: 25,
     pageNum: 0,
     direction: 'DESC'
   };
@@ -204,6 +205,7 @@ function HeaderNotifications() {
     INFO: <NotificationsNoneTwoToneIcon />,
     PURCHASE_ORDER: <ReceiptTwoToneIcon />
   };
+  // TODO It is not triggered
   const onScroll = (e) => {
     const bottom =
       e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;
@@ -320,7 +322,17 @@ function HeaderNotifications() {
             }}
           >
             <Scrollbar>
-              <List onScroll={onScroll}>
+              <List onScroll={onScroll} sx={{ position: 'relative' }}>
+                {
+                  <CircularProgress
+                    sx={{
+                      position: 'absolute',
+                      zIndex: 10,
+                      left: '45%',
+                      top: '45%'
+                    }}
+                  />
+                }
                 {notifications.content.map((notification) => (
                   <ListItemButton
                     selected={!notification.seen}

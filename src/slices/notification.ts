@@ -16,7 +16,7 @@ interface NotificationState {
 const initialState: NotificationState = {
   notifications: getInitialPage<Notification>(),
   currentPageNum: 0,
-  lastPage: true,
+  lastPage: false,
   loadingGet: false
 };
 
