@@ -165,9 +165,12 @@ export default function SelectTasks({
     ) {
       showError(t('remove_blank_options'));
     } else if (
-      tasks.some(task=>task.taskBase.taskType === 'METER' && !task.taskBase.meter)){
-        showError(t('remove_blank_meter_tasks'))
-      }else {
+      tasks.some(
+        (task) => task.taskBase.taskType === 'METER' && !task.taskBase.meter
+      )
+    ) {
+      showError(t('remove_blank_meter_tasks'));
+    } else {
       setSubmitting(true);
       onSelect(tasks, { name, description, category })
         .then(onClose)

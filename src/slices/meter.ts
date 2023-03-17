@@ -108,10 +108,10 @@ export const getMeters =
       dispatch(slice.actions.setLoadingGet({ loading: false }));
     }
   };
-  export const getMetersMini = (): AppThunk => async (dispatch) => {
-    const meters = await api.get<MeterMiniDTO[]>(`${basePath}/mini`);
-    dispatch(slice.actions.getMetersMini({ meters }));
-  };
+export const getMetersMini = (): AppThunk => async (dispatch) => {
+  const meters = await api.get<MeterMiniDTO[]>(`${basePath}/mini`);
+  dispatch(slice.actions.getMetersMini({ meters }));
+};
 
 export const getSingleMeter =
   (id: number): AppThunk =>

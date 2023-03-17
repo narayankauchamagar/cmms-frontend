@@ -1479,8 +1479,8 @@ const frJSON = {
   privacy_policy: 'Politique de confidentialité',
   last_login: 'Dernière connexion',
   not_enough_part: "Cette pièce n'est plus en stock",
-  remove_blank_meter_tasks: 'Supprimez les tâches de type compteur sans compteur'
-
+  remove_blank_meter_tasks:
+    'Supprimez les tâches de type compteur sans compteur'
 };
 
 export default frJSON;

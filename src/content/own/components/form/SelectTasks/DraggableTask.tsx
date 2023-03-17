@@ -174,11 +174,11 @@ const DraggableListItem = ({
                 <Select
                   sx={{ ml: 1 }}
                   value={task.taskBase.taskType}
-                  onChange={(event) =>{
-                    if(event.target.value==='METER'){
-                      setOpenAssignMeter(true)
+                  onChange={(event) => {
+                    if (event.target.value === 'METER') {
+                      setOpenAssignMeter(true);
                     }
-                    onTypeChange(event.target.value as TaskType, task.id)
+                    onTypeChange(event.target.value as TaskType, task.id);
                   }}
                 >
                   {taskTypes.map((taskType) => (
@@ -200,8 +200,8 @@ const DraggableListItem = ({
                 in={
                   openAssignUser ||
                   openAssignAsset ||
-                openAssignMeter
-                ||task.taskBase.taskType === 'MULTIPLE'
+                  openAssignMeter ||
+                  task.taskBase.taskType === 'MULTIPLE'
                 }
               >
                 <Box
