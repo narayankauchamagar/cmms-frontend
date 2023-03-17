@@ -24,6 +24,7 @@ import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import { randomInt } from '../../../../../utils/generators';
 import { AssetMiniDTO } from '../../../../../models/owns/asset';
 import { UserMiniDTO } from '../../../../../models/user';
+import { MeterMiniDTO } from 'src/models/owns/meter';
 
 const useStyles = makeStyles({
   draggingListItem: {
@@ -38,10 +39,12 @@ export type DraggableListItemProps = {
   onTypeChange: (value: TaskType, id: number) => void;
   onUserChange: (user: UserMiniDTO, id: number) => void;
   onAssetChange: (asset: AssetMiniDTO, id: number) => void;
+  onMeterChange: (meter: MeterMiniDTO, id: number) => void;
   onChoicesChange: (choices: string[], id: number) => void;
   onRemove: (id: number) => void;
   assetsMini: AssetMiniDTO[];
   usersMini: UserMiniDTO[];
+  metersMini: MeterMiniDTO[];
 };
 
 const DraggableListItem = ({
@@ -52,9 +55,11 @@ const DraggableListItem = ({
   onRemove,
   onUserChange,
   onAssetChange,
+  onMeterChange,
   onChoicesChange,
   assetsMini,
-  usersMini
+  usersMini, 
+  metersMini
 }: DraggableListItemProps) => {
   const classes = useStyles();
   const { t }: { t: any } = useTranslation();
@@ -81,6 +86,9 @@ const DraggableListItem = ({
   );
   const [openAssignAsset, setOpenAssignAsset] = useState<boolean>(
     !!task.taskBase.asset
+  );
+  const [openAssignMeter, setOpenAssignMeter] = useState<boolean>(
+    !!task.taskBase.meter
   );
   const [choices, setChoices] = useState<TaskOption[]>(
     task.taskBase.options ?? [
@@ -128,7 +136,7 @@ const DraggableListItem = ({
       <MenuItem onClick={() => setOpenAssignAsset(!openAssignAsset)}>
         {openAssignAsset && <CheckTwoToneIcon />}
         {t('assign_asset')}
-      </MenuItem>{' '}
+      </MenuItem>
     </Menu>
   );
 
@@ -166,9 +174,12 @@ const DraggableListItem = ({
                 <Select
                   sx={{ ml: 1 }}
                   value={task.taskBase.taskType}
-                  onChange={(event) =>
+                  onChange={(event) =>{
+                    if(event.target.value==='METER'){
+                      setOpenAssignMeter(true)
+                    }
                     onTypeChange(event.target.value as TaskType, task.id)
-                  }
+                  }}
                 >
                   {taskTypes.map((taskType) => (
                     <MenuItem key={taskType.value} value={taskType.value}>
@@ -189,7 +200,8 @@ const DraggableListItem = ({
                 in={
                   openAssignUser ||
                   openAssignAsset ||
-                  task.taskBase.taskType === 'MULTIPLE'
+                openAssignMeter
+                ||task.taskBase.taskType === 'MULTIPLE'
                 }
               >
                 <Box
@@ -242,6 +254,29 @@ const DraggableListItem = ({
                       {assetsMini.map((asset) => (
                         <MenuItem key={asset.id} value={asset.id}>
                           {asset.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  )}
+                  {openAssignMeter && (
+                    <Select
+                      sx={{ mt: 1 }}
+                      onChange={(event) =>
+                        onMeterChange(
+                          metersMini.find(
+                            (meter) => meter.id === Number(event.target.value)
+                          ),
+                          task.id
+                        )
+                      }
+                      displayEmpty
+                      defaultValue=""
+                      value={task.taskBase.meter?.id ?? ''}
+                    >
+                      <MenuItem value="">{t('select_meter')}</MenuItem>
+                      {metersMini.map((meter) => (
+                        <MenuItem key={meter.id} value={meter.id}>
+                          {meter.name}
                         </MenuItem>
                       ))}
                     </Select>

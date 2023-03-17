@@ -12,6 +12,8 @@ import { UserMiniDTO } from '../../../../../models/user';
 import { getUsersMini } from '../../../../../slices/user';
 import { getAssetsMini } from '../../../../../slices/asset';
 import { useDispatch, useSelector } from '../../../../../store';
+import { getMetersMini } from 'src/slices/meter';
+import { MeterMiniDTO } from 'src/models/owns/meter';
 
 export type DraggableListProps = {
   tasks: Task[];
@@ -19,6 +21,7 @@ export type DraggableListProps = {
   onLabelChange: (value: string, id: number) => void;
   onTypeChange: (value: TaskType, id: number) => void;
   onAssetChange: (asset: AssetMiniDTO, id: number) => void;
+  onMeterChange: (meter: MeterMiniDTO, id: number) => void;
   onRemove: (id: number) => void;
   onUserChange: (user: UserMiniDTO, id: number) => void;
   onChoicesChange: (choices: string[], id: number) => void;
@@ -33,10 +36,12 @@ const DraggableTaskList = React.memo(
     onRemove,
     onUserChange,
     onAssetChange,
-    onChoicesChange
+    onChoicesChange,
+    onMeterChange
   }: DraggableListProps) => {
     const { usersMini } = useSelector((state) => state.users);
     const { assetsMini } = useSelector((state) => state.assets);
+    const { metersMini } = useSelector((state) => state.meters);
     const dispatch = useDispatch();
     useEffect(() => {
       if (!usersMini.length) {
@@ -44,6 +49,9 @@ const DraggableTaskList = React.memo(
       }
       if (!assetsMini.length) {
         dispatch(getAssetsMini());
+      }
+      if (!metersMini.length) {
+        dispatch(getMetersMini());
       }
     }, []);
     return (
@@ -61,9 +69,11 @@ const DraggableTaskList = React.memo(
                   onRemove={onRemove}
                   onUserChange={onUserChange}
                   onAssetChange={onAssetChange}
+                  onMeterChange={onMeterChange}
                   onChoicesChange={onChoicesChange}
                   assetsMini={assetsMini}
                   usersMini={usersMini}
+                  metersMini={metersMini}
                 />
               ))}
               {provided.placeholder}

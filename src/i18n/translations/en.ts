@@ -1331,7 +1331,8 @@ const enJSON = {
   terms_of_service: 'Terms of service',
   privacy_policy: 'Privacy policy',
   last_login: 'Last Login',
-  not_enough_part: 'There is not enough of this part'
+  not_enough_part: 'There is not enough of this part',
+  remove_blank_meter_tasks: 'Remove tasks with type meter without a meter'
 };
 
 export default enJSON;

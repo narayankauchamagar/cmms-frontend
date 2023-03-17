@@ -34,6 +34,7 @@ import useAuth from '../../../../../hooks/useAuth';
 import { PlanFeature } from '../../../../../models/owns/subscriptionPlan';
 import { AssetMiniDTO } from '../../../../../models/owns/asset';
 import { UserMiniDTO } from '../../../../../models/user';
+import { MeterMiniDTO } from 'src/models/owns/meter';
 
 interface SelectTasksProps {
   selected: Task[];
@@ -126,6 +127,15 @@ export default function SelectTasks({
     });
     setTasks(newTasks);
   };
+  const onMeterChange = (meter: MeterMiniDTO, id: number) => {
+    const newTasks = tasks.map((task) => {
+      if (task.id === id) {
+        return { ...task, taskBase: { ...task.taskBase, meter } };
+      }
+      return task;
+    });
+    setTasks(newTasks);
+  };
   const onChoicesChange = (choices: string[], id: number) => {
     const newTasks = tasks.map((task) => {
       if (task.id === id) {
@@ -154,7 +164,10 @@ export default function SelectTasks({
       )
     ) {
       showError(t('remove_blank_options'));
-    } else {
+    } else if (
+      tasks.some(task=>task.taskBase.taskType === 'METER' && !task.taskBase.meter)){
+        showError(t('remove_blank_meter_tasks'))
+      }else {
       setSubmitting(true);
       onSelect(tasks, { name, description, category })
         .then(onClose)
@@ -329,6 +342,7 @@ export default function SelectTasks({
                       onRemove={onRemove}
                       onUserChange={onUserChange}
                       onAssetChange={onAssetChange}
+                      onMeterChange={onMeterChange}
                       onChoicesChange={onChoicesChange}
                     />
                   </Grid>

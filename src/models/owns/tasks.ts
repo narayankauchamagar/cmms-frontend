@@ -1,6 +1,7 @@
 import { AssetMiniDTO } from './asset';
 import File from './file';
 import { UserMiniDTO } from '../user';
+import { MeterMiniDTO } from './meter';
 
 export type TaskType =
   | 'SUBTASK'
@@ -21,7 +22,7 @@ export interface TaskBase {
   options?: TaskOption[];
   user?: UserMiniDTO;
   asset?: AssetMiniDTO;
-  meter?: number;
+  meter?: MeterMiniDTO;
 }
 export interface Task {
   id: number;

@@ -17,3 +17,7 @@ export default interface Meter extends Audit {
   nextReading: string;
   lastReading: string;
 }
+export interface MeterMiniDTO {
+  name: string;
+  id: number;
+}

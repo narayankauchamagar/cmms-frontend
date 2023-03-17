@@ -2,7 +2,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 import { getInitialPage, Page, SearchCriteria } from 'src/models/owns/page';
 import type { AppThunk } from 'src/store';
-import Meter from '../models/owns/meter';
+import Meter, { MeterMiniDTO } from '../models/owns/meter';
 import api from '../utils/api';
 
 const basePath = 'meters';
@@ -10,6 +10,7 @@ interface MeterState {
   meters: Page<Meter>;
   singleMeter: Meter;
   metersByAsset: { [id: number]: Meter[] };
+  metersMini: MeterMiniDTO[];
   loadingGet: boolean;
 }
 
@@ -17,6 +18,7 @@ const initialState: MeterState = {
   meters: getInitialPage<Meter>(),
   singleMeter: null,
   metersByAsset: {},
+  metersMini: [],
   loadingGet: false
 };
 
@@ -30,6 +32,13 @@ const slice = createSlice({
     ) {
       const { meters } = action.payload;
       state.meters = meters;
+    },
+    getMetersMini(
+      state: MeterState,
+      action: PayloadAction<{ meters: MeterMiniDTO[] }>
+    ) {
+      const { meters } = action.payload;
+      state.metersMini = meters;
     },
     getMetersByAsset(
       state: MeterState,
@@ -98,6 +107,10 @@ export const getMeters =
     } finally {
       dispatch(slice.actions.setLoadingGet({ loading: false }));
     }
+  };
+  export const getMetersMini = (): AppThunk => async (dispatch) => {
+    const meters = await api.get<MeterMiniDTO[]>(`${basePath}/mini`);
+    dispatch(slice.actions.getMetersMini({ meters }));
   };
 
 export const getSingleMeter =
