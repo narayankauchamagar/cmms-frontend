@@ -78,24 +78,22 @@ const AssetParts = ({ asset }: PropsType) => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Card sx={{ p: 2 }}>
-            <Box sx={{ height: 570, width: '95%' }}>
-              <div style={{ display: 'flex', height: '80%' }}>
-                <CustomDataGrid
-                  columns={columns}
-                  rows={asset?.parts ?? []}
-                  components={{
-                    Toolbar: GridToolbar
-                  }}
-                  onRowClick={(params) => {
-                    navigate(`/app/inventory/parts/${params.id}`);
-                  }}
-                  initialState={{
-                    columns: {
-                      columnVisibilityModel: {}
-                    }
-                  }}
-                />
-              </div>
+            <Box sx={{ width: '95%' }}>
+              <CustomDataGrid
+                columns={columns}
+                rows={asset?.parts ?? []}
+                components={{
+                  Toolbar: GridToolbar
+                }}
+                onRowClick={(params) => {
+                  navigate(`/app/inventory/parts/${params.id}`);
+                }}
+                initialState={{
+                  columns: {
+                    columnVisibilityModel: {}
+                  }
+                }}
+              />
             </Box>
           </Card>
         </Grid>

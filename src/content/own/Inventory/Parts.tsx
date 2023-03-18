@@ -663,38 +663,36 @@ const Parts = ({ setAction }: PropsType) => {
         </IconButton>
       </Grid>
       {currentTab === 'list' && (
-        <Box sx={{ height: 570, width: '100%' }}>
-          <CustomDataGrid
-            columns={columns}
-            pageSize={criteria.pageSize}
-            page={criteria.pageNum}
-            rows={parts.content}
-            rowCount={parts.totalElements}
-            pagination
-            paginationMode="server"
-            onPageSizeChange={onPageSizeChange}
-            onPageChange={onPageChange}
-            rowsPerPageOptions={[10, 20, 50]}
-            loading={loadingGet}
-            components={{
-              Toolbar: GridToolbar,
-              NoRowsOverlay: () => (
-                <NoRowsMessageWrapper
-                  message={t('noRows.part.message')}
-                  action={t('noRows.part.action')}
-                />
-              )
-            }}
-            onRowClick={(params) => {
-              handleOpenDetails(Number(params.id));
-            }}
-            initialState={{
-              columns: {
-                columnVisibilityModel: {}
-              }
-            }}
-          />
-        </Box>
+        <CustomDataGrid
+          columns={columns}
+          pageSize={criteria.pageSize}
+          page={criteria.pageNum}
+          rows={parts.content}
+          rowCount={parts.totalElements}
+          pagination
+          paginationMode="server"
+          onPageSizeChange={onPageSizeChange}
+          onPageChange={onPageChange}
+          rowsPerPageOptions={[10, 20, 50]}
+          loading={loadingGet}
+          components={{
+            Toolbar: GridToolbar,
+            NoRowsOverlay: () => (
+              <NoRowsMessageWrapper
+                message={t('noRows.part.message')}
+                action={t('noRows.part.action')}
+              />
+            )
+          }}
+          onRowClick={(params) => {
+            handleOpenDetails(Number(params.id));
+          }}
+          initialState={{
+            columns: {
+              columnVisibilityModel: {}
+            }
+          }}
+        />
       )}
       {currentTab === 'card' && (
         <Grid item xs={12}>

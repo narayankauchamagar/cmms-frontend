@@ -683,7 +683,7 @@ function Assets() {
                 justifyContent: 'space-between'
               }}
             >
-              <Box sx={{ height: 570, width: '95%' }}>
+              <Box sx={{ width: '95%' }}>
                 <CustomDataGrid
                   treeData={view === 'hierarchy'}
                   columns={columns}

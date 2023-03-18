@@ -400,7 +400,6 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
   const RenderCustomersList = () => (
     <Box
       sx={{
-        height: 400,
         width: '95%'
       }}
     >
@@ -616,7 +615,7 @@ const Customers = ({ openModal, handleCloseModal }: PropsType) => {
           <SearchInput onChange={debouncedQueryChange} />
         </Box>
       </Stack>
-      <RenderCustomersList />
+      {RenderCustomersList()}
       <ConfirmDialog
         open={openDelete}
         onCancel={() => {

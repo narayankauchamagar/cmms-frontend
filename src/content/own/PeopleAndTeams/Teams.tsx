@@ -253,7 +253,6 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
   const Renderteams = () => (
     <Box
       sx={{
-        height: 400,
         width: '95%'
       }}
     >
@@ -443,7 +442,7 @@ const Teams = ({ openModal, handleCloseModal }: PropsType) => {
           </Box>
         </Stack>
       )}
-      <Renderteams />
+      {Renderteams()}
       <ConfirmDialog
         open={openDelete}
         onCancel={() => {

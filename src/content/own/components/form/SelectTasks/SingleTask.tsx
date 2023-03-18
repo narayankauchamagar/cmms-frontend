@@ -160,7 +160,7 @@ export default function SingleTask({
           {task.taskBase.taskType === 'METER' && (
             <IconButton
               onClick={() =>
-                !preview && navigate(`/app/meters/${task.taskBase.meter}`)
+                !preview && navigate(`/app/meters/${task.taskBase.meter.id}`)
               }
             >
               <SpeedTwoToneIcon color="primary" />

@@ -97,7 +97,6 @@ function WorkOrders() {
   const { uploadFiles, getWOFieldsAndShapes } = useContext(
     CompanySettingsContext
   );
-  const { companySettings } = useAuth();
   const { getFormattedDate, getUserNameById } = useContext(
     CompanySettingsContext
   );
@@ -166,7 +165,6 @@ function WorkOrders() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);
   const navigate = useNavigate();
-
   const handleOpenMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -920,39 +918,37 @@ function WorkOrders() {
               <Divider sx={{ mt: 1 }} />
               <Box sx={{ width: '95%' }}>
                 {currentTab === 'list' ? (
-                  <Box sx={{ height: 550 }}>
-                    <CustomDataGrid
-                      pageSize={criteria.pageSize}
-                      page={criteria.pageNum}
-                      columns={columns}
-                      rows={workOrders.content}
-                      rowCount={workOrders.totalElements}
-                      loading={loadingGet}
-                      pagination
-                      disableColumnFilter
-                      paginationMode="server"
-                      onPageSizeChange={onPageSizeChange}
-                      onPageChange={onPageChange}
-                      rowsPerPageOptions={[10, 20, 50]}
-                      components={{
-                        Toolbar: GridToolbar,
-                        NoRowsOverlay: () => (
-                          <NoRowsMessageWrapper
-                            message={t('noRows.wo.message')}
-                            action={t('noRows.wo.action')}
-                          />
-                        )
-                      }}
-                      onRowClick={(params) =>
-                        handleOpenDetails(Number(params.id))
+                  <CustomDataGrid
+                    pageSize={criteria.pageSize}
+                    page={criteria.pageNum}
+                    columns={columns}
+                    rows={workOrders.content}
+                    rowCount={workOrders.totalElements}
+                    loading={loadingGet}
+                    pagination
+                    disableColumnFilter
+                    paginationMode="server"
+                    onPageSizeChange={onPageSizeChange}
+                    onPageChange={onPageChange}
+                    rowsPerPageOptions={[10, 20, 50]}
+                    components={{
+                      Toolbar: GridToolbar,
+                      NoRowsOverlay: () => (
+                        <NoRowsMessageWrapper
+                          message={t('noRows.wo.message')}
+                          action={t('noRows.wo.action')}
+                        />
+                      )
+                    }}
+                    onRowClick={(params) =>
+                      handleOpenDetails(Number(params.id))
+                    }
+                    initialState={{
+                      columns: {
+                        columnVisibilityModel: {}
                       }
-                      initialState={{
-                        columns: {
-                          columnVisibilityModel: {}
-                        }
-                      }}
-                    />
-                  </Box>
+                    }}
+                  />
                 ) : (
                   <WorkOrderCalendar
                     handleAddWorkOrder={(date: Date) => {

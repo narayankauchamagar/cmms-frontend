@@ -471,7 +471,7 @@ function Roles() {
             formatValues={formatValues}
           />
           {renderDeleteModal()}
-          <Box sx={{ mt: 4, height: 500, width: '95%' }}>
+          <Box sx={{ mt: 4, width: '95%' }}>
             <CustomDatagrid
               rows={roles}
               columns={columns}

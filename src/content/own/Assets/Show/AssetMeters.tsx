@@ -196,22 +196,20 @@ const AssetMeters = ({ asset }: PropsType) => {
                   )}
                 </Stack>
               )}
-              <div style={{ display: 'flex', height: '80%' }}>
-                <CustomDataGrid
-                  columns={columns}
-                  rows={readings}
-                  components={{
-                    Toolbar: GridToolbar
-                  }}
-                  loading={loadingGet}
-                  onRowClick={(params: GridRowParams<Meter>) => null}
-                  initialState={{
-                    columns: {
-                      columnVisibilityModel: {}
-                    }
-                  }}
-                />
-              </div>
+              <CustomDataGrid
+                columns={columns}
+                rows={readings}
+                components={{
+                  Toolbar: GridToolbar
+                }}
+                loading={loadingGet}
+                onRowClick={(params: GridRowParams<Meter>) => null}
+                initialState={{
+                  columns: {
+                    columnVisibilityModel: {}
+                  }
+                }}
+              />
             </Box>
           </Card>
         </Grid>

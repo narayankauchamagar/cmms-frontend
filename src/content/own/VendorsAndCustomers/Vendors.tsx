@@ -380,7 +380,6 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
   const RenderVendorsList = () => (
     <Box
       sx={{
-        height: 400,
         width: '95%'
       }}
     >
@@ -556,7 +555,7 @@ const Vendors = ({ openModal, handleCloseModal }: PropsType) => {
           <SearchInput onChange={debouncedQueryChange} />
         </Box>
       </Stack>
-      <RenderVendorsList />
+      {RenderVendorsList()}
       <ConfirmDialog
         open={openDelete}
         onCancel={() => {

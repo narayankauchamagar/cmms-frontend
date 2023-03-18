@@ -576,7 +576,7 @@ function Meters() {
                   justifyContent: 'space-between'
                 }}
               >
-                <Box sx={{ height: 570, width: '95%' }}>
+                <Box sx={{ width: '95%' }}>
                   <CustomDataGrid
                     columns={columns}
                     loading={loadingGet}

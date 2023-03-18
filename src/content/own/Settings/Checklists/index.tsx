@@ -110,7 +110,6 @@ function Checklists() {
           <Grid item xs={12}>
             <Box
               sx={{
-                height: 600,
                 width: '95%',
                 p: 4
               }}

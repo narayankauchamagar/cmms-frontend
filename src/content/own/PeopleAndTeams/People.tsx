@@ -350,38 +350,31 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
     }
   ];
   const RenderPeopleList = () => (
-    <Box
-      sx={{
-        height: 400,
-        width: '95%'
+    <CustomDataGrid
+      pageSize={criteria.pageSize}
+      page={criteria.pageNum}
+      rows={users.content}
+      rowCount={users.totalElements}
+      pagination
+      paginationMode="server"
+      onPageSizeChange={onPageSizeChange}
+      onPageChange={onPageChange}
+      rowsPerPageOptions={[10, 20, 50]}
+      loading={loadingGet}
+      columns={columns}
+      components={{
+        Toolbar: GridToolbar
       }}
-    >
-      <CustomDataGrid
-        pageSize={criteria.pageSize}
-        page={criteria.pageNum}
-        rows={users.content}
-        rowCount={users.totalElements}
-        pagination
-        paginationMode="server"
-        onPageSizeChange={onPageSizeChange}
-        onPageChange={onPageChange}
-        rowsPerPageOptions={[10, 20, 50]}
-        loading={loadingGet}
-        columns={columns}
-        components={{
-          Toolbar: GridToolbar
-        }}
-        initialState={{
-          columns: {
-            columnVisibilityModel: {}
-          }
-        }}
-        onRowClick={(params) => {
-          // setCurrentUser(users.find((user) => user.id === params.id));
-          handleOpenDetails(Number(params.id));
-        }}
-      />
-    </Box>
+      initialState={{
+        columns: {
+          columnVisibilityModel: {}
+        }
+      }}
+      onRowClick={(params) => {
+        // setCurrentUser(users.find((user) => user.id === params.id));
+        handleOpenDetails(Number(params.id));
+      }}
+    />
   );
 
   return (
@@ -399,7 +392,7 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
           <SearchInput onChange={debouncedQueryChange} />
         </Box>
       </Stack>
-      <RenderPeopleList />
+      {RenderPeopleList()}
 
       <Drawer
         variant="temporary"

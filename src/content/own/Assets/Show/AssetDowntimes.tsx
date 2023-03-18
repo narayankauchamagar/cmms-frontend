@@ -294,21 +294,19 @@ const AssetDowntimes = ({ asset }: PropsType) => {
                   </Button>
                 )}
               </Stack>
-              <div style={{ display: 'flex', height: '80%' }}>
-                <CustomDataGrid
-                  columns={columns}
-                  rows={downtimes.filter((downtime) => downtime.duration)}
-                  components={{
-                    Toolbar: GridToolbar
-                  }}
-                  onRowClick={(params) => null}
-                  initialState={{
-                    columns: {
-                      columnVisibilityModel: {}
-                    }
-                  }}
-                />
-              </div>
+              <CustomDataGrid
+                columns={columns}
+                rows={downtimes.filter((downtime) => downtime.duration)}
+                components={{
+                  Toolbar: GridToolbar
+                }}
+                onRowClick={(params) => null}
+                initialState={{
+                  columns: {
+                    columnVisibilityModel: {}
+                  }
+                }}
+              />
             </Box>
           </Card>
         </Grid>

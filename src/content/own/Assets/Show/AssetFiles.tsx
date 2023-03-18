@@ -65,24 +65,22 @@ const AssetFiles = ({ asset }: PropsType) => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Card sx={{ p: 2 }}>
-            <Box sx={{ height: 570, width: '95%' }}>
-              <div style={{ display: 'flex', height: '80%' }}>
-                <CustomDataGrid
-                  columns={columns}
-                  rows={asset?.files ?? []}
-                  components={{
-                    Toolbar: GridToolbar
-                  }}
-                  onRowClick={(params: GridRowParams<FileMiniDTO>) =>
-                    window.open(params.row.url, '_blank')
+            <Box sx={{ width: '95%' }}>
+              <CustomDataGrid
+                columns={columns}
+                rows={asset?.files ?? []}
+                components={{
+                  Toolbar: GridToolbar
+                }}
+                onRowClick={(params: GridRowParams<FileMiniDTO>) =>
+                  window.open(params.row.url, '_blank')
+                }
+                initialState={{
+                  columns: {
+                    columnVisibilityModel: {}
                   }
-                  initialState={{
-                    columns: {
-                      columnVisibilityModel: {}
-                    }
-                  }}
-                />
-              </div>
+                }}
+              />
             </Box>
           </Card>
         </Grid>
