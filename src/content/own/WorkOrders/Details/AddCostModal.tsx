@@ -66,7 +66,7 @@ export default function AddCostModal({
   ];
   const shape = {
     description: Yup.string().required(t('required_cost_description')),
-    cost: Yup.number().required(t('required_costs'))
+    cost: Yup.number().required(t('required_cost'))
   };
   return (
     <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
