@@ -22,7 +22,7 @@ function CustomDataGrid(props: CustomDatagridProps) {
       const top = viewportOffset.top;
       return height - top - 15;
     }
-    return 0;
+    return 300;
   };
   const translatedGridLocaleText = Object.fromEntries(
     Object.entries(gridLocaleText).map(([key, value]) => {

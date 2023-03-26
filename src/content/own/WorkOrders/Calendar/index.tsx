@@ -9,8 +9,10 @@ import listPlugin from '@fullcalendar/list';
 import {
   Box,
   Card,
+  CircularProgress,
   Divider,
   Grid,
+  Stack,
   styled,
   useMediaQuery,
   useTheme
@@ -27,6 +29,7 @@ import i18n from 'i18next';
 const FullCalendarWrapper = styled(Box)(
   ({ theme }) => `
     padding: ${theme.spacing(3)};
+    position: relative;
    
     & .fc-license-message {
       display: none;
@@ -130,7 +133,7 @@ function ApplicationsCalendar({
   const calendarRef = useRef<FullCalendar | null>(null);
   const mobile = useMediaQuery(theme.breakpoints.down('md'));
   const dispatch = useDispatch();
-  const { calendar } = useSelector((state) => state.workOrders);
+  const { calendar, loadingGet } = useSelector((state) => state.workOrders);
   const [date, setDate] = useState<Date>(new Date());
   const [view, setView] = useState<View>(mobile ? 'listWeek' : 'dayGridMonth');
   const getLanguage = i18n.language;
@@ -241,6 +244,11 @@ function ApplicationsCalendar({
         </Box>
         <Divider />
         <FullCalendarWrapper>
+          {loadingGet && (
+            <Stack position="absolute" top={'45%'} left={'45%'} zIndex={10}>
+              <CircularProgress size={64} />
+            </Stack>
+          )}
           <FullCalendar
             allDayMaintainDuration
             initialDate={date}

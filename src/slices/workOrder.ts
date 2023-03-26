@@ -222,6 +222,7 @@ export const getPDFReport =
 export const getWorkOrderEvents =
   (start: Date, end: Date): AppThunk =>
   async (dispatch) => {
+    dispatch(slice.actions.setLoadingGet({ loading: true }));
     const response = await api.post<WorkOrder[]>(`${basePath}/events`, {
       start,
       end
@@ -231,6 +232,7 @@ export const getWorkOrderEvents =
         events: response
       })
     );
+    dispatch(slice.actions.setLoadingGet({ loading: false }));
   };
 export const clearSingleWorkOrder = (): AppThunk => async (dispatch) => {
   dispatch(slice.actions.clearSingleWorkOrder({}));
