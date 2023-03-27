@@ -535,11 +535,12 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
 
   const logout = async (): Promise<void> => {
     setSession(null);
-    caches.keys().then((names) => {
-      names.forEach((name) => {
-        caches.delete(name);
-      });
-    });
+    //TODO this is not working
+    // caches.keys().then((names) => {
+    //   names.forEach((name) => {
+    //     caches.delete(name);
+    //   });
+    // });
     dispatch({ type: 'LOGOUT' });
   };
 
