@@ -205,7 +205,7 @@ function MoreFilters({ filterFields, onFilterChange, onClose }: OwnProps) {
       teams: getLabelAndValue(filterFields, teamsMini, 'team', 'name'),
       categories: getLabelAndValue(
         filterFields,
-        categories['work-orders'],
+        categories['work-order-categories'],
         'category',
         'name'
       ),

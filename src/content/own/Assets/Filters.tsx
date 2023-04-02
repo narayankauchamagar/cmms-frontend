@@ -181,7 +181,7 @@ function Filters({ filterFields, onFilterChange, onSave }: OwnProps) {
     return {
       categories: getLabelAndValue(
         filterFields,
-        categories['assets'],
+        categories['asset-categories'],
         'category',
         'name'
       ),
