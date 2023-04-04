@@ -22,7 +22,14 @@ import {
   useTheme
 } from '@mui/material';
 import WorkOrder from '../../../../models/owns/workOrder';
-import { ChangeEvent, useContext, useEffect, useMemo, useState } from 'react';
+import {
+  ChangeEvent,
+  Fragment,
+  useContext,
+  useEffect,
+  useMemo,
+  useState
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
@@ -101,16 +108,20 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
   const [openCompleteModal, setOpenCompleteModal] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<string>('details');
   const [changingStatus, setChangingStatus] = useState<boolean>(false);
-  const { partQuantitiesByWorkOrder } = useSelector(
+  const { partQuantitiesByWorkOrder, loadingPartQuantities } = useSelector(
     (state) => state.partQuantities
   );
   const partQuantities = partQuantitiesByWorkOrder[workOrder.id] ?? [];
   const [controllingTime, setControllingTime] = useState<boolean>(false);
-  const { timesByWorkOrder } = useSelector((state) => state.labors);
+  const { timesByWorkOrder, loadingLabors } = useSelector(
+    (state) => state.labors
+  );
   const { workOrderHistories } = useSelector(
     (state) => state.workOrderHistories
   );
-  const { relationsByWorkOrder } = useSelector((state) => state.relations);
+  const { relationsByWorkOrder, loadingRelations } = useSelector(
+    (state) => state.relations
+  );
   const currentWorkOrderHistories = workOrderHistories[workOrder.id] ?? [];
   const currentWorkOrderRelations = relationsByWorkOrder[workOrder.id] ?? [];
   const labors = timesByWorkOrder[workOrder.id] ?? [];
@@ -118,7 +129,9 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
     (labor) => labor.logged && labor.assignedTo.id === user.id
   );
   const runningTimer = primaryTime?.status === 'RUNNING';
-  const { costsByWorkOrder } = useSelector((state) => state.additionalCosts);
+  const { costsByWorkOrder, loadingCosts } = useSelector(
+    (state) => state.additionalCosts
+  );
   const additionalCosts = costsByWorkOrder[workOrder.id] ?? [];
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -883,7 +896,11 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
               <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
                 {t('labors')}
               </Typography>
-              {!labors.filter((labor) => !labor.logged).length ? (
+              {loadingLabors[workOrder.id] ? (
+                <Stack width={'100%'} alignItems="center">
+                  <CircularProgress />
+                </Stack>
+              ) : !labors.filter((labor) => !labor.logged).length ? (
                 <Typography sx={{ color: theme.colors.alpha.black[70] }}>
                   {t('no_labor')}
                 </Typography>
@@ -992,85 +1009,95 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
               <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
                 {t('additional_costs')}
               </Typography>
-              {!additionalCosts.length ? (
-                <Typography sx={{ color: theme.colors.alpha.black[70] }}>
-                  {t('no_additional_cost')}
-                </Typography>
+              {loadingCosts[workOrder.id] ? (
+                <Stack width={'100%'} alignItems={'center'}>
+                  <CircularProgress />
+                </Stack>
               ) : (
-                <List>
-                  {additionalCosts.map((additionalCost) => (
-                    <ListItem
-                      key={additionalCost.id}
-                      secondaryAction={
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            justifyContent: 'flex-end'
-                          }}
-                        >
-                          <Typography variant="h6">
-                            {getFormattedCurrency(additionalCost.cost)}
-                          </Typography>
-                          {hasEditPermission(
-                            PermissionEntity.WORK_ORDERS,
-                            workOrder
-                          ) && (
-                            <IconButton
-                              sx={{ ml: 1 }}
-                              onClick={() =>
-                                dispatch(
-                                  deleteAdditionalCost(
-                                    workOrder.id,
-                                    additionalCost.id
-                                  )
-                                )
-                              }
+                <Fragment>
+                  {!additionalCosts.length ? (
+                    <Typography sx={{ color: theme.colors.alpha.black[70] }}>
+                      {t('no_additional_cost')}
+                    </Typography>
+                  ) : (
+                    <List>
+                      {additionalCosts.map((additionalCost) => (
+                        <ListItem
+                          key={additionalCost.id}
+                          secondaryAction={
+                            <Box
+                              sx={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'flex-end'
+                              }}
                             >
-                              <DeleteTwoToneIcon
-                                fontSize="small"
-                                color="error"
-                              />
-                            </IconButton>
-                          )}
-                        </Box>
-                      }
-                    >
-                      <ListItemText
-                        primary={
-                          <Typography variant="h6">
-                            {additionalCost.description}
+                              <Typography variant="h6">
+                                {getFormattedCurrency(additionalCost.cost)}
+                              </Typography>
+                              {hasEditPermission(
+                                PermissionEntity.WORK_ORDERS,
+                                workOrder
+                              ) && (
+                                <IconButton
+                                  sx={{ ml: 1 }}
+                                  onClick={() =>
+                                    dispatch(
+                                      deleteAdditionalCost(
+                                        workOrder.id,
+                                        additionalCost.id
+                                      )
+                                    )
+                                  }
+                                >
+                                  <DeleteTwoToneIcon
+                                    fontSize="small"
+                                    color="error"
+                                  />
+                                </IconButton>
+                              )}
+                            </Box>
+                          }
+                        >
+                          <ListItemText
+                            primary={
+                              <Typography variant="h6">
+                                {additionalCost.description}
+                              </Typography>
+                            }
+                            secondary={getFormattedDate(
+                              additionalCost.createdAt
+                            )}
+                          />
+                        </ListItem>
+                      ))}
+                      <ListItem
+                        secondaryAction={
+                          <Typography variant="h6" fontWeight="bold">
+                            {getFormattedCurrency(
+                              additionalCosts.reduce(
+                                (acc, additionalCost) =>
+                                  additionalCost.includeToTotalCost
+                                    ? acc + additionalCost.cost
+                                    : acc,
+                                0
+                              )
+                            )}
                           </Typography>
                         }
-                        secondary={getFormattedDate(additionalCost.createdAt)}
-                      />
-                    </ListItem>
-                  ))}
-                  <ListItem
-                    secondaryAction={
-                      <Typography variant="h6" fontWeight="bold">
-                        {getFormattedCurrency(
-                          additionalCosts.reduce(
-                            (acc, additionalCost) =>
-                              additionalCost.includeToTotalCost
-                                ? acc + additionalCost.cost
-                                : acc,
-                            0
-                          )
-                        )}
-                      </Typography>
-                    }
-                  >
-                    <ListItemText
-                      primary={
-                        <Typography variant="h6" fontWeight="bold">
-                          Total
-                        </Typography>
-                      }
-                    />
-                  </ListItem>
-                </List>
+                      >
+                        <ListItemText
+                          primary={
+                            <Typography variant="h6" fontWeight="bold">
+                              Total
+                            </Typography>
+                          }
+                        />
+                      </ListItem>
+                    </List>
+                  )}
+                </Fragment>
               )}
               {hasEditPermission(PermissionEntity.WORK_ORDERS, workOrder) && (
                 <Button
@@ -1087,38 +1114,56 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
               <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
                 {t('parts')}
               </Typography>
-              <PartQuantitiesList
-                partQuantities={partQuantities}
-                disabled={
-                  !hasEditPermission(PermissionEntity.WORK_ORDERS, workOrder)
-                }
-                onChange={debouncedPartQuantityChange}
-              />
-              {hasEditPermission(PermissionEntity.WORK_ORDERS, workOrder) && (
-                <SelectParts
-                  selected={partQuantities.map(
-                    (partQuantity) => partQuantity.part.id
-                  )}
-                  onChange={(selectedParts) => {
-                    dispatch(
-                      editWOPartQuantities(
-                        workOrder.id,
-                        selectedParts.map((part) => part.id)
+              {loadingPartQuantities[workOrder.id] ? (
+                <Stack width={'100%'} alignItems={'center'}>
+                  <CircularProgress />
+                </Stack>
+              ) : (
+                <Fragment>
+                  <PartQuantitiesList
+                    partQuantities={partQuantities}
+                    disabled={
+                      !hasEditPermission(
+                        PermissionEntity.WORK_ORDERS,
+                        workOrder
                       )
-                    ).catch((error) =>
-                      showSnackBar(t('not_enough_part'), 'error')
-                    );
-                  }}
-                />
+                    }
+                    onChange={debouncedPartQuantityChange}
+                  />
+                  {hasEditPermission(
+                    PermissionEntity.WORK_ORDERS,
+                    workOrder
+                  ) && (
+                    <SelectParts
+                      selected={partQuantities.map(
+                        (partQuantity) => partQuantity.part.id
+                      )}
+                      onChange={(selectedParts) => {
+                        dispatch(
+                          editWOPartQuantities(
+                            workOrder.id,
+                            selectedParts.map((part) => part.id)
+                          )
+                        ).catch((error) =>
+                          showSnackBar(t('not_enough_part'), 'error')
+                        );
+                      }}
+                    />
+                  )}
+                </Fragment>
               )}
             </Box>
-            {!!currentWorkOrderRelations.length && (
-              <Box>
-                <Divider sx={{ mt: 2 }} />
-                <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
-                  {t('links')}
-                </Typography>
-                {
+            <Box>
+              <Divider sx={{ mt: 2 }} />
+              <Typography sx={{ mt: 2, mb: 1 }} variant="h3">
+                {t('links')}
+              </Typography>
+              {loadingRelations[workOrder.id] ? (
+                <Stack width={'100%'} alignItems={'center'}>
+                  <CircularProgress />
+                </Stack>
+              ) : (
+                <Fragment>
                   <List>
                     {Object.entries(
                       groupRelations(currentWorkOrderRelations)
@@ -1178,16 +1223,16 @@ export default function WorkOrderDetails(props: WorkOrderDetailsProps) {
                         )
                     )}
                   </List>
-                }
-                <Button
-                  onClick={() => setOpenLinkModal(true)}
-                  variant="outlined"
-                  sx={{ mt: 1 }}
-                >
-                  {t('link_wo')}
-                </Button>
-              </Box>
-            )}
+                  <Button
+                    onClick={() => setOpenLinkModal(true)}
+                    variant="outlined"
+                    sx={{ mt: 1 }}
+                  >
+                    {t('link_wo')}
+                  </Button>
+                </Fragment>
+              )}
+            </Box>
             {!!workOrder.files.length && (
               <Box>
                 <Divider sx={{ mt: 2 }} />
