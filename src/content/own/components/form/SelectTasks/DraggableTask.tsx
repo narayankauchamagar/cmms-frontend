@@ -58,7 +58,7 @@ const DraggableListItem = ({
   onMeterChange,
   onChoicesChange,
   assetsMini,
-  usersMini, 
+  usersMini,
   metersMini
 }: DraggableListItemProps) => {
   const classes = useStyles();

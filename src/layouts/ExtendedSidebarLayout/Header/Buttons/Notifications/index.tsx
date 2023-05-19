@@ -321,18 +321,18 @@ function HeaderNotifications() {
               height: 220
             }}
           >
+            {loadingGet && (
+              <CircularProgress
+                sx={{
+                  position: 'absolute',
+                  zIndex: 10,
+                  left: '45%',
+                  top: '45%'
+                }}
+              />
+            )}
             <Scrollbar>
               <List onScroll={onScroll} sx={{ position: 'relative' }}>
-                {
-                  <CircularProgress
-                    sx={{
-                      position: 'absolute',
-                      zIndex: 10,
-                      left: '45%',
-                      top: '45%'
-                    }}
-                  />
-                }
                 {notifications.content.map((notification) => (
                   <ListItemButton
                     selected={!notification.seen}
