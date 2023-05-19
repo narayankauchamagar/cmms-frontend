@@ -14,32 +14,18 @@ function api<T>(url: string, options): Promise<T> {
 function get<T>(url, options?) {
   return api<T>(apiUrl + url, options);
 }
-function post<T>(
-  url,
-  data,
-  options?,
-  withoutCompany?: boolean,
-  isNotJson?: boolean
-) {
-  const companyId = localStorage.getItem('companyId');
+function post<T>(url, data, options?, isNotJson?: boolean) {
   return api<T>(apiUrl + url, {
     ...options,
     method: 'POST',
-    body: isNotJson
-      ? data
-      : JSON.stringify(
-          withoutCompany ? data : { ...data, company: { id: companyId } }
-        )
+    body: isNotJson ? data : JSON.stringify(data)
   });
 }
-function patch<T>(url, data, options?, withoutCompany?: boolean) {
-  const companyId = localStorage.getItem('companyId');
+function patch<T>(url, data, options?) {
   return api<T>(apiUrl + url, {
     ...options,
     method: 'PATCH',
-    body: JSON.stringify(
-      withoutCompany ? data : { ...data, company: { id: companyId } }
-    )
+    body: JSON.stringify(data)
   });
 }
 function deletes<T>(url, options?) {

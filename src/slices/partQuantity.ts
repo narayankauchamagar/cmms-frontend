@@ -118,8 +118,7 @@ export const editWOPartQuantities =
     const partQuantities = await api.patch<PartQuantity[]>(
       `${basePath}/work-order/${id}`,
       parts,
-      null,
-      true
+      null
     );
     dispatch(
       slice.actions.getPartQuantitiesByWorkOrder({
@@ -135,8 +134,7 @@ export const editPOPartQuantities =
     const partQuantitiesResponse = await api.patch<PartQuantity[]>(
       `${basePath}/purchase-order/${id}`,
       partQuantities,
-      null,
-      true
+      null
     );
     dispatch(
       slice.actions.getPartQuantitiesByPurchaseOrder({
@@ -148,12 +146,9 @@ export const editPOPartQuantities =
 export const editPartQuantity =
   (rootId: number, id: number, quantity: number, isPO: boolean): AppThunk =>
   async (dispatch) => {
-    const partQuantity = await api.patch<PartQuantity>(
-      `${basePath}/${id}`,
-      { quantity },
-      null,
-      true
-    );
+    const partQuantity = await api.patch<PartQuantity>(`${basePath}/${id}`, {
+      quantity
+    });
     if (isPO)
       dispatch(
         slice.actions.editPOPartQuantity({

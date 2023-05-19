@@ -160,8 +160,7 @@ export const addWorkOrder =
       const tasks = await api.patch<Task[]>(
         `tasks/work-order/${workOrderResponse.id}`,
         taskBases,
-        null,
-        true
+        null
       );
     }
   };

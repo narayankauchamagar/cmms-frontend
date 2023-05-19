@@ -126,7 +126,6 @@ export const addFiles =
       {
         headers
       },
-      true,
       true
     );
     dispatch(slice.actions.addFiles({ files: filesResponse }));

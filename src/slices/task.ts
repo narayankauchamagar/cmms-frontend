@@ -97,8 +97,7 @@ export const patchTasks =
       const tasks = await api.patch<Task[]>(
         `${basePath}/work-order/${workOrderId}`,
         taskBases,
-        null,
-        true
+        null
       );
       dispatch(
         slice.actions.patchTasks({
@@ -127,8 +126,7 @@ export const patchTask =
     const taskResponse = await api.patch<Task>(
       `${basePath}/${taskId}`,
       task,
-      null,
-      true
+      null
     );
     dispatch(
       slice.actions.patchTask({

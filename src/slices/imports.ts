@@ -25,8 +25,7 @@ export const importEntity =
       response = await api.post<ImportResponse>(
         `${basePath}/${entity}`,
         values,
-        {},
-        true
+        {}
       );
     } finally {
       return response;
