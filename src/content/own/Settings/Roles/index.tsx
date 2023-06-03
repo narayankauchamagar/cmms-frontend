@@ -104,7 +104,7 @@ function Roles() {
   const [currentRole, setCurrentRole] = useState<Role>();
   const { showSnackBar } = useContext(CustomSnackBarContext);
   const dispatch = useDispatch();
-  const { roles } = useSelector((state) => state.roles);
+  const { roles, loadingGet } = useSelector((state) => state.roles);
   const { hasFeature } = useAuth();
 
   useEffect(() => {
@@ -475,6 +475,7 @@ function Roles() {
             <CustomDatagrid
               rows={roles}
               columns={columns}
+              loading={loadingGet}
               components={{
                 Toolbar: GridToolbar
                 // Toolbar: GridToolbarColumnsButton,
