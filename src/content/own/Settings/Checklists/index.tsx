@@ -50,7 +50,12 @@ function Checklists() {
   };
   const onDeleteFailure = (err) =>
     showSnackBar(t('checklist_delete_failure'), 'error');
-
+  const onEditSuccess = () => {
+    setOpenEditChecklist(false);
+    showSnackBar(t('changes_saved_success'), 'success');
+  };
+  const onEditFailure = (err) =>
+    showSnackBar(t('checklist_update_failure'), 'error');
   const handleDelete = (id: number) => {
     dispatch(deleteChecklist(id)).then(onDeleteSuccess).catch(onDeleteFailure);
     setOpenDelete(false);
@@ -190,7 +195,13 @@ function Checklists() {
                       };
                     })
                   })
-                ).finally(res);
+                )
+                  .then(onEditSuccess)
+                  .then(() => res())
+                  .catch((err) => {
+                    onEditFailure(err);
+                    rej();
+                  });
               });
             }}
             action="editChecklist"

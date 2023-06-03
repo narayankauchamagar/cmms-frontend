@@ -1480,7 +1480,8 @@ const frJSON = {
   last_login: 'Dernière connexion',
   not_enough_part: "Cette pièce n'est plus en stock",
   remove_blank_meter_tasks:
-    'Supprimez les tâches de type compteur sans compteur'
+    'Supprimez les tâches de type compteur sans compteur',
+  checklist_update_failure: "La checklist n'a pas pu être modifiée"
 };
 
 export default frJSON;

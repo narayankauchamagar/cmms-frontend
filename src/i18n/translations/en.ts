@@ -1332,7 +1332,8 @@ const enJSON = {
   privacy_policy: 'Privacy policy',
   last_login: 'Last Login',
   not_enough_part: 'There is not enough of this part',
-  remove_blank_meter_tasks: 'Remove tasks with type meter without a meter'
+  remove_blank_meter_tasks: 'Remove tasks with type meter without a meter',
+  checklist_update_failure: "The checklist could'nt be edited"
 };
 
 export default enJSON;
