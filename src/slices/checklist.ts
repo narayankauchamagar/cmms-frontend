@@ -6,10 +6,12 @@ import api from '../utils/api';
 
 interface ChecklistState {
   checklists: Checklist[];
+  loadingGet: boolean;
 }
 
 const initialState: ChecklistState = {
-  checklists: []
+  checklists: [],
+  loadingGet: false
 };
 
 const slice = createSlice({
@@ -51,6 +53,13 @@ const slice = createSlice({
         (checklist) => checklist.id === id
       );
       state.checklists.splice(checklistIndex, 1);
+    },
+    setLoadingGet(
+      state: ChecklistState,
+      action: PayloadAction<{ loading: boolean }>
+    ) {
+      const { loading } = action.payload;
+      state.loadingGet = loading;
     }
   }
 });
@@ -58,8 +67,13 @@ const slice = createSlice({
 export const reducer = slice.reducer;
 
 export const getChecklists = (): AppThunk => async (dispatch) => {
-  const checklists = await api.get<Checklist[]>('checklists');
-  dispatch(slice.actions.getChecklists({ checklists }));
+  try {
+    dispatch(slice.actions.setLoadingGet({ loading: true }));
+    const checklists = await api.get<Checklist[]>('checklists');
+    dispatch(slice.actions.getChecklists({ checklists }));
+  } finally {
+    dispatch(slice.actions.setLoadingGet({ loading: false }));
+  }
 };
 
 export const addChecklist =

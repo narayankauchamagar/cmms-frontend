@@ -40,7 +40,7 @@ function Checklists() {
   const { user } = useAuth();
   const { companySettingsId } = user;
   const { showSnackBar } = useContext(CustomSnackBarContext);
-  const { checklists } = useSelector((state) => state.checklists);
+  const { checklists, loadingGet } = useSelector((state) => state.checklists);
 
   useEffect(() => {
     if (hasFeature(PlanFeature.CHECKLIST)) dispatch(getChecklists());
@@ -132,6 +132,7 @@ function Checklists() {
               <CustomDataGrid
                 columns={columns}
                 rows={checklists}
+                loading={loadingGet}
                 components={{
                   Toolbar: GridToolbar
                 }}
