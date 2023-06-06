@@ -20,10 +20,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
 import ChevronRightTwoToneIcon from '@mui/icons-material/ChevronRightTwoTone';
-import Chart from 'react-apexcharts';
 import type { ApexOptions } from 'apexcharts';
-import Text from 'src/components/Text';
-import MonetizationOnTwoToneIcon from '@mui/icons-material/MonetizationOnTwoTone';
 
 const DotLegend = styled('span')(
   ({ theme }) => `
@@ -296,26 +293,26 @@ function HeaderUserbox() {
           </MenuItem>
         </MenuListWrapperPrimary>
         <Divider />
-        <Box m={1}>
-          <Box px={2} pt={1} pb={0.5} display="flex" alignItems="flex-start">
-            <Text color="warning">
-              <MonetizationOnTwoToneIcon fontSize="large" />
-            </Text>
-            <Box ml={1}>
-              <Typography variant="h3">$14,264</Typography>
-              <Typography noWrap variant="subtitle2">
-                {t('total value')}
-              </Typography>
-            </Box>
-          </Box>
-          <Chart
-            options={Box1Options}
-            series={Box1Data}
-            type="line"
-            height={60}
-          />
-        </Box>
-        <Divider />
+        {/*<Box m={1}>*/}
+        {/*  <Box px={2} pt={1} pb={0.5} display="flex" alignItems="flex-start">*/}
+        {/*    <Text color="warning">*/}
+        {/*      <MonetizationOnTwoToneIcon fontSize="large" />*/}
+        {/*    </Text>*/}
+        {/*    <Box ml={1}>*/}
+        {/*      <Typography variant="h3">$14,264</Typography>*/}
+        {/*      <Typography noWrap variant="subtitle2">*/}
+        {/*        {t('total value')}*/}
+        {/*      </Typography>*/}
+        {/*    </Box>*/}
+        {/*  </Box>*/}
+        {/*  <Chart*/}
+        {/*    options={Box1Options}*/}
+        {/*    series={Box1Data}*/}
+        {/*    type="line"*/}
+        {/*    height={60}*/}
+        {/*  />*/}
+        {/*</Box>*/}
+        {/*<Divider />*/}
         <Box m={1}>
           <Button color="primary" fullWidth onClick={handleLogout}>
             <LockOpenTwoToneIcon
