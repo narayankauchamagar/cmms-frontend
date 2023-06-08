@@ -1481,7 +1481,8 @@ const frJSON = {
   not_enough_part: "Cette pièce n'est plus en stock",
   remove_blank_meter_tasks:
     'Supprimez les tâches de type compteur sans compteur',
-  checklist_update_failure: "La checklist n'a pas pu être modifiée"
+  checklist_update_failure: "La checklist n'a pas pu être modifiée",
+  contact_us: 'Nous Contacter'
 };
 
 export default frJSON;

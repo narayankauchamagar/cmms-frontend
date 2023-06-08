@@ -166,10 +166,21 @@ function Hero() {
             }}
             component="a"
             href="#key-features"
-            size="large"
+            size="medium"
             variant="text"
           >
             {t('key_features')}
+          </Button>
+          <Button
+            sx={{
+              ml: 2
+            }}
+            component="a"
+            href="mailto:admin@grash-cmms.com"
+            size="medium"
+            variant="text"
+          >
+            {t('contact_us')}
           </Button>
         </Grid>
         <Grid item md={6}>
