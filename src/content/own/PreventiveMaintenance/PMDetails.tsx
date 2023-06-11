@@ -14,7 +14,7 @@ import PreventiveMaintenance from '../../../models/owns/preventiveMaintenance';
 import { getPriorityLabel } from '../../../utils/formatters';
 import { useDispatch } from '../../../store';
 import { editPreventiveMaintenance } from '../../../slices/preventiveMaintenance';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   getAssetUrl,
@@ -27,6 +27,7 @@ import { PermissionEntity } from '../../../models/owns/role';
 import ImageViewer from 'react-simple-image-viewer';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 import FilesList from '../components/FilesList';
+import { getTasksByPreventiveMaintenance } from '../../../slices/task';
 
 interface RequestDetailsProps {
   preventiveMaintenance: PreventiveMaintenance;
@@ -50,6 +51,10 @@ export default function PMDetails({
     CompanySettingsContext
   );
   const [isImageViewerOpen, setIsImageViewerOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    dispatch(getTasksByPreventiveMaintenance(preventiveMaintenance.id));
+  }, []);
 
   const BasicField = ({
     label,

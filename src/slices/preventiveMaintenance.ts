@@ -7,6 +7,7 @@ import PreventiveMaintenance, {
 import api from '../utils/api';
 import Schedule from '../models/owns/schedule';
 import { getInitialPage, Page, SearchCriteria } from '../models/owns/page';
+import { Task } from '../models/owns/tasks';
 
 interface PreventiveMaintenanceState {
   preventiveMaintenances: Page<PreventiveMaintenance>;
@@ -159,6 +160,20 @@ export const addPreventiveMaintenance =
         preventiveMaintenance: preventiveMaintenanceResponse
       })
     );
+    const taskBases =
+      preventiveMaintenance.tasks?.map((task) => {
+        return {
+          ...task.taskBase,
+          options: task.taskBase.options.map((option) => option.label)
+        };
+      }) ?? [];
+    if (taskBases.length) {
+      const tasks = await api.patch<Task[]>(
+        `tasks/preventive-maintenance/${preventiveMaintenanceResponse.id}`,
+        taskBases,
+        null
+      );
+    }
   };
 export const editPreventiveMaintenance =
   (id: number, preventiveMaintenance): AppThunk =>

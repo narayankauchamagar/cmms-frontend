@@ -14,7 +14,7 @@ import TaskAltTwoToneIcon from '@mui/icons-material/TaskAltTwoTone';
 import { useContext, useEffect, useState } from 'react';
 import SingleTask from '../../components/form/SelectTasks/SingleTask';
 import { Task } from '../../../../models/owns/tasks';
-import { getTasks, patchTask } from '../../../../slices/task';
+import { getTasksByWorkOrder, patchTask } from '../../../../slices/task';
 import { useDispatch } from '../../../../store';
 import { CustomSnackBarContext } from '../../../../contexts/CustomSnackBarContext';
 import Form from '../../components/form';
@@ -145,7 +145,7 @@ export default function Tasks({
               return dispatch(addFiles(values.images, 'IMAGE', currentTask.id))
                 .then(onImageUploadSuccess)
                 .then(() =>
-                  dispatch(getTasks(workOrderId)).then(() => {
+                  dispatch(getTasksByWorkOrder(workOrderId)).then(() => {
                     const newNotes = new Map(notes);
                     newNotes.set(currentTask.id, true);
                     setNotes(newNotes);

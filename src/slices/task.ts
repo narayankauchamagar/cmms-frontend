@@ -8,11 +8,13 @@ const basePath = 'tasks';
 
 interface TaskState {
   tasksByWorkOrder: { [id: number]: Task[] };
+  tasksByPreventiveMaintenance: { [id: number]: Task[] };
   loadingTasks: { [id: number]: boolean };
 }
 
 const initialState: TaskState = {
   tasksByWorkOrder: {},
+  tasksByPreventiveMaintenance: {},
   loadingTasks: {}
 };
 
@@ -20,14 +22,14 @@ const slice = createSlice({
   name: 'tasks',
   initialState,
   reducers: {
-    getTasks(
+    getTasksByWorkOrder(
       state: TaskState,
       action: PayloadAction<{ id: number; tasks: Task[] }>
     ) {
       const { tasks, id } = action.payload;
       state.tasksByWorkOrder[id] = tasks;
     },
-    patchTasks(
+    patchTasksOfWorkOrder(
       state: TaskState,
       action: PayloadAction<{
         workOrderId: number;
@@ -36,6 +38,23 @@ const slice = createSlice({
     ) {
       const { tasks, workOrderId } = action.payload;
       state.tasksByWorkOrder[workOrderId] = tasks;
+    },
+    getTasksByPM(
+      state: TaskState,
+      action: PayloadAction<{ id: number; tasks: Task[] }>
+    ) {
+      const { tasks, id } = action.payload;
+      state.tasksByPreventiveMaintenance[id] = tasks;
+    },
+    patchTasksOfPM(
+      state: TaskState,
+      action: PayloadAction<{
+        preventiveMaintenanceId: number;
+        tasks: Task[];
+      }>
+    ) {
+      const { tasks, preventiveMaintenanceId } = action.payload;
+      state.tasksByPreventiveMaintenance[preventiveMaintenanceId] = tasks;
     },
     patchTask(
       state: TaskState,
@@ -77,20 +96,20 @@ const slice = createSlice({
 });
 export const reducer = slice.reducer;
 
-export const getTasks =
+export const getTasksByWorkOrder =
   (id: number): AppThunk =>
   async (dispatch) => {
     dispatch(slice.actions.setLoadingByTask({ id, loading: true }));
     try {
       const tasks = await api.get<Task[]>(`${basePath}/work-order/${id}`);
-      dispatch(slice.actions.getTasks({ id, tasks }));
+      dispatch(slice.actions.getTasksByWorkOrder({ id, tasks }));
     } catch {
     } finally {
       dispatch(slice.actions.setLoadingByTask({ id, loading: false }));
     }
   };
 
-export const patchTasks =
+export const patchTasksOfWorkOrder =
   (workOrderId: number, taskBases: any[]): AppThunk =>
   async (dispatch) => {
     if (taskBases.length) {
@@ -100,14 +119,45 @@ export const patchTasks =
         null
       );
       dispatch(
-        slice.actions.patchTasks({
+        slice.actions.patchTasksOfWorkOrder({
           workOrderId,
           tasks
         })
       );
     }
   };
+export const getTasksByPreventiveMaintenance =
+  (id: number): AppThunk =>
+  async (dispatch) => {
+    dispatch(slice.actions.setLoadingByTask({ id, loading: true }));
+    try {
+      const tasks = await api.get<Task[]>(
+        `${basePath}/preventive-maintenance/${id}`
+      );
+      dispatch(slice.actions.getTasksByPM({ id, tasks }));
+    } catch {
+    } finally {
+      dispatch(slice.actions.setLoadingByTask({ id, loading: false }));
+    }
+  };
 
+export const patchTasksOfPreventiveMaintenance =
+  (preventiveMaintenanceId: number, taskBases: any[]): AppThunk =>
+  async (dispatch) => {
+    if (taskBases.length) {
+      const tasks = await api.patch<Task[]>(
+        `${basePath}/preventive-maintenance/${preventiveMaintenanceId}`,
+        taskBases,
+        null
+      );
+      dispatch(
+        slice.actions.patchTasksOfPM({
+          preventiveMaintenanceId,
+          tasks
+        })
+      );
+    }
+  };
 export const deleteTask =
   (workOrderId: number, id: number): AppThunk =>
   async (dispatch) => {

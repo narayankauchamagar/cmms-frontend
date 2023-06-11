@@ -55,6 +55,7 @@ import PreventiveMaintenance from '../../../models/owns/preventiveMaintenance';
 import Category from '../../../models/owns/category';
 import { LocationMiniDTO } from '../../../models/owns/location';
 import { AssetMiniDTO } from '../../../models/owns/asset';
+import { patchTasksOfPreventiveMaintenance } from '../../../slices/task';
 
 function Files() {
   const { t }: { t: any } = useTranslation();
@@ -69,6 +70,8 @@ function Files() {
     getFilteredFields
   } = useAuth();
   const [currentPM, setCurrentPM] = useState<PreventiveMaintenance>();
+  const { tasksByPreventiveMaintenance } = useSelector((state) => state.tasks);
+  const tasks = tasksByPreventiveMaintenance[currentPM?.id] ?? [];
   const { uploadFiles, getWOFieldsAndShapes } = useContext(
     CompanySettingsContext
   );
@@ -324,7 +327,14 @@ function Files() {
       type: 'titleGroupField',
       label: 'wo_configuration'
     },
-    ...getWOBaseFields(t, { delay: true })
+    ...getWOBaseFields(t, { delay: true }),
+    {
+      name: 'tasks',
+      type: 'select',
+      type2: 'task',
+      label: t('tasks'),
+      placeholder: t('select_tasks')
+    }
   ];
   const defaultShape = {
     name: Yup.string().required(t('required_trigger_name')),
@@ -435,7 +445,8 @@ function Files() {
               startsOn: currentPM?.schedule.startsOn,
               endsOn: currentPM?.schedule.endsOn,
               frequency: currentPM?.schedule.frequency,
-              dueDateDelay: currentPM?.schedule.dueDateDelay
+              dueDateDelay: currentPM?.schedule.dueDateDelay,
+              tasks
             }}
             onChange={({ field, e }) => {}}
             onSubmit={async (values) => {
@@ -456,19 +467,45 @@ function Files() {
                       files: [...currentPM.files, ...imageAndFiles.files]
                     };
                     dispatch(
-                      editPreventiveMaintenance(currentPM?.id, formattedValues)
+                      patchTasksOfPreventiveMaintenance(
+                        currentPM?.id,
+                        formattedValues.tasks.map((task) => {
+                          return {
+                            ...task.taskBase,
+                            options: task.taskBase.options.map(
+                              (option) => option.label
+                            )
+                          };
+                        })
+                      )
                     )
-                      .then(() => {
+                      .then(() =>
                         dispatch(
-                          patchSchedule(currentPM.schedule.id, currentPM.id, {
-                            ...currentPM.schedule,
-                            ...formattedValues
+                          editPreventiveMaintenance(
+                            currentPM?.id,
+                            formattedValues
+                          )
+                        )
+                          .then(() => {
+                            dispatch(
+                              patchSchedule(
+                                currentPM.schedule.id,
+                                currentPM.id,
+                                {
+                                  ...currentPM.schedule,
+                                  ...formattedValues
+                                }
+                              )
+                            );
                           })
-                        );
-                      })
-                      .then(onEditSuccess)
-                      .catch(onEditFailure)
-                      .finally(resolve);
+                          .then(onEditSuccess)
+                          .catch(onEditFailure)
+                          .finally(resolve)
+                      )
+                      .catch((err) => {
+                        onEditFailure(err);
+                        rej();
+                      });
                   })
                   .catch((err) => {
                     onEditFailure(err);

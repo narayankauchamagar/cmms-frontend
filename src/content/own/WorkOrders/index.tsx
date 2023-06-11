@@ -55,7 +55,7 @@ import {
 import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import { useDispatch, useSelector } from '../../../store';
 import PriorityWrapper from '../components/PriorityWrapper';
-import { patchTasks } from '../../../slices/task';
+import { patchTasksOfWorkOrder } from '../../../slices/task';
 import { CompanySettingsContext } from '../../../contexts/CompanySettingsContext';
 import useAuth from '../../../hooks/useAuth';
 import { getWOBaseValues } from '../../../utils/woBase';
@@ -702,7 +702,7 @@ function WorkOrders() {
             submitText={t('save')}
             values={{
               ...currentWorkOrder,
-              tasks: tasks,
+              tasks,
               ...getWOBaseValues(t, currentWorkOrder)
             }}
             onChange={({ field, e }) => {}}
@@ -726,7 +726,7 @@ function WorkOrders() {
                     };
                     dispatch(
                       //TODO editTask
-                      patchTasks(
+                      patchTasksOfWorkOrder(
                         currentWorkOrder?.id,
                         formattedValues.tasks.map((task) => {
                           return {
