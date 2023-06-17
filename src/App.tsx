@@ -21,7 +21,11 @@ function App() {
   const { isInitialized, company, isAuthenticated, user } = useAuth();
   let location = useLocation();
   useEffect(() => {
-    if (!IS_LOCALHOST) ReactGA.pageview(location.pathname + location.search);
+    if (!IS_LOCALHOST)
+      ReactGA.send({
+        hitType: 'pageview',
+        page: location.pathname + location.search
+      });
   }, [location]);
   useEffect(() => {
     const arr = location.pathname.split('/');
