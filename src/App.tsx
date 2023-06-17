@@ -10,7 +10,7 @@ import { CssBaseline } from '@mui/material';
 import ThemeProvider from './theme/ThemeProvider';
 import AppInit from './components/AppInit';
 import { CustomSnackBarProvider } from './contexts/CustomSnackBarContext';
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 import { googleTrackingId, IS_LOCALHOST } from './config';
 import { useEffect } from 'react';
 
