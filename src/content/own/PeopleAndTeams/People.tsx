@@ -202,18 +202,15 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
               return dispatch(
                 editUser(currentUser.id, {
                   ...currentUser,
-                  rate: values.rate
+                  rate: values.rate ?? currentUser.rate
                 })
               )
-                .then(() =>
-                  formatSelect(values.role).id !== currentUser.role.id
-                    ? dispatch(
-                        editUserRole(
-                          currentUser.id,
-                          formatSelect(values.role).id
-                        )
-                      )
-                    : null
+                .then(
+                  () =>
+                    formatSelect(values.role).id !== currentUser.role.id &&
+                    dispatch(
+                      editUserRole(currentUser.id, formatSelect(values.role).id)
+                    )
                 )
                 .then(onEditSuccess)
                 .catch(onEditFailure);
