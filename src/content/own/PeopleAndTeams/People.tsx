@@ -40,6 +40,7 @@ import { CustomSnackBarContext } from '../../../contexts/CustomSnackBarContext';
 import {
   clearSingleUser,
   editUser,
+  editUserRole,
   getSingleUser,
   getUsers,
   inviteUsers
@@ -201,10 +202,19 @@ const People = ({ openModal, handleCloseModal }: PropsType) => {
               return dispatch(
                 editUser(currentUser.id, {
                   ...currentUser,
-                  rate: values.rate,
-                  role: formatSelect(values.role)
+                  rate: values.rate
                 })
               )
+                .then(() =>
+                  formatSelect(values.role).id !== currentUser.role.id
+                    ? dispatch(
+                        editUserRole(
+                          currentUser.id,
+                          formatSelect(values.role).id
+                        )
+                      )
+                    : null
+                )
                 .then(onEditSuccess)
                 .catch(onEditFailure);
             }}

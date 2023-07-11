@@ -125,6 +125,15 @@ export const editUser =
     const userResponse = await api.patch<User>(`${basePath}/${id}`, user);
     dispatch(slice.actions.editUser({ user: userResponse }));
   };
+export const editUserRole =
+  (id: number, roleId: number): AppThunk =>
+  async (dispatch) => {
+    const userResponse = await api.patch<User>(
+      `${basePath}/${id}/role?role=${roleId}`,
+      {}
+    );
+    dispatch(slice.actions.editUser({ user: userResponse }));
+  };
 export const getSingleUserMini =
   (id: number): AppThunk =>
   async (dispatch) => {
