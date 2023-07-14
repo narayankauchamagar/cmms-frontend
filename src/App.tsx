@@ -14,7 +14,7 @@ import ReactGA from 'react-ga4';
 import { googleTrackingId, IS_LOCALHOST } from './config';
 import { useEffect } from 'react';
 
-ReactGA.initialize(googleTrackingId);
+if (!IS_LOCALHOST) ReactGA.initialize(googleTrackingId);
 function App() {
   const content = useRoutes(router);
   const navigate = useNavigate();

@@ -1482,7 +1482,10 @@ const frJSON = {
   remove_blank_meter_tasks:
     'Supprimez les tâches de type compteur sans compteur',
   checklist_update_failure: "La checklist n'a pas pu être modifiée",
-  contact_us: 'Nous Contacter'
+  contact_us: 'Nous Contacter',
+  simplify_wo: "Simplifier les Ordres de Travail dans l'application mobile",
+  simplify_wo_description:
+    "Cacher le compteur de temps, les coûts et pièces dans les details d'un Ordre de travail en utilisant l'application mobile"
 };
 
 export default frJSON;

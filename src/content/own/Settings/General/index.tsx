@@ -16,6 +16,7 @@ import internationalization from '../../../../i18n/i18n';
 import { useDispatch, useSelector } from '../../../../store';
 import { getCurrencies } from '../../../../slices/currency';
 import { useEffect } from 'react';
+import { GeneralPreferences } from '../../../../models/owns/generalPreferences';
 
 function GeneralSettings() {
   const { t }: { t: any } = useTranslation();
@@ -31,7 +32,11 @@ function GeneralSettings() {
     dispatch(getCurrencies());
   }, []);
 
-  const switches = [
+  const switches: {
+    title: string;
+    description: string;
+    name: keyof GeneralPreferences;
+  }[] = [
     {
       title: t('auto_assign_wo'),
       description: t('auto_assign_wo_description'),
@@ -61,6 +66,11 @@ function GeneralSettings() {
       title: t('enable_wo_updates_requesters'),
       description: t('enable_wo_updates_requesters_description'),
       name: 'woUpdateForRequesters'
+    },
+    {
+      title: t('simplify_wo'),
+      description: t('simplify_wo_description'),
+      name: 'simplifiedWorkOrder'
     }
   ];
   const onSubmit = async (

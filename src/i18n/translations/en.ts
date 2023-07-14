@@ -1334,7 +1334,10 @@ const enJSON = {
   not_enough_part: 'There is not enough of this part',
   remove_blank_meter_tasks: 'Remove tasks with type meter without a meter',
   checklist_update_failure: "The checklist could'nt be edited",
-  contact_us: 'Contact Us'
+  contact_us: 'Contact Us',
+  simplify_wo: 'Simplify Work Orders in the mobile app',
+  simplify_wo_description:
+    'Hide time controls, costs and parts in the Work Order details while using the mobile app'
 };
 
 export default enJSON;
