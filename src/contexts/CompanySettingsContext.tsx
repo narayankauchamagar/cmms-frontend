@@ -172,7 +172,7 @@ export const CompanySettingsProvider: FC = ({ children }) => {
   };
   useEffect(() => {
     if (isAuthenticated) dispatch(getUsersMini());
-  }, []);
+  }, [isAuthenticated]);
   return (
     <CompanySettingsContext.Provider
       value={{
