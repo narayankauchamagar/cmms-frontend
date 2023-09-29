@@ -14,7 +14,7 @@ And please star the repo.
 
 ```bash
 npm i
-set REACT_APP_API_URL=http:/local-api
+set REACT_APP_API_URL=http://local-api
 npm start
 ```
 
