@@ -32,6 +32,13 @@ You can contribute in different ways. Sending feedback on features, fixing certa
 Here is the [trello dashboard](https://trello.com/invite/b/dHcnX2Y0/ATTI9f361dff4298643df8ef3a80a1413c42E4308099/grash).
 Instructions on _how_ to contribute can be found in [CONTRIBUTING](CONTRIBUTING.md).
 
+## Stars History
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=grashjs/frontend&type=Date&theme=dark" />
+  <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=grashjs/frontend&type=Date" />
+  <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=grashjs/frontend&type=Date" />
+</picture>
 
 ----
 
